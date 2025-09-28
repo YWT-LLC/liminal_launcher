@@ -32,97 +32,6 @@ void main() async {
   runApp(LiminalLauncher(await getApps()));
 }
 
-final GoRouter router = GoRouter(
-  initialLocation: homePath,
-  errorBuilder: (_, GoRouterState state) => ErrorScreen(state.error),
-  routes: <RouteBase>[
-    GoRoute(
-      path: homePath,
-      name: homePath,
-      builder: (_, __) => const HomeScreen(),
-      routes: <RouteBase>[
-        GoRoute(
-          path: appListPath,
-          name: appListPath,
-          builder: (_, GoRouterState state) {
-            final Map<String, dynamic> listData =
-                state.extra as Map<String, dynamic>;
-
-            return AppListScreen(
-              listCheck: listData[ListData.listCheck.key],
-              onSelected: listData[ListData.onSelected.key],
-              refresh: listData[ListData.refresh.key],
-              autoRefresh: listData[ListData.autoRefresh.key],
-              editable: listData[ListData.editable.key],
-              icon: listData[ListData.icon.key],
-            );
-          },
-        ),
-        GoRoute(
-          path: settingsHomePath,
-          name: settingsHomePath,
-          builder: (_, __) => const SettingsHomeScreen(),
-          routes: <RouteBase>[
-            GoRoute(
-              path: textSettingsPath,
-              name: textSettingsPath,
-              builder: (_, __) => const TextSettingsScreen(),
-              routes: <RouteBase>[
-                GoRoute(
-                  path: EzTSType.quick.path,
-                  name: EzTSType.quick.name,
-                  builder: (_, __) =>
-                      const TextSettingsScreen(target: EzTSType.quick),
-                ),
-                GoRoute(
-                  path: EzTSType.advanced.path,
-                  name: EzTSType.advanced.name,
-                  builder: (_, __) =>
-                      const TextSettingsScreen(target: EzTSType.advanced),
-                ),
-              ],
-            ),
-            GoRoute(
-              path: layoutSettingsPath,
-              name: layoutSettingsPath,
-              builder: (_, __) => const LayoutSettingsScreen(),
-            ),
-            GoRoute(
-              path: colorSettingsPath,
-              name: colorSettingsPath,
-              builder: (_, __) => const ColorSettingsScreen(),
-              routes: <RouteBase>[
-                GoRoute(
-                  path: EzCSType.quick.path,
-                  name: EzCSType.quick.name,
-                  builder: (_, __) =>
-                      const ColorSettingsScreen(target: EzCSType.quick),
-                ),
-                GoRoute(
-                  path: EzCSType.advanced.path,
-                  name: EzCSType.advanced.name,
-                  builder: (_, __) =>
-                      const ColorSettingsScreen(target: EzCSType.advanced),
-                ),
-              ],
-            ),
-            GoRoute(
-              path: imageSettingsPath,
-              name: imageSettingsPath,
-              builder: (_, __) => const ImageSettingsScreen(),
-            ),
-            GoRoute(
-              path: designSettingsPath,
-              name: designSettingsPath,
-              builder: (_, __) => const DesignSettingsScreen(),
-            ),
-          ],
-        ),
-      ],
-    ),
-  ],
-);
-
 class LiminalLauncher extends StatelessWidget {
   final List<AppInfo> installedApps;
 
@@ -130,15 +39,6 @@ class LiminalLauncher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData darkTheme = ezThemeData(Brightness.dark).copyWith(
-      scaffoldBackgroundColor: Colors.transparent,
-      pageTransitionsTheme: EzNoTransitions(),
-    );
-    final ThemeData lightTheme = ezThemeData(Brightness.light).copyWith(
-      scaffoldBackgroundColor: Colors.transparent,
-      pageTransitionsTheme: EzNoTransitions(),
-    );
-
     return ChangeNotifierProvider<AppInfoProvider>(
       create: (_) => AppInfoProvider(installedApps),
       child: EzAppProvider(
@@ -159,10 +59,101 @@ class LiminalLauncher extends StatelessWidget {
           locale: EzConfig.getLocale(),
 
           title: appTitle,
-          routerConfig: router,
+          routerConfig: GoRouter(
+            initialLocation: homePath,
+            errorBuilder: (_, GoRouterState state) => ErrorScreen(state.error),
+            routes: <RouteBase>[
+              GoRoute(
+                path: homePath,
+                name: homePath,
+                builder: (_, __) => const HomeScreen(),
+                routes: <RouteBase>[
+                  GoRoute(
+                    path: appListPath,
+                    name: appListPath,
+                    builder: (_, GoRouterState state) {
+                      final Map<String, dynamic> listData =
+                          state.extra as Map<String, dynamic>;
+
+                      return AppListScreen(
+                        listCheck: listData[ListData.listCheck.key],
+                        onSelected: listData[ListData.onSelected.key],
+                        refresh: listData[ListData.refresh.key],
+                        autoRefresh: listData[ListData.autoRefresh.key],
+                        editable: listData[ListData.editable.key],
+                        icon: listData[ListData.icon.key],
+                      );
+                    },
+                  ),
+                  GoRoute(
+                    path: settingsHomePath,
+                    name: settingsHomePath,
+                    builder: (_, __) => const SettingsHomeScreen(),
+                    routes: <RouteBase>[
+                      GoRoute(
+                        path: textSettingsPath,
+                        name: textSettingsPath,
+                        builder: (_, __) => const TextSettingsScreen(),
+                        routes: <RouteBase>[
+                          GoRoute(
+                            path: EzTSType.quick.path,
+                            name: EzTSType.quick.name,
+                            builder: (_, __) => const TextSettingsScreen(
+                                target: EzTSType.quick),
+                          ),
+                          GoRoute(
+                            path: EzTSType.advanced.path,
+                            name: EzTSType.advanced.name,
+                            builder: (_, __) => const TextSettingsScreen(
+                                target: EzTSType.advanced),
+                          ),
+                        ],
+                      ),
+                      GoRoute(
+                        path: layoutSettingsPath,
+                        name: layoutSettingsPath,
+                        builder: (_, __) => const LayoutSettingsScreen(),
+                      ),
+                      GoRoute(
+                        path: colorSettingsPath,
+                        name: colorSettingsPath,
+                        builder: (_, __) => const ColorSettingsScreen(),
+                        routes: <RouteBase>[
+                          GoRoute(
+                            path: EzCSType.quick.path,
+                            name: EzCSType.quick.name,
+                            builder: (_, __) => const ColorSettingsScreen(
+                                target: EzCSType.quick),
+                          ),
+                          GoRoute(
+                            path: EzCSType.advanced.path,
+                            name: EzCSType.advanced.name,
+                            builder: (_, __) => const ColorSettingsScreen(
+                                target: EzCSType.advanced),
+                          ),
+                        ],
+                      ),
+                      GoRoute(
+                        path: imageSettingsPath,
+                        name: imageSettingsPath,
+                        builder: (_, __) => const ImageSettingsScreen(),
+                      ),
+                      GoRoute(
+                        path: designSettingsPath,
+                        name: designSettingsPath,
+                        builder: (_, __) => const DesignSettingsScreen(),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-        darkTheme: darkTheme,
-        lightTheme: lightTheme,
+        darkTheme: ezThemeData(Brightness.dark)
+            .copyWith(scaffoldBackgroundColor: Colors.transparent),
+        lightTheme: ezThemeData(Brightness.light)
+            .copyWith(scaffoldBackgroundColor: Colors.transparent),
       ),
     );
   }
