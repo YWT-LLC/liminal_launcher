@@ -16,11 +16,8 @@ const String appName = 'Liminal Launcher';
 const String androidPackage = 'net.empathetech.liminal';
 
 /// [AppInfo] with package 'net.empathetech.liminal'
-final AppInfo self = AppInfo(
-  label: appName,
-  package: 'net.empathetech.liminal',
-  removable: false,
-);
+final AppInfo self =
+    AppInfo(label: appName, package: androidPackage, removable: false);
 
 // EzConfig //
 
@@ -34,9 +31,10 @@ const String ascListKey = 'asc_list';
 // Functionality
 const String leftSwipeIDKey = 'left_swipe_id';
 const String rightSwipeIDKey = 'right_swipe_id';
+const String autoAddToHomeKey = 'auto_add_to_home';
 const String autoSearchKey = 'auto_search';
 const String authToEditKey = 'auth_to_edit';
-const String autoAddToHomeKey = 'auto_add_to_home';
+const String shakeForFeedbackKey = 'shake_for_feedback';
 
 // Design
 const String homeTimeKey = 'home_time';
@@ -69,9 +67,10 @@ final Map<String, Object> defaultConfig = <String, Object>{
   // Functionality
   leftSwipeIDKey: '',
   rightSwipeIDKey: '',
+  autoAddToHomeKey: false,
   autoSearchKey: false,
   authToEditKey: false,
-  autoAddToHomeKey: false,
+  shakeForFeedbackKey: false,
 
   // Design
   homeTimeKey: true,
