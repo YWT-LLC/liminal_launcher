@@ -47,7 +47,7 @@ class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return LiminalScaffold(
-      LiminalScreen(EzLayoutSettings(
+      EzScreen(EzLayoutSettings(
         beforeLayout: const <Widget>[EzDominantHandSwitch()],
         afterLayout: <Widget>[
           // Home align
@@ -67,7 +67,7 @@ class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
         ],
         resetSpacer: divider,
       )),
-      fab: EzBackFAB(context),
+      fabs: <Widget>[const EzSpacer(), EzBackFAB(context)],
     );
   }
 }

@@ -115,7 +115,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return LiminalScaffold(
-      LiminalScreen(EzScrollView(children: <Widget>[
+      EzScreen(EzScrollView(children: <Widget>[
         if (spacing > margin) EzSpacer(space: spacing - margin),
 
         // Header //
@@ -262,7 +262,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
         ),
         separator,
       ])),
-      fab: EzBackFAB(context),
+      fabs: <Widget>[const EzSpacer(), EzBackFAB(context)],
     );
   }
 }

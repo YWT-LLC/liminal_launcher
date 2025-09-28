@@ -134,7 +134,7 @@ class _AppListScreenState extends State<AppListScreen> {
             }
           }
         },
-        child: LiminalScreen(Column(
+        child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: vAlign.mainAxis,
           crossAxisAlignment: hAlign.crossAxis,
@@ -338,49 +338,48 @@ class _AppListScreenState extends State<AppListScreen> {
                     ),
             ),
           ],
-        )),
+        ),
       ),
-      fab: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          // Scroll to top
-          SizedBox(
-            height: iconSize + padding,
-            child: Visibility(
-              visible: !atTop,
-              child: FloatingActionButton(
-                onPressed: () {
-                  scrollControl.animateTo(
-                    0,
-                    duration: animDuration,
-                    curve: Curves.easeOut,
-                  );
-                },
-                child: EzIcon(PlatformIcons(context).upArrow),
-              ),
-            ),
-          ),
-          spacer,
+      fabs: <Widget>[
+        spacer,
 
-          // Scroll to bottom
-          SizedBox(
-            height: iconSize + padding,
-            child: Visibility(
-              visible: !atBottom,
-              child: FloatingActionButton(
-                onPressed: () {
-                  scrollControl.animateTo(
-                    scrollControl.position.maxScrollExtent,
-                    duration: animDuration,
-                    curve: Curves.easeOut,
-                  );
-                },
-                child: EzIcon(PlatformIcons(context).downArrow),
-              ),
+        // Scroll to top
+        SizedBox(
+          height: iconSize + padding,
+          child: Visibility(
+            visible: !atTop,
+            child: FloatingActionButton(
+              onPressed: () {
+                scrollControl.animateTo(
+                  0,
+                  duration: animDuration,
+                  curve: Curves.easeOut,
+                );
+              },
+              child: EzIcon(PlatformIcons(context).upArrow),
             ),
           ),
-        ],
-      ),
+        ),
+        spacer,
+
+        // Scroll to bottom
+        SizedBox(
+          height: iconSize + padding,
+          child: Visibility(
+            visible: !atBottom,
+            child: FloatingActionButton(
+              onPressed: () {
+                scrollControl.animateTo(
+                  scrollControl.position.maxScrollExtent,
+                  duration: animDuration,
+                  curve: Curves.easeOut,
+                );
+              },
+              child: EzIcon(PlatformIcons(context).downArrow),
+            ),
+          ),
+        ),
+      ],
     );
   }
 

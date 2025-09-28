@@ -57,7 +57,7 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return LiminalScaffold(
-      LiminalScreen(EzScrollView(children: <Widget>[
+      EzScreen(EzScrollView(children: <Widget>[
         Stack(
           // Core //
           children: <Widget>[
@@ -342,7 +342,7 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
         ),
         separator,
       ])),
-      fab: EzBackFAB(context, showHome: true),
+      fabs: <Widget>[const EzSpacer(), EzBackFAB(context)],
     );
   }
 }

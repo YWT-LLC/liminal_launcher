@@ -206,7 +206,7 @@ class _HomeScreenState extends State<HomeScreen> {
             if (toLaunch != null) launchApp(toLaunch.package);
           }
         },
-        child: LiminalScreen(Column(
+        child: Column(
           mainAxisAlignment: vAlign.mainAxis,
           crossAxisAlignment: hAlign.crossAxis,
           children: <Widget>[
@@ -258,52 +258,50 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
             spacer,
           ],
-        )),
-      ),
-      fab: Visibility(
-        visible: editing,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            // Add folder
-            AddFolderFAB(context, () {
-              editor.addHomeFolder();
-              refresh();
-            }),
-            separator,
-
-            // Add app
-            AddAppFAB(
-              context,
-              () => context.goNamed(
-                appListPath,
-                extra: listData(
-                  listCheck: (String id) =>
-                      !listener.hiddenSet.contains(id) &&
-                      !listener.homeSet.contains(id),
-                  onSelected: (String id) => editor.addHomeApp(id),
-                  refresh: refresh,
-                  autoRefresh: true,
-                  icon: EzTextBackground(EzRow(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text('Home\t', style: textTheme.labelLarge),
-                      EzIcon(
-                        PlatformIcons(context).add,
-                        color: colorScheme.onSurface,
-                      ),
-                    ],
-                  )),
-                ),
-              ),
-            ),
-            separator,
-
-            // Settings
-            SettingsFAB(context, () => context.goNamed(settingsHomePath))
-          ],
         ),
       ),
+      fabs: editing
+          ? <Widget>[
+              separator,
+
+              // Add folder
+              AddFolderFAB(context, () {
+                editor.addHomeFolder();
+                refresh();
+              }),
+              separator,
+
+              // Add app
+              AddAppFAB(
+                context,
+                () => context.goNamed(
+                  appListPath,
+                  extra: listData(
+                    listCheck: (String id) =>
+                        !listener.hiddenSet.contains(id) &&
+                        !listener.homeSet.contains(id),
+                    onSelected: (String id) => editor.addHomeApp(id),
+                    refresh: refresh,
+                    autoRefresh: true,
+                    icon: EzTextBackground(EzRow(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text('Home\t', style: textTheme.labelLarge),
+                        EzIcon(
+                          PlatformIcons(context).add,
+                          color: colorScheme.onSurface,
+                        ),
+                      ],
+                    )),
+                  ),
+                ),
+              ),
+              separator,
+
+              // Settings
+              SettingsFAB(context, () => context.goNamed(settingsHomePath))
+            ]
+          : null,
     );
   }
 }
