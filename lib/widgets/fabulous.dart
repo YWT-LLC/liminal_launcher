@@ -9,17 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-class AddFolderFAB extends FloatingActionButton {
-  /// [FloatingActionButton] that adds another home folder
-  AddFolderFAB(BuildContext context, void Function()? onPressed, {super.key})
-      : super(
-          heroTag: 'add_folder_fab',
-          onPressed: onPressed,
-          tooltip: 'Add an app folder',
-          child: EzIcon(Icons.create_new_folder),
-        );
-}
-
 class AddAppFAB extends FloatingActionButton {
   /// [FloatingActionButton] that opens a modal for adding more home apps
   AddAppFAB(BuildContext context, void Function()? onPressed, {super.key})
@@ -28,6 +17,17 @@ class AddAppFAB extends FloatingActionButton {
           onPressed: onPressed,
           tooltip: 'Add more home apps',
           child: EzIcon(PlatformIcons(context).add),
+        );
+}
+
+class AddFolderFAB extends FloatingActionButton {
+  /// [FloatingActionButton] that adds another home folder
+  AddFolderFAB(BuildContext context, void Function()? onPressed, {super.key})
+      : super(
+          heroTag: 'add_folder_fab',
+          onPressed: onPressed,
+          tooltip: 'Add an app folder',
+          child: EzIcon(Icons.create_new_folder),
         );
 }
 
@@ -41,3 +41,12 @@ class SettingsFAB extends FloatingActionButton {
           child: EzIcon(PlatformIcons(context).settings),
         );
 }
+
+const EzUpdaterFAB updater = EzUpdaterFAB(
+  appVersion: '1.0.0',
+  versionSource:
+      'https://raw.githubusercontent.com/Empathetech-LLC/liminal_launcher/refs/heads/main/APP_VERSION',
+  gPlay: 'blarg',
+  appStore: 'blarg',
+  github: 'https://github.com/Empathetech-LLC/liminal_launcher/releases',
+);

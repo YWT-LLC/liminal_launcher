@@ -84,7 +84,7 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
               top: 0,
               left: isLefty ? null : 0,
               right: isLefty ? 0 : null,
-              child: const LiminalUpdater(),
+              child: updater,
             ),
           ],
         ),
@@ -129,11 +129,11 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
 
         // Navigation //
 
-        // GoTo layout settings
+        // GoTo color settings
         EzElevatedIconButton(
-          onPressed: () => context.goNamed(layoutSettingsPath),
+          onPressed: () => context.goNamed(colorSettingsPath),
           icon: EzIcon(Icons.navigate_next),
-          label: el10n.lsPageTitle,
+          label: el10n.csPageTitle,
         ),
         spacer,
 
@@ -145,6 +145,14 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
         ),
         spacer,
 
+        // GoTo layout settings
+        EzElevatedIconButton(
+          onPressed: () => context.goNamed(layoutSettingsPath),
+          icon: EzIcon(Icons.navigate_next),
+          label: el10n.lsPageTitle,
+        ),
+        spacer,
+
         // GoTo text settings
         EzElevatedIconButton(
           onPressed: () => context.goNamed(textSettingsPath),
@@ -152,22 +160,6 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
           label: el10n.tsPageTitle,
         ),
         spacer,
-
-        // GoTo color settings
-        EzElevatedIconButton(
-          onPressed: () => context.goNamed(colorSettingsPath),
-          icon: EzIcon(Icons.navigate_next),
-          label: el10n.csPageTitle,
-        ),
-        spacer,
-
-        // GoTo image settings
-        EzElevatedIconButton(
-          onPressed: () => context.goNamed(imageSettingsPath),
-          icon: EzIcon(Icons.navigate_next),
-          label: el10n.isPageTitle,
-        ),
-        divider,
 
         // Batch //
 

@@ -51,7 +51,7 @@ class AppListScreen extends StatefulWidget {
 }
 
 class _AppListScreenState extends State<AppListScreen> {
-  // Gather the theme data //
+  // Gather the fixed theme data //
 
   static const EzSpacer spacer = EzSpacer();
   static const EzSpacer rowSpacer = EzSpacer(vertical: false);
@@ -62,6 +62,8 @@ class _AppListScreenState extends State<AppListScreen> {
   final double margin = EzConfig.get(marginKey);
   final double padding = EzConfig.get(paddingKey);
   final double spacing = EzConfig.get(spacingKey);
+
+  final Duration animDuration = ezAnimDuration();
 
   late final EdgeInsets listPadding =
       EdgeInsets.symmetric(vertical: spacing / 2);

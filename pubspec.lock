@@ -216,7 +216,7 @@ packages:
     source: hosted
     version: "1.3.3"
   feedback:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: feedback
       sha256: "55edce4f8f0ec01a5ff023e29c5c57df86a7391c831d5647e3b3fdff05e4b01e"
@@ -398,7 +398,7 @@ packages:
     source: hosted
     version: "14.8.1"
   go_transitions:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: go_transitions
       sha256: b6fdcca517b985197cedb6b91d86101a14f3af2717d52fca83cd56d6daeaa8f9

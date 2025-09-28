@@ -10,11 +10,14 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 // App config //
 
 /// Liminal Launcher
-const String appTitle = 'Liminal Launcher';
+const String appName = 'Liminal Launcher';
+
+/// net.empathetech.liminal
+const String androidPackage = 'net.empathetech.liminal';
 
 /// [AppInfo] with package 'net.empathetech.liminal'
 final AppInfo self = AppInfo(
-  label: appTitle,
+  label: appName,
   package: 'net.empathetech.liminal',
   removable: false,
 );
@@ -35,26 +38,26 @@ const String autoSearchKey = 'auto_search';
 const String authToEditKey = 'auth_to_edit';
 const String autoAddToHomeKey = 'auto_add_to_home';
 
+// Design
+const String homeTimeKey = 'home_time';
+const String homeDateKey = 'home_date';
+const String useOSKey = 'use_os';
+const String listIconKey = 'list_icon';
+const String listLabelTypeKey = 'list_label_type';
+const String folderIconKey = 'folder_icon';
+const String folderLabelTypeKey = 'folder_label_type';
+
 // Layout
 const String homeHAlignKey = 'home_horizontal_alignment';
 const String homeVAlignKey = 'home_vertical_alignment';
 const String listHAlignKey = 'list_horizontal_alignment';
 const String listVAlignKey = 'list_vertical_alignment';
 
-// Design
-const String homeTimeKey = 'home_time';
-const String homeDateKey = 'home_date';
-const String listIconKey = 'list_icon';
-const String listLabelTypeKey = 'list_label_type';
-const String folderIconKey = 'folder_icon';
-const String folderLabelTypeKey = 'folder_label_type';
-
 // Image
-const String useOSKey = 'use_os';
 
-/// [mobileEmpathConfig] with Liminal additions
+/// [empathMobileConfig] with Liminal additions
 final Map<String, Object> defaultConfig = <String, Object>{
-  ...mobileEmpathConfig,
+  ...empathMobileConfig,
 
   // BTS
   homeIDsKey: <String>[],
@@ -70,22 +73,20 @@ final Map<String, Object> defaultConfig = <String, Object>{
   authToEditKey: false,
   autoAddToHomeKey: false,
 
-  // Layout
-  homeHAlignKey: ListAlignment.center.configValue,
-  homeVAlignKey: ListAlignment.start.configValue,
-  listHAlignKey: ListAlignment.center.configValue,
-  listVAlignKey: ListAlignment.start.configValue,
-
   // Design
   homeTimeKey: true,
   homeDateKey: true,
+  useOSKey: true,
   listIconKey: true,
   listLabelTypeKey: LabelType.full.configValue,
   folderIconKey: true,
   folderLabelTypeKey: LabelType.none.configValue,
 
-  // Image
-  useOSKey: true,
+  // Layout
+  homeHAlignKey: ListAlignment.center.configValue,
+  homeVAlignKey: ListAlignment.start.configValue,
+  listHAlignKey: ListAlignment.center.configValue,
+  listVAlignKey: ListAlignment.start.configValue,
 };
 
 // Custom fonts //

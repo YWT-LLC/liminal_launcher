@@ -19,7 +19,6 @@ class LayoutSettingsScreen extends StatefulWidget {
 class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
   // Gather the theme data //
 
-  static const EzSpacer spacer = EzSpacer();
   static const EzSeparator separator = EzSeparator();
   static const EzDivider divider = EzDivider();
 
@@ -50,8 +49,6 @@ class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
     return LiminalScaffold(
       LiminalScreen(EzLayoutSettings(
         beforeLayout: const <Widget>[EzDominantHandSwitch()],
-        prefixSpacer: spacer,
-        postfixSpacer: divider,
         afterLayout: <Widget>[
           // Home align
           EzText('Home list alignment', style: titleStyle),
