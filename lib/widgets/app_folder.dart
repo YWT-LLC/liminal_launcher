@@ -43,7 +43,7 @@ class AppFolder extends StatefulWidget {
 }
 
 class _AppFolderState extends State<AppFolder> {
-  // Gather the theme data //
+  // Gather the fixed theme data //
 
   static const EzSpacer rowSpacer = EzSpacer(vertical: false);
 
@@ -53,10 +53,7 @@ class _AppFolderState extends State<AppFolder> {
   late final EdgeInsets rowPadding =
       EdgeInsets.symmetric(horizontal: spacing / 2);
 
-  late final ColorScheme colorScheme = Theme.of(context).colorScheme;
-
   late final EFUILang el10n = ezL10n(context);
-  late final TextTheme textTheme = Theme.of(context).textTheme;
 
   // Define the build data //
 
@@ -129,6 +126,9 @@ class _AppFolderState extends State<AppFolder> {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
     if (editing) {
       return EzScrollView(
         scrollDirection: Axis.horizontal,

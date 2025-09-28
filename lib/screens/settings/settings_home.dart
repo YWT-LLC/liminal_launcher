@@ -22,7 +22,7 @@ class SettingsHomeScreen extends StatefulWidget {
 }
 
 class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
-  // Gather the theme data //
+  // Gather the fixed theme data //
 
   static const EzSpacer spacer = EzSpacer();
   static const EzSeparator separator = EzSeparator();
@@ -31,8 +31,6 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
   final bool isLefty = EzConfig.get(isLeftyKey);
 
   late final EFUILang el10n = ezL10n(context);
-
-  late final TextTheme textTheme = Theme.of(context).textTheme;
 
   // Define the build data //
 
@@ -56,6 +54,8 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
     return LiminalScaffold(
       EzScreen(EzScrollView(children: <Widget>[
         Stack(
@@ -364,11 +364,9 @@ class _SwipeSelector extends StatefulWidget {
 }
 
 class _SwipeSelectorState extends State<_SwipeSelector> {
-  // Gather the theme data //
+  // Gather the fixed theme data //
 
   final EzSpacer rowMargin = EzMargin(vertical: false);
-
-  late final TextTheme textTheme = Theme.of(context).textTheme;
 
   // Define the build data //
 
@@ -393,6 +391,8 @@ class _SwipeSelectorState extends State<_SwipeSelector> {
 
   @override
   Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
     return EzRow(
       mainAxisSize: MainAxisSize.min,
       children: widget.isLeft

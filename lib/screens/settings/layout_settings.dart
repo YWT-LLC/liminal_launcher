@@ -17,12 +17,10 @@ class LayoutSettingsScreen extends StatefulWidget {
 }
 
 class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
-  // Gather the theme data //
+  // Gather the fixed theme data //
 
   static const EzSeparator separator = EzSeparator();
   static const EzDivider divider = EzDivider();
-
-  late final TextStyle? titleStyle = Theme.of(context).textTheme.titleLarge;
 
   // Define custom Widgets //
 
@@ -46,6 +44,8 @@ class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final TextStyle? titleStyle = Theme.of(context).textTheme.titleLarge;
+
     return LiminalScaffold(
       EzScreen(EzLayoutSettings(
         beforeLayout: const <Widget>[EzDominantHandSwitch()],

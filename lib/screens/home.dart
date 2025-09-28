@@ -23,7 +23,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // Gather the theme data //
+  // Gather the fixed theme data //
 
   static const EzSpacer spacer = EzSpacer();
   static const EzSeparator separator = EzSeparator();
@@ -32,10 +32,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   late final EdgeInsets listPadding =
       EdgeInsets.symmetric(vertical: spacing / 2);
-
-  late final ColorScheme colorScheme = Theme.of(context).colorScheme;
-
-  late final TextTheme textTheme = Theme.of(context).textTheme;
 
   final ListAlignment hAlign =
       ListAlignmentConfig.fromValue(EzConfig.get(homeHAlignKey));
@@ -64,21 +60,6 @@ class _HomeScreenState extends State<HomeScreen> {
   late final Map<String, dynamic> appListData = listData(
     listCheck: (String id) => !listener.hiddenSet.contains(id),
     onSelected: (String id) => launchApp(id),
-    refresh: refresh,
-  );
-  late final Map<String, dynamic> hiddenListData = listData(
-    listCheck: (String id) => listener.hiddenSet.contains(id),
-    onSelected: (String id) => launchApp(id),
-    icon: EzTextBackground(EzRow(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Text('Hidden\t', style: textTheme.labelLarge),
-        EzIcon(
-          PlatformIcons(context).eyeSlash,
-          color: colorScheme.onSurface,
-        ),
-      ],
-    )),
     refresh: refresh,
   );
 
@@ -141,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Define custom Widgets //
 
-  Widget header() => (homeTime || homeDate)
+  Widget header(TextTheme textTheme) => (homeTime || homeDate)
       ? _Clock(
           homeTime: homeTime,
           homeDate: homeDate,
@@ -154,6 +135,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
     return LiminalScaffold(
       GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -186,7 +170,24 @@ class _HomeScreenState extends State<HomeScreen> {
               // Swiped up
               context.goNamed(
                 appListPath,
-                extra: editing ? hiddenListData : appListData,
+                extra: editing
+                    ? listData(
+                        listCheck: (String id) =>
+                            listener.hiddenSet.contains(id),
+                        onSelected: (String id) => launchApp(id),
+                        icon: EzTextBackground(EzRow(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Text('Hidden\t', style: textTheme.labelLarge),
+                            EzIcon(
+                              PlatformIcons(context).eyeSlash,
+                              color: colorScheme.onSurface,
+                            ),
+                          ],
+                        )),
+                        refresh: refresh,
+                      )
+                    : appListData,
               );
             }
           }
@@ -210,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: vAlign.mainAxis,
           crossAxisAlignment: hAlign.crossAxis,
           children: <Widget>[
-            header(),
+            header(textTheme),
             spacer,
 
             // App list
@@ -221,7 +222,25 @@ class _HomeScreenState extends State<HomeScreen> {
                           notification.overscroll > 0) {
                         // Navigate on bottom overscroll
                         if (atBottom) {
-                          context.goNamed(appListPath, extra: hiddenListData);
+                          context.goNamed(
+                            appListPath,
+                            extra: listData(
+                              listCheck: (String id) =>
+                                  listener.hiddenSet.contains(id),
+                              onSelected: (String id) => launchApp(id),
+                              icon: EzTextBackground(EzRow(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Text('Hidden\t', style: textTheme.labelLarge),
+                                  EzIcon(
+                                    PlatformIcons(context).eyeSlash,
+                                    color: colorScheme.onSurface,
+                                  ),
+                                ],
+                              )),
+                              refresh: refresh,
+                            ),
+                          );
                           return true;
                         } else {
                           setState(() => atBottom = true);

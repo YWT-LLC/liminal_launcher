@@ -19,18 +19,18 @@ class ErrorScreen extends StatefulWidget {
 }
 
 class _ErrorScreenState extends State<ErrorScreen> {
-  // Gather the theme data //
+  // Gather the fixed theme data //
 
   static const EzSeparator separator = EzSeparator();
 
   late final EFUILang l10n = ezL10n(context);
 
-  late final TextTheme textTheme = Theme.of(context).textTheme;
-
   // Return the build //
 
   @override
   Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
     return LiminalScaffold(Center(
       child: EzScrollView(
         mainAxisAlignment: MainAxisAlignment.center,
