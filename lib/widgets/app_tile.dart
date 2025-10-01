@@ -73,7 +73,7 @@ class _AppTileState extends State<AppTile> {
               // App icon
               if (widget.app.icon != null) ...<Widget>[
                 GestureDetector(
-                  onTap: () => widget.onSelected(widget.app.package),
+                  onTap: () => widget.onSelected(widget.app.id),
                   child: Image.memory(
                     widget.app.icon!,
                     semanticLabel: widget.app.name,
@@ -203,7 +203,7 @@ class _AppTileState extends State<AppTile> {
               // Info
               EzIconButton(
                 onPressed: () async {
-                  await openSettings(widget.app.package);
+                  await openSettings(widget.app.id);
                   if (widget.onHomeScreen == false && context.mounted) {
                     Navigator.of(context).pop();
                   }
@@ -250,7 +250,7 @@ class _AppTileState extends State<AppTile> {
             app: widget.app,
             type: widget.labelType,
             showIcon: widget.showIcon,
-            onPressed: () => widget.onSelected(widget.app.package),
+            onPressed: () => widget.onSelected(widget.app.id),
             onLongPress: holdTile,
           );
   }

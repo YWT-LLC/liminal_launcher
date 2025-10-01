@@ -28,8 +28,9 @@ Future<List<AppInfo>> getApps() async {
   }
 }
 
-/// Open [package]
-Future<void> launchApp(String package) async {
+Future<void> launchApp(String appID) async {
+  final String package = appID.split(idSplit).first;
+
   try {
     await platform.invokeMethod('launchApp', <String, dynamic>{
       'packageName': package,
@@ -39,8 +40,9 @@ Future<void> launchApp(String package) async {
   }
 }
 
-/// Open the settings for [package]
-Future<void> openSettings(String package) async {
+Future<void> openSettings(String appID) async {
+  final String package = appID.split(idSplit).first;
+
   try {
     await platform.invokeMethod('openSettings', <String, dynamic>{
       'packageName': package,
@@ -50,8 +52,7 @@ Future<void> openSettings(String package) async {
   }
 }
 
-/// Uninstall [app]
-/// Android will show it's built-in uninstall dialog
+/// Reminder: Android shows a built-in uninstall dialog
 Future<bool> deleteApp(BuildContext context, AppInfo app) async {
   try {
     await platform.invokeMethod('deleteApp', <String, dynamic>{
