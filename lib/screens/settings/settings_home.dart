@@ -24,9 +24,6 @@ class SettingsHomeScreen extends StatefulWidget {
 class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
   // Gather the fixed theme data //
 
-  static const EzSpacer spacer = EzSpacer();
-  static const EzSeparator separator = EzSeparator();
-
   final bool isLefty = EzConfig.get(isLeftyKey);
 
   late final EFUILang el10n = ezL10n(context);
@@ -81,34 +78,34 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
             ),
           ],
         ),
-        separator,
+        ezSeparator,
 
         // Swipe selectors
         LeftSwipeSelector(listener: listener, textTheme: textTheme),
-        spacer,
+        ezSpacer,
         RightSwipeSelector(listener: listener, textTheme: textTheme),
-        separator,
+        ezSeparator,
 
         // Auto search
         const EzSwitchPair(
           text: 'Auto search',
           valueKey: autoSearchKey,
         ),
-        spacer,
+        ezSpacer,
 
         // Auto search
         const EzSwitchPair(
           text: 'Auth to edit',
           valueKey: authToEditKey,
         ),
-        spacer,
+        ezSpacer,
 
         // Auto add to home
         const EzSwitchPair(
           text: 'Add new apps to home',
           valueKey: autoAddToHomeKey,
         ),
-        const EzDivider(),
+        ezDivider,
 
         // Navigation //
 
@@ -118,7 +115,7 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
           icon: EzIcon(Icons.navigate_next),
           label: el10n.csPageTitle,
         ),
-        spacer,
+        ezSpacer,
 
         // GoTo design settings
         EzElevatedIconButton(
@@ -126,7 +123,7 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
           icon: EzIcon(Icons.navigate_next),
           label: 'Design settings',
         ),
-        spacer,
+        ezSpacer,
 
         // GoTo layout settings
         EzElevatedIconButton(
@@ -134,7 +131,7 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
           icon: EzIcon(Icons.navigate_next),
           label: el10n.lsPageTitle,
         ),
-        spacer,
+        ezSpacer,
 
         // GoTo text settings
         EzElevatedIconButton(
@@ -142,7 +139,7 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
           icon: EzIcon(Icons.navigate_next),
           label: el10n.tsPageTitle,
         ),
-        spacer,
+        ezSpacer,
 
         // Batch //
 
@@ -257,7 +254,7 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
             await EzConfig.setString(folderLabelTypeKey, folderLabelValue);
           },
         ),
-        spacer,
+        ezSpacer,
 
         // Reset
         EzElevatedIconButton(
@@ -308,7 +305,7 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
                       dialogState(() {});
                     },
                   ),
-                  spacer,
+                  ezSpacer,
                   Text(
                     el10n.gUndoWarn,
                     textAlign: TextAlign.center,
@@ -323,9 +320,17 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
           icon: EzIcon(PlatformIcons(context).refresh),
           label: el10n.gResetAll,
         ),
-        separator,
+        ezSeparator,
       ]),
-      fabs: <Widget>[const EzSpacer(), EzBackFAB(context, showHome: true)],
+      fabs: <Widget>[
+        ezSpacer,
+        EzConfigFAB(
+          context,
+          appName: appName,
+          androidPackage: androidPackage,
+          extraKeys: liminalDesignKeys + liminalLayoutKeys,
+        )
+      ],
     );
   }
 }
