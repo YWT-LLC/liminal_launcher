@@ -50,8 +50,6 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
-
     return LiminalScaffold(
       EzScrollView(children: <Widget>[
         Stack(
@@ -81,9 +79,9 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
         ezSeparator,
 
         // Swipe selectors
-        LeftSwipeSelector(listener: listener, textTheme: textTheme),
+        LeftSwipeSelector(listener: listener),
         ezSpacer,
-        RightSwipeSelector(listener: listener, textTheme: textTheme),
+        RightSwipeSelector(listener: listener),
         ezSeparator,
 
         // Auto search
