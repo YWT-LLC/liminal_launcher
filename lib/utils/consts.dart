@@ -51,10 +51,27 @@ const String homeVAlignKey = 'home_vertical_alignment';
 const String listHAlignKey = 'list_horizontal_alignment';
 const String listVAlignKey = 'list_vertical_alignment';
 
-// Image
+/// For [EzConfigFAB.extraKeys]
+const List<String> liminalDesignKeys = <String>[
+  homeTimeKey,
+  homeDateKey,
+  useOSKey,
+  listIconKey,
+  listLabelTypeKey,
+  folderIconKey,
+  folderLabelTypeKey,
+];
+
+/// For [EzConfigFAB.extraKeys]
+const List<String> liminalLayoutKeys = <String>[
+  homeHAlignKey,
+  homeVAlignKey,
+  listHAlignKey,
+  listVAlignKey,
+];
 
 /// [empathMobileConfig] with Liminal additions
-final Map<String, Object> defaultConfig = <String, Object>{
+final Map<String, Object> liminalDefault = <String, Object>{
   ...empathMobileConfig,
 
   // BTS
