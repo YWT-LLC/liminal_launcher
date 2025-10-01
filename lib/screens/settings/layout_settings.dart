@@ -47,7 +47,7 @@ class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
     final TextStyle? titleStyle = Theme.of(context).textTheme.titleLarge;
 
     return LiminalScaffold(
-      EzScreen(EzLayoutSettings(
+      EzLayoutSettings(
         beforeLayout: const <Widget>[EzDominantHandSwitch()],
         afterLayout: <Widget>[
           // Home align
@@ -66,7 +66,7 @@ class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
           ),
         ],
         resetSpacer: divider,
-      )),
+      ),
       fabs: <Widget>[const EzSpacer(), EzBackFAB(context)],
     );
   }

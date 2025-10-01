@@ -57,7 +57,7 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return LiminalScaffold(
-      EzScreen(EzScrollView(children: <Widget>[
+      EzScrollView(children: <Widget>[
         Stack(
           // Core //
           children: <Widget>[
@@ -341,7 +341,7 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
           label: el10n.gResetAll,
         ),
         separator,
-      ])),
+      ]),
       fabs: <Widget>[const EzSpacer(), EzBackFAB(context)],
     );
   }

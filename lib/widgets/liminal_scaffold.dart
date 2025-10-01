@@ -27,6 +27,12 @@ class LiminalScaffold extends StatefulWidget {
 }
 
 class _LiminalScaffoldState extends State<LiminalScaffold> {
+  // Gather the fixed theme data //
+
+  final double margin = EzConfig.get(marginKey);
+
+  // Init //
+
   ShakeDetector? detector;
 
   @override
@@ -44,36 +50,35 @@ class _LiminalScaffoldState extends State<LiminalScaffold> {
         supportEmail: empathSupport,
         appName: appName,
       ),
+      shakeThresholdGravity: 1.75,
+      useFilter: true,
     );
   }
+
+  // Return the build //
 
   @override
-  Widget build(BuildContext context) {
-    if (EzConfig.get(shakeForFeedbackKey)) {
-      ShakeDetector.autoStart(
-        onPhoneShake: (_) => ezFeedback(
-          parentContext: context,
-          l10n: ezL10n(context),
-          supportEmail: empathSupport,
-          appName: appName,
+  Widget build(BuildContext context) => EzAdaptiveScaffold(
+        small: Scaffold(
+          body: SafeArea(
+            child: EzScreen(
+              widget.body,
+              margin: EdgeInsets.symmetric(horizontal: margin),
+            ),
+          ),
+          floatingActionButton: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              updater,
+              if (widget.fabs != null) ...widget.fabs!
+            ],
+          ),
+          floatingActionButtonLocation: EzConfig.get(isLeftyKey)
+              ? FloatingActionButtonLocation.startFloat
+              : FloatingActionButtonLocation.endFloat,
+          resizeToAvoidBottomInset: false,
         ),
       );
-    }
-
-    return EzAdaptiveScaffold(
-      small: Scaffold(
-        body: widget.body,
-        floatingActionButton: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[updater, if (widget.fabs != null) ...widget.fabs!],
-        ),
-        floatingActionButtonLocation: EzConfig.get(isLeftyKey)
-            ? FloatingActionButtonLocation.startFloat
-            : FloatingActionButtonLocation.endFloat,
-        resizeToAvoidBottomInset: false,
-      ),
-    );
-  }
 
   @override
   void dispose() {
