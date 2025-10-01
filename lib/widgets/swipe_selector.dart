@@ -1,3 +1,8 @@
+/* liminal_launcher
+ * Copyright (c) 2025 Empathetech LLC. All rights reserved.
+ * See LICENSE for distribution and usage details.
+ */
+
 import '../../screens/export.dart';
 import '../../utils/export.dart';
 import '../../widgets/export.dart';
@@ -35,40 +40,36 @@ class _LeftSwipeSelectorState extends State<LeftSwipeSelector> {
   // Return the build //
 
   @override
-  Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
+  Widget build(BuildContext context) => EzRow(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          EzText('Left package', style: widget.textTheme.bodyLarge),
+          EzMargin(vertical: false),
+          TileButton(
+            app: app,
+            type: labelType,
+            showIcon: showIcon,
+            onPressed: () => context.goNamed(
+              appListPath,
+              extra: listData(
+                listCheck: (String id) => true,
+                onSelected: (String id) async {
+                  final AppInfo? newApp = widget.listener.appMap[id];
+                  if (newApp == null || newApp == app) return;
 
-    return EzRow(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        EzText('Left package', style: widget.textTheme.bodyLarge),
-        EzMargin(vertical: false),
-        TileButton(
-          app: app,
-          type: labelType,
-          showIcon: showIcon,
-          onPressed: () => context.goNamed(
-            appListPath,
-            extra: listData(
-              listCheck: (String id) => true,
-              onSelected: (String id) async {
-                final AppInfo? newApp = widget.listener.appMap[id];
-                if (newApp == null || newApp == app) return;
-
-                await EzConfig.setString(leftSwipeIDKey, id);
-                setState(() => app = newApp);
-              },
-              refresh: () => setState(() {}),
-              icon: Text(
-                'Selecting left swipe',
-                style: textTheme.labelLarge,
+                  await EzConfig.setString(leftSwipeIDKey, id);
+                  setState(() => app = newApp);
+                },
+                refresh: () => setState(() {}),
+                icon: Text(
+                  'Selecting left swipe',
+                  style: widget.textTheme.labelLarge,
+                ),
               ),
             ),
           ),
-        ),
-      ],
-    );
-  }
+        ],
+      );
 }
 
 class RightSwipeSelector extends StatefulWidget {
@@ -101,38 +102,34 @@ class _RightSwipeSelectorState extends State<RightSwipeSelector> {
   // Return the build //
 
   @override
-  Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
+  Widget build(BuildContext context) => EzRow(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          EzText('Right package', style: widget.textTheme.bodyLarge),
+          EzMargin(vertical: false),
+          TileButton(
+            app: app,
+            type: labelType,
+            showIcon: showIcon,
+            onPressed: () => context.goNamed(
+              appListPath,
+              extra: listData(
+                listCheck: (String id) => true,
+                onSelected: (String id) async {
+                  final AppInfo? newApp = widget.listener.appMap[id];
+                  if (newApp == null || newApp == app) return;
 
-    return EzRow(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        EzText('Right package', style: widget.textTheme.bodyLarge),
-        EzMargin(vertical: false),
-        TileButton(
-          app: app,
-          type: labelType,
-          showIcon: showIcon,
-          onPressed: () => context.goNamed(
-            appListPath,
-            extra: listData(
-              listCheck: (String id) => true,
-              onSelected: (String id) async {
-                final AppInfo? newApp = widget.listener.appMap[id];
-                if (newApp == null || newApp == app) return;
-
-                await EzConfig.setString(rightSwipeIDKey, id);
-                setState(() => app = newApp);
-              },
-              refresh: () => setState(() {}),
-              icon: Text(
-                'Selecting right swipe',
-                style: textTheme.labelLarge,
+                  await EzConfig.setString(rightSwipeIDKey, id);
+                  setState(() => app = newApp);
+                },
+                refresh: () => setState(() {}),
+                icon: Text(
+                  'Selecting right swipe',
+                  style: widget.textTheme.labelLarge,
+                ),
               ),
             ),
           ),
-        ),
-      ],
-    );
-  }
+        ],
+      );
 }
