@@ -106,13 +106,10 @@ class AppInfoProvider extends ChangeNotifier {
 
             if (apps.isEmpty) {
               return;
-            } else if (apps.length == 1) {
-              await removeDeleted(apps.first.id);
             } else {
-              await removeDeleted(apps.first.id);
-              // Needs improvement
-              // Some apps can have the same package name
-              // Rare edge case, but still possible
+              for (final AppInfo app in apps) {
+                await removeDeleted(app.id);
+              }
             }
             break;
         }
