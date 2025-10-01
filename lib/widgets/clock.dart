@@ -16,6 +16,7 @@ class Clock extends StatefulWidget {
   final TextTheme textTheme;
 
   const Clock({
+    super.key,
     required this.homeTime,
     required this.homeDate,
     required this.hAlign,
