@@ -104,9 +104,7 @@ class AppInfoProvider extends ChangeNotifier {
                 .where((AppInfo app) => app.package == packageName)
                 .toList();
 
-            if (apps.isEmpty) {
-              return;
-            } else {
+            if (apps.isNotEmpty) {
               for (final AppInfo app in apps) {
                 await removeDeleted(app.id);
               }
