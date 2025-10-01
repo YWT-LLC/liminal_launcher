@@ -24,9 +24,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   // Gather the fixed theme data //
 
-  static const EzSpacer spacer = EzSpacer();
-  static const EzSeparator separator = EzSeparator();
-
   final double spacing = EzConfig.get(spacingKey);
 
   late final EdgeInsets listPadding =
@@ -211,7 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: hAlign.crossAxis,
           children: <Widget>[
             header(textTheme),
-            spacer,
+            ezSpacer,
 
             // App list
             editing
@@ -274,20 +271,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: hAlign.crossAxis,
                     children: homeTiles,
                   ),
-            spacer,
+            ezSpacer,
           ],
         ),
       ),
       fabs: editing
           ? <Widget>[
-              separator,
+              ezSeparator,
 
               // Add folder
               AddFolderFAB(context, () {
                 editor.addHomeFolder();
                 refresh();
               }),
-              separator,
+              ezSeparator,
 
               // Add app
               AddAppFAB(
@@ -314,7 +311,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              separator,
+              ezSeparator,
 
               // Settings
               SettingsFAB(context, () => context.goNamed(settingsHomePath))

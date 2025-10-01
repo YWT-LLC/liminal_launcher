@@ -20,11 +20,6 @@ class DesignSettingsScreen extends StatefulWidget {
 class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
   // Gather the theme data //
 
-  static const EzSpacer spacer = EzSpacer();
-  static const EzSpacer rowSpacer = EzSpacer(vertical: false);
-  static const EzSeparator separator = EzSeparator();
-  static const EzDivider divider = EzDivider();
-
   final double margin = EzConfig.get(marginKey);
   final double spacing = EzConfig.get(spacingKey);
 
@@ -122,11 +117,11 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
 
         // Time
         const EzSwitchPair(text: 'Home time', valueKey: homeTimeKey),
-        spacer,
+        ezSpacer,
 
         // Date
         const EzSwitchPair(text: 'Home date', valueKey: homeDateKey),
-        divider,
+        ezDivider,
 
         // List AppTile //
         // Preview
@@ -140,14 +135,14 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
                 text: listLabel(),
                 onPressed: doNothing,
               ),
-        spacer,
+        ezSpacer,
 
         // Label type
         EzRow(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             const EzText('Label type'),
-            rowSpacer,
+            ezRowSpacer,
             EzDropdownMenu<LabelType>(
               widthEntries: <String>['Full name'],
               dropdownMenuEntries: labelEntries,
@@ -172,7 +167,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
             ),
           ],
         ),
-        rowSpacer,
+        ezRowSpacer,
 
         // Show icon
         EzSwitchPair(
@@ -193,7 +188,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
             setState(() {});
           },
         ),
-        divider,
+        ezDivider,
 
         // Folder AppTile //
         // Preview
@@ -207,14 +202,14 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
                 text: folderLabel(),
                 onPressed: doNothing,
               ),
-        spacer,
+        ezSpacer,
 
         // Label type
         EzRow(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             const EzText('Label type'),
-            rowSpacer,
+            ezRowSpacer,
             EzDropdownMenu<LabelType>(
               widthEntries: <String>['Full name'],
               dropdownMenuEntries: labelEntries,
@@ -239,7 +234,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
             ),
           ],
         ),
-        rowSpacer,
+        ezRowSpacer,
 
         // Show icon
         EzSwitchPair(
@@ -260,9 +255,9 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
             setState(() {});
           },
         ),
-        separator,
+        ezSeparator,
       ]),
-      fabs: <Widget>[const EzSpacer(), EzBackFAB(context)],
+      fabs: <Widget>[ezSpacer, EzBackFAB(context)],
     );
   }
 }

@@ -19,9 +19,6 @@ class LayoutSettingsScreen extends StatefulWidget {
 class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
   // Gather the fixed theme data //
 
-  static const EzSeparator separator = EzSeparator();
-  static const EzDivider divider = EzDivider();
-
   // Define custom Widgets //
 
   static const List<ButtonSegment<ListAlignment>> alignmentSegments =
@@ -56,7 +53,7 @@ class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
             home: true,
             segments: alignmentSegments,
           ),
-          separator,
+          ezSeparator,
 
           // Full list align
           EzText('Full list alignment', style: titleStyle),
@@ -65,9 +62,9 @@ class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
             segments: alignmentSegments,
           ),
         ],
-        resetSpacer: divider,
+        resetSpacer: ezDivider,
       ),
-      fabs: <Widget>[const EzSpacer(), EzBackFAB(context)],
+      fabs: <Widget>[ezSpacer, EzBackFAB(context)],
     );
   }
 }
@@ -114,7 +111,7 @@ class _AlignmentSelectorsState extends State<_AlignmentSelectors> {
               setState(() => hAlign = selected);
             },
           ),
-          const EzSpacer(),
+          ezSpacer,
 
           // Vertical
           SegmentedButton<ListAlignment>(
