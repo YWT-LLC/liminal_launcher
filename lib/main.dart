@@ -28,7 +28,7 @@ void main() async {
 
   EzConfig.init(
     preferences: await SharedPreferences.getInstance(),
-    defaults: defaultConfig,
+    defaults: liminalDefault,
     fallbackLang: await EFUILang.delegate.load(americanEnglish),
     assetPaths: <String>{},
   );

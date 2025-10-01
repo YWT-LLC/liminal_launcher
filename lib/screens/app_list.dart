@@ -53,10 +53,6 @@ class AppListScreen extends StatefulWidget {
 class _AppListScreenState extends State<AppListScreen> {
   // Gather the fixed theme data //
 
-  static const EzSpacer spacer = EzSpacer();
-  static const EzSpacer rowSpacer = EzSpacer(vertical: false);
-  final EzSpacer rowMargin = EzMargin(vertical: false);
-
   final double iconSize = EzConfig.get(iconSizeKey);
 
   final double margin = EzConfig.get(marginKey);
@@ -191,7 +187,7 @@ class _AppListScreenState extends State<AppListScreen> {
                     ),
                   ],
                 ),
-                rowSpacer,
+                ezRowSpacer,
 
                 // Order
                 EzIconButton(
@@ -206,7 +202,7 @@ class _AppListScreenState extends State<AppListScreen> {
                     refreshList();
                   },
                 ),
-                rowSpacer,
+                ezRowSpacer,
 
                 // Search
                 AnimatedContainer(
@@ -232,7 +228,7 @@ class _AppListScreenState extends State<AppListScreen> {
                         },
                       ),
                       if (searching) ...<Widget>[
-                        rowMargin,
+                        ezRowMargin,
                         Expanded(
                           child: TextField(
                             controller: searchControl,
@@ -253,10 +249,10 @@ class _AppListScreenState extends State<AppListScreen> {
               ],
             ),
             if (widget.icon != null) ...<Widget>[
-              EzMargin(),
+              ezMargin,
               widget.icon!,
             ],
-            spacer,
+            ezSpacer,
 
             // App list
             NotificationListener<ScrollNotification>(
@@ -341,7 +337,7 @@ class _AppListScreenState extends State<AppListScreen> {
         ),
       ),
       fabs: <Widget>[
-        spacer,
+        ezSpacer,
 
         // Scroll to top
         SizedBox(
@@ -360,7 +356,7 @@ class _AppListScreenState extends State<AppListScreen> {
             ),
           ),
         ),
-        spacer,
+        ezSpacer,
 
         // Scroll to bottom
         SizedBox(

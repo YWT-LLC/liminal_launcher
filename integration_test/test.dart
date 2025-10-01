@@ -23,7 +23,7 @@ void main() async {
 
   EzConfig.init(
     preferences: prefs,
-    defaults: defaultConfig,
+    defaults: liminalDefault,
     fallbackLang: await EFUILang.delegate.load(americanEnglish),
     assetPaths: <String>{},
   );
