@@ -7,7 +7,6 @@ import '../screens/export.dart';
 import '../utils/export.dart';
 import '../widgets/export.dart';
 
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
@@ -123,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // Define custom Widgets //
 
   Widget header(TextTheme textTheme) => (homeTime || homeDate)
-      ? _Clock(
+      ? Clock(
           homeTime: homeTime,
           homeDate: homeDate,
           hAlign: hAlign,
@@ -322,66 +321,5 @@ class _HomeScreenState extends State<HomeScreen> {
             ]
           : null,
     );
-  }
-}
-
-class _Clock extends StatefulWidget {
-  final bool homeTime;
-  final bool homeDate;
-  final ListAlignment hAlign;
-  final TextTheme textTheme;
-
-  const _Clock({
-    required this.homeTime,
-    required this.homeDate,
-    required this.hAlign,
-    required this.textTheme,
-  });
-
-  @override
-  State<_Clock> createState() => _ClockState();
-}
-
-class _ClockState extends State<_Clock> {
-  DateTime now = DateTime.now();
-  late Timer ticker;
-
-  @override
-  void initState() {
-    super.initState();
-
-    ticker = widget.homeTime
-        ? Timer.periodic(const Duration(seconds: 1), (_) {
-            if (mounted) setState(() => now = DateTime.now());
-          })
-        : Timer.periodic(const Duration(minutes: 1), (_) {
-            if (mounted) setState(() => now = DateTime.now());
-          });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return EzTextBackground(Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: widget.hAlign.crossAxis,
-      children: <Widget>[
-        if (widget.homeTime)
-          Text(
-            TimeOfDay.fromDateTime(now).format(context),
-            style: widget.textTheme.headlineLarge,
-          ),
-        if (widget.homeDate)
-          Text(
-            MaterialLocalizations.of(context).formatMediumDate(now),
-            style: widget.textTheme.labelLarge,
-          ),
-      ],
-    ));
-  }
-
-  @override
-  void dispose() {
-    ticker.cancel();
-    super.dispose();
   }
 }

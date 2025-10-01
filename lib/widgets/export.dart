@@ -5,6 +5,7 @@
 
 export 'app_folder.dart';
 export 'app_tile.dart';
+export 'clock.dart';
 export 'fabulous.dart';
 export 'liminal_scaffold.dart';
 export 'swipe_selector.dart';
