@@ -26,7 +26,6 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
 
   static const EzSpacer spacer = EzSpacer();
   static const EzSeparator separator = EzSeparator();
-  static const EzDivider divider = EzDivider();
 
   final bool isLefty = EzConfig.get(isLeftyKey);
 
@@ -60,12 +59,14 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
       EzScrollView(children: <Widget>[
         Stack(
           // Core //
+
           children: <Widget>[
             // Restart reminder
             GestureDetector(
               onLongPress: showTips,
               child: const EzWarning(
-                  'Appearance settings take full effect on restart.\n\nHave fun!'),
+                'Appearance settings take full effect on restart.\nHave fun!',
+              ),
             ),
 
             // Tips
@@ -78,32 +79,14 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
                 onPressed: showTips,
               ),
             ),
-
-            // Updater
-            Positioned(
-              top: 0,
-              left: isLefty ? null : 0,
-              right: isLefty ? 0 : null,
-              child: updater,
-            ),
           ],
         ),
         separator,
 
-        // Left swipe
-        _SwipeSelector(
-          isLeft: true,
-          listener: listener,
-          textTheme: textTheme,
-        ),
+        // Swipe selectors
+        LeftSwipeSelector(listener: listener, textTheme: textTheme),
         spacer,
-
-        // Right swipe
-        _SwipeSelector(
-          isLeft: false,
-          listener: listener,
-          textTheme: textTheme,
-        ),
+        RightSwipeSelector(listener: listener, textTheme: textTheme),
         separator,
 
         // Auto search
@@ -125,7 +108,7 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
           text: 'Add new apps to home',
           valueKey: autoAddToHomeKey,
         ),
-        divider,
+        const EzDivider(),
 
         // Navigation //
 
@@ -342,114 +325,7 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
         ),
         separator,
       ]),
-      fabs: <Widget>[const EzSpacer(), EzBackFAB(context)],
-    );
-  }
-}
-
-class _SwipeSelector extends StatefulWidget {
-  final bool isLeft;
-
-  final AppInfoProvider listener;
-  final TextTheme textTheme;
-
-  const _SwipeSelector({
-    required this.isLeft,
-    required this.listener,
-    required this.textTheme,
-  });
-
-  @override
-  State<_SwipeSelector> createState() => _SwipeSelectorState();
-}
-
-class _SwipeSelectorState extends State<_SwipeSelector> {
-  // Gather the fixed theme data //
-
-  final EzSpacer rowMargin = EzMargin(vertical: false);
-
-  // Define the build data //
-
-  final bool showIcon = EzConfig.get(listIconKey);
-  final LabelType labelType =
-      LabelTypeConfig.fromValue(EzConfig.get(listLabelTypeKey));
-
-  late final String leftLabel = 'Left package';
-  late final String rightLabel = 'Right package';
-
-  late final String? leftID = EzConfig.get(leftSwipeIDKey);
-  late final String? rightID = EzConfig.get(rightSwipeIDKey);
-
-  late AppInfo leftApp = (leftID == null || leftID!.isEmpty)
-      ? nullApp
-      : widget.listener.appMap[leftID!] ?? nullApp;
-  late AppInfo rightApp = (rightID == null || rightID!.isEmpty)
-      ? nullApp
-      : widget.listener.appMap[rightID!] ?? nullApp;
-
-  // Return the build //
-
-  @override
-  Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
-
-    return EzRow(
-      mainAxisSize: MainAxisSize.min,
-      children: widget.isLeft
-          ? <Widget>[
-              EzText(leftLabel, style: widget.textTheme.bodyLarge),
-              rowMargin,
-              TileButton(
-                app: leftApp,
-                type: labelType,
-                showIcon: showIcon,
-                onPressed: () => context.goNamed(
-                  appListPath,
-                  extra: listData(
-                    listCheck: (String id) => true,
-                    onSelected: (String id) async {
-                      final AppInfo? app = widget.listener.appMap[id];
-                      if (app == null || app == leftApp) return;
-
-                      await EzConfig.setString(leftSwipeIDKey, id);
-                      setState(() => leftApp = app);
-                    },
-                    refresh: () => setState(() {}),
-                    icon: Text(
-                      'Selecting left swipe',
-                      style: textTheme.labelLarge,
-                    ),
-                  ),
-                ),
-              ),
-            ]
-          : <Widget>[
-              EzText(rightLabel, style: widget.textTheme.bodyLarge),
-              rowMargin,
-              TileButton(
-                app: rightApp,
-                type: labelType,
-                showIcon: showIcon,
-                onPressed: () => context.goNamed(
-                  appListPath,
-                  extra: listData(
-                    listCheck: (String id) => true,
-                    onSelected: (String id) async {
-                      final AppInfo? app = widget.listener.appMap[id];
-                      if (app == null || app == rightApp) return;
-
-                      await EzConfig.setString(rightSwipeIDKey, id);
-                      setState(() => rightApp = app);
-                    },
-                    refresh: () => setState(() {}),
-                    icon: Text(
-                      'Selecting right swipe',
-                      style: textTheme.labelLarge,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+      fabs: <Widget>[const EzSpacer(), EzBackFAB(context, showHome: true)],
     );
   }
 }
