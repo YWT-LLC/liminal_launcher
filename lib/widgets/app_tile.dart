@@ -46,8 +46,6 @@ class AppTile extends StatefulWidget {
 class _AppTileState extends State<AppTile> {
   // Gather the theme data //
 
-  static const EzSpacer rowSpacer = EzSpacer(vertical: false);
-
   final double iconSize = EzConfig.get(iconSizeKey);
   final double padding = EzConfig.get(paddingKey);
 
@@ -83,7 +81,7 @@ class _AppTileState extends State<AppTile> {
                     height: iconSize + padding,
                   ),
                 ),
-                rowSpacer,
+                ezRowSpacer,
               ],
 
               // Rename
@@ -150,7 +148,7 @@ class _AppTileState extends State<AppTile> {
                     }),
                 icon: Icon(PlatformIcons(context).edit),
               ),
-              rowSpacer,
+              ezRowSpacer,
 
               // Add to home
               if (!widget.listener.hiddenSet.contains(widget.app.id) &&
@@ -167,7 +165,7 @@ class _AppTileState extends State<AppTile> {
                   },
                   icon: const Icon(Icons.add_to_home_screen),
                 ),
-                rowSpacer,
+                ezRowSpacer,
               ],
 
               // Remove from home
@@ -184,7 +182,7 @@ class _AppTileState extends State<AppTile> {
                   },
                   icon: Icon(PlatformIcons(context).remove),
                 ),
-                rowSpacer,
+                ezRowSpacer,
               ],
 
               // Show/hide
@@ -200,7 +198,7 @@ class _AppTileState extends State<AppTile> {
                     ? PlatformIcons(context).eyeSolid
                     : PlatformIcons(context).eyeSlash),
               ),
-              rowSpacer,
+              ezRowSpacer,
 
               // Info
               EzIconButton(
@@ -213,7 +211,7 @@ class _AppTileState extends State<AppTile> {
                 },
                 icon: Icon(PlatformIcons(context).info),
               ),
-              rowSpacer,
+              ezRowSpacer,
 
               // Delete
               if (widget.app.removable) ...<Widget>[
@@ -229,7 +227,7 @@ class _AppTileState extends State<AppTile> {
                   },
                   icon: Icon(PlatformIcons(context).delete),
                 ),
-                rowSpacer,
+                ezRowSpacer,
               ],
 
               // Close
@@ -240,7 +238,7 @@ class _AppTileState extends State<AppTile> {
 
               // Drag handle
               if (widget.onHomeScreen == true) ...<Widget>[
-                rowSpacer,
+                ezRowSpacer,
                 EzIcon(
                   Icons.drag_handle,
                   color: Theme.of(context).colorScheme.outline,

@@ -45,8 +45,6 @@ class AppFolder extends StatefulWidget {
 class _AppFolderState extends State<AppFolder> {
   // Gather the fixed theme data //
 
-  static const EzSpacer rowSpacer = EzSpacer(vertical: false);
-
   final double spacing = EzConfig.get(spacingKey);
 
   late final EdgeInsets colPadding = EzInsets.col(spacing);
@@ -200,7 +198,7 @@ class _AppFolderState extends State<AppFolder> {
                 }),
             child: Text(name, style: textTheme.bodyLarge),
           ),
-          rowSpacer,
+          ezRowSpacer,
 
           if (appSet.isNotEmpty) ...<Widget>[
             // Re-order apps
@@ -245,7 +243,7 @@ class _AppFolderState extends State<AppFolder> {
                 ),
               ),
             ),
-            rowSpacer,
+            ezRowSpacer,
 
             // Remove apps
             EzIconButton(
@@ -271,7 +269,7 @@ class _AppFolderState extends State<AppFolder> {
                 ),
               ),
             ),
-            rowSpacer,
+            ezRowSpacer,
           ],
 
           // Add apps
@@ -302,7 +300,7 @@ class _AppFolderState extends State<AppFolder> {
               ),
             ),
           ),
-          rowSpacer,
+          ezRowSpacer,
 
           // Delete folder
           EzIconButton(
@@ -316,7 +314,7 @@ class _AppFolderState extends State<AppFolder> {
               if (success) refreshAll();
             },
           ),
-          rowSpacer,
+          ezRowSpacer,
 
           // Drag handle
           EzIcon(
