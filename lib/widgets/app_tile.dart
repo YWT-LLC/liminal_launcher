@@ -75,7 +75,7 @@ class _AppTileState extends State<AppTile> {
               // App icon
               if (widget.app.icon != null) ...<Widget>[
                 GestureDetector(
-                  onTap: () => widget.onSelected(widget.app.id),
+                  onTap: () => widget.onSelected(widget.app.package),
                   child: Image.memory(
                     widget.app.icon!,
                     semanticLabel: widget.app.name,
@@ -252,7 +252,7 @@ class _AppTileState extends State<AppTile> {
             app: widget.app,
             type: widget.labelType,
             showIcon: widget.showIcon,
-            onPressed: () => widget.onSelected(widget.app.id),
+            onPressed: () => widget.onSelected(widget.app.package),
             onLongPress: holdTile,
           );
   }
