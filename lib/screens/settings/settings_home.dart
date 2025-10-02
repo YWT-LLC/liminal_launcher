@@ -72,6 +72,7 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
               child: IconButton(
                 icon: EzIcon(Icons.help_outline),
                 onPressed: showTips,
+                onLongPress: showTips,
               ),
             ),
           ],
@@ -107,7 +108,7 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
 
         // Navigation //
 
-        // GoTo color settings
+        // Color
         EzElevatedIconButton(
           onPressed: () => context.goNamed(colorSettingsPath),
           icon: EzIcon(Icons.navigate_next),
@@ -115,15 +116,15 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
         ),
         ezSpacer,
 
-        // GoTo design settings
+        // Design
         EzElevatedIconButton(
           onPressed: () => context.goNamed(designSettingsPath),
           icon: EzIcon(Icons.navigate_next),
-          label: 'Design settings',
+          label: el10n.dsPageTitle,
         ),
         ezSpacer,
 
-        // GoTo layout settings
+        // Layout
         EzElevatedIconButton(
           onPressed: () => context.goNamed(layoutSettingsPath),
           icon: EzIcon(Icons.navigate_next),
@@ -131,15 +132,18 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
         ),
         ezSpacer,
 
-        // GoTo text settings
+        // Text
         EzElevatedIconButton(
           onPressed: () => context.goNamed(textSettingsPath),
           icon: EzIcon(Icons.navigate_next),
           label: el10n.tsPageTitle,
         ),
-        ezSpacer,
+        ezDivider,
 
         // Batch //
+
+        const EzQuickConfig(),
+        ezSpacer,
 
         // Randomize
         EzConfigRandomizer(
