@@ -185,6 +185,38 @@ class _AppListScreenState extends State<AppListScreen> {
                         refreshList();
                       },
                     ),
+                    // Install date
+                    EzMenuButton(
+                      label: 'Install date',
+                      textAlign: hAlign.textAlign,
+                      onPressed: () async {
+                        listSort = AppSort.date;
+
+                        await EzConfig.setString(
+                          listSortKey,
+                          listSort.configValue,
+                        );
+                        editor.sort(listSort, ascList);
+
+                        refreshList();
+                      },
+                    ),
+                    // Package size
+                    EzMenuButton(
+                      label: 'Package size',
+                      textAlign: hAlign.textAlign,
+                      onPressed: () async {
+                        listSort = AppSort.size;
+
+                        await EzConfig.setString(
+                          listSortKey,
+                          listSort.configValue,
+                        );
+                        editor.sort(listSort, ascList);
+
+                        refreshList();
+                      },
+                    ),
                   ],
                 ),
                 ezRowSpacer,

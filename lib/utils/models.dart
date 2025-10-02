@@ -8,43 +8,54 @@ import 'package:flutter/services.dart';
 /// '---'
 const String nullAppLabel = '---';
 
+/// ''
+const String nullAppPackage = '';
+
 /// ';'
 const String idSplit = ':';
 
 /// Helpful for creating [AppInfo] lists
-/// [nullAppLabel], '', false
+/// [nullAppLabel], [nullAppPackage], false, 0, 0
 final AppInfo nullApp = AppInfo(
   label: nullAppLabel,
-  package: '', // If you change this, match launchApp
+  package: nullAppPackage,
   removable: false,
+  installDate: 0,
+  packageSize: 0,
 );
 
 class AppInfo {
+  final String _package;
   final String _label;
   String name;
-  final String _package;
   String id;
   final Uint8List? icon;
   final bool removable;
+  final int installDate;
+  final int packageSize;
 
   /// [Object] to store app information
   /// Label, package, and icon
   /// [AppInfo]s with == packages are ==
   AppInfo({
-    required String label,
     required String package,
+    required String label,
     this.icon,
     required this.removable,
+    required this.installDate,
+    required this.packageSize,
   })  : _label = label,
         name = label,
         _package = package,
         id = package + idSplit + label;
 
   factory AppInfo.fromMap(Map<String, dynamic> map) => AppInfo(
+        package: map['package'] ?? nullAppPackage,
         label: map['label'] ?? nullAppLabel,
-        package: map['package'] ?? '', // Ditto (above)
         icon: map['icon'],
         removable: map['removable'] ?? false,
+        installDate: map['installDate'] ?? 0,
+        packageSize: map['packageSize'] ?? 0,
       );
 
   String get package => _package;
@@ -59,12 +70,14 @@ class AppInfo {
 
   @override
   String toString() => '''<AppInfo> {
+  package: $_package
   label: $_label,
   name: $name,
-  package: $_package
   id: $id,
   icon: ${icon == null ? 'null' : 'present'},
   removable: $removable,
+  installDate: $installDate,
+  packageSize: $packageSize
 }''';
 }
 

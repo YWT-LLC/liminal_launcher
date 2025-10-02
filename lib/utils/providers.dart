@@ -172,6 +172,16 @@ class AppInfoProvider extends ChangeNotifier {
         _apps.sort((AppInfo a, AppInfo b) => (asc)
             ? a.package.compareTo(b.package)
             : b.package.compareTo(a.package));
+
+      case AppSort.date:
+        _apps.sort((AppInfo a, AppInfo b) => (asc)
+            ? a.installDate.compareTo(b.installDate)
+            : b.installDate.compareTo(a.installDate));
+
+      case AppSort.size:
+        _apps.sort((AppInfo a, AppInfo b) => (asc)
+            ? a.packageSize.compareTo(b.packageSize)
+            : b.packageSize.compareTo(a.packageSize));
     }
     notifyListeners();
   }

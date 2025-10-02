@@ -40,10 +40,12 @@ extension ListDataConfig on ListData {
 
 // AppList Sort //
 
-enum AppSort { name, publisher }
+enum AppSort { name, publisher, date, size }
 
 const String _name = 'name';
 const String _publisher = 'publisher';
+const String _date = 'date';
+const String _size = 'size';
 
 extension AppSortConfig on AppSort {
   String get configValue {
@@ -52,6 +54,10 @@ extension AppSortConfig on AppSort {
         return _name;
       case AppSort.publisher:
         return _publisher;
+      case AppSort.date:
+        return _date;
+      case AppSort.size:
+        return _size;
     }
   }
 
@@ -59,6 +65,10 @@ extension AppSortConfig on AppSort {
     switch (value) {
       case _publisher:
         return AppSort.publisher;
+      case _date:
+        return AppSort.date;
+      case _size:
+        return AppSort.size;
       default:
         return AppSort.name;
     }

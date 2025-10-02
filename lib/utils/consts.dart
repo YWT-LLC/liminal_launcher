@@ -15,9 +15,14 @@ const String appName = 'Liminal Launcher';
 /// net.empathetech.liminal
 const String androidPackage = 'net.empathetech.liminal';
 
-/// [AppInfo] with package 'net.empathetech.liminal'
-final AppInfo self =
-    AppInfo(label: appName, package: androidPackage, removable: false);
+/// Liminal Launcher [AppInfo]
+final AppInfo self = AppInfo(
+  label: appName,
+  package: androidPackage,
+  removable: false,
+  installDate: 0,
+  packageSize: 0,
+);
 
 // EzConfig //
 
