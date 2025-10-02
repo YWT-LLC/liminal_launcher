@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ApplicationInfo
+import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -25,6 +26,7 @@ import io.flutter.plugin.common.EventChannel.EventSink
 import io.flutter.plugin.common.MethodChannel
 
 import java.io.ByteArrayOutputStream
+import java.io.File
 
 //* Main *//
 
@@ -121,12 +123,21 @@ class MainActivity : FlutterFragmentActivity() {
     for (info in appInfo) {
       val app = mutableMapOf<String, Any?>()
 
+      val packageName = info.activityInfo.packageName
+      val packageInfo: PackageInfo = packageManager.getPackageInfo(packageName, 0)
+      val applicationInfo: ApplicationInfo = packageManager.getApplicationInfo(packageName, 0)
+
+      app["package"] = packageName
       app["label"] = info.loadLabel(packageManager).toString()
-      app["package"] = info.activityInfo.packageName
       app["icon"] = drawableToByteArray(info.loadIcon(packageManager))
       
       val isSystemApp: Boolean = (info.activityInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
       app["removable"] = !isSystemApp
+
+      app["installDate"] = packageInfo.firstInstallTime
+
+      val apkPath = applicationInfo.publicSourceDir
+      app["packageSize"] = File(apkPath).length()
 
       apps.add(app)
     }
@@ -183,15 +194,22 @@ class AppEventReceiver(private val eventSink: EventSink?) : BroadcastReceiver() 
     val packageManager = context.packageManager
 
     try {
-      val appInfo: ApplicationInfo = packageManager.getApplicationInfo(packageName, 0)
       val app = mutableMapOf<String, Any?>()
 
+      val appInfo: ApplicationInfo = packageManager.getApplicationInfo(packageName, 0)
+      val packageInfo: PackageInfo = packageManager.getPackageInfo(packageName, 0)
+
+      app["package"] = packageName
       app["label"] = packageManager.getApplicationLabel(appInfo).toString()
-      app["package"] = appInfo.packageName
       app["icon"] = drawableToByteArray(packageManager.getApplicationIcon(appInfo))
 
       val isSystemApp: Boolean = (appInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
       app["removable"] = !isSystemApp
+
+      app["installDate"] = packageInfo.firstInstallTime
+
+      val apkPath = applicationInfo.publicSourceDir
+      app["packageSize"] = File(apkPath).length()
 
       return app
     } catch (e: PackageManager.NameNotFoundException) {
