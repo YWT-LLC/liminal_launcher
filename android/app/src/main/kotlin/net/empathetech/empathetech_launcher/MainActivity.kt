@@ -112,7 +112,7 @@ class MainActivity : FlutterFragmentActivity() {
     val getIntent = Intent(Intent.ACTION_MAIN, null)
     getIntent.addCategory(Intent.CATEGORY_LAUNCHER)
 
-    val appInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+    val appInfoList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
       packageManager.queryIntentActivities(getIntent, PackageManager.ResolveInfoFlags.of(0L))
     } else {
       @Suppress("DEPRECATION")
@@ -120,18 +120,18 @@ class MainActivity : FlutterFragmentActivity() {
     }
 
     val apps = mutableListOf<Map<String, Any?>>()
-    for (info in appInfo) {
+    for (appInfo in appInfoList) {
       val app = mutableMapOf<String, Any?>()
 
-      val packageName = info.activityInfo.packageName
+      val packageName = appInfo.activityInfo.packageName
       val packageInfo: PackageInfo = packageManager.getPackageInfo(packageName, 0)
       val applicationInfo: ApplicationInfo = packageManager.getApplicationInfo(packageName, 0)
 
       app["package"] = packageName
-      app["label"] = info.loadLabel(packageManager).toString()
-      app["icon"] = drawableToByteArray(info.loadIcon(packageManager))
+      app["label"] = appInfo.loadLabel(packageManager).toString()
+      app["icon"] = drawableToByteArray(appInfo.loadIcon(packageManager))
       
-      val isSystemApp: Boolean = (info.activityInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
+      val isSystemApp: Boolean = (applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
       app["removable"] = !isSystemApp
 
       app["installDate"] = packageInfo.firstInstallTime
@@ -196,14 +196,14 @@ class AppEventReceiver(private val eventSink: EventSink?) : BroadcastReceiver() 
     try {
       val app = mutableMapOf<String, Any?>()
 
-      val appInfo: ApplicationInfo = packageManager.getApplicationInfo(packageName, 0)
       val packageInfo: PackageInfo = packageManager.getPackageInfo(packageName, 0)
+      val applicationInfo: ApplicationInfo = packageManager.getApplicationInfo(packageName, 0)
 
       app["package"] = packageName
-      app["label"] = packageManager.getApplicationLabel(appInfo).toString()
-      app["icon"] = drawableToByteArray(packageManager.getApplicationIcon(appInfo))
+      app["label"] = packageManager.getApplicationLabel(applicationInfo).toString()
+      app["icon"] = drawableToByteArray(packageManager.getApplicationIcon(applicationInfo))
 
-      val isSystemApp: Boolean = (appInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
+      val isSystemApp: Boolean = (applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
       app["removable"] = !isSystemApp
 
       app["installDate"] = packageInfo.firstInstallTime
