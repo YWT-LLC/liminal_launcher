@@ -19,20 +19,20 @@ export 'settings/text_settings.dart';
 
 // Route names //
 
-/// 'app-list'
+/// app-list
 const String appListPath = 'app-list';
 
-/// 'settings-home'
+/// settings-home
 const String settingsHomePath = 'settings-home';
 
-/// 'color-settings'
+/// color-settings
 const String colorSettingsPath = 'color-settings';
 
-/// 'design-settings'
+/// design-settings
 const String designSettingsPath = 'design-settings';
 
-/// 'layout-settings'
+/// layout-settings
 const String layoutSettingsPath = 'layout-settings';
 
-/// 'text-settings'
+/// text-settings
 const String textSettingsPath = 'text-settings';

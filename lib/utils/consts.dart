@@ -112,7 +112,7 @@ final Map<String, Object> liminalDefault = <String, Object>{
 
 // Custom fonts //
 
-/// 'wingding'
+/// wingding
 const String wingding = 'Wingding';
 
 const Map<String, String> wingdingMap = <String, String>{
