@@ -25,13 +25,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
 
   // Define the build data //
 
-  bool listIcon = EzConfig.get(listIconKey);
-  LabelType listLabelType =
-      LabelTypeConfig.fromValue(EzConfig.get(listLabelTypeKey));
-
-  bool folderIcon = EzConfig.get(folderIconKey);
-  LabelType folderLabelType =
-      LabelTypeConfig.fromValue(EzConfig.get(folderLabelTypeKey));
+  bool useOS = EzConfig.get(useOSKey);
 
   final List<DropdownMenuEntry<LabelType>> labelEntries =
       <DropdownMenuEntry<LabelType>>[
@@ -53,14 +47,12 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
     ),
   ];
 
-  bool useOS = EzConfig.get(useOSKey);
-
   // Define custom functions //
 
-  String listLabel() {
+  String listLabel(LabelType type) {
     const String base = 'List App';
 
-    switch (listLabelType) {
+    switch (type) {
       case LabelType.none:
         return '';
 
@@ -82,10 +74,10 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
     }
   }
 
-  String folderLabel() {
+  String folderLabel(LabelType type) {
     const String base = 'Folder App';
 
-    switch (folderLabelType) {
+    switch (type) {
       case LabelType.none:
         return '';
 
@@ -126,7 +118,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
 
           // Date
           const EzSwitchPair(text: 'Home date', valueKey: homeDateKey),
-          ezSpacer,
+          ezSeparator,
 
           // AppTile settings //
 
@@ -134,80 +126,88 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
           EzElevatedIconButton(
             onPressed: () => showModalBottomSheet(
               context: context,
+              constraints: const BoxConstraints(minWidth: double.infinity),
               builder: (_) {
-                return EzScrollView(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    // Preview
-                    listIcon
-                        ? EzTextIconButton(
-                            icon: EzIcon(PlatformIcons(context).settings),
-                            label: listLabel(),
-                            onPressed: doNothing,
-                          )
-                        : EzTextButton(
-                            text: listLabel(),
-                            onPressed: doNothing,
+                bool listIcon = EzConfig.get(listIconKey);
+                LabelType listLabelType =
+                    LabelTypeConfig.fromValue(EzConfig.get(listLabelTypeKey));
+
+                return StatefulBuilder(
+                  builder: (_, StateSetter setModal) => EzScrollView(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      // Preview
+                      listIcon
+                          ? EzTextIconButton(
+                              icon: EzIcon(PlatformIcons(context).settings),
+                              label: listLabel(listLabelType),
+                              onPressed: doNothing,
+                            )
+                          : EzTextButton(
+                              text: listLabel(listLabelType),
+                              onPressed: doNothing,
+                            ),
+                      ezSpacer,
+
+                      // Label type
+                      EzRow(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          const EzText('Label type'),
+                          ezRowSpacer,
+                          EzDropdownMenu<LabelType>(
+                            widthEntries: <String>['Full name'],
+                            dropdownMenuEntries: labelEntries,
+                            enableSearch: false,
+                            initialSelection: listLabelType,
+                            onSelected: (LabelType? choice) async {
+                              if (choice == null) return;
+
+                              await EzConfig.setString(
+                                listLabelTypeKey,
+                                choice.configValue,
+                              );
+                              listLabelType = choice;
+
+                              if (listLabelType == LabelType.none) {
+                                await EzConfig.setBool(listIconKey, true);
+                                listIcon = true;
+                              }
+
+                              setModal(() {});
+                            },
                           ),
-                    ezSpacer,
+                        ],
+                      ),
+                      ezSpacer,
 
-                    // Label type
-                    EzRow(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        const EzText('Label type'),
-                        ezRowSpacer,
-                        EzDropdownMenu<LabelType>(
-                          widthEntries: <String>['Full name'],
-                          dropdownMenuEntries: labelEntries,
-                          enableSearch: false,
-                          initialSelection: listLabelType,
-                          onSelected: (LabelType? choice) async {
-                            if (choice == null) return;
+                      // Show icon
+                      EzSwitchPair(
+                        text: 'Show icon',
+                        valueKey: listIconKey,
+                        onChangedCallback: (bool? value) async {
+                          if (value == null) return;
 
+                          listIcon = value;
+                          if (value == false &&
+                              listLabelType == LabelType.none) {
                             await EzConfig.setString(
                               listLabelTypeKey,
-                              choice.configValue,
+                              LabelType.full.configValue,
                             );
-                            listLabelType = choice;
+                            listLabelType = LabelType.full;
+                          }
 
-                            if (listLabelType == LabelType.none) {
-                              await EzConfig.setBool(listIconKey, true);
-                              listIcon = true;
-                            }
-
-                            setState(() {});
-                          },
-                        ),
-                      ],
-                    ),
-                    ezSpacer,
-
-                    // Show icon
-                    EzSwitchPair(
-                      text: 'Show icon',
-                      valueKey: listIconKey,
-                      onChangedCallback: (bool? value) async {
-                        if (value == null) return;
-
-                        listIcon = value;
-                        if (value == false && listLabelType == LabelType.none) {
-                          await EzConfig.setString(
-                            listLabelTypeKey,
-                            LabelType.full.configValue,
-                          );
-                          listLabelType = LabelType.full;
-                        }
-
-                        setState(() {});
-                      },
-                    ),
-                    ezSpacer,
-                  ],
+                          setModal(() {});
+                        },
+                      ),
+                      ezSeparator,
+                    ],
+                  ),
                 );
               },
             ),
-            icon: Icon(PlatformIcons(context).settings),
+            icon: Icon(PlatformIcons(context).edit),
             label: 'List apps',
           ),
           ezSpacer,
@@ -216,84 +216,91 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
           EzElevatedIconButton(
             onPressed: () => showModalBottomSheet(
               context: context,
+              constraints: const BoxConstraints(minWidth: double.infinity),
               builder: (_) {
-                return EzScrollView(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    // Preview
-                    folderIcon
-                        ? EzTextIconButton(
-                            icon: EzIcon(PlatformIcons(context).settings),
-                            label: folderLabel(),
-                            onPressed: doNothing,
-                          )
-                        : EzTextButton(
-                            text: folderLabel(),
-                            onPressed: doNothing,
+                bool folderIcon = EzConfig.get(folderIconKey);
+                LabelType folderLabelType =
+                    LabelTypeConfig.fromValue(EzConfig.get(folderLabelTypeKey));
+
+                return StatefulBuilder(
+                  builder: (_, StateSetter setModal) => EzScrollView(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      // Preview
+                      folderIcon
+                          ? EzTextIconButton(
+                              icon: EzIcon(PlatformIcons(context).settings),
+                              label: folderLabel(folderLabelType),
+                              onPressed: doNothing,
+                            )
+                          : EzTextButton(
+                              text: folderLabel(folderLabelType),
+                              onPressed: doNothing,
+                            ),
+                      ezSpacer,
+
+                      // Label type
+                      EzRow(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          const EzText('Label type'),
+                          ezRowSpacer,
+                          EzDropdownMenu<LabelType>(
+                            widthEntries: <String>['Full name'],
+                            dropdownMenuEntries: labelEntries,
+                            enableSearch: false,
+                            initialSelection: folderLabelType,
+                            onSelected: (LabelType? choice) async {
+                              if (choice == null) return;
+
+                              await EzConfig.setString(
+                                folderLabelTypeKey,
+                                choice.configValue,
+                              );
+                              folderLabelType = choice;
+
+                              if (folderLabelType == LabelType.none) {
+                                await EzConfig.setBool(folderIconKey, true);
+                                folderIcon = true;
+                              }
+
+                              setModal(() {});
+                            },
                           ),
-                    ezSpacer,
+                        ],
+                      ),
+                      ezSpacer,
 
-                    // Label type
-                    EzRow(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        const EzText('Label type'),
-                        ezRowSpacer,
-                        EzDropdownMenu<LabelType>(
-                          widthEntries: <String>['Full name'],
-                          dropdownMenuEntries: labelEntries,
-                          enableSearch: false,
-                          initialSelection: folderLabelType,
-                          onSelected: (LabelType? choice) async {
-                            if (choice == null) return;
+                      // Show icon
+                      EzSwitchPair(
+                        text: 'Show icon',
+                        valueKey: folderIconKey,
+                        onChangedCallback: (bool? value) async {
+                          if (value == null) return;
 
+                          folderIcon = value;
+                          if (value == false &&
+                              folderLabelType == LabelType.none) {
                             await EzConfig.setString(
                               folderLabelTypeKey,
-                              choice.configValue,
+                              LabelType.full.configValue,
                             );
-                            folderLabelType = choice;
+                            folderLabelType = LabelType.full;
+                          }
 
-                            if (folderLabelType == LabelType.none) {
-                              await EzConfig.setBool(folderIconKey, true);
-                              folderIcon = true;
-                            }
-
-                            setState(() {});
-                          },
-                        ),
-                      ],
-                    ),
-                    ezSpacer,
-
-                    // Show icon
-                    EzSwitchPair(
-                      text: 'Show icon',
-                      valueKey: folderIconKey,
-                      onChangedCallback: (bool? value) async {
-                        if (value == null) return;
-
-                        folderIcon = value;
-                        if (value == false &&
-                            folderLabelType == LabelType.none) {
-                          await EzConfig.setString(
-                            folderLabelTypeKey,
-                            LabelType.full.configValue,
-                          );
-                          folderLabelType = LabelType.full;
-                        }
-
-                        setState(() {});
-                      },
-                    ),
-                    ezSpacer,
-                  ],
+                          setModal(() {});
+                        },
+                      ),
+                      ezSeparator,
+                    ],
+                  ),
                 );
               },
             ),
-            icon: Icon(PlatformIcons(context).settings),
+            icon: Icon(PlatformIcons(context).edit),
             label: 'Folder apps',
           ),
-          ezSpacer,
+          ezSeparator,
         ],
         includeIconSize: false,
         includeScroll: false,
