@@ -58,7 +58,7 @@ class _LiminalScaffoldState extends State<LiminalScaffold> {
   // Return the build //
 
   @override
-  Widget build(BuildContext context) => EzAdaptiveScaffold(
+  Widget build(BuildContext context) => EzAdaptiveParent(
         small: Scaffold(
           body: EzScreen(SafeArea(child: widget.body)),
           floatingActionButton: Column(
