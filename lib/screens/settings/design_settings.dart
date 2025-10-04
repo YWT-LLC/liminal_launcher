@@ -155,7 +155,8 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
             key: ValueKey<String>('time_switch_$redraw'),
             text: 'Home time',
             valueKey: homeTimeKey,
-            backgroundColor: switchSurface,
+            activeTrackColor: switchSurface,
+            inactiveTrackColor: switchSurface,
             trackOutlineColor: switchOutline,
           ),
           ezSpacer,
@@ -165,7 +166,8 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
             key: ValueKey<String>('date_switch_$redraw'),
             text: 'Home date',
             valueKey: homeDateKey,
-            backgroundColor: switchSurface,
+            activeTrackColor: switchSurface,
+            inactiveTrackColor: switchSurface,
             trackOutlineColor: switchOutline,
           ),
           ezSeparator,
@@ -364,7 +366,8 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
         themedSettingsPostpend: <Widget>[
           // Wallpaper //
 
-          if (EzConfig.get(isDark ? darkUseOSKey : lightUseOSKey)) ...<Widget>[
+          if (EzConfig.get(isDark ? darkUseOSKey : lightUseOSKey) ==
+              false) ...<Widget>[
             ezSpacer,
             EzScrollView(
               scrollDirection: Axis.horizontal,
@@ -391,13 +394,15 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
           // Use OS
           ezSpacer,
           EzSwitchPair(
+            key: ValueKey<String>('use_os_$redraw'),
             text: 'Use System Wallpaper',
             valueKey: isDark ? darkUseOSKey : lightUseOSKey,
             onChangedCallback: (bool? choice) {
               if (choice == null) return;
               setState(() {});
             },
-            backgroundColor: switchSurface,
+            activeTrackColor: switchSurface,
+            inactiveTrackColor: switchSurface,
             trackOutlineColor: switchOutline,
           ),
         ],
