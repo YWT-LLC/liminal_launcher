@@ -66,9 +66,10 @@ class _AppTileState extends State<AppTile> {
   Widget build(BuildContext context) {
     return editing
         ? EzScrollView(
-            scrollDirection: Axis.horizontal,
-            reverseHands: true,
             mainAxisSize: MainAxisSize.min,
+            reverseHands: true,
+            scrollDirection: Axis.horizontal,
+            showScrollHint: true,
             children: <Widget>[
               // App icon
               if (widget.app.icon != null) ...<Widget>[
