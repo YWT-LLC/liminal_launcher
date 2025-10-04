@@ -6,6 +6,7 @@
 import '../../utils/export.dart';
 import '../../widgets/export.dart';
 
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -25,7 +26,10 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
 
   // Define the build data //
 
-  bool useOS = EzConfig.get(useOSKey);
+  int redraw = 0;
+
+  late double buttonOpacity;
+  late double outlineOpacity;
 
   final List<DropdownMenuEntry<LabelType>> labelEntries =
       <DropdownMenuEntry<LabelType>>[
@@ -48,6 +52,8 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
   ];
 
   // Define custom functions //
+
+  void drawState() => setState(() => redraw = Random().nextInt(rMax));
 
   String listLabel(LabelType type) {
     const String base = 'List App';
@@ -99,11 +105,43 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
     }
   }
 
+  // Init //
+
+  @override
+  void initState() {
+    super.initState();
+    if (isDarkTheme(context)) {
+      buttonOpacity = EzConfig.get(darkButtonOpacityKey);
+      outlineOpacity = EzConfig.get(darkButtonOutlineOpacityKey);
+    } else {
+      buttonOpacity = EzConfig.get(lightButtonOpacityKey);
+      outlineOpacity = EzConfig.get(lightButtonOutlineOpacityKey);
+    }
+  }
+
   //* Return the build *//
 
   @override
   Widget build(BuildContext context) {
     final bool isDark = isDarkTheme(context);
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+
+    final Color buttonSurface =
+        colorScheme.surface.withValues(alpha: buttonOpacity);
+    final Color buttonOutline =
+        colorScheme.primaryContainer.withValues(alpha: outlineOpacity);
+
+    final Color switchSurface =
+        colorScheme.surface.withValues(alpha: max(crucialOT, buttonOpacity));
+    final WidgetStatePropertyAll<Color> switchOutline =
+        WidgetStatePropertyAll<Color>(buttonOutline);
+
+    final ButtonStyle ebStyle = ElevatedButton.styleFrom(
+      backgroundColor: buttonSurface,
+      shadowColor:
+          colorScheme.shadow.withValues(alpha: buttonOpacity * shadowMod),
+      side: BorderSide(color: buttonOutline),
+    );
 
     return LiminalScaffold(
       EzDesignSettings(
@@ -113,17 +151,30 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
           // Header settings //
 
           // Time
-          const EzSwitchPair(text: 'Home time', valueKey: homeTimeKey),
+          EzSwitchPair(
+            key: ValueKey<String>('time_switch_$redraw'),
+            text: 'Home time',
+            valueKey: homeTimeKey,
+            backgroundColor: switchSurface,
+            trackOutlineColor: switchOutline,
+          ),
           ezSpacer,
 
           // Date
-          const EzSwitchPair(text: 'Home date', valueKey: homeDateKey),
+          EzSwitchPair(
+            key: ValueKey<String>('date_switch_$redraw'),
+            text: 'Home date',
+            valueKey: homeDateKey,
+            backgroundColor: switchSurface,
+            trackOutlineColor: switchOutline,
+          ),
           ezSeparator,
 
           // AppTile settings //
 
           // List
           EzElevatedIconButton(
+            style: ebStyle,
             onPressed: () => showModalBottomSheet(
               context: context,
               constraints: const BoxConstraints(minWidth: double.infinity),
@@ -214,6 +265,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
 
           // Folder
           EzElevatedIconButton(
+            style: ebStyle,
             onPressed: () => showModalBottomSheet(
               context: context,
               constraints: const BoxConstraints(minWidth: double.infinity),
@@ -304,11 +356,15 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
         ],
         includeIconSize: false,
         includeScroll: false,
+        onButtonOpacityChanged: (double value) =>
+            setState(() => buttonOpacity = value),
+        onButtonOutlineOpacityChanged: (double value) =>
+            setState(() => outlineOpacity = value),
         includeBackgroundImage: false,
         themedSettingsPostpend: <Widget>[
           // Wallpaper //
 
-          if (!useOS) ...<Widget>[
+          if (EzConfig.get(isDark ? darkUseOSKey : lightUseOSKey)) ...<Widget>[
             ezSpacer,
             EzScrollView(
               scrollDirection: Axis.horizontal,
@@ -320,12 +376,14 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
                       configKey: darkBackgroundImageKey,
                       label: 'Wallpaper',
                       updateTheme: Brightness.dark,
+                      style: ebStyle,
                     )
                   : EzImageSetting(
                       key: UniqueKey(),
                       configKey: lightBackgroundImageKey,
                       label: 'Wallpaper',
                       updateTheme: Brightness.light,
+                      style: ebStyle,
                     ),
             ),
           ],
@@ -334,13 +392,18 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
           ezSpacer,
           EzSwitchPair(
             text: 'Use System Wallpaper',
-            valueKey: useOSKey,
+            valueKey: isDark ? darkUseOSKey : lightUseOSKey,
             onChangedCallback: (bool? choice) {
               if (choice == null) return;
-              setState(() => useOS = choice);
+              setState(() {});
             },
+            backgroundColor: switchSurface,
+            trackOutlineColor: switchOutline,
           ),
         ],
+        darkThemeResetKeys: <String>{darkUseOSKey},
+        lightThemeResetKeys: <String>{darkUseOSKey},
+        onReset: drawState,
       ),
       fabs: <Widget>[ezSpacer, EzBackFAB(context)],
     );
