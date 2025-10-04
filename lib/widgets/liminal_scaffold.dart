@@ -60,12 +60,7 @@ class _LiminalScaffoldState extends State<LiminalScaffold> {
   @override
   Widget build(BuildContext context) => EzAdaptiveScaffold(
         small: Scaffold(
-          body: SafeArea(
-            child: EzScreen(
-              widget.body,
-              margin: EdgeInsets.symmetric(horizontal: margin),
-            ),
-          ),
+          body: EzScreen(SafeArea(child: widget.body)),
           floatingActionButton: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
