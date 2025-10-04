@@ -44,11 +44,13 @@ const String shakeForFeedbackKey = 'shake_for_feedback';
 // Design
 const String homeTimeKey = 'home_time';
 const String homeDateKey = 'home_date';
-const String useOSKey = 'use_os';
 const String listIconKey = 'list_icon';
 const String listLabelTypeKey = 'list_label_type';
 const String folderIconKey = 'folder_icon';
 const String folderLabelTypeKey = 'folder_label_type';
+
+const String darkUseOSKey = 'dark_use_os';
+const String lightUseOSKey = 'light_use_os';
 
 // Layout
 const String homeHAlignKey = 'home_horizontal_alignment';
@@ -60,11 +62,12 @@ const String listVAlignKey = 'list_vertical_alignment';
 const List<String> liminalDesignKeys = <String>[
   homeTimeKey,
   homeDateKey,
-  useOSKey,
   listIconKey,
   listLabelTypeKey,
   folderIconKey,
   folderLabelTypeKey,
+  darkUseOSKey,
+  lightUseOSKey,
 ];
 
 /// For [EzConfigFAB.extraKeys]
@@ -97,11 +100,12 @@ final Map<String, Object> liminalDefault = <String, Object>{
   // Design
   homeTimeKey: true,
   homeDateKey: true,
-  useOSKey: true,
   listIconKey: true,
   listLabelTypeKey: LabelType.full.configValue,
   folderIconKey: true,
   folderLabelTypeKey: LabelType.none.configValue,
+  darkUseOSKey: true,
+  lightUseOSKey: true,
 
   // Layout
   homeHAlignKey: ListAlignment.center.configValue,
