@@ -18,6 +18,7 @@ class AppTile extends StatefulWidget {
   /// Quantum computing
   final bool? onHomeScreen;
 
+  final ListAlignment hAlign;
   final LabelType labelType;
   final bool showIcon;
   final Future<void> Function(String id) onSelected;
@@ -31,6 +32,7 @@ class AppTile extends StatefulWidget {
     required this.listener,
     required this.editor,
     required this.onHomeScreen,
+    required this.hAlign,
     required this.labelType,
     required this.showIcon,
     required this.onSelected,
@@ -247,12 +249,21 @@ class _AppTileState extends State<AppTile> {
               ],
             ],
           )
-        : TileButton(
-            app: widget.app,
-            type: widget.labelType,
-            showIcon: widget.showIcon,
-            onPressed: () => widget.onSelected(widget.app.id),
-            onLongPress: holdTile,
+        :
+        // Row prevents the tile from auto-expanding
+        Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: widget.hAlign.mainAxis,
+            crossAxisAlignment: widget.hAlign.crossAxis,
+            children: <Widget>[
+              TileButton(
+                app: widget.app,
+                type: widget.labelType,
+                showIcon: widget.showIcon,
+                onPressed: () => widget.onSelected(widget.app.id),
+                onLongPress: holdTile,
+              ),
+            ],
           );
   }
 }

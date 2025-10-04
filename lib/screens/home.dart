@@ -103,6 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
             listener: listener,
             editor: editor,
             onHomeScreen: true,
+            hAlign: hAlign,
             labelType: listLabel,
             showIcon: listIcon,
             onSelected: (String id) => launchApp(id),

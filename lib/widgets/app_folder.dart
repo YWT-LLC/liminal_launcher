@@ -345,6 +345,7 @@ class _AppFolderState extends State<AppFolder> {
                             listener: widget.listener,
                             editor: widget.editor,
                             onHomeScreen: null,
+                            hAlign: widget.hAlign,
                             labelType: widget.folderLabel,
                             showIcon: widget.folderIcon,
                             onSelected: (String id) => launchApp(id),
