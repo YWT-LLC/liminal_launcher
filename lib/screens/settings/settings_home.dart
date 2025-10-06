@@ -331,7 +331,9 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
           appName: appName,
           androidPackage: androidPackage,
           extraKeys: liminalDesignKeys + liminalLayoutKeys,
-        )
+        ),
+        ezSpacer,
+        EzBackFAB(context, showHome: true),
       ],
     );
   }

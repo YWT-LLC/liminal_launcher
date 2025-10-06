@@ -3,6 +3,7 @@
  * See LICENSE for distribution and usage details.
  */
 
+import '../../utils/export.dart';
 import '../../widgets/export.dart';
 
 import 'package:flutter/material.dart';
@@ -16,6 +17,16 @@ class ColorSettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => LiminalScaffold(
         EzColorSettings(target: target),
-        fabs: <Widget>[ezSpacer, EzBackFAB(context)],
+        fabs: <Widget>[
+          ezSpacer,
+          EzConfigFAB(
+            context,
+            appName: appName,
+            androidPackage: androidPackage,
+            extraKeys: liminalDesignKeys + liminalLayoutKeys,
+          ),
+          ezSpacer,
+          EzBackFAB(context)
+        ],
       );
 }
