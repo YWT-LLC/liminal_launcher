@@ -278,14 +278,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       fabs: editing
           ? <Widget>[
-              ezSeparator,
-
-              // Add folder
-              AddFolderFAB(context, () {
-                editor.addHomeFolder();
-                refresh();
-              }),
-              ezSeparator,
+              ezSpacer,
 
               // Add app
               AddAppFAB(
@@ -312,7 +305,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              ezSeparator,
+              ezSpacer,
+
+              // Add folder
+              AddFolderFAB(context, () {
+                editor.addHomeFolder();
+                refresh();
+              }),
+              ezSpacer,
 
               // Settings
               SettingsFAB(context, () => context.goNamed(settingsHomePath))
