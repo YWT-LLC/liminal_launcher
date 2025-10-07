@@ -179,6 +179,8 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
             style: ebStyle,
             onPressed: () => showModalBottomSheet(
               context: context,
+              useSafeArea: true,
+              isScrollControlled: true,
               constraints: const BoxConstraints(minWidth: double.infinity),
               builder: (_) {
                 bool listIcon = EzConfig.get(listIconKey);
@@ -270,6 +272,8 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
             style: ebStyle,
             onPressed: () => showModalBottomSheet(
               context: context,
+              useSafeArea: true,
+              isScrollControlled: true,
               constraints: const BoxConstraints(minWidth: double.infinity),
               builder: (_) {
                 bool folderIcon = EzConfig.get(folderIconKey);
