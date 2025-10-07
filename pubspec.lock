@@ -622,10 +622,10 @@ packages:
     dependency: transitive
     description:
       name: local_auth_android
-      sha256: "1ee0e63fb8b5c6fa286796b5fb1570d256857c2f4a262127e728b36b80a570cf"
+      sha256: c63219ced0c8fbf8370fcb2f5575cdc4a0f0ac79ac8a81a87acda65423ad1495
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.53"
+    version: "1.0.54"
   local_auth_darwin:
     dependency: transitive
     description:
@@ -1195,10 +1195,10 @@ packages:
     dependency: transitive
     description:
       name: win32
-      sha256: "66814138c3562338d05613a6e368ed8cfb237ad6d64a9e9334be3f309acfca03"
+      sha256: d7cb55e04cd34096cd3a79b3330245f54cb96a370a1c27adb3c84b917de8b08e
       url: "https://pub.dev"
     source: hosted
-    version: "5.14.0"
+    version: "5.15.0"
   window_manager:
     dependency: transitive
     description:
