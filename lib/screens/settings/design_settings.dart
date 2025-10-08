@@ -28,9 +28,6 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
 
   int redraw = 0;
 
-  late double buttonOpacity;
-  late double outlineOpacity;
-
   final List<DropdownMenuEntry<LabelType>> labelEntries =
       <DropdownMenuEntry<LabelType>>[
     const DropdownMenuEntry<LabelType>(
@@ -105,43 +102,11 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
     }
   }
 
-  // Init //
-
-  @override
-  void initState() {
-    super.initState();
-    if (isDarkTheme(context)) {
-      buttonOpacity = EzConfig.get(darkButtonOpacityKey);
-      outlineOpacity = EzConfig.get(darkButtonOutlineOpacityKey);
-    } else {
-      buttonOpacity = EzConfig.get(lightButtonOpacityKey);
-      outlineOpacity = EzConfig.get(lightButtonOutlineOpacityKey);
-    }
-  }
-
   //* Return the build *//
 
   @override
   Widget build(BuildContext context) {
     final bool isDark = isDarkTheme(context);
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-
-    final Color buttonSurface =
-        colorScheme.surface.withValues(alpha: buttonOpacity);
-    final Color buttonOutline =
-        colorScheme.primaryContainer.withValues(alpha: outlineOpacity);
-
-    final Color switchSurface =
-        colorScheme.surface.withValues(alpha: max(crucialOT, buttonOpacity));
-    final WidgetStatePropertyAll<Color> switchOutline =
-        WidgetStatePropertyAll<Color>(buttonOutline);
-
-    final ButtonStyle ebStyle = ElevatedButton.styleFrom(
-      backgroundColor: buttonSurface,
-      shadowColor:
-          colorScheme.shadow.withValues(alpha: buttonOpacity * shadowMod),
-      side: BorderSide(color: buttonOutline),
-    );
 
     return LiminalScaffold(
       EzDesignSettings(
@@ -155,9 +120,6 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
             key: ValueKey<String>('time_switch_$redraw'),
             text: 'Home time',
             valueKey: homeTimeKey,
-            activeTrackColor: switchSurface,
-            inactiveTrackColor: switchSurface,
-            trackOutlineColor: switchOutline,
           ),
           ezSpacer,
 
@@ -166,9 +128,6 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
             key: ValueKey<String>('date_switch_$redraw'),
             text: 'Home date',
             valueKey: homeDateKey,
-            activeTrackColor: switchSurface,
-            inactiveTrackColor: switchSurface,
-            trackOutlineColor: switchOutline,
           ),
           ezSeparator,
 
@@ -176,7 +135,6 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
 
           // List
           EzElevatedIconButton(
-            style: ebStyle,
             onPressed: () => showModalBottomSheet(
               context: context,
               useSafeArea: true,
@@ -269,7 +227,6 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
 
           // Folder
           EzElevatedIconButton(
-            style: ebStyle,
             onPressed: () => showModalBottomSheet(
               context: context,
               useSafeArea: true,
@@ -362,10 +319,6 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
         ],
         includeIconSize: false,
         includeScroll: false,
-        onButtonOpacityChanged: (double value) =>
-            setState(() => buttonOpacity = value),
-        onButtonOutlineOpacityChanged: (double value) =>
-            setState(() => outlineOpacity = value),
         includeBackgroundImage: false,
         themedSettingsPostpend: <Widget>[
           // Wallpaper //
@@ -383,14 +336,12 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
                       configKey: darkBackgroundImageKey,
                       label: 'Wallpaper',
                       updateTheme: Brightness.dark,
-                      style: ebStyle,
                     )
                   : EzImageSetting(
                       key: UniqueKey(),
                       configKey: lightBackgroundImageKey,
                       label: 'Wallpaper',
                       updateTheme: Brightness.light,
-                      style: ebStyle,
                     ),
             ),
           ],
@@ -405,9 +356,6 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
               if (choice == null) return;
               setState(() {});
             },
-            activeTrackColor: switchSurface,
-            inactiveTrackColor: switchSurface,
-            trackOutlineColor: switchOutline,
           ),
         ],
         darkThemeResetKeys: <String>{darkUseOSKey},
