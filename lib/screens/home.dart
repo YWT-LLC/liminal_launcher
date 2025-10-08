@@ -119,12 +119,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Define custom Widgets //
 
-  Widget header(TextTheme textTheme) => (homeTime || homeDate)
-      ? Clock(
-          homeTime: homeTime,
-          homeDate: homeDate,
-          hAlign: hAlign,
-          textTheme: textTheme,
+  Widget clock(TextTheme textTheme) => (homeTime || homeDate)
+      ? Padding(
+          padding: EdgeInsets.only(
+            top: vAlign == ListAlignment.start ? 0 : spacing,
+            bottom: vAlign == ListAlignment.start ? spacing : 0,
+          ),
+          child: Clock(
+            homeTime: homeTime,
+            homeDate: homeDate,
+            hAlign: hAlign,
+            textTheme: textTheme,
+          ),
         )
       : const SizedBox.shrink();
 
@@ -208,8 +214,7 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: vAlign.mainAxis,
           crossAxisAlignment: hAlign.crossAxis,
           children: <Widget>[
-            header(textTheme),
-            ezSpacer,
+            if (vAlign == ListAlignment.start) clock(textTheme),
 
             // App list
             editing
@@ -272,7 +277,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: hAlign.crossAxis,
                     children: homeTiles,
                   ),
-            ezSpacer,
+
+            if (vAlign == ListAlignment.end) clock(textTheme),
           ],
         ),
       ),
