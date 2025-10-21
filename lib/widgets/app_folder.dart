@@ -204,11 +204,8 @@ class _AppFolderState extends State<AppFolder> {
             // Re-order apps
             EzIconButton(
               icon: Icon(PlatformIcons(context).edit),
-              onPressed: () => showModalBottomSheet(
+              onPressed: () => ezModal(
                 context: context,
-                useSafeArea: true,
-                isScrollControlled: true,
-                constraints: const BoxConstraints(minWidth: double.infinity),
                 builder: (_) => StatefulBuilder(
                   builder: (_, StateSetter modalState) => Expanded(
                     child: ReorderableListView(

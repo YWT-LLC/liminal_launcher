@@ -333,7 +333,7 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
           extraKeys: liminalDesignKeys + liminalLayoutKeys,
         ),
         ezSpacer,
-        EzBackFAB(context, showHome: true),
+        const EzBackFAB(showHome: true)
       ],
     );
   }

@@ -73,7 +73,7 @@ class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
           extraKeys: liminalDesignKeys + liminalLayoutKeys,
         ),
         ezSpacer,
-        EzBackFAB(context)
+        const EzBackFAB()
       ],
     );
   }

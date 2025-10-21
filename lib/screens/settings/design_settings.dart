@@ -135,11 +135,8 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
 
           // List
           EzElevatedIconButton(
-            onPressed: () => showModalBottomSheet(
+            onPressed: () => ezModal(
               context: context,
-              useSafeArea: true,
-              isScrollControlled: true,
-              constraints: const BoxConstraints(minWidth: double.infinity),
               builder: (_) {
                 bool listIcon = EzConfig.get(listIconKey);
                 LabelType listLabelType =
@@ -227,11 +224,8 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
 
           // Folder
           EzElevatedIconButton(
-            onPressed: () => showModalBottomSheet(
+            onPressed: () => ezModal(
               context: context,
-              useSafeArea: true,
-              isScrollControlled: true,
-              constraints: const BoxConstraints(minWidth: double.infinity),
               builder: (_) {
                 bool folderIcon = EzConfig.get(folderIconKey);
                 LabelType folderLabelType =
@@ -371,7 +365,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
           extraKeys: liminalDesignKeys + liminalLayoutKeys,
         ),
         ezSpacer,
-        EzBackFAB(context)
+        const EzBackFAB()
       ],
     );
   }

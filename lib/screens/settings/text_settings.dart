@@ -25,7 +25,7 @@ class TextSettingsScreen extends StatelessWidget {
             androidPackage: androidPackage,
             extraKeys: liminalDesignKeys + liminalLayoutKeys,
           ),
-          EzBackFAB(context)
+          const EzBackFAB()
         ],
       );
 }

@@ -26,7 +26,7 @@ class ColorSettingsScreen extends StatelessWidget {
             extraKeys: liminalDesignKeys + liminalLayoutKeys,
           ),
           ezSpacer,
-          EzBackFAB(context)
+          const EzBackFAB()
         ],
       );
 }
