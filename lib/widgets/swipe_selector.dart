@@ -64,7 +64,7 @@ class _LeftSwipeSelectorState extends State<LeftSwipeSelector> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         EzLink(
-          'Left package',
+          'Left app',
           style: textTheme.bodyLarge,
           textColor: colorScheme.onSurface,
           onTap: activate,
@@ -135,7 +135,7 @@ class _RightSwipeSelectorState extends State<RightSwipeSelector> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         EzLink(
-          'Right package',
+          'Right app',
           style: textTheme.bodyLarge,
           textColor: colorScheme.onSurface,
           onTap: activate,
