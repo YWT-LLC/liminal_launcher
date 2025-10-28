@@ -8,6 +8,7 @@ import '../../widgets/export.dart';
 
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class LayoutSettingsScreen extends StatefulWidget {
   const LayoutSettingsScreen({super.key});
@@ -18,6 +19,8 @@ class LayoutSettingsScreen extends StatefulWidget {
 
 class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
   // Gather the fixed theme data //
+
+  final double spacing = EzConfig.get(spacingKey);
 
   // Define custom Widgets //
 
@@ -40,43 +43,68 @@ class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
   // Return the build //
 
   @override
-  Widget build(BuildContext context) {
-    final TextStyle? titleStyle = Theme.of(context).textTheme.titleLarge;
+  Widget build(BuildContext context) => LiminalScaffold(
+        EzLayoutSettings(
+          beforeLayout: const <Widget>[
+            EzDominantHandSwitch(),
+            ezSeparator,
+          ],
+          afterLayout: <Widget>[
+            ezDivider,
 
-    return LiminalScaffold(
-      EzLayoutSettings(
-        beforeLayout: const <Widget>[EzDominantHandSwitch()],
-        afterLayout: <Widget>[
-          // Home align
-          EzText('Home list alignment', style: titleStyle),
-          const _AlignmentSelectors(
-            home: true,
-            segments: alignmentSegments,
-          ),
-          ezSeparator,
+            // Home list align
+            EzElevatedIconButton(
+              onPressed: () => ezModal(
+                context: context,
+                builder: (_) => EzScrollView(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    const _AlignmentSelectors(
+                      home: true,
+                      segments: alignmentSegments,
+                    ),
+                    EzSpacer(space: spacing * 1.5),
+                  ],
+                ),
+              ),
+              label: 'Home alignment',
+              icon: Icon(PlatformIcons(context).home),
+            ),
+            ezSpacer,
 
-          // Full list align
-          EzText('Full list alignment', style: titleStyle),
-          const _AlignmentSelectors(
-            home: false,
-            segments: alignmentSegments,
-          ),
-        ],
-        resetSpacer: ezDivider,
-      ),
-      fabs: <Widget>[
-        ezSpacer,
-        EzConfigFAB(
-          context,
-          appName: appName,
-          androidPackage: androidPackage,
-          extraKeys: liminalDesignKeys + liminalLayoutKeys,
+            // App list align
+            EzElevatedIconButton(
+              onPressed: () => ezModal(
+                context: context,
+                builder: (_) => EzScrollView(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    const _AlignmentSelectors(
+                      home: false,
+                      segments: alignmentSegments,
+                    ),
+                    EzSpacer(space: spacing * 1.5),
+                  ],
+                ),
+              ),
+              label: 'App list(s) alignment',
+              icon: const Icon(Icons.list),
+            ),
+          ],
+          resetSpacer: ezDivider,
         ),
-        ezSpacer,
-        const EzBackFAB()
-      ],
-    );
-  }
+        fabs: <Widget>[
+          ezSpacer,
+          EzConfigFAB(
+            context,
+            appName: appName,
+            androidPackage: androidPackage,
+            extraKeys: liminalDesignKeys + liminalLayoutKeys,
+          ),
+          ezSpacer,
+          const EzBackFAB()
+        ],
+      );
 }
 
 class _AlignmentSelectors extends StatefulWidget {
@@ -93,6 +121,15 @@ class _AlignmentSelectors extends StatefulWidget {
 }
 
 class _AlignmentSelectorsState extends State<_AlignmentSelectors> {
+  // Gather the fixed theme data //
+
+  final double padding = EzConfig.get(paddingKey);
+  final double iconSize = EzConfig.get(iconSizeKey);
+
+  // Define the build data //
+
+  final double sizeMod = 0.333;
+
   late final String hConfigKey = widget.home ? homeHAlignKey : listHAlignKey;
   late final String vConfigKey = widget.home ? homeVAlignKey : listVAlignKey;
 
@@ -102,41 +139,134 @@ class _AlignmentSelectorsState extends State<_AlignmentSelectors> {
   late ListAlignment vAlign =
       ListAlignmentConfig.fromValue(EzConfig.get(vConfigKey));
 
+  // Define custom functions //
+
+  Alignment merge() {
+    switch (hAlign) {
+      case ListAlignment.start:
+        switch (vAlign) {
+          case ListAlignment.start:
+            return Alignment.topLeft;
+          case ListAlignment.center:
+            return Alignment.centerLeft;
+          case ListAlignment.end:
+            return Alignment.bottomLeft;
+        }
+      case ListAlignment.center:
+        switch (vAlign) {
+          case ListAlignment.start:
+            return Alignment.topCenter;
+          case ListAlignment.center:
+            return Alignment.center;
+          case ListAlignment.end:
+            return Alignment.bottomCenter;
+        }
+      case ListAlignment.end:
+        switch (vAlign) {
+          case ListAlignment.start:
+            return Alignment.topRight;
+          case ListAlignment.center:
+            return Alignment.centerRight;
+          case ListAlignment.end:
+            return Alignment.bottomRight;
+        }
+    }
+  }
+
+  // Return the build //
+
   @override
-  Widget build(BuildContext context) => Wrap(
-        alignment: WrapAlignment.center,
-        runAlignment: WrapAlignment.center,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        children: <Widget>[
-          // Horizontal
-          SegmentedButton<ListAlignment>(
-            segments: widget.segments,
-            selected: <ListAlignment>{hAlign},
-            showSelectedIcon: false,
-            onSelectionChanged: (Set<ListAlignment>? choice) async {
-              if (choice?.first == null) return;
-              final ListAlignment selected = choice!.first;
+  Widget build(BuildContext context) {
+    final bool isDark = isDarkTheme(context);
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
 
-              await EzConfig.setString(hConfigKey, selected.configValue);
-              setState(() => hAlign = selected);
-            },
-          ),
-          ezSpacer,
+    final String? backgroundImagePath =
+        EzConfig.get(isDark ? darkBackgroundImageKey : lightBackgroundImageKey);
 
-          // Vertical
-          SegmentedButton<ListAlignment>(
-            segments: widget.segments,
-            direction: Axis.vertical,
-            selected: <ListAlignment>{vAlign},
-            showSelectedIcon: false,
-            onSelectionChanged: (Set<ListAlignment>? choice) async {
-              if (choice?.first == null) return;
-              final ListAlignment selected = choice!.first;
+    final BoxFit? backgroundImageFit = ezFitFromName(isDark
+        ? EzConfig.get('$darkBackgroundImageKey$boxFitSuffix')
+        : EzConfig.get('$lightBackgroundImageKey$boxFitSuffix'));
 
-              await EzConfig.setString(vConfigKey, selected.configValue);
-              setState(() => vAlign = selected);
-            },
-          ),
-        ],
-      );
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        // Preview
+        Container(
+          color: colorScheme.onSurface,
+          height: heightOf(context) * sizeMod,
+          width: widthOf(context) * sizeMod,
+          child: Stack(children: <Widget>[
+            // Background
+            Container(
+              decoration: BoxDecoration(
+                color: colorScheme.surface,
+                image: (backgroundImagePath == null ||
+                        backgroundImagePath == noImageValue)
+                    ? null
+                    : DecorationImage(
+                        image: ezImageProvider(backgroundImagePath),
+                        fit: backgroundImageFit,
+                      ),
+              ),
+              margin: EdgeInsets.all(EzConfig.get(marginKey) * sizeMod),
+            ),
+
+            // Aligned circular icon
+            Align(
+              alignment: merge(),
+              child: ClipOval(
+                child: Image.asset(
+                  appIconPath,
+                  semanticLabel:
+                      'Liminal Launcher icon used for alignment preview',
+                  width: iconSize + padding,
+                  height: iconSize + padding,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ]),
+        ),
+        ezSeparator,
+
+        // Controls
+        Wrap(
+          alignment: WrapAlignment.center,
+          runAlignment: WrapAlignment.center,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: <Widget>[
+            // Horizontal
+            SegmentedButton<ListAlignment>(
+              segments: widget.segments,
+              selected: <ListAlignment>{hAlign},
+              showSelectedIcon: false,
+              onSelectionChanged: (Set<ListAlignment>? choice) async {
+                if (choice?.first == null) return;
+                final ListAlignment selected = choice!.first;
+
+                await EzConfig.setString(hConfigKey, selected.configValue);
+                setState(() => hAlign = selected);
+              },
+            ),
+            ezSpacer,
+
+            // Vertical
+            SegmentedButton<ListAlignment>(
+              segments: widget.segments,
+              direction: Axis.vertical,
+              selected: <ListAlignment>{vAlign},
+              showSelectedIcon: false,
+              onSelectionChanged: (Set<ListAlignment>? choice) async {
+                if (choice?.first == null) return;
+                final ListAlignment selected = choice!.first;
+
+                await EzConfig.setString(vConfigKey, selected.configValue);
+                setState(() => vAlign = selected);
+              },
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 }
