@@ -147,7 +147,8 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
 
         // Randomize
         EzConfigRandomizer(
-          dialogContent: 'Only affects appearance settings\n${el10n.gUndoWarn}',
+          dialogContent:
+              'Only affects appearance settings.\n${el10n.gUndoWarn}',
           onConfirm: () async {
             await EzConfig.randomize(isDarkTheme(context), shiny: false);
 
