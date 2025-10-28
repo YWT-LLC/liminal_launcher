@@ -87,6 +87,54 @@ class _AppTileState extends State<AppTile> {
                 ezRowSpacer,
               ],
 
+              // Add to home
+              if (!widget.listener.hiddenSet.contains(widget.app.id) &&
+                  !widget.listener.homeSet.contains(widget.app.id)) ...<Widget>[
+                EzIconButton(
+                  onPressed: () async {
+                    final bool success =
+                        await widget.editor.addHomeApp(widget.app.id);
+
+                    if (success) {
+                      setState(() => editing = false);
+                      widget.refresh();
+                    }
+                  },
+                  icon: const Icon(Icons.add_to_home_screen),
+                ),
+                ezRowSpacer,
+              ],
+
+              // Remove from home
+              if (widget.onHomeScreen == true) ...<Widget>[
+                EzIconButton(
+                  onPressed: () async {
+                    final bool success =
+                        await widget.editor.removeHomeApp(widget.app.id);
+
+                    if (success) {
+                      setState(() => editing = false);
+                      widget.refresh();
+                    }
+                  },
+                  icon: Icon(PlatformIcons(context).remove),
+                ),
+                ezRowSpacer,
+              ],
+
+              // Info
+              EzIconButton(
+                onPressed: () async {
+                  await openSettings(widget.app.id);
+                  if (widget.onHomeScreen == false && context.mounted) {
+                    Navigator.of(context).pop();
+                  }
+                  widget.refresh();
+                },
+                icon: Icon(PlatformIcons(context).info),
+              ),
+              ezRowSpacer,
+
               // Rename
               EzIconButton(
                 onPressed: () => showPlatformDialog(
@@ -153,41 +201,6 @@ class _AppTileState extends State<AppTile> {
               ),
               ezRowSpacer,
 
-              // Add to home
-              if (!widget.listener.hiddenSet.contains(widget.app.id) &&
-                  !widget.listener.homeSet.contains(widget.app.id)) ...<Widget>[
-                EzIconButton(
-                  onPressed: () async {
-                    final bool success =
-                        await widget.editor.addHomeApp(widget.app.id);
-
-                    if (success) {
-                      setState(() => editing = false);
-                      widget.refresh();
-                    }
-                  },
-                  icon: const Icon(Icons.add_to_home_screen),
-                ),
-                ezRowSpacer,
-              ],
-
-              // Remove from home
-              if (widget.onHomeScreen == true) ...<Widget>[
-                EzIconButton(
-                  onPressed: () async {
-                    final bool success =
-                        await widget.editor.removeHomeApp(widget.app.id);
-
-                    if (success) {
-                      setState(() => editing = false);
-                      widget.refresh();
-                    }
-                  },
-                  icon: Icon(PlatformIcons(context).remove),
-                ),
-                ezRowSpacer,
-              ],
-
               // Show/hide
               EzIconButton(
                 onPressed: () async {
@@ -200,19 +213,6 @@ class _AppTileState extends State<AppTile> {
                 icon: Icon(widget.listener.hiddenSet.contains(widget.app.id)
                     ? PlatformIcons(context).eyeSolid
                     : PlatformIcons(context).eyeSlash),
-              ),
-              ezRowSpacer,
-
-              // Info
-              EzIconButton(
-                onPressed: () async {
-                  await openSettings(widget.app.id);
-                  if (widget.onHomeScreen == false && context.mounted) {
-                    Navigator.of(context).pop();
-                  }
-                  widget.refresh();
-                },
-                icon: Icon(PlatformIcons(context).info),
               ),
               ezRowSpacer,
 
