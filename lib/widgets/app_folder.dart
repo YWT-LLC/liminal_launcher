@@ -307,11 +307,12 @@ class _AppFolderState extends State<AppFolder> {
             icon: Icon(PlatformIcons(context).delete),
             onPressed: () async {
               final bool success = await widget.editor.deleteFolder(
-                  appList.isEmpty
-                      ? '$name$folderSplit$emptyTag'
-                      : <String>[name, ...appList].join(folderSplit));
+                appList.isEmpty
+                    ? '$name$folderSplit$emptyTag'
+                    : <String>[name, ...appList].join(folderSplit),
+              );
 
-              if (success) refreshAll();
+              if (success) refreshAll(); // TODO: Should I refresh all here?
             },
           ),
           ezRowSpacer,
