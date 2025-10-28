@@ -24,6 +24,16 @@ final AppInfo self = AppInfo(
   packageSize: 0,
 );
 
+// App assets //
+
+const String appIconPath = 'assets/images/app-icon.jpg';
+
+const Set<String> assetPaths = <String>{appIconPath};
+
+const Map<String, String> credits = <String, String>{
+  appIconPath: 'AI; tis a placeholder, human work coming soon.',
+};
+
 // EzConfig //
 
 // BTS
