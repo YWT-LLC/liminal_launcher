@@ -49,11 +49,11 @@ flutter:
   assets:
     - assets/
     - assets/images/
-    - assets/images/tmp-icon.jpg      
+    - assets/images/app-icon.jpg      
 
 flutter_launcher_icons:
-  image_path: assets/images/tmp-icon.jpg
-  adaptive_icon_foreground: assets/images/tmp-icon.jpg
+  image_path: assets/images/app-icon.jpg
+  adaptive_icon_foreground: assets/images/app-icon.jpg
   adaptive_icon_background: "#000000"
   android: true
   ios: false
