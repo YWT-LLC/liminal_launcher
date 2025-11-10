@@ -51,6 +51,8 @@ class _AppTileState extends State<AppTile> {
   final double iconSize = EzConfig.get(iconSizeKey);
   final double padding = EzConfig.get(paddingKey);
 
+  late final double appIconSize = iconSize / 2 + padding * 2; // Same as FAB
+
   late final EFUILang el10n = ezL10n(context);
 
   // Define the build data //
@@ -80,8 +82,8 @@ class _AppTileState extends State<AppTile> {
                   child: Image.memory(
                     widget.app.icon!,
                     semanticLabel: widget.app.name,
-                    width: iconSize + padding,
-                    height: iconSize + padding,
+                    width: appIconSize,
+                    height: appIconSize,
                   ),
                 ),
                 ezRowSpacer,
@@ -286,16 +288,19 @@ class TileButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late final double iconSize = EzConfig.get(iconSizeKey);
-    late final double padding = EzConfig.get(paddingKey);
+    final double margin = EzConfig.get(marginKey);
+    final double padding = EzConfig.get(paddingKey);
+    final double iconSize = EzConfig.get(iconSizeKey);
+
+    late final double appIconSize = iconSize / 2 + padding * 2;
 
     late final Widget iconImage = (app.icon == null)
         ? const SizedBox.shrink()
         : Image.memory(
             app.icon!,
             semanticLabel: app.name,
-            width: iconSize + padding,
-            height: iconSize + padding,
+            width: appIconSize,
+            height: appIconSize,
           );
 
     if (type == LabelType.none) {
@@ -337,11 +342,13 @@ class TileButton extends StatelessWidget {
         ? EzTextIconButton(
             icon: iconImage,
             label: label,
+            style: TextButton.styleFrom(padding: EdgeInsets.all(margin)),
             onPressed: onPressed,
             onLongPress: onLongPress,
           )
         : EzTextButton(
             text: label,
+            style: TextButton.styleFrom(padding: EdgeInsets.all(margin)),
             onPressed: onPressed,
             onLongPress: onLongPress,
           );
