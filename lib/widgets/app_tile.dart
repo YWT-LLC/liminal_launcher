@@ -51,7 +51,7 @@ class _AppTileState extends State<AppTile> {
   final double iconSize = EzConfig.get(iconSizeKey);
   final double padding = EzConfig.get(paddingKey);
 
-  late final double appIconSize = iconSize / 2 + padding * 2; // Same as FAB
+  late final double appIconSize = (iconSize * 1.25) + padding; // Same as FAB
 
   late final EFUILang el10n = ezL10n(context);
 
@@ -292,7 +292,7 @@ class TileButton extends StatelessWidget {
     final double padding = EzConfig.get(paddingKey);
     final double iconSize = EzConfig.get(iconSizeKey);
 
-    late final double appIconSize = iconSize / 2 + padding * 2;
+    late final double appIconSize = (iconSize * 1.25) + padding;
 
     late final Widget iconImage = (app.icon == null)
         ? const SizedBox.shrink()
