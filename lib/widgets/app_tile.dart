@@ -48,10 +48,8 @@ class AppTile extends StatefulWidget {
 class _AppTileState extends State<AppTile> {
   // Gather the theme data //
 
-  final double iconSize = EzConfig.get(iconSizeKey);
   final double padding = EzConfig.get(paddingKey);
-
-  late final double appIconSize = (iconSize * 1.25) + padding; // Same as FAB
+  late final double appIconSize = (EzConfig.get(iconSizeKey) * 1.25) + padding;
 
   late final EFUILang el10n = ezL10n(context);
 
@@ -260,7 +258,7 @@ class _AppTileState extends State<AppTile> {
             children: <Widget>[
               TileButton(
                 app: widget.app,
-                type: widget.labelType,
+                labelType: widget.labelType,
                 showIcon: widget.showIcon,
                 onPressed: () => widget.onSelected(widget.app.id),
                 onLongPress: holdTile,
@@ -272,7 +270,7 @@ class _AppTileState extends State<AppTile> {
 
 class TileButton extends StatelessWidget {
   final AppInfo app;
-  final LabelType type;
+  final LabelType labelType;
   final bool showIcon;
   final void Function()? onPressed;
   final void Function()? onLongPress;
@@ -280,7 +278,7 @@ class TileButton extends StatelessWidget {
   const TileButton({
     super.key,
     required this.app,
-    required this.type,
+    required this.labelType,
     required this.showIcon,
     this.onPressed,
     this.onLongPress,
@@ -290,12 +288,12 @@ class TileButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final double margin = EzConfig.get(marginKey);
     final double padding = EzConfig.get(paddingKey);
-    final double iconSize = EzConfig.get(iconSizeKey);
 
-    late final double appIconSize = (iconSize * 1.25) + padding;
+    late final double appIconSize =
+        (EzConfig.get(iconSizeKey) * 1.25) + padding;
 
-    late final Widget iconImage = (app.icon == null)
-        ? const SizedBox.shrink()
+    late final Widget? iconImage = (app.icon == null)
+        ? null
         : Image.memory(
             app.icon!,
             semanticLabel: app.name,
@@ -303,7 +301,7 @@ class TileButton extends StatelessWidget {
             height: appIconSize,
           );
 
-    if (type == LabelType.none) {
+    if (labelType == LabelType.none) {
       return Tooltip(
         message: app.name,
         child: GestureDetector(
@@ -316,7 +314,7 @@ class TileButton extends StatelessWidget {
 
     late final String label;
 
-    switch (type) {
+    switch (labelType) {
       case LabelType.none:
         label = '';
         break;
@@ -338,17 +336,17 @@ class TileButton extends StatelessWidget {
         break;
     }
 
-    return showIcon
+    return (showIcon && iconImage != null)
         ? EzTextIconButton(
-            icon: iconImage,
             label: label,
-            style: TextButton.styleFrom(padding: EdgeInsets.all(margin)),
+            icon: iconImage,
+            style: TextButton.styleFrom(padding: EzInsets.wrap(margin)),
             onPressed: onPressed,
             onLongPress: onLongPress,
           )
         : EzTextButton(
             text: label,
-            style: TextButton.styleFrom(padding: EdgeInsets.all(margin)),
+            style: TextButton.styleFrom(padding: EzInsets.wrap(margin)),
             onPressed: onPressed,
             onLongPress: onLongPress,
           );
