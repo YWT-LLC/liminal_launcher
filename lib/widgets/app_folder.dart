@@ -231,7 +231,7 @@ class _AppFolderState extends State<AppFolder> {
                               padding: colPadding,
                               child: TileButton(
                                 app: app,
-                                type: widget.appLabel,
+                                labelType: widget.appLabel,
                                 showIcon: widget.appIcon,
                               ),
                             );

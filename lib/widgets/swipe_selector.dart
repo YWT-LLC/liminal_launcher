@@ -65,14 +65,16 @@ class _LeftSwipeSelectorState extends State<LeftSwipeSelector> {
       children: <Widget>[
         EzLink(
           'Left app',
-          style: textTheme.bodyLarge,
           textColor: colorScheme.onSurface,
           onTap: activate,
           hint: 'Choose app that opens on left swipe',
+          style: textTheme.bodyLarge,
+          padding: EzInsets.wrap(EzConfig.get(marginKey)),
         ),
+        ezRowMargin,
         TileButton(
           app: app,
-          type: labelType,
+          labelType: labelType,
           showIcon: showIcon,
           onPressed: activate,
         ),
@@ -136,14 +138,16 @@ class _RightSwipeSelectorState extends State<RightSwipeSelector> {
       children: <Widget>[
         EzLink(
           'Right app',
-          style: textTheme.bodyLarge,
           textColor: colorScheme.onSurface,
           onTap: activate,
           hint: 'Choose app that opens on right swipe',
+          style: textTheme.bodyLarge,
+          padding: EzInsets.wrap(EzConfig.get(marginKey)),
         ),
+        ezRowMargin,
         TileButton(
           app: app,
-          type: labelType,
+          labelType: labelType,
           showIcon: showIcon,
           onPressed: activate,
         ),
