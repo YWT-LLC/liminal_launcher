@@ -8,7 +8,6 @@ import './utils/export.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:feedback/feedback.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:go_transitions/go_transitions.dart';
@@ -36,14 +35,7 @@ void main() async {
   // Run the app //
   // With a feedback wrapper
 
-  runApp(BetterFeedback(
-    theme: empathFeedbackLight,
-    darkTheme: empathFeedbackDark,
-    themeMode: EzConfig.getThemeMode(),
-    localizationsDelegates: <LocalizationsDelegate<dynamic>>[EzFeedbackLD()],
-    localeOverride: EzConfig.getLocale(),
-    child: LiminalLauncher(await getApps()),
-  ));
+  runApp(LiminalLauncher(await getApps()));
 }
 
 class LiminalLauncher extends StatelessWidget {

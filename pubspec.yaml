@@ -14,14 +14,11 @@ dependencies:
 
   # Flutter (Google)
   go_router: ^14.8.1
-  http: ^1.6.0
   intl: ^0.20.2
   local_auth: ^3.0.0
   shared_preferences: ^2.5.3
-  url_launcher: ^6.3.2
 
   # Community
-  feedback: ^3.2.0
   flutter_localized_locales: ^2.0.5
   flutter_platform_widgets: ^9.0.0
   go_transitions: ^0.8.3
