@@ -39,7 +39,7 @@ class _LeftSwipeSelectorState extends State<LeftSwipeSelector> {
 
     // Define custom functions //
 
-    void activate() => context.goNamed(
+    void activate() => context.pushNamed(
           appListPath,
           extra: listData(
             listCheck: (String id) => true,
@@ -112,7 +112,7 @@ class _RightSwipeSelectorState extends State<RightSwipeSelector> {
 
     // Define custom functions //
 
-    void activate() => context.goNamed(
+    void activate() => context.pushNamed(
           appListPath,
           extra: listData(
             listCheck: (String id) => true,
