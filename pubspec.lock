@@ -190,7 +190,7 @@ packages:
       path: "../empathetech_flutter_ui"
       relative: true
     source: path
-    version: "10.2.0"
+    version: "10.2.1"
   extended_image:
     dependency: transitive
     description:
