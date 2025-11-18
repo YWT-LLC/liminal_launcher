@@ -139,12 +139,12 @@ class _AppTileState extends State<AppTile> {
               EzIconButton(
                 onPressed: () => showPlatformDialog(
                     context: context,
-                    builder: (BuildContext dialogContext) {
+                    builder: (BuildContext dContext) {
                       final TextEditingController renameController =
                           TextEditingController();
 
                       void onConfirm() async {
-                        closeKeyboard(dialogContext);
+                        closeKeyboard(dContext);
 
                         final String name = renameController.text.trim();
                         if (validateRename(name) != null) return null;
@@ -153,16 +153,16 @@ class _AppTileState extends State<AppTile> {
                             .renameApp(newName: name, appID: widget.app.id);
 
                         if (success) {
-                          if (dialogContext.mounted) {
-                            Navigator.of(dialogContext).pop(name);
+                          if (dContext.mounted) {
+                            Navigator.of(dContext).pop(name);
                           }
                           widget.refresh();
                         }
                       }
 
                       void onDeny() {
-                        closeKeyboard(dialogContext);
-                        Navigator.of(dialogContext).pop();
+                        closeKeyboard(dContext);
+                        Navigator.of(dContext).pop();
                       }
 
                       late final List<Widget> materialActions;

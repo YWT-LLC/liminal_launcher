@@ -264,7 +264,7 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
           onPressed: () => showPlatformDialog(
             context: context,
             builder: (_) => StatefulBuilder(builder: (
-              BuildContext dialogContext,
+              BuildContext dContext,
               StateSetter dialogState,
             ) {
               late final Set<String> skip = <String>{
@@ -283,13 +283,10 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
                 onConfirm: () async {
                   await EzConfig.reset(skip: resetAll ? <String>{} : skip);
                   if (resetAll) await editor.reset();
-
-                  if (dialogContext.mounted) {
-                    Navigator.of(dialogContext).pop();
-                  }
+                  if (dContext.mounted) Navigator.of(dContext).pop();
                 },
                 confirmIsDestructive: true,
-                onDeny: () => Navigator.of(dialogContext).pop(),
+                onDeny: () => Navigator.of(dContext).pop(),
               );
 
               return EzAlertDialog(
