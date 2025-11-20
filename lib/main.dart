@@ -33,7 +33,6 @@ void main() async {
   );
 
   // Run the app //
-  // With a feedback wrapper
 
   runApp(LiminalLauncher(await getApps()));
 }

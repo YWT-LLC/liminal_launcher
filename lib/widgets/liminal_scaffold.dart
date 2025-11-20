@@ -4,10 +4,7 @@
  */
 
 import './export.dart';
-import '../utils/consts.dart';
-import 'package:efui_bios/efui_bios.dart';
 
-import 'package:shake/shake.dart';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
@@ -27,36 +24,6 @@ class LiminalScaffold extends StatefulWidget {
 }
 
 class _LiminalScaffoldState extends State<LiminalScaffold> {
-  // Gather the fixed theme data //
-
-  final double margin = EzConfig.get(marginKey);
-
-  // Init //
-
-  ShakeDetector? detector;
-
-  @override
-  void initState() {
-    super.initState();
-    if (EzConfig.get(shakeForFeedbackKey)) startDetector();
-  }
-
-  void startDetector() {
-    detector?.stopListening();
-    detector = ShakeDetector.autoStart(
-      onPhoneShake: (_) => ezFeedback(
-        parentContext: context,
-        l10n: ezL10n(context),
-        supportEmail: empathSupport,
-        appName: appName,
-      ),
-      shakeThresholdGravity: 1.75,
-      useFilter: true,
-    );
-  }
-
-  // Return the build //
-
   @override
   Widget build(BuildContext context) => EzAdaptiveParent(
         small: Scaffold(
@@ -66,7 +33,7 @@ class _LiminalScaffoldState extends State<LiminalScaffold> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               updater,
-              if (widget.fabs != null) ...widget.fabs!
+              if (widget.fabs != null) ...widget.fabs!,
             ],
           ),
           floatingActionButtonLocation: EzConfig.get(isLeftyKey)
@@ -75,10 +42,4 @@ class _LiminalScaffoldState extends State<LiminalScaffold> {
           resizeToAvoidBottomInset: false,
         ),
       );
-
-  @override
-  void dispose() {
-    detector?.stopListening();
-    super.dispose();
-  }
 }

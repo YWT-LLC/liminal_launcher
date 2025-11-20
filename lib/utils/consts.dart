@@ -49,7 +49,6 @@ const String rightSwipeIDKey = 'right_swipe_id';
 const String autoAddToHomeKey = 'auto_add_to_home';
 const String autoSearchKey = 'auto_search';
 const String authToEditKey = 'auth_to_edit';
-const String shakeForFeedbackKey = 'shake_for_feedback';
 
 // Design
 const String homeTimeKey = 'home_time';
@@ -105,7 +104,6 @@ final Map<String, Object> liminalDefault = <String, Object>{
   autoAddToHomeKey: false,
   autoSearchKey: false,
   authToEditKey: false,
-  shakeForFeedbackKey: false,
 
   // Design
   homeTimeKey: true,
