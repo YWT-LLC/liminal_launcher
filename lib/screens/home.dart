@@ -196,15 +196,23 @@ class _HomeScreenState extends State<HomeScreen> {
           }
         },
         onHorizontalDragEnd: (DragEndDetails details) {
-          if (details.primaryVelocity != null) {
+          if (details.primaryVelocity != null &&
+              details.primaryVelocity! != 0) {
             AppInfo? toLaunch;
 
-            if (details.primaryVelocity! < 0 && !editing) {
-              toLaunch = listener.appMap[EzConfig.get(leftSwipeIDKey)];
-            } else if (details.primaryVelocity! > 0) {
-              editing
-                  ? setState(() => editing = false)
-                  : toLaunch = listener.appMap[EzConfig.get(rightSwipeIDKey)];
+            if (details.primaryVelocity! < 0) {
+              if (editing) {
+                editing = false;
+                refresh();
+              } else {
+                toLaunch = listener.appMap[EzConfig.get(leftSwipeIDKey)];
+              }
+            } else {
+              if (editing) {
+                doNothing();
+              } else {
+                toLaunch = listener.appMap[EzConfig.get(rightSwipeIDKey)];
+              }
             }
 
             if (toLaunch != null) launchApp(toLaunch.package);
