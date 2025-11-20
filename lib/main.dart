@@ -45,8 +45,6 @@ class LiminalLauncher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool ltr = Directionality.of(context) == TextDirection.ltr;
-
     // Prep the router //
 
     final int animDuration = EzConfig.get(animationDurationKey);
@@ -176,10 +174,6 @@ class LiminalLauncher extends StatelessWidget {
             ],
           ),
         ),
-        darkTheme: ezThemeData(Brightness.dark, ltr)
-            .copyWith(scaffoldBackgroundColor: Colors.transparent),
-        lightTheme: ezThemeData(Brightness.light, ltr)
-            .copyWith(scaffoldBackgroundColor: Colors.transparent),
       ),
     );
   }
