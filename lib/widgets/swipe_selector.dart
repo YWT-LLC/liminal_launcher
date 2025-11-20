@@ -49,9 +49,10 @@ class _LeftSwipeSelectorState extends State<LeftSwipeSelector> {
 
               await EzConfig.setString(leftSwipeIDKey, id);
               setState(() => app = newApp);
+              if (context.mounted) Navigator.of(context).pop();
             },
             refresh: () => setState(() {}),
-            icon: Text(
+            icon: EzText(
               'Selecting left swipe',
               style: textTheme.labelLarge,
             ),
@@ -100,7 +101,6 @@ class _RightSwipeSelectorState extends State<RightSwipeSelector> {
       LabelTypeConfig.fromValue(EzConfig.get(listLabelTypeKey));
 
   late String? appID = EzConfig.get(rightSwipeIDKey);
-
   late AppInfo app = (appID == null || appID!.isEmpty)
       ? nullApp
       : widget.listener.appMap[appID!] ?? nullApp;
@@ -122,9 +122,10 @@ class _RightSwipeSelectorState extends State<RightSwipeSelector> {
 
               await EzConfig.setString(rightSwipeIDKey, id);
               setState(() => app = newApp);
+              if (context.mounted) Navigator.of(context).pop();
             },
             refresh: () => setState(() {}),
-            icon: Text(
+            icon: EzText(
               'Selecting right swipe',
               style: textTheme.labelLarge,
             ),
