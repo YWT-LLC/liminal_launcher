@@ -69,7 +69,7 @@ class _AppFolderState extends State<AppFolder> {
   bool open = false;
   late bool? editing = widget.editing;
 
-  // Define custom functions I //
+  // Define custom functions //
 
   void toggleOpen() => setState(() => open = !open);
 
@@ -85,13 +85,6 @@ class _AppFolderState extends State<AppFolder> {
     widget.refresh();
     refreshFolder();
   }
-
-  // Define custom Widgets //
-
-  late final List<Widget> closeTail = <Widget>[
-    EzSpacer(space: spacing / 2, vertical: false),
-    EzIconButton(icon: const Icon(Icons.close), onPressed: toggleOpen),
-  ];
 
   // Init //
 
@@ -121,72 +114,17 @@ class _AppFolderState extends State<AppFolder> {
     }
   }
 
+  // Return the build //
+
+  late final List<Widget> closeTail = <Widget>[
+    EzSpacer(space: spacing / 2, vertical: false),
+    EzIconButton(icon: const Icon(Icons.close), onPressed: toggleOpen),
+  ];
+
   @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final TextTheme textTheme = Theme.of(context).textTheme;
-
-    // Define custom functions II //
-
-    void rename() => showPlatformDialog(
-        context: context,
-        builder: (BuildContext dContext) {
-          final TextEditingController renameController =
-              TextEditingController();
-
-          void onConfirm() async {
-            closeKeyboard(dContext);
-
-            final String name = renameController.text.trim();
-            if (validateRename(name) != null) return null;
-
-            final bool success = await widget.editor.renameFolder(name, index);
-
-            if (success) {
-              if (dContext.mounted) Navigator.of(dContext).pop(name);
-              refreshAll();
-            }
-          }
-
-          void onDeny() {
-            closeKeyboard(dContext);
-            Navigator.of(dContext).pop();
-          }
-
-          late final List<Widget> materialActions;
-          late final List<Widget> cupertinoActions;
-
-          (materialActions, cupertinoActions) = ezActionPairs(
-            context: context,
-            confirmMsg: el10n.gApply,
-            onConfirm: onConfirm,
-            confirmIsDestructive: true,
-            denyMsg: el10n.gCancel,
-            onDeny: onDeny,
-          );
-
-          return EzAlertDialog(
-            title: Text(
-              "Rename '$name'?",
-              textAlign: TextAlign.center,
-            ),
-            content: Form(
-              child: TextFormField(
-                controller: renameController,
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                autofillHints: const <String>[AutofillHints.name],
-                autovalidateMode: AutovalidateMode.onUnfocus,
-                validator: validateRename,
-              ),
-            ),
-            materialActions: materialActions,
-            cupertinoActions: cupertinoActions,
-            needsClose: false,
-          );
-        });
-
-    // Return the build //
 
     if (editing != false) {
       return EzScrollView(
@@ -235,7 +173,65 @@ class _AppFolderState extends State<AppFolder> {
 
           // Info (rename)
           EzIconButton(
-            onPressed: rename,
+            onPressed: () => showPlatformDialog(
+              context: context,
+              builder: (BuildContext dContext) {
+                final TextEditingController renameController =
+                    TextEditingController();
+
+                void onConfirm() async {
+                  closeKeyboard(dContext);
+
+                  final String name = renameController.text.trim();
+                  if (validateRename(name) != null) return null;
+
+                  final bool success =
+                      await widget.editor.renameFolder(name, index);
+
+                  if (success) {
+                    if (dContext.mounted) Navigator.of(dContext).pop(name);
+                    refreshAll();
+                  }
+                }
+
+                void onDeny() {
+                  closeKeyboard(dContext);
+                  Navigator.of(dContext).pop();
+                }
+
+                late final List<Widget> materialActions;
+                late final List<Widget> cupertinoActions;
+
+                (materialActions, cupertinoActions) = ezActionPairs(
+                  context: context,
+                  confirmMsg: el10n.gApply,
+                  onConfirm: onConfirm,
+                  confirmIsDestructive: true,
+                  denyMsg: el10n.gCancel,
+                  onDeny: onDeny,
+                );
+
+                return EzAlertDialog(
+                  title: Text(
+                    "Rename '$name'?",
+                    textAlign: TextAlign.center,
+                  ),
+                  content: Form(
+                    child: TextFormField(
+                      controller: renameController,
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      autofillHints: const <String>[AutofillHints.name],
+                      autovalidateMode: AutovalidateMode.onUnfocus,
+                      validator: validateRename,
+                    ),
+                  ),
+                  materialActions: materialActions,
+                  cupertinoActions: cupertinoActions,
+                  needsClose: false,
+                );
+              },
+            ),
             icon: Icon(PlatformIcons(context).info),
           ),
           ezRowSpacer,
