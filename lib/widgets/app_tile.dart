@@ -252,7 +252,7 @@ class _AppTileState extends State<AppTile> {
               ],
 
               // Drag handle
-              if (widget.onHomeScreen == true) ...<Widget>[
+              if (widget.onHomeScreen == true && editing == null) ...<Widget>[
                 ezRowSpacer,
                 EzIcon(
                   Icons.drag_handle,
