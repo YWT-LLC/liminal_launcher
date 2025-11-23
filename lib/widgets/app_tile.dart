@@ -224,10 +224,10 @@ class _AppTileState extends State<AppTile> {
                     ? PlatformIcons(context).eyeSolid
                     : PlatformIcons(context).eyeSlash),
               ),
-              ezRowSpacer,
 
               // Delete
               if (widget.app.removable) ...<Widget>[
+                ezRowSpacer,
                 EzIconButton(
                   onPressed: () async {
                     final bool deleted = await deleteApp(context, widget.app);
@@ -240,15 +240,16 @@ class _AppTileState extends State<AppTile> {
                   },
                   icon: Icon(PlatformIcons(context).delete),
                 ),
-                ezRowSpacer,
               ],
 
               // Close/end edits
-              if (editing == true)
+              if (editing == true) ...<Widget>[
+                ezRowSpacer,
                 EzIconButton(
                   onPressed: () => setState(() => editing = false),
                   icon: const Icon(Icons.close),
                 ),
+              ],
 
               // Drag handle
               if (widget.onHomeScreen == true) ...<Widget>[
