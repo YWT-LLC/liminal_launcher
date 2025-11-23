@@ -236,7 +236,8 @@ class _AppFolderState extends State<AppFolder> {
           ),
           ezRowSpacer,
 
-          if (appSet.isNotEmpty) // Edit apps
+          // Edit apps
+          if (appSet.isNotEmpty) ...<Widget>[
             EzIconButton(
               icon: Icon(PlatformIcons(context).edit),
               onPressed: () => ezModal(
@@ -278,7 +279,8 @@ class _AppFolderState extends State<AppFolder> {
                 ),
               ),
             ),
-          ezRowSpacer,
+            ezRowSpacer,
+          ],
 
           // Delete folder
           EzIconButton(
@@ -293,22 +295,24 @@ class _AppFolderState extends State<AppFolder> {
               if (success) refreshAll(); // TODO: Should I refresh all here?
             },
           ),
-          ezRowSpacer,
 
           // Close/end edits
           if (editing == true) ...<Widget>[
+            ezRowSpacer,
             EzIconButton(
               onPressed: () => setState(() => editing = false),
               icon: const Icon(Icons.close),
             ),
-            ezRowSpacer,
           ],
 
           // Drag handle
-          EzIcon(
-            Icons.drag_handle,
-            color: colorScheme.outline,
-          ),
+          if (editing == null) ...<Widget>[
+            ezRowSpacer,
+            EzIcon(
+              Icons.drag_handle,
+              color: colorScheme.outline,
+            ),
+          ],
         ],
       );
     }
@@ -356,11 +360,13 @@ class _AppFolderState extends State<AppFolder> {
                 ),
                 style: TextButton.styleFrom(padding: EzInsets.wrap(margin)),
                 onPressed: toggleOpen,
+                onLongPress: () => setState(() => editing = true),
               )
             : EzTextButton(
                 text: name,
                 style: TextButton.styleFrom(padding: EzInsets.wrap(margin)),
                 onPressed: toggleOpen,
+                onLongPress: () => setState(() => editing = true),
               ));
   }
 }
