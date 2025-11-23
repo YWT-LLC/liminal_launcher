@@ -21,7 +21,7 @@ class AppFolder extends StatefulWidget {
   final bool folderIcon;
   final LabelType appLabel;
   final bool appIcon;
-  final bool editing;
+  final bool? editing;
   final void Function() refresh;
 
   const AppFolder({
@@ -45,6 +45,7 @@ class AppFolder extends StatefulWidget {
 class _AppFolderState extends State<AppFolder> {
   // Gather the fixed theme data //
 
+  final double margin = EzConfig.get(marginKey);
   final double spacing = EzConfig.get(spacingKey);
 
   late final EdgeInsets colPadding = EzInsets.col(spacing);
@@ -66,9 +67,9 @@ class _AppFolderState extends State<AppFolder> {
   late Set<String> appSet = appList.toSet();
 
   bool open = false;
-  late bool editing = widget.editing;
+  late bool? editing = widget.editing;
 
-  // Define custom functions //
+  // Define custom functions I //
 
   void toggleOpen() => setState(() => open = !open);
 
@@ -120,14 +121,74 @@ class _AppFolderState extends State<AppFolder> {
     }
   }
 
-  // Return the build //
-
   @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final TextTheme textTheme = Theme.of(context).textTheme;
 
-    if (editing) {
+    // Define custom functions II //
+
+    void rename() => showPlatformDialog(
+        context: context,
+        builder: (BuildContext dContext) {
+          final TextEditingController renameController =
+              TextEditingController();
+
+          void onConfirm() async {
+            closeKeyboard(dContext);
+
+            final String name = renameController.text.trim();
+            if (validateRename(name) != null) return null;
+
+            final bool success = await widget.editor.renameFolder(name, index);
+
+            if (success) {
+              if (dContext.mounted) Navigator.of(dContext).pop(name);
+              refreshAll();
+            }
+          }
+
+          void onDeny() {
+            closeKeyboard(dContext);
+            Navigator.of(dContext).pop();
+          }
+
+          late final List<Widget> materialActions;
+          late final List<Widget> cupertinoActions;
+
+          (materialActions, cupertinoActions) = ezActionPairs(
+            context: context,
+            confirmMsg: el10n.gApply,
+            onConfirm: onConfirm,
+            confirmIsDestructive: true,
+            denyMsg: el10n.gCancel,
+            onDeny: onDeny,
+          );
+
+          return EzAlertDialog(
+            title: Text(
+              "Rename '$name'?",
+              textAlign: TextAlign.center,
+            ),
+            content: Form(
+              child: TextFormField(
+                controller: renameController,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                autofillHints: const <String>[AutofillHints.name],
+                autovalidateMode: AutovalidateMode.onUnfocus,
+                validator: validateRename,
+              ),
+            ),
+            materialActions: materialActions,
+            cupertinoActions: cupertinoActions,
+            needsClose: false,
+          );
+        });
+
+    // Return the build //
+
+    if (editing != false) {
       return EzScrollView(
         scrollDirection: Axis.horizontal,
         mainAxisSize: MainAxisSize.min,
@@ -135,71 +196,51 @@ class _AppFolderState extends State<AppFolder> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           // Name
-          GestureDetector(
-            onTap: () => showPlatformDialog(
-                context: context,
-                builder: (BuildContext dContext) {
-                  final TextEditingController renameController =
-                      TextEditingController();
-
-                  void onConfirm() async {
-                    closeKeyboard(dContext);
-
-                    final String name = renameController.text.trim();
-                    if (validateRename(name) != null) return null;
-
-                    final bool success =
-                        await widget.editor.renameFolder(name, index);
-
-                    if (success) {
-                      if (dContext.mounted) Navigator.of(dContext).pop(name);
-                      refreshAll();
-                    }
-                  }
-
-                  void onDeny() {
-                    closeKeyboard(dContext);
-                    Navigator.of(dContext).pop();
-                  }
-
-                  late final List<Widget> materialActions;
-                  late final List<Widget> cupertinoActions;
-
-                  (materialActions, cupertinoActions) = ezActionPairs(
-                    context: context,
-                    confirmMsg: el10n.gApply,
-                    onConfirm: onConfirm,
-                    confirmIsDestructive: true,
-                    denyMsg: el10n.gCancel,
-                    onDeny: onDeny,
-                  );
-
-                  return EzAlertDialog(
-                    title: Text(
-                      "Rename folder '$name'?",
-                      textAlign: TextAlign.center,
-                    ),
-                    content: Form(
-                      child: TextFormField(
-                        controller: renameController,
-                        textAlign: TextAlign.center,
-                        maxLines: 1,
-                        autofillHints: const <String>[AutofillHints.name],
-                        autovalidateMode: AutovalidateMode.onUnfocus,
-                        validator: validateRename,
-                      ),
-                    ),
-                    materialActions: materialActions,
-                    cupertinoActions: cupertinoActions,
-                    needsClose: false,
-                  );
-                }),
-            child: Text(name, style: textTheme.bodyLarge),
+          EzText(
+            name,
+            style: textTheme.bodyLarge,
+            textAlign: TextAlign.center,
           ),
           ezRowSpacer,
 
-          if (appSet.isNotEmpty) ...<Widget>[
-            // Re-order apps
+          // Add apps
+          EzIconButton(
+            icon: Icon(PlatformIcons(context).add),
+            onPressed: () => context.goNamed(
+              appListPath,
+              extra: listData(
+                listCheck: (String id) => !appSet.contains(id),
+                onSelected: (String id) async {
+                  final int? indexMod =
+                      await widget.editor.addToFolder(id, index);
+
+                  if (indexMod != null) index += indexMod;
+                },
+                refresh: refreshAll,
+                autoRefresh: true,
+                icon: EzTextBackground(EzRow(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text('$name\t', style: textTheme.labelLarge),
+                    EzIcon(
+                      PlatformIcons(context).add,
+                      color: colorScheme.onSurface,
+                    ),
+                  ],
+                )),
+              ),
+            ),
+          ),
+          ezRowSpacer,
+
+          // Info (rename)
+          EzIconButton(
+            onPressed: rename,
+            icon: Icon(PlatformIcons(context).info),
+          ),
+          ezRowSpacer,
+
+          if (appSet.isNotEmpty) // Edit apps
             EzIconButton(
               icon: Icon(PlatformIcons(context).edit),
               onPressed: () => ezModal(
@@ -241,63 +282,6 @@ class _AppFolderState extends State<AppFolder> {
                 ),
               ),
             ),
-            ezRowSpacer,
-
-            // Remove apps
-            EzIconButton(
-              icon: Icon(PlatformIcons(context).remove),
-              onPressed: () => context.goNamed(
-                appListPath,
-                extra: listData(
-                  listCheck: (String id) => appSet.contains(id),
-                  onSelected: (String id) =>
-                      widget.editor.removeFromFolder(id, index),
-                  refresh: refreshAll,
-                  autoRefresh: true,
-                  icon: EzTextBackground(EzRow(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text('$name\t', style: textTheme.labelLarge),
-                      EzIcon(
-                        PlatformIcons(context).remove,
-                        color: colorScheme.onSurface,
-                      ),
-                    ],
-                  )),
-                ),
-              ),
-            ),
-            ezRowSpacer,
-          ],
-
-          // Add apps
-          EzIconButton(
-            icon: Icon(PlatformIcons(context).add),
-            onPressed: () => context.goNamed(
-              appListPath,
-              extra: listData(
-                listCheck: (String id) => !appSet.contains(id),
-                onSelected: (String id) async {
-                  final int? indexMod =
-                      await widget.editor.addToFolder(id, index);
-
-                  if (indexMod != null) index += indexMod;
-                },
-                refresh: refreshAll,
-                autoRefresh: true,
-                icon: EzTextBackground(EzRow(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text('$name\t', style: textTheme.labelLarge),
-                    EzIcon(
-                      PlatformIcons(context).add,
-                      color: colorScheme.onSurface,
-                    ),
-                  ],
-                )),
-              ),
-            ),
-          ),
           ezRowSpacer,
 
           // Delete folder
@@ -314,6 +298,15 @@ class _AppFolderState extends State<AppFolder> {
             },
           ),
           ezRowSpacer,
+
+          // Close/end edits
+          if (editing == true) ...<Widget>[
+            EzIconButton(
+              onPressed: () => setState(() => editing = false),
+              icon: const Icon(Icons.close),
+            ),
+            ezRowSpacer,
+          ],
 
           // Drag handle
           EzIcon(
@@ -360,13 +353,18 @@ class _AppFolderState extends State<AppFolder> {
           )
         : (widget.appIcon
             ? EzTextIconButton(
+                label: folderLabel,
                 icon: Icon(
                   PlatformIcons(context).folderOpen,
                   size: EzConfig.get(iconSizeKey) + EzConfig.get(paddingKey),
                 ),
-                label: folderLabel,
+                style: TextButton.styleFrom(padding: EzInsets.wrap(margin)),
                 onPressed: toggleOpen,
               )
-            : EzTextButton(text: name, onPressed: toggleOpen));
+            : EzTextButton(
+                text: name,
+                style: TextButton.styleFrom(padding: EzInsets.wrap(margin)),
+                onPressed: toggleOpen,
+              ));
   }
 }

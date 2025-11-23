@@ -23,7 +23,7 @@ class AppTile extends StatefulWidget {
   final bool showIcon;
   final Future<void> Function(String id) onSelected;
   final bool editable;
-  final bool editing;
+  final bool? editing;
   final void Function() refresh;
 
   const AppTile({
@@ -53,21 +53,31 @@ class _AppTileState extends State<AppTile> {
 
   late final EFUILang el10n = ezL10n(context);
 
-  // Define the build data //
-
-  late bool editing = widget.editable && widget.editing;
-
-  // Define custom functions //
-
-  void holdTile() =>
-      widget.editable ? setState(() => editing = !editing) : doNothing;
-
   // Return the build //
+
+  late bool? editing = widget.editable ? widget.editing : false;
 
   @override
   Widget build(BuildContext context) {
-    return editing
-        ? EzScrollView(
+    return editing == false
+        ? Row(
+            // The Row prevents the AppTile from auto-expanding
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: widget.hAlign.mainAxis,
+            crossAxisAlignment: widget.hAlign.crossAxis,
+            children: <Widget>[
+              TileButton(
+                app: widget.app,
+                labelType: widget.labelType,
+                showIcon: widget.showIcon,
+                onPressed: () => widget.onSelected(widget.app.id),
+                onLongPress: () => widget.editable
+                    ? setState(() => editing = true)
+                    : doNothing,
+              ),
+            ],
+          )
+        : EzScrollView(
             mainAxisSize: MainAxisSize.min,
             reverseHands: true,
             scrollDirection: Axis.horizontal,
@@ -233,11 +243,12 @@ class _AppTileState extends State<AppTile> {
                 ezRowSpacer,
               ],
 
-              // Close
-              EzIconButton(
-                onPressed: () => setState(() => editing = false),
-                icon: const Icon(Icons.close),
-              ),
+              // Close/end edits
+              if (editing == true)
+                EzIconButton(
+                  onPressed: () => setState(() => editing = false),
+                  icon: const Icon(Icons.close),
+                ),
 
               // Drag handle
               if (widget.onHomeScreen == true) ...<Widget>[
@@ -247,22 +258,6 @@ class _AppTileState extends State<AppTile> {
                   color: Theme.of(context).colorScheme.outline,
                 ),
               ],
-            ],
-          )
-        :
-        // Row prevents the tile from auto-expanding
-        Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: widget.hAlign.mainAxis,
-            crossAxisAlignment: widget.hAlign.crossAxis,
-            children: <Widget>[
-              TileButton(
-                app: widget.app,
-                labelType: widget.labelType,
-                showIcon: widget.showIcon,
-                onPressed: () => widget.onSelected(widget.app.id),
-                onLongPress: holdTile,
-              ),
             ],
           );
   }

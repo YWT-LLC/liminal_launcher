@@ -89,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
             folderIcon: listIcon,
             appIcon: listIcon,
             appLabel: listLabel,
-            editing: editing,
+            editing: editing ? null : false,
             refresh: refresh,
           ),
         ));
@@ -107,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
             labelType: listLabel,
             showIcon: listIcon,
             onSelected: (String id) => launchApp(id),
-            editing: editing,
+            editing: editing ? null : false,
             refresh: refresh,
           ),
         ));
