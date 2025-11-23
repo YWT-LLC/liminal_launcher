@@ -48,7 +48,8 @@ class _AppFolderState extends State<AppFolder> {
   final double margin = EzConfig.get(marginKey);
   final double spacing = EzConfig.get(spacingKey);
 
-  late final EdgeInsets colPadding = EzInsets.col(spacing);
+  late final EdgeInsets colPadding =
+      EdgeInsets.symmetric(vertical: spacing / 2);
   late final EdgeInsets rowPadding =
       EdgeInsets.symmetric(horizontal: spacing / 2);
 
@@ -243,7 +244,7 @@ class _AppFolderState extends State<AppFolder> {
               onPressed: () => ezModal(
                 context: context,
                 builder: (_) => StatefulBuilder(
-                  builder: (_, StateSetter modalState) => Expanded(
+                  builder: (_, StateSetter setModal) => Expanded(
                     child: ReorderableListView(
                       onReorder: (int oldIndex, int newIndex) async {
                         final bool reordered =
@@ -254,7 +255,7 @@ class _AppFolderState extends State<AppFolder> {
                         );
                         if (reordered) {
                           refreshFolder();
-                          modalState(() {});
+                          setModal(() {});
                         }
                       },
                       children: appList
@@ -265,10 +266,38 @@ class _AppFolderState extends State<AppFolder> {
                             return Padding(
                               key: ValueKey<String>(id),
                               padding: colPadding,
-                              child: TileButton(
-                                app: app,
-                                labelType: widget.appLabel,
-                                showIcon: widget.appIcon,
+                              child: Row(
+                                // The Row prevents the AppTile from auto-expanding
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: widget.hAlign.mainAxis,
+                                crossAxisAlignment: widget.hAlign.crossAxis,
+                                children: <Widget>[
+                                  // App tile
+                                  TileButton(
+                                    app: app,
+                                    labelType: widget.appLabel,
+                                    showIcon: widget.appIcon,
+                                  ),
+                                  ezRowSpacer,
+
+                                  // Remove button
+                                  EzIconButton(
+                                    icon: Icon(PlatformIcons(context).remove),
+                                    onPressed: () async {
+                                      await widget.editor
+                                          .removeFromFolder(id, widget.index);
+                                      refreshAll();
+                                      setModal(() {});
+                                    },
+                                  ),
+                                  ezRowSpacer,
+
+                                  // Drag handle
+                                  EzIcon(
+                                    Icons.drag_handle,
+                                    color: colorScheme.outline,
+                                  ),
+                                ],
                               ),
                             );
                           })
@@ -292,7 +321,7 @@ class _AppFolderState extends State<AppFolder> {
                     : <String>[name, ...appList].join(folderSplit),
               );
 
-              if (success) refreshAll(); // TODO: Should I refresh all here?
+              if (success) refreshAll();
             },
           ),
 
