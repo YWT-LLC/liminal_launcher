@@ -80,9 +80,9 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
         ezSeparator,
 
         // Swipe selectors
-        LeftSwipeSelector(listener: listener),
+        SwipeSelector(left: true, listener: listener),
         ezSpacer,
-        RightSwipeSelector(listener: listener),
+        SwipeSelector(left: false, listener: listener),
         ezSeparator,
 
         // Auto search
