@@ -184,7 +184,3 @@ const Map<String, String> wingdingMap = <String, String>{
   'Y': '\u{2721}',
   'Z': '\u{262A}',
 };
-
-// Custom animations //
-
-const double animMod = 10.0;
