@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 /// [ezAnimDuration] mod 10.0
-final Duration rippleDuration = ezAnimDuration(mod: 5.0);
+final Duration rippleDuration = ezAnimDuration(mod: 3.0);
 
 /// Tracks the position of the last ripple LongPress
 /// Defaults to [Offset.zero]
