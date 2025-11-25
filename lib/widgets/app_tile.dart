@@ -5,6 +5,7 @@
 
 import '../utils/export.dart';
 
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -59,6 +60,9 @@ class _AppTileState extends State<AppTile> {
 
   late bool? editing = widget.editable ? widget.editing : false;
 
+  late final Duration rippleDuration = ezAnimDuration(mod: animMod);
+  Timer? rippleThrottle;
+
   @override
   void initState() {
     super.initState();
@@ -67,8 +71,9 @@ class _AppTileState extends State<AppTile> {
 
   void rippling() {
     if (widget.editable == false ||
+        rippleThrottle != null ||
         widget.rippleProgress == null ||
-        widget.rippleProgress!.value == 0) {
+        widget.rippleProgress!.value <= 0) {
       return;
     }
     final Offset wya =
@@ -77,6 +82,11 @@ class _AppTileState extends State<AppTile> {
     if ((wya.dx <= widget.rippleProgress!.value * widthOf(context)) &&
         (wya.dy <= widget.rippleProgress!.value * heightOf(context))) {
       setState(() => editing = (editing == null) ? false : null);
+
+      rippleThrottle = Timer(
+        rippleDuration - (rippleDuration * widget.rippleProgress!.value),
+        () => rippleThrottle = null,
+      );
     }
   }
 

@@ -7,6 +7,7 @@ import '../screens/export.dart';
 import '../utils/export.dart';
 import './export.dart';
 
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
@@ -72,6 +73,9 @@ class _AppFolderState extends State<AppFolder> {
   bool open = false;
   late bool? editing = widget.editing;
 
+  late final Duration rippleDuration = ezAnimDuration(mod: animMod);
+  Timer? rippleThrottle;
+
   // Define custom functions //
 
   void toggleOpen() => setState(() => open = !open);
@@ -90,7 +94,9 @@ class _AppFolderState extends State<AppFolder> {
   }
 
   void rippling() {
-    if (widget.rippleProgress == null || widget.rippleProgress!.value == 0) {
+    if (rippleThrottle != null ||
+        widget.rippleProgress == null ||
+        widget.rippleProgress!.value <= 0) {
       return;
     }
     final Offset wya =
@@ -99,6 +105,11 @@ class _AppFolderState extends State<AppFolder> {
     if ((wya.dx <= widget.rippleProgress!.value * widthOf(context)) &&
         (wya.dy <= widget.rippleProgress!.value * heightOf(context))) {
       setState(() => editing = (editing == null) ? false : null);
+
+      rippleThrottle = Timer(
+        rippleDuration - (rippleDuration * widget.rippleProgress!.value),
+        () => rippleThrottle = null,
+      );
     }
   }
 
