@@ -23,6 +23,7 @@ class AppFolder extends StatefulWidget {
   final bool appIcon;
   final bool? editing;
   final void Function() refresh;
+  final ValueNotifier<double>? rippleProgress;
 
   const AppFolder({
     super.key,
@@ -36,6 +37,7 @@ class AppFolder extends StatefulWidget {
     required this.appIcon,
     required this.editing,
     required this.refresh,
+    this.rippleProgress,
   });
 
   @override
@@ -87,11 +89,25 @@ class _AppFolderState extends State<AppFolder> {
     refreshFolder();
   }
 
+  void rippling() {
+    if (widget.rippleProgress == null || widget.rippleProgress!.value == 0) {
+      return;
+    }
+    final Offset wya =
+        (context.findRenderObject() as RenderBox).localToGlobal(Offset.zero);
+
+    if ((wya.dx <= widget.rippleProgress!.value * widthOf(context)) &&
+        (wya.dy <= widget.rippleProgress!.value * heightOf(context))) {
+      setState(() => editing = (editing == null) ? false : null);
+    }
+  }
+
   // Init //
 
   @override
   void initState() {
     super.initState();
+    widget.rippleProgress?.addListener(rippling);
 
     switch (widget.appLabel) {
       case LabelType.none:
@@ -397,5 +413,11 @@ class _AppFolderState extends State<AppFolder> {
                 onPressed: toggleOpen,
                 onLongPress: () => setState(() => editing = true),
               ));
+  }
+
+  @override
+  void dispose() {
+    widget.rippleProgress?.removeListener(rippling);
+    super.dispose();
   }
 }

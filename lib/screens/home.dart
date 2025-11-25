@@ -60,8 +60,11 @@ class _HomeScreenState extends State<HomeScreen> {
     refresh: refresh,
   );
 
-  bool editing = false;
   bool atBottom = false;
+
+  bool editing = false;
+  late final OverlayState overlay = Overlay.of(context);
+  ValueNotifier<double> rippleProgress = ValueNotifier<double>(0.0);
 
   // Define custom functions //
 
@@ -70,6 +73,8 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
   }
 
+  /// home apps to tiles
+  /// listener.homeList -> AppTile/AppFolder
   List<Widget> homeA2T() {
     final List<Widget> tileList = <Widget>[];
 
@@ -92,6 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
             appLabel: listLabel,
             editing: editing ? null : false,
             refresh: refresh,
+            rippleProgress: rippleProgress,
           ),
         ));
       } else {
@@ -110,6 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onSelected: (String id) => launchApp(id),
             editing: editing ? null : false,
             refresh: refresh,
+            rippleProgress: rippleProgress,
           ),
         ));
       }
@@ -165,17 +172,37 @@ class _HomeScreenState extends State<HomeScreen> {
             if (!authed) return;
           }
 
-          editing = !editing;
           if (context.mounted) {
-            ezRipple(
-              context: context,
+            // Ripple transition to editing
+            final AnimationController rippleController = AnimationController(
+              vsync: overlay,
+              duration: ezAnimDuration(mod: 10),
+            );
+            rippleController.addListener(
+                () => rippleProgress.value = rippleController.value);
+
+            final OverlayEntry ripple = ezRipple(
+              controller: rippleController,
               width: widthOf(context),
               height: heightOf(context),
               position: details.globalPosition,
-              duration: ezAnimDuration(),
-              color: colorScheme.onSurface,
+              color: colorScheme.primary,
             );
+            overlay.insert(ripple);
+
+            rippleController.forward().whenComplete(() {
+              rippleProgress = ValueNotifier<double>(0.0);
+              editing = !editing;
+              refresh();
+
+              ripple.remove();
+              rippleController.dispose();
+            });
+            return;
           }
+
+          // Full transition to editing
+          editing = !editing;
           refresh();
         },
         onVerticalDragEnd: (DragEndDetails details) {

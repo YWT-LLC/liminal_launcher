@@ -25,6 +25,7 @@ class AppTile extends StatefulWidget {
   final bool editable;
   final bool? editing;
   final void Function() refresh;
+  final ValueNotifier<double>? rippleProgress;
 
   const AppTile({
     super.key,
@@ -39,6 +40,7 @@ class AppTile extends StatefulWidget {
     this.editable = true,
     required this.editing,
     required this.refresh,
+    this.rippleProgress,
   });
 
   @override
@@ -53,9 +55,32 @@ class _AppTileState extends State<AppTile> {
 
   late final EFUILang el10n = ezL10n(context);
 
-  // Return the build //
+  // Init //
 
   late bool? editing = widget.editable ? widget.editing : false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.rippleProgress?.addListener(rippling);
+  }
+
+  void rippling() {
+    if (widget.editable == false ||
+        widget.rippleProgress == null ||
+        widget.rippleProgress!.value == 0) {
+      return;
+    }
+    final Offset wya =
+        (context.findRenderObject() as RenderBox).localToGlobal(Offset.zero);
+
+    if ((wya.dx <= widget.rippleProgress!.value * widthOf(context)) &&
+        (wya.dy <= widget.rippleProgress!.value * heightOf(context))) {
+      setState(() => editing = (editing == null) ? false : null);
+    }
+  }
+
+  // Return the build //
 
   @override
   Widget build(BuildContext context) {
@@ -261,6 +286,12 @@ class _AppTileState extends State<AppTile> {
               ],
             ],
           );
+  }
+
+  @override
+  void dispose() {
+    widget.rippleProgress?.removeListener(rippling);
+    super.dispose();
   }
 }
 
