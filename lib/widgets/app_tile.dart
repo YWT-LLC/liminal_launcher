@@ -59,8 +59,6 @@ class _AppTileState extends State<AppTile> {
   // Init //
 
   late bool? editing = widget.editable ? widget.editing : false;
-
-  late final Duration rippleDuration = ezAnimDuration(mod: animMod);
   Timer? rippleThrottle;
 
   @override
@@ -78,9 +76,9 @@ class _AppTileState extends State<AppTile> {
     }
     final Offset wya =
         (context.findRenderObject() as RenderBox).localToGlobal(Offset.zero);
+    final double dy = (wya.dy - lastRipple.dy).abs();
 
-    if ((wya.dx <= widget.rippleProgress!.value * widthOf(context)) &&
-        (wya.dy <= widget.rippleProgress!.value * heightOf(context))) {
+    if (dy <= widget.rippleProgress!.value * heightOf(context)) {
       setState(() => editing = (editing == null) ? false : null);
 
       rippleThrottle = Timer(

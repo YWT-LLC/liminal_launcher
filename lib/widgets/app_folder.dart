@@ -72,8 +72,6 @@ class _AppFolderState extends State<AppFolder> {
 
   bool open = false;
   late bool? editing = widget.editing;
-
-  late final Duration rippleDuration = ezAnimDuration(mod: animMod);
   Timer? rippleThrottle;
 
   // Define custom functions //
@@ -101,9 +99,9 @@ class _AppFolderState extends State<AppFolder> {
     }
     final Offset wya =
         (context.findRenderObject() as RenderBox).localToGlobal(Offset.zero);
+    final double dy = (wya.dy - lastRipple.dy).abs();
 
-    if ((wya.dx <= widget.rippleProgress!.value * widthOf(context)) &&
-        (wya.dy <= widget.rippleProgress!.value * heightOf(context))) {
+    if (dy <= widget.rippleProgress!.value * heightOf(context)) {
       setState(() => editing = (editing == null) ? false : null);
 
       rippleThrottle = Timer(

@@ -174,10 +174,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
           if (context.mounted) {
             // Ripple transition to editing
-            final AnimationController rippleController = AnimationController(
-              vsync: overlay,
-              duration: ezAnimDuration(mod: animMod),
-            );
+            final AnimationController rippleController =
+                AnimationController(vsync: overlay, duration: rippleDuration);
             rippleController.addListener(
                 () => rippleProgress.value = rippleController.value);
 
@@ -189,6 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
               color: colorScheme.primary,
             );
             overlay.insert(ripple);
+            lastRipple = details.globalPosition;
 
             rippleController.forward().whenComplete(() {
               rippleProgress = ValueNotifier<double>(0.0);
