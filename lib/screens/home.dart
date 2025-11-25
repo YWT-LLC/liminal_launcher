@@ -6,6 +6,7 @@
 import '../screens/export.dart';
 import '../utils/export.dart';
 import '../widgets/export.dart';
+import 'package:efui_bios/efui_bios.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -144,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return LiminalScaffold(
       GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onLongPress: () async {
+        onLongPressStart: (LongPressStartDetails details) async {
           final bool needAuth = !editing && (EzConfig.get(authToEditKey));
           // Check every time so no reset is required; O(1)
 
@@ -165,6 +166,16 @@ class _HomeScreenState extends State<HomeScreen> {
           }
 
           editing = !editing;
+          if (context.mounted) {
+            ezRipple(
+              context: context,
+              width: widthOf(context),
+              height: heightOf(context),
+              position: details.globalPosition,
+              duration: ezAnimDuration(),
+              color: colorScheme.onSurface,
+            );
+          }
           refresh();
         },
         onVerticalDragEnd: (DragEndDetails details) {
