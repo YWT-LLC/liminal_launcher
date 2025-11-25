@@ -176,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
             // Ripple transition to editing
             final AnimationController rippleController = AnimationController(
               vsync: overlay,
-              duration: ezAnimDuration(mod: 10),
+              duration: ezAnimDuration(mod: animMod),
             );
             rippleController.addListener(
                 () => rippleProgress.value = rippleController.value);
