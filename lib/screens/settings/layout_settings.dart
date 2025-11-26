@@ -93,17 +93,7 @@ class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
           ],
           resetSpacer: ezDivider,
         ),
-        fabs: <Widget>[
-          ezSpacer,
-          EzConfigFAB(
-            context,
-            appName: appName,
-            androidPackage: androidPackage,
-            extraKeys: liminalDesignKeys + liminalLayoutKeys,
-          ),
-          ezSpacer,
-          const EzBackFAB()
-        ],
+        fabs: settingsFABs(context),
       );
 }
 

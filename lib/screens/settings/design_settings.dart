@@ -356,17 +356,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
         lightThemeResetKeys: <String>{darkUseOSKey},
         onReset: drawState,
       ),
-      fabs: <Widget>[
-        ezSpacer,
-        EzConfigFAB(
-          context,
-          appName: appName,
-          androidPackage: androidPackage,
-          extraKeys: liminalDesignKeys + liminalLayoutKeys,
-        ),
-        ezSpacer,
-        const EzBackFAB()
-      ],
+      fabs: settingsFABs(context),
     );
   }
 }

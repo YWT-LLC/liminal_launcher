@@ -322,17 +322,7 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
         ),
         ezSeparator,
       ]),
-      fabs: <Widget>[
-        ezSpacer,
-        EzConfigFAB(
-          context,
-          appName: appName,
-          androidPackage: androidPackage,
-          extraKeys: liminalDesignKeys + liminalLayoutKeys,
-        ),
-        ezSpacer,
-        const EzBackFAB(showHome: true)
-      ],
+      fabs: settingsFABs(context, home: true),
     );
   }
 }
