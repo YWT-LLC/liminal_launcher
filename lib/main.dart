@@ -46,14 +46,8 @@ class LiminalLauncher extends StatelessWidget {
   Widget build(BuildContext context) {
     // Prep the router //
 
-    final int animDuration = EzConfig.get(animationDurationKey);
-    final TargetPlatform currPlatform = getBasePlatform();
-
-    GoTransition.defaultCurve = Curves.easeInOut;
-    GoTransition.defaultDuration = Duration(milliseconds: animDuration);
-
-    Page<dynamic> getTransition(BuildContext context, GoRouterState state) =>
-        ezGoTransition(context, state, animDuration, currPlatform);
+    GoTransition.defaultCurve = Curves.linear;
+    GoTransition.defaultDuration = animDuration;
 
     // Return the app //
 
@@ -84,7 +78,7 @@ class LiminalLauncher extends StatelessWidget {
                 path: homePath,
                 name: homePath,
                 builder: (_, __) => const HomeScreen(),
-                pageBuilder: getTransition,
+                pageBuilder: GoTransitions.none.call,
                 routes: <RouteBase>[
                   GoRoute(
                     path: appListPath,
@@ -102,33 +96,33 @@ class LiminalLauncher extends StatelessWidget {
                         icon: listData[ListData.icon.key],
                       );
                     },
-                    pageBuilder: getTransition,
+                    pageBuilder: GoTransitions.openUpwards.withFade.call,
                   ),
                   GoRoute(
                     path: settingsHomePath,
                     name: settingsHomePath,
                     builder: (_, __) => const SettingsHomeScreen(),
-                    pageBuilder: getTransition,
+                    pageBuilder: GoTransitions.material.withFade.call,
                     routes: <RouteBase>[
                       GoRoute(
                         path: colorSettingsPath,
                         name: colorSettingsPath,
                         builder: (_, __) => const ColorSettingsScreen(),
-                        pageBuilder: getTransition,
+                        pageBuilder: GoTransitions.material.withFade.call,
                         routes: <RouteBase>[
                           GoRoute(
                             path: EzCSType.quick.path,
                             name: EzCSType.quick.name,
                             builder: (_, __) => const ColorSettingsScreen(
                                 target: EzCSType.quick),
-                            pageBuilder: getTransition,
+                            pageBuilder: GoTransitions.material.withFade.call,
                           ),
                           GoRoute(
                             path: EzCSType.advanced.path,
                             name: EzCSType.advanced.name,
                             builder: (_, __) => const ColorSettingsScreen(
                                 target: EzCSType.advanced),
-                            pageBuilder: getTransition,
+                            pageBuilder: GoTransitions.material.withFade.call,
                           ),
                         ],
                       ),
@@ -136,33 +130,33 @@ class LiminalLauncher extends StatelessWidget {
                         path: designSettingsPath,
                         name: designSettingsPath,
                         builder: (_, __) => const DesignSettingsScreen(),
-                        pageBuilder: getTransition,
+                        pageBuilder: GoTransitions.material.withFade.call,
                       ),
                       GoRoute(
                         path: layoutSettingsPath,
                         name: layoutSettingsPath,
                         builder: (_, __) => const LayoutSettingsScreen(),
-                        pageBuilder: getTransition,
+                        pageBuilder: GoTransitions.material.withFade.call,
                       ),
                       GoRoute(
                         path: textSettingsPath,
                         name: textSettingsPath,
                         builder: (_, __) => const TextSettingsScreen(),
-                        pageBuilder: getTransition,
+                        pageBuilder: GoTransitions.material.withFade.call,
                         routes: <RouteBase>[
                           GoRoute(
                             path: EzTSType.quick.path,
                             name: EzTSType.quick.name,
                             builder: (_, __) => const TextSettingsScreen(
                                 target: EzTSType.quick),
-                            pageBuilder: getTransition,
+                            pageBuilder: GoTransitions.material.withFade.call,
                           ),
                           GoRoute(
                             path: EzTSType.advanced.path,
                             name: EzTSType.advanced.name,
                             builder: (_, __) => const TextSettingsScreen(
                                 target: EzTSType.advanced),
-                            pageBuilder: getTransition,
+                            pageBuilder: GoTransitions.material.withFade.call,
                           ),
                         ],
                       ),
