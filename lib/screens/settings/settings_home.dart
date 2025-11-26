@@ -52,11 +52,11 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
   Widget build(BuildContext context) {
     return LiminalScaffold(
       EzScrollView(children: <Widget>[
-        Stack(
-          // Core //
+        // Restart reminder //
 
+        Stack(
           children: <Widget>[
-            // Restart reminder
+            // Core
             GestureDetector(
               onLongPress: showTips,
               child: const EzWarning(
@@ -77,36 +77,17 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
             ),
           ],
         ),
-        ezSeparator,
-
-        // Swipe selectors
-        SwipeSelector(left: true, listener: listener),
-        ezSpacer,
-        SwipeSelector(left: false, listener: listener),
-        ezSeparator,
-
-        // Auto search
-        const EzSwitchPair(
-          text: 'Auto search',
-          valueKey: autoSearchKey,
-        ),
-        ezSpacer,
-
-        // Auto search
-        const EzSwitchPair(
-          text: 'Auth to edit',
-          valueKey: authToEditKey,
-        ),
-        ezSpacer,
-
-        // Auto add to home
-        const EzSwitchPair(
-          text: 'Add new apps to home',
-          valueKey: autoAddToHomeKey,
-        ),
         ezDivider,
 
         // Navigation //
+
+        // Launcher
+        EzElevatedIconButton(
+          onPressed: () => context.goNamed(launcherSettingsPath),
+          icon: EzIcon(Icons.navigate_next),
+          label: 'Launcher settings',
+        ),
+        ezSpacer,
 
         // Color
         EzElevatedIconButton(
