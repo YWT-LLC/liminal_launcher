@@ -240,14 +240,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
             if (details.primaryVelocity! < 0) {
               if (editing) {
-                editing = false;
-                refresh();
+                doNothing();
               } else {
                 toLaunch = listener.appMap[EzConfig.get(leftSwipeIDKey)];
               }
             } else {
               if (editing) {
-                doNothing();
+                editing = false;
+                refresh();
               } else {
                 toLaunch = listener.appMap[EzConfig.get(rightSwipeIDKey)];
               }
