@@ -102,27 +102,27 @@ class LiminalLauncher extends StatelessWidget {
                     path: settingsHomePath,
                     name: settingsHomePath,
                     builder: (_, __) => const SettingsHomeScreen(),
-                    pageBuilder: GoTransitions.material.withFade.call,
+                    pageBuilder: GoTransitions.fade.call,
                     routes: <RouteBase>[
                       GoRoute(
                         path: colorSettingsPath,
                         name: colorSettingsPath,
                         builder: (_, __) => const ColorSettingsScreen(),
-                        pageBuilder: GoTransitions.material.withFade.call,
+                        pageBuilder: GoTransitions.fade.call,
                         routes: <RouteBase>[
                           GoRoute(
                             path: EzCSType.quick.path,
                             name: EzCSType.quick.name,
                             builder: (_, __) => const ColorSettingsScreen(
                                 target: EzCSType.quick),
-                            pageBuilder: GoTransitions.material.withFade.call,
+                            pageBuilder: GoTransitions.fade.call,
                           ),
                           GoRoute(
                             path: EzCSType.advanced.path,
                             name: EzCSType.advanced.name,
                             builder: (_, __) => const ColorSettingsScreen(
                                 target: EzCSType.advanced),
-                            pageBuilder: GoTransitions.material.withFade.call,
+                            pageBuilder: GoTransitions.fade.call,
                           ),
                         ],
                       ),
@@ -130,33 +130,33 @@ class LiminalLauncher extends StatelessWidget {
                         path: designSettingsPath,
                         name: designSettingsPath,
                         builder: (_, __) => const DesignSettingsScreen(),
-                        pageBuilder: GoTransitions.material.withFade.call,
+                        pageBuilder: GoTransitions.fade.call,
                       ),
                       GoRoute(
                         path: layoutSettingsPath,
                         name: layoutSettingsPath,
                         builder: (_, __) => const LayoutSettingsScreen(),
-                        pageBuilder: GoTransitions.material.withFade.call,
+                        pageBuilder: GoTransitions.fade.call,
                       ),
                       GoRoute(
                         path: textSettingsPath,
                         name: textSettingsPath,
                         builder: (_, __) => const TextSettingsScreen(),
-                        pageBuilder: GoTransitions.material.withFade.call,
+                        pageBuilder: GoTransitions.fade.call,
                         routes: <RouteBase>[
                           GoRoute(
                             path: EzTSType.quick.path,
                             name: EzTSType.quick.name,
                             builder: (_, __) => const TextSettingsScreen(
                                 target: EzTSType.quick),
-                            pageBuilder: GoTransitions.material.withFade.call,
+                            pageBuilder: GoTransitions.fade.call,
                           ),
                           GoRoute(
                             path: EzTSType.advanced.path,
                             name: EzTSType.advanced.name,
                             builder: (_, __) => const TextSettingsScreen(
                                 target: EzTSType.advanced),
-                            pageBuilder: GoTransitions.material.withFade.call,
+                            pageBuilder: GoTransitions.fade.call,
                           ),
                         ],
                       ),
