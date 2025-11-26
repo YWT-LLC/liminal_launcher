@@ -35,7 +35,10 @@ void main() async {
   // Run the app //
 
   if (EzConfig.get(hideStatusKey) == true) {
-    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    await SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: <SystemUiOverlay>[SystemUiOverlay.bottom],
+    );
   }
   runApp(LiminalLauncher(await getApps()));
 }
