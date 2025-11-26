@@ -108,27 +108,35 @@ class LiminalLauncher extends StatelessWidget {
                     path: settingsHomePath,
                     name: settingsHomePath,
                     builder: (_, __) => const SettingsHomeScreen(),
-                    pageBuilder: GoTransitions.fade.call,
+                    pageBuilder: GoTransitions.slide.toLeft.withFade.call,
                     routes: <RouteBase>[
+                      GoRoute(
+                        path: launcherSettingsPath,
+                        name: launcherSettingsPath,
+                        builder: (_, __) => const LauncherSettingsScreen(),
+                        pageBuilder: GoTransitions.slide.toLeft.withFade.call,
+                      ),
                       GoRoute(
                         path: colorSettingsPath,
                         name: colorSettingsPath,
                         builder: (_, __) => const ColorSettingsScreen(),
-                        pageBuilder: GoTransitions.fade.call,
+                        pageBuilder: GoTransitions.slide.toLeft.withFade.call,
                         routes: <RouteBase>[
                           GoRoute(
                             path: EzCSType.quick.path,
                             name: EzCSType.quick.name,
                             builder: (_, __) => const ColorSettingsScreen(
                                 target: EzCSType.quick),
-                            pageBuilder: GoTransitions.fade.call,
+                            pageBuilder:
+                                GoTransitions.slide.toLeft.withFade.call,
                           ),
                           GoRoute(
                             path: EzCSType.advanced.path,
                             name: EzCSType.advanced.name,
                             builder: (_, __) => const ColorSettingsScreen(
                                 target: EzCSType.advanced),
-                            pageBuilder: GoTransitions.fade.call,
+                            pageBuilder:
+                                GoTransitions.slide.toLeft.withFade.call,
                           ),
                         ],
                       ),
@@ -136,33 +144,35 @@ class LiminalLauncher extends StatelessWidget {
                         path: designSettingsPath,
                         name: designSettingsPath,
                         builder: (_, __) => const DesignSettingsScreen(),
-                        pageBuilder: GoTransitions.fade.call,
+                        pageBuilder: GoTransitions.slide.toLeft.withFade.call,
                       ),
                       GoRoute(
                         path: layoutSettingsPath,
                         name: layoutSettingsPath,
                         builder: (_, __) => const LayoutSettingsScreen(),
-                        pageBuilder: GoTransitions.fade.call,
+                        pageBuilder: GoTransitions.slide.toLeft.withFade.call,
                       ),
                       GoRoute(
                         path: textSettingsPath,
                         name: textSettingsPath,
                         builder: (_, __) => const TextSettingsScreen(),
-                        pageBuilder: GoTransitions.fade.call,
+                        pageBuilder: GoTransitions.slide.toLeft.withFade.call,
                         routes: <RouteBase>[
                           GoRoute(
                             path: EzTSType.quick.path,
                             name: EzTSType.quick.name,
                             builder: (_, __) => const TextSettingsScreen(
                                 target: EzTSType.quick),
-                            pageBuilder: GoTransitions.fade.call,
+                            pageBuilder:
+                                GoTransitions.slide.toLeft.withFade.call,
                           ),
                           GoRoute(
                             path: EzTSType.advanced.path,
                             name: EzTSType.advanced.name,
                             builder: (_, __) => const TextSettingsScreen(
                                 target: EzTSType.advanced),
-                            pageBuilder: GoTransitions.fade.call,
+                            pageBuilder:
+                                GoTransitions.slide.toLeft.withFade.call,
                           ),
                         ],
                       ),
