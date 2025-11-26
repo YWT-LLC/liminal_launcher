@@ -26,6 +26,9 @@ const String appListPath = 'app-list';
 /// settings-home
 const String settingsHomePath = 'settings-home';
 
+/// launcher-settings
+const String launcherSettingsPath = 'launcher-settings';
+
 /// color-settings
 const String colorSettingsPath = 'color-settings';
 
