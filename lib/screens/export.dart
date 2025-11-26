@@ -14,6 +14,7 @@ export 'settings/settings_home.dart';
 
 export 'settings/color_settings.dart';
 export 'settings/design_settings.dart';
+export 'settings/launcher_settings.dart';
 export 'settings/layout_settings.dart';
 export 'settings/text_settings.dart';
 
