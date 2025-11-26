@@ -43,12 +43,30 @@ const String renamedIDsKey = 'renamed_ids';
 const String listSortKey = 'list_sort';
 const String ascListKey = 'asc_list';
 
-// Functionality
+const List<String> limBTSKeys = <String>[
+  homeIDsKey,
+  hiddenIDsKey,
+  renamedIDsKey,
+  listSortKey,
+  ascListKey,
+];
+
+// Launcher
 const String leftSwipeIDKey = 'left_swipe_id';
 const String rightSwipeIDKey = 'right_swipe_id';
+const String hideStatusKey = 'hide_status';
 const String autoAddToHomeKey = 'auto_add_to_home';
 const String autoSearchKey = 'auto_search';
 const String authToEditKey = 'auth_to_edit';
+
+const List<String> limLauncherKeys = <String>[
+  leftSwipeIDKey,
+  rightSwipeIDKey,
+  authToEditKey,
+  hideStatusKey,
+  autoAddToHomeKey,
+  autoSearchKey,
+];
 
 // Design
 const String homeTimeKey = 'home_time';
@@ -61,14 +79,7 @@ const String folderLabelTypeKey = 'folder_label_type';
 const String darkUseOSKey = 'dark_use_os';
 const String lightUseOSKey = 'light_use_os';
 
-// Layout
-const String homeHAlignKey = 'home_horizontal_alignment';
-const String homeVAlignKey = 'home_vertical_alignment';
-const String listHAlignKey = 'list_horizontal_alignment';
-const String listVAlignKey = 'list_vertical_alignment';
-
-/// For [EzConfigFAB.extraKeys]
-const List<String> liminalDesignKeys = <String>[
+const List<String> limDesignKeys = <String>[
   homeTimeKey,
   homeDateKey,
   listIconKey,
@@ -79,12 +90,24 @@ const List<String> liminalDesignKeys = <String>[
   lightUseOSKey,
 ];
 
-/// For [EzConfigFAB.extraKeys]
-const List<String> liminalLayoutKeys = <String>[
+// Layout
+const String homeHAlignKey = 'home_horizontal_alignment';
+const String homeVAlignKey = 'home_vertical_alignment';
+const String listHAlignKey = 'list_horizontal_alignment';
+const String listVAlignKey = 'list_vertical_alignment';
+
+const List<String> limLayoutKeys = <String>[
   homeHAlignKey,
   homeVAlignKey,
   listHAlignKey,
   listVAlignKey,
+];
+
+const List<String> extraKeys = <String>[
+  ...limBTSKeys,
+  ...limLauncherKeys,
+  ...limDesignKeys,
+  ...limLayoutKeys,
 ];
 
 /// [empathMobileConfig] with Liminal additions
@@ -98,12 +121,13 @@ final Map<String, Object> liminalDefault = <String, Object>{
   listSortKey: AppSort.name.configValue,
   ascListKey: true,
 
-  // Functionality
+  // Launcher
   leftSwipeIDKey: '',
   rightSwipeIDKey: '',
+  authToEditKey: false,
+  hideStatusKey: true,
   autoAddToHomeKey: false,
   autoSearchKey: false,
-  authToEditKey: false,
 
   // Design
   homeTimeKey: true,
