@@ -82,7 +82,7 @@ class _AppTileState extends State<AppTile> {
       setState(() => editing = (editing == null) ? false : null);
 
       rippleThrottle = Timer(
-        rippleDuration - (rippleDuration * widget.rippleProgress!.value),
+        animDuration - (animDuration * widget.rippleProgress!.value),
         () => rippleThrottle = null,
       );
     }
