@@ -309,20 +309,18 @@ class AppInfoProvider extends ChangeNotifier {
     return true;
   }
 
-  Future<bool> reorderHomeItem({
+  Future<void> reorderHomeItem({
     required int oldIndex,
     required int newIndex,
   }) async {
-    if (oldIndex == newIndex) return false;
-    if (newIndex > oldIndex) newIndex -= 1;
-
     final String id = _homeList.removeAt(oldIndex);
-    _homeList.insert(newIndex, id);
+    _homeList.insert(
+      oldIndex < newIndex ? newIndex - 1 : newIndex,
+      id,
+    );
 
     await EzConfig.setStringList(homeIDsKey, _homeList);
     notifyListeners();
-
-    return true;
   }
 
   Future<bool> reorderFolderItem({

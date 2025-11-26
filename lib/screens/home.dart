@@ -308,11 +308,22 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Expanded(
                       child: ReorderableListView(
                         onReorder: (int oldIndex, int newIndex) async {
-                          final bool reordered = await editor.reorderHomeItem(
+                          if (oldIndex == newIndex) return;
+
+                          // Local UI update first
+                          final Widget toMove = homeTiles.removeAt(oldIndex);
+                          homeTiles.insert(
+                            oldIndex < newIndex ? newIndex - 1 : newIndex,
+                            toMove,
+                          );
+                          setState(() {});
+
+                          // Storage update
+                          await editor.reorderHomeItem(
                             oldIndex: oldIndex,
                             newIndex: newIndex,
                           );
-                          if (reordered) refresh();
+                          refresh();
                         },
                         children: homeTiles,
                       ),
