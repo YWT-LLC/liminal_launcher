@@ -26,10 +26,14 @@ final AppInfo self = AppInfo(
 
 // App assets //
 
+/// assets/images/app-icon.jpg
 const String appIconPath = 'assets/images/app-icon.jpg';
 
+/// [appIconPath]
 const Set<String> assetPaths = <String>{appIconPath};
 
+/// Credits for...
+/// [appIconPath]
 const Map<String, String> credits = <String, String>{
   appIconPath: 'AI; tis a placeholder, human work coming soon.',
 };
@@ -43,6 +47,7 @@ const String renamedIDsKey = 'renamed_ids';
 const String listSortKey = 'list_sort';
 const String ascListKey = 'asc_list';
 
+/// Home/app list keys
 const List<String> limBTSKeys = <String>[
   homeIDsKey,
   hiddenIDsKey,
@@ -60,6 +65,7 @@ const String hideStatusKey = 'hide_status';
 const String autoAddToHomeKey = 'auto_add_to_home';
 const String autoSearchKey = 'auto_search';
 
+/// Left/right swipe, auth, hide status, and auto add/search keys
 const List<String> limLauncherKeys = <String>[
   leftSwipeIDKey,
   rightSwipeIDKey,
@@ -81,6 +87,7 @@ const String folderLabelTypeKey = 'folder_label_type';
 const String darkUseOSKey = 'dark_use_os';
 const String lightUseOSKey = 'light_use_os';
 
+/// Clock keys,
 const List<String> limDesignKeys = <String>[
   homeTimeKey,
   homeDateKey,
@@ -98,6 +105,7 @@ const String homeVAlignKey = 'home_vertical_alignment';
 const String listHAlignKey = 'list_horizontal_alignment';
 const String listVAlignKey = 'list_vertical_alignment';
 
+/// Home and list alignment keys
 const List<String> limLayoutKeys = <String>[
   homeHAlignKey,
   homeVAlignKey,
@@ -105,6 +113,8 @@ const List<String> limLayoutKeys = <String>[
   listVAlignKey,
 ];
 
+/// BTS and Launcher keys
+/// && Liminal specific design and layout keys
 const List<String> extraKeys = <String>[
   ...limBTSKeys,
   ...limLauncherKeys,
