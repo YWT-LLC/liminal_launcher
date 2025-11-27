@@ -68,11 +68,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Define custom functions //
 
-  void refresh() {
-    homeTiles = homeA2T();
-    setState(() {});
-  }
-
   /// home apps to tiles
   /// listener.homeList -> AppTile/AppFolder
   List<Widget> homeA2T() {
@@ -125,6 +120,55 @@ class _HomeScreenState extends State<HomeScreen> {
     return tileList;
   }
 
+  void refresh() {
+    homeTiles = homeA2T();
+    setState(() {});
+  }
+
+  Future<void> navToHidden(
+    BuildContext context,
+    TextTheme textTheme,
+    ColorScheme colorScheme,
+  ) async {
+    if (EzConfig.get(authForHiddenKey) == true) {
+      // Check every time so no reset is required; O(1)
+      bool authed = false;
+
+      try {
+        authed = await LocalAuthentication().authenticate(
+          localizedReason: 'Authenticate to see hidden apps',
+          persistAcrossBackgrounding: true,
+          biometricOnly: false,
+        );
+      } catch (e) {
+        ezLog(e.toString());
+      }
+
+      if (!authed) return;
+    }
+
+    if (context.mounted) {
+      context.goNamed(
+        appListPath,
+        extra: listData(
+          listCheck: (String id) => listener.hiddenSet.contains(id),
+          onSelected: (String id) => launchApp(id),
+          icon: EzTextBackground(EzRow(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text('Hidden\t', style: textTheme.labelLarge),
+              EzIcon(
+                PlatformIcons(context).eyeSlash,
+                color: colorScheme.onSurface,
+              ),
+            ],
+          )),
+          refresh: refresh,
+        ),
+      );
+    }
+  }
+
   // Define custom Widgets //
 
   Widget clock(TextTheme textTheme) => (homeTime || homeDate)
@@ -153,20 +197,18 @@ class _HomeScreenState extends State<HomeScreen> {
       GestureDetector(
         behavior: HitTestBehavior.opaque,
         onLongPressStart: (LongPressStartDetails details) async {
-          final bool needAuth = !editing && (EzConfig.get(authToEditKey));
-          // Check every time so no reset is required; O(1)
-
-          if (needAuth) {
+          if (!editing && (EzConfig.get(authToEditKey))) {
+            // Check every time so no reset is required; O(1)
             bool authed = false;
 
             try {
               authed = await LocalAuthentication().authenticate(
-                localizedReason: 'Authenticate to continue',
+                localizedReason: 'Authenticate to edit the launcher',
+                persistAcrossBackgrounding: true,
+                biometricOnly: false,
               );
             } catch (e) {
-              if (context.mounted) {
-                ezLogAlert(context, message: e.toString());
-              }
+              ezLog(e.toString());
             }
 
             if (!authed) return;
@@ -205,31 +247,18 @@ class _HomeScreenState extends State<HomeScreen> {
           editing = !editing;
           refresh();
         },
-        onVerticalDragEnd: (DragEndDetails details) {
+        onVerticalDragEnd: (DragEndDetails details) async {
           if (details.primaryVelocity != null) {
             if (details.primaryVelocity! < 0) {
               // Swiped up
-              context.goNamed(
-                appListPath,
-                extra: editing
-                    ? listData(
-                        listCheck: (String id) =>
-                            listener.hiddenSet.contains(id),
-                        onSelected: (String id) => launchApp(id),
-                        icon: EzTextBackground(EzRow(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Text('Hidden\t', style: textTheme.labelLarge),
-                            EzIcon(
-                              PlatformIcons(context).eyeSlash,
-                              color: colorScheme.onSurface,
-                            ),
-                          ],
-                        )),
-                        refresh: refresh,
-                      )
-                    : appListData,
-              );
+              if (editing) {
+                await navToHidden(context, textTheme, colorScheme);
+              } else {
+                context.goNamed(
+                  appListPath,
+                  extra: appListData,
+                );
+              }
             }
           }
         },
@@ -270,25 +299,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           notification.overscroll > 0) {
                         // Navigate on bottom overscroll
                         if (atBottom) {
-                          context.goNamed(
-                            appListPath,
-                            extra: listData(
-                              listCheck: (String id) =>
-                                  listener.hiddenSet.contains(id),
-                              onSelected: (String id) => launchApp(id),
-                              icon: EzTextBackground(EzRow(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Text('Hidden\t', style: textTheme.labelLarge),
-                                  EzIcon(
-                                    PlatformIcons(context).eyeSlash,
-                                    color: colorScheme.onSurface,
-                                  ),
-                                ],
-                              )),
-                              refresh: refresh,
-                            ),
-                          );
+                          navToHidden(context, textTheme, colorScheme);
                           return true;
                         } else {
                           setState(() => atBottom = true);
