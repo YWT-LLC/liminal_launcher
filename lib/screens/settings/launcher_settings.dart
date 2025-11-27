@@ -48,6 +48,13 @@ class _LauncherSettingsScreenState extends State<LauncherSettingsScreen> {
         ),
         ezSpacer,
 
+        // Auth for hidden
+        const EzSwitchPair(
+          text: 'Auth for hidden',
+          valueKey: authForHiddenKey,
+        ),
+        ezSpacer,
+
         // Hide status bar
         const EzSwitchPair(
           text: 'Hide status bar',
