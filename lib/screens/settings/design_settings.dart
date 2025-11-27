@@ -27,6 +27,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
   // Define the build data //
 
   int redraw = 0;
+  DateType currDateType = DateTypeConfig.fromValue(EzConfig.get(homeDateKey));
 
   final List<DropdownMenuEntry<LabelType>> labelEntries =
       <DropdownMenuEntry<LabelType>>[
@@ -107,27 +108,58 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final bool isDark = isDarkTheme(context);
+    final TextTheme texTheme = Theme.of(context).textTheme;
+
+    final DateTime now = DateTime.now();
 
     return LiminalScaffold(
       EzDesignSettings(
         globalSettingsPrepend: <Widget>[
-          ezSpacer,
-
           // Header settings //
 
           // Time
           EzSwitchPair(
             key: ValueKey<String>('time_switch_$redraw'),
-            text: 'Home time',
+            text: 'Show time',
             valueKey: homeTimeKey,
           ),
           ezSpacer,
 
           // Date
-          EzSwitchPair(
-            key: ValueKey<String>('date_switch_$redraw'),
-            text: 'Home date',
-            valueKey: homeDateKey,
+          EzScrollView(
+            scrollDirection: Axis.horizontal,
+            reverseHands: true,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              // Label
+              EzText(
+                'Date type',
+                style: texTheme.bodyLarge,
+                textAlign: TextAlign.center,
+              ),
+              ezMargin,
+
+              // Button
+              EzDropdownMenu<DateType>(
+                enableSearch: false,
+                initialSelection: currDateType,
+                dropdownMenuEntries: DateType.values
+                    .map((DateType type) => DropdownMenuEntry<DateType>(
+                        value: type,
+                        label: DateTypeConfig.buildDate(
+                          type,
+                          context,
+                          now,
+                        )))
+                    .toList(),
+                widthEntries: <String>['Wednesday, Sept'],
+                onSelected: (DateType? choice) async {
+                  if (choice == null) return;
+                  await EzConfig.setString(homeDateKey, choice.configValue);
+                  setState(() => currDateType = choice);
+                },
+              ),
+            ],
           ),
           ezSeparator,
 

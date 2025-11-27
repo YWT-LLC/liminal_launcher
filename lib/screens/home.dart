@@ -45,8 +45,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Define the build data //
 
-  final bool homeTime = EzConfig.get(homeTimeKey);
-  final bool homeDate = EzConfig.get(homeDateKey);
+  final bool showTime = EzConfig.get(homeTimeKey);
+  final String dateType = EzConfig.get(homeDateKey);
 
   late final AppInfoProvider listener = Provider.of<AppInfoProvider>(context);
   late final AppInfoProvider editor =
@@ -171,20 +171,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Define custom Widgets //
 
-  Widget clock(TextTheme textTheme) => (homeTime || homeDate)
-      ? Padding(
-          padding: EdgeInsets.only(
-            top: vAlign == ListAlignment.start ? 0 : spacing,
-            bottom: vAlign == ListAlignment.start ? spacing : 0,
-          ),
-          child: Clock(
-            homeTime: homeTime,
-            homeDate: homeDate,
-            hAlign: hAlign,
-            textTheme: textTheme,
-          ),
-        )
-      : const SizedBox.shrink();
+  Widget clock(TextTheme textTheme) =>
+      (showTime || dateType != DateType.none.configValue)
+          ? Padding(
+              padding: EdgeInsets.only(
+                top: vAlign == ListAlignment.start ? 0 : spacing,
+                bottom: vAlign == ListAlignment.start ? spacing : 0,
+              ),
+              child: Clock(
+                showTime: showTime,
+                dateType: dateType,
+                hAlign: hAlign,
+                textTheme: textTheme,
+              ),
+            )
+          : const SizedBox.shrink();
 
   // Return the build //
 

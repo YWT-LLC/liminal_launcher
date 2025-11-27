@@ -6,6 +6,15 @@
 import './export.dart';
 import 'package:flutter/material.dart';
 
+//* Shared (local) consts *//
+
+const String _none = 'none';
+const String _full = 'full';
+
+const String _center = 'center';
+const String _start = 'start';
+const String _end = 'end';
+
 //* BTS settings *//
 
 // AppListScreen Data //
@@ -75,15 +84,102 @@ extension AppSortConfig on AppSort {
   }
 }
 
+//* Design settings *//
+
+// Date type //
+
+enum DateType { none, compact, short, medium, full }
+
+const String _compact = 'compact';
+const String _short = 'short';
+const String _medium = 'medium';
+
+extension DateTypeConfig on DateType {
+  String get configValue {
+    switch (this) {
+      case DateType.none:
+        return _none;
+      case DateType.compact:
+        return _compact;
+      case DateType.short:
+        return _short;
+      case DateType.medium:
+        return _medium;
+      case DateType.full:
+        return _full;
+    }
+  }
+
+  static String buildDate(DateType type, BuildContext context, DateTime now) {
+    switch (type) {
+      case DateType.compact:
+        return MaterialLocalizations.of(context).formatCompactDate(now);
+      case DateType.short:
+        return MaterialLocalizations.of(context).formatShortDate(now);
+      case DateType.medium:
+        return MaterialLocalizations.of(context).formatMediumDate(now);
+      case DateType.full:
+        return MaterialLocalizations.of(context).formatFullDate(now);
+      default:
+        return '---';
+    }
+  }
+
+  static DateType fromValue(String value) {
+    switch (value) {
+      case _compact:
+        return DateType.compact;
+      case _short:
+        return DateType.short;
+      case _medium:
+        return DateType.medium;
+      case _full:
+        return DateType.full;
+      default:
+        return DateType.none;
+    }
+  }
+}
+
+// App/Folder Label Type //
+
+enum LabelType { none, initials, full, wingding }
+
+const String _initials = 'initials';
+
+extension LabelTypeConfig on LabelType {
+  String get configValue {
+    switch (this) {
+      case LabelType.none:
+        return _none;
+      case LabelType.initials:
+        return _initials;
+      case LabelType.full:
+        return _full;
+      case LabelType.wingding:
+        return wingding;
+    }
+  }
+
+  static LabelType fromValue(String value) {
+    switch (value) {
+      case _none:
+        return LabelType.none;
+      case _initials:
+        return LabelType.initials;
+      case wingding:
+        return LabelType.wingding;
+      default:
+        return LabelType.full;
+    }
+  }
+}
+
 //* Layout settings *//
 
 // App List Alignment //
 
 enum ListAlignment { center, start, end }
-
-const String _center = 'center';
-const String _start = 'start';
-const String _end = 'end';
 
 extension ListAlignmentConfig on ListAlignment {
   String get configValue {
@@ -149,44 +245,6 @@ extension ListAlignmentConfig on ListAlignment {
         return ListAlignment.end;
       default:
         return ListAlignment.center;
-    }
-  }
-}
-
-//* Design settings *//
-
-// App/Folder Label Type //
-
-enum LabelType { none, initials, full, wingding }
-
-const String _none = 'none';
-const String _initials = 'initials';
-const String _full = 'full';
-
-extension LabelTypeConfig on LabelType {
-  String get configValue {
-    switch (this) {
-      case LabelType.none:
-        return _none;
-      case LabelType.initials:
-        return _initials;
-      case LabelType.full:
-        return _full;
-      case LabelType.wingding:
-        return wingding;
-    }
-  }
-
-  static LabelType fromValue(String value) {
-    switch (value) {
-      case _none:
-        return LabelType.none;
-      case _initials:
-        return LabelType.initials;
-      case wingding:
-        return LabelType.wingding;
-      default:
-        return LabelType.full;
     }
   }
 }

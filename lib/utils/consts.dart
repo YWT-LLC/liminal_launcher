@@ -134,7 +134,7 @@ final Map<String, Object> liminalDefault = <String, Object>{
 
   // Design
   homeTimeKey: true,
-  homeDateKey: true,
+  homeDateKey: DateType.medium.configValue,
   listIconKey: true,
   listLabelTypeKey: LabelType.full.configValue,
   folderIconKey: true,
