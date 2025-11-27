@@ -272,16 +272,24 @@ class _AppFolderState extends State<AppFolder> {
                   builder: (_, StateSetter setModal) => Expanded(
                     child: ReorderableListView(
                       onReorder: (int oldIndex, int newIndex) async {
-                        final bool reordered =
-                            await widget.editor.reorderFolderItem(
+                        if (oldIndex == newIndex) return;
+
+                        // Local UI update first
+                        final String toMove = appList.removeAt(oldIndex);
+                        appList.insert(
+                          oldIndex < newIndex ? newIndex - 1 : newIndex,
+                          toMove,
+                        );
+                        setModal(() {});
+
+                        // Storage update
+                        await widget.editor.reorderFolderItem(
                           oldIndex: oldIndex + 1, // name offset
                           newIndex: newIndex + 1,
                           folderIndex: widget.index,
                         );
-                        if (reordered) {
-                          refreshFolder();
-                          setModal(() {});
-                        }
+                        refreshFolder();
+                        setModal(() {});
                       },
                       children: appList
                           .map((String id) {
