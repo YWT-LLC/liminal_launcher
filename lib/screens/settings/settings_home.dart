@@ -8,9 +8,11 @@ import '../../utils/export.dart';
 import '../../widgets/export.dart';
 
 import 'dart:math';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:file_saver/file_saver.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
@@ -50,6 +52,8 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
     return LiminalScaffold(
       EzScrollView(children: <Widget>[
         // Restart reminder //
@@ -128,8 +132,12 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
 
         // Randomize
         EzConfigRandomizer(
-          dialogContent:
-              'Only affects appearance settings.\n${el10n.gUndoWarn}',
+          dialogContent: <String>[
+            'Only affects appearance settings.\n',
+            el10n.gUndoWarn1,
+            el10n.gSave,
+            el10n.gUndoWarn2,
+          ].join(),
           onConfirm: () async {
             await EzConfig.randomize(isDarkTheme(context), shiny: false);
             final Random random = Random();
@@ -283,8 +291,63 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
                     },
                   ),
                   ezSpacer,
-                  Text(
-                    el10n.gUndoWarn,
+                  EzRichText(
+                    <InlineSpan>[
+                      EzPlainText(
+                        text: el10n.gUndoWarn1,
+                        style: textTheme.bodyLarge,
+                      ),
+                      EzInlineLink(
+                        el10n.gSave,
+                        onTap: () async {
+                          final List<String> keys = <String>[
+                            ...ezConfigKeys.keys,
+                            ...extraKeys,
+                          ];
+
+                          final Map<String, dynamic> config =
+                              Map<String, dynamic>.fromEntries(keys.map(
+                            (String key) => MapEntry<String, dynamic>(
+                              key,
+                              EzConfig.get(key),
+                            ),
+                          ));
+
+                          try {
+                            await FileSaver.instance.saveFile(
+                              name: '${ezTitleToSnake(appName)}_settings.json',
+                              bytes: utf8.encode(jsonEncode(config)),
+                              mimeType: MimeType.json,
+                            );
+                          } catch (e) {
+                            if (context.mounted) {
+                              ezLogAlert(context, message: e.toString());
+                            }
+                            return;
+                          }
+
+                          if (context.mounted) {
+                            ezSnackBar(
+                              context: context,
+                              message: el10n.ssConfigSaved(archivePath(
+                                appName: appName,
+                                androidPackage: androidPackage,
+                              )),
+                            );
+                          }
+                        },
+                        hint:
+                            '', // TODO: Add a hint? Make this nullable? If yes (to nullable), audit others.
+                        style: textTheme.bodyLarge,
+                        textAlign: TextAlign.center,
+                      ),
+                      EzPlainText(
+                        text: el10n.gUndoWarn2,
+                        style: textTheme.bodyLarge,
+                      ),
+                    ],
+                    textBackground: false,
+                    style: textTheme.bodyLarge,
                     textAlign: TextAlign.center,
                   ),
                 ],
