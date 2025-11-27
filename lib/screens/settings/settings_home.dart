@@ -249,11 +249,8 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
               StateSetter dialogState,
             ) {
               late final Set<String> skip = <String>{
-                homeIDsKey,
-                hiddenIDsKey,
-                leftSwipeIDKey,
-                rightSwipeIDKey,
-                authToEditKey,
+                ...limBTSKeys,
+                ...limLauncherKeys,
               };
 
               late final List<Widget> materialActions;
