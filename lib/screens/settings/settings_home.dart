@@ -132,8 +132,48 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
               'Only affects appearance settings.\n${el10n.gUndoWarn}',
           onConfirm: () async {
             await EzConfig.randomize(isDarkTheme(context), shiny: false);
-
             final Random random = Random();
+
+            // Design
+            await EzConfig.setBool(homeTimeKey, random.nextBool());
+            await EzConfig.setBool(homeDateKey, random.nextBool());
+
+            await EzConfig.setBool(listIconKey, random.nextBool());
+            final int listLabelRand = random.nextInt(4);
+            late final String listLabelValue;
+            switch (listLabelRand) {
+              case 0:
+                listLabelValue = LabelType.none.configValue;
+                break;
+              case 1:
+                listLabelValue = LabelType.initials.configValue;
+                break;
+              case 3:
+                listLabelValue = LabelType.wingding.configValue;
+                break;
+              default:
+                listLabelValue = LabelType.full.configValue;
+                break;
+            }
+            await EzConfig.setString(listLabelTypeKey, listLabelValue);
+
+            await EzConfig.setBool(folderIconKey, random.nextBool());
+            final int folderLabelRand = random.nextInt(3);
+            late final String folderLabelValue;
+            switch (folderLabelRand) {
+              case 0:
+                folderLabelValue = LabelType.none.configValue;
+                break;
+              case 1:
+                folderLabelValue = LabelType.initials.configValue;
+                break;
+              case 3:
+                folderLabelValue = LabelType.wingding.configValue;
+              default:
+                folderLabelValue = LabelType.full.configValue;
+                break;
+            }
+            await EzConfig.setString(folderLabelTypeKey, folderLabelValue);
 
             // Layout
             final int homeHAlignRand = random.nextInt(3);
@@ -195,47 +235,6 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
                 break;
             }
             await EzConfig.setString(listVAlignKey, listVAlignValue);
-
-            // Design
-            await EzConfig.setBool(homeTimeKey, random.nextBool());
-            await EzConfig.setBool(homeDateKey, random.nextBool());
-
-            await EzConfig.setBool(listIconKey, random.nextBool());
-            final int listLabelRand = random.nextInt(4);
-            late final String listLabelValue;
-            switch (listLabelRand) {
-              case 0:
-                listLabelValue = LabelType.none.configValue;
-                break;
-              case 1:
-                listLabelValue = LabelType.initials.configValue;
-                break;
-              case 3:
-                listLabelValue = LabelType.wingding.configValue;
-                break;
-              default:
-                listLabelValue = LabelType.full.configValue;
-                break;
-            }
-            await EzConfig.setString(listLabelTypeKey, listLabelValue);
-
-            await EzConfig.setBool(folderIconKey, random.nextBool());
-            final int folderLabelRand = random.nextInt(3);
-            late final String folderLabelValue;
-            switch (folderLabelRand) {
-              case 0:
-                folderLabelValue = LabelType.none.configValue;
-                break;
-              case 1:
-                folderLabelValue = LabelType.initials.configValue;
-                break;
-              case 3:
-                folderLabelValue = LabelType.wingding.configValue;
-              default:
-                folderLabelValue = LabelType.full.configValue;
-                break;
-            }
-            await EzConfig.setString(folderLabelTypeKey, folderLabelValue);
           },
         ),
         ezSpacer,
