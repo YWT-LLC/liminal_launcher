@@ -233,6 +233,9 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
               }
               await EzConfig.setString(listVAlignKey, listVAlignValue);
             },
+            extraKeys: extraKeys,
+            appName: appName,
+            androidPackage: androidPackage,
           ),
           ezSpacer,
 
