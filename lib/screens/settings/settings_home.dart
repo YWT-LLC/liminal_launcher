@@ -11,6 +11,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:after_layout/after_layout.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
@@ -21,7 +22,8 @@ class SettingsHomeScreen extends StatefulWidget {
   State<SettingsHomeScreen> createState() => _SettingsHomeScreenState();
 }
 
-class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
+class _SettingsHomeScreenState extends State<SettingsHomeScreen>
+    with AfterLayoutMixin<SettingsHomeScreen> {
   // Gather the fixed theme data //
 
   final bool isLefty = EzConfig.get(isLeftyKey);
@@ -47,6 +49,29 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen> {
       );
 
   //* Return the build *//
+
+  @override
+  void afterFirstLayout(BuildContext context) async {
+    if (!(await isGPlayInstall()) &&
+        !EzConfig.get(shownReminderKey) &&
+        context.mounted) {
+      await showPlatformDialog(
+        // TODO: Replace vibe holders with real content
+        context: context,
+        builder: (_) => const EzAlertDialog(
+          title: Text(
+            'Ty && welcome',
+            textAlign: TextAlign.center,
+          ),
+          content: Text(
+            'Friendly reminder to contribute if you can. Ty again, this will not show again.',
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+      await EzConfig.setBool(shownReminderKey, true);
+    }
+  }
 
   @override
   Widget build(BuildContext context) => LiminalScaffold(
