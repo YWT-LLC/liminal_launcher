@@ -47,6 +47,9 @@ const String renamedIDsKey = 'renamed_ids';
 const String listSortKey = 'list_sort';
 const String ascListKey = 'asc_list';
 
+const String shownReminderKey =
+    'shown_reminder'; // TODO: integrate, make sure it's not reset
+
 /// Home/app list keys
 const List<String> limBTSKeys = <String>[
   homeIDsKey,
@@ -132,6 +135,8 @@ final Map<String, Object> liminalDefault = <String, Object>{
   renamedIDsKey: <String>[],
   listSortKey: AppSort.name.configValue,
   ascListKey: true,
+
+  shownReminderKey: false,
 
   // Launcher
   leftSwipeIDKey: '',
