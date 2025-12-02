@@ -46,9 +46,7 @@ const String hiddenIDsKey = 'hidden_ids';
 const String renamedIDsKey = 'renamed_ids';
 const String listSortKey = 'list_sort';
 const String ascListKey = 'asc_list';
-
-const String shownReminderKey =
-    'shown_reminder'; // TODO: integrate, make sure it's not reset
+const String shownReminderKey = 'shown_reminder';
 
 /// Home/app list keys
 const List<String> limBTSKeys = <String>[
@@ -57,6 +55,7 @@ const List<String> limBTSKeys = <String>[
   renamedIDsKey,
   listSortKey,
   ascListKey,
+  shownReminderKey,
 ];
 
 // Launcher
@@ -116,14 +115,18 @@ const List<String> limLayoutKeys = <String>[
   listVAlignKey,
 ];
 
-/// BTS and Launcher keys
-/// && Liminal specific design and layout keys
+/// BTS, launcher setup, and Liminal specific design && layout keys
 const List<String> extraKeys = <String>[
   ...limBTSKeys,
   ...limLauncherKeys,
   ...limDesignKeys,
   ...limLayoutKeys,
 ];
+
+/// [EzConfig] keys that should never b reset/only changed by the user
+const Set<String> neverResetKeys = <String>{
+  shownReminderKey,
+};
 
 /// [empathMobileConfig] with Liminal additions
 final Map<String, Object> liminalDefault = <String, Object>{

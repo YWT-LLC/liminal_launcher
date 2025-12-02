@@ -283,7 +283,8 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen>
                 (materialActions, cupertinoActions) = ezActionPairs(
                   context: context,
                   onConfirm: () async {
-                    await EzConfig.reset(skip: resetAll ? <String>{} : skip);
+                    await EzConfig.reset(
+                        skip: resetAll ? neverResetKeys : skip);
                     if (resetAll) await editor.reset();
                     if (dContext.mounted) Navigator.of(dContext).pop();
                   },
