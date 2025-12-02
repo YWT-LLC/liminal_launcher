@@ -297,24 +297,31 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen>
                     'Reset all appearance settings?',
                     textAlign: TextAlign.center,
                   ),
-                  contents: <Widget>[
-                    EzSwitchPair(
-                      text: 'Or, ALL settings',
-                      value: resetAll,
-                      onChanged: (bool? choice) {
-                        resetAll = (choice == null) ? false : choice;
-                        setState(() {});
-                        dialogState(() {});
-                      },
+                  content: SizedBox(
+                    width: widthOf(context),
+                    child: EzScrollView(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        EzSwitchPair(
+                          text: 'Or, ALL settings',
+                          value: resetAll,
+                          onChanged: (bool? choice) {
+                            resetAll = (choice == null) ? false : choice;
+                            setState(() {});
+                            dialogState(() {});
+                          },
+                        ),
+                        ezSpacer,
+                        ezRichUndoWarning(
+                          context,
+                          standalone: false,
+                          extraKeys: extraKeys,
+                          appName: appName,
+                          androidPackage: androidPackage,
+                        ),
+                      ],
                     ),
-                    ezSpacer,
-                    ezRichUndoWarning(
-                      context,
-                      extraKeys: extraKeys,
-                      appName: appName,
-                      androidPackage: androidPackage,
-                    ),
-                  ],
+                  ),
                   materialActions: materialActions,
                   cupertinoActions: cupertinoActions,
                   needsClose: false,
