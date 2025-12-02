@@ -112,8 +112,10 @@ class _AppTileState extends State<AppTile> {
           )
         : EzScrollView(
             mainAxisSize: MainAxisSize.min,
-            reverseHands: true,
+            mainAxisAlignment: widget.hAlign.mainAxis,
+            crossAxisAlignment: widget.hAlign.crossAxis,
             scrollDirection: Axis.horizontal,
+            reverseHands: true,
             showScrollHint: true,
             children: <Widget>[
               // App icon
