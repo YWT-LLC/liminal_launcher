@@ -387,6 +387,9 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
         darkThemeResetKeys: <String>{darkUseOSKey},
         lightThemeResetKeys: <String>{darkUseOSKey},
         onReset: drawState,
+        extraSaveKeys: extraKeys,
+        appName: appName,
+        androidPackage: androidPackage,
       ),
       fabs: settingsFABs(context),
     );

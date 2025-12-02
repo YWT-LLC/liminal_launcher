@@ -92,6 +92,9 @@ class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
             ),
           ],
           resetSpacer: ezDivider,
+          extraSaveKeys: extraKeys,
+          appName: appName,
+          androidPackage: androidPackage,
         ),
         fabs: settingsFABs(context),
       );

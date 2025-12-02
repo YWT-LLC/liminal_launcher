@@ -16,7 +16,12 @@ class TextSettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => LiminalScaffold(
-        EzTextSettings(target: target),
+        EzTextSettings(
+          target: target,
+          extraSaveKeys: extraKeys,
+          appName: appName,
+          androidPackage: androidPackage,
+        ),
         fabs: settingsFABs(context),
       );
 }

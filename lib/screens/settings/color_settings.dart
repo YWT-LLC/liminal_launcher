@@ -16,7 +16,12 @@ class ColorSettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => LiminalScaffold(
-        EzColorSettings(target: target),
+        EzColorSettings(
+          target: target,
+          extraSaveKeys: extraKeys,
+          appName: appName,
+          androidPackage: androidPackage,
+        ),
         fabs: settingsFABs(context),
       );
 }
