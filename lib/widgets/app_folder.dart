@@ -363,7 +363,7 @@ class _AppFolderState extends State<AppFolder> {
                       : <String>[name, ...appList].join(folderSplit),
                 );
 
-                if (success) refreshAll();
+                if (success) widget.refresh();
               },
             ),
 
