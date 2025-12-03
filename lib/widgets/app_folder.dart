@@ -83,7 +83,7 @@ class _AppFolderState extends State<AppFolder> {
     name = items[0];
     appList = (items[1] == emptyTag) ? <String>[] : items.sublist(1);
     appSet = appList.toSet();
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   void refreshAll() {
