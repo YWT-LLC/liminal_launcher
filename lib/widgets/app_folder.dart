@@ -111,6 +111,13 @@ class _AppFolderState extends State<AppFolder> {
     }
   }
 
+  // Define custom widgets //
+
+  late final List<Widget> closeTail = <Widget>[
+    EzSpacer(space: spacing / 2, vertical: false),
+    EzIconButton(icon: const Icon(Icons.close), onPressed: toggleOpen),
+  ];
+
   // Init //
 
   @override
@@ -140,17 +147,16 @@ class _AppFolderState extends State<AppFolder> {
     }
   }
 
-  // Return the build //
-
-  late final List<Widget> closeTail = <Widget>[
-    EzSpacer(space: spacing / 2, vertical: false),
-    EzIconButton(icon: const Icon(Icons.close), onPressed: toggleOpen),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    // Gather the dynamic theme data //
+
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final TextTheme textTheme = Theme.of(context).textTheme;
+
+    // Return the build //
+
+    if (rippleThrottle != null) return const SizedBox.shrink();
 
     if (editing != false) {
       return EzScrollView(

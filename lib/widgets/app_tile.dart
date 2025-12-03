@@ -98,6 +98,8 @@ class _AppTileState extends State<AppTile> {
 
   @override
   Widget build(BuildContext context) {
+    if (rippleThrottle != null) return const SizedBox.shrink();
+
     return editing == false
         ? Row(
             // The Row prevents the AppTile from auto-expanding
