@@ -81,11 +81,11 @@ const List<String> limLauncherKeys = <String>[
 // Design
 const String homeTimeKey = 'home_time';
 const String homeDateKey = 'home_date';
+const String wideTilesKey = 'wide_tiles';
 const String listIconKey = 'list_icon';
 const String listLabelTypeKey = 'list_label_type';
 const String folderIconKey = 'folder_icon';
 const String folderLabelTypeKey = 'folder_label_type';
-
 const String darkUseOSKey = 'dark_use_os';
 const String lightUseOSKey = 'light_use_os';
 
@@ -93,6 +93,7 @@ const String lightUseOSKey = 'light_use_os';
 const List<String> limDesignKeys = <String>[
   homeTimeKey,
   homeDateKey,
+  wideTilesKey,
   listIconKey,
   listLabelTypeKey,
   folderIconKey,
@@ -153,6 +154,7 @@ final Map<String, Object> liminalDefault = <String, Object>{
   // Design
   homeTimeKey: true,
   homeDateKey: DateType.medium.configValue,
+  wideTilesKey: true,
   listIconKey: true,
   listLabelTypeKey: LabelType.full.configValue,
   folderIconKey: true,
