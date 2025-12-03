@@ -27,13 +27,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final double spacing = EzConfig.get(spacingKey);
 
-  late final EdgeInsets listPadding =
+  late final EdgeInsets tilePadding =
       EdgeInsets.symmetric(vertical: spacing / 2);
+
+  // Define the fixed build data //
 
   final ListAlignment hAlign =
       ListAlignmentConfig.fromValue(EzConfig.get(homeHAlignKey));
   final ListAlignment vAlign =
       ListAlignmentConfig.fromValue(EzConfig.get(homeVAlignKey));
+
+  final bool showTime = EzConfig.get(homeTimeKey);
+  final String dateType = EzConfig.get(homeDateKey);
+
+  final bool wideTiles = EzConfig.get(wideTilesKey);
 
   final bool listIcon = EzConfig.get(listIconKey);
   final LabelType listLabel =
@@ -43,16 +50,9 @@ class _HomeScreenState extends State<HomeScreen> {
   final LabelType folderLabel =
       LabelTypeConfig.fromValue(EzConfig.get(folderLabelTypeKey));
 
-  // Define the build data //
-
-  final bool showTime = EzConfig.get(homeTimeKey);
-  final String dateType = EzConfig.get(homeDateKey);
-
   late final AppInfoProvider listener = Provider.of<AppInfoProvider>(context);
   late final AppInfoProvider editor =
       Provider.of<AppInfoProvider>(context, listen: false);
-
-  late List<Widget> homeTiles = homeA2T();
 
   late final Map<String, dynamic> appListData = listData(
     listCheck: (String id) => !listener.hiddenSet.contains(id),
@@ -60,9 +60,13 @@ class _HomeScreenState extends State<HomeScreen> {
     refresh: refresh,
   );
 
-  bool atBottom = false;
+  // Define the dynamic build data //
 
+  late List<Widget> homeTiles = homeA2T();
+
+  bool atBottom = false;
   bool editing = false;
+
   late final OverlayState overlay = Overlay.of(context);
   ValueNotifier<double> rippleProgress = ValueNotifier<double>(0.0);
 
@@ -80,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
       if (parts.length > 1) {
         tileList.add(Padding(
           key: ValueKey<String>('${parts[0]}_$index'),
-          padding: EdgeInsets.symmetric(vertical: spacing / 2),
+          padding: tilePadding,
           child: AppFolder(
             listener: listener,
             editor: editor,
@@ -99,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
         final AppInfo app = listener.appMap[parts[0]] ?? nullApp;
         tileList.add(Padding(
           key: ValueKey<String>(app.id),
-          padding: EdgeInsets.symmetric(vertical: spacing / 2),
+          padding: tilePadding,
           child: AppTile(
             app: app,
             listener: listener,
@@ -187,18 +191,20 @@ class _HomeScreenState extends State<HomeScreen> {
             )
           : const SizedBox.shrink();
 
-  // Return the build //
-
   @override
   Widget build(BuildContext context) {
+    // Gather the dynamic theme data //
+
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final TextTheme textTheme = Theme.of(context).textTheme;
+
+    // Return the build //
 
     return LiminalScaffold(
       GestureDetector(
         behavior: HitTestBehavior.opaque,
         onLongPressStart: (LongPressStartDetails details) async {
-          if (!editing && (EzConfig.get(authToEditKey))) {
+          if (!editing && (EzConfig.get(authToEditKey) == true)) {
             // Check every time so no reset is required; O(1)
             bool authed = false;
 
@@ -215,7 +221,7 @@ class _HomeScreenState extends State<HomeScreen> {
             if (!authed) return;
           }
 
-          if (context.mounted) {
+          if (context.mounted && animDuration > Duration.zero) {
             // Ripple transition to editing
             final AnimationController rippleController =
                 AnimationController(vsync: overlay, duration: animDuration);
@@ -255,10 +261,7 @@ class _HomeScreenState extends State<HomeScreen> {
               if (editing) {
                 await navToHidden(context, textTheme, colorScheme);
               } else {
-                context.goNamed(
-                  appListPath,
-                  extra: appListData,
-                );
+                context.goNamed(appListPath, extra: appListData);
               }
             }
           }
@@ -269,12 +272,14 @@ class _HomeScreenState extends State<HomeScreen> {
             AppInfo? toLaunch;
 
             if (details.primaryVelocity! < 0) {
+              // Swiped left
               if (editing) {
                 doNothing();
               } else {
                 toLaunch = listener.appMap[EzConfig.get(leftSwipeIDKey)];
               }
             } else {
+              // Swiped right (==0 already handled)
               if (editing) {
                 editing = false;
                 refresh();
@@ -290,35 +295,40 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: vAlign.mainAxis,
           crossAxisAlignment: hAlign.crossAxis,
           children: <Widget>[
+            // Clock I
             if (vAlign == ListAlignment.start) clock(textTheme),
 
             // App list
-            editing
-                ? NotificationListener<ScrollNotification>(
-                    onNotification: (ScrollNotification notification) {
-                      if (notification is OverscrollNotification &&
-                          notification.overscroll > 0) {
-                        // Navigate on bottom overscroll
-                        if (atBottom) {
-                          navToHidden(context, textTheme, colorScheme);
-                          return true;
-                        } else {
-                          setState(() => atBottom = true);
-                          return true;
-                        }
-                      } else if (notification is ScrollUpdateNotification) {
-                        if (atBottom && notification.metrics.pixels < 0) {
-                          setState(() => atBottom = false);
-                        }
-                      } else if (notification is ScrollEndNotification) {
-                        setState(() => atBottom =
-                            (notification.metrics.pixels ==
-                                notification.metrics.maxScrollExtent));
+            Expanded(
+              child: NotificationListener<ScrollNotification>(
+                onNotification: (ScrollNotification notification) {
+                  if (notification is OverscrollNotification &&
+                      notification.overscroll > 0) {
+                    // Navigate on bottom overscroll
+                    if (atBottom) {
+                      if (editing) {
+                        navToHidden(context, textTheme, colorScheme);
+                      } else {
+                        context.goNamed(appListPath, extra: appListData);
                       }
-                      return false; // Let other notifications propagate
-                    },
-                    child: Expanded(
-                      child: ReorderableListView(
+
+                      return true;
+                    } else {
+                      setState(() => atBottom = true);
+                      return true;
+                    }
+                  } else if (notification is ScrollUpdateNotification) {
+                    if (atBottom && notification.metrics.pixels < 0) {
+                      setState(() => atBottom = false);
+                    }
+                  } else if (notification is ScrollEndNotification) {
+                    setState(() => atBottom = (notification.metrics.pixels ==
+                        notification.metrics.maxScrollExtent));
+                  }
+                  return false; // Let other notifications propagate
+                },
+                child: editing
+                    ? ReorderableListView(
                         onReorder: (int oldIndex, int newIndex) async {
                           if (oldIndex == newIndex) return;
 
@@ -338,15 +348,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           refresh();
                         },
                         children: homeTiles,
+                      )
+                    : EzScrollView(
+                        mainAxisAlignment: vAlign.mainAxis,
+                        crossAxisAlignment: hAlign.crossAxis,
+                        children: homeTiles,
                       ),
-                    ),
-                  )
-                : EzScrollView(
-                    mainAxisAlignment: vAlign.mainAxis,
-                    crossAxisAlignment: hAlign.crossAxis,
-                    children: homeTiles,
-                  ),
+              ),
+            ),
 
+            // Clock II
             if (vAlign == ListAlignment.end) clock(textTheme),
           ],
         ),
