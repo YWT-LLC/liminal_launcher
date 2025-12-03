@@ -349,10 +349,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                         children: homeTiles,
                       )
-                    : EzScrollView(
-                        mainAxisAlignment: vAlign.mainAxis,
-                        crossAxisAlignment: hAlign.crossAxis,
-                        children: homeTiles,
+                    : ConstrainedBox(
+                        constraints: wideTiles
+                            ? BoxConstraints(minWidth: widthOf(context) * 0.8)
+                            : const BoxConstraints(),
+                        child: EzScrollView(
+                          mainAxisAlignment: vAlign.mainAxis,
+                          crossAxisAlignment: hAlign.crossAxis,
+                          children: homeTiles,
+                        ),
                       ),
               ),
             ),
