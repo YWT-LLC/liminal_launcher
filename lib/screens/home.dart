@@ -356,6 +356,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: EzScrollView(
                           mainAxisAlignment: vAlign.mainAxis,
                           crossAxisAlignment: hAlign.crossAxis,
+                          physics: const ClampingScrollPhysics(),
                           children: homeTiles,
                         ),
                       ),
