@@ -49,24 +49,22 @@ class AppTile extends StatefulWidget {
 }
 
 class _AppTileState extends State<AppTile> {
-  // Gather the theme data //
+  // Gather the fixed theme data //
 
   final double padding = EzConfig.get(paddingKey);
   late final double appIconSize = (EzConfig.get(iconSizeKey) * 1.25) + padding;
 
   late final EFUILang el10n = ezL10n(context);
 
-  // Init //
+  // Define the build data //
 
   late bool? editing = widget.editable ? widget.editing : false;
   Timer? rippleThrottle;
 
-  @override
-  void initState() {
-    super.initState();
-    widget.rippleProgress?.addListener(rippling);
-  }
+  // Define custom functions //
 
+  /// Handle rippling effect
+  /// Transition to editing on home screen long press
   void rippling() {
     if (widget.editable == false ||
         rippleThrottle != null ||
@@ -86,6 +84,14 @@ class _AppTileState extends State<AppTile> {
         () => rippleThrottle = null,
       );
     }
+  }
+
+  // Init //
+
+  @override
+  void initState() {
+    super.initState();
+    widget.rippleProgress?.addListener(rippling);
   }
 
   // Return the build //
