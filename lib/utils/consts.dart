@@ -102,11 +102,11 @@ const List<String> limDesignKeys = <String>[
 
 const String leftSwipeIDKey = 'left_swipe_id';
 const String rightSwipeIDKey = 'right_swipe_id';
-const String authToEditKey = 'auth_to_edit';
-const String authForHiddenKey = 'auth_for_hidden';
 const String hideStatusKey = 'hide_status';
 const String autoAddToHomeKey = 'auto_add_to_home';
 const String autoSearchKey = 'auto_search';
+const String authToEditKey = 'auth_to_edit';
+const String authForHiddenKey = 'auth_for_hidden';
 
 /// Left/right swipe, auth, hide status, and auto add/search keys
 const List<String> limLauncherKeys = <String>[
