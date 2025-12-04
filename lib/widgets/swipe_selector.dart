@@ -25,10 +25,6 @@ class SwipeSelector extends StatefulWidget {
 class _SwipeSelectorState extends State<SwipeSelector> {
   // Define the build data //
 
-  final bool showIcon = EzConfig.get(listIconKey);
-  final LabelType labelType =
-      LabelTypeConfig.fromValue(EzConfig.get(listLabelTypeKey));
-
   late String key = widget.left ? leftSwipeIDKey : rightSwipeIDKey;
   late String dir = widget.left ? 'Left' : 'Right';
   late String lowDir = dir.toLowerCase();
@@ -42,8 +38,15 @@ class _SwipeSelectorState extends State<SwipeSelector> {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
+    final bool isDark = isDarkTheme(context);
+
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
+    final bool showIcon =
+        EzConfig.get(isDark ? darkListIconKey : lightListIconKey);
+    final LabelType labelType = LabelTypeConfig.fromValue(
+        EzConfig.get(isDark ? darkListLabelTypeKey : lightListLabelTypeKey));
 
     return EzRow(
       mainAxisSize: MainAxisSize.min,
