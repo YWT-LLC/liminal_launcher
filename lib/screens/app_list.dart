@@ -59,21 +59,10 @@ class _AppListScreenState extends State<AppListScreen> {
   final double padding = EzConfig.get(paddingKey);
   final double spacing = EzConfig.get(spacingKey);
 
-  final Duration animDuration = ezAnimDuration();
-
   late final EdgeInsets listPadding =
       EdgeInsets.symmetric(vertical: spacing / 2);
 
-  final LabelType listLabel =
-      LabelTypeConfig.fromValue(EzConfig.get(listLabelTypeKey));
-  final bool listIcon = EzConfig.get(listIconKey);
-
-  final ListAlignment hAlign =
-      ListAlignmentConfig.fromValue(EzConfig.get(listHAlignKey));
-  final ListAlignment vAlign =
-      ListAlignmentConfig.fromValue(EzConfig.get(listVAlignKey));
-
-  // Define the build data //
+  // Define the fixed build data //
 
   late final AppInfoProvider listener = Provider.of<AppInfoProvider>(context);
   late final AppInfoProvider editor =
@@ -115,10 +104,24 @@ class _AppListScreenState extends State<AppListScreen> {
           app.name.toLowerCase().contains(searchControl.text.toLowerCase()))
       .toList();
 
-  // Return the build //
-
   @override
   Widget build(BuildContext context) {
+    // Define the contextual build data //
+
+    final bool isDark = isDarkTheme(context);
+
+    final LabelType listLabel = LabelTypeConfig.fromValue(
+        EzConfig.get(isDark ? darkListLabelTypeKey : lightListLabelTypeKey));
+    final bool listIcon =
+        EzConfig.get(isDark ? darkListIconKey : lightListIconKey);
+
+    final ListAlignment hAlign = ListAlignmentConfig.fromValue(
+        EzConfig.get(isDark ? darkListHAlignKey : lightListHAlignKey));
+    final ListAlignment vAlign = ListAlignmentConfig.fromValue(
+        EzConfig.get(isDark ? darkListVAlignKey : lightListVAlignKey));
+
+    // Return the build //
+
     return LiminalScaffold(
       GestureDetector(
         behavior: HitTestBehavior.opaque,
