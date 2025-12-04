@@ -149,7 +149,7 @@ class _AppFolderState extends State<AppFolder> {
 
   @override
   Widget build(BuildContext context) {
-    // Gather the dynamic theme data //
+    // Gather the contextual theme data //
 
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final TextTheme textTheme = Theme.of(context).textTheme;
