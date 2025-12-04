@@ -39,21 +39,7 @@ class _LauncherSettingsScreenState extends State<LauncherSettingsScreen> {
         SwipeSelector(left: true, listener: listener),
         ezSpacer,
         SwipeSelector(left: false, listener: listener),
-        ezSeparator,
-
-        // Auth to edit
-        const EzSwitchPair(
-          text: 'Auth to edit',
-          valueKey: authToEditKey,
-        ),
-        ezSpacer,
-
-        // Auth for hidden
-        const EzSwitchPair(
-          text: 'Auth for hidden',
-          valueKey: authForHiddenKey,
-        ),
-        ezSpacer,
+        ezDivider,
 
         // Hide status bar
         const EzSwitchPair(
@@ -73,6 +59,20 @@ class _LauncherSettingsScreenState extends State<LauncherSettingsScreen> {
         const EzSwitchPair(
           text: 'Auto search',
           valueKey: autoSearchKey,
+        ),
+        ezSpacer,
+
+        // Auth to edit
+        const EzSwitchPair(
+          text: 'Auth to edit',
+          valueKey: authToEditKey,
+        ),
+        ezSpacer,
+
+        // Auth for hidden
+        const EzSwitchPair(
+          text: 'Auth for hidden',
+          valueKey: authForHiddenKey,
         ),
         ezSeparator,
       ]),
