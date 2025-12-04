@@ -7,7 +7,7 @@ import './export.dart';
 
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-// App config //
+//* App config *//
 
 /// Liminal Launcher
 const String appName = 'Liminal Launcher';
@@ -24,7 +24,7 @@ final AppInfo self = AppInfo(
   packageSize: 0,
 );
 
-// App assets //
+//* App assets *//
 
 /// assets/images/app-icon.jpg
 const String appIconPath = 'assets/images/app-icon.jpg';
@@ -38,9 +38,10 @@ const Map<String, String> credits = <String, String>{
   appIconPath: 'AI; tis a placeholder, human work coming soon.',
 };
 
-// EzConfig //
+//* EzConfig *//
 
-// BTS
+// BTS //
+
 const String homeIDsKey = 'home_ids';
 const String hiddenIDsKey = 'hidden_ids';
 const String renamedIDsKey = 'renamed_ids';
@@ -58,7 +59,47 @@ const List<String> limBTSKeys = <String>[
   shownReminderKey,
 ];
 
-// Launcher
+// Design //
+
+const String wideTilesKey = 'wide_tiles';
+
+const String darkHomeTimeKey = 'dark_home_time';
+const String darkHomeDateKey = 'dark_home_date';
+const String darkListIconKey = 'dark_list_icon';
+const String darkListLabelTypeKey = 'dark_list_label_type';
+const String darkFolderIconKey = 'dark_folder_icon';
+const String darkFolderLabelTypeKey = 'dark_folder_label_type';
+const String darkUseOSKey = 'dark_use_os';
+
+const String lightHomeTimeKey = 'light_home_time';
+const String lightHomeDateKey = 'light_home_date';
+const String lightListIconKey = 'light_list_icon';
+const String lightListLabelTypeKey = 'light_list_label_type';
+const String lightFolderIconKey = 'light_folder_icon';
+const String lightFolderLabelTypeKey = 'light_folder_label_type';
+const String lightUseOSKey = 'light_use_os';
+
+/// Clock keys,
+const List<String> limDesignKeys = <String>[
+  wideTilesKey,
+  darkHomeTimeKey,
+  darkHomeDateKey,
+  darkListIconKey,
+  darkListLabelTypeKey,
+  darkFolderIconKey,
+  darkFolderLabelTypeKey,
+  darkUseOSKey,
+  lightHomeTimeKey,
+  lightHomeDateKey,
+  lightListIconKey,
+  lightListLabelTypeKey,
+  lightFolderIconKey,
+  lightFolderLabelTypeKey,
+  lightUseOSKey,
+];
+
+// Launcher //
+
 const String leftSwipeIDKey = 'left_swipe_id';
 const String rightSwipeIDKey = 'right_swipe_id';
 const String authToEditKey = 'auth_to_edit';
@@ -71,50 +112,38 @@ const String autoSearchKey = 'auto_search';
 const List<String> limLauncherKeys = <String>[
   leftSwipeIDKey,
   rightSwipeIDKey,
-  authToEditKey,
-  authForHiddenKey,
   hideStatusKey,
   autoAddToHomeKey,
   autoSearchKey,
+  authToEditKey,
+  authForHiddenKey,
 ];
 
-// Design
-const String homeTimeKey = 'home_time';
-const String homeDateKey = 'home_date';
-const String wideTilesKey = 'wide_tiles';
-const String listIconKey = 'list_icon';
-const String listLabelTypeKey = 'list_label_type';
-const String folderIconKey = 'folder_icon';
-const String folderLabelTypeKey = 'folder_label_type';
-const String darkUseOSKey = 'dark_use_os';
-const String lightUseOSKey = 'light_use_os';
+// Layout //
 
-/// Clock keys,
-const List<String> limDesignKeys = <String>[
-  homeTimeKey,
-  homeDateKey,
-  wideTilesKey,
-  listIconKey,
-  listLabelTypeKey,
-  folderIconKey,
-  folderLabelTypeKey,
-  darkUseOSKey,
-  lightUseOSKey,
-];
+const String darkHomeHAlignKey = 'dark_home_horizontal_alignment';
+const String darkHomeVAlignKey = 'dark_home_vertical_alignment';
+const String darkListHAlignKey = 'dark_list_horizontal_alignment';
+const String darkListVAlignKey = 'dark_list_vertical_alignment';
 
-// Layout
-const String homeHAlignKey = 'home_horizontal_alignment';
-const String homeVAlignKey = 'home_vertical_alignment';
-const String listHAlignKey = 'list_horizontal_alignment';
-const String listVAlignKey = 'list_vertical_alignment';
+const String lightHomeHAlignKey = 'light_home_horizontal_alignment';
+const String lightHomeVAlignKey = 'light_home_vertical_alignment';
+const String lightListHAlignKey = 'light_list_horizontal_alignment';
+const String lightListVAlignKey = 'light_list_vertical_alignment';
 
 /// Home and list alignment keys
 const List<String> limLayoutKeys = <String>[
-  homeHAlignKey,
-  homeVAlignKey,
-  listHAlignKey,
-  listVAlignKey,
+  darkHomeHAlignKey,
+  darkHomeVAlignKey,
+  darkListHAlignKey,
+  darkListVAlignKey,
+  lightHomeHAlignKey,
+  lightHomeVAlignKey,
+  lightListHAlignKey,
+  lightListVAlignKey,
 ];
+
+// Shared //
 
 /// BTS, launcher setup, and Liminal specific design && layout keys
 const List<String> extraKeys = <String>[
@@ -139,8 +168,26 @@ final Map<String, Object> liminalDefault = <String, Object>{
   renamedIDsKey: <String>[],
   listSortKey: AppSort.name.configValue,
   ascListKey: true,
-
   shownReminderKey: false,
+
+  // Design
+  wideTilesKey: true,
+
+  darkHomeTimeKey: true,
+  darkHomeDateKey: DateType.medium.configValue,
+  darkListIconKey: false,
+  darkListLabelTypeKey: LabelType.full.configValue,
+  darkFolderIconKey: false,
+  darkFolderLabelTypeKey: LabelType.initials.configValue,
+  darkUseOSKey: true,
+
+  lightHomeTimeKey: true,
+  lightHomeDateKey: DateType.compact.configValue,
+  lightListIconKey: true,
+  lightListLabelTypeKey: LabelType.full.configValue,
+  lightFolderIconKey: true,
+  lightFolderLabelTypeKey: LabelType.none.configValue,
+  lightUseOSKey: true,
 
   // Launcher
   leftSwipeIDKey: '',
@@ -151,25 +198,19 @@ final Map<String, Object> liminalDefault = <String, Object>{
   autoAddToHomeKey: false,
   autoSearchKey: false,
 
-  // Design
-  homeTimeKey: true,
-  homeDateKey: DateType.medium.configValue,
-  wideTilesKey: true,
-  listIconKey: true,
-  listLabelTypeKey: LabelType.full.configValue,
-  folderIconKey: true,
-  folderLabelTypeKey: LabelType.none.configValue,
-  darkUseOSKey: true,
-  lightUseOSKey: true,
-
   // Layout
-  homeHAlignKey: ListAlignment.center.configValue,
-  homeVAlignKey: ListAlignment.start.configValue,
-  listHAlignKey: ListAlignment.center.configValue,
-  listVAlignKey: ListAlignment.start.configValue,
+  darkHomeHAlignKey: ListAlignment.center.configValue,
+  darkHomeVAlignKey: ListAlignment.start.configValue,
+  darkListHAlignKey: ListAlignment.center.configValue,
+  darkListVAlignKey: ListAlignment.start.configValue,
+
+  lightHomeHAlignKey: ListAlignment.center.configValue,
+  lightHomeVAlignKey: ListAlignment.start.configValue,
+  lightListHAlignKey: ListAlignment.center.configValue,
+  lightListVAlignKey: ListAlignment.start.configValue,
 };
 
-// Custom fonts //
+//* Custom fonts *//
 
 /// wingding
 const String wingding = 'Wingding';
