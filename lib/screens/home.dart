@@ -22,7 +22,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   // Gather the fixed theme data //
 
   final double spacing = EzConfig.get(spacingKey);
@@ -31,24 +31,6 @@ class _HomeScreenState extends State<HomeScreen> {
       EdgeInsets.symmetric(vertical: spacing / 2);
 
   // Define the fixed build data //
-
-  final ListAlignment hAlign =
-      ListAlignmentConfig.fromValue(EzConfig.get(homeHAlignKey));
-  final ListAlignment vAlign =
-      ListAlignmentConfig.fromValue(EzConfig.get(homeVAlignKey));
-
-  final bool showTime = EzConfig.get(homeTimeKey);
-  final String dateType = EzConfig.get(homeDateKey);
-
-  final bool wideTiles = EzConfig.get(wideTilesKey);
-
-  final bool listIcon = EzConfig.get(listIconKey);
-  final LabelType listLabel =
-      LabelTypeConfig.fromValue(EzConfig.get(listLabelTypeKey));
-
-  final bool folderIcon = EzConfig.get(folderIconKey);
-  final LabelType folderLabel =
-      LabelTypeConfig.fromValue(EzConfig.get(folderLabelTypeKey));
 
   late final AppInfoProvider listener = Provider.of<AppInfoProvider>(context);
   late final AppInfoProvider editor =
@@ -60,15 +42,28 @@ class _HomeScreenState extends State<HomeScreen> {
     refresh: refresh,
   );
 
-  // Define the dynamic build data //
-
-  late List<Widget> homeTiles = homeA2T();
-
+  final bool wideTiles = EzConfig.get(wideTilesKey);
   bool atBottom = false;
   bool editing = false;
 
   late final OverlayState overlay = Overlay.of(context);
   ValueNotifier<double> rippleProgress = ValueNotifier<double>(0.0);
+
+  // Define the contextual build data //
+
+  late ListAlignment hAlign;
+  late ListAlignment vAlign;
+
+  late bool showTime;
+  late String dateType;
+
+  late bool listIcon;
+  late LabelType listLabel;
+
+  late bool folderIcon;
+  late LabelType folderLabel;
+
+  late List<Widget> homeTiles = homeA2T();
 
   // Define custom functions //
 
@@ -190,6 +185,53 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             )
           : const SizedBox.shrink();
+
+  // Init //
+
+  void setContextualData(bool isDark) {
+    if (isDark) {
+      hAlign = ListAlignmentConfig.fromValue(EzConfig.get(darkHomeHAlignKey));
+      vAlign = ListAlignmentConfig.fromValue(EzConfig.get(darkHomeVAlignKey));
+
+      showTime = EzConfig.get(darkHomeTimeKey);
+      dateType = EzConfig.get(darkHomeDateKey);
+
+      listIcon = EzConfig.get(darkListIconKey);
+      listLabel = LabelTypeConfig.fromValue(EzConfig.get(darkListLabelTypeKey));
+
+      folderIcon = EzConfig.get(darkFolderIconKey);
+      folderLabel =
+          LabelTypeConfig.fromValue(EzConfig.get(darkFolderLabelTypeKey));
+    } else {
+      hAlign = ListAlignmentConfig.fromValue(EzConfig.get(lightHomeHAlignKey));
+      vAlign = ListAlignmentConfig.fromValue(EzConfig.get(lightHomeVAlignKey));
+
+      showTime = EzConfig.get(lightHomeTimeKey);
+      dateType = EzConfig.get(lightHomeDateKey);
+
+      listIcon = EzConfig.get(lightListIconKey);
+      listLabel =
+          LabelTypeConfig.fromValue(EzConfig.get(lightListLabelTypeKey));
+
+      folderIcon = EzConfig.get(lightFolderIconKey);
+      folderLabel =
+          LabelTypeConfig.fromValue(EzConfig.get(lightFolderLabelTypeKey));
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    setContextualData(isDarkTheme(context));
+  }
+
+  @override
+  void didChangePlatformBrightness() {
+    super.didChangePlatformBrightness();
+    setContextualData(isDarkTheme(context));
+    refresh();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -411,5 +453,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ]
           : null,
     );
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 }
