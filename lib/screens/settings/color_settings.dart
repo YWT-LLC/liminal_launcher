@@ -7,6 +7,7 @@ import '../../utils/export.dart';
 import '../../widgets/export.dart';
 
 import 'package:flutter/material.dart';
+import 'package:app_settings/app_settings.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class ColorSettingsScreen extends StatelessWidget {
@@ -18,6 +19,10 @@ class ColorSettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) => LiminalScaffold(
         EzColorSettings(
           target: target,
+          themeLink: () => AppSettings.openAppSettings(
+            type: AppSettingsType.display,
+            asAnotherTask: true,
+          ),
           extraSaveKeys: extraKeys,
           appName: appName,
           androidPackage: androidPackage,
