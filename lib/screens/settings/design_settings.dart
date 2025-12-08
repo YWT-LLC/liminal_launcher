@@ -18,7 +18,8 @@ class DesignSettingsScreen extends StatefulWidget {
   State<DesignSettingsScreen> createState() => _DesignSettingsScreenState();
 }
 
-class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
+class _DesignSettingsScreenState extends State<DesignSettingsScreen>
+    with WidgetsBindingObserver {
   // Gather the theme data //
 
   final double margin = EzConfig.get(marginKey);
@@ -27,7 +28,14 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
   // Define the build data //
 
   int redraw = 0;
-  DateType currDateType = DateTypeConfig.fromValue(EzConfig.get(homeDateKey));
+
+  late String homeTimeKey;
+  late String homeDateKey;
+  late DateType currDateType;
+  late String listIconKey;
+  late String listLabelTypeKey;
+  late String folderIconKey;
+  late String folderLabelTypeKey;
 
   final List<DropdownMenuEntry<LabelType>> labelEntries =
       <DropdownMenuEntry<LabelType>>[
@@ -101,6 +109,42 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
             .map((String char) => wingdingMap[char] ?? char)
             .join();
     }
+  }
+
+  // Init //
+
+  void setContextualData(bool isDark) {
+    if (isDark) {
+      homeTimeKey = darkHomeTimeKey;
+      homeDateKey = darkHomeDateKey;
+      currDateType = DateTypeConfig.fromValue(EzConfig.get(darkHomeDateKey));
+      listIconKey = darkListIconKey;
+      listLabelTypeKey = darkListLabelTypeKey;
+      folderIconKey = darkFolderIconKey;
+      folderLabelTypeKey = darkFolderLabelTypeKey;
+    } else {
+      homeTimeKey = lightHomeTimeKey;
+      homeDateKey = lightHomeDateKey;
+      currDateType = DateTypeConfig.fromValue(EzConfig.get(lightHomeDateKey));
+      listIconKey = lightListIconKey;
+      listLabelTypeKey = lightListLabelTypeKey;
+      folderIconKey = lightFolderIconKey;
+      folderLabelTypeKey = lightFolderLabelTypeKey;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    setContextualData(isDarkTheme(context));
+  }
+
+  @override
+  void didChangePlatformBrightness() {
+    super.didChangePlatformBrightness();
+    setContextualData(isDarkTheme(context));
+    drawState();
   }
 
   //* Return the build *//
@@ -393,5 +437,11 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen> {
       ),
       fabs: settingsFABs(context),
     );
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 }
