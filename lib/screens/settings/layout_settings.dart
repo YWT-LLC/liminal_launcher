@@ -116,25 +116,17 @@ class _AlignmentSelectors extends StatefulWidget {
 class _AlignmentSelectorsState extends State<_AlignmentSelectors> {
   // Gather the fixed theme data //
 
+  final double sizeMod = 0.333;
+
   final double padding = EzConfig.get(paddingKey);
   final double iconSize = EzConfig.get(iconSizeKey);
 
-  // Define the build data //
-
-  final double sizeMod = 0.333;
-
-  late final String hConfigKey = widget.home ? homeHAlignKey : listHAlignKey;
-  late final String vConfigKey = widget.home ? homeVAlignKey : listVAlignKey;
-
-  late ListAlignment hAlign =
-      ListAlignmentConfig.fromValue(EzConfig.get(hConfigKey));
-
-  late ListAlignment vAlign =
-      ListAlignmentConfig.fromValue(EzConfig.get(vConfigKey));
-
   // Define custom functions //
 
-  Alignment merge() {
+  Alignment merge({
+    required ListAlignment hAlign,
+    required ListAlignment vAlign,
+  }) {
     switch (hAlign) {
       case ListAlignment.start:
         switch (vAlign) {
@@ -166,12 +158,35 @@ class _AlignmentSelectorsState extends State<_AlignmentSelectors> {
     }
   }
 
-  // Return the build //
-
   @override
   Widget build(BuildContext context) {
+    // Gather the dynamic theme data //
+
     final bool isDark = isDarkTheme(context);
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
+
+    // Define the build data //
+
+    final String hConfigKey = widget.home
+        ? isDark
+            ? darkHomeHAlignKey
+            : lightHomeHAlignKey
+        : isDark
+            ? darkListHAlignKey
+            : lightListHAlignKey;
+    final String vConfigKey = widget.home
+        ? isDark
+            ? darkHomeVAlignKey
+            : lightHomeVAlignKey
+        : isDark
+            ? darkListVAlignKey
+            : lightListVAlignKey;
+
+    ListAlignment hAlign =
+        ListAlignmentConfig.fromValue(EzConfig.get(hConfigKey));
+
+    ListAlignment vAlign =
+        ListAlignmentConfig.fromValue(EzConfig.get(vConfigKey));
 
     final String? backgroundImagePath =
         EzConfig.get(isDark ? darkBackgroundImageKey : lightBackgroundImageKey);
@@ -179,6 +194,8 @@ class _AlignmentSelectorsState extends State<_AlignmentSelectors> {
     final BoxFit? backgroundImageFit = ezFitFromName(isDark
         ? EzConfig.get('$darkBackgroundImageKey$boxFitSuffix')
         : EzConfig.get('$lightBackgroundImageKey$boxFitSuffix'));
+
+    // Return the build //
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -206,7 +223,7 @@ class _AlignmentSelectorsState extends State<_AlignmentSelectors> {
 
             // Aligned circular icon
             Align(
-              alignment: merge(),
+              alignment: merge(hAlign: hAlign, vAlign: vAlign),
               child: ClipOval(
                 child: Image.asset(
                   appIconPath,
