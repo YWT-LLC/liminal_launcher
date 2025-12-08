@@ -20,6 +20,7 @@ dependencies:
 
   # Community
   after_layout: ^1.2.0
+  app_settings: ^7.0.0
   flutter_localized_locales: ^2.0.5
   flutter_platform_widgets: ^9.0.0
   go_transitions: ^0.8.3
