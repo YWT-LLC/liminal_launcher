@@ -105,14 +105,6 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen>
 
           // Navigation //
 
-          // Launcher
-          EzElevatedIconButton(
-            onPressed: () => context.goNamed(launcherSettingsPath),
-            icon: EzIcon(Icons.navigate_next),
-            label: 'Launcher settings',
-          ),
-          ezSpacer,
-
           // Color
           EzElevatedIconButton(
             onPressed: () => context.goNamed(colorSettingsPath),
@@ -126,6 +118,14 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen>
             onPressed: () => context.goNamed(designSettingsPath),
             icon: EzIcon(Icons.navigate_next),
             label: el10n.dsPageTitle,
+          ),
+          ezSpacer,
+
+          // Launcher
+          EzElevatedIconButton(
+            onPressed: () => context.goNamed(launcherSettingsPath),
+            icon: EzIcon(Icons.navigate_next),
+            label: 'Launcher settings',
           ),
           ezSpacer,
 
@@ -153,7 +153,44 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen>
           // Randomize
           EzConfigRandomizer(
             onConfirm: () async {
-              await EzConfig.randomize(isDarkTheme(context), shiny: false);
+              final bool isDark = isDarkTheme(context);
+
+              late final String homeTimeKey;
+              late final String homeDateKey;
+              late final String listIconKey;
+              late final String listLabelTypeKey;
+              late final String folderIconKey;
+              late final String folderLabelTypeKey;
+              late final String homeHAlignKey;
+              late final String homeVAlignKey;
+              late final String listHAlignKey;
+              late final String listVAlignKey;
+
+              if (isDark) {
+                homeTimeKey = darkHomeTimeKey;
+                homeDateKey = darkHomeDateKey;
+                listIconKey = darkListIconKey;
+                listLabelTypeKey = darkListLabelTypeKey;
+                folderIconKey = darkFolderIconKey;
+                folderLabelTypeKey = darkFolderLabelTypeKey;
+                homeHAlignKey = darkHomeHAlignKey;
+                homeVAlignKey = darkHomeVAlignKey;
+                listHAlignKey = darkListHAlignKey;
+                listVAlignKey = darkListVAlignKey;
+              } else {
+                homeTimeKey = lightHomeTimeKey;
+                homeDateKey = lightHomeDateKey;
+                listIconKey = lightListIconKey;
+                listLabelTypeKey = lightListLabelTypeKey;
+                folderIconKey = lightFolderIconKey;
+                folderLabelTypeKey = lightFolderLabelTypeKey;
+                homeHAlignKey = lightHomeHAlignKey;
+                homeVAlignKey = lightHomeVAlignKey;
+                listHAlignKey = lightListHAlignKey;
+                listVAlignKey = lightListVAlignKey;
+              }
+
+              await EzConfig.randomize(isDark, shiny: false);
               final Random random = Random();
 
               // Design
