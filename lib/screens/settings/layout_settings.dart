@@ -7,6 +7,7 @@ import '../../utils/export.dart';
 import '../../widgets/export.dart';
 
 import 'package:flutter/material.dart';
+import 'package:app_settings/app_settings.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
@@ -20,7 +21,10 @@ class LayoutSettingsScreen extends StatefulWidget {
 class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
   // Gather the fixed theme data //
 
+  final double margin = EzConfig.get(marginKey);
   final double spacing = EzConfig.get(spacingKey);
+
+  late final EFUILang el10n = ezL10n(context);
 
   // Define custom Widgets //
 
@@ -40,64 +44,84 @@ class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
     ),
   ];
 
-  // Return the build //
-
   @override
-  Widget build(BuildContext context) => LiminalScaffold(
-        EzLayoutSettings(
-          beforeLayout: const <Widget>[
-            EzDominantHandSwitch(),
-            ezSeparator,
-          ],
-          afterLayout: <Widget>[
-            ezDivider,
+  Widget build(BuildContext context) {
+    // Gather the contextual theme data //
 
-            // Home list align
-            EzElevatedIconButton(
-              onPressed: () => ezModal(
-                context: context,
-                builder: (_) => EzScrollView(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    const _AlignmentSelectors(
-                      home: true,
-                      segments: alignmentSegments,
-                    ),
-                    EzSpacer(space: spacing * 1.5),
-                  ],
-                ),
-              ),
-              label: 'Home alignment',
-              icon: Icon(PlatformIcons(context).home),
-            ),
-            ezSpacer,
+    final bool isDark = isDarkTheme(context);
 
-            // App list align
-            EzElevatedIconButton(
-              onPressed: () => ezModal(
-                context: context,
-                builder: (_) => EzScrollView(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    const _AlignmentSelectors(
-                      home: false,
-                      segments: alignmentSegments,
-                    ),
-                    EzSpacer(space: spacing * 1.5),
-                  ],
-                ),
-              ),
-              label: 'App list(s) alignment',
-              icon: const Icon(Icons.list),
+    // Return the build //
+
+    return LiminalScaffold(
+      EzLayoutSettings(
+        beforeLayout: const <Widget>[
+          EzDominantHandSwitch(),
+          ezSeparator,
+        ],
+        afterLayout: <Widget>[
+          EzSpacer(space: spacing * 1.25),
+          EzDivider(height: margin),
+          EzLink(
+            el10n.gEditingTheme(isDark
+                ? el10n.gDark.toLowerCase()
+                : el10n.gLight.toLowerCase()),
+            onTap: () => AppSettings.openAppSettings(
+              type: AppSettingsType.display,
+              asAnotherTask: true,
             ),
-          ],
-          resetSpacer: ezDivider,
-          extraSaveKeys: extraKeys,
-          appName: appName,
-          androidPackage: androidPackage,
-        ),
-        fabs: settingsFABs(context),
-      );
+            hint: el10n.gEditingThemeHint,
+            style: Theme.of(context).textTheme.labelLarge,
+            textAlign: TextAlign.center,
+          ),
+          EzSpacer(space: spacing * 1.25),
+
+          // Home list align
+          EzElevatedIconButton(
+            onPressed: () => ezModal(
+              context: context,
+              builder: (_) => const EzScrollView(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  _AlignmentSelectors(
+                    home: true,
+                    segments: alignmentSegments,
+                  ),
+                  ezSeparator,
+                ],
+              ),
+            ),
+            label: 'Home alignment',
+            icon: Icon(PlatformIcons(context).home),
+          ),
+          ezSpacer,
+
+          // App list align
+          EzElevatedIconButton(
+            onPressed: () => ezModal(
+              context: context,
+              builder: (_) => const EzScrollView(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  _AlignmentSelectors(
+                    home: false,
+                    segments: alignmentSegments,
+                  ),
+                  ezSeparator,
+                ],
+              ),
+            ),
+            label: 'App list(s) alignment',
+            icon: const Icon(Icons.list),
+          ),
+        ],
+        resetSpacer: ezDivider,
+        extraSaveKeys: extraKeys,
+        appName: appName,
+        androidPackage: androidPackage,
+      ),
+      fabs: settingsFABs(context),
+    );
+  }
 }
 
 class _AlignmentSelectors extends StatefulWidget {
