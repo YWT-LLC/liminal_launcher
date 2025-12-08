@@ -8,6 +8,7 @@ import '../../widgets/export.dart';
 
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:app_settings/app_settings.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
@@ -158,7 +159,51 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
 
     return LiminalScaffold(
       EzDesignSettings(
-        globalSettingsPrepend: <Widget>[
+        themeLink: () => AppSettings.openAppSettings(
+          type: AppSettingsType.display,
+          asAnotherTask: true,
+        ),
+        includeScroll: false,
+        includeBackgroundImage: false,
+        themedSettingsPostpend: <Widget>[
+          // Wallpaper //
+
+          if (EzConfig.get(isDark ? darkUseOSKey : lightUseOSKey) ==
+              false) ...<Widget>[
+            ezSpacer,
+            EzScrollView(
+              scrollDirection: Axis.horizontal,
+              startCentered: true,
+              mainAxisSize: MainAxisSize.min,
+              child: isDark
+                  ? EzImageSetting(
+                      key: UniqueKey(),
+                      configKey: darkBackgroundImageKey,
+                      label: 'Wallpaper',
+                      updateTheme: Brightness.dark,
+                    )
+                  : EzImageSetting(
+                      key: UniqueKey(),
+                      configKey: lightBackgroundImageKey,
+                      label: 'Wallpaper',
+                      updateTheme: Brightness.light,
+                    ),
+            ),
+          ],
+
+          // Use OS
+          ezSpacer,
+          EzSwitchPair(
+            key: ValueKey<String>('use_os_$redraw'),
+            text: 'Use System Wallpaper',
+            valueKey: isDark ? darkUseOSKey : lightUseOSKey,
+            onChangedCallback: (bool? choice) {
+              if (choice == null) return;
+              setState(() {});
+            },
+          ),
+          ezSeparator,
+
           // Header settings //
 
           // Time
@@ -205,7 +250,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
               ),
             ],
           ),
-          ezSeparator,
+          ezSpacer,
 
           // AppTile settings //
 
@@ -385,48 +430,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
             icon: Icon(PlatformIcons(context).edit),
             label: 'Folder apps',
           ),
-          ezSeparator,
-        ],
-        includeIconSize: false,
-        includeScroll: false,
-        includeBackgroundImage: false,
-        themedSettingsPostpend: <Widget>[
-          // Wallpaper //
-
-          if (EzConfig.get(isDark ? darkUseOSKey : lightUseOSKey) ==
-              false) ...<Widget>[
-            ezSpacer,
-            EzScrollView(
-              scrollDirection: Axis.horizontal,
-              startCentered: true,
-              mainAxisSize: MainAxisSize.min,
-              child: isDark
-                  ? EzImageSetting(
-                      key: UniqueKey(),
-                      configKey: darkBackgroundImageKey,
-                      label: 'Wallpaper',
-                      updateTheme: Brightness.dark,
-                    )
-                  : EzImageSetting(
-                      key: UniqueKey(),
-                      configKey: lightBackgroundImageKey,
-                      label: 'Wallpaper',
-                      updateTheme: Brightness.light,
-                    ),
-            ),
-          ],
-
-          // Use OS
           ezSpacer,
-          EzSwitchPair(
-            key: ValueKey<String>('use_os_$redraw'),
-            text: 'Use System Wallpaper',
-            valueKey: isDark ? darkUseOSKey : lightUseOSKey,
-            onChangedCallback: (bool? choice) {
-              if (choice == null) return;
-              setState(() {});
-            },
-          ),
         ],
         darkThemeResetKeys: <String>{darkUseOSKey},
         lightThemeResetKeys: <String>{darkUseOSKey},
