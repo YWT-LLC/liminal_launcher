@@ -179,14 +179,16 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
                   ? EzImageSetting(
                       key: UniqueKey(),
                       configKey: darkBackgroundImageKey,
-                      label: 'Wallpaper',
                       updateTheme: Brightness.dark,
+                      allowSolidColor: true,
+                      label: 'Wallpaper',
                     )
                   : EzImageSetting(
                       key: UniqueKey(),
                       configKey: lightBackgroundImageKey,
-                      label: 'Wallpaper',
                       updateTheme: Brightness.light,
+                      allowSolidColor: true,
+                      label: 'Wallpaper',
                     ),
             ),
           ],
