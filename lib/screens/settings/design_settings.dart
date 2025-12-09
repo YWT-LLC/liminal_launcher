@@ -316,6 +316,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
 
                       // Show icon
                       EzSwitchPair(
+                        key: UniqueKey(),
                         text: 'Show icon',
                         valueKey: listIconKey,
                         onChangedCallback: (bool? value) async {
@@ -405,6 +406,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
 
                       // Show icon
                       EzSwitchPair(
+                        key: UniqueKey(),
                         text: 'Show icon',
                         valueKey: folderIconKey,
                         onChangedCallback: (bool? value) async {
