@@ -48,23 +48,49 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen>
         ),
       );
 
-  //* Return the build *//
+  // Init //
 
   @override
   void afterFirstLayout(BuildContext context) async {
     if (!(await isGPlayInstall()) &&
         !EzConfig.get(shownReminderKey) &&
         context.mounted) {
+      final TextStyle? style = Theme.of(context).textTheme.bodyLarge;
+
       await showPlatformDialog(
-        // TODO: Replace vibe holders with real content
         context: context,
-        builder: (_) => const EzAlertDialog(
-          title: Text(
-            'Ty && welcome',
+        builder: (_) => EzAlertDialog(
+          title: const Text(
+            'Welcome to Liminal Launcher',
             textAlign: TextAlign.center,
           ),
-          content: Text(
-            'Friendly reminder to contribute if you can. Ty again, this will not show again.',
+          content: EzRichText(
+            <InlineSpan>[
+              const EzPlainText(
+                text:
+                    '''We hope it serves you well! This version is not from the Play Store, so it should have been free.
+Rest assured, the free version of Liminal will always be identical to the Google Play version.
+
+With that said, if you want to support Liminal's development, or the development of more Empathetech software, please consider ''',
+              ),
+              EzInlineLink(
+                'contributing',
+                style: style,
+                textAlign: TextAlign.center,
+                url: Uri.parse('https://www.empathetech.net/#/contribute'),
+                hint: 'Open a link to the Empathetic contribution options.',
+              ),
+              const EzPlainText(
+                text: '''.
+
+This is the only non-tutorial dialog that will appear.
+And it will not appear again.
+
+Thank you, and enjoy!''',
+              ),
+            ],
+            style: style,
+            textBackground: false,
             textAlign: TextAlign.center,
           ),
         ),
@@ -72,6 +98,8 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen>
       await EzConfig.setBool(shownReminderKey, true);
     }
   }
+
+  //* Return the build *//
 
   @override
   Widget build(BuildContext context) => LiminalScaffold(
