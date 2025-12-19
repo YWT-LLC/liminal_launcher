@@ -42,22 +42,22 @@ const Map<String, String> credits = <String, String>{
 
 // BTS //
 
-const String homeIDsKey = 'home_ids';
-const String hiddenIDsKey = 'hidden_ids';
-const String renamedIDsKey = 'renamed_ids';
-const String listSortKey = 'list_sort';
 const String ascListKey = 'asc_list';
+const String hiddenIDsKey = 'hidden_ids';
+const String homeIDsKey = 'home_ids';
+const String listSortKey = 'list_sort';
+const String renamedIDsKey = 'renamed_ids';
 const String shownReminderKey = 'shown_reminder';
 
 /// Home/app list keys
-const List<String> limBTSKeys = <String>[
-  homeIDsKey,
-  hiddenIDsKey,
-  renamedIDsKey,
-  listSortKey,
-  ascListKey,
-  shownReminderKey,
-];
+const Map<String, Type> limBTSKeys = <String, Type>{
+  ascListKey: bool,
+  hiddenIDsKey: List<String>,
+  homeIDsKey: List<String>,
+  listSortKey: String,
+  renamedIDsKey: List<String>,
+  shownReminderKey: bool,
+};
 
 // Design //
 
@@ -80,23 +80,23 @@ const String lightFolderLabelTypeKey = 'light_folder_label_type';
 const String lightUseOSKey = 'light_use_os';
 
 /// Clock keys,
-const List<String> limDesignKeys = <String>[
-  wideTilesKey,
-  darkHomeTimeKey,
-  darkHomeDateKey,
-  darkListIconKey,
-  darkListLabelTypeKey,
-  darkFolderIconKey,
-  darkFolderLabelTypeKey,
-  darkUseOSKey,
-  lightHomeTimeKey,
-  lightHomeDateKey,
-  lightListIconKey,
-  lightListLabelTypeKey,
-  lightFolderIconKey,
-  lightFolderLabelTypeKey,
-  lightUseOSKey,
-];
+const Map<String, Type> limDesignKeys = <String, Type>{
+  wideTilesKey: bool,
+  darkHomeTimeKey: bool,
+  darkHomeDateKey: String,
+  darkListIconKey: bool,
+  darkListLabelTypeKey: String,
+  darkFolderIconKey: bool,
+  darkFolderLabelTypeKey: String,
+  darkUseOSKey: bool,
+  lightHomeTimeKey: bool,
+  lightHomeDateKey: String,
+  lightListIconKey: bool,
+  lightListLabelTypeKey: String,
+  lightFolderIconKey: bool,
+  lightFolderLabelTypeKey: String,
+  lightUseOSKey: bool,
+};
 
 // Launcher //
 
@@ -109,15 +109,15 @@ const String authToEditKey = 'auth_to_edit';
 const String authForHiddenKey = 'auth_for_hidden';
 
 /// Left/right swipe, auth, hide status, and auto add/search keys
-const List<String> limLauncherKeys = <String>[
-  leftSwipeIDKey,
-  rightSwipeIDKey,
-  hideStatusKey,
-  autoAddToHomeKey,
-  autoSearchKey,
-  authToEditKey,
-  authForHiddenKey,
-];
+const Map<String, Type> limLauncherKeys = <String, Type>{
+  leftSwipeIDKey: String,
+  rightSwipeIDKey: String,
+  hideStatusKey: bool,
+  autoAddToHomeKey: bool,
+  autoSearchKey: bool,
+  authToEditKey: bool,
+  authForHiddenKey: bool,
+};
 
 // Layout //
 
@@ -132,26 +132,41 @@ const String lightListHAlignKey = 'light_list_horizontal_alignment';
 const String lightListVAlignKey = 'light_list_vertical_alignment';
 
 /// Home and list alignment keys
-const List<String> limLayoutKeys = <String>[
-  darkHomeHAlignKey,
-  darkHomeVAlignKey,
-  darkListHAlignKey,
-  darkListVAlignKey,
-  lightHomeHAlignKey,
-  lightHomeVAlignKey,
-  lightListHAlignKey,
-  lightListVAlignKey,
-];
+const Map<String, Type> limLayoutKeys = <String, Type>{
+  darkHomeHAlignKey: String,
+  darkHomeVAlignKey: String,
+  darkListHAlignKey: String,
+  darkListVAlignKey: String,
+  lightHomeHAlignKey: String,
+  lightHomeVAlignKey: String,
+  lightListHAlignKey: String,
+  lightListVAlignKey: String,
+};
 
 // Shared //
 
-/// BTS, launcher setup, and Liminal specific design && layout keys
-const List<String> extraKeys = <String>[
+/// [limBTSKeys], [limDesignKeys], [limLauncherKeys], [limLayoutKeys]
+const Map<String, Type> _extraKeys = <String, Type>{
   ...limBTSKeys,
-  ...limLauncherKeys,
   ...limDesignKeys,
+  ...limLauncherKeys,
   ...limLayoutKeys,
-];
+};
+
+/// Keys from [limBTSKeys], [limDesignKeys], [limLauncherKeys], [limLayoutKeys]
+final List<String> extraSaveKeys = _extraKeys.keys.toList();
+
+/// [allEZConfigKeys], [limBTSKeys], [limDesignKeys], [limLauncherKeys], [limLayoutKeys]
+const Map<String, Type> allLimKeys = <String, Type>{
+  ...allEZConfigKeys,
+  ..._extraKeys
+};
+
+/// Keys that should be preserved from [EzConfig.reset] by default
+final Set<String> defaultNoResetKeys = <String>{
+  ...limBTSKeys.keys,
+  ...limLauncherKeys.keys,
+};
 
 /// [EzConfig] keys that should never b reset/only changed by the user
 const Set<String> neverResetKeys = <String>{
