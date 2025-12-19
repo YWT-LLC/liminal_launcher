@@ -23,9 +23,6 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
     with WidgetsBindingObserver {
   // Gather the theme data //
 
-  final double margin = EzConfig.get(marginKey);
-  final double spacing = EzConfig.get(spacingKey);
-
   // Define the build data //
 
   int redraw = 0;
