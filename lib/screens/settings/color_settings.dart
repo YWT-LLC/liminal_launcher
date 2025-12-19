@@ -23,7 +23,7 @@ class ColorSettingsScreen extends StatelessWidget {
             type: AppSettingsType.display,
             asAnotherTask: true,
           ),
-          extraSaveKeys: extraKeys,
+          extraSaveKeys: extraSaveKeys,
           appName: appName,
           androidPackage: androidPackage,
         ),

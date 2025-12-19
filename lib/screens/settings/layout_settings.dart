@@ -115,7 +115,7 @@ class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
           ),
         ],
         resetSpacer: ezDivider,
-        extraSaveKeys: extraKeys,
+        extraSaveKeys: extraSaveKeys,
         appName: appName,
         androidPackage: androidPackage,
       ),
