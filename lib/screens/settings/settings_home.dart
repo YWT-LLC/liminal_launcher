@@ -322,7 +322,7 @@ Thank you, and enjoy!''',
               }
               await EzConfig.setString(listVAlignKey, listVAlignValue);
             },
-            extraKeys: extraKeys,
+            extraKeys: extraSaveKeys,
             appName: appName,
             androidPackage: androidPackage,
           ),
@@ -336,11 +336,6 @@ Thank you, and enjoy!''',
                 BuildContext dContext,
                 StateSetter dialogState,
               ) {
-                late final Set<String> skip = <String>{
-                  ...limBTSKeys,
-                  ...limLauncherKeys,
-                };
-
                 late final List<Widget> materialActions;
                 late final List<Widget> cupertinoActions;
 
@@ -348,7 +343,7 @@ Thank you, and enjoy!''',
                   context: context,
                   onConfirm: () async {
                     await EzConfig.reset(
-                        skip: resetAll ? neverResetKeys : skip);
+                        skip: resetAll ? neverResetKeys : defaultNoResetKeys);
                     if (resetAll) await appProvider.reset();
                     if (dContext.mounted) Navigator.of(dContext).pop();
                   },
@@ -380,7 +375,7 @@ Thank you, and enjoy!''',
                         ezRichUndoWarning(
                           context,
                           standalone: false,
-                          extraKeys: extraKeys,
+                          extraKeys: extraSaveKeys,
                           appName: appName,
                           androidPackage: androidPackage,
                         ),
