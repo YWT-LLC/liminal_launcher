@@ -64,9 +64,8 @@ class _AppListScreenState extends State<AppListScreen> {
 
   // Define the fixed build data //
 
-  late final AppInfoProvider listener = Provider.of<AppInfoProvider>(context);
-  late final AppInfoProvider editor =
-      Provider.of<AppInfoProvider>(context, listen: false);
+  late final AppInfoProvider appProvider =
+      Provider.of<AppInfoProvider>(context);
 
   late List<AppInfo> appList = getApps();
   late List<AppInfo> searchList = appList;
@@ -96,8 +95,9 @@ class _AppListScreenState extends State<AppListScreen> {
     if (widget.autoRefresh) refreshAll();
   }
 
-  List<AppInfo> getApps() =>
-      listener.apps.where((AppInfo app) => widget.listCheck(app.id)).toList();
+  List<AppInfo> getApps() => appProvider.apps
+      .where((AppInfo app) => widget.listCheck(app.id))
+      .toList();
 
   List<AppInfo> searchApps(List<AppInfo> appList) => appList
       .where((AppInfo app) =>
@@ -167,7 +167,7 @@ class _AppListScreenState extends State<AppListScreen> {
                           listSortKey,
                           listSort.configValue,
                         );
-                        editor.sort(listSort, ascList);
+                        appProvider.sort(listSort, ascList);
 
                         refreshList();
                       },
@@ -183,7 +183,7 @@ class _AppListScreenState extends State<AppListScreen> {
                           listSortKey,
                           listSort.configValue,
                         );
-                        editor.sort(listSort, ascList);
+                        appProvider.sort(listSort, ascList);
 
                         refreshList();
                       },
@@ -199,7 +199,7 @@ class _AppListScreenState extends State<AppListScreen> {
                           listSortKey,
                           listSort.configValue,
                         );
-                        editor.sort(listSort, ascList);
+                        appProvider.sort(listSort, ascList);
 
                         refreshList();
                       },
@@ -215,7 +215,7 @@ class _AppListScreenState extends State<AppListScreen> {
                           listSortKey,
                           listSort.configValue,
                         );
-                        editor.sort(listSort, ascList);
+                        appProvider.sort(listSort, ascList);
 
                         refreshList();
                       },
@@ -232,7 +232,7 @@ class _AppListScreenState extends State<AppListScreen> {
                     ascList = !ascList;
 
                     await EzConfig.setBool(ascListKey, ascList);
-                    editor.sort(listSort, ascList);
+                    appProvider.sort(listSort, ascList);
 
                     refreshList();
                   },
@@ -331,8 +331,7 @@ class _AppListScreenState extends State<AppListScreen> {
                           padding: listPadding,
                           child: AppTile(
                             app: searchList[index],
-                            listener: listener,
-                            editor: editor,
+                            appProvider: appProvider,
                             onHomeScreen: false,
                             hAlign: hAlign,
                             labelType: listLabel,
@@ -355,8 +354,7 @@ class _AppListScreenState extends State<AppListScreen> {
                           padding: listPadding,
                           child: AppTile(
                             app: appList[index],
-                            listener: listener,
-                            editor: editor,
+                            appProvider: appProvider,
                             onHomeScreen: false,
                             hAlign: hAlign,
                             labelType: listLabel,

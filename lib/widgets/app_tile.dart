@@ -12,8 +12,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class AppTile extends StatefulWidget {
   final AppInfo app;
-  final AppInfoProvider listener;
-  final AppInfoProvider editor;
+  final AppInfoProvider appProvider;
 
   /// true for home list, null for home folder, false for false
   /// Quantum computing
@@ -31,8 +30,7 @@ class AppTile extends StatefulWidget {
   const AppTile({
     super.key,
     required this.app,
-    required this.listener,
-    required this.editor,
+    required this.appProvider,
     required this.onHomeScreen,
     required this.hAlign,
     required this.labelType,
@@ -143,13 +141,13 @@ class _AppTileState extends State<AppTile> {
                   ],
 
                   // Add to home
-                  if (!widget.listener.hiddenSet.contains(widget.app.id) &&
-                      !widget.listener.homeSet
+                  if (!widget.appProvider.hiddenSet.contains(widget.app.id) &&
+                      !widget.appProvider.homeSet
                           .contains(widget.app.id)) ...<Widget>[
                     EzIconButton(
                       onPressed: () async {
                         final bool success =
-                            await widget.editor.addHomeApp(widget.app.id);
+                            await widget.appProvider.addHomeApp(widget.app.id);
 
                         if (success) {
                           setState(() => editing = false);
@@ -165,8 +163,8 @@ class _AppTileState extends State<AppTile> {
                   if (widget.onHomeScreen == true) ...<Widget>[
                     EzIconButton(
                       onPressed: () async {
-                        final bool success =
-                            await widget.editor.removeHomeApp(widget.app.id);
+                        final bool success = await widget.appProvider
+                            .removeHomeApp(widget.app.id);
 
                         if (success) {
                           setState(() => editing = false);
@@ -205,7 +203,7 @@ class _AppTileState extends State<AppTile> {
                             final String name = renameController.text.trim();
                             if (validateRename(name) != null) return null;
 
-                            final bool success = await widget.editor
+                            final bool success = await widget.appProvider
                                 .renameApp(newName: name, appID: widget.app.id);
 
                             if (success) {
@@ -262,15 +260,16 @@ class _AppTileState extends State<AppTile> {
                   // Show/hide
                   EzIconButton(
                     onPressed: () async {
-                      widget.listener.hiddenSet.contains(widget.app.id)
-                          ? await widget.editor.showApp(widget.app.id)
-                          : await widget.editor.hideApp(widget.app.id);
+                      widget.appProvider.hiddenSet.contains(widget.app.id)
+                          ? await widget.appProvider.showApp(widget.app.id)
+                          : await widget.appProvider.hideApp(widget.app.id);
                       setState(() => editing = false);
                       widget.refresh();
                     },
-                    icon: Icon(widget.listener.hiddenSet.contains(widget.app.id)
-                        ? PlatformIcons(context).eyeSolid
-                        : PlatformIcons(context).eyeSlash),
+                    icon: Icon(
+                        widget.appProvider.hiddenSet.contains(widget.app.id)
+                            ? PlatformIcons(context).eyeSolid
+                            : PlatformIcons(context).eyeSlash),
                   ),
 
                   // Delete
@@ -283,7 +282,7 @@ class _AppTileState extends State<AppTile> {
 
                         if (deleted) {
                           setState(() => editing = false);
-                          await widget.editor.removeDeleted(widget.app.id);
+                          await widget.appProvider.removeDeleted(widget.app.id);
                           widget.refresh();
                         }
                       },

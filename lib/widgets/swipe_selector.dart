@@ -14,9 +14,13 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class SwipeSelector extends StatefulWidget {
   final bool left;
-  final AppInfoProvider listener;
+  final AppInfoProvider appProvider;
 
-  const SwipeSelector({super.key, required this.left, required this.listener});
+  const SwipeSelector({
+    super.key,
+    required this.left,
+    required this.appProvider,
+  });
 
   @override
   State<SwipeSelector> createState() => _SwipeSelectorState();
@@ -32,7 +36,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
   late String? appID = EzConfig.get(key);
   late AppInfo app = (appID == null || appID!.isEmpty)
       ? nullApp
-      : widget.listener.appMap[appID!] ?? nullApp;
+      : widget.appProvider.appMap[appID!] ?? nullApp;
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +86,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
             extra: listData(
               listCheck: (String id) => true,
               onSelected: (String id) async {
-                final AppInfo? newApp = widget.listener.appMap[id];
+                final AppInfo? newApp = widget.appProvider.appMap[id];
                 if (newApp == null || newApp == app) {
                   if (context.mounted) Navigator.of(context).pop();
                   return;

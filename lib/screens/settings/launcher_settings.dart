@@ -25,7 +25,8 @@ class _LauncherSettingsScreenState extends State<LauncherSettingsScreen> {
 
   // Define the build data //
 
-  late final AppInfoProvider listener = Provider.of<AppInfoProvider>(context);
+  late final AppInfoProvider appProvider =
+      Provider.of<AppInfoProvider>(context);
 
   // Return the build //
 
@@ -36,9 +37,9 @@ class _LauncherSettingsScreenState extends State<LauncherSettingsScreen> {
         if (spacing > margin) EzSpacer(space: spacing - margin),
 
         // Swipe selectors
-        SwipeSelector(left: true, listener: listener),
+        SwipeSelector(left: true, appProvider: appProvider),
         ezSpacer,
-        SwipeSelector(left: false, listener: listener),
+        SwipeSelector(left: false, appProvider: appProvider),
         ezDivider,
 
         // Hide status bar

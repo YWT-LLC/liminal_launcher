@@ -14,8 +14,7 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class AppFolder extends StatefulWidget {
-  final AppInfoProvider listener;
-  final AppInfoProvider editor;
+  final AppInfoProvider appProvider;
   final int index;
   final ListAlignment hAlign;
   final LabelType folderLabel;
@@ -28,8 +27,7 @@ class AppFolder extends StatefulWidget {
 
   const AppFolder({
     super.key,
-    required this.listener,
-    required this.editor,
+    required this.appProvider,
     required this.index,
     required this.hAlign,
     required this.folderLabel,
@@ -61,7 +59,8 @@ class _AppFolderState extends State<AppFolder> {
   // Define the build data //
 
   late int index = widget.index;
-  late List<String> items = widget.listener.homeList[index].split(folderSplit);
+  late List<String> items =
+      widget.appProvider.homeList[index].split(folderSplit);
 
   late String name = items[0];
   late final String folderLabel;
@@ -79,7 +78,7 @@ class _AppFolderState extends State<AppFolder> {
   void toggleOpen() => setState(() => open = !open);
 
   void refreshFolder() {
-    items = widget.listener.homeList[index].split(folderSplit);
+    items = widget.appProvider.homeList[index].split(folderSplit);
     name = items[0];
     appList = (items[1] == emptyTag) ? <String>[] : items.sublist(1);
     appSet = appList.toSet();
@@ -185,7 +184,7 @@ class _AppFolderState extends State<AppFolder> {
                   listCheck: (String id) => !appSet.contains(id),
                   onSelected: (String id) async {
                     final int? indexMod =
-                        await widget.editor.addToFolder(id, index);
+                        await widget.appProvider.addToFolder(id, index);
 
                     if (indexMod != null) index += indexMod;
                   },
@@ -221,7 +220,7 @@ class _AppFolderState extends State<AppFolder> {
                     if (validateRename(name) != null) return null;
 
                     final bool success =
-                        await widget.editor.renameFolder(name, index);
+                        await widget.appProvider.renameFolder(name, index);
 
                     if (success) {
                       if (dContext.mounted) Navigator.of(dContext).pop(name);
@@ -292,7 +291,7 @@ class _AppFolderState extends State<AppFolder> {
                           setModal(() {});
 
                           // Storage update
-                          await widget.editor.reorderFolderItem(
+                          await widget.appProvider.reorderFolderItem(
                             oldIndex: oldIndex + 1, // name offset
                             newIndex: newIndex + 1,
                             folderIndex: widget.index,
@@ -302,7 +301,8 @@ class _AppFolderState extends State<AppFolder> {
                         },
                         children: appList
                             .map((String id) {
-                              final AppInfo? app = widget.listener.appMap[id];
+                              final AppInfo? app =
+                                  widget.appProvider.appMap[id];
                               if (app == null) return null;
 
                               return Padding(
@@ -326,7 +326,7 @@ class _AppFolderState extends State<AppFolder> {
                                     EzIconButton(
                                       icon: Icon(PlatformIcons(context).remove),
                                       onPressed: () async {
-                                        await widget.editor
+                                        await widget.appProvider
                                             .removeFromFolder(id, widget.index);
                                         refreshAll();
                                         setModal(() {});
@@ -357,7 +357,7 @@ class _AppFolderState extends State<AppFolder> {
             EzIconButton(
               icon: Icon(PlatformIcons(context).delete),
               onPressed: () async {
-                final bool success = await widget.editor.deleteFolder(
+                final bool success = await widget.appProvider.deleteFolder(
                   appList.isEmpty
                       ? '$name$folderSplit$emptyTag'
                       : <String>[name, ...appList].join(folderSplit),
@@ -404,15 +404,14 @@ class _AppFolderState extends State<AppFolder> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: appList
                         .map((String id) {
-                          final AppInfo? app = widget.listener.appMap[id];
+                          final AppInfo? app = widget.appProvider.appMap[id];
                           if (app == null) return null;
 
                           return Padding(
                             padding: rowPadding,
                             child: AppTile(
                               app: app,
-                              listener: widget.listener,
-                              editor: widget.editor,
+                              appProvider: widget.appProvider,
                               onHomeScreen: null,
                               hAlign: widget.hAlign,
                               labelType: widget.folderLabel,

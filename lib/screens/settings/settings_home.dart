@@ -32,9 +32,8 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen>
 
   // Define the build data //
 
-  late final AppInfoProvider listener = Provider.of<AppInfoProvider>(context);
-  late final AppInfoProvider editor =
-      Provider.of<AppInfoProvider>(context, listen: false);
+  late final AppInfoProvider appProvider =
+      Provider.of<AppInfoProvider>(context);
 
   bool resetAll = false;
 
@@ -350,7 +349,7 @@ Thank you, and enjoy!''',
                   onConfirm: () async {
                     await EzConfig.reset(
                         skip: resetAll ? neverResetKeys : skip);
-                    if (resetAll) await editor.reset();
+                    if (resetAll) await appProvider.reset();
                     if (dContext.mounted) Navigator.of(dContext).pop();
                   },
                   confirmIsDestructive: true,

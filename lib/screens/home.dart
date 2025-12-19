@@ -32,12 +32,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   // Define the fixed build data //
 
-  late final AppInfoProvider listener = Provider.of<AppInfoProvider>(context);
-  late final AppInfoProvider editor =
-      Provider.of<AppInfoProvider>(context, listen: false);
+  late final AppInfoProvider appProvider =
+      Provider.of<AppInfoProvider>(context);
 
   late final Map<String, dynamic> appListData = listData(
-    listCheck: (String id) => !listener.hiddenSet.contains(id),
+    listCheck: (String id) => !appProvider.hiddenSet.contains(id),
     onSelected: (String id) => launchApp(id),
     refresh: refresh,
   );
@@ -68,12 +67,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   // Define custom functions //
 
   /// home apps to tiles
-  /// listener.homeList -> AppTile/AppFolder
+  /// appProvider.homeList -> AppTile/AppFolder
   List<Widget> homeA2T() {
     final List<Widget> tileList = <Widget>[];
 
-    for (int index = 0; index < listener.homeList.length; index++) {
-      final String item = listener.homeList[index];
+    for (int index = 0; index < appProvider.homeList.length; index++) {
+      final String item = appProvider.homeList[index];
       final List<String> parts = item.split(folderSplit);
 
       if (parts.length > 1) {
@@ -81,8 +80,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           key: ValueKey<String>('${parts[0]}_$index'),
           padding: tilePadding,
           child: AppFolder(
-            listener: listener,
-            editor: editor,
+            appProvider: appProvider,
             index: index,
             hAlign: hAlign,
             folderLabel: folderLabel,
@@ -95,14 +93,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           ),
         ));
       } else {
-        final AppInfo app = listener.appMap[parts[0]] ?? nullApp;
+        final AppInfo app = appProvider.appMap[parts[0]] ?? nullApp;
         tileList.add(Padding(
           key: ValueKey<String>(app.id),
           padding: tilePadding,
           child: AppTile(
             app: app,
-            listener: listener,
-            editor: editor,
+            appProvider: appProvider,
             onHomeScreen: true,
             hAlign: hAlign,
             labelType: listLabel,
@@ -150,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       context.goNamed(
         appListPath,
         extra: listData(
-          listCheck: (String id) => listener.hiddenSet.contains(id),
+          listCheck: (String id) => appProvider.hiddenSet.contains(id),
           onSelected: (String id) => launchApp(id),
           icon: EzTextBackground(EzRow(
             mainAxisSize: MainAxisSize.min,
@@ -318,7 +315,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               if (editing) {
                 doNothing();
               } else {
-                toLaunch = listener.appMap[EzConfig.get(leftSwipeIDKey)];
+                toLaunch = appProvider.appMap[EzConfig.get(leftSwipeIDKey)];
               }
             } else {
               // Swiped right (==0 already handled)
@@ -326,7 +323,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 editing = false;
                 refresh();
               } else {
-                toLaunch = listener.appMap[EzConfig.get(rightSwipeIDKey)];
+                toLaunch = appProvider.appMap[EzConfig.get(rightSwipeIDKey)];
               }
             }
 
@@ -383,7 +380,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                           setState(() {});
 
                           // Storage update
-                          await editor.reorderHomeItem(
+                          await appProvider.reorderHomeItem(
                             oldIndex: oldIndex,
                             newIndex: newIndex,
                           );
@@ -421,9 +418,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   appListPath,
                   extra: listData(
                     listCheck: (String id) =>
-                        !listener.hiddenSet.contains(id) &&
-                        !listener.homeSet.contains(id),
-                    onSelected: (String id) => editor.addHomeApp(id),
+                        !appProvider.hiddenSet.contains(id) &&
+                        !appProvider.homeSet.contains(id),
+                    onSelected: (String id) => appProvider.addHomeApp(id),
                     refresh: refresh,
                     autoRefresh: true,
                     icon: EzTextBackground(EzRow(
@@ -443,7 +440,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
               // Add folder
               AddFolderFAB(context, () {
-                editor.addHomeFolder();
+                appProvider.addHomeFolder();
                 refresh();
               }),
               ezSpacer,
