@@ -21,9 +21,6 @@ class LayoutSettingsScreen extends StatefulWidget {
 class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
   // Gather the fixed theme data //
 
-  final double margin = EzConfig.get(marginKey);
-  final double spacing = EzConfig.get(spacingKey);
-
   late final EFUILang el10n = ezL10n(context);
 
   // Define custom Widgets //
@@ -47,6 +44,11 @@ class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     // Gather the contextual theme data //
+
+    const EzSeparator ezSeparator = EzSeparator();
+
+    final double margin = EzConfig.margin;
+    final double spacing = EzConfig.spacing;
 
     final bool isDark = isDarkTheme(context);
 
@@ -93,7 +95,7 @@ class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
             label: 'Home alignment',
             icon: Icon(PlatformIcons(context).home),
           ),
-          ezSpacer,
+          const EzSpacer(),
 
           // App list align
           EzElevatedIconButton(
@@ -114,7 +116,7 @@ class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
             icon: const Icon(Icons.list),
           ),
         ],
-        resetSpacer: ezDivider,
+        resetSpacer: const EzDivider(),
         extraSaveKeys: extraSaveKeys,
         appName: appName,
         androidPackage: androidPackage,
@@ -141,9 +143,6 @@ class _AlignmentSelectorsState extends State<_AlignmentSelectors> {
   // Gather the fixed theme data //
 
   final double sizeMod = 0.333;
-
-  final double padding = EzConfig.get(paddingKey);
-  final double iconSize = EzConfig.get(iconSizeKey);
 
   // Define custom functions //
 
@@ -185,6 +184,9 @@ class _AlignmentSelectorsState extends State<_AlignmentSelectors> {
   @override
   Widget build(BuildContext context) {
     // Gather the contextual theme data //
+
+    final double padding = EzConfig.padding;
+    final double iconSize = EzConfig.iconSize;
 
     final bool isDark = isDarkTheme(context);
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
@@ -242,7 +244,7 @@ class _AlignmentSelectorsState extends State<_AlignmentSelectors> {
                         fit: backgroundImageFit,
                       ),
               ),
-              margin: EdgeInsets.all(EzConfig.get(marginKey) * sizeMod),
+              margin: EdgeInsets.all(EzConfig.margin * sizeMod),
             ),
 
             // Aligned circular icon
@@ -261,7 +263,7 @@ class _AlignmentSelectorsState extends State<_AlignmentSelectors> {
             ),
           ]),
         ),
-        ezSeparator,
+        const EzSeparator(),
 
         // Controls
         Wrap(
@@ -282,7 +284,7 @@ class _AlignmentSelectorsState extends State<_AlignmentSelectors> {
                 setState(() => hAlign = selected);
               },
             ),
-            ezSpacer,
+            const EzSpacer(),
 
             // Vertical
             SegmentedButton<ListAlignment>(
