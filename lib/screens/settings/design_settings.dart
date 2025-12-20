@@ -145,12 +145,18 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
     drawState();
   }
 
-  //* Return the build *//
-
   @override
   Widget build(BuildContext context) {
+    // Gather the contextual theme data //
+
+    const EzSpacer ezSpacer = EzSpacer();
+    const EzSpacer ezRowSpacer = EzSpacer(vertical: false);
+    const EzSeparator ezSeparator = EzSeparator();
+
     final bool isDark = isDarkTheme(context);
     final TextTheme texTheme = Theme.of(context).textTheme;
+
+    //* Return the build *//
 
     final DateTime now = DateTime.now();
 
@@ -225,7 +231,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
                 style: texTheme.bodyLarge,
                 textAlign: TextAlign.center,
               ),
-              ezMargin,
+              EzMargin(),
 
               // Button
               EzDropdownMenu<DateType>(

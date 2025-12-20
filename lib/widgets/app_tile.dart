@@ -47,14 +47,9 @@ class AppTile extends StatefulWidget {
 }
 
 class _AppTileState extends State<AppTile> {
-  // Gather the fixed theme data //
-
-  final double padding = EzConfig.get(paddingKey);
-  late final double appIconSize = (EzConfig.get(iconSizeKey) * 1.25) + padding;
+  // Define the build data //
 
   late final EFUILang el10n = ezL10n(context);
-
-  // Define the build data //
 
   late bool? editing = widget.editable ? widget.editing : false;
   Timer? rippleThrottle;
@@ -92,225 +87,230 @@ class _AppTileState extends State<AppTile> {
     widget.rippleProgress?.addListener(rippling);
   }
 
-  // Return the build //
-
   @override
-  Widget build(BuildContext context) => Visibility(
-        visible: rippleThrottle == null,
-        maintainSize: true,
-        maintainState: true,
-        maintainAnimation: true,
-        child: editing == false
-            ? Row(
-                // The Row prevents the AppTile from auto-expanding
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: widget.hAlign.mainAxis,
-                crossAxisAlignment: widget.hAlign.crossAxis,
-                children: <Widget>[
-                  TileButton(
-                    app: widget.app,
-                    labelType: widget.labelType,
-                    showIcon: widget.showIcon,
-                    onPressed: () => widget.onSelected(widget.app.id),
-                    onLongPress: () => widget.editable
-                        ? setState(() => editing = true)
-                        : doNothing,
+  Widget build(BuildContext context) {
+    // Gather the contextual theme data //
+
+    const EzSpacer ezRowSpacer = EzSpacer(vertical: false);
+
+    final double appIconSize = (EzConfig.iconSize * 1.25) + EzConfig.padding;
+
+    // Return the build //
+    return Visibility(
+      visible: rippleThrottle == null,
+      maintainSize: true,
+      maintainState: true,
+      maintainAnimation: true,
+      child: editing == false
+          ? Row(
+              // The Row prevents the AppTile from auto-expanding
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: widget.hAlign.mainAxis,
+              crossAxisAlignment: widget.hAlign.crossAxis,
+              children: <Widget>[
+                TileButton(
+                  app: widget.app,
+                  labelType: widget.labelType,
+                  showIcon: widget.showIcon,
+                  onPressed: () => widget.onSelected(widget.app.id),
+                  onLongPress: () => widget.editable
+                      ? setState(() => editing = true)
+                      : doNothing,
+                ),
+              ],
+            )
+          : EzScrollView(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: widget.hAlign.mainAxis,
+              crossAxisAlignment: widget.hAlign.crossAxis,
+              scrollDirection: Axis.horizontal,
+              reverseHands: true,
+              showScrollHint: true,
+              children: <Widget>[
+                // App icon
+                if (widget.app.icon != null) ...<Widget>[
+                  GestureDetector(
+                    onTap: () => widget.onSelected(widget.app.id),
+                    child: Image.memory(
+                      widget.app.icon!,
+                      semanticLabel: widget.app.name,
+                      width: appIconSize,
+                      height: appIconSize,
+                    ),
                   ),
+                  ezRowSpacer,
                 ],
-              )
-            : EzScrollView(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: widget.hAlign.mainAxis,
-                crossAxisAlignment: widget.hAlign.crossAxis,
-                scrollDirection: Axis.horizontal,
-                reverseHands: true,
-                showScrollHint: true,
-                children: <Widget>[
-                  // App icon
-                  if (widget.app.icon != null) ...<Widget>[
-                    GestureDetector(
-                      onTap: () => widget.onSelected(widget.app.id),
-                      child: Image.memory(
-                        widget.app.icon!,
-                        semanticLabel: widget.app.name,
-                        width: appIconSize,
-                        height: appIconSize,
-                      ),
-                    ),
-                    ezRowSpacer,
-                  ],
 
-                  // Add to home
-                  if (!widget.appProvider.hiddenSet.contains(widget.app.id) &&
-                      !widget.appProvider.homeSet
-                          .contains(widget.app.id)) ...<Widget>[
-                    EzIconButton(
-                      onPressed: () async {
-                        final bool success =
-                            await widget.appProvider.addHomeApp(widget.app.id);
-
-                        if (success) {
-                          setState(() => editing = false);
-                          widget.refresh();
-                        }
-                      },
-                      icon: const Icon(Icons.add_to_home_screen),
-                    ),
-                    ezRowSpacer,
-                  ],
-
-                  // Remove from home
-                  if (widget.onHomeScreen == true) ...<Widget>[
-                    EzIconButton(
-                      onPressed: () async {
-                        final bool success = await widget.appProvider
-                            .removeHomeApp(widget.app.id);
-
-                        if (success) {
-                          setState(() => editing = false);
-                          widget.refresh();
-                        }
-                      },
-                      icon: Icon(PlatformIcons(context).remove),
-                    ),
-                    ezRowSpacer,
-                  ],
-
-                  // Info
+                // Add to home
+                if (!widget.appProvider.hiddenSet.contains(widget.app.id) &&
+                    !widget.appProvider.homeSet
+                        .contains(widget.app.id)) ...<Widget>[
                   EzIconButton(
                     onPressed: () async {
-                      await openSettings(widget.app.id);
-                      if (widget.onHomeScreen == false && context.mounted) {
-                        Navigator.of(context).pop();
+                      final bool success =
+                          await widget.appProvider.addHomeApp(widget.app.id);
+
+                      if (success) {
+                        setState(() => editing = false);
+                        widget.refresh();
                       }
-                      widget.refresh();
                     },
-                    icon: Icon(PlatformIcons(context).info),
+                    icon: const Icon(Icons.add_to_home_screen),
                   ),
                   ezRowSpacer,
+                ],
 
-                  // Rename
-                  EzIconButton(
-                    onPressed: () => showPlatformDialog(
-                        context: context,
-                        builder: (BuildContext dContext) {
-                          final TextEditingController renameController =
-                              TextEditingController();
-
-                          void onConfirm() async {
-                            closeKeyboard(dContext);
-
-                            final String name = renameController.text.trim();
-                            if (validateRename(name) != null) return null;
-
-                            final bool success = await widget.appProvider
-                                .renameApp(newName: name, appID: widget.app.id);
-
-                            if (success) {
-                              if (dContext.mounted) {
-                                Navigator.of(dContext).pop(name);
-                              }
-                              widget.refresh();
-                            }
-                          }
-
-                          void onDeny() {
-                            closeKeyboard(dContext);
-                            Navigator.of(dContext).pop();
-                          }
-
-                          late final List<Widget> materialActions;
-                          late final List<Widget> cupertinoActions;
-
-                          (materialActions, cupertinoActions) = ezActionPairs(
-                            context: context,
-                            confirmMsg: el10n.gApply,
-                            onConfirm: onConfirm,
-                            confirmIsDestructive: true,
-                            denyMsg: el10n.gCancel,
-                            onDeny: onDeny,
-                          );
-
-                          return EzAlertDialog(
-                            title: Text(
-                              'Rename ${widget.app.name}?',
-                              textAlign: TextAlign.center,
-                            ),
-                            content: Form(
-                              child: TextFormField(
-                                controller: renameController,
-                                textAlign: TextAlign.center,
-                                maxLines: 1,
-                                autofillHints: const <String>[
-                                  AutofillHints.name,
-                                ],
-                                autovalidateMode: AutovalidateMode.onUnfocus,
-                                validator: validateRename,
-                              ),
-                            ),
-                            materialActions: materialActions,
-                            cupertinoActions: cupertinoActions,
-                            needsClose: false,
-                          );
-                        }),
-                    icon: Icon(PlatformIcons(context).edit),
-                  ),
-                  ezRowSpacer,
-
-                  // Show/hide
+                // Remove from home
+                if (widget.onHomeScreen == true) ...<Widget>[
                   EzIconButton(
                     onPressed: () async {
-                      widget.appProvider.hiddenSet.contains(widget.app.id)
-                          ? await widget.appProvider.showApp(widget.app.id)
-                          : await widget.appProvider.hideApp(widget.app.id);
-                      setState(() => editing = false);
-                      widget.refresh();
+                      final bool success =
+                          await widget.appProvider.removeHomeApp(widget.app.id);
+
+                      if (success) {
+                        setState(() => editing = false);
+                        widget.refresh();
+                      }
                     },
-                    icon: Icon(
-                        widget.appProvider.hiddenSet.contains(widget.app.id)
-                            ? PlatformIcons(context).eyeSolid
-                            : PlatformIcons(context).eyeSlash),
+                    icon: Icon(PlatformIcons(context).remove),
                   ),
-
-                  // Delete
-                  if (widget.app.removable) ...<Widget>[
-                    ezRowSpacer,
-                    EzIconButton(
-                      onPressed: () async {
-                        final bool deleted =
-                            await deleteApp(context, widget.app);
-
-                        if (deleted) {
-                          setState(() => editing = false);
-                          await widget.appProvider.removeDeleted(widget.app.id);
-                          widget.refresh();
-                        }
-                      },
-                      icon: Icon(PlatformIcons(context).delete),
-                    ),
-                  ],
-
-                  // Close/end edits
-                  if (editing == true) ...<Widget>[
-                    ezRowSpacer,
-                    EzIconButton(
-                      onPressed: () => setState(() => editing = false),
-                      icon: const Icon(Icons.close),
-                    ),
-                  ],
-
-                  // Drag handle
-                  if (widget.onHomeScreen == true &&
-                      editing == null) ...<Widget>[
-                    ezRowSpacer,
-                    EzIcon(
-                      Icons.drag_handle,
-                      color: Theme.of(context).colorScheme.outline,
-                    ),
-                  ],
+                  ezRowSpacer,
                 ],
-              ),
-      );
+
+                // Info
+                EzIconButton(
+                  onPressed: () async {
+                    await openSettings(widget.app.id);
+                    if (widget.onHomeScreen == false && context.mounted) {
+                      Navigator.of(context).pop();
+                    }
+                    widget.refresh();
+                  },
+                  icon: Icon(PlatformIcons(context).info),
+                ),
+                ezRowSpacer,
+
+                // Rename
+                EzIconButton(
+                  onPressed: () => showPlatformDialog(
+                      context: context,
+                      builder: (BuildContext dContext) {
+                        final TextEditingController renameController =
+                            TextEditingController();
+
+                        void onConfirm() async {
+                          closeKeyboard(dContext);
+
+                          final String name = renameController.text.trim();
+                          if (validateRename(name) != null) return null;
+
+                          final bool success = await widget.appProvider
+                              .renameApp(newName: name, appID: widget.app.id);
+
+                          if (success) {
+                            if (dContext.mounted) {
+                              Navigator.of(dContext).pop(name);
+                            }
+                            widget.refresh();
+                          }
+                        }
+
+                        void onDeny() {
+                          closeKeyboard(dContext);
+                          Navigator.of(dContext).pop();
+                        }
+
+                        late final List<Widget> materialActions;
+                        late final List<Widget> cupertinoActions;
+
+                        (materialActions, cupertinoActions) = ezActionPairs(
+                          context: context,
+                          confirmMsg: el10n.gApply,
+                          onConfirm: onConfirm,
+                          confirmIsDestructive: true,
+                          denyMsg: el10n.gCancel,
+                          onDeny: onDeny,
+                        );
+
+                        return EzAlertDialog(
+                          title: Text(
+                            'Rename ${widget.app.name}?',
+                            textAlign: TextAlign.center,
+                          ),
+                          content: Form(
+                            child: TextFormField(
+                              controller: renameController,
+                              textAlign: TextAlign.center,
+                              maxLines: 1,
+                              autofillHints: const <String>[
+                                AutofillHints.name,
+                              ],
+                              autovalidateMode: AutovalidateMode.onUnfocus,
+                              validator: validateRename,
+                            ),
+                          ),
+                          materialActions: materialActions,
+                          cupertinoActions: cupertinoActions,
+                          needsClose: false,
+                        );
+                      }),
+                  icon: Icon(PlatformIcons(context).edit),
+                ),
+                ezRowSpacer,
+
+                // Show/hide
+                EzIconButton(
+                  onPressed: () async {
+                    widget.appProvider.hiddenSet.contains(widget.app.id)
+                        ? await widget.appProvider.showApp(widget.app.id)
+                        : await widget.appProvider.hideApp(widget.app.id);
+                    setState(() => editing = false);
+                    widget.refresh();
+                  },
+                  icon: Icon(
+                      widget.appProvider.hiddenSet.contains(widget.app.id)
+                          ? PlatformIcons(context).eyeSolid
+                          : PlatformIcons(context).eyeSlash),
+                ),
+
+                // Delete
+                if (widget.app.removable) ...<Widget>[
+                  ezRowSpacer,
+                  EzIconButton(
+                    onPressed: () async {
+                      final bool deleted = await deleteApp(context, widget.app);
+
+                      if (deleted) {
+                        setState(() => editing = false);
+                        await widget.appProvider.removeDeleted(widget.app.id);
+                        widget.refresh();
+                      }
+                    },
+                    icon: Icon(PlatformIcons(context).delete),
+                  ),
+                ],
+
+                // Close/end edits
+                if (editing == true) ...<Widget>[
+                  ezRowSpacer,
+                  EzIconButton(
+                    onPressed: () => setState(() => editing = false),
+                    icon: const Icon(Icons.close),
+                  ),
+                ],
+
+                // Drag handle
+                if (widget.onHomeScreen == true && editing == null) ...<Widget>[
+                  ezRowSpacer,
+                  EzIcon(
+                    Icons.drag_handle,
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
+                ],
+              ],
+            ),
+    );
+  }
 
   @override
   void dispose() {
@@ -337,11 +337,8 @@ class TileButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double margin = EzConfig.get(marginKey);
-    final double padding = EzConfig.get(paddingKey);
-
     late final double appIconSize =
-        (EzConfig.get(iconSizeKey) * 1.25) + padding;
+        (EzConfig.iconSize * 1.25) + EzConfig.padding;
 
     late final Widget? iconImage = (app.icon == null)
         ? null
@@ -391,13 +388,15 @@ class TileButton extends StatelessWidget {
         ? EzTextIconButton(
             label: label,
             icon: iconImage,
-            style: TextButton.styleFrom(padding: EzInsets.wrap(margin)),
+            style:
+                TextButton.styleFrom(padding: EzInsets.wrap(EzConfig.margin)),
             onPressed: onPressed,
             onLongPress: onLongPress,
           )
         : EzTextButton(
             text: label,
-            style: TextButton.styleFrom(padding: EzInsets.wrap(margin)),
+            style:
+                TextButton.styleFrom(padding: EzInsets.wrap(EzConfig.margin)),
             onPressed: onPressed,
             onLongPress: onLongPress,
           );
