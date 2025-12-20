@@ -76,7 +76,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
           style: textTheme.bodyLarge,
           padding: EzInsets.wrap(EzConfig.margin),
         ),
-        ezRowMargin,
+        EzMargin(vertical: false),
         TileButton(
           app: app,
           labelType: labelType,
