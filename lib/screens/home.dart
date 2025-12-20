@@ -23,13 +23,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
-  // Gather the fixed theme data //
-
-  final double spacing = EzConfig.get(spacingKey);
-
-  late final EdgeInsets tilePadding =
-      EdgeInsets.symmetric(vertical: spacing / 2);
-
   // Define the fixed build data //
 
   late final AppInfoProvider appProvider =
@@ -69,6 +62,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   /// home apps to tiles
   /// appProvider.homeList -> AppTile/AppFolder
   List<Widget> homeA2T() {
+    final EdgeInsets tilePadding =
+        EdgeInsets.symmetric(vertical: EzConfig.spacing / 2);
     final List<Widget> tileList = <Widget>[];
 
     for (int index = 0; index < appProvider.homeList.length; index++) {
@@ -171,8 +166,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       (showTime || dateType != DateType.none.configValue)
           ? Padding(
               padding: EdgeInsets.only(
-                top: vAlign == ListAlignment.start ? 0 : spacing,
-                bottom: vAlign == ListAlignment.start ? spacing : 0,
+                top: vAlign == ListAlignment.start ? 0 : EzConfig.spacing,
+                bottom: vAlign == ListAlignment.start ? EzConfig.spacing : 0,
               ),
               child: Clock(
                 showTime: showTime,
@@ -233,6 +228,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     // Gather the contextual theme data //
+
+    const EzSpacer ezSpacer = EzSpacer();
 
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final TextTheme textTheme = Theme.of(context).textTheme;

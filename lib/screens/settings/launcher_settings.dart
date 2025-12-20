@@ -20,9 +20,6 @@ class LauncherSettingsScreen extends StatefulWidget {
 class _LauncherSettingsScreenState extends State<LauncherSettingsScreen> {
   // Gather the fixed theme data //
 
-  final double margin = EzConfig.get(marginKey);
-  final double spacing = EzConfig.get(spacingKey);
-
   // Define the build data //
 
   late final AppInfoProvider appProvider =
@@ -32,15 +29,17 @@ class _LauncherSettingsScreenState extends State<LauncherSettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    const EzSpacer ezSpacer = EzSpacer();
+
     return LiminalScaffold(
       EzScrollView(children: <Widget>[
-        if (spacing > margin) EzSpacer(space: spacing - margin),
+        EzHeader(),
 
         // Swipe selectors
         SwipeSelector(left: true, appProvider: appProvider),
         ezSpacer,
         SwipeSelector(left: false, appProvider: appProvider),
-        ezDivider,
+        const EzDivider(),
 
         // Hide status bar
         const EzSwitchPair(
@@ -75,7 +74,7 @@ class _LauncherSettingsScreenState extends State<LauncherSettingsScreen> {
           text: 'Auth for hidden',
           valueKey: authForHiddenKey,
         ),
-        ezSeparator,
+        const EzSeparator(),
       ]),
       fabs: settingsFABs(context),
     );

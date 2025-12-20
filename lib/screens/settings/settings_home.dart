@@ -101,298 +101,277 @@ Thank you, and enjoy!''',
   //* Return the build *//
 
   @override
-  Widget build(BuildContext context) => LiminalScaffold(
-        EzScrollView(children: <Widget>[
-          // Restart reminder //
+  Widget build(BuildContext context) {
+    const EzSpacer ezSpacer = EzSpacer();
 
-          Stack(
-            children: <Widget>[
-              // Core
-              GestureDetector(
-                onLongPress: showTips,
-                child: const EzWarning(
-                  'Appearance settings take full effect on restart.\nHave fun!',
+    return LiminalScaffold(
+      EzScrollView(children: <Widget>[
+        // TODO: New home for showTips
+
+        // Navigation //
+
+        // Color
+        EzElevatedIconButton(
+          onPressed: () => context.goNamed(colorSettingsPath),
+          icon: EzIcon(Icons.navigate_next),
+          label: el10n.csPageTitle,
+        ),
+        ezSpacer,
+
+        // Design
+        EzElevatedIconButton(
+          onPressed: () => context.goNamed(designSettingsPath),
+          icon: EzIcon(Icons.navigate_next),
+          label: el10n.dsPageTitle,
+        ),
+        ezSpacer,
+
+        // Launcher
+        EzElevatedIconButton(
+          onPressed: () => context.goNamed(launcherSettingsPath),
+          icon: EzIcon(Icons.navigate_next),
+          label: 'Launcher settings',
+        ),
+        ezSpacer,
+
+        // Layout
+        EzElevatedIconButton(
+          onPressed: () => context.goNamed(layoutSettingsPath),
+          icon: EzIcon(Icons.navigate_next),
+          label: el10n.lsPageTitle,
+        ),
+        ezSpacer,
+
+        // Text
+        EzElevatedIconButton(
+          onPressed: () => context.goNamed(textSettingsPath),
+          icon: EzIcon(Icons.navigate_next),
+          label: el10n.tsPageTitle,
+        ),
+        const EzDivider(),
+
+        // Batch //
+
+        const EzQuickConfig(),
+        ezSpacer,
+
+        // Randomize
+        EzConfigRandomizer(
+          onConfirm: () async {
+            final bool isDark = isDarkTheme(context);
+
+            late final String homeTimeKey;
+            late final String homeDateKey;
+            late final String listIconKey;
+            late final String listLabelTypeKey;
+            late final String folderIconKey;
+            late final String folderLabelTypeKey;
+            late final String homeHAlignKey;
+            late final String homeVAlignKey;
+            late final String listHAlignKey;
+            late final String listVAlignKey;
+
+            if (isDark) {
+              homeTimeKey = darkHomeTimeKey;
+              homeDateKey = darkHomeDateKey;
+              listIconKey = darkListIconKey;
+              listLabelTypeKey = darkListLabelTypeKey;
+              folderIconKey = darkFolderIconKey;
+              folderLabelTypeKey = darkFolderLabelTypeKey;
+              homeHAlignKey = darkHomeHAlignKey;
+              homeVAlignKey = darkHomeVAlignKey;
+              listHAlignKey = darkListHAlignKey;
+              listVAlignKey = darkListVAlignKey;
+            } else {
+              homeTimeKey = lightHomeTimeKey;
+              homeDateKey = lightHomeDateKey;
+              listIconKey = lightListIconKey;
+              listLabelTypeKey = lightListLabelTypeKey;
+              folderIconKey = lightFolderIconKey;
+              folderLabelTypeKey = lightFolderLabelTypeKey;
+              homeHAlignKey = lightHomeHAlignKey;
+              homeVAlignKey = lightHomeVAlignKey;
+              listHAlignKey = lightListHAlignKey;
+              listVAlignKey = lightListVAlignKey;
+            }
+
+            await EzConfig.randomize(isDark, shiny: false);
+            final Random random = Random();
+
+            // Design
+            await EzConfig.setBool(homeTimeKey, random.nextBool());
+            await EzConfig.setBool(homeDateKey, random.nextBool());
+
+            await EzConfig.setBool(listIconKey, random.nextBool());
+            final int listLabelRand = random.nextInt(4);
+            late final String listLabelValue;
+            switch (listLabelRand) {
+              case 0:
+                listLabelValue = LabelType.none.configValue;
+                break;
+              case 1:
+                listLabelValue = LabelType.initials.configValue;
+                break;
+              case 3:
+                listLabelValue = LabelType.wingding.configValue;
+                break;
+              default:
+                listLabelValue = LabelType.full.configValue;
+                break;
+            }
+            await EzConfig.setString(listLabelTypeKey, listLabelValue);
+
+            await EzConfig.setBool(folderIconKey, random.nextBool());
+            final int folderLabelRand = random.nextInt(3);
+            late final String folderLabelValue;
+            switch (folderLabelRand) {
+              case 0:
+                folderLabelValue = LabelType.none.configValue;
+                break;
+              case 1:
+                folderLabelValue = LabelType.initials.configValue;
+                break;
+              case 3:
+                folderLabelValue = LabelType.wingding.configValue;
+              default:
+                folderLabelValue = LabelType.full.configValue;
+                break;
+            }
+            await EzConfig.setString(folderLabelTypeKey, folderLabelValue);
+
+            // Layout
+            final int homeHAlignRand = random.nextInt(3);
+            late final String homeHAlignValue;
+            switch (homeHAlignRand) {
+              case 0:
+                homeHAlignValue = ListAlignment.start.configValue;
+                break;
+              case 2:
+                homeHAlignValue = ListAlignment.end.configValue;
+                break;
+              default:
+                homeHAlignValue = ListAlignment.center.configValue;
+                break;
+            }
+            await EzConfig.setString(homeHAlignKey, homeHAlignValue);
+
+            final int homeVAlignRand = random.nextInt(3);
+            late final String homeVAlignValue;
+            switch (homeVAlignRand) {
+              case 0:
+                homeVAlignValue = ListAlignment.start.configValue;
+                break;
+              case 2:
+                homeVAlignValue = ListAlignment.end.configValue;
+                break;
+              default:
+                homeVAlignValue = ListAlignment.center.configValue;
+                break;
+            }
+            await EzConfig.setString(homeVAlignKey, homeVAlignValue);
+
+            final int listHAlignRand = random.nextInt(3);
+            late final String listHAlignValue;
+            switch (listHAlignRand) {
+              case 0:
+                listHAlignValue = ListAlignment.start.configValue;
+                break;
+              case 2:
+                listHAlignValue = ListAlignment.end.configValue;
+                break;
+              default:
+                listHAlignValue = ListAlignment.center.configValue;
+                break;
+            }
+            await EzConfig.setString(listHAlignKey, listHAlignValue);
+
+            final int listVAlignRand = random.nextInt(3);
+            late final String listVAlignValue;
+            switch (listVAlignRand) {
+              case 0:
+                listVAlignValue = ListAlignment.start.configValue;
+                break;
+              case 2:
+                listVAlignValue = ListAlignment.end.configValue;
+                break;
+              default:
+                listVAlignValue = ListAlignment.center.configValue;
+                break;
+            }
+            await EzConfig.setString(listVAlignKey, listVAlignValue);
+          },
+          extraKeys: extraSaveKeys,
+          appName: appName,
+          androidPackage: androidPackage,
+        ),
+        ezSpacer,
+
+        // Reset
+        EzElevatedIconButton(
+          onPressed: () => showPlatformDialog(
+            context: context,
+            builder: (_) => StatefulBuilder(builder: (
+              BuildContext dContext,
+              StateSetter dialogState,
+            ) {
+              late final List<Widget> materialActions;
+              late final List<Widget> cupertinoActions;
+
+              (materialActions, cupertinoActions) = ezActionPairs(
+                context: context,
+                onConfirm: () async {
+                  await EzConfig.reset(
+                      skip: resetAll ? neverResetKeys : defaultNoResetKeys);
+                  if (resetAll) await appProvider.reset();
+                  if (dContext.mounted) Navigator.of(dContext).pop();
+                },
+                confirmIsDestructive: true,
+                onDeny: () => Navigator.of(dContext).pop(),
+              );
+
+              return EzAlertDialog(
+                key: ValueKey<bool>(resetAll),
+                title: const Text(
+                  'Reset all appearance settings?',
+                  textAlign: TextAlign.center,
                 ),
-              ),
-
-              // Tips
-              Positioned(
-                top: 0,
-                right: isLefty ? null : 0,
-                left: isLefty ? 0 : null,
-                child: IconButton(
-                  icon: EzIcon(Icons.help_outline),
-                  onPressed: showTips,
-                  onLongPress: showTips,
+                content: SizedBox(
+                  width: widthOf(context),
+                  child: EzScrollView(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      EzSwitchPair(
+                        text: 'Or, ALL settings',
+                        value: resetAll,
+                        onChanged: (bool? choice) {
+                          resetAll = (choice == null) ? false : choice;
+                          setState(() {});
+                          dialogState(() {});
+                        },
+                      ),
+                      ezSpacer,
+                      ezRichUndoWarning(
+                        context,
+                        standalone: false,
+                        extraKeys: extraSaveKeys,
+                        appName: appName,
+                        androidPackage: androidPackage,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                materialActions: materialActions,
+                cupertinoActions: cupertinoActions,
+                needsClose: false,
+              );
+            }),
           ),
-          ezDivider,
-
-          // Navigation //
-
-          // Color
-          EzElevatedIconButton(
-            onPressed: () => context.goNamed(colorSettingsPath),
-            icon: EzIcon(Icons.navigate_next),
-            label: el10n.csPageTitle,
-          ),
-          ezSpacer,
-
-          // Design
-          EzElevatedIconButton(
-            onPressed: () => context.goNamed(designSettingsPath),
-            icon: EzIcon(Icons.navigate_next),
-            label: el10n.dsPageTitle,
-          ),
-          ezSpacer,
-
-          // Launcher
-          EzElevatedIconButton(
-            onPressed: () => context.goNamed(launcherSettingsPath),
-            icon: EzIcon(Icons.navigate_next),
-            label: 'Launcher settings',
-          ),
-          ezSpacer,
-
-          // Layout
-          EzElevatedIconButton(
-            onPressed: () => context.goNamed(layoutSettingsPath),
-            icon: EzIcon(Icons.navigate_next),
-            label: el10n.lsPageTitle,
-          ),
-          ezSpacer,
-
-          // Text
-          EzElevatedIconButton(
-            onPressed: () => context.goNamed(textSettingsPath),
-            icon: EzIcon(Icons.navigate_next),
-            label: el10n.tsPageTitle,
-          ),
-          ezDivider,
-
-          // Batch //
-
-          const EzQuickConfig(),
-          ezSpacer,
-
-          // Randomize
-          EzConfigRandomizer(
-            onConfirm: () async {
-              final bool isDark = isDarkTheme(context);
-
-              late final String homeTimeKey;
-              late final String homeDateKey;
-              late final String listIconKey;
-              late final String listLabelTypeKey;
-              late final String folderIconKey;
-              late final String folderLabelTypeKey;
-              late final String homeHAlignKey;
-              late final String homeVAlignKey;
-              late final String listHAlignKey;
-              late final String listVAlignKey;
-
-              if (isDark) {
-                homeTimeKey = darkHomeTimeKey;
-                homeDateKey = darkHomeDateKey;
-                listIconKey = darkListIconKey;
-                listLabelTypeKey = darkListLabelTypeKey;
-                folderIconKey = darkFolderIconKey;
-                folderLabelTypeKey = darkFolderLabelTypeKey;
-                homeHAlignKey = darkHomeHAlignKey;
-                homeVAlignKey = darkHomeVAlignKey;
-                listHAlignKey = darkListHAlignKey;
-                listVAlignKey = darkListVAlignKey;
-              } else {
-                homeTimeKey = lightHomeTimeKey;
-                homeDateKey = lightHomeDateKey;
-                listIconKey = lightListIconKey;
-                listLabelTypeKey = lightListLabelTypeKey;
-                folderIconKey = lightFolderIconKey;
-                folderLabelTypeKey = lightFolderLabelTypeKey;
-                homeHAlignKey = lightHomeHAlignKey;
-                homeVAlignKey = lightHomeVAlignKey;
-                listHAlignKey = lightListHAlignKey;
-                listVAlignKey = lightListVAlignKey;
-              }
-
-              await EzConfig.randomize(isDark, shiny: false);
-              final Random random = Random();
-
-              // Design
-              await EzConfig.setBool(homeTimeKey, random.nextBool());
-              await EzConfig.setBool(homeDateKey, random.nextBool());
-
-              await EzConfig.setBool(listIconKey, random.nextBool());
-              final int listLabelRand = random.nextInt(4);
-              late final String listLabelValue;
-              switch (listLabelRand) {
-                case 0:
-                  listLabelValue = LabelType.none.configValue;
-                  break;
-                case 1:
-                  listLabelValue = LabelType.initials.configValue;
-                  break;
-                case 3:
-                  listLabelValue = LabelType.wingding.configValue;
-                  break;
-                default:
-                  listLabelValue = LabelType.full.configValue;
-                  break;
-              }
-              await EzConfig.setString(listLabelTypeKey, listLabelValue);
-
-              await EzConfig.setBool(folderIconKey, random.nextBool());
-              final int folderLabelRand = random.nextInt(3);
-              late final String folderLabelValue;
-              switch (folderLabelRand) {
-                case 0:
-                  folderLabelValue = LabelType.none.configValue;
-                  break;
-                case 1:
-                  folderLabelValue = LabelType.initials.configValue;
-                  break;
-                case 3:
-                  folderLabelValue = LabelType.wingding.configValue;
-                default:
-                  folderLabelValue = LabelType.full.configValue;
-                  break;
-              }
-              await EzConfig.setString(folderLabelTypeKey, folderLabelValue);
-
-              // Layout
-              final int homeHAlignRand = random.nextInt(3);
-              late final String homeHAlignValue;
-              switch (homeHAlignRand) {
-                case 0:
-                  homeHAlignValue = ListAlignment.start.configValue;
-                  break;
-                case 2:
-                  homeHAlignValue = ListAlignment.end.configValue;
-                  break;
-                default:
-                  homeHAlignValue = ListAlignment.center.configValue;
-                  break;
-              }
-              await EzConfig.setString(homeHAlignKey, homeHAlignValue);
-
-              final int homeVAlignRand = random.nextInt(3);
-              late final String homeVAlignValue;
-              switch (homeVAlignRand) {
-                case 0:
-                  homeVAlignValue = ListAlignment.start.configValue;
-                  break;
-                case 2:
-                  homeVAlignValue = ListAlignment.end.configValue;
-                  break;
-                default:
-                  homeVAlignValue = ListAlignment.center.configValue;
-                  break;
-              }
-              await EzConfig.setString(homeVAlignKey, homeVAlignValue);
-
-              final int listHAlignRand = random.nextInt(3);
-              late final String listHAlignValue;
-              switch (listHAlignRand) {
-                case 0:
-                  listHAlignValue = ListAlignment.start.configValue;
-                  break;
-                case 2:
-                  listHAlignValue = ListAlignment.end.configValue;
-                  break;
-                default:
-                  listHAlignValue = ListAlignment.center.configValue;
-                  break;
-              }
-              await EzConfig.setString(listHAlignKey, listHAlignValue);
-
-              final int listVAlignRand = random.nextInt(3);
-              late final String listVAlignValue;
-              switch (listVAlignRand) {
-                case 0:
-                  listVAlignValue = ListAlignment.start.configValue;
-                  break;
-                case 2:
-                  listVAlignValue = ListAlignment.end.configValue;
-                  break;
-                default:
-                  listVAlignValue = ListAlignment.center.configValue;
-                  break;
-              }
-              await EzConfig.setString(listVAlignKey, listVAlignValue);
-            },
-            extraKeys: extraSaveKeys,
-            appName: appName,
-            androidPackage: androidPackage,
-          ),
-          ezSpacer,
-
-          // Reset
-          EzElevatedIconButton(
-            onPressed: () => showPlatformDialog(
-              context: context,
-              builder: (_) => StatefulBuilder(builder: (
-                BuildContext dContext,
-                StateSetter dialogState,
-              ) {
-                late final List<Widget> materialActions;
-                late final List<Widget> cupertinoActions;
-
-                (materialActions, cupertinoActions) = ezActionPairs(
-                  context: context,
-                  onConfirm: () async {
-                    await EzConfig.reset(
-                        skip: resetAll ? neverResetKeys : defaultNoResetKeys);
-                    if (resetAll) await appProvider.reset();
-                    if (dContext.mounted) Navigator.of(dContext).pop();
-                  },
-                  confirmIsDestructive: true,
-                  onDeny: () => Navigator.of(dContext).pop(),
-                );
-
-                return EzAlertDialog(
-                  key: ValueKey<bool>(resetAll),
-                  title: const Text(
-                    'Reset all appearance settings?',
-                    textAlign: TextAlign.center,
-                  ),
-                  content: SizedBox(
-                    width: widthOf(context),
-                    child: EzScrollView(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        EzSwitchPair(
-                          text: 'Or, ALL settings',
-                          value: resetAll,
-                          onChanged: (bool? choice) {
-                            resetAll = (choice == null) ? false : choice;
-                            setState(() {});
-                            dialogState(() {});
-                          },
-                        ),
-                        ezSpacer,
-                        ezRichUndoWarning(
-                          context,
-                          standalone: false,
-                          extraKeys: extraSaveKeys,
-                          appName: appName,
-                          androidPackage: androidPackage,
-                        ),
-                      ],
-                    ),
-                  ),
-                  materialActions: materialActions,
-                  cupertinoActions: cupertinoActions,
-                  needsClose: false,
-                );
-              }),
-            ),
-            icon: EzIcon(PlatformIcons(context).refresh),
-            label: el10n.gResetAll,
-          ),
-          ezSeparator,
-        ]),
-        fabs: settingsFABs(context, home: true),
-      );
+          icon: EzIcon(PlatformIcons(context).refresh),
+          label: el10n.gResetAll,
+        ),
+        const EzSeparator(),
+      ]),
+      fabs: settingsFABs(context, home: true),
+    );
+  }
 }
