@@ -51,17 +51,6 @@ class AppListScreen extends StatefulWidget {
 }
 
 class _AppListScreenState extends State<AppListScreen> {
-  // Gather the fixed theme data //
-
-  final double iconSize = EzConfig.get(iconSizeKey);
-
-  final double margin = EzConfig.get(marginKey);
-  final double padding = EzConfig.get(paddingKey);
-  final double spacing = EzConfig.get(spacingKey);
-
-  late final EdgeInsets listPadding =
-      EdgeInsets.symmetric(vertical: spacing / 2);
-
   // Define the fixed build data //
 
   late final AppInfoProvider appProvider =
@@ -108,6 +97,15 @@ class _AppListScreenState extends State<AppListScreen> {
   Widget build(BuildContext context) {
     // Define the contextual build data //
 
+    const EzSpacer ezSpacer = EzSpacer();
+    const EzSpacer ezRowSpacer = EzSpacer(vertical: false);
+
+    final double padding = EzConfig.padding;
+    final double iconSize = EzConfig.iconSize;
+
+    final EdgeInsets listPadding =
+        EdgeInsets.symmetric(vertical: EzConfig.spacing / 2);
+
     final bool isDark = isDarkTheme(context);
 
     final LabelType listLabel = LabelTypeConfig.fromValue(
@@ -138,7 +136,7 @@ class _AppListScreenState extends State<AppListScreen> {
           mainAxisAlignment: vAlign.mainAxis,
           crossAxisAlignment: hAlign.crossAxis,
           children: <Widget>[
-            if (spacing > margin) EzSpacer(space: spacing - margin),
+            EzHeader(),
 
             // List controls
             EzScrollView(
@@ -263,7 +261,7 @@ class _AppListScreenState extends State<AppListScreen> {
                         },
                       ),
                       if (searching) ...<Widget>[
-                        ezRowMargin,
+                        EzMargin(vertical: false),
                         Expanded(
                           child: TextField(
                             controller: searchControl,
@@ -284,7 +282,7 @@ class _AppListScreenState extends State<AppListScreen> {
               ],
             ),
             if (widget.icon != null) ...<Widget>[
-              ezMargin,
+              EzMargin(),
               widget.icon!,
             ],
             ezSpacer,

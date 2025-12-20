@@ -44,19 +44,9 @@ class AppFolder extends StatefulWidget {
 }
 
 class _AppFolderState extends State<AppFolder> {
-  // Gather the fixed theme data //
-
-  final double margin = EzConfig.get(marginKey);
-  final double spacing = EzConfig.get(spacingKey);
-
-  late final EdgeInsets colPadding =
-      EdgeInsets.symmetric(vertical: spacing / 2);
-  late final EdgeInsets rowPadding =
-      EdgeInsets.symmetric(horizontal: spacing / 2);
+  // Define the build data //
 
   late final EFUILang el10n = ezL10n(context);
-
-  // Define the build data //
 
   late int index = widget.index;
   late List<String> items =
@@ -110,13 +100,6 @@ class _AppFolderState extends State<AppFolder> {
     }
   }
 
-  // Define custom widgets //
-
-  late final List<Widget> closeTail = <Widget>[
-    EzSpacer(space: spacing / 2, vertical: false),
-    EzIconButton(icon: const Icon(Icons.close), onPressed: toggleOpen),
-  ];
-
   // Init //
 
   @override
@@ -149,6 +132,14 @@ class _AppFolderState extends State<AppFolder> {
   @override
   Widget build(BuildContext context) {
     // Gather the contextual theme data //
+
+    const EzSpacer ezRowSpacer = EzSpacer(vertical: false);
+
+    final double margin = EzConfig.margin;
+    final double spacing = EzConfig.spacing;
+
+    final EdgeInsets colPadding = EdgeInsets.symmetric(vertical: spacing / 2);
+    final EdgeInsets rowPadding = EdgeInsets.symmetric(horizontal: spacing / 2);
 
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final TextTheme textTheme = Theme.of(context).textTheme;
@@ -424,7 +415,11 @@ class _AppFolderState extends State<AppFolder> {
                         })
                         .whereType<Widget>()
                         .toList() +
-                    closeTail,
+                    <Widget>[
+                      EzSpacer(space: spacing / 2, vertical: false),
+                      EzIconButton(
+                          icon: const Icon(Icons.close), onPressed: toggleOpen),
+                    ],
               ),
             )
           : (widget.appIcon
@@ -432,7 +427,7 @@ class _AppFolderState extends State<AppFolder> {
                   label: folderLabel,
                   icon: Icon(
                     PlatformIcons(context).folderOpen,
-                    size: EzConfig.get(iconSizeKey) + EzConfig.get(paddingKey),
+                    size: EzConfig.iconSize + EzConfig.padding,
                   ),
                   style: TextButton.styleFrom(padding: EzInsets.wrap(margin)),
                   onPressed: toggleOpen,
