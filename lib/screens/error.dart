@@ -23,6 +23,7 @@ class _ErrorScreenState extends State<ErrorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    const EzSeparator ezSeparator = EzSeparator();
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return LiminalScaffold(Center(
