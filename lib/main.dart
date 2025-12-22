@@ -74,7 +74,7 @@ class LiminalLauncher extends StatelessWidget {
             ...Lang.localizationsDelegates,
           },
           supportedLocales: Lang.supportedLocales,
-          locale: EzConfig.locale,
+          locale: EzConfig.provider.storedLocale,
 
           // App title
           title: appName,
