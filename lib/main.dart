@@ -28,7 +28,7 @@ void main() async {
   EzConfig.init(
     assetPaths: assetPaths,
     defaults: liminalDefault,
-    fallbackLang: await EFUILang.delegate.load(americanEnglish),
+    l10nFallback: await EFUILang.delegate.load(americanEnglish),
     preferences: await SharedPreferencesWithCache.create(
       cacheOptions:
           SharedPreferencesWithCacheOptions(allowList: allLimKeys.keys.toSet()),
@@ -73,7 +73,7 @@ class LiminalLauncher extends StatelessWidget {
             ...Lang.localizationsDelegates,
           },
           supportedLocales: Lang.supportedLocales,
-          locale: EzConfig.getLocale(),
+          locale: EzConfig.locale,
 
           // App title
           title: appName,

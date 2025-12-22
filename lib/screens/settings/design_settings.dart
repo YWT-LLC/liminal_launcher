@@ -149,10 +149,6 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
   Widget build(BuildContext context) {
     // Gather the contextual theme data //
 
-    const EzSpacer ezSpacer = EzSpacer();
-    const EzSpacer ezRowSpacer = EzSpacer(vertical: false);
-    const EzSeparator ezSeparator = EzSeparator();
-
     final bool isDark = isDarkTheme(context);
     final TextTheme texTheme = Theme.of(context).textTheme;
 
@@ -173,7 +169,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
 
           if (EzConfig.get(isDark ? darkUseOSKey : lightUseOSKey) ==
               false) ...<Widget>[
-            ezSpacer,
+            EzConfig.layout.spacer,
             EzScrollView(
               scrollDirection: Axis.horizontal,
               startCentered: true,
@@ -197,7 +193,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
           ],
 
           // Use OS
-          ezSpacer,
+          EzConfig.layout.spacer,
           EzSwitchPair(
             key: ValueKey<String>('use_os_$redraw'),
             text: 'Use System Wallpaper',
@@ -207,7 +203,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
               setState(() {});
             },
           ),
-          ezSeparator,
+          EzConfig.layout.separator,
 
           // Header settings //
 
@@ -217,7 +213,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
             text: 'Show time',
             valueKey: homeTimeKey,
           ),
-          ezSpacer,
+          EzConfig.layout.spacer,
 
           // Date
           EzScrollView(
@@ -255,7 +251,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
               ),
             ],
           ),
-          ezSpacer,
+          EzConfig.layout.spacer,
 
           // AppTile settings //
 
@@ -283,14 +279,14 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
                               text: listLabel(listLabelType),
                               onPressed: doNothing,
                             ),
-                      ezSpacer,
+                      EzConfig.layout.spacer,
 
                       // Label type
                       EzRow(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           const EzText('Label type'),
-                          ezRowSpacer,
+                          EzConfig.layout.rowSpacer,
                           EzDropdownMenu<LabelType>(
                             widthEntries: <String>['Full name'],
                             dropdownMenuEntries: labelEntries,
@@ -315,7 +311,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
                           ),
                         ],
                       ),
-                      ezSpacer,
+                      EzConfig.layout.spacer,
 
                       // Show icon
                       EzSwitchPair(
@@ -338,7 +334,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
                           setModal(() {});
                         },
                       ),
-                      ezSeparator,
+                      EzConfig.layout.separator,
                     ],
                   ),
                 );
@@ -347,7 +343,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
             icon: Icon(PlatformIcons(context).edit),
             label: 'List apps',
           ),
-          ezSpacer,
+          EzConfig.layout.spacer,
 
           // Folder
           EzElevatedIconButton(
@@ -373,14 +369,14 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
                               text: folderLabel(folderLabelType),
                               onPressed: doNothing,
                             ),
-                      ezSpacer,
+                      EzConfig.layout.spacer,
 
                       // Label type
                       EzRow(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           const EzText('Label type'),
-                          ezRowSpacer,
+                          EzConfig.layout.rowSpacer,
                           EzDropdownMenu<LabelType>(
                             widthEntries: <String>['Full name'],
                             dropdownMenuEntries: labelEntries,
@@ -405,7 +401,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
                           ),
                         ],
                       ),
-                      ezSpacer,
+                      EzConfig.layout.spacer,
 
                       // Show icon
                       EzSwitchPair(
@@ -428,7 +424,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
                           setModal(() {});
                         },
                       ),
-                      ezSeparator,
+                      EzConfig.layout.separator,
                     ],
                   ),
                 );
@@ -437,7 +433,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
             icon: Icon(PlatformIcons(context).edit),
             label: 'Folder apps',
           ),
-          ezSpacer,
+          EzConfig.layout.spacer,
         ],
         darkThemeResetKeys: <String>{darkUseOSKey},
         lightThemeResetKeys: <String>{darkUseOSKey},

@@ -97,12 +97,6 @@ class _AppListScreenState extends State<AppListScreen> {
   Widget build(BuildContext context) {
     // Define the contextual build data //
 
-    const EzSpacer ezSpacer = EzSpacer();
-    const EzSpacer ezRowSpacer = EzSpacer(vertical: false);
-
-    final double padding = EzConfig.padding;
-    final double iconSize = EzConfig.iconSize;
-
     final EdgeInsets listPadding =
         EdgeInsets.symmetric(vertical: EzConfig.spacing / 2);
 
@@ -220,7 +214,7 @@ class _AppListScreenState extends State<AppListScreen> {
                     ),
                   ],
                 ),
-                ezRowSpacer,
+                EzConfig.layout.rowSpacer,
 
                 // Order
                 EzIconButton(
@@ -235,7 +229,7 @@ class _AppListScreenState extends State<AppListScreen> {
                     refreshList();
                   },
                 ),
-                ezRowSpacer,
+                EzConfig.layout.rowSpacer,
 
                 // Search
                 AnimatedContainer(
@@ -285,7 +279,7 @@ class _AppListScreenState extends State<AppListScreen> {
               EzMargin(),
               widget.icon!,
             ],
-            ezSpacer,
+            EzConfig.layout.spacer,
 
             // App list
             NotificationListener<ScrollNotification>(
@@ -370,11 +364,11 @@ class _AppListScreenState extends State<AppListScreen> {
         ),
       ),
       fabs: <Widget>[
-        ezSpacer,
+        EzConfig.layout.spacer,
 
         // Scroll to top
         SizedBox(
-          height: iconSize + padding,
+          height: EzConfig.iconSize + EzConfig.padding,
           child: Visibility(
             visible: !atTop,
             child: FloatingActionButton(
@@ -389,11 +383,11 @@ class _AppListScreenState extends State<AppListScreen> {
             ),
           ),
         ),
-        ezSpacer,
+        EzConfig.layout.spacer,
 
         // Scroll to bottom
         SizedBox(
-          height: iconSize + padding,
+          height: EzConfig.iconSize + EzConfig.padding,
           child: Visibility(
             visible: !atBottom,
             child: FloatingActionButton(

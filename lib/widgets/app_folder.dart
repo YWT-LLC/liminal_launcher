@@ -46,8 +46,6 @@ class AppFolder extends StatefulWidget {
 class _AppFolderState extends State<AppFolder> {
   // Define the build data //
 
-  late final EFUILang el10n = ezL10n(context);
-
   late int index = widget.index;
   late List<String> items =
       widget.appProvider.homeList[index].split(folderSplit);
@@ -133,13 +131,10 @@ class _AppFolderState extends State<AppFolder> {
   Widget build(BuildContext context) {
     // Gather the contextual theme data //
 
-    const EzSpacer ezRowSpacer = EzSpacer(vertical: false);
-
-    final double margin = EzConfig.margin;
-    final double spacing = EzConfig.spacing;
-
-    final EdgeInsets colPadding = EdgeInsets.symmetric(vertical: spacing / 2);
-    final EdgeInsets rowPadding = EdgeInsets.symmetric(horizontal: spacing / 2);
+    final EdgeInsets colPadding =
+        EdgeInsets.symmetric(vertical: EzConfig.spacing / 2);
+    final EdgeInsets rowPadding =
+        EdgeInsets.symmetric(horizontal: EzConfig.spacing / 2);
 
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final TextTheme textTheme = Theme.of(context).textTheme;
@@ -164,7 +159,7 @@ class _AppFolderState extends State<AppFolder> {
               style: textTheme.bodyLarge,
               textAlign: TextAlign.center,
             ),
-            ezRowSpacer,
+            EzConfig.layout.rowSpacer,
 
             // Add apps
             EzIconButton(
@@ -194,7 +189,7 @@ class _AppFolderState extends State<AppFolder> {
                 ),
               ),
             ),
-            ezRowSpacer,
+            EzConfig.layout.rowSpacer,
 
             // Info (rename)
             EzIconButton(
@@ -229,10 +224,10 @@ class _AppFolderState extends State<AppFolder> {
 
                   (materialActions, cupertinoActions) = ezActionPairs(
                     context: context,
-                    confirmMsg: el10n.gApply,
+                    confirmMsg: EzConfig.l10n.gApply,
                     onConfirm: onConfirm,
                     confirmIsDestructive: true,
-                    denyMsg: el10n.gCancel,
+                    denyMsg: EzConfig.l10n.gCancel,
                     onDeny: onDeny,
                   );
 
@@ -259,7 +254,7 @@ class _AppFolderState extends State<AppFolder> {
               ),
               icon: Icon(PlatformIcons(context).info),
             ),
-            ezRowSpacer,
+            EzConfig.layout.rowSpacer,
 
             // Edit apps
             if (appSet.isNotEmpty) ...<Widget>[
@@ -311,7 +306,7 @@ class _AppFolderState extends State<AppFolder> {
                                       labelType: widget.appLabel,
                                       showIcon: widget.appIcon,
                                     ),
-                                    ezRowSpacer,
+                                    EzConfig.layout.rowSpacer,
 
                                     // Remove button
                                     EzIconButton(
@@ -323,7 +318,7 @@ class _AppFolderState extends State<AppFolder> {
                                         setModal(() {});
                                       },
                                     ),
-                                    ezRowSpacer,
+                                    EzConfig.layout.rowSpacer,
 
                                     // Drag handle
                                     EzIcon(
@@ -341,7 +336,7 @@ class _AppFolderState extends State<AppFolder> {
                   ),
                 ),
               ),
-              ezRowSpacer,
+              EzConfig.layout.rowSpacer,
             ],
 
             // Delete folder
@@ -360,7 +355,7 @@ class _AppFolderState extends State<AppFolder> {
 
             // Close/end edits
             if (editing == true) ...<Widget>[
-              ezRowSpacer,
+              EzConfig.layout.rowSpacer,
               EzIconButton(
                 onPressed: () => setState(() => editing = false),
                 icon: const Icon(Icons.close),
@@ -369,7 +364,7 @@ class _AppFolderState extends State<AppFolder> {
 
             // Drag handle
             if (editing == null) ...<Widget>[
-              ezRowSpacer,
+              EzConfig.layout.rowSpacer,
               EzIcon(
                 Icons.drag_handle,
                 color: colorScheme.outline,
@@ -416,7 +411,7 @@ class _AppFolderState extends State<AppFolder> {
                         .whereType<Widget>()
                         .toList() +
                     <Widget>[
-                      EzSpacer(space: spacing / 2, vertical: false),
+                      EzSpacer(space: EzConfig.spacing / 2, vertical: false),
                       EzIconButton(
                           icon: const Icon(Icons.close), onPressed: toggleOpen),
                     ],
@@ -429,13 +424,15 @@ class _AppFolderState extends State<AppFolder> {
                     PlatformIcons(context).folderOpen,
                     size: EzConfig.iconSize + EzConfig.padding,
                   ),
-                  style: TextButton.styleFrom(padding: EzInsets.wrap(margin)),
+                  style: TextButton.styleFrom(
+                      padding: EzInsets.wrap(EzConfig.margin)),
                   onPressed: toggleOpen,
                   onLongPress: () => setState(() => editing = true),
                 )
               : EzTextButton(
                   text: name,
-                  style: TextButton.styleFrom(padding: EzInsets.wrap(margin)),
+                  style: TextButton.styleFrom(
+                      padding: EzInsets.wrap(EzConfig.margin)),
                   onPressed: toggleOpen,
                   onLongPress: () => setState(() => editing = true),
                 )),

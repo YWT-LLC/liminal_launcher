@@ -21,7 +21,7 @@ void main() async {
   EzConfig.init(
     assetPaths: <String>{},
     defaults: liminalDefault,
-    fallbackLang: await EFUILang.delegate.load(americanEnglish),
+    l10nFallback: await EFUILang.delegate.load(americanEnglish),
     preferences: await SharedPreferencesWithCache.create(
       cacheOptions:
           SharedPreferencesWithCacheOptions(allowList: allLimKeys.keys.toSet()),
@@ -36,11 +36,6 @@ void main() async {
     'Generated tests',
     () {
       testWidgets('Test randomizer', (WidgetTester tester) async {
-        // Load localization(s) //
-
-        ezLog('Loading localizations');
-        final EFUILang l10n = await EFUILang.delegate.load(americanEnglish);
-
         // Load the app //
 
         ezLog('Loading Liminal Launcher');
@@ -53,14 +48,14 @@ void main() async {
         await ezTouch(tester, find.byIcon(Icons.more_vert));
 
         // Go to the settings page
-        await ezTouchText(tester, l10n.ssPageTitle);
+        await ezTouchText(tester, EzConfig.l10n.ssPageTitle);
 
         // Randomize the settings
-        await ezTouchText(tester, l10n.ssRandom);
-        await ezTouchText(tester, l10n.gYes);
+        await ezTouchText(tester, EzConfig.l10n.ssRandom);
+        await ezTouchText(tester, EzConfig.l10n.gYes);
 
         // Return to home screen
-        await ezTapBack(tester, l10n.gBack);
+        await ezTapBack(tester, EzConfig.l10n.gBack);
       });
 
       testWidgets('Test CountFAB', (WidgetTester tester) async {

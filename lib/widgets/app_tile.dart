@@ -49,8 +49,6 @@ class AppTile extends StatefulWidget {
 class _AppTileState extends State<AppTile> {
   // Define the build data //
 
-  late final EFUILang el10n = ezL10n(context);
-
   late bool? editing = widget.editable ? widget.editing : false;
   Timer? rippleThrottle;
 
@@ -90,8 +88,6 @@ class _AppTileState extends State<AppTile> {
   @override
   Widget build(BuildContext context) {
     // Gather the contextual theme data //
-
-    const EzSpacer ezRowSpacer = EzSpacer(vertical: false);
 
     final double appIconSize = (EzConfig.iconSize * 1.25) + EzConfig.padding;
 
@@ -138,7 +134,7 @@ class _AppTileState extends State<AppTile> {
                       height: appIconSize,
                     ),
                   ),
-                  ezRowSpacer,
+                  EzConfig.layout.rowSpacer,
                 ],
 
                 // Add to home
@@ -157,7 +153,7 @@ class _AppTileState extends State<AppTile> {
                     },
                     icon: const Icon(Icons.add_to_home_screen),
                   ),
-                  ezRowSpacer,
+                  EzConfig.layout.rowSpacer,
                 ],
 
                 // Remove from home
@@ -174,7 +170,7 @@ class _AppTileState extends State<AppTile> {
                     },
                     icon: Icon(PlatformIcons(context).remove),
                   ),
-                  ezRowSpacer,
+                  EzConfig.layout.rowSpacer,
                 ],
 
                 // Info
@@ -188,7 +184,7 @@ class _AppTileState extends State<AppTile> {
                   },
                   icon: Icon(PlatformIcons(context).info),
                 ),
-                ezRowSpacer,
+                EzConfig.layout.rowSpacer,
 
                 // Rename
                 EzIconButton(
@@ -225,10 +221,10 @@ class _AppTileState extends State<AppTile> {
 
                         (materialActions, cupertinoActions) = ezActionPairs(
                           context: context,
-                          confirmMsg: el10n.gApply,
+                          confirmMsg: EzConfig.l10n.gApply,
                           onConfirm: onConfirm,
                           confirmIsDestructive: true,
-                          denyMsg: el10n.gCancel,
+                          denyMsg: EzConfig.l10n.gCancel,
                           onDeny: onDeny,
                         );
 
@@ -256,7 +252,7 @@ class _AppTileState extends State<AppTile> {
                       }),
                   icon: Icon(PlatformIcons(context).edit),
                 ),
-                ezRowSpacer,
+                EzConfig.layout.rowSpacer,
 
                 // Show/hide
                 EzIconButton(
@@ -275,7 +271,7 @@ class _AppTileState extends State<AppTile> {
 
                 // Delete
                 if (widget.app.removable) ...<Widget>[
-                  ezRowSpacer,
+                  EzConfig.layout.rowSpacer,
                   EzIconButton(
                     onPressed: () async {
                       final bool deleted = await deleteApp(context, widget.app);
@@ -292,7 +288,7 @@ class _AppTileState extends State<AppTile> {
 
                 // Close/end edits
                 if (editing == true) ...<Widget>[
-                  ezRowSpacer,
+                  EzConfig.layout.rowSpacer,
                   EzIconButton(
                     onPressed: () => setState(() => editing = false),
                     icon: const Icon(Icons.close),
@@ -301,7 +297,7 @@ class _AppTileState extends State<AppTile> {
 
                 // Drag handle
                 if (widget.onHomeScreen == true && editing == null) ...<Widget>[
-                  ezRowSpacer,
+                  EzConfig.layout.rowSpacer,
                   EzIcon(
                     Icons.drag_handle,
                     color: Theme.of(context).colorScheme.outline,

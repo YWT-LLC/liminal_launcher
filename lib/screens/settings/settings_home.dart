@@ -24,12 +24,6 @@ class SettingsHomeScreen extends StatefulWidget {
 
 class _SettingsHomeScreenState extends State<SettingsHomeScreen>
     with AfterLayoutMixin<SettingsHomeScreen> {
-  // Gather the fixed theme data //
-
-  final bool isLefty = EzConfig.get(isLeftyKey);
-
-  late final EFUILang el10n = ezL10n(context);
-
   // Define the build data //
 
   late final AppInfoProvider appProvider =
@@ -114,7 +108,7 @@ Thank you, and enjoy!''',
         EzElevatedIconButton(
           onPressed: () => context.goNamed(colorSettingsPath),
           icon: EzIcon(Icons.navigate_next),
-          label: el10n.csPageTitle,
+          label: EzConfig.l10n.csPageTitle,
         ),
         ezSpacer,
 
@@ -122,7 +116,7 @@ Thank you, and enjoy!''',
         EzElevatedIconButton(
           onPressed: () => context.goNamed(designSettingsPath),
           icon: EzIcon(Icons.navigate_next),
-          label: el10n.dsPageTitle,
+          label: EzConfig.l10n.dsPageTitle,
         ),
         ezSpacer,
 
@@ -138,7 +132,7 @@ Thank you, and enjoy!''',
         EzElevatedIconButton(
           onPressed: () => context.goNamed(layoutSettingsPath),
           icon: EzIcon(Icons.navigate_next),
-          label: el10n.lsPageTitle,
+          label: EzConfig.l10n.lsPageTitle,
         ),
         ezSpacer,
 
@@ -146,7 +140,7 @@ Thank you, and enjoy!''',
         EzElevatedIconButton(
           onPressed: () => context.goNamed(textSettingsPath),
           icon: EzIcon(Icons.navigate_next),
-          label: el10n.tsPageTitle,
+          label: EzConfig.l10n.tsPageTitle,
         ),
         const EzDivider(),
 
@@ -367,7 +361,7 @@ Thank you, and enjoy!''',
             }),
           ),
           icon: EzIcon(PlatformIcons(context).refresh),
-          label: el10n.gResetAll,
+          label: EzConfig.l10n.gResetAll,
         ),
         const EzSeparator(),
       ]),

@@ -19,8 +19,6 @@ class ErrorScreen extends StatefulWidget {
 }
 
 class _ErrorScreenState extends State<ErrorScreen> {
-  late final EFUILang l10n = ezL10n(context);
-
   @override
   Widget build(BuildContext context) {
     const EzSeparator ezSeparator = EzSeparator();
@@ -31,19 +29,19 @@ class _ErrorScreenState extends State<ErrorScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text(
-            l10n.g404Wonder,
+            EzConfig.l10n.g404Wonder,
             style: textTheme.headlineLarge,
             textAlign: TextAlign.center,
           ),
           ezSeparator,
           Text(
-            l10n.g404,
+            EzConfig.l10n.g404,
             style: ezSubTitleStyle(textTheme),
             textAlign: TextAlign.center,
           ),
           ezSeparator,
           Text(
-            l10n.g404Note,
+            EzConfig.l10n.g404Note,
             style: textTheme.labelLarge,
             textAlign: TextAlign.center,
           ),

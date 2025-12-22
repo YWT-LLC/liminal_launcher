@@ -37,7 +37,7 @@ class SettingsFAB extends FloatingActionButton {
       : super(
           heroTag: 'settings_fab',
           onPressed: onPressed,
-          tooltip: ezL10n(context).ssNavHint,
+          tooltip: EzConfig.l10n.ssNavHint,
           child: EzIcon(PlatformIcons(context).settings),
         );
 }
