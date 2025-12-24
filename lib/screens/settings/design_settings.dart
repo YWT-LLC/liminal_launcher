@@ -227,7 +227,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
                 style: texTheme.bodyLarge,
                 textAlign: TextAlign.center,
               ),
-              EzMargin(),
+              EzConfig.layout.margin,
 
               // Button
               EzDropdownMenu<DateType>(

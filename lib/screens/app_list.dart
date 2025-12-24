@@ -276,7 +276,7 @@ class _AppListScreenState extends State<AppListScreen> {
               ],
             ),
             if (widget.icon != null) ...<Widget>[
-              EzMargin(),
+              EzConfig.layout.margin,
               widget.icon!,
             ],
             EzConfig.layout.spacer,

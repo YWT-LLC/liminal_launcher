@@ -142,7 +142,7 @@ Thank you, and enjoy!''',
           icon: EzIcon(Icons.navigate_next),
           label: EzConfig.l10n.tsPageTitle,
         ),
-        const EzDivider(),
+        EzConfig.layout.divider,
 
         // Batch //
 
@@ -363,7 +363,7 @@ Thank you, and enjoy!''',
           icon: EzIcon(PlatformIcons(context).refresh),
           label: EzConfig.l10n.gResetAll,
         ),
-        const EzSeparator(),
+        EzConfig.layout.separator,
       ]),
       fabs: settingsFABs(context, home: true),
     );

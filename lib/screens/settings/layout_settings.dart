@@ -82,7 +82,7 @@ class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
               label: 'Home alignment',
               icon: Icon(PlatformIcons(context).home),
             ),
-            const EzSpacer(),
+            EzConfig.layout.spacer,
 
             // App list align
             EzElevatedIconButton(
@@ -103,7 +103,7 @@ class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
               icon: const Icon(Icons.list),
             ),
           ],
-          resetSpacer: const EzDivider(),
+          resetSpacer: EzConfig.layout.divider,
           extraSaveKeys: extraSaveKeys,
           appName: appName,
           androidPackage: androidPackage,
@@ -249,7 +249,7 @@ class _AlignmentSelectorsState extends State<_AlignmentSelectors> {
             ),
           ]),
         ),
-        const EzSeparator(),
+        EzConfig.layout.separator,
 
         // Controls
         Wrap(
@@ -270,7 +270,7 @@ class _AlignmentSelectorsState extends State<_AlignmentSelectors> {
                 setState(() => hAlign = selected);
               },
             ),
-            const EzSpacer(),
+            EzConfig.layout.spacer,
 
             // Vertical
             SegmentedButton<ListAlignment>(
