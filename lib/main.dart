@@ -52,14 +52,11 @@ class LiminalLauncher extends StatelessWidget {
 
   const LiminalLauncher(this.installedApps, {super.key});
 
+  // Return the app //
+
   @override
   Widget build(BuildContext context) {
-    // Prep the router //
-
     GoTransition.defaultCurve = Curves.linear;
-    GoTransition.defaultDuration = animDuration;
-
-    // Return the app //
 
     return ChangeNotifierProvider<AppInfoProvider>(
       create: (_) => AppInfoProvider(installedApps),
