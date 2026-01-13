@@ -189,7 +189,7 @@ Thank you, and enjoy!''',
               listVAlignKey = lightListVAlignKey;
             }
 
-            await EzConfig.randomize(isDark, shiny: false);
+            await EzConfig.randomize(shiny: false);
             final Random random = Random();
 
             // Design
