@@ -6,7 +6,7 @@
 import '../screens/export.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class AddAppFAB extends FloatingActionButton {
@@ -16,7 +16,7 @@ class AddAppFAB extends FloatingActionButton {
           heroTag: 'add_app_fab',
           onPressed: onPressed,
           tooltip: 'Add more home apps',
-          child: EzIcon(PlatformIcons(context).add),
+          child: EzIcon(Icons.add),
         );
 }
 
@@ -38,7 +38,7 @@ class SettingsFAB extends FloatingActionButton {
           heroTag: 'settings_fab',
           onPressed: onPressed,
           tooltip: EzConfig.l10n.ssNavHint,
-          child: EzIcon(PlatformIcons(context).settings),
+          child: EzIcon(Icons.settings),
         );
 }
 

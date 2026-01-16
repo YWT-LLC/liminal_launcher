@@ -18,13 +18,13 @@ Offset lastRipple = Offset.zero;
 /// [FloatingActionButton] list for the settings screens
 List<Widget> settingsFABs(BuildContext context, {bool home = false}) =>
     <Widget>[
-      EzConfig.layout.spacer,
+      EzConfig.spacer,
       EzConfigFAB(
         context,
         appName: appName,
         androidPackage: androidPackage,
         extraKeys: extraSaveKeys,
       ),
-      EzConfig.layout.spacer,
+      EzConfig.spacer,
       EzBackFAB(showHome: home),
     ];

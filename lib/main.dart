@@ -13,7 +13,6 @@ import 'package:go_router/go_router.dart';
 import 'package:go_transitions/go_transitions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 
 void main() async {
@@ -21,9 +20,9 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
-  await SystemChrome.setPreferredOrientations(
-    <DeviceOrientation>[DeviceOrientation.portraitUp],
-  );
+  await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
+    DeviceOrientation.portraitUp,
+  ]);
 
   EzConfig.init(
     assetPaths: assetPaths,
@@ -31,8 +30,9 @@ void main() async {
     localeFallback: americanEnglish,
     l10nFallback: await EFUILang.delegate.load(americanEnglish),
     preferences: await SharedPreferencesWithCache.create(
-      cacheOptions:
-          SharedPreferencesWithCacheOptions(allowList: allLimKeys.keys.toSet()),
+      cacheOptions: SharedPreferencesWithCacheOptions(
+        allowList: allLimKeys.keys.toSet(),
+      ),
     ),
   );
 
@@ -44,6 +44,7 @@ void main() async {
       overlays: <SystemUiOverlay>[SystemUiOverlay.bottom],
     );
   }
+
   runApp(LiminalLauncher(await getApps()));
 }
 
@@ -61,7 +62,7 @@ class LiminalLauncher extends StatelessWidget {
     return ChangeNotifierProvider<AppInfoProvider>(
       create: (_) => AppInfoProvider(installedApps),
       child: EzAppProvider(
-        app: PlatformApp.router(
+        app: MaterialApp.router(
           debugShowCheckedModeBanner: false,
 
           // Language handlers
