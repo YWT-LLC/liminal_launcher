@@ -39,7 +39,7 @@ class _LauncherSettingsScreenState extends State<LauncherSettingsScreen> {
         SwipeSelector(left: true, appProvider: appProvider),
         ezSpacer,
         SwipeSelector(left: false, appProvider: appProvider),
-        EzConfig.layout.divider,
+        EzConfig.divider,
 
         // Hide status bar
         const EzSwitchPair(
@@ -74,7 +74,7 @@ class _LauncherSettingsScreenState extends State<LauncherSettingsScreen> {
           text: 'Auth for hidden',
           valueKey: authForHiddenKey,
         ),
-        EzConfig.layout.separator,
+        EzConfig.separator,
       ]),
       fabs: settingsFABs(context),
     );
