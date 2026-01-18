@@ -9,7 +9,6 @@ import '../widgets/export.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 Map<String, dynamic> listData({
   required bool Function(String id) listCheck,
@@ -214,12 +213,13 @@ class _AppListScreenState extends State<AppListScreen> {
                     ),
                   ],
                 ),
-                EzConfig.layout.rowSpacer,
+                EzConfig.rowSpacer,
 
                 // Order
                 EzIconButton(
                   icon: EzIcon(
-                      ascList ? Icons.arrow_upward : Icons.arrow_downward),
+                    ascList ? Icons.arrow_upward : Icons.arrow_downward,
+                  ),
                   onPressed: () async {
                     ascList = !ascList;
 
@@ -229,7 +229,7 @@ class _AppListScreenState extends State<AppListScreen> {
                     refreshList();
                   },
                 ),
-                EzConfig.layout.rowSpacer,
+                EzConfig.rowSpacer,
 
                 // Search
                 AnimatedContainer(
@@ -240,7 +240,7 @@ class _AppListScreenState extends State<AppListScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       EzIconButton(
-                        icon: Icon(PlatformIcons(context).search),
+                        icon: const Icon(Icons.search),
                         onPressed: () {
                           if (searching) {
                             closeKeyboard(context);
@@ -266,7 +266,8 @@ class _AppListScreenState extends State<AppListScreen> {
                               isDense: true,
                             ),
                             onChanged: (_) => setState(
-                                () => searchList = searchApps(appList)),
+                              () => searchList = searchApps(appList),
+                            ),
                           ),
                         ),
                       ],
@@ -276,10 +277,10 @@ class _AppListScreenState extends State<AppListScreen> {
               ],
             ),
             if (widget.icon != null) ...<Widget>[
-              EzConfig.layout.margin,
+              EzConfig.margin,
               widget.icon!,
             ],
-            EzConfig.layout.spacer,
+            EzConfig.spacer,
 
             // App list
             NotificationListener<ScrollNotification>(
@@ -364,7 +365,7 @@ class _AppListScreenState extends State<AppListScreen> {
         ),
       ),
       fabs: <Widget>[
-        EzConfig.layout.spacer,
+        EzConfig.spacer,
 
         // Scroll to top
         SizedBox(
@@ -379,11 +380,11 @@ class _AppListScreenState extends State<AppListScreen> {
                   curve: Curves.easeOut,
                 );
               },
-              child: EzIcon(PlatformIcons(context).upArrow),
+              child: EzIcon(Icons.arrow_upward),
             ),
           ),
         ),
-        EzConfig.layout.spacer,
+        EzConfig.spacer,
 
         // Scroll to bottom
         SizedBox(
@@ -398,7 +399,7 @@ class _AppListScreenState extends State<AppListScreen> {
                   curve: Curves.easeOut,
                 );
               },
-              child: EzIcon(PlatformIcons(context).downArrow),
+              child: EzIcon(Icons.arrow_downward),
             ),
           ),
         ),

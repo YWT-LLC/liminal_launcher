@@ -13,7 +13,6 @@ import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -149,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             children: <Widget>[
               Text('Hidden\t', style: textTheme.labelLarge),
               EzIcon(
-                PlatformIcons(context).eyeSlash,
+                Icons.visibility_off,
                 color: colorScheme.onSurface,
               ),
             ],
@@ -425,7 +424,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                       children: <Widget>[
                         Text('Home\t', style: textTheme.labelLarge),
                         EzIcon(
-                          PlatformIcons(context).add,
+                          Icons.add,
                           color: colorScheme.onSurface,
                         ),
                       ],
@@ -443,7 +442,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               ezSpacer,
 
               // Settings
-              SettingsFAB(context, () => context.goNamed(settingsHomePath))
+              SettingsFAB(context, () => context.goNamed(settingsHomePath)),
             ]
           : null,
     );

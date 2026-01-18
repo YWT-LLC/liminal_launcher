@@ -165,6 +165,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
         includeBackgroundImage: false,
         themedSettingsPostpend: <Widget>[
           // Wallpaper //
+
           if (EzConfig.get(isDark ? darkUseOSKey : lightUseOSKey) ==
               false) ...<Widget>[
             EzConfig.spacer,
@@ -232,12 +233,10 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
                 enableSearch: false,
                 initialSelection: currDateType,
                 dropdownMenuEntries: DateType.values
-                    .map(
-                      (DateType type) => DropdownMenuEntry<DateType>(
-                        value: type,
-                        label: DateTypeConfig.buildDate(type, context, now),
-                      ),
-                    )
+                    .map((DateType type) => DropdownMenuEntry<DateType>(
+                          value: type,
+                          label: DateTypeConfig.buildDate(type, context, now),
+                        ))
                     .toList(),
                 widthEntries: <String>['Wednesday, Sept'],
                 onSelected: (DateType? choice) async {
@@ -258,9 +257,8 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
               context: context,
               builder: (_) {
                 bool listIcon = EzConfig.get(listIconKey);
-                LabelType listLabelType = LabelTypeConfig.fromValue(
-                  EzConfig.get(listLabelTypeKey),
-                );
+                LabelType listLabelType =
+                    LabelTypeConfig.fromValue(EzConfig.get(listLabelTypeKey));
 
                 return StatefulBuilder(
                   builder: (_, StateSetter setModal) => EzScrollView(

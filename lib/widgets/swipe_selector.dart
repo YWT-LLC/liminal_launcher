@@ -10,7 +10,6 @@ import '../../widgets/export.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class SwipeSelector extends StatefulWidget {
   final bool left;
@@ -62,7 +61,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
         EzLink(
           '$dir app',
           textColor: colorScheme.onSurface,
-          onTap: () => showPlatformDialog(
+          onTap: () => showDialog(
             context: context,
             builder: (_) => EzAlertDialog(
               content: Text(
@@ -74,7 +73,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
           ),
           hint: 'Choose app that opens on $lowDir swipe',
           style: textTheme.bodyLarge,
-          padding: EzInsets.wrap(EzConfig.margin),
+          padding: EzInsets.wrap(EzConfig.marginVal),
         ),
         EzMargin(vertical: false),
         TileButton(

@@ -11,7 +11,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class AppFolder extends StatefulWidget {
   final AppInfoProvider appProvider;
@@ -159,11 +158,11 @@ class _AppFolderState extends State<AppFolder> {
               style: textTheme.bodyLarge,
               textAlign: TextAlign.center,
             ),
-            EzConfig.layout.rowSpacer,
+            EzConfig.rowSpacer,
 
             // Add apps
             EzIconButton(
-              icon: Icon(PlatformIcons(context).add),
+              icon: const Icon(Icons.add),
               onPressed: () => context.goNamed(
                 appListPath,
                 extra: listData(
@@ -181,7 +180,7 @@ class _AppFolderState extends State<AppFolder> {
                     children: <Widget>[
                       Text('$name\t', style: textTheme.labelLarge),
                       EzIcon(
-                        PlatformIcons(context).add,
+                        Icons.add,
                         color: colorScheme.onSurface,
                       ),
                     ],
@@ -189,11 +188,11 @@ class _AppFolderState extends State<AppFolder> {
                 ),
               ),
             ),
-            EzConfig.layout.rowSpacer,
+            EzConfig.rowSpacer,
 
             // Info (rename)
             EzIconButton(
-              onPressed: () => showPlatformDialog(
+              onPressed: () => showDialog(
                 context: context,
                 builder: (BuildContext dContext) {
                   final TextEditingController renameController =
@@ -219,23 +218,8 @@ class _AppFolderState extends State<AppFolder> {
                     Navigator.of(dContext).pop();
                   }
 
-                  late final List<Widget> materialActions;
-                  late final List<Widget> cupertinoActions;
-
-                  (materialActions, cupertinoActions) = ezActionPairs(
-                    context: context,
-                    confirmMsg: EzConfig.l10n.gApply,
-                    onConfirm: onConfirm,
-                    confirmIsDestructive: true,
-                    denyMsg: EzConfig.l10n.gCancel,
-                    onDeny: onDeny,
-                  );
-
                   return EzAlertDialog(
-                    title: Text(
-                      "Rename '$name'?",
-                      textAlign: TextAlign.center,
-                    ),
+                    title: Text("Rename '$name'?", textAlign: TextAlign.center),
                     content: Form(
                       child: TextFormField(
                         controller: renameController,
@@ -246,20 +230,26 @@ class _AppFolderState extends State<AppFolder> {
                         validator: validateRename,
                       ),
                     ),
-                    materialActions: materialActions,
-                    cupertinoActions: cupertinoActions,
+                    actions: ezActionPair(
+                      context: context,
+                      confirmMsg: EzConfig.l10n.gApply,
+                      onConfirm: onConfirm,
+                      confirmIsDestructive: true,
+                      denyMsg: EzConfig.l10n.gCancel,
+                      onDeny: onDeny,
+                    ),
                     needsClose: false,
                   );
                 },
               ),
-              icon: Icon(PlatformIcons(context).info),
+              icon: const Icon(Icons.info),
             ),
-            EzConfig.layout.rowSpacer,
+            EzConfig.rowSpacer,
 
             // Edit apps
             if (appSet.isNotEmpty) ...<Widget>[
               EzIconButton(
-                icon: Icon(PlatformIcons(context).edit),
+                icon: const Icon(Icons.edit),
                 onPressed: () => ezModal(
                   context: context,
                   builder: (_) => StatefulBuilder(
@@ -306,11 +296,11 @@ class _AppFolderState extends State<AppFolder> {
                                       labelType: widget.appLabel,
                                       showIcon: widget.appIcon,
                                     ),
-                                    EzConfig.layout.rowSpacer,
+                                    EzConfig.rowSpacer,
 
                                     // Remove button
                                     EzIconButton(
-                                      icon: Icon(PlatformIcons(context).remove),
+                                      icon: const Icon(Icons.remove),
                                       onPressed: () async {
                                         await widget.appProvider
                                             .removeFromFolder(id, widget.index);
@@ -318,7 +308,7 @@ class _AppFolderState extends State<AppFolder> {
                                         setModal(() {});
                                       },
                                     ),
-                                    EzConfig.layout.rowSpacer,
+                                    EzConfig.rowSpacer,
 
                                     // Drag handle
                                     EzIcon(
@@ -336,12 +326,12 @@ class _AppFolderState extends State<AppFolder> {
                   ),
                 ),
               ),
-              EzConfig.layout.rowSpacer,
+              EzConfig.rowSpacer,
             ],
 
             // Delete folder
             EzIconButton(
-              icon: Icon(PlatformIcons(context).delete),
+              icon: const Icon(Icons.delete),
               onPressed: () async {
                 final bool success = await widget.appProvider.deleteFolder(
                   appList.isEmpty
@@ -355,7 +345,7 @@ class _AppFolderState extends State<AppFolder> {
 
             // Close/end edits
             if (editing == true) ...<Widget>[
-              EzConfig.layout.rowSpacer,
+              EzConfig.rowSpacer,
               EzIconButton(
                 onPressed: () => setState(() => editing = false),
                 icon: const Icon(Icons.close),
@@ -364,11 +354,8 @@ class _AppFolderState extends State<AppFolder> {
 
             // Drag handle
             if (editing == null) ...<Widget>[
-              EzConfig.layout.rowSpacer,
-              EzIcon(
-                Icons.drag_handle,
-                color: colorScheme.outline,
-              ),
+              EzConfig.rowSpacer,
+              EzIcon(Icons.drag_handle, color: colorScheme.outline),
             ],
           ],
         ),
@@ -421,18 +408,18 @@ class _AppFolderState extends State<AppFolder> {
               ? EzTextIconButton(
                   label: folderLabel,
                   icon: Icon(
-                    PlatformIcons(context).folderOpen,
+                    Icons.folder_open,
                     size: EzConfig.iconSize + EzConfig.padding,
                   ),
                   style: TextButton.styleFrom(
-                      padding: EzInsets.wrap(EzConfig.margin)),
+                      padding: EzInsets.wrap(EzConfig.marginVal)),
                   onPressed: toggleOpen,
                   onLongPress: () => setState(() => editing = true),
                 )
               : EzTextButton(
                   text: name,
                   style: TextButton.styleFrom(
-                      padding: EzInsets.wrap(EzConfig.margin)),
+                      padding: EzInsets.wrap(EzConfig.marginVal)),
                   onPressed: toggleOpen,
                   onLongPress: () => setState(() => editing = true),
                 )),

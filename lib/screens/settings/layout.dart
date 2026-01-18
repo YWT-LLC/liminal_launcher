@@ -18,8 +18,6 @@ class LayoutSettingsScreen extends StatefulWidget {
 }
 
 class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
-  // Gather the fixed theme data //
-
   // Define custom Widgets //
 
   static const List<ButtonSegment<ListAlignment>> alignmentSegments =
@@ -37,6 +35,7 @@ class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
       label: Text('End', textAlign: TextAlign.center),
     ),
   ];
+
   // Return the build //
 
   @override
@@ -50,11 +49,9 @@ class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
             EzSpacer(space: EzConfig.spacing * 1.25),
             EzDivider(height: EzConfig.marginVal),
             EzLink(
-              EzConfig.l10n.gEditingTheme(
-                isDarkTheme(context)
-                    ? EzConfig.l10n.gDark.toLowerCase()
-                    : EzConfig.l10n.gLight.toLowerCase(),
-              ),
+              EzConfig.l10n.gEditingTheme(isDarkTheme(context)
+                  ? EzConfig.l10n.gDark.toLowerCase()
+                  : EzConfig.l10n.gLight.toLowerCase()),
               onTap: () => AppSettings.openAppSettings(
                 type: AppSettingsType.display,
                 asAnotherTask: true,
@@ -220,39 +217,37 @@ class _AlignmentSelectorsState extends State<_AlignmentSelectors> {
           color: colorScheme.onSurface,
           height: heightOf(context) * sizeMod,
           width: widthOf(context) * sizeMod,
-          child: Stack(
-            children: <Widget>[
-              // Background
-              Container(
-                decoration: BoxDecoration(
-                  color: colorScheme.surface,
-                  image: (backgroundImagePath == null ||
-                          backgroundImagePath == noImageValue)
-                      ? null
-                      : DecorationImage(
-                          image: ezImageProvider(backgroundImagePath),
-                          fit: backgroundImageFit,
-                        ),
-                ),
-                margin: EdgeInsets.all(EzConfig.marginVal * sizeMod),
+          child: Stack(children: <Widget>[
+            // Background
+            Container(
+              decoration: BoxDecoration(
+                color: colorScheme.surface,
+                image: (backgroundImagePath == null ||
+                        backgroundImagePath == noImageValue)
+                    ? null
+                    : DecorationImage(
+                        image: ezImageProvider(backgroundImagePath),
+                        fit: backgroundImageFit,
+                      ),
               ),
+              margin: EdgeInsets.all(EzConfig.marginVal * sizeMod),
+            ),
 
-              // Aligned circular icon
-              Align(
-                alignment: merge(hAlign: hAlign, vAlign: vAlign),
-                child: ClipOval(
-                  child: Image.asset(
-                    appIconPath,
-                    semanticLabel:
-                        'Liminal Launcher icon used for alignment preview',
-                    width: iconSize + padding,
-                    height: iconSize + padding,
-                    fit: BoxFit.cover,
-                  ),
+            // Aligned circular icon
+            Align(
+              alignment: merge(hAlign: hAlign, vAlign: vAlign),
+              child: ClipOval(
+                child: Image.asset(
+                  appIconPath,
+                  semanticLabel:
+                      'Liminal Launcher icon used for alignment preview',
+                  width: iconSize + padding,
+                  height: iconSize + padding,
+                  fit: BoxFit.cover,
                 ),
               ),
-            ],
-          ),
+            ),
+          ]),
         ),
         EzConfig.separator,
 

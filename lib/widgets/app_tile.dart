@@ -8,7 +8,6 @@ import '../utils/export.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class AppTile extends StatefulWidget {
   final AppInfo app;
@@ -134,7 +133,7 @@ class _AppTileState extends State<AppTile> {
                       height: appIconSize,
                     ),
                   ),
-                  EzConfig.layout.rowSpacer,
+                  EzConfig.rowSpacer,
                 ],
 
                 // Add to home
@@ -153,7 +152,7 @@ class _AppTileState extends State<AppTile> {
                     },
                     icon: const Icon(Icons.add_to_home_screen),
                   ),
-                  EzConfig.layout.rowSpacer,
+                  EzConfig.rowSpacer,
                 ],
 
                 // Remove from home
@@ -168,9 +167,9 @@ class _AppTileState extends State<AppTile> {
                         widget.refresh();
                       }
                     },
-                    icon: Icon(PlatformIcons(context).remove),
+                    icon: const Icon(Icons.remove),
                   ),
-                  EzConfig.layout.rowSpacer,
+                  EzConfig.rowSpacer,
                 ],
 
                 // Info
@@ -182,77 +181,70 @@ class _AppTileState extends State<AppTile> {
                     }
                     widget.refresh();
                   },
-                  icon: Icon(PlatformIcons(context).info),
+                  icon: const Icon(Icons.info),
                 ),
-                EzConfig.layout.rowSpacer,
+                EzConfig.rowSpacer,
 
                 // Rename
                 EzIconButton(
-                  onPressed: () => showPlatformDialog(
-                      context: context,
-                      builder: (BuildContext dContext) {
-                        final TextEditingController renameController =
-                            TextEditingController();
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (BuildContext dContext) {
+                      final TextEditingController renameController =
+                          TextEditingController();
 
-                        void onConfirm() async {
-                          closeKeyboard(dContext);
+                      void onConfirm() async {
+                        closeKeyboard(dContext);
 
-                          final String name = renameController.text.trim();
-                          if (validateRename(name) != null) return null;
+                        final String name = renameController.text.trim();
+                        if (validateRename(name) != null) return null;
 
-                          final bool success = await widget.appProvider
-                              .renameApp(newName: name, appID: widget.app.id);
+                        final bool success = await widget.appProvider
+                            .renameApp(newName: name, appID: widget.app.id);
 
-                          if (success) {
-                            if (dContext.mounted) {
-                              Navigator.of(dContext).pop(name);
-                            }
-                            widget.refresh();
+                        if (success) {
+                          if (dContext.mounted) {
+                            Navigator.of(dContext).pop(name);
                           }
+                          widget.refresh();
                         }
+                      }
 
-                        void onDeny() {
-                          closeKeyboard(dContext);
-                          Navigator.of(dContext).pop();
-                        }
+                      void onDeny() {
+                        closeKeyboard(dContext);
+                        Navigator.of(dContext).pop();
+                      }
 
-                        late final List<Widget> materialActions;
-                        late final List<Widget> cupertinoActions;
-
-                        (materialActions, cupertinoActions) = ezActionPairs(
+                      return EzAlertDialog(
+                        title: Text(
+                          'Rename ${widget.app.name}?',
+                          textAlign: TextAlign.center,
+                        ),
+                        content: Form(
+                          child: TextFormField(
+                            controller: renameController,
+                            textAlign: TextAlign.center,
+                            maxLines: 1,
+                            autofillHints: const <String>[AutofillHints.name],
+                            autovalidateMode: AutovalidateMode.onUnfocus,
+                            validator: validateRename,
+                          ),
+                        ),
+                        actions: ezActionPair(
                           context: context,
                           confirmMsg: EzConfig.l10n.gApply,
                           onConfirm: onConfirm,
                           confirmIsDestructive: true,
                           denyMsg: EzConfig.l10n.gCancel,
                           onDeny: onDeny,
-                        );
-
-                        return EzAlertDialog(
-                          title: Text(
-                            'Rename ${widget.app.name}?',
-                            textAlign: TextAlign.center,
-                          ),
-                          content: Form(
-                            child: TextFormField(
-                              controller: renameController,
-                              textAlign: TextAlign.center,
-                              maxLines: 1,
-                              autofillHints: const <String>[
-                                AutofillHints.name,
-                              ],
-                              autovalidateMode: AutovalidateMode.onUnfocus,
-                              validator: validateRename,
-                            ),
-                          ),
-                          materialActions: materialActions,
-                          cupertinoActions: cupertinoActions,
-                          needsClose: false,
-                        );
-                      }),
-                  icon: Icon(PlatformIcons(context).edit),
+                        ),
+                        needsClose: false,
+                      );
+                    },
+                  ),
+                  icon: const Icon(Icons.edit),
                 ),
-                EzConfig.layout.rowSpacer,
+                EzConfig.rowSpacer,
 
                 // Show/hide
                 EzIconButton(
@@ -264,14 +256,15 @@ class _AppTileState extends State<AppTile> {
                     widget.refresh();
                   },
                   icon: Icon(
-                      widget.appProvider.hiddenSet.contains(widget.app.id)
-                          ? PlatformIcons(context).eyeSolid
-                          : PlatformIcons(context).eyeSlash),
+                    widget.appProvider.hiddenSet.contains(widget.app.id)
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                  ),
                 ),
 
                 // Delete
                 if (widget.app.removable) ...<Widget>[
-                  EzConfig.layout.rowSpacer,
+                  EzConfig.rowSpacer,
                   EzIconButton(
                     onPressed: () async {
                       final bool deleted = await deleteApp(context, widget.app);
@@ -282,13 +275,13 @@ class _AppTileState extends State<AppTile> {
                         widget.refresh();
                       }
                     },
-                    icon: Icon(PlatformIcons(context).delete),
+                    icon: const Icon(Icons.delete),
                   ),
                 ],
 
                 // Close/end edits
                 if (editing == true) ...<Widget>[
-                  EzConfig.layout.rowSpacer,
+                  EzConfig.rowSpacer,
                   EzIconButton(
                     onPressed: () => setState(() => editing = false),
                     icon: const Icon(Icons.close),
@@ -297,7 +290,7 @@ class _AppTileState extends State<AppTile> {
 
                 // Drag handle
                 if (widget.onHomeScreen == true && editing == null) ...<Widget>[
-                  EzConfig.layout.rowSpacer,
+                  EzConfig.rowSpacer,
                   EzIcon(
                     Icons.drag_handle,
                     color: Theme.of(context).colorScheme.outline,
@@ -384,15 +377,15 @@ class TileButton extends StatelessWidget {
         ? EzTextIconButton(
             label: label,
             icon: iconImage,
-            style:
-                TextButton.styleFrom(padding: EzInsets.wrap(EzConfig.margin)),
+            style: TextButton.styleFrom(
+                padding: EzInsets.wrap(EzConfig.marginVal)),
             onPressed: onPressed,
             onLongPress: onLongPress,
           )
         : EzTextButton(
             text: label,
-            style:
-                TextButton.styleFrom(padding: EzInsets.wrap(EzConfig.margin)),
+            style: TextButton.styleFrom(
+                padding: EzInsets.wrap(EzConfig.marginVal)),
             onPressed: onPressed,
             onLongPress: onLongPress,
           );
