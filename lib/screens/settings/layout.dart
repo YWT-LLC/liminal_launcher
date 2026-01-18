@@ -9,7 +9,6 @@ import '../../widgets/export.dart';
 import 'package:flutter/material.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class LayoutSettingsScreen extends StatefulWidget {
   const LayoutSettingsScreen({super.key});
@@ -45,15 +44,17 @@ class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
         EzLayoutSettings(
           beforeLayout: <Widget>[
             const EzDominantHandSwitch(),
-            EzConfig.layout.separator,
+            EzConfig.separator,
           ],
           afterLayout: <Widget>[
             EzSpacer(space: EzConfig.spacing * 1.25),
-            EzDivider(height: EzConfig.margin),
+            EzDivider(height: EzConfig.marginVal),
             EzLink(
-              EzConfig.l10n.gEditingTheme(isDarkTheme(context)
-                  ? EzConfig.l10n.gDark.toLowerCase()
-                  : EzConfig.l10n.gLight.toLowerCase()),
+              EzConfig.l10n.gEditingTheme(
+                isDarkTheme(context)
+                    ? EzConfig.l10n.gDark.toLowerCase()
+                    : EzConfig.l10n.gLight.toLowerCase(),
+              ),
               onTap: () => AppSettings.openAppSettings(
                 type: AppSettingsType.display,
                 asAnotherTask: true,
@@ -75,14 +76,14 @@ class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
                       home: true,
                       segments: alignmentSegments,
                     ),
-                    EzConfig.layout.separator,
+                    EzConfig.separator,
                   ],
                 ),
               ),
               label: 'Home alignment',
-              icon: Icon(PlatformIcons(context).home),
+              icon: const Icon(Icons.home),
             ),
-            EzConfig.layout.spacer,
+            EzConfig.spacer,
 
             // App list align
             EzElevatedIconButton(
@@ -95,7 +96,7 @@ class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
                       home: false,
                       segments: alignmentSegments,
                     ),
-                    EzConfig.layout.separator,
+                    EzConfig.separator,
                   ],
                 ),
               ),
@@ -103,7 +104,7 @@ class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
               icon: const Icon(Icons.list),
             ),
           ],
-          resetSpacer: EzConfig.layout.divider,
+          resetSpacer: EzConfig.divider,
           extraSaveKeys: extraSaveKeys,
           appName: appName,
           androidPackage: androidPackage,
@@ -116,10 +117,7 @@ class _AlignmentSelectors extends StatefulWidget {
   final bool home;
   final List<ButtonSegment<ListAlignment>> segments;
 
-  const _AlignmentSelectors({
-    required this.home,
-    required this.segments,
-  });
+  const _AlignmentSelectors({required this.home, required this.segments});
 
   @override
   State<_AlignmentSelectors> createState() => _AlignmentSelectorsState();
@@ -194,18 +192,23 @@ class _AlignmentSelectorsState extends State<_AlignmentSelectors> {
             ? darkListVAlignKey
             : lightListVAlignKey;
 
-    ListAlignment hAlign =
-        ListAlignmentConfig.fromValue(EzConfig.get(hConfigKey));
+    ListAlignment hAlign = ListAlignmentConfig.fromValue(
+      EzConfig.get(hConfigKey),
+    );
 
-    ListAlignment vAlign =
-        ListAlignmentConfig.fromValue(EzConfig.get(vConfigKey));
+    ListAlignment vAlign = ListAlignmentConfig.fromValue(
+      EzConfig.get(vConfigKey),
+    );
 
-    final String? backgroundImagePath =
-        EzConfig.get(isDark ? darkBackgroundImageKey : lightBackgroundImageKey);
+    final String? backgroundImagePath = EzConfig.get(
+      isDark ? darkBackgroundImageKey : lightBackgroundImageKey,
+    );
 
-    final BoxFit? backgroundImageFit = ezFitFromName(isDark
-        ? EzConfig.get('$darkBackgroundImageKey$boxFitSuffix')
-        : EzConfig.get('$lightBackgroundImageKey$boxFitSuffix'));
+    final BoxFit? backgroundImageFit = ezFitFromName(
+      isDark
+          ? EzConfig.get('$darkBackgroundImageKey$boxFitSuffix')
+          : EzConfig.get('$lightBackgroundImageKey$boxFitSuffix'),
+    );
 
     // Return the build //
 
@@ -217,39 +220,41 @@ class _AlignmentSelectorsState extends State<_AlignmentSelectors> {
           color: colorScheme.onSurface,
           height: heightOf(context) * sizeMod,
           width: widthOf(context) * sizeMod,
-          child: Stack(children: <Widget>[
-            // Background
-            Container(
-              decoration: BoxDecoration(
-                color: colorScheme.surface,
-                image: (backgroundImagePath == null ||
-                        backgroundImagePath == noImageValue)
-                    ? null
-                    : DecorationImage(
-                        image: ezImageProvider(backgroundImagePath),
-                        fit: backgroundImageFit,
-                      ),
+          child: Stack(
+            children: <Widget>[
+              // Background
+              Container(
+                decoration: BoxDecoration(
+                  color: colorScheme.surface,
+                  image: (backgroundImagePath == null ||
+                          backgroundImagePath == noImageValue)
+                      ? null
+                      : DecorationImage(
+                          image: ezImageProvider(backgroundImagePath),
+                          fit: backgroundImageFit,
+                        ),
+                ),
+                margin: EdgeInsets.all(EzConfig.marginVal * sizeMod),
               ),
-              margin: EdgeInsets.all(EzConfig.margin * sizeMod),
-            ),
 
-            // Aligned circular icon
-            Align(
-              alignment: merge(hAlign: hAlign, vAlign: vAlign),
-              child: ClipOval(
-                child: Image.asset(
-                  appIconPath,
-                  semanticLabel:
-                      'Liminal Launcher icon used for alignment preview',
-                  width: iconSize + padding,
-                  height: iconSize + padding,
-                  fit: BoxFit.cover,
+              // Aligned circular icon
+              Align(
+                alignment: merge(hAlign: hAlign, vAlign: vAlign),
+                child: ClipOval(
+                  child: Image.asset(
+                    appIconPath,
+                    semanticLabel:
+                        'Liminal Launcher icon used for alignment preview',
+                    width: iconSize + padding,
+                    height: iconSize + padding,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-            ),
-          ]),
+            ],
+          ),
         ),
-        EzConfig.layout.separator,
+        EzConfig.separator,
 
         // Controls
         Wrap(
@@ -270,7 +275,7 @@ class _AlignmentSelectorsState extends State<_AlignmentSelectors> {
                 setState(() => hAlign = selected);
               },
             ),
-            EzConfig.layout.spacer,
+            EzConfig.spacer,
 
             // Vertical
             SegmentedButton<ListAlignment>(

@@ -10,7 +10,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class DesignSettingsScreen extends StatefulWidget {
   const DesignSettingsScreen({super.key});
@@ -166,10 +165,9 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
         includeBackgroundImage: false,
         themedSettingsPostpend: <Widget>[
           // Wallpaper //
-
           if (EzConfig.get(isDark ? darkUseOSKey : lightUseOSKey) ==
               false) ...<Widget>[
-            EzConfig.layout.spacer,
+            EzConfig.spacer,
             EzScrollView(
               scrollDirection: Axis.horizontal,
               startCentered: true,
@@ -193,7 +191,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
           ],
 
           // Use OS
-          EzConfig.layout.spacer,
+          EzConfig.spacer,
           EzSwitchPair(
             key: ValueKey<String>('use_os_$redraw'),
             text: 'Use System Wallpaper',
@@ -203,7 +201,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
               setState(() {});
             },
           ),
-          EzConfig.layout.separator,
+          EzConfig.separator,
 
           // Header settings //
 
@@ -213,7 +211,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
             text: 'Show time',
             valueKey: homeTimeKey,
           ),
-          EzConfig.layout.spacer,
+          EzConfig.spacer,
 
           // Date
           EzScrollView(
@@ -227,20 +225,19 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
                 style: texTheme.bodyLarge,
                 textAlign: TextAlign.center,
               ),
-              EzConfig.layout.margin,
+              EzConfig.margin,
 
               // Button
               EzDropdownMenu<DateType>(
                 enableSearch: false,
                 initialSelection: currDateType,
                 dropdownMenuEntries: DateType.values
-                    .map((DateType type) => DropdownMenuEntry<DateType>(
+                    .map(
+                      (DateType type) => DropdownMenuEntry<DateType>(
                         value: type,
-                        label: DateTypeConfig.buildDate(
-                          type,
-                          context,
-                          now,
-                        )))
+                        label: DateTypeConfig.buildDate(type, context, now),
+                      ),
+                    )
                     .toList(),
                 widthEntries: <String>['Wednesday, Sept'],
                 onSelected: (DateType? choice) async {
@@ -251,7 +248,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
               ),
             ],
           ),
-          EzConfig.layout.spacer,
+          EzConfig.spacer,
 
           // AppTile settings //
 
@@ -261,8 +258,9 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
               context: context,
               builder: (_) {
                 bool listIcon = EzConfig.get(listIconKey);
-                LabelType listLabelType =
-                    LabelTypeConfig.fromValue(EzConfig.get(listLabelTypeKey));
+                LabelType listLabelType = LabelTypeConfig.fromValue(
+                  EzConfig.get(listLabelTypeKey),
+                );
 
                 return StatefulBuilder(
                   builder: (_, StateSetter setModal) => EzScrollView(
@@ -271,7 +269,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
                       // Preview
                       listIcon
                           ? EzTextIconButton(
-                              icon: EzIcon(PlatformIcons(context).settings),
+                              icon: EzIcon(Icons.settings),
                               label: listLabel(listLabelType),
                               onPressed: doNothing,
                             )
@@ -279,14 +277,14 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
                               text: listLabel(listLabelType),
                               onPressed: doNothing,
                             ),
-                      EzConfig.layout.spacer,
+                      EzConfig.spacer,
 
                       // Label type
                       EzRow(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           const EzText('Label type'),
-                          EzConfig.layout.rowSpacer,
+                          EzConfig.rowSpacer,
                           EzDropdownMenu<LabelType>(
                             widthEntries: <String>['Full name'],
                             dropdownMenuEntries: labelEntries,
@@ -311,7 +309,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
                           ),
                         ],
                       ),
-                      EzConfig.layout.spacer,
+                      EzConfig.spacer,
 
                       // Show icon
                       EzSwitchPair(
@@ -334,16 +332,16 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
                           setModal(() {});
                         },
                       ),
-                      EzConfig.layout.separator,
+                      EzConfig.separator,
                     ],
                   ),
                 );
               },
             ),
-            icon: Icon(PlatformIcons(context).edit),
+            icon: const Icon(Icons.edit),
             label: 'List apps',
           ),
-          EzConfig.layout.spacer,
+          EzConfig.spacer,
 
           // Folder
           EzElevatedIconButton(
@@ -351,8 +349,9 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
               context: context,
               builder: (_) {
                 bool folderIcon = EzConfig.get(folderIconKey);
-                LabelType folderLabelType =
-                    LabelTypeConfig.fromValue(EzConfig.get(folderLabelTypeKey));
+                LabelType folderLabelType = LabelTypeConfig.fromValue(
+                  EzConfig.get(folderLabelTypeKey),
+                );
 
                 return StatefulBuilder(
                   builder: (_, StateSetter setModal) => EzScrollView(
@@ -361,7 +360,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
                       // Preview
                       folderIcon
                           ? EzTextIconButton(
-                              icon: EzIcon(PlatformIcons(context).settings),
+                              icon: EzIcon(Icons.settings),
                               label: folderLabel(folderLabelType),
                               onPressed: doNothing,
                             )
@@ -369,14 +368,14 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
                               text: folderLabel(folderLabelType),
                               onPressed: doNothing,
                             ),
-                      EzConfig.layout.spacer,
+                      EzConfig.spacer,
 
                       // Label type
                       EzRow(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           const EzText('Label type'),
-                          EzConfig.layout.rowSpacer,
+                          EzConfig.rowSpacer,
                           EzDropdownMenu<LabelType>(
                             widthEntries: <String>['Full name'],
                             dropdownMenuEntries: labelEntries,
@@ -401,7 +400,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
                           ),
                         ],
                       ),
-                      EzConfig.layout.spacer,
+                      EzConfig.spacer,
 
                       // Show icon
                       EzSwitchPair(
@@ -424,16 +423,16 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
                           setModal(() {});
                         },
                       ),
-                      EzConfig.layout.separator,
+                      EzConfig.separator,
                     ],
                   ),
                 );
               },
             ),
-            icon: Icon(PlatformIcons(context).edit),
+            icon: const Icon(Icons.edit),
             label: 'Folder apps',
           ),
-          EzConfig.layout.spacer,
+          EzConfig.spacer,
         ],
         darkThemeResetKeys: <String>{darkUseOSKey},
         lightThemeResetKeys: <String>{darkUseOSKey},
