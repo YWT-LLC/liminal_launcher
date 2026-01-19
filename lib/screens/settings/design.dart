@@ -267,7 +267,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
                       // Preview
                       listIcon
                           ? EzTextIconButton(
-                              icon: EzIcon(Icons.settings),
+                              icon: const Icon(Icons.settings),
                               label: listLabel(listLabelType),
                               onPressed: doNothing,
                             )
@@ -358,7 +358,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
                       // Preview
                       folderIcon
                           ? EzTextIconButton(
-                              icon: EzIcon(Icons.settings),
+                              icon: const Icon(Icons.settings),
                               label: folderLabel(folderLabelType),
                               onPressed: doNothing,
                             )

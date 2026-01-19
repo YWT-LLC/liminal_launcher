@@ -217,7 +217,7 @@ class _AppListScreenState extends State<AppListScreen> {
 
                 // Order
                 EzIconButton(
-                  icon: EzIcon(
+                  icon: Icon(
                     ascList ? Icons.arrow_upward : Icons.arrow_downward,
                   ),
                   onPressed: () async {

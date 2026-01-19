@@ -108,7 +108,7 @@ Thank you, and enjoy!''',
           // Color
           EzElevatedIconButton(
             onPressed: () => context.goNamed(colorSettingsPath),
-            icon: EzIcon(Icons.navigate_next),
+            icon: const Icon(Icons.navigate_next),
             label: EzConfig.l10n.csPageTitle,
           ),
           ezSpacer,
@@ -116,7 +116,7 @@ Thank you, and enjoy!''',
           // Design
           EzElevatedIconButton(
             onPressed: () => context.goNamed(designSettingsPath),
-            icon: EzIcon(Icons.navigate_next),
+            icon: const Icon(Icons.navigate_next),
             label: EzConfig.l10n.dsPageTitle,
           ),
           ezSpacer,
@@ -124,7 +124,7 @@ Thank you, and enjoy!''',
           // Launcher
           EzElevatedIconButton(
             onPressed: () => context.goNamed(launcherSettingsPath),
-            icon: EzIcon(Icons.navigate_next),
+            icon: const Icon(Icons.navigate_next),
             label: 'Launcher settings',
           ),
           ezSpacer,
@@ -132,7 +132,7 @@ Thank you, and enjoy!''',
           // Layout
           EzElevatedIconButton(
             onPressed: () => context.goNamed(layoutSettingsPath),
-            icon: EzIcon(Icons.navigate_next),
+            icon: const Icon(Icons.navigate_next),
             label: EzConfig.l10n.lsPageTitle,
           ),
           ezSpacer,
@@ -140,7 +140,7 @@ Thank you, and enjoy!''',
           // Text
           EzElevatedIconButton(
             onPressed: () => context.goNamed(textSettingsPath),
-            icon: EzIcon(Icons.navigate_next),
+            icon: const Icon(Icons.navigate_next),
             label: EzConfig.l10n.tsPageTitle,
           ),
           EzConfig.divider,
@@ -353,7 +353,7 @@ Thank you, and enjoy!''',
                 ),
               ),
             ),
-            icon: EzIcon(Icons.refresh),
+            icon: const Icon(Icons.refresh),
             label: EzConfig.l10n.gResetAll,
           ),
           EzConfig.separator,
