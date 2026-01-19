@@ -61,7 +61,7 @@ class LiminalLauncher extends StatelessWidget {
 
     return ChangeNotifierProvider<AppInfoProvider>(
       create: (_) => AppInfoProvider(installedApps),
-      child: EzAppProvider(
+      child: EzConfigurableApp(
         app: MaterialApp.router(
           debugShowCheckedModeBanner: false,
 
@@ -76,6 +76,11 @@ class LiminalLauncher extends StatelessWidget {
 
           // App title
           title: appName,
+
+          // App theme
+          themeMode: EzConfig.provider.themeMode,
+          darkTheme: EzConfig.provider.darkTheme,
+          theme: EzConfig.provider.lightTheme,
 
           // Router (page) config
           routerConfig: GoRouter(
