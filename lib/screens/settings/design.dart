@@ -163,7 +163,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
         ),
         includeScroll: false,
         includeBackgroundImage: false,
-        themedSettingsPostpend: <Widget>[
+        afterDesign: <Widget>[
           // Wallpaper //
 
           if (EzConfig.get(isDark ? darkUseOSKey : lightUseOSKey) ==
@@ -432,10 +432,9 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
           ),
           EzConfig.spacer,
         ],
-        darkThemeResetKeys: <String>{darkUseOSKey},
-        lightThemeResetKeys: <String>{darkUseOSKey},
+        resetExtraDark: <String>{darkUseOSKey},
+        resetExtraLight: <String>{darkUseOSKey},
         onReset: drawState,
-        extraSaveKeys: extraSaveKeys,
         appName: appName,
         androidPackage: androidPackage,
       ),

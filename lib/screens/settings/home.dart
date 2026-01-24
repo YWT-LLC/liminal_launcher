@@ -294,7 +294,6 @@ Thank you, and enjoy!''',
               }
               await EzConfig.setString(listVAlignKey, listVAlignValue);
             },
-            extraKeys: extraSaveKeys,
             appName: appName,
             androidPackage: androidPackage,
           ),
@@ -330,7 +329,6 @@ Thank you, and enjoy!''',
                         ezRichUndoWarning(
                           context,
                           standalone: false,
-                          extraKeys: extraSaveKeys,
                           appName: appName,
                           androidPackage: androidPackage,
                         ),

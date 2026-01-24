@@ -23,7 +23,6 @@ List<Widget> settingsFABs(BuildContext context, {bool home = false}) =>
         context,
         appName: appName,
         androidPackage: androidPackage,
-        extraKeys: extraSaveKeys,
       ),
       EzConfig.spacer,
       EzBackFAB(showHome: home),

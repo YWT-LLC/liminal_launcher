@@ -23,9 +23,9 @@ class ColorSettingsScreen extends StatelessWidget {
             type: AppSettingsType.display,
             asAnotherTask: true,
           ),
-          extraSaveKeys: extraSaveKeys,
           appName: appName,
           androidPackage: androidPackage,
+          resetSkip: neverResetKeys,
         ),
         fabs: settingsFABs(context),
       );
