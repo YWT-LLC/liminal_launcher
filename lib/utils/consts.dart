@@ -145,21 +145,13 @@ const Map<String, Type> limLayoutKeys = <String, Type>{
 
 // Shared //
 
-/// [limBTSKeys], [limDesignKeys], [limLauncherKeys], [limLayoutKeys]
-const Map<String, Type> _extraKeys = <String, Type>{
+/// [allEZConfigKeys], [limBTSKeys], [limDesignKeys], [limLauncherKeys], [limLayoutKeys]
+const Map<String, Type> allLimKeys = <String, Type>{
+  ...allEZConfigKeys,
   ...limBTSKeys,
   ...limDesignKeys,
   ...limLauncherKeys,
   ...limLayoutKeys,
-};
-
-/// Keys from [limBTSKeys], [limDesignKeys], [limLauncherKeys], [limLayoutKeys]
-final List<String> extraSaveKeys = _extraKeys.keys.toList();
-
-/// [allEZConfigKeys], [limBTSKeys], [limDesignKeys], [limLauncherKeys], [limLayoutKeys]
-const Map<String, Type> allLimKeys = <String, Type>{
-  ...allEZConfigKeys,
-  ..._extraKeys
 };
 
 /// Keys that should be preserved from [EzConfig.reset] by default
