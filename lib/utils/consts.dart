@@ -162,6 +162,7 @@ final Set<String> defaultNoResetKeys = <String>{
 
 /// [EzConfig] keys that should never b reset/only changed by the user
 const Set<String> neverResetKeys = <String>{
+  appLocaleKey,
   shownReminderKey,
 };
 
