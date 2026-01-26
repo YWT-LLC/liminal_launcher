@@ -120,10 +120,6 @@ class _AlignmentSelectors extends StatefulWidget {
 }
 
 class _AlignmentSelectorsState extends State<_AlignmentSelectors> {
-  // Gather the fixed theme data //
-
-  final double sizeMod = 0.333;
-
   // Define custom functions //
 
   Alignment merge({
@@ -165,26 +161,22 @@ class _AlignmentSelectorsState extends State<_AlignmentSelectors> {
   Widget build(BuildContext context) {
     // Gather the contextual theme data //
 
-    final double padding = EzConfig.padding;
-    final double iconSize = EzConfig.iconSize;
-
-    final bool isDark = isDarkTheme(context);
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
 
     // Define the build data //
 
     final String hConfigKey = widget.home
-        ? isDark
+        ? EzConfig.isDark
             ? darkHomeHAlignKey
             : lightHomeHAlignKey
-        : isDark
+        : EzConfig.isDark
             ? darkListHAlignKey
             : lightListHAlignKey;
     final String vConfigKey = widget.home
-        ? isDark
+        ? EzConfig.isDark
             ? darkHomeVAlignKey
             : lightHomeVAlignKey
-        : isDark
+        : EzConfig.isDark
             ? darkListVAlignKey
             : lightListVAlignKey;
 
@@ -197,16 +189,16 @@ class _AlignmentSelectorsState extends State<_AlignmentSelectors> {
     );
 
     final String? backgroundImagePath = EzConfig.get(
-      isDark ? darkBackgroundImageKey : lightBackgroundImageKey,
+      EzConfig.isDark ? darkBackgroundImageKey : lightBackgroundImageKey,
     );
 
-    final BoxFit? backgroundImageFit = ezFitFromName(
-      isDark
-          ? EzConfig.get('$darkBackgroundImageKey$boxFitSuffix')
-          : EzConfig.get('$lightBackgroundImageKey$boxFitSuffix'),
-    );
+    final BoxFit? backgroundImageFit = boxFitLib[EzConfig.isDark
+        ? EzConfig.get('$darkBackgroundImageKey$boxFitSuffix')
+        : EzConfig.get('$lightBackgroundImageKey$boxFitSuffix')];
 
     // Return the build //
+
+    const double sizeMod = 0.333;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -240,8 +232,8 @@ class _AlignmentSelectorsState extends State<_AlignmentSelectors> {
                   appIconPath,
                   semanticLabel:
                       'Liminal Launcher icon used for alignment preview',
-                  width: iconSize + padding,
-                  height: iconSize + padding,
+                  width: EzConfig.iconSize + EzConfig.padding,
+                  height: EzConfig.iconSize + EzConfig.padding,
                   fit: BoxFit.cover,
                 ),
               ),

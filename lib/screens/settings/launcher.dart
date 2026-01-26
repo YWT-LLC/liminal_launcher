@@ -18,8 +18,6 @@ class LauncherSettingsScreen extends StatefulWidget {
 }
 
 class _LauncherSettingsScreenState extends State<LauncherSettingsScreen> {
-  // Gather the fixed theme data //
-
   // Define the build data //
 
   late final AppInfoProvider appProvider =

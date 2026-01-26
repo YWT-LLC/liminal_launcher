@@ -20,8 +20,6 @@ class DesignSettingsScreen extends StatefulWidget {
 
 class _DesignSettingsScreenState extends State<DesignSettingsScreen>
     with WidgetsBindingObserver {
-  // Gather the theme data //
-
   // Define the build data //
 
   int redraw = 0;
