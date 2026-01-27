@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
-import 'package:go_transitions/go_transitions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
@@ -57,8 +56,6 @@ class LiminalLauncher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    GoTransition.defaultCurve = Curves.linear;
-
     return ChangeNotifierProvider<AppInfoProvider>(
       create: (_) => AppInfoProvider(installedApps),
       child: EzConfigurableApp(
@@ -73,95 +70,152 @@ class LiminalLauncher extends StatelessWidget {
           initialLocation: homePath,
           errorBuilder: (_, GoRouterState state) => ErrorScreen(state.error),
           routes: <RouteBase>[
+            // Home
             GoRoute(
               path: homePath,
               name: homePath,
-              builder: (_, __) => const HomeScreen(),
-              pageBuilder: GoTransitions.none.call,
+              pageBuilder: (BuildContext context, GoRouterState state) =>
+                  ezPageBuilder(context, state, const HomeScreen()),
               routes: <RouteBase>[
+                // App list
                 GoRoute(
                   path: appListPath,
                   name: appListPath,
-                  builder: (_, GoRouterState state) {
+                  pageBuilder: (BuildContext context, GoRouterState state) {
                     final Map<String, dynamic> listData =
                         state.extra as Map<String, dynamic>;
 
-                    return AppListScreen(
-                      listCheck: listData[ListData.listCheck.key],
-                      onSelected: listData[ListData.onSelected.key],
-                      refresh: listData[ListData.refresh.key],
-                      autoRefresh: listData[ListData.autoRefresh.key],
-                      editable: listData[ListData.editable.key],
-                      icon: listData[ListData.icon.key],
+                    return ezPageBuilder(
+                      context,
+                      state,
+                      AppListScreen(
+                        listCheck: listData[ListData.listCheck.key],
+                        onSelected: listData[ListData.onSelected.key],
+                        refresh: listData[ListData.refresh.key],
+                        autoRefresh: listData[ListData.autoRefresh.key],
+                        editable: listData[ListData.editable.key],
+                        icon: listData[ListData.icon.key],
+                      ),
+                      transitionsBuilder: (_, Animation<double> animation, __,
+                              Widget child) =>
+                          SlideTransition(
+                              position: Tween<Offset>(
+                                begin: const Offset(0.0, 1.0),
+                                end: Offset.zero,
+                              ).animate(CurvedAnimation(
+                                parent: animation,
+                                curve: Curves.easeInOut,
+                              )),
+                              child: FadeTransition(
+                                opacity: animation,
+                                child: child,
+                              )), // TODO: allow for manual version of the config values
                     );
                   },
-                  pageBuilder: GoTransitions.openUpwards.withFade.call,
                 ),
+
+                // Settings home
                 GoRoute(
                   path: settingsHomePath,
                   name: settingsHomePath,
-                  builder: (_, __) => const SettingsHomeScreen(),
-                  pageBuilder: GoTransitions.slide.toLeft.withFade.call,
+                  pageBuilder: (BuildContext context, GoRouterState state) =>
+                      ezPageBuilder(context, state, const SettingsHomeScreen()),
                   routes: <RouteBase>[
-                    GoRoute(
-                      path: launcherSettingsPath,
-                      name: launcherSettingsPath,
-                      builder: (_, __) => const LauncherSettingsScreen(),
-                      pageBuilder: GoTransitions.slide.toLeft.withFade.call,
-                    ),
+                    // Color settings
                     GoRoute(
                       path: colorSettingsPath,
                       name: colorSettingsPath,
-                      builder: (_, __) => const ColorSettingsScreen(),
-                      pageBuilder: GoTransitions.slide.toLeft.withFade.call,
+                      pageBuilder:
+                          (BuildContext context, GoRouterState state) =>
+                              ezPageBuilder(
+                                  context, state, const ColorSettingsScreen()),
                       routes: <RouteBase>[
                         GoRoute(
                           path: EzCSType.quick.path,
                           name: EzCSType.quick.name,
-                          builder: (_, __) =>
-                              const ColorSettingsScreen(target: EzCSType.quick),
-                          pageBuilder: GoTransitions.slide.toLeft.withFade.call,
+                          pageBuilder:
+                              (BuildContext context, GoRouterState state) =>
+                                  ezPageBuilder(
+                            context,
+                            state,
+                            const ColorSettingsScreen(target: EzCSType.quick),
+                          ),
                         ),
                         GoRoute(
                           path: EzCSType.advanced.path,
                           name: EzCSType.advanced.name,
-                          builder: (_, __) => const ColorSettingsScreen(
-                              target: EzCSType.advanced),
-                          pageBuilder: GoTransitions.slide.toLeft.withFade.call,
+                          pageBuilder:
+                              (BuildContext context, GoRouterState state) =>
+                                  ezPageBuilder(
+                            context,
+                            state,
+                            const ColorSettingsScreen(
+                                target: EzCSType.advanced),
+                          ),
                         ),
                       ],
                     ),
+
+                    // Design settings
                     GoRoute(
                       path: designSettingsPath,
                       name: designSettingsPath,
-                      builder: (_, __) => const DesignSettingsScreen(),
-                      pageBuilder: GoTransitions.slide.toLeft.withFade.call,
+                      pageBuilder:
+                          (BuildContext context, GoRouterState state) =>
+                              ezPageBuilder(
+                                  context, state, const DesignSettingsScreen()),
                     ),
+
+                    // Launcher settings
+                    GoRoute(
+                      path: launcherSettingsPath,
+                      name: launcherSettingsPath,
+                      pageBuilder: (BuildContext context,
+                              GoRouterState state) =>
+                          ezPageBuilder(
+                              context, state, const LauncherSettingsScreen()),
+                    ),
+
+                    // Layout settings
                     GoRoute(
                       path: layoutSettingsPath,
                       name: layoutSettingsPath,
-                      builder: (_, __) => const LayoutSettingsScreen(),
-                      pageBuilder: GoTransitions.slide.toLeft.withFade.call,
+                      pageBuilder:
+                          (BuildContext context, GoRouterState state) =>
+                              ezPageBuilder(
+                                  context, state, const LayoutSettingsScreen()),
                     ),
+
+                    // Text settings
                     GoRoute(
                       path: textSettingsPath,
                       name: textSettingsPath,
-                      builder: (_, __) => const TextSettingsScreen(),
-                      pageBuilder: GoTransitions.slide.toLeft.withFade.call,
+                      pageBuilder:
+                          (BuildContext context, GoRouterState state) =>
+                              ezPageBuilder(
+                                  context, state, const TextSettingsScreen()),
                       routes: <RouteBase>[
                         GoRoute(
                           path: EzTSType.quick.path,
                           name: EzTSType.quick.name,
-                          builder: (_, __) =>
-                              const TextSettingsScreen(target: EzTSType.quick),
-                          pageBuilder: GoTransitions.slide.toLeft.withFade.call,
+                          pageBuilder:
+                              (BuildContext context, GoRouterState state) =>
+                                  ezPageBuilder(
+                            context,
+                            state,
+                            const TextSettingsScreen(target: EzTSType.quick),
+                          ),
                         ),
                         GoRoute(
                           path: EzTSType.advanced.path,
                           name: EzTSType.advanced.name,
-                          builder: (_, __) => const TextSettingsScreen(
-                              target: EzTSType.advanced),
-                          pageBuilder: GoTransitions.slide.toLeft.withFade.call,
+                          pageBuilder:
+                              (BuildContext context, GoRouterState state) =>
+                                  ezPageBuilder(
+                            context,
+                            state,
+                            const TextSettingsScreen(target: EzTSType.advanced),
+                          ),
                         ),
                       ],
                     ),
