@@ -48,8 +48,6 @@ class _SettingsHomeScreenState extends State<SettingsHomeScreen>
     if (!(await isGPlayInstall()) &&
         !EzConfig.get(shownReminderKey) &&
         context.mounted) {
-      final TextStyle? style = Theme.of(context).textTheme.bodyLarge;
-
       await showDialog(
         context: context,
         builder: (_) => EzAlertDialog(
@@ -68,7 +66,7 @@ With that said, if you want to support Liminal's development, or the development
               ),
               EzInlineLink(
                 'contributing',
-                style: style,
+                style: EzConfig.styles.bodyLarge,
                 textAlign: TextAlign.center,
                 url: Uri.parse('https://www.empathetech.net/#/contribute'),
                 hint: 'Open a link to the Empathetic contribution options.',
@@ -82,7 +80,7 @@ And it will not appear again.
 Thank you, and enjoy!''',
               ),
             ],
-            style: style,
+            style: EzConfig.styles.bodyLarge,
             textBackground: false,
             textAlign: TextAlign.center,
           ),
@@ -101,7 +99,7 @@ Thank you, and enjoy!''',
     return LiminalScaffold(
       EzScrollView(
         children: <Widget>[
-          // TODO: New home for showTips
+          // Need a new home for showTips
 
           // Navigation //
 

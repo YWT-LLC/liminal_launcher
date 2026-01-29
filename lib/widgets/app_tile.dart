@@ -293,7 +293,7 @@ class _AppTileState extends State<AppTile> {
                   EzConfig.rowSpacer,
                   EzIcon(
                     Icons.drag_handle,
-                    color: Theme.of(context).colorScheme.outline,
+                    color: EzConfig.colors.outline,
                   ),
                 ],
               ],

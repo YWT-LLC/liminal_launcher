@@ -135,9 +135,6 @@ class _AppFolderState extends State<AppFolder> {
     final EdgeInsets rowPadding =
         EdgeInsets.symmetric(horizontal: EzConfig.spacing / 2);
 
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    final TextTheme textTheme = Theme.of(context).textTheme;
-
     // Return the build //
 
     if (editing != false) {
@@ -155,7 +152,7 @@ class _AppFolderState extends State<AppFolder> {
             // Name
             EzText(
               name,
-              style: textTheme.bodyLarge,
+              style: EzConfig.styles.bodyLarge,
               textAlign: TextAlign.center,
             ),
             EzConfig.rowSpacer,
@@ -178,10 +175,10 @@ class _AppFolderState extends State<AppFolder> {
                   icon: EzTextBackground(EzRow(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Text('$name\t', style: textTheme.labelLarge),
+                      Text('$name\t', style: EzConfig.styles.labelLarge),
                       EzIcon(
                         Icons.add,
-                        color: colorScheme.onSurface,
+                        color: EzConfig.colors.onSurface,
                       ),
                     ],
                   )),
@@ -313,7 +310,7 @@ class _AppFolderState extends State<AppFolder> {
                                     // Drag handle
                                     EzIcon(
                                       Icons.drag_handle,
-                                      color: colorScheme.outline,
+                                      color: EzConfig.colors.outline,
                                     ),
                                   ],
                                 ),
@@ -355,7 +352,7 @@ class _AppFolderState extends State<AppFolder> {
             // Drag handle
             if (editing == null) ...<Widget>[
               EzConfig.rowSpacer,
-              EzIcon(Icons.drag_handle, color: colorScheme.outline),
+              EzIcon(Icons.drag_handle, color: EzConfig.colors.outline),
             ],
           ],
         ),

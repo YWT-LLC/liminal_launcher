@@ -39,19 +39,12 @@ class _SwipeSelectorState extends State<SwipeSelector> {
 
   @override
   Widget build(BuildContext context) {
-    // Gather the contextual theme data //
-
-    final bool isDark = isDarkTheme(context);
-
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    final TextTheme textTheme = Theme.of(context).textTheme;
-
     // Define the contextual build data //
 
     final bool showIcon =
-        EzConfig.get(isDark ? darkListIconKey : lightListIconKey);
-    final LabelType labelType = LabelTypeConfig.fromValue(
-        EzConfig.get(isDark ? darkListLabelTypeKey : lightListLabelTypeKey));
+        EzConfig.get(EzConfig.isDark ? darkListIconKey : lightListIconKey);
+    final LabelType labelType = LabelTypeConfig.fromValue(EzConfig.get(
+        EzConfig.isDark ? darkListLabelTypeKey : lightListLabelTypeKey));
 
     // Return the build //
 
@@ -60,19 +53,19 @@ class _SwipeSelectorState extends State<SwipeSelector> {
       children: <Widget>[
         EzLink(
           '$dir app',
-          textColor: colorScheme.onSurface,
+          textColor: EzConfig.colors.onSurface,
           onTap: () => showDialog(
             context: context,
             builder: (_) => EzAlertDialog(
               content: Text(
                 'Choose a quick access app that will open when you swipe $lowDir on the home screen.',
-                style: textTheme.bodyLarge,
+                style: EzConfig.styles.bodyLarge,
                 textAlign: TextAlign.center,
               ),
             ),
           ),
           hint: 'Choose app that opens on $lowDir swipe',
-          style: textTheme.bodyLarge,
+          style: EzConfig.styles.bodyLarge,
           padding: EzInsets.wrap(EzConfig.marginVal),
         ),
         EzMargin(vertical: false),
@@ -98,7 +91,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
               refresh: () => setState(() {}),
               icon: EzText(
                 'Selecting $lowDir swipe',
-                style: textTheme.labelLarge,
+                style: EzConfig.styles.labelLarge,
               ),
             ),
           ),

@@ -13,14 +13,12 @@ class Clock extends StatefulWidget {
   final bool showTime;
   final String dateType;
   final ListAlignment hAlign;
-  final TextTheme textTheme;
 
   const Clock({
     super.key,
     required this.showTime,
     required this.dateType,
     required this.hAlign,
-    required this.textTheme,
   });
 
   @override
@@ -53,13 +51,13 @@ class _ClockState extends State<Clock> {
         if (widget.showTime)
           Text(
             TimeOfDay.fromDateTime(now).format(context),
-            style: widget.textTheme.headlineLarge,
+            style: EzConfig.styles.headlineLarge,
           ),
         if (widget.dateType != DateType.none.configValue)
           Text(
             DateTypeConfig.buildDate(
                 DateTypeConfig.fromValue(widget.dateType), context, now),
-            style: widget.textTheme.labelLarge,
+            style: EzConfig.styles.labelLarge,
           ),
       ],
     ));

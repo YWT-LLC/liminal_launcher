@@ -115,11 +115,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     setState(() {});
   }
 
-  Future<void> navToHidden(
-    BuildContext context,
-    TextTheme textTheme,
-    ColorScheme colorScheme,
-  ) async {
+  Future<void> navToHidden(BuildContext context) async {
     if (EzConfig.get(authForHiddenKey) == true) {
       // Check every time so no reset is required; O(1)
       bool authed = false;
@@ -146,10 +142,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           icon: EzTextBackground(EzRow(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text('Hidden\t', style: textTheme.labelLarge),
+              Text('Hidden\t', style: EzConfig.styles.labelLarge),
               EzIcon(
                 Icons.visibility_off,
-                color: colorScheme.onSurface,
+                color: EzConfig.colors.onSurface,
               ),
             ],
           )),
@@ -161,21 +157,19 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   // Define custom Widgets //
 
-  Widget clock(TextTheme textTheme) =>
-      (showTime || dateType != DateType.none.configValue)
-          ? Padding(
-              padding: EdgeInsets.only(
-                top: vAlign == ListAlignment.start ? 0 : EzConfig.spacing,
-                bottom: vAlign == ListAlignment.start ? EzConfig.spacing : 0,
-              ),
-              child: Clock(
-                showTime: showTime,
-                dateType: dateType,
-                hAlign: hAlign,
-                textTheme: textTheme,
-              ),
-            )
-          : const SizedBox.shrink();
+  Widget clock() => (showTime || dateType != DateType.none.configValue)
+      ? Padding(
+          padding: EdgeInsets.only(
+            top: vAlign == ListAlignment.start ? 0 : EzConfig.spacing,
+            bottom: vAlign == ListAlignment.start ? EzConfig.spacing : 0,
+          ),
+          child: Clock(
+            showTime: showTime,
+            dateType: dateType,
+            hAlign: hAlign,
+          ),
+        )
+      : const SizedBox.shrink();
 
   // Init //
 
@@ -224,17 +218,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     refresh();
   }
 
+  // Return the build //
+
   @override
   Widget build(BuildContext context) {
-    // Gather the contextual theme data //
-
-    const EzSpacer ezSpacer = EzSpacer();
-
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    final TextTheme textTheme = Theme.of(context).textTheme;
-
-    // Return the build //
-
     return LiminalScaffold(
       GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -268,7 +255,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               width: widthOf(context),
               height: heightOf(context),
               position: details.globalPosition,
-              color: colorScheme.primary,
+              color: EzConfig.colors.primary,
               oMin: crucialOT,
             );
             overlay.insert(ripple);
@@ -294,7 +281,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             if (details.primaryVelocity! < 0) {
               // Swiped up
               if (editing) {
-                await navToHidden(context, textTheme, colorScheme);
+                await navToHidden(context);
               } else {
                 context.goNamed(appListPath, extra: appListData);
               }
@@ -331,7 +318,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           crossAxisAlignment: hAlign.crossAxis,
           children: <Widget>[
             // Clock I
-            if (vAlign == ListAlignment.start) clock(textTheme),
+            if (vAlign == ListAlignment.start) clock(),
 
             // App list
             Expanded(
@@ -342,7 +329,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     // Navigate on bottom overscroll
                     if (atBottom) {
                       if (editing) {
-                        navToHidden(context, textTheme, colorScheme);
+                        navToHidden(context);
                       } else {
                         context.goNamed(appListPath, extra: appListData);
                       }
@@ -399,13 +386,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             ),
 
             // Clock II
-            if (vAlign == ListAlignment.end) clock(textTheme),
+            if (vAlign == ListAlignment.end) clock(),
           ],
         ),
       ),
       fabs: editing
           ? <Widget>[
-              ezSpacer,
+              EzConfig.spacer,
 
               // Add app
               AddAppFAB(
@@ -422,24 +409,24 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     icon: EzTextBackground(EzRow(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Text('Home\t', style: textTheme.labelLarge),
+                        Text('Home\t', style: EzConfig.styles.labelLarge),
                         EzIcon(
                           Icons.add,
-                          color: colorScheme.onSurface,
+                          color: EzConfig.colors.onSurface,
                         ),
                       ],
                     )),
                   ),
                 ),
               ),
-              ezSpacer,
+              EzConfig.spacer,
 
               // Add folder
               AddFolderFAB(context, () {
                 appProvider.addHomeFolder();
                 refresh();
               }),
-              ezSpacer,
+              EzConfig.spacer,
 
               // Settings
               SettingsFAB(context, () => context.goNamed(settingsHomePath)),

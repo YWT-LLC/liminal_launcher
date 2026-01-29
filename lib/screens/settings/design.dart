@@ -142,15 +142,10 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
     drawState();
   }
 
+  //* Return the build *//
+
   @override
   Widget build(BuildContext context) {
-    // Gather the contextual theme data //
-
-    final bool isDark = isDarkTheme(context);
-    final TextTheme texTheme = Theme.of(context).textTheme;
-
-    //* Return the build *//
-
     final DateTime now = DateTime.now();
 
     return LiminalScaffold(
@@ -164,14 +159,14 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
         afterDesign: <Widget>[
           // Wallpaper //
 
-          if (EzConfig.get(isDark ? darkUseOSKey : lightUseOSKey) ==
+          if (EzConfig.get(EzConfig.isDark ? darkUseOSKey : lightUseOSKey) ==
               false) ...<Widget>[
             EzConfig.spacer,
             EzScrollView(
               scrollDirection: Axis.horizontal,
               startCentered: true,
               mainAxisSize: MainAxisSize.min,
-              child: isDark
+              child: EzConfig.isDark
                   ? EzImageSetting(
                       key: UniqueKey(),
                       configKey: darkBackgroundImageKey,
@@ -194,7 +189,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
           EzSwitchPair(
             key: ValueKey<String>('use_os_$redraw'),
             text: 'Use System Wallpaper',
-            valueKey: isDark ? darkUseOSKey : lightUseOSKey,
+            valueKey: EzConfig.isDark ? darkUseOSKey : lightUseOSKey,
             onChangedCallback: (bool? choice) {
               if (choice == null) return;
               setState(() {});
@@ -221,7 +216,7 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
               // Label
               EzText(
                 'Date type',
-                style: texTheme.bodyLarge,
+                style: EzConfig.styles.bodyLarge,
                 textAlign: TextAlign.center,
               ),
               EzConfig.margin,

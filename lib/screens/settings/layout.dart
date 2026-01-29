@@ -57,7 +57,7 @@ class _LayoutSettingsScreenState extends State<LayoutSettingsScreen> {
                 asAnotherTask: true,
               ),
               hint: EzConfig.l10n.gEditingThemeHint,
-              style: Theme.of(context).textTheme.labelLarge,
+              style: EzConfig.styles.labelLarge,
               textAlign: TextAlign.center,
             ),
             EzSpacer(space: EzConfig.spacing * 1.25),
@@ -159,10 +159,6 @@ class _AlignmentSelectorsState extends State<_AlignmentSelectors> {
 
   @override
   Widget build(BuildContext context) {
-    // Gather the contextual theme data //
-
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-
     // Define the build data //
 
     final String hConfigKey = widget.home
@@ -205,14 +201,14 @@ class _AlignmentSelectorsState extends State<_AlignmentSelectors> {
       children: <Widget>[
         // Preview
         Container(
-          color: colorScheme.onSurface,
+          color: EzConfig.colors.onSurface,
           height: heightOf(context) * sizeMod,
           width: widthOf(context) * sizeMod,
           child: Stack(children: <Widget>[
             // Background
             Container(
               decoration: BoxDecoration(
-                color: colorScheme.surface,
+                color: EzConfig.colors.surface,
                 image: (backgroundImagePath == null ||
                         backgroundImagePath == noImageValue)
                     ? null

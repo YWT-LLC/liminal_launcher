@@ -20,34 +20,29 @@ class ErrorScreen extends StatefulWidget {
 
 class _ErrorScreenState extends State<ErrorScreen> {
   @override
-  Widget build(BuildContext context) {
-    const EzSeparator ezSeparator = EzSeparator();
-    final TextTheme textTheme = Theme.of(context).textTheme;
-
-    return LiminalScaffold(Center(
-      child: EzScrollView(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            EzConfig.l10n.g404Wonder,
-            style: textTheme.headlineLarge,
-            textAlign: TextAlign.center,
-          ),
-          ezSeparator,
-          Text(
-            EzConfig.l10n.g404,
-            style: ezSubTitleStyle(textTheme),
-            textAlign: TextAlign.center,
-          ),
-          ezSeparator,
-          Text(
-            EzConfig.l10n.g404Note,
-            style: textTheme.labelLarge,
-            textAlign: TextAlign.center,
-          ),
-          ezSeparator,
-        ],
-      ),
-    ));
-  }
+  Widget build(BuildContext context) => LiminalScaffold(Center(
+        child: EzScrollView(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              EzConfig.l10n.g404Wonder,
+              style: EzConfig.styles.headlineLarge,
+              textAlign: TextAlign.center,
+            ),
+            EzConfig.separator,
+            Text(
+              EzConfig.l10n.g404,
+              style: ezSubTitleStyle(),
+              textAlign: TextAlign.center,
+            ),
+            EzConfig.separator,
+            Text(
+              EzConfig.l10n.g404Note,
+              style: EzConfig.styles.labelLarge,
+              textAlign: TextAlign.center,
+            ),
+            EzConfig.separator,
+          ],
+        ),
+      ));
 }
