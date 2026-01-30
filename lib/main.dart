@@ -19,9 +19,10 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
-  await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
-    DeviceOrientation.portraitUp,
-  ]);
+  await SystemChrome.setPreferredOrientations(
+      <DeviceOrientation>[DeviceOrientation.portraitUp]);
+
+  // Initialize EzConfig //
 
   EzConfig.init(
     assetPaths: assetPaths,
@@ -37,6 +38,9 @@ void main() async {
 
   // Run the app //
 
+  final (Locale storedLocale, EFUILang storedEFUILang) = await ezStoredL10n();
+  final Lang storedLang = await Lang.delegate.load(storedLocale);
+
   if (EzConfig.get(hideStatusKey) == true) {
     await SystemChrome.setEnabledSystemUIMode(
       SystemUiMode.manual,
@@ -44,13 +48,27 @@ void main() async {
     );
   }
 
-  runApp(LiminalLauncher(await getApps()));
+  runApp(LiminalLauncher(
+    await getApps(),
+    storedLocale,
+    storedEFUILang,
+    storedLang,
+  ));
 }
 
 class LiminalLauncher extends StatelessWidget {
   final List<AppInfo> installedApps;
+  final Locale storedLocale;
+  final EFUILang storedEFUILang;
+  final Lang storedLang;
 
-  const LiminalLauncher(this.installedApps, {super.key});
+  const LiminalLauncher(
+    this.installedApps,
+    this.storedLocale,
+    this.storedEFUILang,
+    this.storedLang, {
+    super.key,
+  });
 
   // Return the app //
 
@@ -65,6 +83,9 @@ class LiminalLauncher extends StatelessWidget {
           ...Lang.localizationsDelegates,
         },
         supportedLocales: Lang.supportedLocales,
+        locale: storedLocale,
+        el10n: storedEFUILang,
+        appCache: LiminalCache(storedLocale, storedLang),
         appName: appName,
         routerConfig: GoRouter(
           initialLocation: homePath,
