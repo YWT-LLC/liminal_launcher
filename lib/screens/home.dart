@@ -21,7 +21,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
+class _HomeScreenState extends State<HomeScreen> {
   // Define the fixed build data //
 
   late final AppInfoProvider appProvider =
@@ -53,6 +53,38 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   late bool folderIcon;
   late LabelType folderLabel;
+
+  // TODO: add to cache or provider
+  // void setContextualData(bool isDark) {
+  //   if (isDark) {
+  //     hAlign = ListAlignmentConfig.fromValue(EzConfig.get(darkHomeHAlignKey));
+  //     vAlign = ListAlignmentConfig.fromValue(EzConfig.get(darkHomeVAlignKey));
+
+  //     showTime = EzConfig.get(darkHomeTimeKey);
+  //     dateType = EzConfig.get(darkHomeDateKey);
+
+  //     listIcon = EzConfig.get(darkListIconKey);
+  //     listLabel = LabelTypeConfig.fromValue(EzConfig.get(darkListLabelTypeKey));
+
+  //     folderIcon = EzConfig.get(darkFolderIconKey);
+  //     folderLabel =
+  //         LabelTypeConfig.fromValue(EzConfig.get(darkFolderLabelTypeKey));
+  //   } else {
+  //     hAlign = ListAlignmentConfig.fromValue(EzConfig.get(lightHomeHAlignKey));
+  //     vAlign = ListAlignmentConfig.fromValue(EzConfig.get(lightHomeVAlignKey));
+
+  //     showTime = EzConfig.get(lightHomeTimeKey);
+  //     dateType = EzConfig.get(lightHomeDateKey);
+
+  //     listIcon = EzConfig.get(lightListIconKey);
+  //     listLabel =
+  //         LabelTypeConfig.fromValue(EzConfig.get(lightListLabelTypeKey));
+
+  //     folderIcon = EzConfig.get(lightFolderIconKey);
+  //     folderLabel =
+  //         LabelTypeConfig.fromValue(EzConfig.get(lightFolderLabelTypeKey));
+  //   }
+  // }
 
   late List<Widget> homeTiles = homeA2T();
 
@@ -170,53 +202,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           ),
         )
       : const SizedBox.shrink();
-
-  // Init //
-
-  void setContextualData(bool isDark) {
-    if (isDark) {
-      hAlign = ListAlignmentConfig.fromValue(EzConfig.get(darkHomeHAlignKey));
-      vAlign = ListAlignmentConfig.fromValue(EzConfig.get(darkHomeVAlignKey));
-
-      showTime = EzConfig.get(darkHomeTimeKey);
-      dateType = EzConfig.get(darkHomeDateKey);
-
-      listIcon = EzConfig.get(darkListIconKey);
-      listLabel = LabelTypeConfig.fromValue(EzConfig.get(darkListLabelTypeKey));
-
-      folderIcon = EzConfig.get(darkFolderIconKey);
-      folderLabel =
-          LabelTypeConfig.fromValue(EzConfig.get(darkFolderLabelTypeKey));
-    } else {
-      hAlign = ListAlignmentConfig.fromValue(EzConfig.get(lightHomeHAlignKey));
-      vAlign = ListAlignmentConfig.fromValue(EzConfig.get(lightHomeVAlignKey));
-
-      showTime = EzConfig.get(lightHomeTimeKey);
-      dateType = EzConfig.get(lightHomeDateKey);
-
-      listIcon = EzConfig.get(lightListIconKey);
-      listLabel =
-          LabelTypeConfig.fromValue(EzConfig.get(lightListLabelTypeKey));
-
-      folderIcon = EzConfig.get(lightFolderIconKey);
-      folderLabel =
-          LabelTypeConfig.fromValue(EzConfig.get(lightFolderLabelTypeKey));
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    setContextualData(isDarkTheme(context));
-  }
-
-  @override
-  void didChangePlatformBrightness() {
-    super.didChangePlatformBrightness();
-    setContextualData(isDarkTheme(context));
-    refresh();
-  }
 
   // Return the build //
 
@@ -433,11 +418,5 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             ]
           : null,
     );
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
   }
 }

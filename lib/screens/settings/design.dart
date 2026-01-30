@@ -32,6 +32,27 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
   late String folderIconKey;
   late String folderLabelTypeKey;
 
+  // TODO: add to cache or provider
+  // void setContextualData(bool isDark) {
+  //   if (isDark) {
+  //     homeTimeKey = darkHomeTimeKey;
+  //     homeDateKey = darkHomeDateKey;
+  //     currDateType = DateTypeConfig.fromValue(EzConfig.get(darkHomeDateKey));
+  //     listIconKey = darkListIconKey;
+  //     listLabelTypeKey = darkListLabelTypeKey;
+  //     folderIconKey = darkFolderIconKey;
+  //     folderLabelTypeKey = darkFolderLabelTypeKey;
+  //   } else {
+  //     homeTimeKey = lightHomeTimeKey;
+  //     homeDateKey = lightHomeDateKey;
+  //     currDateType = DateTypeConfig.fromValue(EzConfig.get(lightHomeDateKey));
+  //     listIconKey = lightListIconKey;
+  //     listLabelTypeKey = lightListLabelTypeKey;
+  //     folderIconKey = lightFolderIconKey;
+  //     folderLabelTypeKey = lightFolderLabelTypeKey;
+  //   }
+  // }
+
   final List<DropdownMenuEntry<LabelType>> labelEntries =
       <DropdownMenuEntry<LabelType>>[
     const DropdownMenuEntry<LabelType>(
@@ -108,38 +129,10 @@ class _DesignSettingsScreenState extends State<DesignSettingsScreen>
 
   // Init //
 
-  void setContextualData(bool isDark) {
-    if (isDark) {
-      homeTimeKey = darkHomeTimeKey;
-      homeDateKey = darkHomeDateKey;
-      currDateType = DateTypeConfig.fromValue(EzConfig.get(darkHomeDateKey));
-      listIconKey = darkListIconKey;
-      listLabelTypeKey = darkListLabelTypeKey;
-      folderIconKey = darkFolderIconKey;
-      folderLabelTypeKey = darkFolderLabelTypeKey;
-    } else {
-      homeTimeKey = lightHomeTimeKey;
-      homeDateKey = lightHomeDateKey;
-      currDateType = DateTypeConfig.fromValue(EzConfig.get(lightHomeDateKey));
-      listIconKey = lightListIconKey;
-      listLabelTypeKey = lightListLabelTypeKey;
-      folderIconKey = lightFolderIconKey;
-      folderLabelTypeKey = lightFolderLabelTypeKey;
-    }
-  }
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    setContextualData(isDarkTheme(context));
-  }
-
-  @override
-  void didChangePlatformBrightness() {
-    super.didChangePlatformBrightness();
-    setContextualData(isDarkTheme(context));
-    drawState();
   }
 
   //* Return the build *//
