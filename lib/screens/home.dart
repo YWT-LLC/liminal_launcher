@@ -241,7 +241,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: heightOf(context),
               position: details.globalPosition,
               color: EzConfig.colors.primary,
-              oMin: crucialOT,
+              oMin: focusOpacity,
             );
             overlay.insert(ripple);
             lastRipple = details.globalPosition;
