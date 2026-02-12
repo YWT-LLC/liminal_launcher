@@ -31,7 +31,7 @@ dependencies:
     path: ../empathetech_flutter_ui
 
 dev_dependencies:
-  dependency_validator: ^5.0.3
+  dependency_validator: ^5.0.4
   flutter_launcher_icons: ^0.14.4
   flutter_lints: ^6.0.0
 
