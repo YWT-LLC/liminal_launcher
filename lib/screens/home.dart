@@ -14,6 +14,8 @@ import 'package:go_router/go_router.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
+// TODO: the key override thing on all screens
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
