@@ -22,8 +22,6 @@ void main() async {
   await SystemChrome.setPreferredOrientations(
       <DeviceOrientation>[DeviceOrientation.portraitUp]);
 
-  // Initialize EzConfig //
-
   EzConfig.init(
     assetPaths: assetPaths,
     defaults: liminalDefault,
@@ -38,9 +36,6 @@ void main() async {
 
   // Run the app //
 
-  final (Locale storedLocale, EFUILang storedEFUILang) = await ezStoredL10n();
-  final Lang storedLang = await Lang.delegate.load(storedLocale);
-
   if (EzConfig.get(hideStatusKey) == true) {
     await SystemChrome.setEnabledSystemUIMode(
       SystemUiMode.manual,
@@ -48,11 +43,13 @@ void main() async {
     );
   }
 
+  final (Locale storedLocale, EFUILang storedEFUILang) = await ezStoredL10n();
+
   runApp(LiminalLauncher(
     await getApps(),
     storedLocale,
     storedEFUILang,
-    storedLang,
+    await Lang.delegate.load(storedLocale),
   ));
 }
 
@@ -88,6 +85,7 @@ class LiminalLauncher extends StatelessWidget {
         appCache: LiminalCache(storedLocale, storedLang),
         appName: appName,
         routerConfig: GoRouter(
+          navigatorKey: ezRootNav,
           initialLocation: homePath,
           errorBuilder: (_, GoRouterState state) => ErrorScreen(state.error),
           routes: <RouteBase>[
@@ -211,10 +209,9 @@ class LiminalLauncher extends StatelessWidget {
                     GoRoute(
                       path: textSettingsPath,
                       name: textSettingsPath,
-                      pageBuilder:
-                          (BuildContext context, GoRouterState state) =>
-                              ezPageBuilder(
-                                  context, state, const TextSettingsScreen()),
+                      pageBuilder: (BuildContext context,
+                              GoRouterState state) =>
+                          ezPageBuilder(context, state, TextSettingsScreen()),
                       routes: <RouteBase>[
                         GoRoute(
                           path: EzTSType.quick.path,
@@ -224,7 +221,7 @@ class LiminalLauncher extends StatelessWidget {
                                   ezPageBuilder(
                             context,
                             state,
-                            const TextSettingsScreen(target: EzTSType.quick),
+                            TextSettingsScreen(target: EzTSType.quick),
                           ),
                         ),
                         GoRoute(
@@ -235,7 +232,7 @@ class LiminalLauncher extends StatelessWidget {
                                   ezPageBuilder(
                             context,
                             state,
-                            const TextSettingsScreen(target: EzTSType.advanced),
+                            TextSettingsScreen(target: EzTSType.advanced),
                           ),
                         ),
                       ],
