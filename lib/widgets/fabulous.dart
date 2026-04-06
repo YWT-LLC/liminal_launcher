@@ -4,10 +4,19 @@
  */
 
 import '../screens/export.dart';
+import '../utils/export.dart';
 
 import 'package:flutter/material.dart';
-
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
+
+const EzUpdaterFAB updater = EzUpdaterFAB(
+  appVersion: '1.0.0',
+  versionSource:
+      'https://raw.githubusercontent.com/Empathetech-LLC/liminal_launcher/refs/heads/main/APP_VERSION',
+  gPlay: 'blarg',
+  appStore: 'blarg',
+  github: 'https://github.com/Empathetech-LLC/liminal_launcher/releases',
+);
 
 class AddAppFAB extends FloatingActionButton {
   /// [FloatingActionButton] that opens a modal for adding more home apps
@@ -42,11 +51,17 @@ class SettingsFAB extends FloatingActionButton {
         );
 }
 
-const EzUpdaterFAB updater = EzUpdaterFAB(
-  appVersion: '1.0.0',
-  versionSource:
-      'https://raw.githubusercontent.com/Empathetech-LLC/liminal_launcher/refs/heads/main/APP_VERSION',
-  gPlay: 'blarg',
-  appStore: 'blarg',
-  github: 'https://github.com/Empathetech-LLC/liminal_launcher/releases',
-);
+/// [FloatingActionButton] list for the settings screens
+List<Widget> settingsFABs(BuildContext context, {bool home = false}) =>
+    <Widget>[
+      EzConfig.spacer,
+      EzConfigFAB(
+        context,
+        appName: appName,
+        androidPackage: androidPackage,
+      ),
+      if (EzConfig.showBackFAB && ezRootNav.currentState!.canPop()) ...<Widget>[
+        EzConfig.spacer,
+        EzBackFAB(showHome: home),
+      ],
+    ];
