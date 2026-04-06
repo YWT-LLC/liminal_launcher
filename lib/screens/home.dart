@@ -14,10 +14,8 @@ import 'package:go_router/go_router.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-// TODO: the key override thing on all screens
-
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  HomeScreen() : super(key: ValueKey<int>(EzConfig.seed));
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -230,10 +228,11 @@ class _HomeScreenState extends State<HomeScreen> {
             if (!authed) return;
           }
 
-          if (context.mounted && animDuration > Duration.zero) {
+          final Duration animDur = ezAnimDuration();
+          if (context.mounted && animDur > Duration.zero) {
             // Ripple transition to editing
             final AnimationController rippleController =
-                AnimationController(vsync: overlay, duration: animDuration);
+                AnimationController(vsync: overlay, duration: animDur);
             rippleController.addListener(
                 () => rippleProgress.value = rippleController.value);
 
