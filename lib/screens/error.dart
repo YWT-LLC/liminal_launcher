@@ -12,7 +12,7 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 class ErrorScreen extends StatefulWidget {
   final GoException? error;
 
-  const ErrorScreen(this.error, {super.key});
+  ErrorScreen(this.error) : super(key: ValueKey<int>(EzConfig.seed));
 
   @override
   State<ErrorScreen> createState() => _ErrorScreenState();
@@ -20,29 +20,28 @@ class ErrorScreen extends StatefulWidget {
 
 class _ErrorScreenState extends State<ErrorScreen> {
   @override
-  Widget build(BuildContext context) => LiminalScaffold(Center(
-        child: EzScrollView(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              EzConfig.l10n.g404Wonder,
-              style: EzConfig.styles.headlineLarge,
-              textAlign: TextAlign.center,
-            ),
-            EzConfig.separator,
-            Text(
-              EzConfig.l10n.g404,
-              style: ezSubTitleStyle(),
-              textAlign: TextAlign.center,
-            ),
-            EzConfig.separator,
-            Text(
-              EzConfig.l10n.g404Note,
-              style: EzConfig.styles.labelLarge,
-              textAlign: TextAlign.center,
-            ),
-            EzConfig.separator,
-          ],
+  Widget build(BuildContext context) {
+    return LiminalScaffold(Center(
+      child: EzScrollView(children: <Widget>[
+        Text(
+          EzConfig.l10n.g404Wonder,
+          style: EzConfig.styles.headlineLarge,
+          textAlign: TextAlign.center,
         ),
-      ));
+        EzConfig.separator,
+        Text(
+          EzConfig.l10n.g404,
+          style: ezSubTitleStyle(),
+          textAlign: TextAlign.center,
+        ),
+        EzConfig.separator,
+        Text(
+          EzConfig.l10n.g404Note,
+          style: EzConfig.styles.labelLarge,
+          textAlign: TextAlign.center,
+        ),
+        EzConfig.separator,
+      ]),
+    ));
+  }
 }
