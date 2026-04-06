@@ -35,15 +35,14 @@ class AppListScreen extends StatefulWidget {
   final bool editable;
   final Widget? icon;
 
-  const AppListScreen({
-    super.key,
+  AppListScreen({
     required this.listCheck,
     required this.onSelected,
     required this.refresh,
     required this.autoRefresh,
     required this.editable,
     this.icon,
-  });
+  }) : super(key: ValueKey<int>(EzConfig.seed));
 
   @override
   State<AppListScreen> createState() => _AppListScreenState();
@@ -233,7 +232,7 @@ class _AppListScreenState extends State<AppListScreen> {
 
                 // Search
                 AnimatedContainer(
-                  duration: animDuration,
+                  duration: ezAnimDuration(),
                   width: searching ? 200 : null,
                   curve: Curves.easeInOut,
                   child: EzRow(
@@ -376,7 +375,7 @@ class _AppListScreenState extends State<AppListScreen> {
               onPressed: () {
                 scrollControl.animateTo(
                   0,
-                  duration: animDuration,
+                  duration: ezAnimDuration(),
                   curve: Curves.easeOut,
                 );
               },
@@ -395,7 +394,7 @@ class _AppListScreenState extends State<AppListScreen> {
               onPressed: () {
                 scrollControl.animateTo(
                   scrollControl.position.maxScrollExtent,
-                  duration: animDuration,
+                  duration: ezAnimDuration(),
                   curve: Curves.easeOut,
                 );
               },
