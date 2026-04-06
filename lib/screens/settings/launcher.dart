@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class LauncherSettingsScreen extends StatefulWidget {
-  const LauncherSettingsScreen({super.key});
+  LauncherSettingsScreen() : super(key: ValueKey<int>(EzConfig.seed));
 
   @override
   State<LauncherSettingsScreen> createState() => _LauncherSettingsScreenState();
