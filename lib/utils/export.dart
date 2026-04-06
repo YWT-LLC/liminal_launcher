@@ -5,7 +5,6 @@
 
 export 'consts.dart';
 export 'enums.dart';
-export 'globals.dart';
 export 'liminal_cache.dart';
 export 'models.dart';
 export 'platform.dart';
