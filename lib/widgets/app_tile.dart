@@ -69,8 +69,9 @@ class _AppTileState extends State<AppTile> {
     if (dy <= widget.rippleProgress!.value * heightOf(context)) {
       setState(() => editing = (editing == null) ? false : null);
 
+      final Duration animDur = ezAnimDuration();
       rippleThrottle = Timer(
-        animDuration - (animDuration * widget.rippleProgress!.value),
+        animDur - (animDur * widget.rippleProgress!.value),
         () => rippleThrottle = null,
       );
     }
