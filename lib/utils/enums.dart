@@ -3,17 +3,28 @@
  * See LICENSE for distribution and usage details.
  */
 
+import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
+
 import './export.dart';
 import 'package:flutter/material.dart';
 
-//* Shared (local) consts *//
+//* Shared consts *//
 
-const String _none = 'none';
-const String _full = 'full';
+/// Tracks the position of the last ripple LongPress
+/// Defaults to [Offset.zero]
+Offset lastRipple = Offset.zero;
 
-const String _center = 'center';
-const String _start = 'start';
-const String _end = 'end';
+/// enum String 'full'
+const String esFull = 'full';
+
+/// enum String 'center'
+const String esCenter = 'center';
+
+/// enum String 'start'
+const String esStart = 'start';
+
+/// enum String 'end'
+const String esEnd = 'end';
 
 //* BTS settings *//
 
@@ -51,32 +62,39 @@ extension ListDataConfig on ListData {
 
 enum AppSort { name, publisher, date, size }
 
-const String _name = 'name';
-const String _publisher = 'publisher';
-const String _date = 'date';
-const String _size = 'size';
+/// enum String 'name'
+const String esName = 'name';
+
+/// enum String 'publisher'
+const String esPublisher = 'publisher';
+
+/// enum String 'date'
+const String esDate = 'date';
+
+/// enum String 'size'
+const String esSize = 'size';
 
 extension AppSortConfig on AppSort {
   String get configValue {
     switch (this) {
       case AppSort.name:
-        return _name;
+        return esName;
       case AppSort.publisher:
-        return _publisher;
+        return esPublisher;
       case AppSort.date:
-        return _date;
+        return esDate;
       case AppSort.size:
-        return _size;
+        return esSize;
     }
   }
 
   static AppSort fromValue(String value) {
     switch (value) {
-      case _publisher:
+      case esPublisher:
         return AppSort.publisher;
-      case _date:
+      case esDate:
         return AppSort.date;
-      case _size:
+      case esSize:
         return AppSort.size;
       default:
         return AppSort.name;
@@ -88,25 +106,33 @@ extension AppSortConfig on AppSort {
 
 // Date type //
 
-enum DateType { none, compact, short, medium, full }
+enum DateType { none, compact, short, medium, long }
 
-const String _compact = 'compact';
-const String _short = 'short';
-const String _medium = 'medium';
+/// enum String 'compact'
+const String esCompact = 'compact';
+
+/// enum String 'short'
+const String esShort = 'short';
+
+/// enum String 'medium'
+const String esMedium = 'medium';
+
+/// enum String 'long'
+const String esLong = 'long';
 
 extension DateTypeConfig on DateType {
   String get configValue {
     switch (this) {
       case DateType.none:
-        return _none;
+        return esNone;
       case DateType.compact:
-        return _compact;
+        return esCompact;
       case DateType.short:
-        return _short;
+        return esShort;
       case DateType.medium:
-        return _medium;
-      case DateType.full:
-        return _full;
+        return esMedium;
+      case DateType.long:
+        return esLong;
     }
   }
 
@@ -118,7 +144,7 @@ extension DateTypeConfig on DateType {
         return MaterialLocalizations.of(context).formatShortDate(now);
       case DateType.medium:
         return MaterialLocalizations.of(context).formatMediumDate(now);
-      case DateType.full:
+      case DateType.long:
         return MaterialLocalizations.of(context).formatFullDate(now);
       default:
         return '---';
@@ -127,14 +153,14 @@ extension DateTypeConfig on DateType {
 
   static DateType fromValue(String value) {
     switch (value) {
-      case _compact:
+      case esCompact:
         return DateType.compact;
-      case _short:
+      case esShort:
         return DateType.short;
-      case _medium:
+      case esMedium:
         return DateType.medium;
-      case _full:
-        return DateType.full;
+      case esLong:
+        return DateType.long;
       default:
         return DateType.none;
     }
@@ -145,17 +171,18 @@ extension DateTypeConfig on DateType {
 
 enum LabelType { none, initials, full, wingding }
 
-const String _initials = 'initials';
+/// enum String 'initials'
+const String esInitials = 'initials';
 
 extension LabelTypeConfig on LabelType {
   String get configValue {
     switch (this) {
       case LabelType.none:
-        return _none;
+        return esNone;
       case LabelType.initials:
-        return _initials;
+        return esInitials;
       case LabelType.full:
-        return _full;
+        return esFull;
       case LabelType.wingding:
         return wingding;
     }
@@ -163,9 +190,9 @@ extension LabelTypeConfig on LabelType {
 
   static LabelType fromValue(String value) {
     switch (value) {
-      case _none:
+      case esNone:
         return LabelType.none;
-      case _initials:
+      case esInitials:
         return LabelType.initials;
       case wingding:
         return LabelType.wingding;
@@ -185,11 +212,11 @@ extension ListAlignmentConfig on ListAlignment {
   String get configValue {
     switch (this) {
       case ListAlignment.center:
-        return _center;
+        return esCenter;
       case ListAlignment.start:
-        return _start;
+        return esStart;
       case ListAlignment.end:
-        return _end;
+        return esEnd;
     }
   }
 
@@ -239,9 +266,9 @@ extension ListAlignmentConfig on ListAlignment {
 
   static ListAlignment fromValue(String value) {
     switch (value) {
-      case _start:
+      case esStart:
         return ListAlignment.start;
-      case _end:
+      case esEnd:
         return ListAlignment.end;
       default:
         return ListAlignment.center;
