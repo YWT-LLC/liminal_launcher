@@ -15,7 +15,7 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 
 void main() async {
-  // Setup the app //
+  // Config the app //
 
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -67,8 +67,6 @@ class LiminalLauncher extends StatelessWidget {
     super.key,
   });
 
-  // Return the app //
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<AppInfoProvider>(
@@ -94,7 +92,7 @@ class LiminalLauncher extends StatelessWidget {
               path: homePath,
               name: homePath,
               pageBuilder: (BuildContext context, GoRouterState state) =>
-                  ezPageBuilder(context, state, const HomeScreen()),
+                  ezPageBuilder(context, state, HomeScreen()),
               routes: <RouteBase>[
                 // App list
                 GoRoute(
@@ -115,20 +113,19 @@ class LiminalLauncher extends StatelessWidget {
                         editable: listData[ListData.editable.key],
                         icon: listData[ListData.icon.key],
                       ),
-                      transitionsBuilder: (_, Animation<double> animation, __,
-                              Widget child) =>
-                          SlideTransition(
-                              position: Tween<Offset>(
-                                begin: const Offset(0.0, 1.0),
-                                end: Offset.zero,
-                              ).animate(CurvedAnimation(
-                                parent: animation,
-                                curve: Curves.easeInOut,
-                              )),
-                              child: FadeTransition(
-                                opacity: animation,
-                                child: child,
-                              )), // TODO: allow for manual version of the config values
+                      transitionsBuilder: (
+                        BuildContext context,
+                        Animation<double> animation,
+                        Animation<double> secondaryAnimation,
+                        Widget child,
+                      ) =>
+                          ezTransitionsBuilder(
+                        context,
+                        animation,
+                        secondaryAnimation,
+                        child,
+                        force: EzPageTransition.slideY,
+                      ),
                     );
                   },
                 ),
@@ -138,104 +135,26 @@ class LiminalLauncher extends StatelessWidget {
                   path: settingsHomePath,
                   name: settingsHomePath,
                   pageBuilder: (BuildContext context, GoRouterState state) =>
-                      ezPageBuilder(context, state, const SettingsHomeScreen()),
+                      ezPageBuilder(context, state, SettingsHomeScreen()),
                   routes: <RouteBase>[
-                    // Color settings
-                    GoRoute(
-                      path: colorSettingsPath,
-                      name: colorSettingsPath,
-                      pageBuilder:
-                          (BuildContext context, GoRouterState state) =>
-                              ezPageBuilder(
-                                  context, state, const ColorSettingsScreen()),
-                      routes: <RouteBase>[
-                        GoRoute(
-                          path: EzCSType.quick.path,
-                          name: EzCSType.quick.name,
-                          pageBuilder:
-                              (BuildContext context, GoRouterState state) =>
-                                  ezPageBuilder(
-                            context,
-                            state,
-                            const ColorSettingsScreen(target: EzCSType.quick),
-                          ),
-                        ),
-                        GoRoute(
-                          path: EzCSType.advanced.path,
-                          name: EzCSType.advanced.name,
-                          pageBuilder:
-                              (BuildContext context, GoRouterState state) =>
-                                  ezPageBuilder(
-                            context,
-                            state,
-                            const ColorSettingsScreen(
-                                target: EzCSType.advanced),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    // Design settings
-                    GoRoute(
-                      path: designSettingsPath,
-                      name: designSettingsPath,
-                      pageBuilder:
-                          (BuildContext context, GoRouterState state) =>
-                              ezPageBuilder(
-                                  context, state, const DesignSettingsScreen()),
-                    ),
-
                     // Launcher settings
                     GoRoute(
                       path: launcherSettingsPath,
                       name: launcherSettingsPath,
-                      pageBuilder: (BuildContext context,
-                              GoRouterState state) =>
-                          ezPageBuilder(
-                              context, state, const LauncherSettingsScreen()),
-                    ),
-
-                    // Layout settings
-                    GoRoute(
-                      path: layoutSettingsPath,
-                      name: layoutSettingsPath,
                       pageBuilder:
                           (BuildContext context, GoRouterState state) =>
                               ezPageBuilder(
-                                  context, state, const LayoutSettingsScreen()),
+                                  context, state, LauncherSettingsScreen()),
                     ),
 
-                    // Text settings
+                    // Appearance settings
                     GoRoute(
-                      path: textSettingsPath,
-                      name: textSettingsPath,
-                      pageBuilder: (BuildContext context,
-                              GoRouterState state) =>
-                          ezPageBuilder(context, state, TextSettingsScreen()),
-                      routes: <RouteBase>[
-                        GoRoute(
-                          path: EzTSType.quick.path,
-                          name: EzTSType.quick.name,
-                          pageBuilder:
-                              (BuildContext context, GoRouterState state) =>
-                                  ezPageBuilder(
-                            context,
-                            state,
-                            TextSettingsScreen(target: EzTSType.quick),
-                          ),
-                        ),
-                        GoRoute(
-                          path: EzTSType.advanced.path,
-                          name: EzTSType.advanced.name,
-                          pageBuilder:
-                              (BuildContext context, GoRouterState state) =>
-                                  ezPageBuilder(
-                            context,
-                            state,
-                            TextSettingsScreen(target: EzTSType.advanced),
-                          ),
-                        ),
-                      ],
+                      path: appearanceSettingsPath,
+                      name: appearanceSettingsPath,
+                      pageBuilder:
+                          (BuildContext context, GoRouterState state) =>
+                              ezPageBuilder(
+                                  context, state, AppearanceSettingsScreen()),
                     ),
                   ],
                 ),
