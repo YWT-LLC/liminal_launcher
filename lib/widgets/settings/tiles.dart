@@ -48,13 +48,13 @@ class AppTileSetting extends StatelessWidget {
                     ? EzTextIconButton(
                         icon: const Icon(Icons.settings),
                         label: folder
-                            ? folderLabel(labelType)
+                            ? folderLabel(type: labelType)
                             : listLabel(labelType),
                         onPressed: doNothing,
                       )
                     : EzTextButton(
                         text: folder
-                            ? folderLabel(labelType)
+                            ? folderLabel(type: labelType)
                             : listLabel(labelType),
                         onPressed: doNothing,
                       ),

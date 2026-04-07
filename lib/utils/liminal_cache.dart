@@ -6,6 +6,7 @@
 import './export.dart';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class LiminalCache extends EzAppCache {
@@ -17,6 +18,8 @@ class LiminalCache extends EzAppCache {
   late DesignCache _design;
   late LayoutCache _layout;
 
+  AppInfoProvider? _appInfo;
+
   LiminalCache(Locale locale, Lang l10n)
       : _locale = locale,
         _l10n = l10n {
@@ -26,12 +29,19 @@ class LiminalCache extends EzAppCache {
   // Get //
 
   Lang get l10n => _l10n;
+
   DesignCache get design => _design;
   LayoutCache get layout => _layout;
+
+  AppInfoProvider? get appInfo => _appInfo;
 
   // Set //
 
   void _buildLocalCache() {
+    if (_appInfo == null && ezRootNav.currentContext != null) {
+      _appInfo = Provider.of<AppInfoProvider>(ezRootNav.currentContext!);
+    }
+
     if (EzConfig.isDark) {
       _design = DesignCache(
         useOSWall: EzConfig.get(darkUseOSKey),
@@ -127,17 +137,19 @@ LiminalCache get _pointer => EzConfig.appCache! as LiminalCache;
 
 Lang get l10n => _pointer.l10n;
 
-bool get useOSWall => _pointer._design.useOSWall;
-bool get wideTiles => _pointer._design.wideTiles;
+AppInfoProvider get appInfo => _pointer.appInfo!;
 
-DateType get homeDate => _pointer._design.homeDate;
-bool get homeTime => _pointer._design.homeTime;
+bool get useOSWall => _pointer.design.useOSWall;
+bool get wideTiles => _pointer.design.wideTiles;
 
-bool get folderIcons => _pointer._design.folderIcons;
-LabelType get folderLabels => _pointer._design.folderLabels;
+DateType get homeDate => _pointer.design.homeDate;
+bool get homeTime => _pointer.design.homeTime;
 
-bool get listIcons => _pointer._design.listIcons;
-LabelType get listLabels => _pointer._design.listLabels;
+bool get folderIcons => _pointer.design.folderIcons;
+LabelType get folderLabels => _pointer.design.folderLabels;
+
+bool get listIcons => _pointer.design.listIcons;
+LabelType get listLabels => _pointer.design.listLabels;
 
 ListAlignment get hAlign => _pointer.layout.horizontalAlign;
 ListAlignment get vAlign => _pointer.layout.verticalAlign;
@@ -169,7 +181,7 @@ String listLabel(LabelType? type) {
   }
 }
 
-String folderLabel(LabelType? type) {
+String folderLabel({LabelType? type}) {
   const String base = 'Folder App';
 
   switch (type ?? folderLabels) {

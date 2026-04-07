@@ -137,16 +137,6 @@ class LiminalLauncher extends StatelessWidget {
                   pageBuilder: (BuildContext context, GoRouterState state) =>
                       ezPageBuilder(context, state, SettingsHomeScreen()),
                   routes: <RouteBase>[
-                    // Launcher settings
-                    GoRoute(
-                      path: launcherSettingsPath,
-                      name: launcherSettingsPath,
-                      pageBuilder:
-                          (BuildContext context, GoRouterState state) =>
-                              ezPageBuilder(
-                                  context, state, LauncherSettingsScreen()),
-                    ),
-
                     // Appearance settings
                     GoRoute(
                       path: appearanceSettingsPath,

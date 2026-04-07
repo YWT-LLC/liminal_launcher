@@ -9,7 +9,6 @@ import '../widgets/export.dart';
 import 'package:efui_bios/efui_bios.dart';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
@@ -24,16 +23,12 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   // Define the fixed build data //
 
-  late final AppInfoProvider appProvider =
-      Provider.of<AppInfoProvider>(context);
-
   late final Map<String, dynamic> appListData = listData(
-    listCheck: (String id) => !appProvider.hiddenSet.contains(id),
+    listCheck: (String id) => !appInfo.hiddenSet.contains(id),
     onSelected: (String id) => launchApp(id),
     refresh: refresh,
   );
 
-  final bool wideTiles = EzConfig.get(wideTilesKey);
   bool atBottom = false;
   bool editing = false;
 
@@ -41,50 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
   ValueNotifier<double> rippleProgress = ValueNotifier<double>(0.0);
 
   // Define the contextual build data //
-
-  late ListAlignment hAlign;
-  late ListAlignment vAlign;
-
-  late bool showTime;
-  late String dateType;
-
-  late bool listIcon;
-  late LabelType listLabel;
-
-  late bool folderIcon;
-  late LabelType folderLabel;
-
-  // TODO: add to cache or provider
-  // void setContextualData(bool isDark) {
-  //   if (isDark) {
-  //     hAlign = ListAlignmentConfig.fromValue(EzConfig.get(darkHomeHAlignKey));
-  //     vAlign = ListAlignmentConfig.fromValue(EzConfig.get(darkHomeVAlignKey));
-
-  //     showTime = EzConfig.get(darkHomeTimeKey);
-  //     dateType = EzConfig.get(darkHomeDateKey);
-
-  //     listIcon = EzConfig.get(darkListIconKey);
-  //     listLabel = LabelTypeConfig.fromValue(EzConfig.get(darkListLabelTypeKey));
-
-  //     folderIcon = EzConfig.get(darkFolderIconKey);
-  //     folderLabel =
-  //         LabelTypeConfig.fromValue(EzConfig.get(darkFolderLabelTypeKey));
-  //   } else {
-  //     hAlign = ListAlignmentConfig.fromValue(EzConfig.get(lightHomeHAlignKey));
-  //     vAlign = ListAlignmentConfig.fromValue(EzConfig.get(lightHomeVAlignKey));
-
-  //     showTime = EzConfig.get(lightHomeTimeKey);
-  //     dateType = EzConfig.get(lightHomeDateKey);
-
-  //     listIcon = EzConfig.get(lightListIconKey);
-  //     listLabel =
-  //         LabelTypeConfig.fromValue(EzConfig.get(lightListLabelTypeKey));
-
-  //     folderIcon = EzConfig.get(lightFolderIconKey);
-  //     folderLabel =
-  //         LabelTypeConfig.fromValue(EzConfig.get(lightFolderLabelTypeKey));
-  //   }
-  // }
 
   late List<Widget> homeTiles = homeA2T();
 
@@ -97,8 +48,8 @@ class _HomeScreenState extends State<HomeScreen> {
         EdgeInsets.symmetric(vertical: EzConfig.spacing / 2);
     final List<Widget> tileList = <Widget>[];
 
-    for (int index = 0; index < appProvider.homeList.length; index++) {
-      final String item = appProvider.homeList[index];
+    for (int index = 0; index < appInfo.homeList.length; index++) {
+      final String item = appInfo.homeList[index];
       final List<String> parts = item.split(folderSplit);
 
       if (parts.length > 1) {
@@ -106,30 +57,20 @@ class _HomeScreenState extends State<HomeScreen> {
           key: ValueKey<String>('${parts[0]}_$index'),
           padding: tilePadding,
           child: AppFolder(
-            appProvider: appProvider,
             index: index,
-            hAlign: hAlign,
-            folderLabel: folderLabel,
-            folderIcon: listIcon,
-            appIcon: listIcon,
-            appLabel: listLabel,
             editing: editing ? null : false,
             refresh: refresh,
             rippleProgress: rippleProgress,
           ),
         ));
       } else {
-        final AppInfo app = appProvider.appMap[parts[0]] ?? nullApp;
+        final AppInfo app = appInfo.appMap[parts[0]] ?? nullApp;
         tileList.add(Padding(
           key: ValueKey<String>(app.id),
           padding: tilePadding,
           child: AppTile(
             app: app,
-            appProvider: appProvider,
             onHomeScreen: true,
-            hAlign: hAlign,
-            labelType: listLabel,
-            showIcon: listIcon,
             onSelected: (String id) => launchApp(id),
             editing: editing ? null : false,
             refresh: refresh,
@@ -169,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
       context.goNamed(
         appListPath,
         extra: listData(
-          listCheck: (String id) => appProvider.hiddenSet.contains(id),
+          listCheck: (String id) => appInfo.hiddenSet.contains(id),
           onSelected: (String id) => launchApp(id),
           icon: EzTextBackground(EzRow(
             mainAxisSize: MainAxisSize.min,
@@ -189,17 +130,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Define custom Widgets //
 
-  Widget clock() => (showTime || dateType != DateType.none.configValue)
+  Widget clock() => (homeTime || homeDate != DateType.none)
       ? Padding(
           padding: EdgeInsets.only(
             top: vAlign == ListAlignment.start ? 0 : EzConfig.spacing,
             bottom: vAlign == ListAlignment.start ? EzConfig.spacing : 0,
           ),
-          child: Clock(
-            showTime: showTime,
-            dateType: dateType,
-            hAlign: hAlign,
-          ),
+          child: const Clock(),
         )
       : const SizedBox.shrink();
 
@@ -284,7 +221,7 @@ class _HomeScreenState extends State<HomeScreen> {
               if (editing) {
                 doNothing();
               } else {
-                toLaunch = appProvider.appMap[EzConfig.get(leftSwipeIDKey)];
+                toLaunch = appInfo.appMap[EzConfig.get(leftSwipeIDKey)];
               }
             } else {
               // Swiped right (==0 already handled)
@@ -292,7 +229,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 editing = false;
                 refresh();
               } else {
-                toLaunch = appProvider.appMap[EzConfig.get(rightSwipeIDKey)];
+                toLaunch = appInfo.appMap[EzConfig.get(rightSwipeIDKey)];
               }
             }
 
@@ -349,7 +286,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           setState(() {});
 
                           // Storage update
-                          await appProvider.reorderHomeItem(
+                          await appInfo.reorderHomeItem(
                             oldIndex: oldIndex,
                             newIndex: newIndex,
                           );
@@ -387,9 +324,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   appListPath,
                   extra: listData(
                     listCheck: (String id) =>
-                        !appProvider.hiddenSet.contains(id) &&
-                        !appProvider.homeSet.contains(id),
-                    onSelected: (String id) => appProvider.addHomeApp(id),
+                        !appInfo.hiddenSet.contains(id) &&
+                        !appInfo.homeSet.contains(id),
+                    onSelected: (String id) => appInfo.addHomeApp(id),
                     refresh: refresh,
                     autoRefresh: true,
                     icon: EzTextBackground(EzRow(
@@ -409,7 +346,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               // Add folder
               AddFolderFAB(context, () {
-                appProvider.addHomeFolder();
+                appInfo.addHomeFolder();
                 refresh();
               }),
               EzConfig.spacer,

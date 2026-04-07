@@ -12,7 +12,6 @@ export 'app_list.dart';
 
 export 'settings/home.dart';
 export 'settings/appearance.dart';
-export 'settings/launcher.dart';
 
 // Route names //
 
@@ -21,9 +20,6 @@ const String appListPath = 'app-list';
 
 /// settings-home
 const String settingsHomePath = 'settings-home';
-
-/// launcher-settings
-const String launcherSettingsPath = 'launcher-settings';
 
 /// appearance-settings
 const String appearanceSettingsPath = 'appearance-settings';

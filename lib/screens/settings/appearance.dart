@@ -123,44 +123,22 @@ class AppearanceSettingsScreen extends StatelessWidget {
               build: EzLayoutSettings(
                 onUpdate: doNothing,
                 afterLayout: <Widget>[
-                  // Home list align
+                  EzConfig.spacer,
                   EzElevatedIconButton(
                     onPressed: () => ezModal(
                       context: context,
                       builder: (_) => EzScrollView(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                          const AlignmentSelectors(
-                            home: true,
-                            segments: alignmentSegments,
-                          ),
+                          const AlignmentSelectors(),
                           EzConfig.separator,
                         ],
                       ),
                     ),
-                    label: 'Home alignment',
+                    label: 'Page alignment',
                     icon: const Icon(Icons.home),
                   ),
                   EzConfig.spacer,
-
-                  // App list align
-                  EzElevatedIconButton(
-                    onPressed: () => ezModal(
-                      context: context,
-                      builder: (_) => EzScrollView(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          const AlignmentSelectors(
-                            home: false,
-                            segments: alignmentSegments,
-                          ),
-                          EzConfig.separator,
-                        ],
-                      ),
-                    ),
-                    label: 'App list(s) alignment',
-                    icon: const Icon(Icons.list),
-                  ),
                 ],
                 resetSpacer: EzConfig.divider,
                 appName: appName,

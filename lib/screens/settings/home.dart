@@ -7,9 +7,8 @@ import '../../screens/export.dart';
 import '../../utils/export.dart';
 import '../../widgets/export.dart';
 
-import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
@@ -23,13 +22,6 @@ class SettingsHomeScreen extends StatefulWidget {
 
 class _SettingsHomeScreenState extends State<SettingsHomeScreen>
     with AfterLayoutMixin<SettingsHomeScreen> {
-  // Define the build data //
-
-  late final AppInfoProvider appProvider =
-      Provider.of<AppInfoProvider>(context);
-
-  bool resetAll = false;
-
   // Define custom functions //
 
   Future<dynamic> showTips() => showDialog(
@@ -89,91 +81,50 @@ Thank you, and enjoy!''',
     }
   }
 
-  //* Return the build *//
+  // Return the build //
 
   @override
   Widget build(BuildContext context) {
-    const EzSpacer ezSpacer = EzSpacer();
-
     return LiminalScaffold(
-      EzScrollView(
-        children: <Widget>[
-          // TODO: Need a new home for showTips
+      EzScrollView(children: <Widget>[
+        // TODO: Need a new home for showTips
+        EzHeader(),
 
-          // Launcher
-          EzElevatedIconButton(
-            onPressed: () => context.goNamed(launcherSettingsPath),
-            icon: const Icon(Icons.navigate_next),
-            label: 'Launcher settings',
-          ),
-          ezSpacer,
+        // Swipe selectors
+        const SwipeSelector(left: true),
+        EzConfig.spacer,
+        const SwipeSelector(left: false),
+        EzConfig.separator,
 
-          // Batch //
-          const EzQuickConfig(),
-          ezSpacer,
+        // Hide status bar
+        const EzSwitchPair(text: 'Hide status bar', valueKey: hideStatusKey),
+        EzConfig.spacer,
 
-          // Randomize
+        // Auto add to home
+        const EzSwitchPair(
+            text: 'Add new apps to home', valueKey: autoAddToHomeKey),
+        EzConfig.spacer,
 
-          ezSpacer,
+        // Auto search
+        const EzSwitchPair(text: 'Auto search', valueKey: autoSearchKey),
+        EzConfig.spacer,
 
-          // Reset
-          EzElevatedIconButton(
-            onPressed: () => showDialog(
-              context: context,
-              builder: (_) => StatefulBuilder(
-                builder: (BuildContext dContext, StateSetter dialogState) =>
-                    EzAlertDialog(
-                  key: ValueKey<bool>(resetAll),
-                  title: const Text(
-                    'Reset all appearance settings?',
-                    textAlign: TextAlign.center,
-                  ),
-                  content: SizedBox(
-                    width: widthOf(context),
-                    child: EzScrollView(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        EzSwitchPair(
-                          text: 'Or, ALL settings',
-                          value: resetAll,
-                          onChanged: (bool? choice) {
-                            resetAll = (choice == null) ? false : choice;
-                            setState(() {});
-                            dialogState(() {});
-                          },
-                        ),
-                        ezSpacer,
-                        ezRichUndoWarning(
-                          context,
-                          standalone: false,
-                          appName: appName,
-                          androidPackage: androidPackage,
-                        ),
-                      ],
-                    ),
-                  ),
-                  actions: ezActionPair(
-                    context: context,
-                    onConfirm: () async {
-                      await EzConfig.reset(
-                        skip: resetAll ? neverResetKeys : defaultNoResetKeys,
-                      );
-                      if (resetAll) await appProvider.reset();
-                      if (dContext.mounted) Navigator.of(dContext).pop();
-                    },
-                    confirmIsDestructive: true,
-                    onDeny: () => Navigator.of(dContext).pop(),
-                  ),
-                  needsClose: false,
-                ),
-              ),
-            ),
-            icon: const Icon(Icons.refresh),
-            label: EzConfig.l10n.gResetAll,
-          ),
-          EzConfig.separator,
-        ],
-      ),
+        // Auth to edit
+        const EzSwitchPair(text: 'Auth to edit', valueKey: authToEditKey),
+        EzConfig.spacer,
+
+        // Auth for hidden
+        const EzSwitchPair(text: 'Auth for hidden', valueKey: authForHiddenKey),
+        EzConfig.divider,
+
+        // Appearance
+        EzElevatedIconButton(
+          onPressed: () => context.goNamed(appearanceSettingsPath),
+          icon: const Icon(Icons.navigate_next),
+          label: 'Appearance settings',
+        ),
+        EzConfig.separator,
+      ]),
       fabs: settingsFABs(context, home: true),
     );
   }

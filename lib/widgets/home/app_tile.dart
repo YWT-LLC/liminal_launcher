@@ -11,10 +11,11 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class AppTile extends StatefulWidget {
   final AppInfo app;
-  final AppInfoProvider appProvider;
 
-  /// true for home list, null for home folder, false for false
-  /// Quantum computing
+  /// true == home list
+  /// null == home folder
+  /// false == false
+  /// Quantum supremacy
   final bool? onHomeScreen;
 
   final Future<void> Function(String id) onSelected;
@@ -26,7 +27,6 @@ class AppTile extends StatefulWidget {
   const AppTile({
     super.key,
     required this.app,
-    required this.appProvider,
     required this.onHomeScreen,
     required this.onSelected,
     this.editable = true,
@@ -79,13 +79,12 @@ class _AppTileState extends State<AppTile> {
     widget.rippleProgress?.addListener(rippling);
   }
 
+  // Return the build //
+
   @override
   Widget build(BuildContext context) {
-    // Gather the contextual theme data //
-
     final double appIconSize = (EzConfig.iconSize * 1.25) + EzConfig.padding;
 
-    // Return the build //
     return Visibility(
       visible: rippleThrottle == null,
       maintainSize: true,
@@ -100,6 +99,10 @@ class _AppTileState extends State<AppTile> {
               children: <Widget>[
                 TileButton(
                   app: widget.app,
+                  labelType:
+                      (widget.onHomeScreen == null) ? folderLabels : listLabels,
+                  showIcon:
+                      (widget.onHomeScreen == null) ? folderIcons : listIcons,
                   onPressed: () => widget.onSelected(widget.app.id),
                   onLongPress: () => widget.editable
                       ? setState(() => editing = true)
@@ -130,13 +133,12 @@ class _AppTileState extends State<AppTile> {
                 ],
 
                 // Add to home
-                if (!widget.appProvider.hiddenSet.contains(widget.app.id) &&
-                    !widget.appProvider.homeSet
-                        .contains(widget.app.id)) ...<Widget>[
+                if (!appInfo.hiddenSet.contains(widget.app.id) &&
+                    !appInfo.homeSet.contains(widget.app.id)) ...<Widget>[
                   EzIconButton(
                     onPressed: () async {
                       final bool success =
-                          await widget.appProvider.addHomeApp(widget.app.id);
+                          await appInfo.addHomeApp(widget.app.id);
 
                       if (success) {
                         setState(() => editing = false);
@@ -153,7 +155,7 @@ class _AppTileState extends State<AppTile> {
                   EzIconButton(
                     onPressed: () async {
                       final bool success =
-                          await widget.appProvider.removeHomeApp(widget.app.id);
+                          await appInfo.removeHomeApp(widget.app.id);
 
                       if (success) {
                         setState(() => editing = false);
@@ -192,8 +194,8 @@ class _AppTileState extends State<AppTile> {
                         final String name = renameController.text.trim();
                         if (validateRename(name) != null) return null;
 
-                        final bool success = await widget.appProvider
-                            .renameApp(newName: name, appID: widget.app.id);
+                        final bool success = await appInfo.renameApp(
+                            newName: name, appID: widget.app.id);
 
                         if (success) {
                           if (dContext.mounted) {
@@ -242,14 +244,14 @@ class _AppTileState extends State<AppTile> {
                 // Show/hide
                 EzIconButton(
                   onPressed: () async {
-                    widget.appProvider.hiddenSet.contains(widget.app.id)
-                        ? await widget.appProvider.showApp(widget.app.id)
-                        : await widget.appProvider.hideApp(widget.app.id);
+                    appInfo.hiddenSet.contains(widget.app.id)
+                        ? await appInfo.showApp(widget.app.id)
+                        : await appInfo.hideApp(widget.app.id);
                     setState(() => editing = false);
                     widget.refresh();
                   },
                   icon: Icon(
-                    widget.appProvider.hiddenSet.contains(widget.app.id)
+                    appInfo.hiddenSet.contains(widget.app.id)
                         ? Icons.visibility
                         : Icons.visibility_off,
                   ),
@@ -264,7 +266,7 @@ class _AppTileState extends State<AppTile> {
 
                       if (deleted) {
                         setState(() => editing = false);
-                        await widget.appProvider.removeDeleted(widget.app.id);
+                        await appInfo.removeDeleted(widget.app.id);
                         widget.refresh();
                       }
                     },

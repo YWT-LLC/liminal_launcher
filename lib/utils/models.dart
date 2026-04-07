@@ -11,7 +11,7 @@ const String nullAppLabel = '---';
 /// empty string
 const String nullAppPackage = '';
 
-/// ;
+/// :
 const String idSplit = ':';
 
 /// Helpful for creating [AppInfo] lists

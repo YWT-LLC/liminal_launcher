@@ -181,32 +181,32 @@ final Map<String, Object> liminalDefault = <String, Object>{
   renamedIDsKey: <String>[],
 
   ascListKey: true,
-  listSortKey: AppSort.name.configValue,
+  listSortKey: AppSort.name.value,
 
   // Design
   darkUseOSKey: true,
   darkWideTilesKey: false,
 
-  darkHomeDateKey: DateType.medium.configValue,
+  darkHomeDateKey: DateType.medium.value,
   darkHomeTimeKey: true,
 
   darkFolderIconKey: false,
-  darkFolderLabelTypeKey: LabelType.initials.configValue,
+  darkFolderLabelTypeKey: LabelType.initials.value,
 
   darkListIconKey: false,
-  darkListLabelTypeKey: LabelType.full.configValue,
+  darkListLabelTypeKey: LabelType.full.value,
 
   lightUseOSKey: true,
   lightWideTilesKey: false,
 
-  lightHomeDateKey: DateType.compact.configValue,
+  lightHomeDateKey: DateType.compact.value,
   lightHomeTimeKey: true,
 
   lightFolderIconKey: true,
-  lightFolderLabelTypeKey: LabelType.none.configValue,
+  lightFolderLabelTypeKey: LabelType.none.value,
 
   lightListIconKey: true,
-  lightListLabelTypeKey: LabelType.full.configValue,
+  lightListLabelTypeKey: LabelType.full.value,
 
   // Launcher
   hideStatusKey: false,
@@ -220,11 +220,11 @@ final Map<String, Object> liminalDefault = <String, Object>{
   authForHiddenKey: false,
 
   // Layout
-  darkHorizontalAlignKey: ListAlignment.center.configValue,
-  darkVerticalAlignKey: ListAlignment.start.configValue,
+  darkHorizontalAlignKey: ListAlignment.center.value,
+  darkVerticalAlignKey: ListAlignment.start.value,
 
-  lightHorizontalAlignKey: ListAlignment.center.configValue,
-  lightVerticalAlignKey: ListAlignment.start.configValue,
+  lightHorizontalAlignKey: ListAlignment.center.value,
+  lightVerticalAlignKey: ListAlignment.start.value,
 };
 
 //* Custom fonts *//

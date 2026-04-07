@@ -8,30 +8,15 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 import './export.dart';
 import 'package:flutter/material.dart';
 
-//* Shared consts *//
-
 /// Tracks the position of the last ripple LongPress
 /// Defaults to [Offset.zero]
 Offset lastRipple = Offset.zero;
 
-/// enum String 'full'
-const String esFull = 'full';
-
-/// enum String 'center'
-const String esCenter = 'center';
-
-/// enum String 'start'
-const String esStart = 'start';
-
-/// enum String 'end'
-const String esEnd = 'end';
-
 //* BTS settings *//
 
-// AppListScreen Data //
+// (App)List(Screen)Data //
 
 enum ListData {
-  // TODO: what this?
   listCheck,
   onSelected,
   refresh,
@@ -103,7 +88,7 @@ extension AppSortConfig on AppSort {
   }
 }
 
-//* Design settings *//
+//* Launcher settings *//
 
 // Date type //
 
@@ -168,12 +153,17 @@ extension DateTypeConfig on DateType {
   }
 }
 
-// App/Folder Label Type //
+//* Design settings *//
+
+// (App && Folder) Label Type //
 
 enum LabelType { none, initials, full, wingding }
 
 /// enum String 'initials'
 const String esInitials = 'initials';
+
+/// enum String 'full'
+const String esFull = 'full';
 
 extension LabelTypeConfig on LabelType {
   String get value {
@@ -205,9 +195,18 @@ extension LabelTypeConfig on LabelType {
 
 //* Layout settings *//
 
-// App List Alignment //
+// List Alignment //
 
 enum ListAlignment { center, start, end }
+
+/// enum String 'center'
+const String esCenter = 'center';
+
+/// enum String 'start'
+const String esStart = 'start';
+
+/// enum String 'end'
+const String esEnd = 'end';
 
 extension ListAlignmentConfig on ListAlignment {
   String get value {
@@ -276,22 +275,6 @@ extension ListAlignmentConfig on ListAlignment {
     }
   }
 }
-
-const List<ButtonSegment<ListAlignment>> alignmentSegments =
-    <ButtonSegment<ListAlignment>>[
-  ButtonSegment<ListAlignment>(
-    value: ListAlignment.start,
-    label: Text('Start', textAlign: TextAlign.center),
-  ),
-  ButtonSegment<ListAlignment>(
-    value: ListAlignment.center,
-    label: Text('Center', textAlign: TextAlign.center),
-  ),
-  ButtonSegment<ListAlignment>(
-    value: ListAlignment.end,
-    label: Text('End', textAlign: TextAlign.center),
-  ),
-];
 
 const List<DropdownMenuEntry<LabelType>> labelEntries =
     <DropdownMenuEntry<LabelType>>[

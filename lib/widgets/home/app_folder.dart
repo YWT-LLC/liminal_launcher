@@ -13,7 +13,6 @@ import 'package:go_router/go_router.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class AppFolder extends StatefulWidget {
-  final AppInfoProvider appProvider;
   final int index;
   final bool? editing;
   final void Function() refresh;
@@ -21,7 +20,6 @@ class AppFolder extends StatefulWidget {
 
   const AppFolder({
     super.key,
-    required this.appProvider,
     required this.index,
     required this.editing,
     required this.refresh,
@@ -36,11 +34,9 @@ class _AppFolderState extends State<AppFolder> {
   // Define the build data //
 
   late int index = widget.index;
-  late List<String> items =
-      widget.appProvider.homeList[index].split(folderSplit);
+  late List<String> items = appInfo.homeList[index].split(folderSplit);
 
   late String name = items[0];
-  late final String folderLabel;
 
   late List<String> appList =
       (items[1] == emptyTag) ? <String>[] : items.sublist(1);
@@ -55,7 +51,7 @@ class _AppFolderState extends State<AppFolder> {
   void toggleOpen() => setState(() => open = !open);
 
   void refreshFolder() {
-    items = widget.appProvider.homeList[index].split(folderSplit);
+    items = appInfo.homeList[index].split(folderSplit);
     name = items[0];
     appList = (items[1] == emptyTag) ? <String>[] : items.sublist(1);
     appSet = appList.toSet();
@@ -94,27 +90,6 @@ class _AppFolderState extends State<AppFolder> {
   void initState() {
     super.initState();
     widget.rippleProgress?.addListener(rippling);
-
-    switch (widget.appLabel) {
-      case LabelType.none:
-        folderLabel = '';
-
-      case LabelType.initials:
-        folderLabel = name
-            .split(' ')
-            .map((String word) => word.isNotEmpty ? word[0] : '')
-            .join()
-            .toUpperCase();
-
-      case LabelType.full:
-        folderLabel = name;
-
-      case LabelType.wingding:
-        folderLabel = name
-            .split('')
-            .map((String char) => wingdingMap[char] ?? char)
-            .join();
-    }
   }
 
   @override
@@ -137,7 +112,7 @@ class _AppFolderState extends State<AppFolder> {
         child: EzScrollView(
           scrollDirection: Axis.horizontal,
           mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: widget.hAlign.mainAxis,
+          mainAxisAlignment: hAlign.mainAxis,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             // Name
@@ -156,8 +131,7 @@ class _AppFolderState extends State<AppFolder> {
                 extra: listData(
                   listCheck: (String id) => !appSet.contains(id),
                   onSelected: (String id) async {
-                    final int? indexMod =
-                        await widget.appProvider.addToFolder(id, index);
+                    final int? indexMod = await appInfo.addToFolder(id, index);
 
                     if (indexMod != null) index += indexMod;
                   },
@@ -193,7 +167,7 @@ class _AppFolderState extends State<AppFolder> {
                     if (validateRename(name) != null) return null;
 
                     final bool success =
-                        await widget.appProvider.renameFolder(name, index);
+                        await appInfo.renameFolder(name, index);
 
                     if (success) {
                       if (dContext.mounted) Navigator.of(dContext).pop(name);
@@ -255,7 +229,7 @@ class _AppFolderState extends State<AppFolder> {
                           setModal(() {});
 
                           // Storage update
-                          await widget.appProvider.reorderFolderItem(
+                          await appInfo.reorderFolderItem(
                             oldIndex: oldIndex + 1, // name offset
                             newIndex: newIndex + 1,
                             folderIndex: widget.index,
@@ -265,8 +239,7 @@ class _AppFolderState extends State<AppFolder> {
                         },
                         children: appList
                             .map((String id) {
-                              final AppInfo? app =
-                                  widget.appProvider.appMap[id];
+                              final AppInfo? app = appInfo.appMap[id];
                               if (app == null) return null;
 
                               return Padding(
@@ -281,8 +254,8 @@ class _AppFolderState extends State<AppFolder> {
                                     // App tile
                                     TileButton(
                                       app: app,
-                                      labelType: widget.appLabel,
-                                      showIcon: widget.appIcon,
+                                      labelType: folderLabels,
+                                      showIcon: folderIcons,
                                     ),
                                     EzConfig.rowSpacer,
 
@@ -290,8 +263,8 @@ class _AppFolderState extends State<AppFolder> {
                                     EzIconButton(
                                       icon: const Icon(Icons.remove),
                                       onPressed: () async {
-                                        await widget.appProvider
-                                            .removeFromFolder(id, widget.index);
+                                        await appInfo.removeFromFolder(
+                                            id, widget.index);
                                         refreshAll();
                                         setModal(() {});
                                       },
@@ -321,7 +294,7 @@ class _AppFolderState extends State<AppFolder> {
             EzIconButton(
               icon: const Icon(Icons.delete),
               onPressed: () async {
-                final bool success = await widget.appProvider.deleteFolder(
+                final bool success = await appInfo.deleteFolder(
                   appList.isEmpty
                       ? '$name$folderSplit$emptyTag'
                       : <String>[name, ...appList].join(folderSplit),
@@ -365,14 +338,13 @@ class _AppFolderState extends State<AppFolder> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: appList
                         .map((String id) {
-                          final AppInfo? app = widget.appProvider.appMap[id];
+                          final AppInfo? app = appInfo.appMap[id];
                           if (app == null) return null;
 
                           return Padding(
                             padding: rowPadding,
                             child: AppTile(
                               app: app,
-                              appProvider: widget.appProvider,
                               onHomeScreen: null,
                               onSelected: (String id) => launchApp(id),
                               editing: editing,
@@ -389,9 +361,9 @@ class _AppFolderState extends State<AppFolder> {
                     ],
               ),
             )
-          : (widget.appIcon
+          : (folderIcons
               ? EzTextIconButton(
-                  label: folderLabel,
+                  label: folderLabel(),
                   icon: Icon(
                     Icons.folder_open,
                     size: EzConfig.iconSize + EzConfig.padding,

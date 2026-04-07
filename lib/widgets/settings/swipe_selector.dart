@@ -13,13 +13,8 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class SwipeSelector extends StatefulWidget {
   final bool left;
-  final AppInfoProvider appProvider;
 
-  const SwipeSelector({
-    super.key,
-    required this.left,
-    required this.appProvider,
-  });
+  const SwipeSelector({super.key, required this.left});
 
   @override
   State<SwipeSelector> createState() => _SwipeSelectorState();
@@ -35,7 +30,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
   late String? appID = EzConfig.get(key);
   late AppInfo app = (appID == null || appID!.isEmpty)
       ? nullApp
-      : widget.appProvider.appMap[appID!] ?? nullApp;
+      : appInfo.appMap[appID!] ?? nullApp;
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +73,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
             extra: listData(
               listCheck: (String id) => true,
               onSelected: (String id) async {
-                final AppInfo? newApp = widget.appProvider.appMap[id];
+                final AppInfo? newApp = appInfo.appMap[id];
                 if (newApp == null || newApp == app) {
                   if (context.mounted) Navigator.of(context).pop();
                   return;

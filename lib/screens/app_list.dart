@@ -101,7 +101,7 @@ class _AppListScreenState extends State<AppListScreen> {
     return LiminalScaffold(
       GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onVerticalDragEnd: (DragEndDetails details) async {
+        onVerticalDragEnd: (DragEndDetails details) {
           if (details.primaryVelocity != null) {
             if (details.primaryVelocity! > 0) {
               // Pop on swipe down (backup for non-scroll portions)
@@ -309,7 +309,6 @@ class _AppListScreenState extends State<AppListScreen> {
                           padding: listPadding,
                           child: AppTile(
                             app: searchList[index],
-                            appProvider: appProvider,
                             onHomeScreen: false,
                             onSelected: onSelected,
                             editable: widget.editable,
@@ -329,7 +328,6 @@ class _AppListScreenState extends State<AppListScreen> {
                           padding: listPadding,
                           child: AppTile(
                             app: appList[index],
-                            appProvider: appProvider,
                             onHomeScreen: false,
                             onSelected: onSelected,
                             editable: widget.editable,

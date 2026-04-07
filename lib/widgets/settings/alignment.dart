@@ -1,19 +1,26 @@
 import '../../utils/export.dart';
-import '../../widgets/export.dart';
 
 import 'package:flutter/material.dart';
-import 'package:app_settings/app_settings.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-class AlignmentSelectors extends StatefulWidget {
-  final bool home;
-  final List<ButtonSegment<ListAlignment>> segments;
+const List<ButtonSegment<ListAlignment>> alignmentSegments =
+    <ButtonSegment<ListAlignment>>[
+  ButtonSegment<ListAlignment>(
+    value: ListAlignment.start,
+    label: Text('Start', textAlign: TextAlign.center),
+  ),
+  ButtonSegment<ListAlignment>(
+    value: ListAlignment.center,
+    label: Text('Center', textAlign: TextAlign.center),
+  ),
+  ButtonSegment<ListAlignment>(
+    value: ListAlignment.end,
+    label: Text('End', textAlign: TextAlign.center),
+  ),
+];
 
-  const AlignmentSelectors({
-    super.key,
-    required this.home,
-    required this.segments,
-  });
+class AlignmentSelectors extends StatefulWidget {
+  const AlignmentSelectors({super.key});
 
   @override
   State<AlignmentSelectors> createState() => _AlignmentSelectorsState();
@@ -61,17 +68,8 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
   Widget build(BuildContext context) {
     // Define the build data //
 
-    ListAlignment horizAlign = ListAlignmentConfig.lookup(EzConfig.get(
-        EzConfig.isDark ? darkHorizontalAlignKey : lightHorizontalAlignKey));
-    ListAlignment vertAlign = ListAlignmentConfig.lookup(EzConfig.get(
-        EzConfig.isDark ? darkVerticalAlignKey : lightVerticalAlignKey));
-
-    final String? backgroundImagePath = EzConfig.get(
-        EzConfig.isDark ? darkBackgroundImageKey : lightBackgroundImageKey);
-
-    final BoxFit? backgroundImageFit = boxFitLookup[EzConfig.isDark
-        ? EzConfig.get('$darkBackgroundImageKey$boxFitSuffix')
-        : EzConfig.get('$lightBackgroundImageKey$boxFitSuffix')];
+    ListAlignment horizAlign = hAlign;
+    ListAlignment vertAlign = vAlign;
 
     // Return the build //
 
@@ -90,23 +88,16 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
             Container(
               decoration: BoxDecoration(
                 color: EzConfig.colors.surface,
-                image: (backgroundImagePath == null ||
-                        backgroundImagePath == noImageValue)
+                image: (EzConfig.backgroundImagePath == noImageValue)
                     ? null
-                    : DecorationImage(
-                        image: ezImageProvider(backgroundImagePath),
-                        fit: backgroundImageFit,
-                      ),
+                    : EzConfig.backgroundImage,
               ),
               margin: EdgeInsets.all(EzConfig.marginVal * sizeMod),
             ),
 
             // Aligned circular icon
             Align(
-              alignment: merge(
-                horizAlign: horizAlign,
-                vertAlign: vertAlign,
-              ),
+              alignment: merge(horizAlign: horizAlign, vertAlign: vertAlign),
               child: ClipOval(
                 child: Image.asset(
                   appIconPath,
@@ -130,14 +121,26 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
           children: <Widget>[
             // Horizontal
             SegmentedButton<ListAlignment>(
-              segments: widget.segments,
+              segments: alignmentSegments,
               selected: <ListAlignment>{horizAlign},
               showSelectedIcon: false,
               onSelectionChanged: (Set<ListAlignment>? choice) async {
                 if (choice?.first == null) return;
                 final ListAlignment selected = choice!.first;
 
-                await EzConfig.setString(hConfigKey, selected.configValue);
+                if (EzConfig.updateBoth || EzConfig.isDark) {
+                  await EzConfig.setString(
+                    darkHorizontalAlignKey,
+                    selected.value,
+                  );
+                }
+                if (EzConfig.updateBoth || !EzConfig.isDark) {
+                  await EzConfig.setString(
+                    lightHorizontalAlignKey,
+                    selected.value,
+                  );
+                }
+
                 setState(() => horizAlign = selected);
               },
             ),
@@ -145,7 +148,7 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
 
             // Vertical
             SegmentedButton<ListAlignment>(
-              segments: widget.segments,
+              segments: alignmentSegments,
               direction: Axis.vertical,
               selected: <ListAlignment>{vertAlign},
               showSelectedIcon: false,
@@ -153,7 +156,19 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
                 if (choice?.first == null) return;
                 final ListAlignment selected = choice!.first;
 
-                await EzConfig.setString(vConfigKey, selected.configValue);
+                if (EzConfig.updateBoth || EzConfig.isDark) {
+                  await EzConfig.setString(
+                    darkVerticalAlignKey,
+                    selected.value,
+                  );
+                }
+                if (EzConfig.updateBoth || !EzConfig.isDark) {
+                  await EzConfig.setString(
+                    lightVerticalAlignKey,
+                    selected.value,
+                  );
+                }
+
                 setState(() => vertAlign = selected);
               },
             ),
