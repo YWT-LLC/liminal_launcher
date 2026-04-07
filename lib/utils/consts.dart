@@ -42,105 +42,108 @@ const Map<String, String> credits = <String, String>{
 
 // BTS //
 
-const String ascListKey = 'asc_list';
-const String hiddenIDsKey = 'hidden_ids';
-const String homeIDsKey = 'home_ids';
-const String listSortKey = 'list_sort';
-const String renamedIDsKey = 'renamed_ids';
-const String shownReminderKey = 'shown_reminder';
+const String shownReminderKey = 'shownReminder';
+
+const String hiddenIDsKey = 'hiddenIDs';
+const String homeIDsKey = 'homeIDs';
+const String renamedIDsKey = 'renamedIDs';
+
+const String ascListKey = 'ascList';
+const String listSortKey = 'listSort';
 
 /// Home/app list keys
 const Map<String, Type> limBTSKeys = <String, Type>{
-  ascListKey: bool,
+  shownReminderKey: bool,
   hiddenIDsKey: List<String>,
   homeIDsKey: List<String>,
-  listSortKey: String,
   renamedIDsKey: List<String>,
-  shownReminderKey: bool,
-};
-
-// Design //
-
-const String wideTilesKey = 'wide_tiles';
-
-const String darkHomeTimeKey = 'dark_home_time';
-const String darkHomeDateKey = 'dark_home_date';
-const String darkListIconKey = 'dark_list_icon';
-const String darkListLabelTypeKey = 'dark_list_label_type';
-const String darkFolderIconKey = 'dark_folder_icon';
-const String darkFolderLabelTypeKey = 'dark_folder_label_type';
-const String darkUseOSKey = 'dark_use_os';
-
-const String lightHomeTimeKey = 'light_home_time';
-const String lightHomeDateKey = 'light_home_date';
-const String lightListIconKey = 'light_list_icon';
-const String lightListLabelTypeKey = 'light_list_label_type';
-const String lightFolderIconKey = 'light_folder_icon';
-const String lightFolderLabelTypeKey = 'light_folder_label_type';
-const String lightUseOSKey = 'light_use_os';
-
-/// Clock keys,
-const Map<String, Type> limDesignKeys = <String, Type>{
-  wideTilesKey: bool,
-  darkHomeTimeKey: bool,
-  darkHomeDateKey: String,
-  darkListIconKey: bool,
-  darkListLabelTypeKey: String,
-  darkFolderIconKey: bool,
-  darkFolderLabelTypeKey: String,
-  darkUseOSKey: bool,
-  lightHomeTimeKey: bool,
-  lightHomeDateKey: String,
-  lightListIconKey: bool,
-  lightListLabelTypeKey: String,
-  lightFolderIconKey: bool,
-  lightFolderLabelTypeKey: String,
-  lightUseOSKey: bool,
+  ascListKey: bool,
+  listSortKey: String,
 };
 
 // Launcher //
 
-const String leftSwipeIDKey = 'left_swipe_id';
-const String rightSwipeIDKey = 'right_swipe_id';
-const String hideStatusKey = 'hide_status';
-const String autoAddToHomeKey = 'auto_add_to_home';
-const String autoSearchKey = 'auto_search';
-const String authToEditKey = 'auth_to_edit';
-const String authForHiddenKey = 'auth_for_hidden';
+const String hideStatusKey = 'hideStatus';
+const String autoAddToHomeKey = 'autoAddToHome';
+
+const String leftSwipeIDKey = 'leftSwipeID';
+const String rightSwipeIDKey = 'rightSwipeID';
+
+const String autoSearchKey = 'autoSearch';
+const String authToEditKey = 'authToEdit';
+const String authForHiddenKey = 'authForHiddenKey';
 
 /// Left/right swipe, auth, hide status, and auto add/search keys
 const Map<String, Type> limLauncherKeys = <String, Type>{
-  leftSwipeIDKey: String,
-  rightSwipeIDKey: String,
   hideStatusKey: bool,
   autoAddToHomeKey: bool,
+  leftSwipeIDKey: String,
+  rightSwipeIDKey: String,
   autoSearchKey: bool,
   authToEditKey: bool,
   authForHiddenKey: bool,
 };
 
+// Design //
+
+const String darkUseOSKey = 'darkUseOS';
+const String darkWideTilesKey = 'darkWideTiles';
+
+const String darkHomeDateKey = 'darkHomeDate';
+const String darkHomeTimeKey = 'darkHomeTime';
+
+const String darkFolderIconKey = 'darkFolderIcon';
+const String darkFolderLabelTypeKey = 'darkFolderLabelType';
+
+const String darkListIconKey = 'darkListIcon';
+const String darkListLabelTypeKey = 'darkListLabelType';
+
+const String lightUseOSKey = 'lightUseOS';
+const String lightWideTilesKey = 'lightWideTiles';
+
+const String lightHomeDateKey = 'lightHomeDate';
+const String lightHomeTimeKey = 'lightHomeTime';
+
+const String lightFolderIconKey = 'lightFolderIcon';
+const String lightFolderLabelTypeKey = 'lightFolderLabelType';
+
+const String lightListIconKey = 'lightListIcon';
+const String lightListLabelTypeKey = 'lightListLabelType';
+
+/// Clock keys,
+const Map<String, Type> limDesignKeys = <String, Type>{
+  darkUseOSKey: bool,
+  darkWideTilesKey: bool,
+  darkHomeDateKey: String,
+  darkHomeTimeKey: bool,
+  darkFolderIconKey: bool,
+  darkFolderLabelTypeKey: String,
+  darkListIconKey: bool,
+  darkListLabelTypeKey: String,
+  lightUseOSKey: bool,
+  lightWideTilesKey: bool,
+  lightHomeDateKey: String,
+  lightHomeTimeKey: bool,
+  lightFolderIconKey: bool,
+  lightFolderLabelTypeKey: String,
+  lightListIconKey: bool,
+  lightListLabelTypeKey: String,
+};
+
 // Layout //
 
-const String darkHomeHAlignKey = 'dark_home_horizontal_alignment';
-const String darkHomeVAlignKey = 'dark_home_vertical_alignment';
-const String darkListHAlignKey = 'dark_list_horizontal_alignment';
-const String darkListVAlignKey = 'dark_list_vertical_alignment';
+const String darkHorizontalAlignKey = 'darkHorizontalAlign';
+const String darkVerticalAlignKey = 'darkVerticalAlign';
 
-const String lightHomeHAlignKey = 'light_home_horizontal_alignment';
-const String lightHomeVAlignKey = 'light_home_vertical_alignment';
-const String lightListHAlignKey = 'light_list_horizontal_alignment';
-const String lightListVAlignKey = 'light_list_vertical_alignment';
+const String lightHorizontalAlignKey = 'lightHorizontalAlign';
+const String lightVerticalAlignKey = 'lightVerticalAlign';
 
 /// Home and list alignment keys
 const Map<String, Type> limLayoutKeys = <String, Type>{
-  darkHomeHAlignKey: String,
-  darkHomeVAlignKey: String,
-  darkListHAlignKey: String,
-  darkListVAlignKey: String,
-  lightHomeHAlignKey: String,
-  lightHomeVAlignKey: String,
-  lightListHAlignKey: String,
-  lightListVAlignKey: String,
+  darkHorizontalAlignKey: String,
+  darkVerticalAlignKey: String,
+  lightHorizontalAlignKey: String,
+  lightVerticalAlignKey: String,
 };
 
 // Shared //
@@ -171,51 +174,57 @@ final Map<String, Object> liminalDefault = <String, Object>{
   ...empathMobileConfig,
 
   // BTS
-  homeIDsKey: <String>[],
-  hiddenIDsKey: <String>[],
-  renamedIDsKey: <String>[],
-  listSortKey: AppSort.name.configValue,
-  ascListKey: true,
   shownReminderKey: false,
 
-  // Design
-  wideTilesKey: true,
+  hiddenIDsKey: <String>[],
+  homeIDsKey: <String>[],
+  renamedIDsKey: <String>[],
 
-  darkHomeTimeKey: true,
+  ascListKey: true,
+  listSortKey: AppSort.name.configValue,
+
+  // Design
+  darkUseOSKey: true,
+  darkWideTilesKey: false,
+
   darkHomeDateKey: DateType.medium.configValue,
-  darkListIconKey: false,
-  darkListLabelTypeKey: LabelType.full.configValue,
+  darkHomeTimeKey: true,
+
   darkFolderIconKey: false,
   darkFolderLabelTypeKey: LabelType.initials.configValue,
-  darkUseOSKey: true,
 
-  lightHomeTimeKey: true,
+  darkListIconKey: false,
+  darkListLabelTypeKey: LabelType.full.configValue,
+
+  lightUseOSKey: true,
+  lightWideTilesKey: false,
+
   lightHomeDateKey: DateType.compact.configValue,
-  lightListIconKey: true,
-  lightListLabelTypeKey: LabelType.full.configValue,
+  lightHomeTimeKey: true,
+
   lightFolderIconKey: true,
   lightFolderLabelTypeKey: LabelType.none.configValue,
-  lightUseOSKey: true,
+
+  lightListIconKey: true,
+  lightListLabelTypeKey: LabelType.full.configValue,
 
   // Launcher
+  hideStatusKey: false,
+  autoAddToHomeKey: false,
+
   leftSwipeIDKey: '',
   rightSwipeIDKey: '',
+
+  autoSearchKey: false,
   authToEditKey: false,
   authForHiddenKey: false,
-  hideStatusKey: true,
-  autoAddToHomeKey: false,
-  autoSearchKey: false,
 
   // Layout
-  darkHomeHAlignKey: ListAlignment.center.configValue,
-  darkHomeVAlignKey: ListAlignment.start.configValue,
-  darkListHAlignKey: ListAlignment.center.configValue,
-  darkListVAlignKey: ListAlignment.start.configValue,
+  darkHorizontalAlignKey: ListAlignment.center.configValue,
+  darkVerticalAlignKey: ListAlignment.start.configValue,
 
-  lightHomeHAlignKey: ListAlignment.center.configValue,
-  lightHomeVAlignKey: ListAlignment.start.configValue,
-  lightListHAlignKey: ListAlignment.center.configValue,
-  lightListVAlignKey: ListAlignment.start.configValue,
+  lightHorizontalAlignKey: ListAlignment.center.configValue,
+  lightVerticalAlignKey: ListAlignment.start.configValue,
 };
 
 //* Custom fonts *//

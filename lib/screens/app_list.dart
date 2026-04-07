@@ -60,7 +60,7 @@ class _AppListScreenState extends State<AppListScreen> {
   bool searching = EzConfig.get(autoSearchKey);
   final TextEditingController searchControl = TextEditingController();
 
-  AppSort listSort = AppSortConfig.fromValue(EzConfig.get(listSortKey));
+  AppSort listSort = AppSortConfig.lookup(EzConfig.get(listSortKey));
   bool ascList = EzConfig.get(ascListKey);
 
   final ScrollController scrollControl = ScrollController();
@@ -91,26 +91,12 @@ class _AppListScreenState extends State<AppListScreen> {
           app.name.toLowerCase().contains(searchControl.text.toLowerCase()))
       .toList();
 
+  // Return the build //
+
   @override
   Widget build(BuildContext context) {
-    // Define the contextual build data //
-
     final EdgeInsets listPadding =
         EdgeInsets.symmetric(vertical: EzConfig.spacing / 2);
-
-    final bool isDark = isDarkTheme(context);
-
-    final LabelType listLabel = LabelTypeConfig.fromValue(
-        EzConfig.get(isDark ? darkListLabelTypeKey : lightListLabelTypeKey));
-    final bool listIcon =
-        EzConfig.get(isDark ? darkListIconKey : lightListIconKey);
-
-    final ListAlignment hAlign = ListAlignmentConfig.fromValue(
-        EzConfig.get(isDark ? darkListHAlignKey : lightListHAlignKey));
-    final ListAlignment vAlign = ListAlignmentConfig.fromValue(
-        EzConfig.get(isDark ? darkListVAlignKey : lightListVAlignKey));
-
-    // Return the build //
 
     return LiminalScaffold(
       GestureDetector(
@@ -155,7 +141,7 @@ class _AppListScreenState extends State<AppListScreen> {
 
                         await EzConfig.setString(
                           listSortKey,
-                          listSort.configValue,
+                          listSort.value,
                         );
                         appProvider.sort(listSort, ascList);
 
@@ -171,7 +157,7 @@ class _AppListScreenState extends State<AppListScreen> {
 
                         await EzConfig.setString(
                           listSortKey,
-                          listSort.configValue,
+                          listSort.value,
                         );
                         appProvider.sort(listSort, ascList);
 
@@ -187,7 +173,7 @@ class _AppListScreenState extends State<AppListScreen> {
 
                         await EzConfig.setString(
                           listSortKey,
-                          listSort.configValue,
+                          listSort.value,
                         );
                         appProvider.sort(listSort, ascList);
 
@@ -203,7 +189,7 @@ class _AppListScreenState extends State<AppListScreen> {
 
                         await EzConfig.setString(
                           listSortKey,
-                          listSort.configValue,
+                          listSort.value,
                         );
                         appProvider.sort(listSort, ascList);
 
@@ -325,9 +311,6 @@ class _AppListScreenState extends State<AppListScreen> {
                             app: searchList[index],
                             appProvider: appProvider,
                             onHomeScreen: false,
-                            hAlign: hAlign,
-                            labelType: listLabel,
-                            showIcon: listIcon,
                             onSelected: onSelected,
                             editable: widget.editable,
                             editing: false,
@@ -348,9 +331,6 @@ class _AppListScreenState extends State<AppListScreen> {
                             app: appList[index],
                             appProvider: appProvider,
                             onHomeScreen: false,
-                            hAlign: hAlign,
-                            labelType: listLabel,
-                            showIcon: listIcon,
                             onSelected: onSelected,
                             editable: widget.editable,
                             editing: false,

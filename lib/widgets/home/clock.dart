@@ -3,7 +3,7 @@
  * See LICENSE for distribution and usage details.
  */
 
-import '../utils/export.dart';
+import '../../utils/export.dart';
 
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -53,10 +53,10 @@ class _ClockState extends State<Clock> {
             TimeOfDay.fromDateTime(now).format(context),
             style: EzConfig.styles.headlineLarge,
           ),
-        if (widget.dateType != DateType.none.configValue)
+        if (widget.dateType != DateType.none.value)
           Text(
             DateTypeConfig.buildDate(
-                DateTypeConfig.fromValue(widget.dateType), context, now),
+                DateTypeConfig.lookup(widget.dateType), context, now),
             style: EzConfig.styles.labelLarge,
           ),
       ],

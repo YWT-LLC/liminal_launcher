@@ -3,9 +3,9 @@
  * See LICENSE for distribution and usage details.
  */
 
-import '../screens/export.dart';
-import '../utils/export.dart';
-import './export.dart';
+import '../../screens/export.dart';
+import '../../utils/export.dart';
+import '../export.dart';
 
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -15,11 +15,6 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 class AppFolder extends StatefulWidget {
   final AppInfoProvider appProvider;
   final int index;
-  final ListAlignment hAlign;
-  final LabelType folderLabel;
-  final bool folderIcon;
-  final LabelType appLabel;
-  final bool appIcon;
   final bool? editing;
   final void Function() refresh;
   final ValueNotifier<double>? rippleProgress;
@@ -28,11 +23,6 @@ class AppFolder extends StatefulWidget {
     super.key,
     required this.appProvider,
     required this.index,
-    required this.hAlign,
-    required this.folderLabel,
-    required this.folderIcon,
-    required this.appLabel,
-    required this.appIcon,
     required this.editing,
     required this.refresh,
     this.rippleProgress,
@@ -285,8 +275,8 @@ class _AppFolderState extends State<AppFolder> {
                                 child: Row(
                                   // The Row prevents the AppTile from auto-expanding
                                   mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: widget.hAlign.mainAxis,
-                                  crossAxisAlignment: widget.hAlign.crossAxis,
+                                  mainAxisAlignment: hAlign.mainAxis,
+                                  crossAxisAlignment: hAlign.crossAxis,
                                   children: <Widget>[
                                     // App tile
                                     TileButton(
@@ -371,7 +361,7 @@ class _AppFolderState extends State<AppFolder> {
               child: EzScrollView(
                 scrollDirection: Axis.horizontal,
                 mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: widget.hAlign.mainAxis,
+                mainAxisAlignment: hAlign.mainAxis,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: appList
                         .map((String id) {
@@ -384,9 +374,6 @@ class _AppFolderState extends State<AppFolder> {
                               app: app,
                               appProvider: widget.appProvider,
                               onHomeScreen: null,
-                              hAlign: widget.hAlign,
-                              labelType: widget.folderLabel,
-                              showIcon: widget.folderIcon,
                               onSelected: (String id) => launchApp(id),
                               editing: editing,
                               refresh: refreshAll,

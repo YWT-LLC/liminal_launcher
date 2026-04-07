@@ -68,8 +68,45 @@ class AppearanceSettingsScreen extends StatelessWidget {
                 Icons.design_services,
                 semanticLabel: EzConfig.l10n.gDesign,
               ),
-              build: const EzDesignSettings(
+              build: EzDesignSettings(
                 onUpdate: doNothing,
+                includeBackgroundImage: false,
+                afterDesign: <Widget>[
+                  // Custom wallpaper
+                  if (!useOSWall) ...<Widget>[
+                    EzConfig.spacer,
+                    EzScrollView(
+                      scrollDirection: Axis.horizontal,
+                      startCentered: true,
+                      mainAxisSize: MainAxisSize.min,
+                      child: EzConfig.isDark
+                          ? const EzImageSetting(
+                              doNothing,
+                              configKey: darkBackgroundImageKey,
+                              allowSolidColor: true,
+                              label: 'Wallpaper',
+                            )
+                          : const EzImageSetting(
+                              doNothing,
+                              configKey: lightBackgroundImageKey,
+                              allowSolidColor: true,
+                              label: 'Wallpaper',
+                            ),
+                    ),
+                  ],
+
+                  // Use OS switch
+                  EzConfig.spacer,
+                  EzSwitchPair(
+                    text: 'Use System Wallpaper',
+                    valueKey: EzConfig.isDark ? darkUseOSKey : lightUseOSKey,
+                    onChanged: (bool? choice) async {
+                      if (choice == null) return;
+                      await EzConfig.rebuildUI(doNothing);
+                    },
+                  ),
+                  EzConfig.separator,
+                ],
                 appName: appName,
                 androidPackage: androidPackage,
               ),
@@ -83,8 +120,49 @@ class AppearanceSettingsScreen extends StatelessWidget {
                 Icons.grid_3x3,
                 semanticLabel: EzConfig.l10n.gLayout,
               ),
-              build: const EzLayoutSettings(
+              build: EzLayoutSettings(
                 onUpdate: doNothing,
+                afterLayout: <Widget>[
+                  // Home list align
+                  EzElevatedIconButton(
+                    onPressed: () => ezModal(
+                      context: context,
+                      builder: (_) => EzScrollView(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          const AlignmentSelectors(
+                            home: true,
+                            segments: alignmentSegments,
+                          ),
+                          EzConfig.separator,
+                        ],
+                      ),
+                    ),
+                    label: 'Home alignment',
+                    icon: const Icon(Icons.home),
+                  ),
+                  EzConfig.spacer,
+
+                  // App list align
+                  EzElevatedIconButton(
+                    onPressed: () => ezModal(
+                      context: context,
+                      builder: (_) => EzScrollView(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          const AlignmentSelectors(
+                            home: false,
+                            segments: alignmentSegments,
+                          ),
+                          EzConfig.separator,
+                        ],
+                      ),
+                    ),
+                    label: 'App list(s) alignment',
+                    icon: const Icon(Icons.list),
+                  ),
+                ],
+                resetSpacer: EzConfig.divider,
                 appName: appName,
                 androidPackage: androidPackage,
               ),

@@ -31,6 +31,7 @@ const String esEnd = 'end';
 // AppListScreen Data //
 
 enum ListData {
+  // TODO: what this?
   listCheck,
   onSelected,
   refresh,
@@ -75,7 +76,7 @@ const String esDate = 'date';
 const String esSize = 'size';
 
 extension AppSortConfig on AppSort {
-  String get configValue {
+  String get value {
     switch (this) {
       case AppSort.name:
         return esName;
@@ -88,7 +89,7 @@ extension AppSortConfig on AppSort {
     }
   }
 
-  static AppSort fromValue(String value) {
+  static AppSort lookup(String value) {
     switch (value) {
       case esPublisher:
         return AppSort.publisher;
@@ -121,7 +122,7 @@ const String esMedium = 'medium';
 const String esLong = 'long';
 
 extension DateTypeConfig on DateType {
-  String get configValue {
+  String get value {
     switch (this) {
       case DateType.none:
         return esNone;
@@ -151,7 +152,7 @@ extension DateTypeConfig on DateType {
     }
   }
 
-  static DateType fromValue(String value) {
+  static DateType lookup(String value) {
     switch (value) {
       case esCompact:
         return DateType.compact;
@@ -175,7 +176,7 @@ enum LabelType { none, initials, full, wingding }
 const String esInitials = 'initials';
 
 extension LabelTypeConfig on LabelType {
-  String get configValue {
+  String get value {
     switch (this) {
       case LabelType.none:
         return esNone;
@@ -188,7 +189,7 @@ extension LabelTypeConfig on LabelType {
     }
   }
 
-  static LabelType fromValue(String value) {
+  static LabelType lookup(String value) {
     switch (value) {
       case esNone:
         return LabelType.none;
@@ -209,7 +210,7 @@ extension LabelTypeConfig on LabelType {
 enum ListAlignment { center, start, end }
 
 extension ListAlignmentConfig on ListAlignment {
-  String get configValue {
+  String get value {
     switch (this) {
       case ListAlignment.center:
         return esCenter;
@@ -264,7 +265,7 @@ extension ListAlignmentConfig on ListAlignment {
     }
   }
 
-  static ListAlignment fromValue(String value) {
+  static ListAlignment lookup(String value) {
     switch (value) {
       case esStart:
         return ListAlignment.start;
@@ -275,3 +276,39 @@ extension ListAlignmentConfig on ListAlignment {
     }
   }
 }
+
+const List<ButtonSegment<ListAlignment>> alignmentSegments =
+    <ButtonSegment<ListAlignment>>[
+  ButtonSegment<ListAlignment>(
+    value: ListAlignment.start,
+    label: Text('Start', textAlign: TextAlign.center),
+  ),
+  ButtonSegment<ListAlignment>(
+    value: ListAlignment.center,
+    label: Text('Center', textAlign: TextAlign.center),
+  ),
+  ButtonSegment<ListAlignment>(
+    value: ListAlignment.end,
+    label: Text('End', textAlign: TextAlign.center),
+  ),
+];
+
+const List<DropdownMenuEntry<LabelType>> labelEntries =
+    <DropdownMenuEntry<LabelType>>[
+  DropdownMenuEntry<LabelType>(
+    value: LabelType.none,
+    label: 'None',
+  ),
+  DropdownMenuEntry<LabelType>(
+    value: LabelType.initials,
+    label: 'Initials',
+  ),
+  DropdownMenuEntry<LabelType>(
+    value: LabelType.full,
+    label: 'Full name',
+  ),
+  DropdownMenuEntry<LabelType>(
+    value: LabelType.wingding,
+    label: 'Wingding',
+  ),
+];

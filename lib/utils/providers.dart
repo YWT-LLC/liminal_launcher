@@ -75,7 +75,7 @@ class AppInfoProvider extends ChangeNotifier {
 
     // Sort based on the user's preferences
     sort(
-      AppSortConfig.fromValue(EzConfig.get(listSortKey)),
+      AppSortConfig.lookup(EzConfig.get(listSortKey)),
       EzConfig.get(ascListKey),
     );
 
@@ -124,7 +124,7 @@ class AppInfoProvider extends ChangeNotifier {
     _appMap[installed.id] = installed;
 
     sort(
-      AppSortConfig.fromValue(EzConfig.get(listSortKey)),
+      AppSortConfig.lookup(EzConfig.get(listSortKey)),
       EzConfig.get(ascListKey),
     );
 
@@ -380,7 +380,7 @@ class AppInfoProvider extends ChangeNotifier {
     _hiddenList.clear();
 
     sort(
-      AppSortConfig.fromValue(EzConfig.getDefault(listSortKey)),
+      AppSortConfig.lookup(EzConfig.getDefault(listSortKey)),
       EzConfig.getDefault(ascListKey),
     );
 

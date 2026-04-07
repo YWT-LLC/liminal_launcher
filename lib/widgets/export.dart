@@ -3,9 +3,14 @@
  * See LICENSE for distribution and usage details.
  */
 
-export 'app_folder.dart';
-export 'app_tile.dart';
-export 'clock.dart';
+export 'home/app_folder.dart';
+export 'home/app_tile.dart';
+export 'home/clock.dart';
+
+export 'settings/alignment.dart';
+export 'settings/background.dart';
+export 'settings/swipe_selector.dart';
+export 'settings/tiles.dart';
+
 export 'fabulous.dart';
 export 'liminal_scaffold.dart';
-export 'swipe_selector.dart';

@@ -3,9 +3,9 @@
  * See LICENSE for distribution and usage details.
  */
 
-import '../../screens/export.dart';
-import '../../utils/export.dart';
-import '../../widgets/export.dart';
+import '../../../screens/export.dart';
+import '../../../utils/export.dart';
+import '../../../widgets/export.dart';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -43,7 +43,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
 
     final bool showIcon =
         EzConfig.get(EzConfig.isDark ? darkListIconKey : lightListIconKey);
-    final LabelType labelType = LabelTypeConfig.fromValue(EzConfig.get(
+    final LabelType labelType = LabelTypeConfig.lookup(EzConfig.get(
         EzConfig.isDark ? darkListLabelTypeKey : lightListLabelTypeKey));
 
     // Return the build //

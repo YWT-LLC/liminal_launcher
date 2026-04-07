@@ -3,7 +3,7 @@
  * See LICENSE for distribution and usage details.
  */
 
-import '../utils/export.dart';
+import '../../utils/export.dart';
 
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -17,9 +17,6 @@ class AppTile extends StatefulWidget {
   /// Quantum computing
   final bool? onHomeScreen;
 
-  final ListAlignment hAlign;
-  final LabelType labelType;
-  final bool showIcon;
   final Future<void> Function(String id) onSelected;
   final bool editable;
   final bool? editing;
@@ -31,9 +28,6 @@ class AppTile extends StatefulWidget {
     required this.app,
     required this.appProvider,
     required this.onHomeScreen,
-    required this.hAlign,
-    required this.labelType,
-    required this.showIcon,
     required this.onSelected,
     this.editable = true,
     required this.editing,
@@ -101,13 +95,11 @@ class _AppTileState extends State<AppTile> {
           ? Row(
               // The Row prevents the AppTile from auto-expanding
               mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: widget.hAlign.mainAxis,
-              crossAxisAlignment: widget.hAlign.crossAxis,
+              mainAxisAlignment: hAlign.mainAxis,
+              crossAxisAlignment: hAlign.crossAxis,
               children: <Widget>[
                 TileButton(
                   app: widget.app,
-                  labelType: widget.labelType,
-                  showIcon: widget.showIcon,
                   onPressed: () => widget.onSelected(widget.app.id),
                   onLongPress: () => widget.editable
                       ? setState(() => editing = true)
@@ -117,8 +109,8 @@ class _AppTileState extends State<AppTile> {
             )
           : EzScrollView(
               mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: widget.hAlign.mainAxis,
-              crossAxisAlignment: widget.hAlign.crossAxis,
+              mainAxisAlignment: hAlign.mainAxis,
+              crossAxisAlignment: hAlign.crossAxis,
               scrollDirection: Axis.horizontal,
               reverseHands: true,
               showScrollHint: true,
@@ -327,6 +319,7 @@ class TileButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Build app icon
     late final double appIconSize =
         (EzConfig.iconSize * 1.25) + EzConfig.padding;
 
@@ -339,6 +332,7 @@ class TileButton extends StatelessWidget {
             height: appIconSize,
           );
 
+    // Check quick exit TODO: I don't like this
     if (labelType == LabelType.none) {
       return Tooltip(
         message: app.name,
