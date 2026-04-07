@@ -100,7 +100,7 @@ class AppearanceSettingsScreen extends StatelessWidget {
                   EzSwitchPair(
                     text: 'Use System Wallpaper',
                     valueKey: EzConfig.isDark ? darkUseOSKey : lightUseOSKey,
-                    onChanged: (bool? choice) async {
+                    afterChanged: (bool? choice) async {
                       if (choice == null) return;
                       await EzConfig.rebuildUI(doNothing);
                     },

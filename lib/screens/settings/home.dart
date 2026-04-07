@@ -16,6 +16,7 @@ class SettingsHomeScreen extends StatelessWidget {
   SettingsHomeScreen() : super(key: ValueKey<int>(EzConfig.seed));
 
   // Return the build //
+  // TODO: buttonify stuff, lose settings are overwhelming!
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +36,7 @@ class SettingsHomeScreen extends StatelessWidget {
         EzSwitchPair(
           text: 'Hide status bar',
           valueKey: hideStatusKey,
-          onChanged: (_) => EzConfig.rebuildUI(doNothing),
+          afterChanged: (_) => EzConfig.rebuildUI(doNothing),
         ),
         EzConfig.spacer,
 
