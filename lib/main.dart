@@ -71,87 +71,109 @@ class LiminalLauncher extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<AppInfoProvider>(
       create: (_) => AppInfoProvider(installedApps),
-      child: EzConfigurableApp(
-        localizationsDelegates: <LocalizationsDelegate<dynamic>>{
-          const LocaleNamesLocalizationsDelegate(),
-          ...EFUILang.localizationsDelegates,
-          ...Lang.localizationsDelegates,
-        },
-        supportedLocales: Lang.supportedLocales,
-        locale: storedLocale,
-        el10n: storedEFUILang,
-        appCache: LiminalCache(storedLocale, storedLang),
-        appName: appName,
-        routerConfig: GoRouter(
-          navigatorKey: ezRootNav,
-          initialLocation: homePath,
-          errorBuilder: (_, GoRouterState state) => ErrorScreen(state.error),
-          routes: <RouteBase>[
-            // Home
-            GoRoute(
-              path: homePath,
-              name: homePath,
-              pageBuilder: (BuildContext context, GoRouterState state) =>
-                  ezPageBuilder(context, state, HomeScreen()),
-              routes: <RouteBase>[
-                // App list
-                GoRoute(
-                  path: appListPath,
-                  name: appListPath,
-                  pageBuilder: (BuildContext context, GoRouterState state) {
-                    final Map<String, dynamic> listData =
-                        state.extra as Map<String, dynamic>;
+      child: _TheMagic(installedApps, storedLocale, storedEFUILang, storedLang),
+    );
+  }
+}
 
-                    return ezPageBuilder(
-                      context,
-                      state,
-                      AppListScreen(
-                        listCheck: listData[ListData.listCheck.key],
-                        onSelected: listData[ListData.onSelected.key],
-                        refresh: listData[ListData.refresh.key],
-                        autoRefresh: listData[ListData.autoRefresh.key],
-                        editable: listData[ListData.editable.key],
-                        icon: listData[ListData.icon.key],
-                      ),
-                      transitionsBuilder: (
-                        BuildContext context,
-                        Animation<double> animation,
-                        Animation<double> secondaryAnimation,
-                        Widget child,
-                      ) =>
-                          ezTransitionsBuilder(
-                        context,
-                        animation,
-                        secondaryAnimation,
-                        child,
-                        force: EzPageTransition.slideY,
-                      ),
-                    );
-                  },
-                ),
+class _TheMagic extends StatelessWidget {
+  final List<AppInfo> installedApps;
+  final Locale storedLocale;
+  final EFUILang storedEFUILang;
+  final Lang storedLang;
 
-                // Settings home
-                GoRoute(
-                  path: settingsHomePath,
-                  name: settingsHomePath,
-                  pageBuilder: (BuildContext context, GoRouterState state) =>
-                      ezPageBuilder(context, state, SettingsHomeScreen()),
-                  routes: <RouteBase>[
-                    // Appearance settings
-                    GoRoute(
-                      path: appearanceSettingsPath,
-                      name: appearanceSettingsPath,
-                      pageBuilder:
-                          (BuildContext context, GoRouterState state) =>
-                              ezPageBuilder(
-                                  context, state, AppearanceSettingsScreen()),
+  const _TheMagic(
+    this.installedApps,
+    this.storedLocale,
+    this.storedEFUILang,
+    this.storedLang,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return EzConfigurableApp(
+      localizationsDelegates: <LocalizationsDelegate<dynamic>>{
+        const LocaleNamesLocalizationsDelegate(),
+        ...EFUILang.localizationsDelegates,
+        ...Lang.localizationsDelegates,
+      },
+      supportedLocales: Lang.supportedLocales,
+      locale: storedLocale,
+      el10n: storedEFUILang,
+      appCache: LiminalCache(
+        storedLocale,
+        storedLang,
+        Provider.of<AppInfoProvider>(context),
+      ),
+      appName: appName,
+      routerConfig: GoRouter(
+        navigatorKey: ezRootNav,
+        initialLocation: homePath,
+        errorBuilder: (_, GoRouterState state) => ErrorScreen(state.error),
+        routes: <RouteBase>[
+          // Home
+          GoRoute(
+            path: homePath,
+            name: homePath,
+            pageBuilder: (BuildContext context, GoRouterState state) =>
+                ezPageBuilder(context, state, HomeScreen()),
+            routes: <RouteBase>[
+              // App list
+              GoRoute(
+                path: appListPath,
+                name: appListPath,
+                pageBuilder: (BuildContext context, GoRouterState state) {
+                  final Map<String, dynamic> listData =
+                      state.extra as Map<String, dynamic>;
+
+                  return ezPageBuilder(
+                    context,
+                    state,
+                    AppListScreen(
+                      listCheck: listData[ListData.listCheck.key],
+                      onSelected: listData[ListData.onSelected.key],
+                      refresh: listData[ListData.refresh.key],
+                      autoRefresh: listData[ListData.autoRefresh.key],
+                      editable: listData[ListData.editable.key],
+                      icon: listData[ListData.icon.key],
                     ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
+                    transitionsBuilder: (
+                      BuildContext context,
+                      Animation<double> animation,
+                      Animation<double> secondaryAnimation,
+                      Widget child,
+                    ) =>
+                        ezTransitionsBuilder(
+                      context,
+                      animation,
+                      secondaryAnimation,
+                      child,
+                      force: EzPageTransition.slideY,
+                    ),
+                  );
+                },
+              ),
+
+              // Settings home
+              GoRoute(
+                path: settingsHomePath,
+                name: settingsHomePath,
+                pageBuilder: (BuildContext context, GoRouterState state) =>
+                    ezPageBuilder(context, state, SettingsHomeScreen()),
+                routes: <RouteBase>[
+                  // Appearance settings
+                  GoRoute(
+                    path: appearanceSettingsPath,
+                    name: appearanceSettingsPath,
+                    pageBuilder: (BuildContext context, GoRouterState state) =>
+                        ezPageBuilder(
+                            context, state, AppearanceSettingsScreen()),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
