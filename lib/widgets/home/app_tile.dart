@@ -321,11 +321,7 @@ class TileButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Build app icon
-    late final double appIconSize =
-        (EzConfig.iconSize * 1.25) + EzConfig.padding;
-
-    late final Widget? iconImage = (app.icon == null)
+    late final Widget? appIcon = (app.icon == null)
         ? null
         : Image.memory(
             app.icon!,
@@ -334,53 +330,28 @@ class TileButton extends StatelessWidget {
             height: appIconSize,
           );
 
-    // Check quick exit TODO: I don't like this
     if (labelType == LabelType.none) {
       return Tooltip(
         message: app.name,
         child: GestureDetector(
           onTap: onPressed,
           onLongPress: onLongPress,
-          child: iconImage,
+          child: appIcon,
         ),
       );
     }
 
-    late final String label;
-
-    switch (labelType) {
-      case LabelType.none:
-        label = '';
-        break;
-      case LabelType.initials:
-        label = app.name
-            .split(' ')
-            .map((String word) => word.isNotEmpty ? word[0] : '')
-            .join()
-            .toUpperCase();
-        break;
-      case LabelType.full:
-        label = app.name;
-        break;
-      case LabelType.wingding:
-        label = app.name
-            .split('')
-            .map((String char) => wingdingMap[char] ?? char)
-            .join();
-        break;
-    }
-
-    return (showIcon && iconImage != null)
+    return (showIcon && appIcon != null)
         ? EzTextIconButton(
-            label: label,
-            icon: iconImage,
+            label: buildLabel(app.name, labelType),
+            icon: appIcon,
             style: TextButton.styleFrom(
                 padding: EzInsets.wrap(EzConfig.marginVal)),
             onPressed: onPressed,
             onLongPress: onLongPress,
           )
         : EzTextButton(
-            text: label,
+            text: buildLabel(app.name, labelType),
             style: TextButton.styleFrom(
                 padding: EzInsets.wrap(EzConfig.marginVal)),
             onPressed: onPressed,
