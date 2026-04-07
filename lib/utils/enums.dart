@@ -193,6 +193,30 @@ extension LabelTypeConfig on LabelType {
   }
 }
 
+/// Get the result of [base] parsed with [type]
+String buildLabel(String base, LabelType type) {
+  switch (type) {
+    case LabelType.none:
+      return '';
+
+    case LabelType.initials:
+      return base
+          .split(' ')
+          .map((String word) => word.isNotEmpty ? word[0] : '')
+          .join()
+          .toUpperCase();
+
+    case LabelType.full:
+      return base;
+
+    case LabelType.wingding:
+      return base
+          .split('')
+          .map((String char) => wingdingMap[char] ?? char)
+          .join();
+  }
+}
+
 //* Layout settings *//
 
 // List Alignment //
