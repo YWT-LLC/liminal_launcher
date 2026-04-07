@@ -8,7 +8,6 @@ export 'home/app_tile.dart';
 export 'home/clock.dart';
 
 export 'settings/alignment.dart';
-export 'settings/background.dart';
 export 'settings/swipe_selector.dart';
 export 'settings/tiles.dart';
 

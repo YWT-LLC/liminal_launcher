@@ -106,6 +106,12 @@ class AppearanceSettingsScreen extends StatelessWidget {
                     },
                   ),
                   EzConfig.separator,
+
+                  // Tile settings
+                  const AppTileSetting(folder: false, onComplete: doNothing),
+                  EzConfig.spacer,
+                  const AppTileSetting(folder: true, onComplete: doNothing),
+                  EzConfig.separator,
                 ],
                 appName: appName,
                 androidPackage: androidPackage,
