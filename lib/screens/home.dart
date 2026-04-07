@@ -184,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
             overlay.insert(ripple);
             lastRipple = details.globalPosition;
 
-            rippleController.forward().whenComplete(() {
+            await rippleController.forward().whenComplete(() {
               rippleProgress = ValueNotifier<double>(0.0);
               editing = !editing;
               refresh();
