@@ -363,7 +363,7 @@ class _AppFolderState extends State<AppFolder> {
             )
           : (folderIcons
               ? EzTextIconButton(
-                  label: folderLabel(),
+                  label: buildLabel(name, folderLabels),
                   icon: Icon(
                     Icons.folder_open,
                     size: EzConfig.iconSize + EzConfig.padding,
