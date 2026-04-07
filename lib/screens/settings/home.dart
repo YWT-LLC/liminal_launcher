@@ -8,8 +8,8 @@ import '../../utils/export.dart';
 import '../../widgets/export.dart';
 
 import 'package:flutter/material.dart';
-
 import 'package:go_router/go_router.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class SettingsHomeScreen extends StatelessWidget {
@@ -27,67 +27,104 @@ class SettingsHomeScreen extends StatelessWidget {
         EzHeader(),
 
         // Swipe selectors
-        const SwipeSelector(left: true),
-        EzConfig.spacer,
-        const SwipeSelector(left: false),
-        EzConfig.separator,
-
-        // Hide status bar
-        EzSwitchPair(
-          text: 'Hide status bar',
-          valueKey: hideStatusKey,
-          afterChanged: (_) => EzConfig.rebuildUI(doNothing),
-        ),
-        EzConfig.spacer,
-
-        // Home Time
-        EzSwitchPair(
-          text: 'Show time',
-          valueKey: EzConfig.isDark ? darkHomeTimeKey : lightHomeTimeKey,
-        ),
-        EzConfig.spacer,
-
-        // Home Date
-        EzScrollView(
-          scrollDirection: Axis.horizontal,
-          reverseHands: true,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            // Label
-            EzText(
-              'Date type',
-              style: EzConfig.styles.bodyLarge,
-              textAlign: TextAlign.center,
+        EzElevatedIconButton(
+          label: 'Quick launch',
+          icon: const Icon(Icons.swipe),
+          onPressed: () => ezModal(
+            context: context,
+            builder: (_) => EzScrollView(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  'On the home screen, swiping left/right will open the selected app:',
+                  textAlign: TextAlign.center,
+                  style: EzConfig.styles.bodyLarge,
+                ),
+                EzConfig.spacer,
+                const SwipeSelector(left: true),
+                EzConfig.spacer,
+                const SwipeSelector(left: false),
+                EzConfig.separator,
+              ],
             ),
-            EzConfig.margin,
-
-            // Button
-            EzDropdownMenu<DateType>(
-              enableSearch: false,
-              initialSelection: homeDate,
-              dropdownMenuEntries: DateType.values
-                  .map((DateType type) => DropdownMenuEntry<DateType>(
-                        value: type,
-                        label: DateTypeConfig.buildDate(type, context, now),
-                      ))
-                  .toList(),
-              widthEntries: <String>['Wednesday, Sept'],
-              onSelected: (DateType? choice) async {
-                if (choice == null) return;
-
-                if (EzConfig.updateBoth || EzConfig.isDark) {
-                  await EzConfig.setString(darkHomeDateKey, choice.value);
-                }
-                if (EzConfig.updateBoth || !EzConfig.isDark) {
-                  await EzConfig.setString(lightHomeDateKey, choice.value);
-                }
-
-                await EzConfig.redrawUI(doNothing);
-              },
-            ),
-          ],
+          ),
         ),
-        EzConfig.separator,
+        EzConfig.spacer,
+
+        // Home header
+        EzElevatedIconButton(
+          label: 'Home header',
+          icon: const Icon(LineIcons.clock),
+          onPressed: () => ezModal(
+            context: context,
+            builder: (_) => EzScrollView(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                // Hide status bar
+                EzSwitchPair(
+                  text: 'Hide status bar',
+                  valueKey: hideStatusKey,
+                  afterChanged: (_) => EzConfig.rebuildUI(doNothing),
+                ),
+                EzConfig.spacer,
+
+                // Home Time
+                EzSwitchPair(
+                  text: 'Show time',
+                  valueKey:
+                      EzConfig.isDark ? darkHomeTimeKey : lightHomeTimeKey,
+                ),
+                EzConfig.spacer,
+
+                // Home Date
+                EzScrollView(
+                  scrollDirection: Axis.horizontal,
+                  reverseHands: true,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    // Label
+                    EzText(
+                      'Date type',
+                      style: EzConfig.styles.bodyLarge,
+                      textAlign: TextAlign.center,
+                    ),
+                    EzConfig.margin,
+
+                    // Button
+                    EzDropdownMenu<DateType>(
+                      enableSearch: false,
+                      initialSelection: homeDate,
+                      dropdownMenuEntries: DateType.values
+                          .map((DateType type) => DropdownMenuEntry<DateType>(
+                                value: type,
+                                label: DateTypeConfig.buildDate(
+                                    type, context, now),
+                              ))
+                          .toList(),
+                      widthEntries: <String>['Wednesday, Sept'],
+                      onSelected: (DateType? choice) async {
+                        if (choice == null) return;
+
+                        if (EzConfig.updateBoth || EzConfig.isDark) {
+                          await EzConfig.setString(
+                              darkHomeDateKey, choice.value);
+                        }
+                        if (EzConfig.updateBoth || !EzConfig.isDark) {
+                          await EzConfig.setString(
+                              lightHomeDateKey, choice.value);
+                        }
+
+                        await EzConfig.redrawUI(doNothing);
+                      },
+                    ),
+                  ],
+                ),
+                EzConfig.separator,
+              ],
+            ),
+          ),
+        ),
+        EzConfig.spacer,
 
         // Auto add to home
         const EzSwitchPair(
