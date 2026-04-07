@@ -17,7 +17,6 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
   @override
   Widget build(BuildContext context) {
-    final DateTime now = DateTime.now();
 
     return LiminalScaffold(
       EzDesignSettings(
@@ -30,47 +29,7 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
           // Header settings //
 
-          // Time
-          EzSwitchPair(
-            key: ValueKey<String>('time_switch_$redraw'),
-            text: 'Show time',
-            valueKey: homeTimeKey,
-          ),
-          EzConfig.spacer,
-
-          // Date
-          EzScrollView(
-            scrollDirection: Axis.horizontal,
-            reverseHands: true,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              // Label
-              EzText(
-                'Date type',
-                style: EzConfig.styles.bodyLarge,
-                textAlign: TextAlign.center,
-              ),
-              EzConfig.margin,
-
-              // Button
-              EzDropdownMenu<DateType>(
-                enableSearch: false,
-                initialSelection: currDateType,
-                dropdownMenuEntries: DateType.values
-                    .map((DateType type) => DropdownMenuEntry<DateType>(
-                          value: type,
-                          label: DateTypeConfig.buildDate(type, context, now),
-                        ))
-                    .toList(),
-                widthEntries: <String>['Wednesday, Sept'],
-                onSelected: (DateType? choice) async {
-                  if (choice == null) return;
-                  await EzConfig.setString(homeDateKey, choice.configValue);
-                  setState(() => currDateType = choice);
-                },
-              ),
-            ],
-          ),
+          
           EzConfig.spacer,
 
           // AppTile settings //
