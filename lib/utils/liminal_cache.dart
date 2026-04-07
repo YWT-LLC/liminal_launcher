@@ -6,7 +6,6 @@
 import './export.dart';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class LiminalCache extends EzAppCache {
@@ -15,14 +14,15 @@ class LiminalCache extends EzAppCache {
   Locale _locale;
   Lang _l10n;
 
+  final AppInfoProvider _appInfo;
+
   late DesignCache _design;
   late LayoutCache _layout;
 
-  AppInfoProvider? _appInfo;
-
-  LiminalCache(Locale locale, Lang l10n)
+  LiminalCache(Locale locale, Lang l10n, AppInfoProvider appInfo)
       : _locale = locale,
-        _l10n = l10n;
+        _l10n = l10n,
+        _appInfo = appInfo;
 
   // Get //
 
@@ -31,12 +31,12 @@ class LiminalCache extends EzAppCache {
   DesignCache get design => _design;
   LayoutCache get layout => _layout;
 
-  AppInfoProvider? get appInfo => _appInfo;
+  AppInfoProvider get appInfo => _appInfo;
 
   // Set //
 
   @override
-  Future<void> init(bool isDark) async => _buildLocalCache(darkInit: isDark);
+  void init(bool isDark) => _buildLocalCache(darkInit: isDark);
 
   @override
   Future<void> rebuild() async {
@@ -49,10 +49,6 @@ class LiminalCache extends EzAppCache {
   }
 
   void _buildLocalCache({bool? darkInit}) {
-    if (_appInfo == null && ezRootNav.currentContext != null) {
-      _appInfo = Provider.of<AppInfoProvider>(ezRootNav.currentContext!);
-    }
-
     if (darkInit ?? EzConfig.isDark) {
       _design = DesignCache(
         useOSWall: EzConfig.get(darkUseOSKey),
@@ -136,7 +132,7 @@ LiminalCache get _pointer => EzConfig.appCache! as LiminalCache;
 
 Lang get l10n => _pointer.l10n;
 
-AppInfoProvider get appInfo => _pointer.appInfo!;
+AppInfoProvider get appInfo => _pointer.appInfo;
 
 bool get useOSWall => _pointer.design.useOSWall;
 bool get wideTiles => _pointer.design.wideTiles;
