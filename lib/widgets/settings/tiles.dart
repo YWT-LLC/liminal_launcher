@@ -48,14 +48,14 @@ class AppTileSetting extends StatelessWidget {
                     ? EzTextIconButton(
                         icon: const Icon(Icons.settings),
                         label: folder
-                            ? folderLabel(type: labelType)
-                            : listLabel(labelType),
+                            ? buildLabel('Folder app', labelType)
+                            : buildLabel('List app', labelType),
                         onPressed: doNothing,
                       )
                     : EzTextButton(
                         text: folder
-                            ? folderLabel(type: labelType)
-                            : listLabel(labelType),
+                            ? buildLabel('Folder app', labelType)
+                            : buildLabel('List app', labelType),
                         onPressed: doNothing,
                       ),
                 EzConfig.spacer,
@@ -112,7 +112,7 @@ class AppTileSetting extends StatelessWidget {
                   icon: const Icon(Icons.refresh),
                   label: EzConfig.l10n.gReset,
                 ),
-                EzSpacer(space: EzConfig.spargin),
+                EzConfig.separator,
               ],
             ),
           ),
