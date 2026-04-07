@@ -146,57 +146,7 @@ LabelType get folderLabels => _pointer.design.folderLabels;
 bool get listIcons => _pointer.design.listIcons;
 LabelType get listLabels => _pointer.design.listLabels;
 
+double get appIconSize => EzConfig.iconSize * 1.25 + EzConfig.padding;
+
 ListAlignment get hAlign => _pointer.layout.horizontalAlign;
 ListAlignment get vAlign => _pointer.layout.verticalAlign;
-
-// Helpers //
-
-String listLabel(LabelType? type) {
-  const String base = 'List App';
-
-  switch (type ?? listLabels) {
-    case LabelType.none:
-      return '';
-
-    case LabelType.initials:
-      return base
-          .split(' ')
-          .map((String word) => word.isNotEmpty ? word[0] : '')
-          .join()
-          .toUpperCase();
-
-    case LabelType.full:
-      return base;
-
-    case LabelType.wingding:
-      return base
-          .split('')
-          .map((String char) => wingdingMap[char] ?? char)
-          .join();
-  }
-}
-
-String folderLabel({LabelType? type}) {
-  const String base = 'Folder App';
-
-  switch (type ?? folderLabels) {
-    case LabelType.none:
-      return '';
-
-    case LabelType.initials:
-      return base
-          .split(' ')
-          .map((String word) => word.isNotEmpty ? word[0] : '')
-          .join()
-          .toUpperCase();
-
-    case LabelType.full:
-      return base;
-
-    case LabelType.wingding:
-      return base
-          .split('')
-          .map((String char) => wingdingMap[char] ?? char)
-          .join();
-  }
-}
