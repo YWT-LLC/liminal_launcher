@@ -22,9 +22,7 @@ class LiminalCache extends EzAppCache {
 
   LiminalCache(Locale locale, Lang l10n)
       : _locale = locale,
-        _l10n = l10n {
-    _buildLocalCache();
-  }
+        _l10n = l10n;
 
   // Get //
 
@@ -37,12 +35,25 @@ class LiminalCache extends EzAppCache {
 
   // Set //
 
-  void _buildLocalCache() {
+  @override
+  Future<void> init(bool isDark) async => _buildLocalCache(darkInit: isDark);
+
+  @override
+  Future<void> rebuild() async {
+    if (_locale != EzConfig.locale) {
+      _l10n = await Lang.delegate.load(EzConfig.locale);
+      _locale = EzConfig.locale;
+    }
+
+    _buildLocalCache();
+  }
+
+  void _buildLocalCache({bool? darkInit}) {
     if (_appInfo == null && ezRootNav.currentContext != null) {
       _appInfo = Provider.of<AppInfoProvider>(ezRootNav.currentContext!);
     }
 
-    if (EzConfig.isDark) {
+    if (darkInit ?? EzConfig.isDark) {
       _design = DesignCache(
         useOSWall: EzConfig.get(darkUseOSKey),
         wideTiles: EzConfig.get(darkWideTilesKey),
@@ -79,18 +90,6 @@ class LiminalCache extends EzAppCache {
             ListAlignmentConfig.lookup(EzConfig.get(lightVerticalAlignKey)),
       );
     }
-  }
-
-  // Rebuild //
-
-  @override
-  Future<void> rebuild() async {
-    if (_locale != EzConfig.locale) {
-      _l10n = await Lang.delegate.load(EzConfig.locale);
-      _locale = EzConfig.locale;
-    }
-
-    _buildLocalCache();
   }
 }
 
