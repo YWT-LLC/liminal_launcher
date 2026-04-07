@@ -4,26 +4,42 @@
  */
 
 import '../../utils/export.dart';
-import '../../widgets/export.dart';
 
-import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:app_settings/app_settings.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class AppTileSetting extends StatelessWidget {
-  const AppTileSetting({super.key});
+  /// true == folder tile setting
+  /// false == list tile setting
+  final bool folder;
+
+  /// [EzConfig.rebuildUI] passthrough
+  final void Function() onComplete;
+
+  const AppTileSetting({
+    super.key,
+    required this.folder,
+    required this.onComplete,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return EzElevatedIconButton(
-      onPressed: () => ezModal(
-        context: context,
-        builder: (_) {
-          bool showIcon = listIcons;
-          LabelType labelType = listLabels;
+    final String darkLabelKey =
+        folder ? darkFolderLabelTypeKey : darkListLabelTypeKey;
+    final String lightLabelKey =
+        folder ? lightFolderLabelTypeKey : lightListLabelTypeKey;
 
-          return StatefulBuilder(
+    final String darkIconKey = folder ? darkFolderIconKey : darkListIconKey;
+    final String lightIconKey = folder ? lightFolderIconKey : lightListIconKey;
+
+    return EzElevatedIconButton(
+      onPressed: () async {
+        LabelType labelType = folder ? folderLabels : listLabels;
+        bool showIcon = folder ? folderIcons : listIcons;
+
+        await ezModal(
+          context: context,
+          builder: (_) => StatefulBuilder(
             builder: (_, StateSetter setModal) => EzScrollView(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -31,11 +47,15 @@ class AppTileSetting extends StatelessWidget {
                 showIcon
                     ? EzTextIconButton(
                         icon: const Icon(Icons.settings),
-                        label: listLabel(labelType),
+                        label: folder
+                            ? folderLabel(labelType)
+                            : listLabel(labelType),
                         onPressed: doNothing,
                       )
                     : EzTextButton(
-                        text: listLabel(labelType),
+                        text: folder
+                            ? folderLabel(labelType)
+                            : listLabel(labelType),
                         onPressed: doNothing,
                       ),
                 EzConfig.spacer,
@@ -51,21 +71,13 @@ class AppTileSetting extends StatelessWidget {
                       dropdownMenuEntries: labelEntries,
                       enableSearch: false,
                       initialSelection: labelType,
-                      onSelected: (LabelType? choice) async {
+                      onSelected: (LabelType? choice) {
                         if (choice == null) return;
 
-                        await EzConfig.setString(
-                          labelTypeKey,
-                          choice.configValue,
-                        );
-                        labelType = choice;
-
                         if (labelType == LabelType.none) {
-                          await EzConfig.setBool(listIconKey, true);
                           showIcon = true;
                         }
-
-                        setModal(() {});
+                        setModal(() => labelType = choice);
                       },
                     ),
                   ],
@@ -76,28 +88,51 @@ class AppTileSetting extends StatelessWidget {
                 EzSwitchPair(
                   key: UniqueKey(),
                   text: 'Show icon',
-                  valueKey: listIconKey,
-                  onChangedCallback: (bool? value) async {
+                  valueKey: EzConfig.isDark ? darkIconKey : lightIconKey,
+                  afterChanged: (bool? value) {
                     if (value == null) return;
 
-                    showIcon = value;
                     if (value == false && labelType == LabelType.none) {
-                      await EzConfig.setString(
-                        labelTypeKey,
-                        LabelType.full.configValue,
-                      );
                       labelType = LabelType.full;
                     }
-
-                    setModal(() {});
+                    setModal(() => showIcon = value);
                   },
                 ),
                 EzConfig.separator,
+
+                // Local reset
+                EzElevatedIconButton(
+                  onPressed: () {
+                    showIcon = EzConfig.getDefault(
+                        EzConfig.isDark ? darkIconKey : lightIconKey);
+                    labelType = LabelTypeConfig.lookup(EzConfig.getDefault(
+                        EzConfig.isDark ? darkLabelKey : lightLabelKey));
+                    setModal(() {});
+                  },
+                  icon: const Icon(Icons.refresh),
+                  label: EzConfig.l10n.gReset,
+                ),
+                EzSpacer(space: EzConfig.spargin),
               ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+
+        if (labelType != (folder ? folderLabels : listLabels) ||
+            showIcon != (folder ? folderIcons : listIcons)) {
+          if (EzConfig.updateBoth || EzConfig.isDark) {
+            await EzConfig.setString(darkLabelKey, labelType.value);
+            await EzConfig.setBool(darkIconKey, showIcon);
+          }
+
+          if (EzConfig.updateBoth || !EzConfig.isDark) {
+            await EzConfig.setString(lightLabelKey, labelType.value);
+            await EzConfig.setBool(lightIconKey, showIcon);
+          }
+
+          await EzConfig.rebuildUI(onComplete);
+        }
+      },
       icon: const Icon(Icons.edit),
       label: 'List apps',
     );
