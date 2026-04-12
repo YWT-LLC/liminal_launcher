@@ -190,12 +190,3 @@ class _AppListSettings extends StatelessWidget {
         ),
       );
 }
-
-// TODO: Find me a new home
-// Future<dynamic> showTips() => showDialog(
-//       context: context,
-//       builder: (_) => const EzAlertDialog(
-//         title: Text('Tips', textAlign: TextAlign.center),
-//         content: Text('&& tricks', textAlign: TextAlign.center),
-//       ),
-//     );
