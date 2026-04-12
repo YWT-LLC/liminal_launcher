@@ -36,13 +36,6 @@ void main() async {
 
   // Run the app //
 
-  if (EzConfig.get(hideStatusKey) == true) {
-    await SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.manual,
-      overlays: <SystemUiOverlay>[SystemUiOverlay.bottom],
-    );
-  }
-
   final (Locale storedLocale, EFUILang storedEFUILang) = await ezStoredL10n();
 
   runApp(LiminalLauncher(
