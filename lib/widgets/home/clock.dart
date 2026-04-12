@@ -46,7 +46,7 @@ class _ClockState extends State<Clock> {
           ),
         if (homeDate != DateType.none)
           Text(
-            DateTypeConfig.buildDate(homeDate, context, now),
+            DateTypeConfig.buildDate(context, now, homeDate),
             style: EzConfig.styles.labelLarge,
           ),
       ],

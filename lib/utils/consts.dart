@@ -42,7 +42,7 @@ const Map<String, String> credits = <String, String>{
 
 // BTS //
 
-const String shownReminderKey = 'shownReminder';
+const String shownIntroKey = 'shownIntro';
 
 const String hiddenIDsKey = 'hiddenIDs';
 const String homeIDsKey = 'homeIDs';
@@ -53,7 +53,7 @@ const String listSortKey = 'listSort';
 
 /// Home/app list keys
 const Map<String, Type> limBTSKeys = <String, Type>{
-  shownReminderKey: bool,
+  shownIntroKey: bool,
   hiddenIDsKey: List<String>,
   homeIDsKey: List<String>,
   renamedIDsKey: List<String>,
@@ -166,7 +166,7 @@ final Set<String> defaultNoResetKeys = <String>{
 /// [EzConfig] keys that should never b reset/only changed by the user
 const Set<String> neverResetKeys = <String>{
   appLocaleKey,
-  shownReminderKey,
+  shownIntroKey,
 };
 
 /// [empathMobileConfig] with Liminal additions
@@ -174,7 +174,7 @@ final Map<String, Object> liminalDefault = <String, Object>{
   ...empathMobileConfig,
 
   // BTS
-  shownReminderKey: false,
+  shownIntroKey: false,
 
   hiddenIDsKey: <String>[],
   homeIDsKey: <String>[],

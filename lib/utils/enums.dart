@@ -122,16 +122,16 @@ extension DateTypeConfig on DateType {
     }
   }
 
-  static String buildDate(DateType type, BuildContext context, DateTime now) {
+  static String buildDate(BuildContext context, DateTime time, DateType type) {
     switch (type) {
       case DateType.compact:
-        return MaterialLocalizations.of(context).formatCompactDate(now);
+        return MaterialLocalizations.of(context).formatCompactDate(time);
       case DateType.short:
-        return MaterialLocalizations.of(context).formatShortDate(now);
+        return MaterialLocalizations.of(context).formatShortDate(time);
       case DateType.medium:
-        return MaterialLocalizations.of(context).formatMediumDate(now);
+        return MaterialLocalizations.of(context).formatMediumDate(time);
       case DateType.long:
-        return MaterialLocalizations.of(context).formatFullDate(now);
+        return MaterialLocalizations.of(context).formatFullDate(time);
       default:
         return '---';
     }
