@@ -11,6 +11,7 @@ import 'package:efui_bios/efui_bios.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:after_layout/after_layout.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -20,7 +21,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with AfterLayoutMixin<HomeScreen> {
   // Define the fixed build data //
 
   late final Map<String, dynamic> appListData = listData(
@@ -139,6 +141,59 @@ class _HomeScreenState extends State<HomeScreen> {
           child: const Clock(),
         )
       : const SizedBox.shrink();
+
+  // Init //
+
+  @override
+  void afterFirstLayout(BuildContext context) async {
+    final bool isGPlay = await isGPlayInstall();
+
+    if (!EzConfig.get(shownIntroKey) && context.mounted) {
+      await ezModal(
+        context: context,
+        builder: (_) => EzScrollView(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            const Text(
+              'Welcome to Liminal Launcher',
+              textAlign: TextAlign.center,
+            ),
+            if (!isGPlay)
+              EzRichText(
+                <InlineSpan>[
+                  const EzPlainText(
+                    text:
+                        '''We hope it serves you well! This version is not from the Play Store, so it should have been free.
+Rest assured, the free version of Liminal will always be identical to the Google Play version.
+
+With that said, if you want to support Liminal's development, or the development of more Empathetech software, please consider ''',
+                  ),
+                  EzInlineLink(
+                    'contributing',
+                    style: EzConfig.styles.bodyLarge,
+                    textAlign: TextAlign.center,
+                    url: Uri.parse('https://www.empathetech.net/#/contribute'),
+                    hint: 'Open a link to the Empathetic contribution options.',
+                  ),
+                  const EzPlainText(
+                    text: '''.
+
+This is the only non-tutorial dialog that will appear.
+And it will not appear again.
+
+Thank you, and enjoy!''',
+                  ),
+                ],
+                style: EzConfig.styles.bodyLarge,
+                textBackground: false,
+                textAlign: TextAlign.center,
+              ),
+          ],
+        ),
+      );
+      await EzConfig.setBool(shownIntroKey, true);
+    }
+  }
 
   // Return the build //
 
