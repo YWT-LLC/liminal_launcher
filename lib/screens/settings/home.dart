@@ -186,83 +186,135 @@ class _AppListSettings extends StatelessWidget {
   const _AppListSettings();
 
   @override
-  Widget build(BuildContext context) => EzElevatedIconButton(
-        label: 'App list',
-        icon: const Icon(Icons.list),
-        onPressed: () async {
-          final String wideKey =
-              EzConfig.isDark ? darkWideTilesKey : lightWideTilesKey;
-          final bool wideBackup = wideTiles;
+  Widget build(BuildContext context) {
+    final TextEditingController controller = TextEditingController();
 
-          await ezModal(
-            context: context,
-            builder: (_) => EzScrollView(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text(
-                  'Theme dependent',
+    return EzElevatedIconButton(
+      label: 'App list',
+      icon: const Icon(Icons.list),
+      onPressed: () async {
+        final String wideKey =
+            EzConfig.isDark ? darkWideTilesKey : lightWideTilesKey;
+        final bool wideBackup = wideTiles;
+
+        final int timeoutBackup = EzConfig.get(authTimeoutKey);
+
+        await ezModal(
+          context: context,
+          builder: (_) => EzScrollView(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text(
+                'Theme dependent',
+                textAlign: TextAlign.center,
+                style: EzConfig.styles.labelLarge,
+              ),
+              EzConfig.spacer,
+
+              // Wide tiles
+              EzSwitchPair(
+                text: 'Max width app tiles',
+                valueKey: wideKey,
+                afterChanged: (bool? choice) async {
+                  if (choice == null) return;
+                  if (EzConfig.updateBoth) {
+                    await EzConfig.setBool(
+                      EzConfig.isDark ? lightWideTilesKey : darkWideTilesKey,
+                      choice,
+                    );
+                  }
+                },
+              ),
+
+              EzDivider(
+                title: Text(
+                  'Constant',
                   textAlign: TextAlign.center,
                   style: EzConfig.styles.labelLarge,
                 ),
-                EzConfig.spacer,
+              ),
 
-                // Wide tiles
-                EzSwitchPair(
-                  text: 'Max width app tiles',
-                  valueKey: wideKey,
-                  afterChanged: (bool? choice) async {
-                    if (choice == null) return;
-                    if (EzConfig.updateBoth) {
-                      await EzConfig.setBool(
-                        EzConfig.isDark ? lightWideTilesKey : darkWideTilesKey,
-                        choice,
-                      );
-                    }
-                  },
-                ),
+              // Auto add to home
+              const EzSwitchPair(
+                text: 'Auto-add new apps to home',
+                valueKey: autoAddToHomeKey,
+              ),
+              EzConfig.spacer,
 
-                EzDivider(
-                  title: Text(
-                    'Constant',
-                    textAlign: TextAlign.center,
-                    style: EzConfig.styles.labelLarge,
+              // Auto search
+              const EzSwitchPair(
+                text: 'Auto-search the apps list',
+                valueKey: autoSearchKey,
+              ),
+              EzConfig.separator,
+
+              // Auth to edit
+              const EzSwitchPair(
+                text: 'Auth to edit lists/settings',
+                valueKey: authToEditKey,
+              ),
+              EzConfig.spacer,
+
+              // Auth for hidden
+              const EzSwitchPair(
+                text: 'Auth to see hidden apps',
+                valueKey: authForHiddenKey,
+              ),
+
+              // Re-auth timer
+              EzRow(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  // Label
+                  Flexible(
+                    child: Text(
+                      'Auth timeout (mins)',
+                      textAlign: TextAlign.start,
+                      style: EzConfig.styles.bodyLarge,
+                    ),
                   ),
-                ),
+                  EzConfig.rowSpacer,
 
-                // Auto add to home
-                const EzSwitchPair(
-                  text: 'Auto-add new apps to home',
-                  valueKey: autoAddToHomeKey,
-                ),
-                EzConfig.spacer,
+                  // Field
+                  TextFormField(
+                    controller: controller,
+                    textAlign: TextAlign.center,
+                    textAlignVertical: TextAlignVertical.top,
+                    maxLines: 1,
+                    keyboardType: TextInputType.number,
+                    autovalidateMode: AutovalidateMode.onUnfocus,
+                    validator: (String? value) {
+                      if (value == null) return null;
+                      final int? intVal = int.tryParse(value);
 
-                // Auto search
-                const EzSwitchPair(
-                  text: 'Auto-search the apps list',
-                  valueKey: autoSearchKey,
-                ),
-                EzConfig.separator,
+                      if (intVal == null || intVal < 0) {
+                        return 'Positive integers only';
+                      }
+                      return null;
+                    },
+                    onFieldSubmitted: (String stringVal) async {
+                      final int? intVal = int.tryParse(stringVal);
 
-                // Auth to edit
-                const EzSwitchPair(
-                  text: 'Auth to edit lists/settings',
-                  valueKey: authToEditKey,
-                ),
-                EzConfig.spacer,
+                      if (intVal == null || intVal < 0) {
+                        return;
+                      }
+                      await EzConfig.setInt(authTimeoutKey, intVal);
+                    },
+                  )
+                ],
+              ),
+              EzConfig.separator,
+            ],
+          ),
+        );
 
-                // Auth for hidden
-                const EzSwitchPair(
-                  text: 'Auth to see hidden apps',
-                  valueKey: authForHiddenKey,
-                ),
-                EzConfig.separator,
-              ],
-            ),
-          );
-
-          if (wideBackup != EzConfig.get(wideKey)) {
-            await EzConfig.redrawUI(doNothing);
-          }
-        },
-      );
+        if (wideBackup != EzConfig.get(wideKey) ||
+            timeoutBackup != EzConfig.get(authTimeoutKey)) {
+          await EzConfig.redrawUI(doNothing);
+        }
+      },
+    );
+  }
 }
