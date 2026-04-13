@@ -16,6 +16,7 @@ class LiminalCache extends EzAppCache {
 
   final AppInfoProvider _appInfo;
 
+  late LauncherCache _launcher;
   late DesignCache _design;
   late LayoutCache _layout;
 
@@ -28,6 +29,7 @@ class LiminalCache extends EzAppCache {
 
   Lang get l10n => _l10n;
 
+  LauncherCache get launcher => _launcher;
   DesignCache get design => _design;
   LayoutCache get layout => _layout;
 
@@ -50,6 +52,10 @@ class LiminalCache extends EzAppCache {
 
   void _buildLocalCache({bool? darkInit}) {
     if (darkInit ?? EzConfig.isDark) {
+      _launcher = LauncherCache(
+        leftSwipe: EzConfig.get(darkLeftSwipeIDKey),
+        rightSwipe: EzConfig.get(darkRightSwipeIDKey),
+      );
       _design = DesignCache(
         useOSWall: EzConfig.get(darkUseOSKey),
         wideTiles: EzConfig.get(darkWideTilesKey),
@@ -68,6 +74,10 @@ class LiminalCache extends EzAppCache {
             ListAlignmentConfig.lookup(EzConfig.get(darkVerticalAlignKey)),
       );
     } else {
+      _launcher = LauncherCache(
+        leftSwipe: EzConfig.get(lightLeftSwipeIDKey),
+        rightSwipe: EzConfig.get(lightRightSwipeIDKey),
+      );
       _design = DesignCache(
         useOSWall: EzConfig.get(lightUseOSKey),
         wideTiles: EzConfig.get(lightWideTilesKey),
@@ -90,6 +100,16 @@ class LiminalCache extends EzAppCache {
 }
 
 // Local sub-caches //
+
+class LauncherCache {
+  final String leftSwipe;
+  final String rightSwipe;
+
+  LauncherCache({
+    required this.leftSwipe,
+    required this.rightSwipe,
+  });
+}
 
 class DesignCache {
   final bool useOSWall;
@@ -133,6 +153,9 @@ LiminalCache get _pointer => EzConfig.appCache! as LiminalCache;
 Lang get l10n => _pointer.l10n;
 
 AppInfoProvider get appInfo => _pointer.appInfo;
+
+String get leftSwipeID => _pointer.launcher.leftSwipe;
+String get rightSwipeID => _pointer.launcher.rightSwipe;
 
 bool get useOSWall => _pointer.design.useOSWall;
 bool get wideTiles => _pointer.design.wideTiles;
