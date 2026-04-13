@@ -38,9 +38,10 @@ class AppearanceSettingsScreen extends StatelessWidget {
                     : Icons.computer,
                 semanticLabel: EzConfig.l10n.gGlobal,
               ),
-              build: const EzGlobalSettings(
+              build: EzGlobalSettings(
                 appName: appName,
                 androidPackage: androidPackage,
+                resetTitle: () => 'Reset all appearance settings?',
               ),
             ),
 
