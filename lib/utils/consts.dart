@@ -43,6 +43,7 @@ const Map<String, String> credits = <String, String>{
 // BTS //
 
 const String shownIntroKey = 'shownIntro';
+const String lastAuthKey = 'lastAuth';
 
 const String homeIDsKey = 'homeIDs';
 const String hiddenIDsKey = 'hiddenIDs';
@@ -55,6 +56,7 @@ const String listSortKey = 'listSort';
 const Map<String, Type> limBTSKeys = <String, Type>{
   // Intro
   shownIntroKey: bool,
+  lastAuthKey: String,
 
   homeIDsKey: List<String>,
   hiddenIDsKey: List<String>,
@@ -87,6 +89,7 @@ const String autoSearchKey = 'autoSearch';
 
 const String authToEditKey = 'authToEdit';
 const String authForHiddenKey = 'authForHiddenKey';
+const String authTimeoutKey = 'authTimeout';
 
 /// Header, quick launch, and app list settings
 const Map<String, Type> limLauncherKeys = <String, Type>{
@@ -113,6 +116,7 @@ const Map<String, Type> limLauncherKeys = <String, Type>{
   autoSearchKey: bool,
   authToEditKey: bool,
   authForHiddenKey: bool,
+  authTimeoutKey: int,
 };
 
 // Design //
@@ -185,6 +189,7 @@ final Set<String> defaultNoResetKeys = <String>{
 const Set<String> neverResetKeys = <String>{
   appLocaleKey,
   shownIntroKey,
+  lastAuthKey,
 };
 
 /// [empathMobileConfig] with Liminal additions
@@ -193,8 +198,9 @@ final Map<String, Object> liminalDefault = <String, Object>{
 
   // BTS //
 
-  // Intro
+  // For dev
   shownIntroKey: false,
+  lastAuthKey: '',
 
   // ID lists
   homeIDsKey: <String>[],
@@ -230,6 +236,7 @@ final Map<String, Object> liminalDefault = <String, Object>{
   autoSearchKey: false,
   authToEditKey: false,
   authForHiddenKey: false,
+  authTimeoutKey: 5,
 
   // Design //
 
