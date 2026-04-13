@@ -46,79 +46,115 @@ class _HeaderSettings extends StatelessWidget {
     return EzElevatedIconButton(
       label: 'Home header',
       icon: const Icon(LineIcons.clock),
-      onPressed: () => ezModal(
-        context: context,
-        builder: (BuildContext modalContext) => EzScrollView(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            // Hide status bar
-            EzSwitchPair(
-              // TODO: either make work, or add snack to tell them to restart
-              text: 'Hide status bar',
-              valueKey: hideStatusKey,
-              afterChanged: (_) => EzConfig.rebuildUI(doNothing),
-            ),
-            EzConfig.spacer,
+      onPressed: () async {
+        final String statusKey =
+            EzConfig.isDark ? darkHideStatusKey : lightHideStatusKey;
+        final bool backupStatus = EzConfig.get(statusKey);
 
-            // Home Time
-            EzSwitchPair(
-              text: 'Show time',
-              valueKey: EzConfig.isDark ? darkHomeTimeKey : lightHomeTimeKey,
-            ),
-            EzConfig.spacer,
+        final String timeKey =
+            EzConfig.isDark ? darkHomeTimeKey : lightHomeTimeKey;
+        final bool backupTime = EzConfig.get(timeKey);
 
-            // Home Date
-            // TODO: add checks on close for redrawUI (rebuild shouldn't be needed)
-            EzScrollView(
-              scrollDirection: Axis.horizontal,
-              reverseHands: true,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                // Label
-                EzText(
-                  'Date type',
-                  style: EzConfig.styles.bodyLarge,
-                  textAlign: TextAlign.center,
-                ),
-                EzConfig.margin,
+        final String dateKey =
+            EzConfig.isDark ? darkHomeDateKey : lightHomeDateKey;
+        final DateType backupDate =
+            DateTypeConfig.lookup(EzConfig.get(dateKey));
 
-                // Button
-                EzDropdownMenu<DateType>(
-                  enableSearch: false,
-                  initialSelection: homeDate,
-                  dropdownMenuEntries: DateType.values
-                      .map((DateType type) => DropdownMenuEntry<DateType>(
-                          value: type,
-                          label: DateTypeConfig.buildDate(
-                            modalContext,
-                            DateTime.now(),
-                            type,
-                          )))
-                      .toList(),
-                  widthEntries: <String>['Wednesday, Sept'],
-                  onSelected: (DateType? choice) async {
-                    if (choice == null) return;
+        await ezModal(
+          context: context,
+          builder: (BuildContext modalContext) => EzScrollView(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              // Hide status bar
+              EzSwitchPair(
+                text: 'Hide status bar',
+                valueKey: statusKey,
+                afterChanged: (bool? choice) async {
+                  if (choice == null) return;
+                  if (EzConfig.updateBoth) {
+                    await EzConfig.setBool(
+                      EzConfig.isDark ? lightHideStatusKey : darkHideStatusKey,
+                      choice,
+                    );
+                  }
+                },
+              ),
+              EzConfig.spacer,
 
-                    if (EzConfig.updateBoth || EzConfig.isDark) {
-                      await EzConfig.setString(darkHomeDateKey, choice.value);
-                    }
-                    if (EzConfig.updateBoth || !EzConfig.isDark) {
-                      await EzConfig.setString(lightHomeDateKey, choice.value);
-                    }
-                  },
-                ),
-              ],
-            ),
-            EzConfig.separator,
-          ],
-        ),
-      ),
+              // Home Time
+              EzSwitchPair(
+                text: 'Show time',
+                valueKey: timeKey,
+                afterChanged: (bool? choice) async {
+                  if (choice == null) return;
+                  if (EzConfig.updateBoth) {
+                    await EzConfig.setBool(
+                      EzConfig.isDark ? lightHomeTimeKey : darkHomeTimeKey,
+                      choice,
+                    );
+                  }
+                },
+              ),
+              EzConfig.spacer,
+
+              // Home Date
+              EzScrollView(
+                scrollDirection: Axis.horizontal,
+                reverseHands: true,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  // Label
+                  EzText(
+                    'Date type',
+                    style: EzConfig.styles.bodyLarge,
+                    textAlign: TextAlign.center,
+                  ),
+                  EzConfig.margin,
+
+                  // Button
+                  EzDropdownMenu<DateType>(
+                    enableSearch: false,
+                    initialSelection: homeDate,
+                    dropdownMenuEntries: DateType.values
+                        .map((DateType type) => DropdownMenuEntry<DateType>(
+                            value: type,
+                            label: DateTypeConfig.buildDate(
+                              modalContext,
+                              DateTime.now(),
+                              type,
+                            )))
+                        .toList(),
+                    widthEntries: <String>['Wednesday, Sept'],
+                    onSelected: (DateType? choice) async {
+                      if (choice == null) return;
+
+                      if (EzConfig.updateBoth || EzConfig.isDark) {
+                        await EzConfig.setString(darkHomeDateKey, choice.value);
+                      }
+                      if (EzConfig.updateBoth || !EzConfig.isDark) {
+                        await EzConfig.setString(
+                            lightHomeDateKey, choice.value);
+                      }
+                    },
+                  ),
+                ],
+              ),
+              EzConfig.separator,
+            ],
+          ),
+        );
+
+        if (backupStatus != EzConfig.get(statusKey) ||
+            backupTime != EzConfig.get(timeKey) ||
+            backupDate != DateTypeConfig.lookup(EzConfig.get(dateKey))) {
+          await EzConfig.rebuildUI(doNothing);
+        }
+      },
     );
   }
 }
 
 class _SwipeSettings extends StatelessWidget {
-  // TODO: dark/light split
   const _SwipeSettings();
 
   @override
