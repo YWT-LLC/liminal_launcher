@@ -252,6 +252,18 @@ class AppInfoProvider extends ChangeNotifier {
   Future<bool> hideApp(String appID) async {
     if (_hiddenSet.contains(appID)) return false;
 
+    if (_hiddenSet.isEmpty && ezRootNav.currentContext != null) {
+      await showDialog(
+        context: ezRootNav.currentContext!,
+        builder: (_) => const EzAlertDialog(
+          content: Text(
+            'Swipe up while editing to open the hidden apps list.',
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+
     _hiddenList.add(appID);
     _hiddenSet.add(appID);
 
