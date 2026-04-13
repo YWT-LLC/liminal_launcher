@@ -6,6 +6,7 @@
 import './export.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class LiminalCache extends EzAppCache {
@@ -50,8 +51,10 @@ class LiminalCache extends EzAppCache {
     _buildLocalCache();
   }
 
-  void _buildLocalCache({bool? darkInit}) {
-    if (darkInit ?? EzConfig.isDark) {
+  void _buildLocalCache({bool? darkInit}) async {
+    final bool isDark = darkInit ?? EzConfig.isDark;
+
+    if (isDark) {
       _launcher = LauncherCache(
         leftSwipe: EzConfig.get(darkLeftSwipeIDKey),
         rightSwipe: EzConfig.get(darkRightSwipeIDKey),
@@ -94,6 +97,18 @@ class LiminalCache extends EzAppCache {
             ListAlignmentConfig.lookup(EzConfig.get(lightHorizontalAlignKey)),
         verticalAlign:
             ListAlignmentConfig.lookup(EzConfig.get(lightVerticalAlignKey)),
+      );
+    }
+
+    if (EzConfig.get(isDark ? darkHideStatusKey : lightHideStatusKey) == true) {
+      await SystemChrome.setEnabledSystemUIMode(
+        SystemUiMode.manual,
+        overlays: <SystemUiOverlay>[SystemUiOverlay.bottom],
+      );
+    } else {
+      await SystemChrome.setEnabledSystemUIMode(
+        SystemUiMode.manual,
+        overlays: SystemUiOverlay.values,
       );
     }
   }
