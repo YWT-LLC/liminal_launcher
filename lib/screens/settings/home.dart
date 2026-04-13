@@ -189,40 +189,80 @@ class _AppListSettings extends StatelessWidget {
   Widget build(BuildContext context) => EzElevatedIconButton(
         label: 'App list',
         icon: const Icon(Icons.list),
-        onPressed: () => ezModal(
-          context: context,
-          builder: (_) => EzScrollView(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              // Auto add to home
-              const EzSwitchPair(
-                text: 'Auto-add new apps to home',
-                valueKey: autoAddToHomeKey,
-              ),
-              EzConfig.spacer,
+        onPressed: () async {
+          final String wideKey =
+              EzConfig.isDark ? darkWideTilesKey : lightWideTilesKey;
+          final bool wideBackup = wideTiles;
 
-              // Auto search
-              const EzSwitchPair(
-                text: 'Auto-search the apps list',
-                valueKey: autoSearchKey,
-              ),
-              EzConfig.separator,
+          await ezModal(
+            context: context,
+            builder: (_) => EzScrollView(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  'Theme dependent',
+                  textAlign: TextAlign.center,
+                  style: EzConfig.styles.labelLarge,
+                ),
+                EzConfig.spacer,
 
-              // Auth to edit
-              const EzSwitchPair(
-                text: 'Auth to edit lists/settings',
-                valueKey: authToEditKey,
-              ),
-              EzConfig.spacer,
+                // Wide tiles
+                EzSwitchPair(
+                  text: 'Max width app tiles',
+                  valueKey: wideKey,
+                  afterChanged: (bool? choice) async {
+                    if (choice == null) return;
+                    if (EzConfig.updateBoth) {
+                      await EzConfig.setBool(
+                        EzConfig.isDark ? lightWideTilesKey : darkWideTilesKey,
+                        choice,
+                      );
+                    }
+                  },
+                ),
 
-              // Auth for hidden
-              const EzSwitchPair(
-                text: 'Auth to see hidden apps',
-                valueKey: authForHiddenKey,
-              ),
-              EzConfig.separator,
-            ],
-          ),
-        ),
+                EzDivider(
+                  title: Text(
+                    'Constant',
+                    textAlign: TextAlign.center,
+                    style: EzConfig.styles.labelLarge,
+                  ),
+                ),
+
+                // Auto add to home
+                const EzSwitchPair(
+                  text: 'Auto-add new apps to home',
+                  valueKey: autoAddToHomeKey,
+                ),
+                EzConfig.spacer,
+
+                // Auto search
+                const EzSwitchPair(
+                  text: 'Auto-search the apps list',
+                  valueKey: autoSearchKey,
+                ),
+                EzConfig.separator,
+
+                // Auth to edit
+                const EzSwitchPair(
+                  text: 'Auth to edit lists/settings',
+                  valueKey: authToEditKey,
+                ),
+                EzConfig.spacer,
+
+                // Auth for hidden
+                const EzSwitchPair(
+                  text: 'Auth to see hidden apps',
+                  valueKey: authForHiddenKey,
+                ),
+                EzConfig.separator,
+              ],
+            ),
+          );
+
+          if (wideBackup != EzConfig.get(wideKey)) {
+            await EzConfig.redrawUI(doNothing);
+          }
+        },
       );
 }
