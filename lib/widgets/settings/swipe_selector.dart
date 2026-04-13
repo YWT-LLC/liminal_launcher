@@ -28,6 +28,9 @@ class _SwipeSelectorState extends State<SwipeSelector> {
     final String key = widget.left
         ? (EzConfig.isDark ? darkLeftSwipeIDKey : lightLeftSwipeIDKey)
         : (EzConfig.isDark ? darkRightSwipeIDKey : lightRightSwipeIDKey);
+    late final String mirrorKey = widget.left
+        ? (EzConfig.isDark ? lightLeftSwipeIDKey : darkLeftSwipeIDKey)
+        : (EzConfig.isDark ? lightRightSwipeIDKey : darkRightSwipeIDKey);
     final String dir = widget.left ? 'Left' : 'Right';
     final String lowDir = dir.toLowerCase();
 
@@ -80,6 +83,10 @@ class _SwipeSelectorState extends State<SwipeSelector> {
                 }
 
                 await EzConfig.setString(key, id);
+                if (EzConfig.updateBoth) {
+                  await EzConfig.setString(mirrorKey, id);
+                }
+
                 setState(() => app = newApp);
                 if (context.mounted) Navigator.of(context).pop();
               },
