@@ -21,20 +21,20 @@ class SwipeSelector extends StatefulWidget {
 }
 
 class _SwipeSelectorState extends State<SwipeSelector> {
-  // Define the fixed build data //
-
-  late String key = widget.left ? leftSwipeIDKey : rightSwipeIDKey;
-  late String dir = widget.left ? 'Left' : 'Right';
-  late String lowDir = dir.toLowerCase();
-
-  late String? appID = EzConfig.get(key);
-  late AppInfo app = (appID == null || appID!.isEmpty)
-      ? nullApp
-      : appInfo.appMap[appID!] ?? nullApp;
-
   @override
   Widget build(BuildContext context) {
-    // Define the contextual build data //
+    // Define the build data //
+
+    final String key = widget.left
+        ? (EzConfig.isDark ? darkLeftSwipeIDKey : lightLeftSwipeIDKey)
+        : (EzConfig.isDark ? darkRightSwipeIDKey : lightRightSwipeIDKey);
+    final String dir = widget.left ? 'Left' : 'Right';
+    final String lowDir = dir.toLowerCase();
+
+    String? appID = EzConfig.get(key);
+    AppInfo app = (appID == null || appID.isEmpty)
+        ? nullApp
+        : appInfo.appMap[appID] ?? nullApp;
 
     final bool showIcon =
         EzConfig.get(EzConfig.isDark ? darkListIconKey : lightListIconKey);
