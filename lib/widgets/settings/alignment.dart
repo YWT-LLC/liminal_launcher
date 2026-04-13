@@ -178,5 +178,3 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
     );
   }
 }
-
-// TODO: add rebuild and shiz
