@@ -131,16 +131,34 @@ class AppearanceSettingsScreen extends StatelessWidget {
                 afterLayout: <Widget>[
                   EzConfig.spacer,
                   EzElevatedIconButton(
-                    onPressed: () => ezModal(
-                      context: context,
-                      builder: (_) => EzScrollView(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          const AlignmentSelectors(),
-                          EzConfig.separator,
-                        ],
-                      ),
-                    ),
+                    onPressed: () async {
+                      final ListAlignment hBackup = hAlign;
+                      final ListAlignment vBackup = vAlign;
+
+                      await ezModal(
+                        context: context,
+                        builder: (_) => EzScrollView(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            const AlignmentSelectors(),
+                            EzConfig.separator,
+                          ],
+                        ),
+                      );
+
+                      if (hBackup !=
+                              ListAlignmentConfig.lookup(EzConfig.get(
+                                  EzConfig.isDark
+                                      ? darkHorizontalAlignKey
+                                      : lightHorizontalAlignKey)) ||
+                          vBackup !=
+                              ListAlignmentConfig.lookup(EzConfig.get(
+                                  EzConfig.isDark
+                                      ? darkVerticalAlignKey
+                                      : lightVerticalAlignKey))) {
+                        await EzConfig.redrawUI(doNothing);
+                      }
+                    },
                     label: 'Page alignment',
                     icon: const Icon(Icons.home),
                   ),
