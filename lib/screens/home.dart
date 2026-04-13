@@ -11,7 +11,6 @@ import 'package:efui_bios/efui_bios.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
@@ -97,11 +96,7 @@ class _HomeScreenState extends State<HomeScreen>
       bool authed = false;
 
       try {
-        authed = await LocalAuthentication().authenticate(
-          localizedReason: 'Authenticate to see hidden apps',
-          persistAcrossBackgrounding: true,
-          biometricOnly: false,
-        );
+        authed = await liminalAuth('Authenticate to see hidden apps');
       } catch (e) {
         ezLog(e.toString());
       }
@@ -247,11 +242,7 @@ If you want to support Liminal's development, or the development of more Empathe
             bool authed = false;
 
             try {
-              authed = await LocalAuthentication().authenticate(
-                localizedReason: 'Authenticate to edit the launcher',
-                persistAcrossBackgrounding: true,
-                biometricOnly: false,
-              );
+              authed = await liminalAuth('Authenticate to edit the launcher');
             } catch (e) {
               ezLog(e.toString());
             }
