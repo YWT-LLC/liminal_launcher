@@ -9,6 +9,7 @@ import '../widgets/export.dart';
 import 'package:efui_bios/efui_bios.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:after_layout/after_layout.dart';
@@ -146,51 +147,89 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   void afterFirstLayout(BuildContext context) async {
-    final bool isGPlay = await isGPlayInstall();
+    // Check for hide status
+    if (EzConfig.get(
+            EzConfig.isDark ? darkHideStatusKey : lightHideStatusKey) ==
+        true) {
+      await SystemChrome.setEnabledSystemUIMode(
+        SystemUiMode.manual,
+        overlays: <SystemUiOverlay>[SystemUiOverlay.bottom],
+      );
+    }
 
-    if (!EzConfig.get(shownIntroKey) && context.mounted) {
-      await ezModal(
-        context: context,
-        builder: (_) => EzScrollView(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            const Text(
-              'Welcome to Liminal Launcher',
-              textAlign: TextAlign.center,
-            ),
-            if (!isGPlay)
-              EzRichText(
-                <InlineSpan>[
-                  const EzPlainText(
-                    text:
-                        '''We hope it serves you well! This version is not from the Play Store, so it should have been free.
+    // Check for welcome message
+    if (!EzConfig.get(shownIntroKey)) {
+      final bool isGPlay = await isGPlayInstall();
+
+      if (context.mounted) {
+        await ezModal(
+          context: context,
+          builder: (_) => EzScrollView(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text(
+                'Welcome to Liminal Launcher',
+                textAlign: TextAlign.center,
+                style: EzConfig.styles.titleLarge,
+              ),
+              Text(
+                'I hope it serves you well!',
+                textAlign: TextAlign.center,
+                style: EzConfig.styles.bodyLarge,
+              ),
+              EzConfig.centerLine,
+              Text(
+                "It's geared toward minimalism, but with limitless customization.\nWho said minimal has to be boring?",
+                textAlign: TextAlign.center,
+                style: EzConfig.styles.bodyLarge,
+              ),
+              EzConfig.centerLine,
+              Text(
+                "There are tooltips where they might be needed, but customization is pretty straight forward.\nLong press the home screen to edit, like usual, and you're off!",
+                textAlign: TextAlign.center,
+                style: EzConfig.styles.bodyLarge,
+              ),
+              if (!isGPlay) ...<Widget>[
+                EzConfig.divider,
+                EzRichText(
+                  <InlineSpan>[
+                    const EzPlainText(
+                      text:
+                          '''This version is not from the Play Store, so it should have been free.
 Rest assured, the free version of Liminal will always be identical to the Google Play version.
 
-With that said, if you want to support Liminal's development, or the development of more Empathetech software, please consider ''',
-                  ),
-                  EzInlineLink(
-                    'contributing',
-                    style: EzConfig.styles.bodyLarge,
-                    textAlign: TextAlign.center,
-                    url: Uri.parse('https://www.empathetech.net/#/contribute'),
-                    hint: 'Open a link to the Empathetic contribution options.',
-                  ),
-                  const EzPlainText(
-                    text: '''.
-
-This is the only non-tutorial dialog that will appear.
-And it will not appear again.
-
-Thank you, and enjoy!''',
-                  ),
-                ],
-                style: EzConfig.styles.bodyLarge,
-                textBackground: false,
+If you want to support Liminal's development, or the development of more Empathetech software, please consider ''',
+                    ),
+                    EzInlineLink(
+                      'contributing',
+                      style: EzConfig.styles.bodyLarge,
+                      textAlign: TextAlign.center,
+                      url:
+                          Uri.parse('https://www.empathetech.net/#/contribute'),
+                      hint:
+                          'Open a link to the Empathetic contribution options.',
+                    ),
+                    const EzPlainText(
+                      text:
+                          '.\n\nThis is the only non-tutorial pop-up, and its only appearance this install.',
+                    ),
+                  ],
+                  style: EzConfig.styles.bodyLarge,
+                  textBackground: false,
+                  textAlign: TextAlign.center,
+                ),
+              ],
+              EzConfig.centerLine,
+              Text(
+                'Thank you, and enjoy!',
                 textAlign: TextAlign.center,
+                style: EzConfig.styles.bodyLarge,
               ),
-          ],
-        ),
-      );
+              EzConfig.separator,
+            ],
+          ),
+        );
+      }
       await EzConfig.setBool(shownIntroKey, true);
     }
   }
@@ -276,7 +315,7 @@ Thank you, and enjoy!''',
               if (editing) {
                 doNothing();
               } else {
-                toLaunch = appInfo.appMap[EzConfig.get(leftSwipeIDKey)];
+                toLaunch = appInfo.appMap[leftSwipeID];
               }
             } else {
               // Swiped right (==0 already handled)
@@ -284,7 +323,7 @@ Thank you, and enjoy!''',
                 editing = false;
                 refresh();
               } else {
-                toLaunch = appInfo.appMap[EzConfig.get(rightSwipeIDKey)];
+                toLaunch = appInfo.appMap[rightSwipeID];
               }
             }
 
