@@ -20,6 +20,9 @@ Future<bool> _externalAuth(String reason) async {
     // TODO: add config upload blocker/protected keys system... use in SOS too??
     // Last auth and timeout, maybe others
     // Also double check there's no way for users to mess with it live (and in prod/release mode)
+    //
+    // Overhaul the passthrough system. It's prolly one and done per app, so set it and forget it (ie consume it)
+    // ... then use that system to actually solve the above problem (with loadConfig filter)
   }
   return authed;
 }
