@@ -7,6 +7,7 @@ import '../../screens/export.dart';
 import '../../utils/export.dart';
 import '../../widgets/export.dart';
 
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:line_icons/line_icons.dart';
@@ -198,6 +199,16 @@ class _AppListSettings extends StatelessWidget {
         final bool wideBackup = wideTiles;
 
         final int timeoutBackup = EzConfig.get(authTimeoutKey);
+        late final Size sizeLimit = ezTextSize(
+          '55',
+          context: context,
+          style: EzConfig.styles.bodyLarge,
+        );
+
+        late final double formFieldHeight =
+            max(sizeLimit.height + EzConfig.padding, kMinInteractiveDimension);
+        late final double formFieldWidth =
+            max(sizeLimit.width + EzConfig.padding, kMinInteractiveDimension);
 
         await ezModal(
           context: context,
@@ -278,32 +289,37 @@ class _AppListSettings extends StatelessWidget {
                   EzConfig.rowSpacer,
 
                   // Field
-                  TextFormField(
-                    // TODO: constraints
-                    controller: controller,
-                    textAlign: TextAlign.center,
-                    textAlignVertical: TextAlignVertical.top,
-                    maxLines: 1,
-                    keyboardType: TextInputType.number,
-                    autovalidateMode: AutovalidateMode.onUnfocus,
-                    validator: (String? value) {
-                      if (value == null) return null;
-                      final int? intVal = int.tryParse(value);
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxHeight: formFieldHeight,
+                      maxWidth: formFieldWidth,
+                    ),
+                    child: TextFormField(
+                      controller: controller,
+                      textAlign: TextAlign.center,
+                      textAlignVertical: TextAlignVertical.top,
+                      maxLines: 1,
+                      keyboardType: TextInputType.number,
+                      autovalidateMode: AutovalidateMode.onUnfocus,
+                      validator: (String? value) {
+                        if (value == null) return null;
+                        final int? intVal = int.tryParse(value);
 
-                      if (intVal == null || intVal < 0) {
-                        return 'Positive integers only';
-                      }
-                      return null;
-                    },
-                    onFieldSubmitted: (String stringVal) async {
-                      final int? intVal = int.tryParse(stringVal);
+                        if (intVal == null || intVal < 0) {
+                          return 'Positive integers only';
+                        }
+                        return null;
+                      },
+                      onFieldSubmitted: (String stringVal) async {
+                        final int? intVal = int.tryParse(stringVal);
 
-                      if (intVal == null || intVal < 0) {
-                        return;
-                      }
-                      await EzConfig.setInt(authTimeoutKey, intVal);
-                    },
-                  )
+                        if (intVal == null || intVal < 0) {
+                          return;
+                        }
+                        await EzConfig.setInt(authTimeoutKey, intVal);
+                      },
+                    ),
+                  ),
                 ],
               ),
               EzConfig.separator,
