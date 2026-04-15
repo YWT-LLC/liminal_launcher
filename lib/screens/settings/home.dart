@@ -24,7 +24,7 @@ class SettingsHomeScreen extends StatelessWidget {
             EzConfig.spacer,
             const _SwipeSettings(),
             EzConfig.spacer,
-            const _AppListSettings(),
+            _AppListSettings(),
             EzConfig.spacer,
             const EzThemeCoin(),
             EzConfig.divider,
@@ -63,7 +63,7 @@ class _HeaderSettings extends StatelessWidget {
 
         await ezModal(
           context: context,
-          builder: (BuildContext modalContext) => EzScrollView(
+          builder: (BuildContext mContext) => EzScrollView(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               // Hide status bar
@@ -120,7 +120,7 @@ class _HeaderSettings extends StatelessWidget {
                         .map((DateType type) => DropdownMenuEntry<DateType>(
                             value: type,
                             label: DateTypeConfig.buildDate(
-                              modalContext,
+                              mContext,
                               DateTime.now(),
                               type,
                             )))
@@ -168,11 +168,11 @@ class _SwipeSettings extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text(
-                'Swipe left/right on the home screen (not in editing mode) to open the selected app.',
+                'Swipe left/right on the home screen (not in editing mode) to open the selected app.\n\nLong press to clear your selection.',
                 textAlign: TextAlign.center,
                 style: EzConfig.styles.bodyLarge,
               ),
-              EzConfig.spacer,
+              EzConfig.separator,
               const SwipeSelector(left: true),
               EzConfig.spacer,
               const SwipeSelector(left: false),
@@ -184,12 +184,14 @@ class _SwipeSettings extends StatelessWidget {
 }
 
 class _AppListSettings extends StatelessWidget {
-  const _AppListSettings();
+  _AppListSettings();
+
+  late final TextEditingController timeoutText =
+      TextEditingController(text: EzConfig.get(authTimeoutKey).toString());
+  late final ScrollController timeoutScroll = ScrollController();
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController controller = TextEditingController();
-
     return EzElevatedIconButton(
       label: 'App list',
       icon: const Icon(Icons.list),
@@ -213,12 +215,14 @@ class _AppListSettings extends StatelessWidget {
         await ezModal(
           context: context,
           builder: (_) => EzScrollView(
+            controller: timeoutScroll,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text(
                 'Theme dependent',
                 textAlign: TextAlign.center,
-                style: EzConfig.styles.labelLarge,
+                style: EzConfig.styles.labelLarge
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
               EzConfig.spacer,
 
@@ -238,10 +242,12 @@ class _AppListSettings extends StatelessWidget {
               ),
 
               EzDivider(
+                constraints: const BoxConstraints(maxWidth: double.infinity),
                 title: Text(
                   'Constant',
                   textAlign: TextAlign.center,
-                  style: EzConfig.styles.labelLarge,
+                  style: EzConfig.styles.labelLarge
+                      ?.copyWith(fontWeight: FontWeight.bold),
                 ),
               ),
 
@@ -271,6 +277,7 @@ class _AppListSettings extends StatelessWidget {
                 text: 'Auth to see hidden apps',
                 valueKey: authForHiddenKey,
               ),
+              EzConfig.separator,
 
               // Re-auth timer
               EzRow(
@@ -295,12 +302,24 @@ class _AppListSettings extends StatelessWidget {
                       maxWidth: formFieldWidth,
                     ),
                     child: TextFormField(
-                      controller: controller,
+                      controller: timeoutText,
                       textAlign: TextAlign.center,
                       textAlignVertical: TextAlignVertical.top,
                       maxLines: 1,
                       keyboardType: TextInputType.number,
                       autovalidateMode: AutovalidateMode.onUnfocus,
+                      onTap: () async {
+                        // Wait a half sec for the Spacer to resize first
+                        await Future<void>.delayed(
+                            const Duration(milliseconds: 500));
+
+                        // Scroll to the bottom
+                        await timeoutScroll.animateTo(
+                          timeoutScroll.position.maxScrollExtent,
+                          duration: ezAnimDuration(),
+                          curve: Curves.easeInOut,
+                        );
+                      },
                       validator: (String? value) {
                         if (value == null) return null;
                         final int? intVal = int.tryParse(value);
@@ -322,6 +341,7 @@ class _AppListSettings extends StatelessWidget {
                   ),
                 ],
               ),
+              EzSpacer(space: MediaQuery.of(context).viewInsets.bottom),
               EzConfig.separator,
             ],
           ),
