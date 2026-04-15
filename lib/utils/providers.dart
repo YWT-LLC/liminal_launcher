@@ -39,6 +39,10 @@ class AppInfoProvider extends ChangeNotifier {
   final Set<String> _hiddenSet = Set<String>.from(EzConfig.get(hiddenIDsKey));
   final List<String> _hiddenList = EzConfig.get(hiddenIDsKey);
 
+  final Set<String> _banishedSet =
+      Set<String>.from(EzConfig.get(banishedIDsKey));
+  final List<String> _banishedList = EzConfig.get(banishedIDsKey);
+
   AppInfoProvider(List<AppInfo> apps)
       : _apps = apps,
         _appMap = <String, AppInfo>{
@@ -145,11 +149,14 @@ class AppInfoProvider extends ChangeNotifier {
 
   Set<String> get renamed => _renamedSet;
 
-  List<String> get homeList => _homeList;
   Set<String> get homeSet => _homeSet;
+  List<String> get homeList => _homeList;
 
-  List<String> get hiddenList => _hiddenList;
   Set<String> get hiddenSet => _hiddenSet;
+  List<String> get hiddenList => _hiddenList;
+
+  Set<String> get banishedSet => _banishedSet;
+  List<String> get banishedList => _banishedList;
 
   // Post //
 
@@ -249,42 +256,38 @@ class AppInfoProvider extends ChangeNotifier {
 
   // Patch //
 
-  Future<bool> hideApp(String appID) async {
-    if (_hiddenSet.contains(appID)) return false;
+  Future<void> reorderHomeItem({
+    required int oldIndex,
+    required int newIndex,
+  }) async {
+    final String id = _homeList.removeAt(oldIndex);
+    _homeList.insert(
+      oldIndex < newIndex ? newIndex - 1 : newIndex,
+      id,
+    );
 
-    if (_hiddenSet.isEmpty && ezRootNav.currentContext != null) {
-      await showDialog(
-        context: ezRootNav.currentContext!,
-        builder: (_) => const EzAlertDialog(
-          content: Text(
-            'Swipe up while editing to open the hidden apps list.',
-            textAlign: TextAlign.center,
-          ),
-        ),
-      );
-    }
-
-    _hiddenList.add(appID);
-    _hiddenSet.add(appID);
-
-    await EzConfig.setStringList(hiddenIDsKey, _hiddenList);
-
-    final bool notified = await removeHomeApp(appID);
-    if (!notified) notifyListeners();
-
-    return true;
+    await EzConfig.setStringList(homeIDsKey, _homeList);
+    notifyListeners();
   }
 
-  Future<bool> showApp(String appID) async {
-    if (!_hiddenSet.contains(appID)) return false;
+  Future<void> reorderFolderItem({
+    required int oldIndex,
+    required int newIndex,
+    required int folderIndex,
+  }) async {
+    final List<String> folderList = _homeList[folderIndex].split(folderSplit);
 
-    _hiddenList.remove(appID);
-    _hiddenSet.remove(appID);
+    final String id = folderList.removeAt(oldIndex);
+    folderList.insert(
+      oldIndex < newIndex ? newIndex - 1 : newIndex,
+      id,
+    );
 
-    await EzConfig.setStringList(hiddenIDsKey, _hiddenList);
+    final String newFullName = folderList.join(folderSplit);
+    _homeList[folderIndex] = newFullName;
+
+    await EzConfig.setStringList(homeIDsKey, _homeList);
     notifyListeners();
-
-    return true;
   }
 
   Future<bool> renameApp({
@@ -321,45 +324,123 @@ class AppInfoProvider extends ChangeNotifier {
     return true;
   }
 
-  Future<void> reorderHomeItem({
-    required int oldIndex,
-    required int newIndex,
-  }) async {
-    final String id = _homeList.removeAt(oldIndex);
-    _homeList.insert(
-      oldIndex < newIndex ? newIndex - 1 : newIndex,
-      id,
-    );
+  Future<bool> hideApp(String appID) async {
+    if (_hiddenSet.contains(appID)) return false;
 
-    await EzConfig.setStringList(homeIDsKey, _homeList);
-    notifyListeners();
+    if (_hiddenSet.isEmpty && ezRootNav.currentContext != null) {
+      await showDialog(
+        context: ezRootNav.currentContext!,
+        builder: (_) => const EzAlertDialog(
+          title: Text('Reminder', textAlign: TextAlign.center),
+          content: Text(
+            'Swipe up while editing to open the hidden apps list.',
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+
+    _hiddenList.add(appID);
+    _hiddenSet.add(appID);
+
+    await EzConfig.setStringList(hiddenIDsKey, _hiddenList);
+
+    final bool notified = await removeHomeApp(appID);
+    if (!notified) notifyListeners();
+
+    return true;
   }
 
-  Future<void> reorderFolderItem({
-    required int oldIndex,
-    required int newIndex,
-    required int folderIndex,
-  }) async {
-    final List<String> folderList = _homeList[folderIndex].split(folderSplit);
+  Future<bool> showApp(String appID) async {
+    if (!_hiddenSet.contains(appID)) return false;
 
-    final String id = folderList.removeAt(oldIndex);
-    folderList.insert(
-      oldIndex < newIndex ? newIndex - 1 : newIndex,
-      id,
-    );
+    _hiddenList.remove(appID);
+    _hiddenSet.remove(appID);
 
-    final String newFullName = folderList.join(folderSplit);
-    _homeList[folderIndex] = newFullName;
-
-    await EzConfig.setStringList(homeIDsKey, _homeList);
+    await EzConfig.setStringList(hiddenIDsKey, _hiddenList);
     notifyListeners();
+
+    return true;
+  }
+
+  Future<bool> banishApp(String appID) async {
+    if (_banishedSet.contains(appID) ||
+        ezRootNav.currentContext == null ||
+        !ezRootNav.currentContext!.mounted) {
+      return false;
+    }
+    final BuildContext currContext = ezRootNav.currentContext!;
+
+    final AppInfo? currApp = appMap[appID];
+    if (currApp == null) return false;
+    final String name = currApp.name;
+
+    final bool confirmed = await showDialog(
+      context: currContext,
+      builder: (BuildContext dContext) => EzAlertDialog(
+        title: Text(
+          'Banish $name?',
+          textAlign: TextAlign.center,
+        ),
+        content: _banishedSet.isEmpty
+            ? Text(
+                '''When you banish an app, it will still be installed but not appear in Liminal at all.
+Banished apps can only be opened from the system settings, or via app link.
+
+To restore $name, you will have to uninstall it from the system settings, then reinstall.
+
+Banishing is useful for utility apps that also waste time. For example, you may want to banish your web browser(s).
+That way, you can use online menus when you go out, and reduce doom scrolling when you stay in.
+
+Reminder: banishing is just for UX, not for security.
+For example: if an app has always on location permissions, banishing it will not affect that.''',
+                textAlign: TextAlign.center,
+              )
+            : Text(
+                'To restore $name, you will have to uninstall it from the system settings, then reinstall.',
+                textAlign: TextAlign.center,
+              ),
+        actions: ezActionPair(
+          context: currContext,
+          onConfirm: () => Navigator.of(dContext).pop(true),
+          confirmMsg: EzConfig.l10n.gContinue,
+          confirmIsDestructive: true,
+          onDeny: () => Navigator.of(dContext).pop(false),
+        ),
+      ),
+    );
+    if (!confirmed) return false;
+
+    _banishedList.add(appID);
+    _banishedSet.add(appID);
+
+    await EzConfig.setStringList(banishedIDsKey, _banishedList);
+
+    final bool notified = await removeHomeApp(appID);
+    if (!notified) notifyListeners();
+
+    return true;
+  }
+
+  Future<void> _purgeApp(String appID) async {
+    if (!_banishedSet.contains(appID)) return;
+
+    _banishedList.remove(appID);
+    _banishedSet.remove(appID);
+
+    await EzConfig.setStringList(banishedIDsKey, _banishedList);
+    notifyListeners();
+
+    return;
   }
 
   // Delete //
 
   Future<void> removeDeleted(String appID) async {
+    await _purgeApp(appID);
     await showApp(appID);
     await removeHomeApp(appID);
+
     _apps.remove(_appMap[appID]);
     _appMap.remove(appID);
 
@@ -390,6 +471,8 @@ class AppInfoProvider extends ChangeNotifier {
     _homeList.clear();
     _hiddenSet.clear();
     _hiddenList.clear();
+    _banishedSet.clear();
+    _banishedList.clear();
 
     sort(
       AppSortConfig.lookup(EzConfig.getDefault(listSortKey)),
