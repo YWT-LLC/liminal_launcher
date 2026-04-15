@@ -133,8 +133,8 @@ class _AppTileState extends State<AppTile> {
                 ],
 
                 // Add to home
-                if (!appInfo.hiddenSet.contains(widget.app.id) &&
-                    !appInfo.homeSet.contains(widget.app.id)) ...<Widget>[
+                if (!appInfo.homeSet.contains(widget.app.id) &&
+                    !appInfo.hiddenSet.contains(widget.app.id)) ...<Widget>[
                   EzIconButton(
                     onPressed: () async {
                       final bool success =
