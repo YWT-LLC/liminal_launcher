@@ -17,7 +17,7 @@ Future<bool> _externalAuth(String reason) async {
 
   if (authed) {
     await EzConfig.setString(lastAuthKey, DateTime.now().toString());
-    // TODO: add config upload blocker/protected keys system... use in SOS too??
+    // TODO (last): add config upload blocker/protected keys system... use in SOS too??
     // Last auth and timeout, maybe others
     // Also double check there's no way for users to mess with it live (and in prod/release mode)
     //
