@@ -26,7 +26,8 @@ class _HomeScreenState extends State<HomeScreen>
   // Define the fixed build data //
 
   late final Map<String, dynamic> appListData = listData(
-    listCheck: (String id) => !appInfo.hiddenSet.contains(id),
+    listCheck: (String id) =>
+        !appInfo.hiddenSet.contains(id) && !appInfo.banishedSet.contains(id),
     onSelected: (String id) => launchApp(id),
     refresh: refresh,
   );
@@ -409,8 +410,9 @@ If you want to support Liminal's development, or the development of more Empathe
                   appListPath,
                   extra: listData(
                     listCheck: (String id) =>
+                        !appInfo.homeSet.contains(id) &&
                         !appInfo.hiddenSet.contains(id) &&
-                        !appInfo.homeSet.contains(id),
+                        !appInfo.banishedSet.contains(id),
                     onSelected: (String id) => appInfo.addHomeApp(id),
                     refresh: refresh,
                     autoRefresh: true,
