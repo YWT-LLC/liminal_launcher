@@ -20,7 +20,7 @@ class SettingsHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) => LiminalScaffold(
         Center(
           child: EzScrollView(children: <Widget>[
-            const _HeaderSettings(), // TODO: local resets (no reset all)
+            const _HeaderSettings(),
             EzConfig.spacer,
             const _SwipeSettings(),
             EzConfig.spacer,
@@ -172,7 +172,7 @@ class _SwipeSettings extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: EzConfig.styles.bodyLarge,
               ),
-              EzConfig.separator,
+              EzConfig.spacer,
               const SwipeSelector(left: true),
               EzConfig.spacer,
               const SwipeSelector(left: false),
