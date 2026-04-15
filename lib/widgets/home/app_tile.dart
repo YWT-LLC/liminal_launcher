@@ -245,11 +245,15 @@ class _AppTileState extends State<AppTile> {
                 // Show/hide
                 EzIconButton(
                   onPressed: () async {
-                    appInfo.hiddenSet.contains(widget.app.id)
-                        ? await appInfo.showApp(widget.app.id)
-                        : await appInfo.hideApp(widget.app.id);
-                    setState(() => editing = false);
-                    widget.refresh();
+                    final bool result =
+                        appInfo.hiddenSet.contains(widget.app.id)
+                            ? await appInfo.showApp(widget.app.id)
+                            : await appInfo.hideApp(widget.app.id);
+
+                    if (result) {
+                      setState(() => editing = false);
+                      widget.refresh();
+                    }
                   },
                   icon: Icon(
                     appInfo.hiddenSet.contains(widget.app.id)
@@ -257,13 +261,18 @@ class _AppTileState extends State<AppTile> {
                         : Icons.visibility_off,
                   ),
                 ),
+                EzConfig.rowSpacer,
 
                 // Banish
                 EzIconButton(
                   onPressed: () async {
-                    await appInfo.banishApp(widget.app.id);
-                    setState(() => editing = false);
-                    widget.refresh();
+                    final bool banished =
+                        await appInfo.banishApp(widget.app.id);
+
+                    if (banished) {
+                      setState(() => editing = false);
+                      widget.refresh();
+                    }
                   },
                   icon: const Icon(LineIcons.ghost),
                 ),
