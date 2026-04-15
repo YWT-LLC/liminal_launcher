@@ -43,7 +43,7 @@ const Map<String, String> credits = <String, String>{
 // BTS //
 
 const String shownIntroKey = 'shownIntro';
-const String lastAuthKey = 'lastAuth';
+const String lastAuthKey = 'lastAuth'; // TODO: switch to secure storage
 
 const String renamedIDsKey = 'renamedIDs';
 const String homeIDsKey = 'homeIDs';
