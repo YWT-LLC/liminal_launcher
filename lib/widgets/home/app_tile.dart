@@ -7,6 +7,7 @@ import '../../utils/export.dart';
 
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class AppTile extends StatefulWidget {
@@ -255,6 +256,16 @@ class _AppTileState extends State<AppTile> {
                         ? Icons.visibility
                         : Icons.visibility_off,
                   ),
+                ),
+
+                // Banish
+                EzIconButton(
+                  onPressed: () async {
+                    await appInfo.banishApp(widget.app.id);
+                    setState(() => editing = false);
+                    widget.refresh();
+                  },
+                  icon: const Icon(LineIcons.ghost),
                 ),
 
                 // Delete
