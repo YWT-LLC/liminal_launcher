@@ -279,6 +279,7 @@ class _AppListSettings extends StatelessWidget {
 
                   // Field
                   TextFormField(
+                    // TODO: constraints
                     controller: controller,
                     textAlign: TextAlign.center,
                     textAlignVertical: TextAlignVertical.top,
