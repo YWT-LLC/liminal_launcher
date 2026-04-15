@@ -407,6 +407,7 @@ For example: if an app has always on location permissions, banishing it will not
           confirmIsDestructive: true,
           onDeny: () => Navigator.of(dContext).pop(false),
         ),
+        needsClose: false,
       ),
     );
     if (!confirmed) return false;
