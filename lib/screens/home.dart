@@ -181,7 +181,7 @@ class _HomeScreenState extends State<HomeScreen>
               ),
               EzConfig.centerLine,
               Text(
-                "There are tips where they might be needed, but customization is pretty straight forward.\nLong press the home screen to edit, like usual, and you're off!",
+                "There are tips where they might be needed, but customization is pretty straight forward.\nLong press the home screen to edit, and you're off!",
                 textAlign: TextAlign.center,
                 style: EzConfig.styles.bodyLarge,
               ),
