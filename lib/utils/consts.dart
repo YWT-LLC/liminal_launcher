@@ -45,9 +45,10 @@ const Map<String, String> credits = <String, String>{
 const String shownIntroKey = 'shownIntro';
 const String lastAuthKey = 'lastAuth';
 
+const String renamedIDsKey = 'renamedIDs';
 const String homeIDsKey = 'homeIDs';
 const String hiddenIDsKey = 'hiddenIDs';
-const String renamedIDsKey = 'renamedIDs';
+const String banishedIDsKey = 'banishedIDs';
 
 const String ascListKey = 'ascList';
 const String listSortKey = 'listSort';
@@ -58,9 +59,10 @@ const Map<String, Type> limBTSKeys = <String, Type>{
   shownIntroKey: bool,
   lastAuthKey: String,
 
+  renamedIDsKey: List<String>,
   homeIDsKey: List<String>,
   hiddenIDsKey: List<String>,
-  renamedIDsKey: List<String>,
+  banishedIDsKey: List<String>,
 
   // List(s) sort
   ascListKey: bool,
@@ -203,9 +205,10 @@ final Map<String, Object> liminalDefault = <String, Object>{
   lastAuthKey: '',
 
   // ID lists
+  renamedIDsKey: <String>[],
   homeIDsKey: <String>[],
   hiddenIDsKey: <String>[],
-  renamedIDsKey: <String>[],
+  banishedIDsKey: <String>[],
 
   // List(s) sort
   ascListKey: true,
