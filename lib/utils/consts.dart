@@ -40,10 +40,16 @@ const Map<String, String> credits = <String, String>{
 
 //* EzConfig *//
 
+// Secure //
+
+const String authToEditKey = 'authToEdit';
+const String authForHiddenKey = 'authForHiddenKey';
+const String authTimeoutKey = 'authTimeout';
+const String lastAuthKey = 'lastAuth';
+
 // BTS //
 
 const String shownIntroKey = 'shownIntro';
-const String lastAuthKey = 'lastAuth'; // TODO: switch to secure storage
 
 const String renamedIDsKey = 'renamedIDs';
 const String homeIDsKey = 'homeIDs';
@@ -57,8 +63,8 @@ const String listSortKey = 'listSort';
 const Map<String, Type> limBTSKeys = <String, Type>{
   // Intro
   shownIntroKey: bool,
-  lastAuthKey: String,
 
+  // ID lists
   renamedIDsKey: List<String>,
   homeIDsKey: List<String>,
   hiddenIDsKey: List<String>,
@@ -89,10 +95,6 @@ const String lightWideTilesKey = 'lightWideTiles';
 const String autoAddToHomeKey = 'autoAddToHome';
 const String autoSearchKey = 'autoSearch';
 
-const String authToEditKey = 'authToEdit';
-const String authForHiddenKey = 'authForHiddenKey';
-const String authTimeoutKey = 'authTimeout';
-
 /// Header, quick launch, and app list settings
 const Map<String, Type> limLauncherKeys = <String, Type>{
   // Header
@@ -116,9 +118,6 @@ const Map<String, Type> limLauncherKeys = <String, Type>{
   // App list (global)
   autoAddToHomeKey: bool,
   autoSearchKey: bool,
-  authToEditKey: bool,
-  authForHiddenKey: bool,
-  authTimeoutKey: int,
 };
 
 // Design //
@@ -181,17 +180,10 @@ const Map<String, Type> allLimKeys = <String, Type>{
   ...limLayoutKeys,
 };
 
-/// Keys that should be preserved from [EzConfig.reset] by default
-final Set<String> defaultNoResetKeys = <String>{
+/// [EzConfig.init] passthrough
+final Set<String> neverResetKeys = <String>{
   ...limBTSKeys.keys,
   ...limLauncherKeys.keys,
-};
-
-/// [EzConfig] keys that should never b reset/only changed by the user
-const Set<String> neverResetKeys = <String>{
-  appLocaleKey,
-  shownIntroKey,
-  lastAuthKey,
 };
 
 /// [empathMobileConfig] with Liminal additions
@@ -202,7 +194,6 @@ final Map<String, Object> liminalDefault = <String, Object>{
 
   // For dev
   shownIntroKey: false,
-  lastAuthKey: '',
 
   // ID lists
   renamedIDsKey: <String>[],
@@ -237,9 +228,6 @@ final Map<String, Object> liminalDefault = <String, Object>{
   // App list (global)
   autoAddToHomeKey: false,
   autoSearchKey: false,
-  authToEditKey: false,
-  authForHiddenKey: false,
-  authTimeoutKey: 5,
 
   // Design //
 
