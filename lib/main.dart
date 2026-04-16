@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 
 void main() async {
@@ -24,7 +25,6 @@ void main() async {
 
   EzConfig.init(
     assetPaths: assetPaths,
-    defaults: liminalDefault,
     localeFallback: americanEnglish,
     l10nFallback: await EFUILang.delegate.load(americanEnglish),
     preferences: await SharedPreferencesWithCache.create(
@@ -32,6 +32,10 @@ void main() async {
         allowList: allLimKeys.keys.toSet(),
       ),
     ),
+    securePreferences: const FlutterSecureStorage(),
+    defaults: liminalDefault,
+    neverReset:
+        neverResetKeys, // Audit all your resets tbh (already have a keep note)
   );
 
   // Run the app //
