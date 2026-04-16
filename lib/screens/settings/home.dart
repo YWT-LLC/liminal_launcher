@@ -269,6 +269,7 @@ class _AppListSettings extends StatelessWidget {
               const EzSwitchPair(
                 text: 'Auth to edit lists/settings',
                 valueKey: authToEditKey,
+                secureKey: true,
               ),
               EzConfig.spacer,
 
@@ -276,6 +277,7 @@ class _AppListSettings extends StatelessWidget {
               const EzSwitchPair(
                 text: 'Auth to see hidden apps',
                 valueKey: authForHiddenKey,
+                secureKey: true,
               ),
               EzConfig.separator,
 
