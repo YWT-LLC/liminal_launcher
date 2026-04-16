@@ -238,7 +238,8 @@ If you want to support Liminal's development, or the development of more Empathe
       GestureDetector(
         behavior: HitTestBehavior.opaque,
         onLongPressStart: (LongPressStartDetails details) async {
-          if (!editing && (EzConfig.get(authToEditKey) == true)) {
+          if (!editing &&
+              (bool.parse(await EzConfig.secGet(authToEditKey) ?? 'false'))) {
             // Check every time so no reset is required; O(1)
             bool authed = false;
 
