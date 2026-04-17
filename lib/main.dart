@@ -35,7 +35,7 @@ void main() async {
     securePreferences: const FlutterSecureStorage(),
     defaults: liminalDefault,
     neverReset:
-        neverResetKeys, // TODO: Audit all your resets tbh (already have a keep note)
+        neverResetKeys, // TODO: (last part II) Audit all your resets tbh (already have a keep note)
   );
 
   // Run the app //
