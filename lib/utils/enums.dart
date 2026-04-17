@@ -217,8 +217,6 @@ String buildLabel(String base, LabelType type) {
   }
 }
 
-//* Layout settings *//
-
 // List Alignment //
 
 enum ListAlignment { center, start, end }
