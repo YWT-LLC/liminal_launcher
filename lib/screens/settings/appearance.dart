@@ -70,9 +70,10 @@ class AppearanceSettingsScreen extends StatelessWidget {
                 semanticLabel: EzConfig.l10n.gDesign,
               ),
               build: EzDesignSettings(
+                pageTab: advanced,
                 onUpdate: doNothing,
                 includeBackgroundImage: false,
-                afterDesign: <Widget>[
+                appendButton: <Widget>[
                   // Custom wallpaper
                   if (!useOSWall) ...<Widget>[
                     EzConfig.spacer,
@@ -114,22 +115,7 @@ class AppearanceSettingsScreen extends StatelessWidget {
                   const AppTileSetting(folder: true, onComplete: doNothing),
                   EzConfig.separator,
                 ],
-                appName: appName,
-                androidPackage: androidPackage,
-              ),
-            ),
-
-            // Layout
-            EzSettingsSection(
-              position: 3,
-              title: EzConfig.l10n.gLayout,
-              icon: Icon(
-                Icons.grid_3x3,
-                semanticLabel: EzConfig.l10n.gLayout,
-              ),
-              build: EzLayoutSettings(
-                onUpdate: doNothing,
-                afterLayout: <Widget>[
+                appendPage: <Widget>[
                   EzConfig.spacer,
                   EzElevatedIconButton(
                     onPressed: () async {
@@ -165,7 +151,7 @@ class AppearanceSettingsScreen extends StatelessWidget {
                   ),
                   EzConfig.spacer,
                 ],
-                resetSpacer: EzConfig.divider,
+                resetSpacerPage: EzConfig.divider,
                 appName: appName,
                 androidPackage: androidPackage,
               ),
@@ -173,7 +159,7 @@ class AppearanceSettingsScreen extends StatelessWidget {
 
             // Text
             EzSettingsSection(
-              position: 4,
+              position: 3,
               title: EzConfig.l10n.gText,
               icon: Icon(
                 Icons.text_format,
