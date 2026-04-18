@@ -15,15 +15,7 @@ Future<bool> _externalAuth(String reason) async {
     biometricOnly: false,
   );
 
-  if (authed) {
-    await EzConfig.setString(lastAuthKey, DateTime.now().toString());
-    // TODO (last): add config upload blocker/protected keys system... use in SOS too??
-    // Last auth and timeout, maybe others
-    // Also double check there's no way for users to mess with it live (and in prod/release mode)
-    //
-    // Overhaul the passthrough system. It's prolly one and done per app, so set it and forget it (ie consume it)
-    // ... then use that system to actually solve the above problem (with loadConfig filter)
-  }
+  if (authed) await EzConfig.setString(lastAuthKey, DateTime.now().toString());
   return authed;
 }
 
