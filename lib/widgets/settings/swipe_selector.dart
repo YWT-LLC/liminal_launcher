@@ -31,6 +31,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
     late final String mirrorKey = widget.left
         ? (EzConfig.isDark ? lightLeftSwipeIDKey : darkLeftSwipeIDKey)
         : (EzConfig.isDark ? lightRightSwipeIDKey : darkRightSwipeIDKey);
+
     final String dir = widget.left ? 'Left' : 'Right';
     final String lowDir = dir.toLowerCase();
 
@@ -38,11 +39,6 @@ class _SwipeSelectorState extends State<SwipeSelector> {
     AppInfo app = (appID == null || appID.isEmpty)
         ? nullApp
         : appInfo.appMap[appID] ?? nullApp;
-
-    final bool showIcon =
-        EzConfig.get(EzConfig.isDark ? darkListIconKey : lightListIconKey);
-    final LabelType labelType = LabelTypeConfig.lookup(EzConfig.get(
-        EzConfig.isDark ? darkListLabelTypeKey : lightListLabelTypeKey));
 
     // Return the build //
 
@@ -69,8 +65,8 @@ class _SwipeSelectorState extends State<SwipeSelector> {
         EzMargin(vertical: false),
         TileButton(
           app: app,
-          labelType: labelType,
-          showIcon: showIcon,
+          labelType: listLabels,
+          showIcon: listIcons,
           onPressed: () => context.pushNamed(
             appListPath,
             extra: listData(
