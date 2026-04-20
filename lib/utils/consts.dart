@@ -80,12 +80,14 @@ const Map<String, Type> limBTSKeys = <String, Type>{
 const String darkHideStatusKey = 'darkHideStatus';
 const String darkHomeTimeKey = 'darkHomeTime';
 const String darkHomeDateKey = 'darkHomeDate';
+
 const String lightHideStatusKey = 'lightHideStatus';
 const String lightHomeTimeKey = 'lightHomeTime';
 const String lightHomeDateKey = 'lightHomeDate';
 
 const String darkLeftSwipeIDKey = 'darkLeftSwipeID';
 const String darkRightSwipeIDKey = 'darkRightSwipeID';
+
 const String lightLeftSwipeIDKey = 'lightLeftSwipeID';
 const String lightRightSwipeIDKey = 'lightRightSwipeID';
 
@@ -122,49 +124,45 @@ const Map<String, Type> limLauncherKeys = <String, Type>{
 
 // Design //
 
-const String darkUseOSKey = 'darkUseOS';
-const String lightUseOSKey = 'lightUseOS';
-
 const String darkListLabelTypeKey = 'darkListLabelType';
 const String darkListIconKey = 'darkListIcon';
-const String lightListLabelTypeKey = 'lightListLabelType';
-const String lightListIconKey = 'lightListIcon';
-
 const String darkFolderLabelTypeKey = 'darkFolderLabelType';
 const String darkFolderIconKey = 'darkFolderIcon';
+
+const String lightListLabelTypeKey = 'lightListLabelType';
+const String lightListIconKey = 'lightListIcon';
 const String lightFolderLabelTypeKey = 'lightFolderLabelType';
 const String lightFolderIconKey = 'lightFolderIcon';
 
-/// Wallpaper and app tile settings
-const Map<String, Type> limDesignKeys = <String, Type>{
-  // Wallpaper
-  darkUseOSKey: bool,
-  lightUseOSKey: bool,
-
-  // App
-  darkListLabelTypeKey: String,
-  darkListIconKey: bool,
-  lightListLabelTypeKey: String,
-  lightListIconKey: bool,
-
-  // Folder
-  darkFolderLabelTypeKey: String,
-  darkFolderIconKey: bool,
-  lightFolderLabelTypeKey: String,
-  lightFolderIconKey: bool,
-};
-
-// Layout //
+const String darkUseOSKey = 'darkUseOS';
+const String lightUseOSKey = 'lightUseOS';
 
 const String darkHorizontalAlignKey = 'darkHorizontalAlign';
 const String darkVerticalAlignKey = 'darkVerticalAlign';
+
 const String lightHorizontalAlignKey = 'lightHorizontalAlign';
 const String lightVerticalAlignKey = 'lightVerticalAlign';
 
-/// List/page alignment keys
-const Map<String, Type> limLayoutKeys = <String, Type>{
+/// Wallpaper and app tile settings
+const Map<String, Type> limDesignKeys = <String, Type>{
+  // Button
+  darkListLabelTypeKey: String,
+  darkListIconKey: bool,
+  darkFolderLabelTypeKey: String,
+  darkFolderIconKey: bool,
+
+  lightListLabelTypeKey: String,
+  lightListIconKey: bool,
+  lightFolderLabelTypeKey: String,
+  lightFolderIconKey: bool,
+
+  // Page
+  darkUseOSKey: bool,
+  lightUseOSKey: bool,
+
   darkHorizontalAlignKey: String,
   darkVerticalAlignKey: String,
+
   lightHorizontalAlignKey: String,
   lightVerticalAlignKey: String,
 };
@@ -177,7 +175,6 @@ const Map<String, Type> allLimKeys = <String, Type>{
   ...limBTSKeys,
   ...limLauncherKeys,
   ...limDesignKeys,
-  ...limLayoutKeys,
 };
 
 /// [EzConfig.init] passthrough
@@ -192,7 +189,7 @@ final Map<String, Object> liminalDefault = <String, Object>{
 
   // BTS //
 
-  // For dev
+  // Intro
   shownIntroKey: false,
 
   // ID lists
@@ -211,6 +208,7 @@ final Map<String, Object> liminalDefault = <String, Object>{
   darkHideStatusKey: false,
   darkHomeTimeKey: true,
   darkHomeDateKey: DateType.medium.value,
+
   lightHideStatusKey: false,
   lightHomeTimeKey: true,
   lightHomeDateKey: DateType.compact.value,
@@ -218,6 +216,7 @@ final Map<String, Object> liminalDefault = <String, Object>{
   // Quick launch
   darkLeftSwipeIDKey: '',
   darkRightSwipeIDKey: '',
+
   lightLeftSwipeIDKey: '',
   lightRightSwipeIDKey: '',
 
@@ -231,23 +230,22 @@ final Map<String, Object> liminalDefault = <String, Object>{
 
   // Design //
 
-  darkUseOSKey: true,
-  lightUseOSKey: true,
-
   darkListLabelTypeKey: LabelType.full.value,
   darkListIconKey: false,
-  lightListLabelTypeKey: LabelType.full.value,
-  lightListIconKey: true,
-
   darkFolderLabelTypeKey: LabelType.initials.value,
   darkFolderIconKey: false,
+
+  lightListLabelTypeKey: LabelType.full.value,
+  lightListIconKey: true,
   lightFolderLabelTypeKey: LabelType.none.value,
   lightFolderIconKey: true,
 
-  // Layout //
+  darkUseOSKey: true,
+  lightUseOSKey: true,
 
   darkHorizontalAlignKey: ListAlignment.center.value,
   darkVerticalAlignKey: ListAlignment.start.value,
+
   lightHorizontalAlignKey: ListAlignment.center.value,
   lightVerticalAlignKey: ListAlignment.start.value,
 };
