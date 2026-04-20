@@ -4,7 +4,6 @@
  */
 
 import '../screens/export.dart';
-import '../utils/export.dart';
 
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
@@ -50,18 +49,3 @@ class SettingsFAB extends FloatingActionButton {
           child: EzIcon(Icons.settings),
         );
 }
-
-/// [FloatingActionButton] list for the settings screens
-List<Widget> settingsFABs(BuildContext context, {bool home = false}) =>
-    <Widget>[
-      EzConfig.spacer,
-      EzConfigFAB(
-        context,
-        appName: appName,
-        androidPackage: androidPackage,
-      ),
-      if (EzConfig.showBackFAB && ezRootNav.currentState!.canPop()) ...<Widget>[
-        EzConfig.spacer,
-        EzBackFAB(showHome: home),
-      ],
-    ];
