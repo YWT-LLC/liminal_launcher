@@ -71,9 +71,9 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
     ListAlignment horizAlign = hAlign;
     ListAlignment vertAlign = vAlign;
 
-    // Return the build //
-
     const double sizeMod = 0.333;
+
+    // Return the build //
 
     return Column(
       mainAxisSize: MainAxisSize.min,
