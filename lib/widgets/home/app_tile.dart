@@ -84,8 +84,6 @@ class _AppTileState extends State<AppTile> {
 
   @override
   Widget build(BuildContext context) {
-    final double appIconSize = (EzConfig.iconSize * 1.25) + EzConfig.padding;
-
     return Visibility(
       visible: rippleThrottle == null,
       maintainSize: true,
