@@ -231,9 +231,9 @@ final Map<String, Object> liminalDefault = <String, Object>{
   // Design //
 
   darkListLabelTypeKey: LabelType.full.value,
-  darkListIconKey: false,
-  darkFolderLabelTypeKey: LabelType.initials.value,
-  darkFolderIconKey: false,
+  darkListIconKey: true,
+  darkFolderLabelTypeKey: LabelType.none.value,
+  darkFolderIconKey: true,
 
   lightListLabelTypeKey: LabelType.full.value,
   lightListIconKey: true,
