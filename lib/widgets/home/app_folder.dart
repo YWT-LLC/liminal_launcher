@@ -14,17 +14,32 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class AppFolder extends StatefulWidget {
   final int index;
+  final List<String> items;
+
+  late final String name;
+  late final List<String> appList;
+  late final Set<String> appSet;
+
+  /// true: individual edits
+  /// false: not editing
+  /// null: all folders are being edited
+  /// Quantum supremacy
   final bool? editing;
-  final void Function() refresh;
+
+  final void Function() onEdit;
   final ValueNotifier<double>? rippleProgress;
 
-  const AppFolder({
+  AppFolder({
     super.key,
     required this.index,
     required this.editing,
-    required this.refresh,
+    required this.onEdit,
     this.rippleProgress,
-  });
+  }) : items = appInfo.homeList[index].split(folderSplit) {
+    name = items[0];
+    appList = (items[1] == emptyTag) ? <String>[] : items.sublist(1);
+    appSet = appList.toSet();
+  }
 
   @override
   State<AppFolder> createState() => _AppFolderState();
@@ -33,15 +48,6 @@ class AppFolder extends StatefulWidget {
 class _AppFolderState extends State<AppFolder> {
   // Define the build data //
 
-  late int index = widget.index;
-  late List<String> items = appInfo.homeList[index].split(folderSplit);
-
-  late String name = items[0];
-
-  late List<String> appList =
-      (items[1] == emptyTag) ? <String>[] : items.sublist(1);
-  late Set<String> appSet = appList.toSet();
-
   bool open = false;
   late bool? editing = widget.editing;
   Timer? rippleThrottle;
@@ -49,19 +55,6 @@ class _AppFolderState extends State<AppFolder> {
   // Define custom functions //
 
   void toggleOpen() => setState(() => open = !open);
-
-  void refreshFolder() {
-    items = appInfo.homeList[index].split(folderSplit);
-    name = items[0];
-    appList = (items[1] == emptyTag) ? <String>[] : items.sublist(1);
-    appSet = appList.toSet();
-    if (mounted) setState(() {});
-  }
-
-  void refreshAll() {
-    widget.refresh();
-    refreshFolder();
-  }
 
   void rippling() {
     if (rippleThrottle != null ||
@@ -92,16 +85,14 @@ class _AppFolderState extends State<AppFolder> {
     widget.rippleProgress?.addListener(rippling);
   }
 
+  // Return the build //
+
   @override
   Widget build(BuildContext context) {
-    // Gather the contextual theme data //
-
     final EdgeInsets colPadding =
         EdgeInsets.symmetric(vertical: EzConfig.spacing / 2);
     final EdgeInsets rowPadding =
         EdgeInsets.symmetric(horizontal: EzConfig.spacing / 2);
-
-    // Return the build //
 
     if (editing != false) {
       return Visibility(
@@ -117,7 +108,7 @@ class _AppFolderState extends State<AppFolder> {
           children: <Widget>[
             // Name
             EzText(
-              name,
+              widget.name,
               style: EzConfig.styles.bodyLarge,
               textAlign: TextAlign.center,
             ),
@@ -129,18 +120,18 @@ class _AppFolderState extends State<AppFolder> {
               onPressed: () => context.goNamed(
                 appListPath,
                 extra: listData(
-                  listCheck: (String id) => !appSet.contains(id),
-                  onSelected: (String id) async {
-                    final int? indexMod = await appInfo.addToFolder(id, index);
-
-                    if (indexMod != null) index += indexMod;
-                  },
-                  refresh: refreshAll,
+                  listCheck: (String id) => !widget.appSet.contains(id),
+                  onSelected: (String id) =>
+                      appInfo.addToFolder(id, widget.index),
+                  refresh: widget.onEdit,
                   autoRefresh: true,
                   icon: EzTextBackground(EzRow(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Text('$name\t', style: EzConfig.styles.labelLarge),
+                      Text(
+                        '${widget.name}\t',
+                        style: EzConfig.styles.labelLarge,
+                      ),
                       EzIcon(
                         Icons.add,
                         color: EzConfig.colors.onSurface,
@@ -167,11 +158,11 @@ class _AppFolderState extends State<AppFolder> {
                     if (validateRename(name) != null) return null;
 
                     final bool success =
-                        await appInfo.renameFolder(name, index);
+                        await appInfo.renameFolder(name, widget.index);
 
                     if (success) {
                       if (dContext.mounted) Navigator.of(dContext).pop(name);
-                      refreshAll();
+                      widget.onEdit();
                     }
                   }
 
@@ -181,7 +172,10 @@ class _AppFolderState extends State<AppFolder> {
                   }
 
                   return EzAlertDialog(
-                    title: Text("Rename '$name'?", textAlign: TextAlign.center),
+                    title: Text(
+                      "Rename '${widget.name}'?",
+                      textAlign: TextAlign.center,
+                    ),
                     content: Form(
                       child: TextFormField(
                         controller: renameController,
@@ -209,7 +203,7 @@ class _AppFolderState extends State<AppFolder> {
             EzConfig.rowSpacer,
 
             // Edit apps
-            if (appSet.isNotEmpty) ...<Widget>[
+            if (widget.appSet.isNotEmpty) ...<Widget>[
               EzIconButton(
                 icon: const Icon(Icons.edit),
                 onPressed: () => ezModal(
@@ -221,8 +215,9 @@ class _AppFolderState extends State<AppFolder> {
                           if (oldIndex == newIndex) return;
 
                           // Local UI update first
-                          final String toMove = appList.removeAt(oldIndex);
-                          appList.insert(
+                          final String toMove =
+                              widget.appList.removeAt(oldIndex);
+                          widget.appList.insert(
                             oldIndex < newIndex ? newIndex - 1 : newIndex,
                             toMove,
                           );
@@ -234,10 +229,10 @@ class _AppFolderState extends State<AppFolder> {
                             newIndex: newIndex + 1,
                             folderIndex: widget.index,
                           );
-                          refreshFolder();
+                          widget.onEdit();
                           setModal(() {});
                         },
-                        children: appList
+                        children: widget.appList
                             .map((String id) {
                               final AppInfo? app = appInfo.appMap[id];
                               if (app == null) return null;
@@ -265,7 +260,7 @@ class _AppFolderState extends State<AppFolder> {
                                       onPressed: () async {
                                         await appInfo.removeFromFolder(
                                             id, widget.index);
-                                        refreshAll();
+                                        widget.onEdit();
                                         setModal(() {});
                                       },
                                     ),
@@ -295,12 +290,13 @@ class _AppFolderState extends State<AppFolder> {
               icon: const Icon(Icons.delete),
               onPressed: () async {
                 final bool success = await appInfo.deleteFolder(
-                  appList.isEmpty
-                      ? '$name$folderSplit$emptyTag'
-                      : <String>[name, ...appList].join(folderSplit),
+                  widget.appList.isEmpty
+                      ? '${widget.name}$folderSplit$emptyTag'
+                      : <String>[widget.name, ...widget.appList]
+                          .join(folderSplit),
                 );
 
-                if (success) widget.refresh();
+                if (success) widget.onEdit();
               },
             ),
 
@@ -336,7 +332,7 @@ class _AppFolderState extends State<AppFolder> {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: hAlign.mainAxis,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: appList
+                children: widget.appList
                         .map((String id) {
                           final AppInfo? app = appInfo.appMap[id];
                           if (app == null) return null;
@@ -348,7 +344,7 @@ class _AppFolderState extends State<AppFolder> {
                               onHomeScreen: null,
                               onSelected: (String id) => launchApp(id),
                               editing: editing,
-                              refresh: refreshAll,
+                              onEdit: widget.onEdit,
                             ),
                           );
                         })
@@ -363,7 +359,7 @@ class _AppFolderState extends State<AppFolder> {
             )
           : (folderIcons
               ? EzTextIconButton(
-                  label: buildLabel(name, folderLabels),
+                  label: buildLabel(widget.name, folderLabels),
                   icon: Icon(
                     Icons.folder_open,
                     size: EzConfig.iconSize + EzConfig.padding,
@@ -374,7 +370,7 @@ class _AppFolderState extends State<AppFolder> {
                   onLongPress: () => setState(() => editing = true),
                 )
               : EzTextButton(
-                  text: name,
+                  text: widget.name,
                   style: TextButton.styleFrom(
                       padding: EzInsets.wrap(EzConfig.marginVal)),
                   onPressed: toggleOpen,

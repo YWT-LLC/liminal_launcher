@@ -62,12 +62,13 @@ class _HomeScreenState extends State<HomeScreen>
           child: AppFolder(
             index: index,
             editing: editing ? null : false,
-            refresh: refresh,
+            onEdit: refresh,
             rippleProgress: rippleProgress,
           ),
         ));
       } else {
         final AppInfo app = appInfo.appMap[parts[0]] ?? nullApp;
+
         tileList.add(Padding(
           key: ValueKey<String>(app.id),
           padding: tilePadding,
@@ -76,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen>
             onHomeScreen: true,
             onSelected: (String id) => launchApp(id),
             editing: editing ? null : false,
-            refresh: refresh,
+            onEdit: refresh,
             rippleProgress: rippleProgress,
           ),
         ));
@@ -433,8 +434,8 @@ If you want to support Liminal's development, or the development of more Empathe
               EzConfig.spacer,
 
               // Add folder
-              AddFolderFAB(context, () {
-                appInfo.addHomeFolder();
+              AddFolderFAB(context, () async {
+                await appInfo.addHomeFolder();
                 refresh();
               }),
               EzConfig.spacer,

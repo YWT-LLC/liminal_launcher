@@ -22,7 +22,7 @@ class AppTile extends StatefulWidget {
   final Future<void> Function(String id) onSelected;
   final bool editable;
   final bool? editing;
-  final void Function() refresh;
+  final void Function() onEdit;
   final ValueNotifier<double>? rippleProgress;
 
   const AppTile({
@@ -32,7 +32,7 @@ class AppTile extends StatefulWidget {
     required this.onSelected,
     this.editable = true,
     required this.editing,
-    required this.refresh,
+    required this.onEdit,
     this.rippleProgress,
   });
 
@@ -141,7 +141,7 @@ class _AppTileState extends State<AppTile> {
 
                       if (success) {
                         setState(() => editing = false);
-                        widget.refresh();
+                        widget.onEdit();
                       }
                     },
                     icon: const Icon(Icons.add_to_home_screen),
@@ -158,7 +158,7 @@ class _AppTileState extends State<AppTile> {
 
                       if (success) {
                         setState(() => editing = false);
-                        widget.refresh();
+                        widget.onEdit();
                       }
                     },
                     icon: const Icon(Icons.remove),
@@ -173,7 +173,7 @@ class _AppTileState extends State<AppTile> {
                     if (widget.onHomeScreen == false && context.mounted) {
                       Navigator.of(context).pop();
                     }
-                    widget.refresh();
+                    widget.onEdit();
                   },
                   icon: const Icon(Icons.info),
                 ),
@@ -200,7 +200,7 @@ class _AppTileState extends State<AppTile> {
                           if (dContext.mounted) {
                             Navigator.of(dContext).pop(name);
                           }
-                          widget.refresh();
+                          widget.onEdit();
                         }
                       }
 
@@ -250,7 +250,7 @@ class _AppTileState extends State<AppTile> {
 
                     if (result) {
                       setState(() => editing = false);
-                      widget.refresh();
+                      widget.onEdit();
                     }
                   },
                   icon: Icon(
@@ -269,7 +269,7 @@ class _AppTileState extends State<AppTile> {
 
                     if (banished) {
                       setState(() => editing = false);
-                      widget.refresh();
+                      widget.onEdit();
                     }
                   },
                   icon: const Icon(LineIcons.ghost),
@@ -285,7 +285,7 @@ class _AppTileState extends State<AppTile> {
                       if (deleted) {
                         setState(() => editing = false);
                         await appInfo.removeDeleted(widget.app.id);
-                        widget.refresh();
+                        widget.onEdit();
                       }
                     },
                     icon: const Icon(Icons.delete),

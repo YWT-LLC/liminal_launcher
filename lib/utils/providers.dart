@@ -217,24 +217,19 @@ class AppInfoProvider extends ChangeNotifier {
     return true;
   }
 
-  Future<int?> addToFolder(String appID, int folderIndex) async {
-    int toReturn = 0;
+  Future<void> addToFolder(String appID, int folderIndex) async {
     _homeList[folderIndex] = (homeList[folderIndex] + folderSplit + appID)
         .replaceAll(folderSplit + emptyTag, '');
 
     if (_homeSet.contains(appID)) {
       final int appIndex = _homeList.indexOf(appID);
       _homeList.removeAt(appIndex);
-
-      if (appIndex < folderIndex) toReturn = -1;
     } else {
       _homeSet.add(appID);
     }
 
     await EzConfig.setStringList(homeIDsKey, _homeList);
     notifyListeners();
-
-    return toReturn;
   }
 
   Future<bool> removeFromFolder(String appID, int folderIndex) async {
