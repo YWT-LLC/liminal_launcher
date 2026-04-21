@@ -148,7 +148,7 @@ class AppearanceSettingsScreen extends StatelessWidget {
                     EzConfig.spacer,
                   ],
 
-                  // Use OS switch
+                  // Use OS switch TODO: smush this switch into a custom clear it/reset it/etc
                   EzSwitchPair(
                     text: 'Use System Wallpaper',
                     valueKey: EzConfig.isDark ? darkUseOSKey : lightUseOSKey,
