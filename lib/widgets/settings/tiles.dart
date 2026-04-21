@@ -9,9 +9,13 @@ import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class AppTileSetting extends StatelessWidget {
-  /// true == folder tile setting
-  /// false == list tile setting
   final bool folder;
+
+  final String darkLabelKey;
+  final String lightLabelKey;
+
+  final String darkIconKey;
+  final String lightIconKey;
 
   /// [EzConfig.rebuildUI] passthrough
   final void Function() onComplete;
@@ -20,44 +24,60 @@ class AppTileSetting extends StatelessWidget {
     super.key,
     required this.folder,
     required this.onComplete,
-  });
+  })  : darkLabelKey = folder ? darkFolderLabelTypeKey : darkListLabelTypeKey,
+        lightLabelKey =
+            folder ? lightFolderLabelTypeKey : lightListLabelTypeKey,
+        darkIconKey = folder ? darkFolderIconKey : darkListIconKey,
+        lightIconKey = folder ? lightFolderIconKey : lightListIconKey;
 
   @override
   Widget build(BuildContext context) {
-    final String darkLabelKey =
-        folder ? darkFolderLabelTypeKey : darkListLabelTypeKey;
-    final String lightLabelKey =
-        folder ? lightFolderLabelTypeKey : lightListLabelTypeKey;
-
-    final String darkIconKey = folder ? darkFolderIconKey : darkListIconKey;
-    final String lightIconKey = folder ? lightFolderIconKey : lightListIconKey;
+    final EdgeInsets padding = EzInsets.wrap(EzConfig.marginVal);
 
     return EzElevatedIconButton(
       onPressed: () async {
         LabelType labelType = folder ? folderLabels : listLabels;
         bool showIcon = folder ? folderIcons : listIcons;
+        bool useWide = wideTiles;
 
         await ezModal(
           context: context,
           builder: (_) => StatefulBuilder(
-            builder: (_, StateSetter setModal) => EzScrollView(
+            builder: (BuildContext mContext, StateSetter setModal) =>
+                EzScrollView(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 // Preview
-                showIcon
-                    ? EzTextIconButton(
-                        icon: const Icon(Icons.settings),
-                        label: folder
-                            ? buildLabel('Folder app', labelType)
-                            : buildLabel('List app', labelType),
-                        onPressed: doNothing,
-                      )
-                    : EzTextButton(
-                        text: folder
-                            ? buildLabel('Folder app', labelType)
-                            : buildLabel('List app', labelType),
-                        onPressed: doNothing,
-                      ),
+                Container(
+                  constraints: useWide
+                      ? const BoxConstraints(minWidth: double.infinity)
+                      : null,
+                  child: showIcon
+                      ? folder
+                          ? EzTextIconButton(
+                              icon: Icon(Icons.folder, size: appIconSize),
+                              label: buildLabel('Liminal Folder', labelType),
+                              style: TextButton.styleFrom(padding: padding),
+                              onPressed: doNothing,
+                            )
+                          : EzTextIconButton(
+                              icon: Icon(Icons.launch, size: appIconSize),
+                              label: buildLabel('Liminal Launcher', labelType),
+                              style: TextButton.styleFrom(padding: padding),
+                              onPressed: doNothing,
+                            )
+                      : folder
+                          ? EzTextButton(
+                              text: buildLabel('Liminal Folder', labelType),
+                              style: TextButton.styleFrom(padding: padding),
+                              onPressed: doNothing,
+                            )
+                          : EzTextButton(
+                              text: buildLabel('Liminal Launcher', labelType),
+                              style: TextButton.styleFrom(padding: padding),
+                              onPressed: doNothing,
+                            ),
+                ),
                 EzConfig.spacer,
 
                 // Label type
@@ -100,17 +120,21 @@ class AppTileSetting extends StatelessWidget {
                 ),
                 EzConfig.separator,
 
-                // Local reset
-                EzElevatedIconButton(
-                  onPressed: () {
-                    showIcon = EzConfig.getDefault(
-                        EzConfig.isDark ? darkIconKey : lightIconKey);
-                    labelType = LabelTypeConfig.lookup(EzConfig.getDefault(
-                        EzConfig.isDark ? darkLabelKey : lightLabelKey));
-                    setModal(() {});
+                // Wide tiles
+                EzSwitchPair(
+                  text: 'Use max width (shared)',
+                  valueKey:
+                      EzConfig.isDark ? darkWideTilesKey : lightWideTilesKey,
+                  afterChanged: (bool? choice) async {
+                    if (choice == null) return;
+                    if (EzConfig.updateBoth) {
+                      await EzConfig.setBool(
+                        EzConfig.isDark ? lightWideTilesKey : darkWideTilesKey,
+                        choice,
+                      );
+                    }
+                    setModal(() => useWide = choice);
                   },
-                  icon: const Icon(Icons.refresh),
-                  label: EzConfig.l10n.gReset,
                 ),
                 EzConfig.separator,
               ],
@@ -119,7 +143,8 @@ class AppTileSetting extends StatelessWidget {
         );
 
         if (labelType != (folder ? folderLabels : listLabels) ||
-            showIcon != (folder ? folderIcons : listIcons)) {
+            showIcon != (folder ? folderIcons : listIcons) ||
+            useWide != wideTiles) {
           if (EzConfig.updateBoth || EzConfig.isDark) {
             await EzConfig.setString(darkLabelKey, labelType.value);
             await EzConfig.setBool(darkIconKey, showIcon);
@@ -133,8 +158,8 @@ class AppTileSetting extends StatelessWidget {
           await EzConfig.rebuildUI(onComplete);
         }
       },
-      icon: const Icon(Icons.edit),
-      label: 'List apps',
+      icon: const Icon(Icons.settings),
+      label: '${folder ? 'Folder' : 'List'} tiles',
     );
   }
 }
