@@ -43,6 +43,7 @@ class AppearanceSettingsScreen extends StatelessWidget {
                 appName: appName,
                 androidPackage: androidPackage,
                 resetTitle: () => 'Reset all appearance settings?',
+                inDistress: const <String>{},
               ),
             ),
 
@@ -76,13 +77,50 @@ class AppearanceSettingsScreen extends StatelessWidget {
                 pageTab: advanced,
                 onUpdate: doNothing,
                 includeBackgroundImage: false,
-                appendButton: <Widget>[
-                  EzConfig.spacer,
-
+                prependButton: <Widget>[
                   // Tile settings
                   const AppTileSetting(folder: false, onComplete: doNothing),
                   EzConfig.spacer,
                   const AppTileSetting(folder: true, onComplete: doNothing),
+
+                  // TODO: fix background on always underline -> should consume not be always on
+                  EzConfig.separator,
+                ],
+                prependPage: <Widget>[
+                  // Page alignment
+                  EzElevatedIconButton(
+                    onPressed: () async {
+                      final ListAlignment hBackup = hAlign;
+                      final ListAlignment vBackup = vAlign;
+
+                      await ezModal(
+                        context: context,
+                        builder: (_) => EzScrollView(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            const AlignmentSelectors(),
+                            EzConfig.separator,
+                          ],
+                        ),
+                      );
+
+                      if (hBackup !=
+                              ListAlignmentConfig.lookup(EzConfig.get(
+                                  EzConfig.isDark
+                                      ? darkHorizontalAlignKey
+                                      : lightHorizontalAlignKey)) ||
+                          vBackup !=
+                              ListAlignmentConfig.lookup(EzConfig.get(
+                                  EzConfig.isDark
+                                      ? darkVerticalAlignKey
+                                      : lightVerticalAlignKey))) {
+                        await EzConfig.redrawUI(doNothing);
+                      }
+                    },
+                    label: 'Alignment',
+                    icon: const Icon(Icons.grid_3x3),
+                  ),
+                  EzConfig.spacer,
                 ],
                 appendPage: <Widget>[
                   EzConfig.spacer,
@@ -119,44 +157,7 @@ class AppearanceSettingsScreen extends StatelessWidget {
                       await EzConfig.rebuildUI(doNothing);
                     },
                   ),
-                  EzConfig.separator,
-
-                  // Page alignment
-                  EzElevatedIconButton(
-                    onPressed: () async {
-                      final ListAlignment hBackup = hAlign;
-                      final ListAlignment vBackup = vAlign;
-
-                      await ezModal(
-                        context: context,
-                        builder: (_) => EzScrollView(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            const AlignmentSelectors(),
-                            EzConfig.separator,
-                          ],
-                        ),
-                      );
-
-                      if (hBackup !=
-                              ListAlignmentConfig.lookup(EzConfig.get(
-                                  EzConfig.isDark
-                                      ? darkHorizontalAlignKey
-                                      : lightHorizontalAlignKey)) ||
-                          vBackup !=
-                              ListAlignmentConfig.lookup(EzConfig.get(
-                                  EzConfig.isDark
-                                      ? darkVerticalAlignKey
-                                      : lightVerticalAlignKey))) {
-                        await EzConfig.redrawUI(doNothing);
-                      }
-                    },
-                    label: 'Page alignment',
-                    icon: const Icon(Icons.home),
-                  ),
-                  EzConfig.spacer,
                 ],
-                resetSpacerPage: EzConfig.divider,
                 appName: appName,
                 androidPackage: androidPackage,
               ),
