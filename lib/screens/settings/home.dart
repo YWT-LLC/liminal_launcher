@@ -9,6 +9,7 @@ import '../../widgets/export.dart';
 
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
@@ -60,10 +61,6 @@ class _HeaderSettings extends StatelessWidget {
       label: 'Home header',
       icon: const Icon(LineIcons.clock),
       onPressed: () async {
-        final String statusKey =
-            EzConfig.isDark ? darkHideStatusKey : lightHideStatusKey;
-        final bool backupStatus = EzConfig.get(statusKey);
-
         final String timeKey =
             EzConfig.isDark ? darkHomeTimeKey : lightHomeTimeKey;
         final bool backupTime = EzConfig.get(timeKey);
@@ -81,13 +78,26 @@ class _HeaderSettings extends StatelessWidget {
               // Hide status bar
               EzSwitchPair(
                 text: 'Hide status bar',
-                valueKey: statusKey,
+                valueKey:
+                    EzConfig.isDark ? darkHideStatusKey : lightHideStatusKey,
                 afterChanged: (bool? choice) async {
                   if (choice == null) return;
                   if (EzConfig.updateBoth) {
                     await EzConfig.setBool(
                       EzConfig.isDark ? lightHideStatusKey : darkHideStatusKey,
                       choice,
+                    );
+                  }
+
+                  if (choice == true) {
+                    await SystemChrome.setEnabledSystemUIMode(
+                      SystemUiMode.manual,
+                      overlays: <SystemUiOverlay>[SystemUiOverlay.bottom],
+                    );
+                  } else {
+                    await SystemChrome.setEnabledSystemUIMode(
+                      SystemUiMode.manual,
+                      overlays: SystemUiOverlay.values,
                     );
                   }
                 },
@@ -157,8 +167,7 @@ class _HeaderSettings extends StatelessWidget {
           ),
         );
 
-        if (backupStatus != EzConfig.get(statusKey) ||
-            backupTime != EzConfig.get(timeKey) ||
+        if (backupTime != EzConfig.get(timeKey) ||
             backupDate != DateTypeConfig.lookup(EzConfig.get(dateKey))) {
           await EzConfig.rebuildUI(doNothing);
         }
