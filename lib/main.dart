@@ -21,7 +21,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await SystemChrome.setPreferredOrientations(
-      <DeviceOrientation>[DeviceOrientation.portraitUp]);
+    <DeviceOrientation>[DeviceOrientation.portraitUp],
+  );
 
   EzConfig.init(
     assetPaths: assetPaths,
@@ -105,65 +106,44 @@ class _TheMagic extends StatelessWidget {
       routerConfig: GoRouter(
         navigatorKey: ezRootNav,
         initialLocation: homePath,
-        errorBuilder: (_, GoRouterState state) => ErrorScreen(state.error),
+        errorBuilder: (_, GoRouterState rs) => ErrorScreen(rs.error),
         routes: <RouteBase>[
           // Home
           GoRoute(
             path: homePath,
             name: homePath,
-            pageBuilder: (BuildContext context, GoRouterState state) =>
-                ezPageBuilder(context, state, HomeScreen()),
+            pageBuilder: (BuildContext pbc, GoRouterState rs) =>
+                ezPageBuilder(pbc, rs, HomeScreen()),
             routes: <RouteBase>[
               // App list
               GoRoute(
                 path: appListPath,
                 name: appListPath,
-                pageBuilder: (BuildContext context, GoRouterState state) {
-                  final Map<String, dynamic> listData =
-                      state.extra as Map<String, dynamic>;
-
-                  return ezPageBuilder(
-                    context,
-                    state,
-                    AppListScreen(
-                      listCheck: listData[ListData.listCheck.key],
-                      onSelected: listData[ListData.onSelected.key],
-                      refresh: listData[ListData.refresh.key],
-                      autoRefresh: listData[ListData.autoRefresh.key],
-                      editable: listData[ListData.editable.key],
-                      icon: listData[ListData.icon.key],
-                    ),
-                    transitionsBuilder: (
-                      BuildContext context,
-                      Animation<double> animation,
-                      Animation<double> secondaryAnimation,
-                      Widget child,
-                    ) =>
-                        ezTransitionsBuilder(
-                      context,
-                      animation,
-                      secondaryAnimation,
-                      child,
-                      force: EzPageTransition.slideY,
-                    ),
-                  );
-                },
+                pageBuilder: (BuildContext pbc, GoRouterState rs) =>
+                    ezPageBuilder(
+                  pbc,
+                  rs,
+                  AppListScreen(rs.extra as ListConfig),
+                  transitionsBuilder: (BuildContext tbc, Animation<double> a,
+                          Animation<double> aa, Widget w) =>
+                      ezTransitionsBuilder(tbc, a, aa, w,
+                          force: EzPageTransition.slideY),
+                ),
               ),
 
               // Settings home
               GoRoute(
                 path: settingsHomePath,
                 name: settingsHomePath,
-                pageBuilder: (BuildContext context, GoRouterState state) =>
-                    ezPageBuilder(context, state, SettingsHomeScreen()),
+                pageBuilder: (BuildContext pbc, GoRouterState rs) =>
+                    ezPageBuilder(pbc, rs, SettingsHomeScreen()),
                 routes: <RouteBase>[
                   // Appearance settings
                   GoRoute(
                     path: appearanceSettingsPath,
                     name: appearanceSettingsPath,
-                    pageBuilder: (BuildContext context, GoRouterState state) =>
-                        ezPageBuilder(
-                            context, state, AppearanceSettingsScreen()),
+                    pageBuilder: (BuildContext pbc, GoRouterState rs) =>
+                        ezPageBuilder(pbc, rs, AppearanceSettingsScreen()),
                   ),
                 ],
               ),
