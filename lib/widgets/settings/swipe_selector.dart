@@ -69,7 +69,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
           showIcon: listIcons,
           onPressed: () => context.pushNamed(
             appListPath,
-            extra: listData(
+            extra: ListConfig(
               listCheck: (String id) => true,
               onSelected: (String id) async {
                 final AppInfo? newApp = appInfo.appMap[id];
@@ -86,8 +86,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
                 setState(() => app = newApp);
                 if (context.mounted) Navigator.of(context).pop();
               },
-              refresh: () => setState(() {}),
-              icon: EzText(
+              title: EzText(
                 'Selecting $lowDir swipe',
                 style: EzConfig.styles.labelLarge,
               ),

@@ -25,13 +25,6 @@ class _HomeScreenState extends State<HomeScreen>
     with AfterLayoutMixin<HomeScreen> {
   // Define the fixed build data //
 
-  late final Map<String, dynamic> appListData = listData(
-    listCheck: (String id) =>
-        !appInfo.hiddenSet.contains(id) && !appInfo.banishedSet.contains(id),
-    onSelected: (String id) => launchApp(id),
-    refresh: refresh,
-  );
-
   bool atBottom = false;
   bool editing = false;
 
@@ -109,10 +102,10 @@ class _HomeScreenState extends State<HomeScreen>
     if (context.mounted) {
       context.goNamed(
         appListPath,
-        extra: listData(
+        extra: ListConfig(
           listCheck: (String id) => appInfo.hiddenSet.contains(id),
           onSelected: (String id) => launchApp(id),
-          icon: EzTextBackground(EzRow(
+          title: EzTextBackground(EzRow(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text('Hidden\t', style: EzConfig.styles.labelLarge),
@@ -122,7 +115,6 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ],
           )),
-          refresh: refresh,
         ),
       );
     }
@@ -294,7 +286,16 @@ If you want to support Liminal's development, or the development of more Empathe
               if (editing) {
                 await navToHidden(context);
               } else {
-                context.goNamed(appListPath, extra: appListData);
+                context.goNamed(
+                  appListPath,
+                  extra: ListConfig(
+                    listCheck: (String id) =>
+                        !appInfo.hiddenSet.contains(id) &&
+                        !appInfo.banishedSet.contains(id),
+                    onSelected: (String id) => launchApp(id),
+                    title: null,
+                  ),
+                );
               }
             }
           }
@@ -342,7 +343,16 @@ If you want to support Liminal's development, or the development of more Empathe
                       if (editing) {
                         navToHidden(context);
                       } else {
-                        context.goNamed(appListPath, extra: appListData);
+                        context.goNamed(
+                          appListPath,
+                          extra: ListConfig(
+                            listCheck: (String id) =>
+                                !appInfo.hiddenSet.contains(id) &&
+                                !appInfo.banishedSet.contains(id),
+                            onSelected: (String id) => launchApp(id),
+                            title: null,
+                          ),
+                        );
                       }
 
                       return true;
@@ -410,15 +420,13 @@ If you want to support Liminal's development, or the development of more Empathe
                 context,
                 () => context.goNamed(
                   appListPath,
-                  extra: listData(
+                  extra: ListConfig(
                     listCheck: (String id) =>
                         !appInfo.homeSet.contains(id) &&
                         !appInfo.hiddenSet.contains(id) &&
                         !appInfo.banishedSet.contains(id),
                     onSelected: (String id) => appInfo.addHomeApp(id),
-                    refresh: refresh,
-                    autoRefresh: true,
-                    icon: EzTextBackground(EzRow(
+                    title: EzTextBackground(EzRow(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Text('Home\t', style: EzConfig.styles.labelLarge),

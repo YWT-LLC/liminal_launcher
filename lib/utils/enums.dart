@@ -12,37 +12,7 @@ import 'package:flutter/material.dart';
 /// Defaults to [Offset.zero]
 Offset lastRipple = Offset.zero;
 
-//* BTS settings *//
-
-// (App)List(Screen)Data //
-
-enum ListData {
-  listCheck,
-  onSelected,
-  refresh,
-  autoRefresh,
-  editable,
-  icon,
-}
-
-extension ListDataConfig on ListData {
-  String get key {
-    switch (this) {
-      case ListData.listCheck:
-        return 'listCheck';
-      case ListData.onSelected:
-        return 'onSelected';
-      case ListData.refresh:
-        return 'refresh';
-      case ListData.autoRefresh:
-        return 'autoRefresh';
-      case ListData.editable:
-        return 'editable';
-      case ListData.icon:
-        return 'icon';
-    }
-  }
-}
+//* Launcher settings *//
 
 // AppList Sort //
 
@@ -87,8 +57,6 @@ extension AppSortConfig on AppSort {
     }
   }
 }
-
-//* Launcher settings *//
 
 // Date type //
 

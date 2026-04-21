@@ -119,13 +119,11 @@ class _AppFolderState extends State<AppFolder> {
               icon: const Icon(Icons.add),
               onPressed: () => context.goNamed(
                 appListPath,
-                extra: listData(
+                extra: ListConfig(
                   listCheck: (String id) => !widget.appSet.contains(id),
                   onSelected: (String id) =>
                       appInfo.addToFolder(id, widget.index),
-                  refresh: widget.onEdit,
-                  autoRefresh: true,
-                  icon: EzTextBackground(EzRow(
+                  title: EzTextBackground(EzRow(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Text(
