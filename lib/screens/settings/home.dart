@@ -26,7 +26,7 @@ class SettingsHomeScreen extends StatelessWidget {
             EzConfig.spacer,
             _AppListSettings(),
             EzConfig.spacer,
-            const EzThemeCoin(),
+            const EzThemeCoin(doNothing),
             EzConfig.divider,
             EzElevatedIconButton(
               onPressed: () => context.goNamed(appearanceSettingsPath),
