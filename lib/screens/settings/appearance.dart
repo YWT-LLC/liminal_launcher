@@ -26,7 +26,8 @@ class AppearanceSettingsScreen extends StatelessWidget {
       builder: (_, EzConfigProvider config, __) => LiminalScaffold(
         EzScreen(EzSettingsHub(
           pages: <EzSettingsSection>[
-            // Global
+            // Global //
+
             EzSettingsSection(
               position: 0,
               title: EzConfig.l10n.gGlobal,
@@ -45,7 +46,8 @@ class AppearanceSettingsScreen extends StatelessWidget {
               ),
             ),
 
-            // Color
+            // Color //
+
             EzSettingsSection(
               position: 1,
               title: EzConfig.l10n.gColor,
@@ -61,7 +63,8 @@ class AppearanceSettingsScreen extends StatelessWidget {
               ),
             ),
 
-            // Design
+            // Design //
+
             EzSettingsSection(
               position: 2,
               title: EzConfig.l10n.gDesign,
@@ -74,9 +77,18 @@ class AppearanceSettingsScreen extends StatelessWidget {
                 onUpdate: doNothing,
                 includeBackgroundImage: false,
                 appendButton: <Widget>[
+                  EzConfig.spacer,
+
+                  // Tile settings
+                  const AppTileSetting(folder: false, onComplete: doNothing),
+                  EzConfig.spacer,
+                  const AppTileSetting(folder: true, onComplete: doNothing),
+                ],
+                appendPage: <Widget>[
+                  EzConfig.spacer,
+
                   // Custom wallpaper
                   if (!useOSWall) ...<Widget>[
-                    EzConfig.spacer,
                     EzScrollView(
                       scrollDirection: Axis.horizontal,
                       startCentered: true,
@@ -95,10 +107,10 @@ class AppearanceSettingsScreen extends StatelessWidget {
                               label: 'Wallpaper',
                             ),
                     ),
+                    EzConfig.spacer,
                   ],
 
                   // Use OS switch
-                  EzConfig.spacer,
                   EzSwitchPair(
                     text: 'Use System Wallpaper',
                     valueKey: EzConfig.isDark ? darkUseOSKey : lightUseOSKey,
@@ -109,14 +121,7 @@ class AppearanceSettingsScreen extends StatelessWidget {
                   ),
                   EzConfig.separator,
 
-                  // Tile settings
-                  const AppTileSetting(folder: false, onComplete: doNothing),
-                  EzConfig.spacer,
-                  const AppTileSetting(folder: true, onComplete: doNothing),
-                  EzConfig.separator,
-                ],
-                appendPage: <Widget>[
-                  EzConfig.spacer,
+                  // Page alignment
                   EzElevatedIconButton(
                     onPressed: () async {
                       final ListAlignment hBackup = hAlign;
@@ -157,7 +162,8 @@ class AppearanceSettingsScreen extends StatelessWidget {
               ),
             ),
 
-            // Text
+            // Text //
+
             EzSettingsSection(
               position: 3,
               title: EzConfig.l10n.gText,
