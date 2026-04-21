@@ -7,42 +7,25 @@ import '../utils/export.dart';
 import '../widgets/export.dart';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-Map<String, dynamic> listData({
-  required bool Function(String id) listCheck,
-  required Future<void> Function(String id) onSelected,
-  required void Function() refresh,
-  bool autoRefresh = false,
-  bool editable = true,
-  Widget? icon,
-}) =>
-    <String, dynamic>{
-      ListData.listCheck.key: listCheck,
-      ListData.onSelected.key: onSelected,
-      ListData.refresh.key: refresh,
-      ListData.autoRefresh.key: autoRefresh,
-      ListData.editable.key: editable,
-      ListData.icon.key: icon,
-    };
-
-class AppListScreen extends StatefulWidget {
-  final bool Function(String) listCheck;
+class ListConfig {
+  final bool Function(String id) listCheck;
   final Future<void> Function(String id) onSelected;
-  final void Function() refresh;
-  final bool autoRefresh;
-  final bool editable;
-  final Widget? icon;
+  final Widget? title;
 
-  AppListScreen({
+  /// How the [AppListScreen] should behave
+  const ListConfig({
     required this.listCheck,
     required this.onSelected,
-    required this.refresh,
-    required this.autoRefresh,
-    required this.editable,
-    this.icon,
-  }) : super(key: ValueKey<int>(EzConfig.seed));
+    required this.title,
+  });
+}
+
+class AppListScreen extends StatefulWidget {
+  final ListConfig config;
+
+  AppListScreen(this.config) : super(key: ValueKey<int>(EzConfig.seed));
 
   @override
   State<AppListScreen> createState() => _AppListScreenState();
@@ -51,11 +34,7 @@ class AppListScreen extends StatefulWidget {
 class _AppListScreenState extends State<AppListScreen> {
   // Define the fixed build data //
 
-  late final AppInfoProvider appProvider =
-      Provider.of<AppInfoProvider>(context);
-
-  late List<AppInfo> appList = getApps();
-  late List<AppInfo> searchList = appList;
+  List<AppInfo> searchList = appInfo.apps;
 
   bool searching = EzConfig.get(autoSearchKey);
   final TextEditingController searchControl = TextEditingController();
@@ -69,22 +48,6 @@ class _AppListScreenState extends State<AppListScreen> {
   bool atBottom = false;
 
   // Define custom functions //
-
-  void refreshList() => setState(() => appList = getApps());
-
-  void refreshAll() {
-    widget.refresh();
-    refreshList();
-  }
-
-  Future<void> onSelected(String id) async {
-    await widget.onSelected(id);
-    if (widget.autoRefresh) refreshAll();
-  }
-
-  List<AppInfo> getApps() => appProvider.apps
-      .where((AppInfo app) => widget.listCheck(app.id))
-      .toList();
 
   List<AppInfo> searchApps(List<AppInfo> appList) => appList
       .where((AppInfo app) =>
@@ -123,7 +86,7 @@ class _AppListScreenState extends State<AppListScreen> {
               mainAxisAlignment: hAlign.mainAxis,
               crossAxisAlignment: vAlign.crossAxis,
               children: <Widget>[
-                // Sort
+                // Sort by...
                 MenuAnchor(
                   builder: (_, MenuController controller, __) => EzIconButton(
                     onPressed: () => controller.isOpen
@@ -132,7 +95,7 @@ class _AppListScreenState extends State<AppListScreen> {
                     icon: const Icon(Icons.sort),
                   ),
                   menuChildren: <EzMenuButton>[
-                    // By name
+                    // Name
                     EzMenuButton(
                       label: 'Name',
                       textAlign: hAlign.textAlign,
@@ -143,12 +106,12 @@ class _AppListScreenState extends State<AppListScreen> {
                           listSortKey,
                           listSort.value,
                         );
-                        appProvider.sort(listSort, ascList);
-
-                        refreshList();
+                        appInfo.sort(listSort, ascList);
+                        setState(() {});
                       },
                     ),
-                    // By publisher
+
+                    // Publisher
                     EzMenuButton(
                       label: 'Publisher',
                       textAlign: hAlign.textAlign,
@@ -159,11 +122,11 @@ class _AppListScreenState extends State<AppListScreen> {
                           listSortKey,
                           listSort.value,
                         );
-                        appProvider.sort(listSort, ascList);
-
-                        refreshList();
+                        appInfo.sort(listSort, ascList);
+                        setState(() {});
                       },
                     ),
+
                     // Install date
                     EzMenuButton(
                       label: 'Install date',
@@ -175,11 +138,11 @@ class _AppListScreenState extends State<AppListScreen> {
                           listSortKey,
                           listSort.value,
                         );
-                        appProvider.sort(listSort, ascList);
-
-                        refreshList();
+                        appInfo.sort(listSort, ascList);
+                        setState(() {});
                       },
                     ),
+
                     // Package size
                     EzMenuButton(
                       label: 'Package size',
@@ -191,9 +154,8 @@ class _AppListScreenState extends State<AppListScreen> {
                           listSortKey,
                           listSort.value,
                         );
-                        appProvider.sort(listSort, ascList);
-
-                        refreshList();
+                        appInfo.sort(listSort, ascList);
+                        setState(() {});
                       },
                     ),
                   ],
@@ -209,9 +171,8 @@ class _AppListScreenState extends State<AppListScreen> {
                     ascList = !ascList;
 
                     await EzConfig.setBool(ascListKey, ascList);
-                    appProvider.sort(listSort, ascList);
-
-                    refreshList();
+                    appInfo.sort(listSort, ascList);
+                    setState(() {});
                   },
                 ),
                 EzConfig.rowSpacer,
@@ -231,10 +192,10 @@ class _AppListScreenState extends State<AppListScreen> {
                             closeKeyboard(context);
                             searchControl.clear();
 
-                            searchList = appList;
+                            searchList = appInfo.apps;
                             setState(() => searching = false);
                           } else {
-                            searchList = searchApps(appList);
+                            searchList = searchApps(appInfo.apps);
                             setState(() => searching = true);
                           }
                         },
@@ -251,7 +212,7 @@ class _AppListScreenState extends State<AppListScreen> {
                               isDense: true,
                             ),
                             onChanged: (_) => setState(
-                              () => searchList = searchApps(appList),
+                              () => searchList = searchApps(appInfo.apps),
                             ),
                           ),
                         ),
@@ -261,9 +222,9 @@ class _AppListScreenState extends State<AppListScreen> {
                 ),
               ],
             ),
-            if (widget.icon != null) ...<Widget>[
+            if (widget.config.title != null) ...<Widget>[
               EzConfig.margin,
-              widget.icon!,
+              widget.config.title!,
             ],
             EzConfig.spacer,
 
@@ -310,10 +271,9 @@ class _AppListScreenState extends State<AppListScreen> {
                           child: AppTile(
                             app: searchList[index],
                             onHomeScreen: false,
-                            onSelected: onSelected,
-                            editable: widget.editable,
+                            onSelected: widget.config.onSelected,
                             editing: false,
-                            onEdit: refreshAll,
+                            onEdit: () => setState(() {}),
                           ),
                         ),
                       ),
@@ -322,17 +282,16 @@ class _AppListScreenState extends State<AppListScreen> {
                       child: ListView.builder(
                         controller: scrollControl,
                         physics: const ClampingScrollPhysics(),
-                        itemCount: appList.length,
+                        itemCount: appInfo.apps.length,
                         itemBuilder: (_, int index) => Padding(
-                          key: ValueKey<String>(appList[index].id),
+                          key: ValueKey<String>(appInfo.apps[index].id),
                           padding: listPadding,
                           child: AppTile(
-                            app: appList[index],
+                            app: appInfo.apps[index],
                             onHomeScreen: false,
-                            onSelected: onSelected,
-                            editable: widget.editable,
+                            onSelected: widget.config.onSelected,
                             editing: false,
-                            onEdit: refreshAll,
+                            onEdit: () => setState(() {}),
                           ),
                         ),
                       ),
