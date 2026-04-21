@@ -27,7 +27,7 @@ class AlignmentSelectors extends StatefulWidget {
 }
 
 class _AlignmentSelectorsState extends State<AlignmentSelectors> {
-  // Define custom functions //
+  // Define custom functions // TODO: ...fix entirely? lol
 
   Alignment merge({
     required ListAlignment horizAlign,
