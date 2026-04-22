@@ -114,66 +114,61 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
         EzConfig.separator,
 
         // Controls
-        Wrap(
-          alignment: WrapAlignment.center,
-          runAlignment: WrapAlignment.center,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: <Widget>[
-            // Horizontal
-            SegmentedButton<ListAlignment>(
-              segments: alignmentSegments,
-              selected: <ListAlignment>{horizAlign},
-              showSelectedIcon: false,
-              onSelectionChanged: (Set<ListAlignment>? choice) async {
-                if (choice?.first == null) return;
-                final ListAlignment selected = choice!.first;
+        Wrap(children: <Widget>[
+          // Horizontal
+          SegmentedButton<ListAlignment>(
+            segments: alignmentSegments,
+            selected: <ListAlignment>{horizAlign},
+            showSelectedIcon: false,
+            onSelectionChanged: (Set<ListAlignment>? choice) async {
+              if (choice?.first == null) return;
+              final ListAlignment selected = choice!.first;
 
-                if (EzConfig.updateBoth || EzConfig.isDark) {
-                  await EzConfig.setString(
-                    darkHorizontalAlignKey,
-                    selected.value,
-                  );
-                }
-                if (EzConfig.updateBoth || !EzConfig.isDark) {
-                  await EzConfig.setString(
-                    lightHorizontalAlignKey,
-                    selected.value,
-                  );
-                }
+              if (EzConfig.updateBoth || EzConfig.isDark) {
+                await EzConfig.setString(
+                  darkHorizontalAlignKey,
+                  selected.value,
+                );
+              }
+              if (EzConfig.updateBoth || !EzConfig.isDark) {
+                await EzConfig.setString(
+                  lightHorizontalAlignKey,
+                  selected.value,
+                );
+              }
 
-                setState(() => horizAlign = selected);
-              },
-            ),
-            EzConfig.spacer,
+              setState(() => horizAlign = selected);
+            },
+          ),
+          EzConfig.spacer,
 
-            // Vertical
-            SegmentedButton<ListAlignment>(
-              segments: alignmentSegments,
-              direction: Axis.vertical,
-              selected: <ListAlignment>{vertAlign},
-              showSelectedIcon: false,
-              onSelectionChanged: (Set<ListAlignment>? choice) async {
-                if (choice?.first == null) return;
-                final ListAlignment selected = choice!.first;
+          // Vertical
+          SegmentedButton<ListAlignment>(
+            segments: alignmentSegments,
+            direction: Axis.vertical,
+            selected: <ListAlignment>{vertAlign},
+            showSelectedIcon: false,
+            onSelectionChanged: (Set<ListAlignment>? choice) async {
+              if (choice?.first == null) return;
+              final ListAlignment selected = choice!.first;
 
-                if (EzConfig.updateBoth || EzConfig.isDark) {
-                  await EzConfig.setString(
-                    darkVerticalAlignKey,
-                    selected.value,
-                  );
-                }
-                if (EzConfig.updateBoth || !EzConfig.isDark) {
-                  await EzConfig.setString(
-                    lightVerticalAlignKey,
-                    selected.value,
-                  );
-                }
+              if (EzConfig.updateBoth || EzConfig.isDark) {
+                await EzConfig.setString(
+                  darkVerticalAlignKey,
+                  selected.value,
+                );
+              }
+              if (EzConfig.updateBoth || !EzConfig.isDark) {
+                await EzConfig.setString(
+                  lightVerticalAlignKey,
+                  selected.value,
+                );
+              }
 
-                setState(() => vertAlign = selected);
-              },
-            ),
-          ],
-        ),
+              setState(() => vertAlign = selected);
+            },
+          ),
+        ]),
       ],
     );
   }
