@@ -11,13 +11,13 @@ import 'package:provider/provider.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class AppearanceSettingsScreen extends StatelessWidget {
-  /// [EzSettingsHub.target] passthrough
-  final int? target;
+  /// Optionally override the starting position
+  final int? targetPass;
 
-  /// [EzColorSettings.advanced] and/or [EzTextSettings.advanced] passthrough
-  final bool? advanced;
+  /// Optionally override the starting sub-page to advanced (or equivalent)
+  final bool? advancedPass;
 
-  AppearanceSettingsScreen({this.target, this.advanced})
+  AppearanceSettingsScreen({this.targetPass, this.advancedPass})
       : super(key: ValueKey<int>(EzConfig.seed));
 
   @override
@@ -39,6 +39,8 @@ class AppearanceSettingsScreen extends StatelessWidget {
                     : Icons.computer,
                 semanticLabel: EzConfig.l10n.gGlobal,
               ),
+              subSettings: <EzSubSetting>[],
+              fromStorage: () => EzSubSetting.blank,
               build: EzGlobalSettings(
                 appName: appName,
                 androidPackage: androidPackage,
@@ -56,8 +58,15 @@ class AppearanceSettingsScreen extends StatelessWidget {
                 Icons.palette,
                 semanticLabel: EzConfig.l10n.gColor,
               ),
+              subSettings: <EzSubSetting>[
+                EzSubSetting.qckColor,
+                EzSubSetting.advColor,
+              ],
+              fromStorage: () => EzConfig.get(advancedColorsKey) == true
+                  ? EzSubSetting.advColor
+                  : EzSubSetting.qckColor,
               build: EzColorSettings(
-                advanced: advanced,
+                advanced: advancedPass,
                 onUpdate: doNothing,
                 appName: appName,
                 androidPackage: androidPackage,
@@ -73,9 +82,18 @@ class AppearanceSettingsScreen extends StatelessWidget {
                 Icons.design_services,
                 semanticLabel: EzConfig.l10n.gDesign,
               ),
+              subSettings: <EzSubSetting>[
+                EzSubSetting.butDesign,
+                EzSubSetting.pagDesign,
+              ],
+              fromStorage: () => EzConfig.get(pageTabKey) == true
+                  ? EzSubSetting.pagDesign
+                  : EzSubSetting.butDesign,
               build: EzDesignSettings(
-                pageTab: advanced,
+                pageTab: advancedPass,
                 onUpdate: doNothing,
+                appName: appName,
+                androidPackage: androidPackage,
                 includeBackgroundImage: false,
                 prependButton: <Widget>[
                   // Tile settings
@@ -158,8 +176,6 @@ class AppearanceSettingsScreen extends StatelessWidget {
                     },
                   ),
                 ],
-                appName: appName,
-                androidPackage: androidPackage,
               ),
             ),
 
@@ -172,15 +188,22 @@ class AppearanceSettingsScreen extends StatelessWidget {
                 Icons.text_format,
                 semanticLabel: EzConfig.l10n.gText,
               ),
+              subSettings: <EzSubSetting>[
+                EzSubSetting.qckText,
+                EzSubSetting.advText,
+              ],
+              fromStorage: () => EzConfig.get(advancedTextKey) == true
+                  ? EzSubSetting.advText
+                  : EzSubSetting.qckText,
               build: EzTextSettings(
-                advanced: advanced,
+                advanced: advancedPass,
                 onUpdate: doNothing,
                 appName: appName,
                 androidPackage: androidPackage,
               ),
             ),
           ],
-          target: target,
+          target: targetPass,
         )),
         fabs: <Widget>[
           // Rebuild (conditional)
