@@ -372,7 +372,7 @@ class AppInfoProvider extends ChangeNotifier {
 
     final bool confirmed = await showDialog(
       context: currContext,
-      builder: (BuildContext dContext) => EzAlertDialog(
+      builder: (BuildContext dCon) => EzAlertDialog(
         title: Text(
           'Banish $name?',
           textAlign: TextAlign.center,
@@ -397,10 +397,10 @@ For example: if an app has always on location permissions, banishing it will not
               ),
         actions: ezActionPair(
           context: currContext,
-          onConfirm: () => Navigator.of(dContext).pop(true),
+          onConfirm: () => Navigator.of(dCon).pop(true),
           confirmMsg: EzConfig.l10n.gContinue,
           confirmIsDestructive: true,
-          onDeny: () => Navigator.of(dContext).pop(false),
+          onDeny: () => Navigator.of(dCon).pop(false),
         ),
         needsClose: false,
       ),

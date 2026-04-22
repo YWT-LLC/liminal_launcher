@@ -182,12 +182,12 @@ class _AppTileState extends State<AppTile> {
                 EzIconButton(
                   onPressed: () => showDialog(
                     context: context,
-                    builder: (BuildContext dContext) {
+                    builder: (BuildContext dCon) {
                       final TextEditingController renameController =
                           TextEditingController();
 
                       void onConfirm() async {
-                        closeKeyboard(dContext);
+                        closeKeyboard(dCon);
 
                         final String name = renameController.text.trim();
                         if (validateRename(name) != null) return null;
@@ -196,16 +196,16 @@ class _AppTileState extends State<AppTile> {
                             newName: name, appID: widget.app.id);
 
                         if (success) {
-                          if (dContext.mounted) {
-                            Navigator.of(dContext).pop(name);
+                          if (dCon.mounted) {
+                            Navigator.of(dCon).pop(name);
                           }
                           widget.onEdit();
                         }
                       }
 
                       void onDeny() {
-                        closeKeyboard(dContext);
-                        Navigator.of(dContext).pop();
+                        closeKeyboard(dCon);
+                        Navigator.of(dCon).pop();
                       }
 
                       return EzAlertDialog(

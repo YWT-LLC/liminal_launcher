@@ -43,8 +43,7 @@ class AppTileSetting extends StatelessWidget {
         await ezModal(
           context: context,
           builder: (_) => StatefulBuilder(
-            builder: (BuildContext mContext, StateSetter setModal) =>
-                EzScrollView(
+            builder: (BuildContext mCon, StateSetter setModal) => EzScrollView(
               children: <Widget>[
                 // Preview
                 Container(

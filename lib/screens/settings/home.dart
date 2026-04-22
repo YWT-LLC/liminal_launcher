@@ -72,7 +72,7 @@ class _HeaderSettings extends StatelessWidget {
 
         await ezModal(
           context: context,
-          builder: (BuildContext mContext) => EzScrollView(
+          builder: (BuildContext mCon) => EzScrollView(
             children: <Widget>[
               // Hide status bar
               EzSwitchPair(
@@ -140,7 +140,7 @@ class _HeaderSettings extends StatelessWidget {
                         .map((DateType type) => DropdownMenuEntry<DateType>(
                             value: type,
                             label: DateTypeConfig.buildDate(
-                              mContext,
+                              mCon,
                               DateTime.now(),
                               type,
                             )))
