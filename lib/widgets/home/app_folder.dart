@@ -102,7 +102,6 @@ class _AppFolderState extends State<AppFolder> {
         maintainAnimation: true,
         child: EzScrollView(
           scrollDirection: Axis.horizontal,
-          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: hAlign.mainAxis,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -124,7 +123,6 @@ class _AppFolderState extends State<AppFolder> {
                   onSelected: (String id) =>
                       appInfo.addToFolder(id, widget.index),
                   title: EzTextBackground(EzRow(
-                    mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Text(
                         '${widget.name}\t',
@@ -327,7 +325,6 @@ class _AppFolderState extends State<AppFolder> {
               onTapOutside: (_) => toggleOpen,
               child: EzScrollView(
                 scrollDirection: Axis.horizontal,
-                mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: hAlign.mainAxis,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: widget.appList

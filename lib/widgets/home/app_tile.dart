@@ -110,7 +110,6 @@ class _AppTileState extends State<AppTile> {
               ],
             )
           : EzScrollView(
-              mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: hAlign.mainAxis,
               crossAxisAlignment: hAlign.crossAxis,
               scrollDirection: Axis.horizontal,

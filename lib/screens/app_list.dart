@@ -82,7 +82,6 @@ class _AppListScreenState extends State<AppListScreen> {
             // List controls
             EzScrollView(
               scrollDirection: Axis.horizontal,
-              mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: hAlign.mainAxis,
               crossAxisAlignment: vAlign.crossAxis,
               children: <Widget>[
@@ -183,7 +182,6 @@ class _AppListScreenState extends State<AppListScreen> {
                   width: searching ? 200 : null,
                   curve: Curves.easeInOut,
                   child: EzRow(
-                    mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       EzIconButton(
                         icon: const Icon(Icons.search),

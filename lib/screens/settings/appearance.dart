@@ -114,7 +114,6 @@ class AppearanceSettingsScreen extends StatelessWidget {
                       await ezModal(
                         context: context,
                         builder: (_) => EzScrollView(
-                          mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             const AlignmentSelectors(),
                             EzConfig.separator,
@@ -148,7 +147,6 @@ class AppearanceSettingsScreen extends StatelessWidget {
                     EzScrollView(
                       scrollDirection: Axis.horizontal,
                       startCentered: true,
-                      mainAxisSize: MainAxisSize.min,
                       child: EzConfig.isDark
                           ? const EzImageSetting(
                               doNothing,

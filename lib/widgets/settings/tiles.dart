@@ -45,7 +45,6 @@ class AppTileSetting extends StatelessWidget {
           builder: (_) => StatefulBuilder(
             builder: (BuildContext mContext, StateSetter setModal) =>
                 EzScrollView(
-              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 // Preview
                 Container(
@@ -82,7 +81,6 @@ class AppTileSetting extends StatelessWidget {
 
                 // Label type
                 EzRow(
-                  mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     const EzText('Label type'),
                     EzConfig.rowSpacer,

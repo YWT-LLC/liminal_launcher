@@ -43,7 +43,6 @@ class _SwipeSelectorState extends State<SwipeSelector> {
     // Return the build //
 
     return EzRow(
-      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         EzLink(
           '$dir app',

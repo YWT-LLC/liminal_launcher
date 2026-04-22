@@ -73,7 +73,6 @@ class _HeaderSettings extends StatelessWidget {
         await ezModal(
           context: context,
           builder: (BuildContext mContext) => EzScrollView(
-            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               // Hide status bar
               EzSwitchPair(
@@ -124,7 +123,6 @@ class _HeaderSettings extends StatelessWidget {
               EzScrollView(
                 scrollDirection: Axis.horizontal,
                 reverseHands: true,
-                mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   // Label
                   EzText(
@@ -186,7 +184,6 @@ class _SwipeSettings extends StatelessWidget {
         onPressed: () => ezModal(
           context: context,
           builder: (_) => EzScrollView(
-            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text(
                 'Swipe left/right on the home screen (not in editing mode) to open the selected app.\n\nLong press to clear your selection.',
@@ -237,7 +234,6 @@ class _AppListSettings extends StatelessWidget {
           context: context,
           builder: (_) => EzScrollView(
             controller: timeoutScroll,
-            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text(
                 'Theme dependent',
@@ -304,7 +300,6 @@ class _AppListSettings extends StatelessWidget {
 
               // Re-auth timer
               EzRow(
-                mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[

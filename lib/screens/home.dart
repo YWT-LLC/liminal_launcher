@@ -106,7 +106,6 @@ class _HomeScreenState extends State<HomeScreen>
           listCheck: (String id) => appInfo.hiddenSet.contains(id),
           onSelected: (String id) => launchApp(id),
           title: EzTextBackground(EzRow(
-            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text('Hidden\t', style: EzConfig.styles.labelLarge),
               EzIcon(
@@ -154,7 +153,6 @@ class _HomeScreenState extends State<HomeScreen>
         await ezModal(
           context: context,
           builder: (_) => EzScrollView(
-            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text(
                 'Welcome to Liminal Launcher',
@@ -427,7 +425,6 @@ If you want to support Liminal's development, or the development of more Empathe
                         !appInfo.banishedSet.contains(id),
                     onSelected: (String id) => appInfo.addHomeApp(id),
                     title: EzTextBackground(EzRow(
-                      mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Text('Home\t', style: EzConfig.styles.labelLarge),
                         EzIcon(
