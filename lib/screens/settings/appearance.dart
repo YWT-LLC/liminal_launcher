@@ -44,7 +44,7 @@ class AppearanceSettingsScreen extends StatelessWidget {
               build: (_) => EzGlobalSettings(
                 appName: appName,
                 androidPackage: androidPackage,
-                resetTitle: () => 'Reset all appearance settings?',
+                resetTitle: () => EzConfig.l10n.ssResetAppearance,
                 inDistress: const <String>{},
               ),
             ),
