@@ -27,8 +27,14 @@ class AlignmentSelectors extends StatefulWidget {
 }
 
 class _AlignmentSelectorsState extends State<AlignmentSelectors> {
-  // Define custom functions // TODO: ...fix entirely? lol
+  // Define the build data //
 
+  static const double _sizeMod = 0.333;
+
+  ListAlignment horizAlign = hAlign;
+  ListAlignment vertAlign = vAlign;
+
+  // Define custom functions //
   Alignment merge({
     required ListAlignment horizAlign,
     required ListAlignment vertAlign,
@@ -64,25 +70,18 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
     }
   }
 
+  // Return the build //
+
   @override
   Widget build(BuildContext context) {
-    // Define the build data //
-
-    ListAlignment horizAlign = hAlign;
-    ListAlignment vertAlign = vAlign;
-
-    const double sizeMod = 0.333;
-
-    // Return the build //
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         // Preview
         Container(
           color: EzConfig.colors.onSurface,
-          height: heightOf(context) * sizeMod,
-          width: widthOf(context) * sizeMod,
+          height: heightOf(context) * _sizeMod,
+          width: widthOf(context) * _sizeMod,
           child: Stack(children: <Widget>[
             // Background
             Container(
@@ -92,7 +91,7 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
                     ? null
                     : EzConfig.backgroundImage,
               ),
-              margin: EdgeInsets.all(EzConfig.marginVal * sizeMod),
+              margin: EdgeInsets.all(EzConfig.marginVal * _sizeMod),
             ),
 
             // Aligned circular icon
