@@ -100,9 +100,6 @@ class AppearanceSettingsScreen extends StatelessWidget {
                   const AppTileSetting(folder: false, onComplete: doNothing),
                   EzConfig.spacer,
                   const AppTileSetting(folder: true, onComplete: doNothing),
-
-                  // TODO: fix background on always underline -> should consume not be always on
-                  // TODO: (added) finish checking all clickables/mouse curours/etc
                   EzConfig.separator,
                 ],
                 prependPage: <Widget>[
