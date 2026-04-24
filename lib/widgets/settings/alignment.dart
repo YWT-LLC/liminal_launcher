@@ -111,7 +111,7 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
       EzConfig.separator,
 
       // Controls
-      Wrap(children: <Widget>[
+      EzWrap(children: <Widget>[
         // Horizontal
         SegmentedButton<ListAlignment>(
           segments: alignmentSegments,
