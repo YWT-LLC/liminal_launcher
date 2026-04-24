@@ -24,7 +24,7 @@ class AppearanceSettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<EzConfigProvider>(
       builder: (_, EzConfigProvider config, __) => LiminalScaffold(
-        EzScreen(EzSettingsHub(
+        EzSettingsHub(
           pages: <EzSettingsSection>[
             // Global //
 
@@ -94,7 +94,6 @@ class AppearanceSettingsScreen extends StatelessWidget {
                 onUpdate: doNothing,
                 appName: appName,
                 androidPackage: androidPackage,
-                includeBackgroundImage: false,
                 prependButton: <Widget>[
                   // Tile settings
                   const AppTileSetting(folder: false, onComplete: doNothing),
@@ -137,41 +136,6 @@ class AppearanceSettingsScreen extends StatelessWidget {
                   ),
                   EzConfig.spacer,
                 ],
-                appendPage: <Widget>[
-                  EzConfig.spacer,
-
-                  // Custom wallpaper
-                  if (!useOSWall) ...<Widget>[
-                    EzScrollView(
-                      scrollDirection: Axis.horizontal,
-                      startCentered: true,
-                      child: EzConfig.isDark
-                          ? const EzImageSetting(
-                              doNothing,
-                              configKey: darkBackgroundImageKey,
-                              allowSolidColor: true,
-                              label: 'Wallpaper',
-                            )
-                          : const EzImageSetting(
-                              doNothing,
-                              configKey: lightBackgroundImageKey,
-                              allowSolidColor: true,
-                              label: 'Wallpaper',
-                            ),
-                    ),
-                    EzConfig.spacer,
-                  ],
-
-                  // Use OS switch TODO: smush this switch into a custom clear it/reset it/etc
-                  EzSwitchPair(
-                    text: 'Use System Wallpaper',
-                    valueKey: EzConfig.isDark ? darkUseOSKey : lightUseOSKey,
-                    afterChanged: (bool? choice) async {
-                      if (choice == null) return;
-                      await EzConfig.rebuildUI(doNothing);
-                    },
-                  ),
-                ],
               ),
             ),
 
@@ -200,7 +164,7 @@ class AppearanceSettingsScreen extends StatelessWidget {
             ),
           ],
           target: targetPass,
-        )),
+        ),
         fabs: <Widget>[
           // Rebuild (conditional)
           if (config.needsRebuild) ...<Widget>[
