@@ -236,9 +236,9 @@ class _AppFolderState extends State<AppFolder> {
                               return Padding(
                                 key: ValueKey<String>(id),
                                 padding: colPadding,
-                                child: Row(
+                                child: EzRow(
                                   // The Row prevents the AppTile from auto-expanding
-                                  mainAxisSize: MainAxisSize.min,
+                                  reverseHands: false,
                                   mainAxisAlignment: hAlign.mainAxis,
                                   crossAxisAlignment: hAlign.crossAxis,
                                   children: <Widget>[

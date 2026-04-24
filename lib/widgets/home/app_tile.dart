@@ -90,9 +90,9 @@ class _AppTileState extends State<AppTile> {
       maintainState: true,
       maintainAnimation: true,
       child: editing == false
-          ? Row(
+          ? EzRow(
               // The Row prevents the AppTile from auto-expanding
-              mainAxisSize: MainAxisSize.min,
+              reverseHands: false,
               mainAxisAlignment: hAlign.mainAxis,
               crossAxisAlignment: hAlign.crossAxis,
               children: <Widget>[
