@@ -323,7 +323,7 @@ If you want to support Liminal's development, or the development of more Empathe
             if (toLaunch != null) launchApp(toLaunch.package);
           }
         },
-        child: Column(
+        child: EzCol(
           mainAxisAlignment: vAlign.mainAxis,
           crossAxisAlignment: hAlign.crossAxis,
           children: <Widget>[

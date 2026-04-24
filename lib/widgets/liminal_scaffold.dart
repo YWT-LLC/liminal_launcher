@@ -27,13 +27,10 @@ class LiminalScaffold extends StatelessWidget {
             key: ValueKey<int>(config.seed),
             body: EzScreen(SafeArea(child: body)),
             backgroundColor: Colors.transparent,
-            floatingActionButton: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                updater,
-                if (fabs != null) ...fabs!,
-              ],
-            ),
+            floatingActionButton: EzCol(children: <Widget>[
+              updater,
+              if (fabs != null) ...fabs!,
+            ]),
             floatingActionButtonLocation: EzConfig.isLefty
                 ? FloatingActionButtonLocation.startFloat
                 : FloatingActionButtonLocation.endFloat,

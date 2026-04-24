@@ -72,8 +72,7 @@ class _AppListScreenState extends State<AppListScreen> {
             }
           }
         },
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+        child: EzCol(
           mainAxisAlignment: vAlign.mainAxis,
           crossAxisAlignment: hAlign.crossAxis,
           children: <Widget>[

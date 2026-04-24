@@ -34,8 +34,7 @@ class _ClockState extends State<Clock> {
   }
 
   @override
-  Widget build(BuildContext context) => EzTextBackground(Column(
-        mainAxisSize: MainAxisSize.min,
+  Widget build(BuildContext context) => EzTextBackground(EzCol(
         crossAxisAlignment: hAlign.crossAxis,
         children: <Widget>[
           if (homeTime)
