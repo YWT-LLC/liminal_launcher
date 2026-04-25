@@ -134,9 +134,6 @@ const String lightListIconKey = 'lightListIcon';
 const String lightFolderLabelTypeKey = 'lightFolderLabelType';
 const String lightFolderIconKey = 'lightFolderIcon';
 
-const String darkUseOSKey = 'darkUseOS';
-const String lightUseOSKey = 'lightUseOS';
-
 const String darkHorizontalAlignKey = 'darkHorizontalAlign';
 const String darkVerticalAlignKey = 'darkVerticalAlign';
 
@@ -155,10 +152,6 @@ const Map<String, Type> limDesignKeys = <String, Type>{
   lightListIconKey: bool,
   lightFolderLabelTypeKey: String,
   lightFolderIconKey: bool,
-
-  // Page
-  darkUseOSKey: bool,
-  lightUseOSKey: bool,
 
   darkHorizontalAlignKey: String,
   darkVerticalAlignKey: String,
@@ -239,9 +232,6 @@ final Map<String, Object> liminalDefault = <String, Object>{
   lightListIconKey: true,
   lightFolderLabelTypeKey: LabelType.none.value,
   lightFolderIconKey: true,
-
-  darkUseOSKey: true,
-  lightUseOSKey: true,
 
   darkHorizontalAlignKey: ListAlignment.center.value,
   darkVerticalAlignKey: ListAlignment.start.value,

@@ -60,8 +60,6 @@ class LiminalCache extends EzAppCache {
         rightSwipe: EzConfig.get(darkRightSwipeIDKey),
       );
       _design = DesignCache(
-        useOSWall: EzConfig.get(darkUseOSKey),
-        wideTiles: EzConfig.get(darkWideTilesKey),
         homeDate: DateTypeConfig.lookup(EzConfig.get(darkHomeDateKey)),
         homeTime: EzConfig.get(darkHomeTimeKey),
         folderIcons: EzConfig.get(darkFolderIconKey),
@@ -69,6 +67,7 @@ class LiminalCache extends EzAppCache {
             LabelTypeConfig.lookup(EzConfig.get(darkFolderLabelTypeKey)),
         listIcons: EzConfig.get(darkListIconKey),
         listLabels: LabelTypeConfig.lookup(EzConfig.get(darkListLabelTypeKey)),
+        wideTiles: EzConfig.get(darkWideTilesKey),
       );
       _layout = LayoutCache(
         horizontalAlign:
@@ -82,8 +81,6 @@ class LiminalCache extends EzAppCache {
         rightSwipe: EzConfig.get(lightRightSwipeIDKey),
       );
       _design = DesignCache(
-        useOSWall: EzConfig.get(lightUseOSKey),
-        wideTiles: EzConfig.get(lightWideTilesKey),
         homeDate: DateTypeConfig.lookup(EzConfig.get(lightHomeDateKey)),
         homeTime: EzConfig.get(lightHomeTimeKey),
         folderIcons: EzConfig.get(lightFolderIconKey),
@@ -91,6 +88,7 @@ class LiminalCache extends EzAppCache {
             LabelTypeConfig.lookup(EzConfig.get(lightFolderLabelTypeKey)),
         listIcons: EzConfig.get(lightListIconKey),
         listLabels: LabelTypeConfig.lookup(EzConfig.get(lightListLabelTypeKey)),
+        wideTiles: EzConfig.get(lightWideTilesKey),
       );
       _layout = LayoutCache(
         horizontalAlign:
@@ -127,9 +125,6 @@ class LauncherCache {
 }
 
 class DesignCache {
-  final bool useOSWall;
-  final bool wideTiles;
-
   final DateType homeDate;
   final bool homeTime;
 
@@ -139,15 +134,16 @@ class DesignCache {
   final bool listIcons;
   final LabelType listLabels;
 
+  final bool wideTiles;
+
   DesignCache({
-    required this.useOSWall,
-    required this.wideTiles,
     required this.homeDate,
     required this.homeTime,
     required this.folderIcons,
     required this.folderLabels,
     required this.listIcons,
     required this.listLabels,
+    required this.wideTiles,
   });
 }
 
@@ -172,9 +168,6 @@ AppInfoProvider get appInfo => _pointer.appInfo;
 String get leftSwipeID => _pointer.launcher.leftSwipe;
 String get rightSwipeID => _pointer.launcher.rightSwipe;
 
-bool get useOSWall => _pointer.design.useOSWall;
-bool get wideTiles => _pointer.design.wideTiles;
-
 DateType get homeDate => _pointer.design.homeDate;
 bool get homeTime => _pointer.design.homeTime;
 
@@ -184,6 +177,7 @@ LabelType get folderLabels => _pointer.design.folderLabels;
 bool get listIcons => _pointer.design.listIcons;
 LabelType get listLabels => _pointer.design.listLabels;
 
+bool get wideTiles => _pointer.design.wideTiles;
 double get appIconSize => EzConfig.iconSize * 1.25 + EzConfig.padding;
 
 ListAlignment get hAlign => _pointer.layout.horizontalAlign;
