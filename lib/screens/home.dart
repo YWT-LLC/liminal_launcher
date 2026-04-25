@@ -9,7 +9,6 @@ import '../widgets/export.dart';
 import 'package:efui_bios/efui_bios.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
@@ -86,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Future<void> navToHidden(BuildContext context) async {
-    if (EzConfig.get(authForHiddenKey) == true) {
+    if (bool.tryParse(await EzConfig.secGet(authForHiddenKey) ?? '') == true) {
       // Check every time so no reset is required; O(1)
       bool authed = false;
 
@@ -135,16 +134,6 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   void afterFirstLayout(BuildContext context) async {
-    // Check for hide status
-    if (EzConfig.get(
-            EzConfig.isDark ? darkHideStatusKey : lightHideStatusKey) ==
-        true) {
-      await SystemChrome.setEnabledSystemUIMode(
-        SystemUiMode.manual,
-        overlays: <SystemUiOverlay>[SystemUiOverlay.bottom],
-      );
-    }
-
     // Check for welcome message
     if (!EzConfig.get(shownIntroKey)) {
       final bool isGPlay = await isGPlayInstall();
@@ -230,7 +219,8 @@ If you want to support Liminal's development, or the development of more Empathe
         behavior: HitTestBehavior.opaque,
         onLongPressStart: (LongPressStartDetails details) async {
           if (!editing &&
-              (bool.parse(await EzConfig.secGet(authToEditKey) ?? 'false'))) {
+              (bool.tryParse(await EzConfig.secGet(authToEditKey) ?? '') ==
+                  true)) {
             // Check every time so no reset is required; O(1)
             bool authed = false;
 
