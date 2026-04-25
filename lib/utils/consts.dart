@@ -43,7 +43,7 @@ const Map<String, String> credits = <String, String>{
 // Secure //
 
 const String authToEditKey = 'authToEdit';
-const String authForHiddenKey = 'authForHiddenKey';
+const String authForHiddenKey = 'authForHidden';
 const String authTimeoutKey = 'authTimeout';
 const String lastAuthKey = 'lastAuth';
 
