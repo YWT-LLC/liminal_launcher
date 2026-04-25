@@ -7,6 +7,7 @@ import '../../utils/export.dart';
 import '../../widgets/export.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
@@ -149,6 +150,39 @@ class AppearanceSettingsScreen extends StatelessWidget {
                     icon: const Icon(Icons.grid_3x3),
                   ),
                   EzConfig.spacer,
+                ],
+                appendPage: <Widget>[
+                  EzConfig.spacer,
+                  // Hide status bar
+                  EzSwitchPair(
+                    text: 'Hide status bar',
+                    valueKey: EzConfig.isDark
+                        ? darkHideStatusKey
+                        : lightHideStatusKey,
+                    afterChanged: (bool? choice) async {
+                      if (choice == null) return;
+                      if (EzConfig.updateBoth) {
+                        await EzConfig.setBool(
+                          EzConfig.isDark
+                              ? lightHideStatusKey
+                              : darkHideStatusKey,
+                          choice,
+                        );
+                      }
+
+                      if (choice == true) {
+                        await SystemChrome.setEnabledSystemUIMode(
+                          SystemUiMode.manual,
+                          overlays: <SystemUiOverlay>[SystemUiOverlay.bottom],
+                        );
+                      } else {
+                        await SystemChrome.setEnabledSystemUIMode(
+                          SystemUiMode.manual,
+                          overlays: SystemUiOverlay.values,
+                        );
+                      }
+                    },
+                  ),
                 ],
               ),
             ),
