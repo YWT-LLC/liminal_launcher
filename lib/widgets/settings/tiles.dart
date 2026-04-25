@@ -76,7 +76,7 @@ class AppTileSetting extends StatelessWidget {
                               onPressed: doNothing,
                             ),
                 ),
-                EzConfig.spacer,
+                EzConfig.separator,
 
                 // Label type
                 EzRow(
