@@ -101,7 +101,21 @@ class AppearanceSettingsScreen extends StatelessWidget {
                   const AppTileSetting(folder: true, onComplete: doNothing),
                   EzConfig.separator,
                 ],
+                includeBackgroundImage: false,
                 prependPage: <Widget>[
+                  // Wallpaper
+                  EzImageSetting(
+                    doNothing,
+                    configKey: EzConfig.isDark
+                        ? darkBackgroundImageKey
+                        : lightBackgroundImageKey,
+                    label: 'Wallpaper',
+                    allowSolidColor: true,
+                    clearLabel: 'Use OS',
+                    defaultFit: BoxFit.cover,
+                  ),
+                  EzConfig.separator,
+
                   // Page alignment
                   EzElevatedIconButton(
                     onPressed: () async {
