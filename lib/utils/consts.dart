@@ -126,13 +126,17 @@ const Map<String, Type> limLauncherKeys = <String, Type>{
 
 const String darkListLabelTypeKey = 'darkListLabelType';
 const String darkListIconKey = 'darkListIcon';
+const String darkElevatedListKey = 'darkElevatedList';
 const String darkFolderLabelTypeKey = 'darkFolderLabelType';
 const String darkFolderIconKey = 'darkFolderIcon';
+const String darkElevatedFolderKey = 'darkElevatedFolder';
 
 const String lightListLabelTypeKey = 'lightListLabelType';
 const String lightListIconKey = 'lightListIcon';
+const String lightElevatedListKey = 'lightElevatedList';
 const String lightFolderLabelTypeKey = 'lightFolderLabelType';
 const String lightFolderIconKey = 'lightFolderIcon';
+const String lightElevatedFolderKey = 'lightElevatedFolder';
 
 const String darkHorizontalAlignKey = 'darkHorizontalAlign';
 const String darkVerticalAlignKey = 'darkVerticalAlign';
@@ -145,13 +149,17 @@ const Map<String, Type> limDesignKeys = <String, Type>{
   // Button
   darkListLabelTypeKey: String,
   darkListIconKey: bool,
+  darkElevatedListKey: bool,
   darkFolderLabelTypeKey: String,
   darkFolderIconKey: bool,
+  darkElevatedFolderKey: bool,
 
   lightListLabelTypeKey: String,
   lightListIconKey: bool,
+  lightElevatedListKey: bool,
   lightFolderLabelTypeKey: String,
   lightFolderIconKey: bool,
+  lightElevatedFolderKey: bool,
 
   darkHorizontalAlignKey: String,
   darkVerticalAlignKey: String,
@@ -225,13 +233,17 @@ final Map<String, Object> liminalDefault = <String, Object>{
 
   darkListLabelTypeKey: LabelType.full.value,
   darkListIconKey: true,
+  darkElevatedListKey: false,
   darkFolderLabelTypeKey: LabelType.none.value,
   darkFolderIconKey: true,
+  darkElevatedFolderKey: false,
 
   lightListLabelTypeKey: LabelType.full.value,
   lightListIconKey: true,
+  lightElevatedListKey: false,
   lightFolderLabelTypeKey: LabelType.none.value,
   lightFolderIconKey: true,
+  lightElevatedFolderKey: false,
 
   darkHorizontalAlignKey: ListAlignment.center.value,
   darkVerticalAlignKey: ListAlignment.start.value,
