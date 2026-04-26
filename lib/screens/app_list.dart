@@ -10,13 +10,15 @@ import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class ListConfig {
-  final bool Function(String id) listCheck;
+  final Set<String> ids;
+  final bool include;
   final Future<void> Function(String id) onSelected;
   final Widget? title;
 
   /// How the [AppListScreen] should behave
   const ListConfig({
-    required this.listCheck,
+    required this.ids,
+    required this.include,
     required this.onSelected,
     required this.title,
   });
@@ -34,25 +36,15 @@ class AppListScreen extends StatefulWidget {
 class _AppListScreenState extends State<AppListScreen> {
   // Define the fixed build data //
 
-  List<AppInfo> searchList = appInfo.apps;
-
-  bool searching = EzConfig.get(autoSearchKey);
+  final ScrollController scrollControl = ScrollController();
   final TextEditingController searchControl = TextEditingController();
 
   AppSort listSort = AppSortConfig.lookup(EzConfig.get(listSortKey));
   bool ascList = EzConfig.get(ascListKey);
-
-  final ScrollController scrollControl = ScrollController();
-
   bool atTop = true;
   bool atBottom = false;
 
-  // Define custom functions //
-
-  List<AppInfo> searchApps(List<AppInfo> appList) => appList
-      .where((AppInfo app) =>
-          app.name.toLowerCase().contains(searchControl.text.toLowerCase()))
-      .toList();
+  bool searching = EzConfig.get(autoSearchKey);
 
   // Return the build //
 
@@ -65,9 +57,9 @@ class _AppListScreenState extends State<AppListScreen> {
       GestureDetector(
         behavior: HitTestBehavior.opaque,
         onVerticalDragEnd: (DragEndDetails details) {
+          // Pop on swipe down (backup for non-scroll portions)
           if (details.primaryVelocity != null) {
             if (details.primaryVelocity! > 0) {
-              // Pop on swipe down (backup for non-scroll portions)
               Navigator.of(context).pop();
             }
           }
@@ -99,11 +91,8 @@ class _AppListScreenState extends State<AppListScreen> {
                       textAlign: hAlign.textAlign,
                       onPressed: () async {
                         listSort = AppSort.name;
+                        await EzConfig.setString(listSortKey, listSort.value);
 
-                        await EzConfig.setString(
-                          listSortKey,
-                          listSort.value,
-                        );
                         appInfo.sort(listSort, ascList);
                         setState(() {});
                       },
@@ -115,11 +104,8 @@ class _AppListScreenState extends State<AppListScreen> {
                       textAlign: hAlign.textAlign,
                       onPressed: () async {
                         listSort = AppSort.publisher;
+                        await EzConfig.setString(listSortKey, listSort.value);
 
-                        await EzConfig.setString(
-                          listSortKey,
-                          listSort.value,
-                        );
                         appInfo.sort(listSort, ascList);
                         setState(() {});
                       },
@@ -131,11 +117,8 @@ class _AppListScreenState extends State<AppListScreen> {
                       textAlign: hAlign.textAlign,
                       onPressed: () async {
                         listSort = AppSort.date;
+                        await EzConfig.setString(listSortKey, listSort.value);
 
-                        await EzConfig.setString(
-                          listSortKey,
-                          listSort.value,
-                        );
                         appInfo.sort(listSort, ascList);
                         setState(() {});
                       },
@@ -147,11 +130,8 @@ class _AppListScreenState extends State<AppListScreen> {
                       textAlign: hAlign.textAlign,
                       onPressed: () async {
                         listSort = AppSort.size;
+                        await EzConfig.setString(listSortKey, listSort.value);
 
-                        await EzConfig.setString(
-                          listSortKey,
-                          listSort.value,
-                        );
                         appInfo.sort(listSort, ascList);
                         setState(() {});
                       },
@@ -188,11 +168,8 @@ class _AppListScreenState extends State<AppListScreen> {
                           if (searching) {
                             closeKeyboard(context);
                             searchControl.clear();
-
-                            searchList = appInfo.apps;
                             setState(() => searching = false);
                           } else {
-                            searchList = searchApps(appInfo.apps);
                             setState(() => searching = true);
                           }
                         },
@@ -208,9 +185,7 @@ class _AppListScreenState extends State<AppListScreen> {
                               border: InputBorder.none,
                               isDense: true,
                             ),
-                            onChanged: (_) => setState(
-                              () => searchList = searchApps(appInfo.apps),
-                            ),
+                            onChanged: (_) => setState(() {}),
                           ),
                         ),
                       ],
@@ -256,43 +231,32 @@ class _AppListScreenState extends State<AppListScreen> {
                 }
                 return false;
               },
-              child: searching
-                  ? Expanded(
-                      child: ListView.builder(
-                        controller: scrollControl,
-                        physics: const ClampingScrollPhysics(),
-                        itemCount: searchList.length,
-                        itemBuilder: (_, int index) => Padding(
-                          key: ValueKey<String>(searchList[index].id),
+              child: EzScrollView(
+                mainAxisSize: MainAxisSize.max,
+                controller: scrollControl,
+                physics: const ClampingScrollPhysics(),
+                children: appInfo.apps
+                    .where((AppInfo app) =>
+                        (widget.config.ids.contains(app.id) ==
+                            widget.config.include) &&
+                        (searching
+                            ? app.name
+                                .toLowerCase()
+                                .contains(searchControl.text.toLowerCase())
+                            : true))
+                    .map((AppInfo app) => Padding(
+                          key: ValueKey<String>(app.id),
                           padding: listPadding,
                           child: AppTile(
-                            app: searchList[index],
+                            app: app,
                             onHomeScreen: false,
                             onSelected: widget.config.onSelected,
                             editing: false,
                             onEdit: () => setState(() {}),
                           ),
-                        ),
-                      ),
-                    )
-                  : Expanded(
-                      child: ListView.builder(
-                        controller: scrollControl,
-                        physics: const ClampingScrollPhysics(),
-                        itemCount: appInfo.apps.length,
-                        itemBuilder: (_, int index) => Padding(
-                          key: ValueKey<String>(appInfo.apps[index].id),
-                          padding: listPadding,
-                          child: AppTile(
-                            app: appInfo.apps[index],
-                            onHomeScreen: false,
-                            onSelected: widget.config.onSelected,
-                            editing: false,
-                            onEdit: () => setState(() {}),
-                          ),
-                        ),
-                      ),
-                    ),
+                        ))
+                    .toList(),
+              ),
             ),
           ],
         ),
