@@ -23,6 +23,7 @@ dependencies:
   app_settings: ^7.0.0
   flutter_localized_locales: ^2.0.5
   flutter_secure_storage: ^10.0.0
+  font_awesome_flutter: ^11.0.0
   line_icons: ^2.0.3
   provider: ^6.1.5+1
 
