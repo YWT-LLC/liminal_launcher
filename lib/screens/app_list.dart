@@ -231,31 +231,33 @@ class _AppListScreenState extends State<AppListScreen> {
                 }
                 return false;
               },
-              child: EzScrollView(
-                mainAxisSize: MainAxisSize.max,
-                controller: scrollControl,
-                physics: const ClampingScrollPhysics(),
-                children: appInfo.apps
-                    .where((AppInfo app) =>
-                        (widget.config.ids.contains(app.id) ==
-                            widget.config.include) &&
-                        (searching
-                            ? app.name
-                                .toLowerCase()
-                                .contains(searchControl.text.toLowerCase())
-                            : true))
-                    .map((AppInfo app) => Padding(
-                          key: ValueKey<String>(app.id),
-                          padding: listPadding,
-                          child: AppTile(
-                            app: app,
-                            onHomeScreen: false,
-                            onSelected: widget.config.onSelected,
-                            editing: false,
-                            onEdit: () => setState(() {}),
-                          ),
-                        ))
-                    .toList(),
+              child: Expanded(
+                child: EzScrollView(
+                  mainAxisSize: MainAxisSize.max,
+                  controller: scrollControl,
+                  physics: const ClampingScrollPhysics(),
+                  children: appInfo.apps
+                      .where((AppInfo app) =>
+                          (widget.config.ids.contains(app.id) ==
+                              widget.config.include) &&
+                          (searching
+                              ? app.name
+                                  .toLowerCase()
+                                  .contains(searchControl.text.toLowerCase())
+                              : true))
+                      .map((AppInfo app) => Padding(
+                            key: ValueKey<String>(app.id),
+                            padding: listPadding,
+                            child: AppTile(
+                              app: app,
+                              onHomeScreen: false,
+                              onSelected: widget.config.onSelected,
+                              editing: false,
+                              onEdit: () => setState(() {}),
+                            ),
+                          ))
+                      .toList(),
+                ),
               ),
             ),
           ],
