@@ -97,11 +97,7 @@ class _TheMagic extends StatelessWidget {
       supportedLocales: Lang.supportedLocales,
       locale: storedLocale,
       el10n: storedEFUILang,
-      appCache: LiminalCache(
-        storedLocale,
-        storedLang,
-        Provider.of<AppInfoProvider>(context),
-      ),
+      appCache: LiminalCache(storedLocale, storedLang),
       appName: appName,
       routerConfig: GoRouter(
         navigatorKey: ezRootNav,
