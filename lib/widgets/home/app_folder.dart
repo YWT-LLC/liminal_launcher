@@ -3,13 +3,11 @@
  * See LICENSE for distribution and usage details.
  */
 
-import '../../screens/export.dart';
 import '../../utils/export.dart';
 import '../export.dart';
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class AppFolder extends StatefulWidget {
@@ -105,44 +103,14 @@ class _AppFolderState extends State<AppFolder> {
           mainAxisAlignment: hAlign.mainAxis,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            // Name
-            EzText(
+            // Name (and rename)
+            EzLink(
               widget.name,
               style: EzConfig.styles.bodyLarge,
+              textColor: EzConfig.colors.onSurface,
               textAlign: TextAlign.center,
-            ),
-            EzConfig.rowSpacer,
-
-            // Add apps
-            EzIconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () => context.goNamed(
-                appListPath,
-                extra: ListConfig(
-                  ids: widget.appSet,
-                  include: false,
-                  onSelected: (String id) =>
-                      appInfo.addToFolder(id, widget.index),
-                  title: EzTextBackground(EzRow(
-                    children: <Widget>[
-                      Text(
-                        '${widget.name}\t',
-                        style: EzConfig.styles.labelLarge,
-                      ),
-                      EzIcon(
-                        Icons.add,
-                        color: EzConfig.colors.onSurface,
-                      ),
-                    ],
-                  )),
-                ),
-              ),
-            ),
-            EzConfig.rowSpacer,
-
-            // Info (rename)
-            EzIconButton(
-              onPressed: () => showDialog(
+              hint: 'Activate to rename.',
+              onTap: () => showDialog(
                 context: context,
                 builder: (BuildContext dCon) {
                   final TextEditingController renameController =
@@ -195,11 +163,10 @@ class _AppFolderState extends State<AppFolder> {
                   );
                 },
               ),
-              icon: const Icon(Icons.info),
             ),
             EzConfig.rowSpacer,
 
-            // Edit apps
+            // Edit apps TODO: re-implement
             if (widget.appSet.isNotEmpty) ...<Widget>[
               EzIconButton(
                 icon: const Icon(Icons.edit),
@@ -304,12 +271,6 @@ class _AppFolderState extends State<AppFolder> {
                 onPressed: () => setState(() => editing = false),
                 icon: const Icon(Icons.close),
               ),
-            ],
-
-            // Drag handle
-            if (editing == null) ...<Widget>[
-              EzConfig.rowSpacer,
-              EzIcon(Icons.drag_handle, color: EzConfig.colors.outline),
             ],
           ],
         ),
