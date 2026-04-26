@@ -34,7 +34,7 @@ Future<bool> liminalAuth(String reason) async {
   final DateTime? saved = DateTime.tryParse(lastAuth);
 
   if (saved == null ||
-      DateTime.now().difference(saved) < Duration(minutes: timeout)) {
+      DateTime.now().difference(saved) > Duration(minutes: timeout)) {
     return _externalAuth(reason);
   } else {
     return Future<bool>.value(true);
