@@ -116,6 +116,15 @@ class _AppTileState extends State<AppTile> {
               reverseHands: true,
               showScrollHint: true,
               children: <Widget>[
+                // Close/end edits
+                if (editing == true) ...<Widget>[
+                  EzConfig.rowSpacer,
+                  EzIconButton(
+                    onPressed: () => setState(() => editing = false),
+                    icon: const Icon(Icons.close),
+                  ),
+                ],
+
                 // App icon
                 if (widget.app.icon != null) ...<Widget>[
                   GestureDetector(
@@ -126,41 +135,6 @@ class _AppTileState extends State<AppTile> {
                       width: appIconSize,
                       height: appIconSize,
                     ),
-                  ),
-                  EzConfig.rowSpacer,
-                ],
-
-                // Add to home
-                if (!appInfo.homeSet.contains(widget.app.id) &&
-                    !appInfo.hiddenSet.contains(widget.app.id)) ...<Widget>[
-                  EzIconButton(
-                    onPressed: () async {
-                      final bool success =
-                          await appInfo.addHomeApp(widget.app.id);
-
-                      if (success) {
-                        setState(() => editing = false);
-                        widget.onEdit();
-                      }
-                    },
-                    icon: const Icon(Icons.add_to_home_screen),
-                  ),
-                  EzConfig.rowSpacer,
-                ],
-
-                // Remove from home
-                if (widget.onHomeScreen == true) ...<Widget>[
-                  EzIconButton(
-                    onPressed: () async {
-                      final bool success =
-                          await appInfo.removeHomeApp(widget.app.id);
-
-                      if (success) {
-                        setState(() => editing = false);
-                        widget.onEdit();
-                      }
-                    },
-                    icon: const Icon(Icons.remove),
                   ),
                   EzConfig.rowSpacer,
                 ],
@@ -239,6 +213,41 @@ class _AppTileState extends State<AppTile> {
                 ),
                 EzConfig.rowSpacer,
 
+                // Add to home
+                if (!appInfo.homeSet.contains(widget.app.id) &&
+                    !appInfo.hiddenSet.contains(widget.app.id)) ...<Widget>[
+                  EzIconButton(
+                    onPressed: () async {
+                      final bool success =
+                          await appInfo.addHomeApp(widget.app.id);
+
+                      if (success) {
+                        setState(() => editing = false);
+                        widget.onEdit();
+                      }
+                    },
+                    icon: const Icon(Icons.add_to_home_screen),
+                  ),
+                  EzConfig.rowSpacer,
+                ],
+
+                // Remove from home
+                if (widget.onHomeScreen == true) ...<Widget>[
+                  EzIconButton(
+                    onPressed: () async {
+                      final bool success =
+                          await appInfo.removeHomeApp(widget.app.id);
+
+                      if (success) {
+                        setState(() => editing = false);
+                        widget.onEdit();
+                      }
+                    },
+                    icon: const Icon(Icons.remove),
+                  ),
+                  EzConfig.rowSpacer,
+                ],
+
                 // Show/hide
                 EzIconButton(
                   onPressed: () async {
@@ -297,15 +306,6 @@ class _AppTileState extends State<AppTile> {
                   EzIconButton(
                     onPressed: () => setState(() => editing = false),
                     icon: const Icon(Icons.close),
-                  ),
-                ],
-
-                // Drag handle
-                if (widget.onHomeScreen == true && editing == null) ...<Widget>[
-                  EzConfig.rowSpacer,
-                  EzIcon(
-                    Icons.drag_handle,
-                    color: EzConfig.colors.outline,
                   ),
                 ],
               ],
