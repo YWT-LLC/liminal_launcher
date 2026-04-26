@@ -15,19 +15,23 @@ Future<bool> _externalAuth(String reason) async {
     biometricOnly: false,
   );
 
-  if (authed) await EzConfig.setString(lastAuthKey, DateTime.now().toString());
+  if (authed) {
+    await EzConfig.secSet(lastAuthKey, DateTime.now().toString());
+  }
+
   return authed;
 }
 
-Future<bool> liminalAuth(String reason) {
-  final int timeout = EzConfig.get(authTimeoutKey);
-  final String lastAuthString = EzConfig.get(lastAuthKey);
+Future<bool> liminalAuth(String reason) async {
+  final int timeout = int.tryParse(await EzConfig.secGet(authTimeoutKey)) ??
+      (limSecDef[authTimeoutKey] as int);
+  final String lastAuth = await EzConfig.secGet(lastAuthKey);
 
   // Check quick exit(s)
-  if (timeout <= 0 || lastAuthString.isEmpty) return _externalAuth(reason);
+  if (timeout <= 0 || lastAuth.isEmpty) return _externalAuth(reason);
 
   // Do the math
-  final DateTime? saved = DateTime.tryParse(lastAuthString);
+  final DateTime? saved = DateTime.tryParse(lastAuth);
 
   if (saved == null ||
       DateTime.now().difference(saved) < Duration(minutes: timeout)) {

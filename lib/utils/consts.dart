@@ -240,6 +240,14 @@ final Map<String, Object> liminalDefault = <String, Object>{
   lightVerticalAlignKey: ListAlignment.start.value,
 };
 
+/// Secure key defaults for Liminal
+const Map<String, Object> limSecDef = <String, Object>{
+  authToEditKey: false,
+  authForHiddenKey: false,
+  authTimeoutKey: 5,
+  lastAuthKey: '',
+};
+
 //* Custom fonts *//
 
 /// wingding

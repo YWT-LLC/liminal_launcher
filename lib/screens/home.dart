@@ -85,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Future<void> navToHidden(BuildContext context) async {
-    if (bool.tryParse(await EzConfig.secGet(authForHiddenKey) ?? '') == true) {
+    if (bool.tryParse(await EzConfig.secGet(authForHiddenKey)) == true) {
       // Check every time so no reset is required; O(1)
       bool authed = false;
 
@@ -219,8 +219,7 @@ If you want to support Liminal's development, or the development of more Empathe
         behavior: HitTestBehavior.opaque,
         onLongPressStart: (LongPressStartDetails details) async {
           if (!editing &&
-              (bool.tryParse(await EzConfig.secGet(authToEditKey) ?? '') ==
-                  true)) {
+              (bool.tryParse(await EzConfig.secGet(authToEditKey)) == true)) {
             // Check every time so no reset is required; O(1)
             bool authed = false;
 
