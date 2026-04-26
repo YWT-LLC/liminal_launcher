@@ -339,7 +339,7 @@ If you want to support Liminal's development, or the development of more Empathe
                 toLaunch = appInfo.appMap[leftSwipeID];
               }
             } else {
-              // Swiped right (==0 already handled)
+              // Swiped right
               if (editing) {
                 editing = false;
                 refresh();
