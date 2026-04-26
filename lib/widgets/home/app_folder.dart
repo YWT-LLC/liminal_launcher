@@ -103,6 +103,15 @@ class _AppFolderState extends State<AppFolder> {
           mainAxisAlignment: hAlign.mainAxis,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
+            // Close/end edits
+            if (editing == true) ...<Widget>[
+              EzIconButton(
+                onPressed: () => setState(() => editing = false),
+                icon: const Icon(Icons.close),
+              ),
+              EzConfig.rowSpacer,
+            ],
+
             // Name (and rename)
             EzLink(
               widget.name,

@@ -118,11 +118,11 @@ class _AppTileState extends State<AppTile> {
               children: <Widget>[
                 // Close/end edits
                 if (editing == true) ...<Widget>[
-                  EzConfig.rowSpacer,
                   EzIconButton(
                     onPressed: () => setState(() => editing = false),
                     icon: const Icon(Icons.close),
                   ),
+                  EzConfig.rowSpacer,
                 ],
 
                 // App icon
