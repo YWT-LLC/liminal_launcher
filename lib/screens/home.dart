@@ -384,6 +384,8 @@ If you want to support Liminal's development, or the development of more Empathe
                 child: editing
                     ? ReorderableListView(
                         // TODO: I sure do hope (and doubt) this still works
+                        // TODO: using on start, on end, and a timer based on hold time: implement put in folder
+                        // TODO: add long hold delay controls to button design, efui up
                         onReorder: (int oldIndex, int newIndex) async {
                           if (oldIndex == newIndex) return;
 
