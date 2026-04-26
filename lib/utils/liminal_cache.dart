@@ -58,11 +58,13 @@ class LiminalCache extends EzAppCache {
       _design = DesignCache(
         homeDate: DateTypeConfig.lookup(EzConfig.get(darkHomeDateKey)),
         homeTime: EzConfig.get(darkHomeTimeKey),
+        listIcons: EzConfig.get(darkListIconKey),
+        listLabels: LabelTypeConfig.lookup(EzConfig.get(darkListLabelTypeKey)),
+        elevatedLists: EzConfig.get(darkElevatedListKey),
         folderIcons: EzConfig.get(darkFolderIconKey),
         folderLabels:
             LabelTypeConfig.lookup(EzConfig.get(darkFolderLabelTypeKey)),
-        listIcons: EzConfig.get(darkListIconKey),
-        listLabels: LabelTypeConfig.lookup(EzConfig.get(darkListLabelTypeKey)),
+        elevatedFolders: EzConfig.get(darkElevatedFolderKey),
         wideTiles: EzConfig.get(darkWideTilesKey),
       );
       _layout = LayoutCache(
@@ -79,11 +81,13 @@ class LiminalCache extends EzAppCache {
       _design = DesignCache(
         homeDate: DateTypeConfig.lookup(EzConfig.get(lightHomeDateKey)),
         homeTime: EzConfig.get(lightHomeTimeKey),
+        listIcons: EzConfig.get(lightListIconKey),
+        listLabels: LabelTypeConfig.lookup(EzConfig.get(lightListLabelTypeKey)),
+        elevatedLists: EzConfig.get(lightElevatedListKey),
         folderIcons: EzConfig.get(lightFolderIconKey),
         folderLabels:
             LabelTypeConfig.lookup(EzConfig.get(lightFolderLabelTypeKey)),
-        listIcons: EzConfig.get(lightListIconKey),
-        listLabels: LabelTypeConfig.lookup(EzConfig.get(lightListLabelTypeKey)),
+        elevatedFolders: EzConfig.get(lightElevatedFolderKey),
         wideTiles: EzConfig.get(lightWideTilesKey),
       );
       _layout = LayoutCache(
@@ -124,22 +128,26 @@ class DesignCache {
   final DateType homeDate;
   final bool homeTime;
 
-  final bool folderIcons;
-  final LabelType folderLabels;
-
   final bool listIcons;
   final LabelType listLabels;
+  final bool elevatedLists;
+
+  final bool folderIcons;
+  final LabelType folderLabels;
+  final bool elevatedFolders;
 
   final bool wideTiles;
 
   DesignCache({
     required this.homeDate,
     required this.homeTime,
-    required this.folderIcons,
-    required this.folderLabels,
     required this.listIcons,
     required this.listLabels,
+    required this.elevatedLists,
+    required this.folderIcons,
+    required this.folderLabels,
     required this.wideTiles,
+    required this.elevatedFolders,
   });
 }
 
@@ -168,14 +176,16 @@ String get rightSwipeID => _pointer.launcher.rightSwipe;
 DateType get homeDate => _pointer.design.homeDate;
 bool get homeTime => _pointer.design.homeTime;
 
-bool get folderIcons => _pointer.design.folderIcons;
-LabelType get folderLabels => _pointer.design.folderLabels;
-
 bool get listIcons => _pointer.design.listIcons;
 LabelType get listLabels => _pointer.design.listLabels;
+bool get elevatedLists => _pointer.design.elevatedLists;
+
+bool get folderIcons => _pointer.design.folderIcons;
+LabelType get folderLabels => _pointer.design.folderLabels;
+bool get elevatedFolders => _pointer.design.elevatedFolders;
 
 bool get wideTiles => _pointer.design.wideTiles;
-double get appIconSize => EzConfig.iconSize * 1.25 + EzConfig.padding;
+double get appIconSize => EzConfig.iconSize * 1.2 + EzConfig.padding;
 
 ListAlignment get hAlign => _pointer.layout.horizontalAlign;
 ListAlignment get vAlign => _pointer.layout.verticalAlign;
