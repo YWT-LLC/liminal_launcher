@@ -430,41 +430,38 @@ If you want to support Liminal's development, or the development of more Empathe
               EzConfig.spacer,
 
               // Add app
-              AddAppFAB(
-                context,
-                () => context.goNamed(
-                  appListPath,
-                  extra: ListConfig(
-                    ids: <String>{
-                      ...appInfo.homeSet,
-                      ...appInfo.hiddenSet,
-                      ...appInfo.banishedSet,
-                    },
-                    include: false,
-                    onSelected: (String id) => appInfo.addHomeApp(id),
-                    title: EzTextBackground(EzRow(
-                      children: <Widget>[
-                        Text('Home\t', style: EzConfig.styles.labelLarge),
-                        EzIcon(
-                          Icons.add,
-                          color: EzConfig.colors.onSurface,
-                        ),
-                      ],
-                    )),
-                  ),
-                ),
-              ),
+              AddAppFAB(() => context.goNamed(
+                    appListPath,
+                    extra: ListConfig(
+                      ids: <String>{
+                        ...appInfo.homeSet,
+                        ...appInfo.hiddenSet,
+                        ...appInfo.banishedSet,
+                      },
+                      include: false,
+                      onSelected: (String id) => appInfo.addHomeApp(id),
+                      title: EzTextBackground(EzRow(
+                        children: <Widget>[
+                          Text('Home\t', style: EzConfig.styles.labelLarge),
+                          EzIcon(
+                            Icons.add,
+                            color: EzConfig.colors.onSurface,
+                          ),
+                        ],
+                      )),
+                    ),
+                  )),
               EzConfig.spacer,
 
               // Add folder
-              AddFolderFAB(context, () async {
+              AddFolderFAB(() async {
                 await appInfo.addHomeFolder();
                 refresh();
               }),
               EzConfig.spacer,
 
               // Settings
-              SettingsFAB(context, () => context.goNamed(settingsHomePath)),
+              SettingsFAB(() => context.goNamed(settingsHomePath)),
             ]
           : null,
     );

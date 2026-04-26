@@ -19,7 +19,7 @@ const EzUpdaterFAB updater = EzUpdaterFAB(
 
 class AddAppFAB extends FloatingActionButton {
   /// [FloatingActionButton] that opens a modal for adding more home apps
-  AddAppFAB(BuildContext context, void Function()? onPressed, {super.key})
+  AddAppFAB(void Function() onPressed, {super.key})
       : super(
           heroTag: 'add_app_fab',
           onPressed: onPressed,
@@ -30,7 +30,7 @@ class AddAppFAB extends FloatingActionButton {
 
 class AddFolderFAB extends FloatingActionButton {
   /// [FloatingActionButton] that adds another home folder
-  AddFolderFAB(BuildContext context, void Function()? onPressed, {super.key})
+  AddFolderFAB(void Function() onPressed, {super.key})
       : super(
           heroTag: 'add_folder_fab',
           onPressed: onPressed,
@@ -41,7 +41,7 @@ class AddFolderFAB extends FloatingActionButton {
 
 class SettingsFAB extends FloatingActionButton {
   /// [FloatingActionButton] that will go to the [SettingsHomeScreen]
-  SettingsFAB(BuildContext context, void Function()? onPressed, {super.key})
+  SettingsFAB(void Function() onPressed, {super.key})
       : super(
           heroTag: 'settings_fab',
           onPressed: onPressed,
