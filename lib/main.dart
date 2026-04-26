@@ -16,7 +16,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 
 void main() async {
-  // Config the app //
+  // Setup the app //
 
   WidgetsFlutterBinding.ensureInitialized();
 
