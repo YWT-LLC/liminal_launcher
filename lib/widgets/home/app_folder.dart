@@ -119,7 +119,8 @@ class _AppFolderState extends State<AppFolder> {
               onPressed: () => context.goNamed(
                 appListPath,
                 extra: ListConfig(
-                  listCheck: (String id) => !widget.appSet.contains(id),
+                  ids: widget.appSet,
+                  include: false,
                   onSelected: (String id) =>
                       appInfo.addToFolder(id, widget.index),
                   title: EzTextBackground(EzRow(
