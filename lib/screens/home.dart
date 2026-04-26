@@ -11,6 +11,7 @@ import 'package:efui_bios/efui_bios.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:after_layout/after_layout.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -22,7 +23,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with AfterLayoutMixin<HomeScreen> {
-  // Define the fixed build data //
+  // Define build data //
 
   bool atBottom = false;
   bool editing = false;
@@ -30,14 +31,13 @@ class _HomeScreenState extends State<HomeScreen>
   late final OverlayState overlay = Overlay.of(context);
   ValueNotifier<double> rippleProgress = ValueNotifier<double>(0.0);
 
-  // Define the contextual build data //
-
   late List<Widget> homeTiles = homeA2T();
 
   // Define custom functions //
 
   /// home apps to tiles
   /// appProvider.homeList -> AppTile/AppFolder
+  /// TODO: I don't like this... should prolly be in build
   List<Widget> homeA2T() {
     final EdgeInsets tilePadding =
         EdgeInsets.symmetric(vertical: EzConfig.spacing / 2);
@@ -84,6 +84,22 @@ class _HomeScreenState extends State<HomeScreen>
     setState(() {});
   }
 
+  Future<void> swipeUp() async {
+    if (editing) {
+      await navToHidden(context);
+    } else {
+      context.goNamed(
+        appListPath,
+        extra: ListConfig(
+          ids: <String>{...appInfo.hiddenSet, ...appInfo.banishedSet},
+          include: false,
+          onSelected: (String id) => launchApp(id),
+          title: null,
+        ),
+      );
+    }
+  }
+
   Future<void> navToHidden(BuildContext context) async {
     if (bool.tryParse(await EzConfig.secGet(authForHiddenKey)) == true) {
       // Check every time so no reset is required; O(1)
@@ -102,7 +118,8 @@ class _HomeScreenState extends State<HomeScreen>
       context.goNamed(
         appListPath,
         extra: ListConfig(
-          listCheck: (String id) => appInfo.hiddenSet.contains(id),
+          ids: appInfo.hiddenSet,
+          include: true,
           onSelected: (String id) => launchApp(id),
           title: EzTextBackground(EzRow(
             children: <Widget>[
@@ -160,8 +177,44 @@ class _HomeScreenState extends State<HomeScreen>
                 style: EzConfig.styles.bodyLarge,
               ),
               EzConfig.centerLine,
-              Text(
-                "There are tips where they might be needed, but customization is pretty straight forward.\nLong press the home screen to edit, and you're off!",
+              EzRichText(
+                <InlineSpan>[
+                  EzPlainText(
+                    text:
+                        '''Personalizing your launcher should be straightforward, with one potential exception: the dark and light theme appearances can be completely separate!
+                
+While in the relevant settings, you will see a toggle-able icon that indicates whether you're editing the dark ''',
+                    style: EzConfig.styles.bodyLarge,
+                  ),
+                  WidgetSpan(
+                    alignment: PlaceholderAlignment.middle,
+                    child: EzIcon(Icons.dark_mode),
+                  ),
+                  EzPlainText(
+                    text: ', light ',
+                    style: EzConfig.styles.bodyLarge,
+                  ),
+                  WidgetSpan(
+                    alignment: PlaceholderAlignment.middle,
+                    child: EzIcon(Icons.light_mode),
+                  ),
+                  EzPlainText(
+                    text: ', or both ',
+                    style: EzConfig.styles.bodyLarge,
+                  ),
+                  WidgetSpan(
+                    alignment: PlaceholderAlignment.middle,
+                    child: FaIcon(
+                      FontAwesomeIcons.yinYang,
+                      size: EzConfig.iconSize,
+                    ),
+                  ),
+                  EzPlainText(
+                    text:
+                        " themes.\n\nLong press the home screen to edit, and you're off!",
+                    style: EzConfig.styles.bodyLarge,
+                  ),
+                ],
                 textAlign: TextAlign.center,
                 style: EzConfig.styles.bodyLarge,
               ),
@@ -269,21 +322,7 @@ If you want to support Liminal's development, or the development of more Empathe
         onVerticalDragEnd: (DragEndDetails details) async {
           if (details.primaryVelocity != null) {
             if (details.primaryVelocity! < 0) {
-              // Swiped up
-              if (editing) {
-                await navToHidden(context);
-              } else {
-                context.goNamed(
-                  appListPath,
-                  extra: ListConfig(
-                    listCheck: (String id) =>
-                        !appInfo.hiddenSet.contains(id) &&
-                        !appInfo.banishedSet.contains(id),
-                    onSelected: (String id) => launchApp(id),
-                    title: null,
-                  ),
-                );
-              }
+              await swipeUp();
             }
           }
         },
@@ -325,23 +364,8 @@ If you want to support Liminal's development, or the development of more Empathe
                 onNotification: (ScrollNotification notification) {
                   if (notification is OverscrollNotification &&
                       notification.overscroll > 0) {
-                    // Navigate on bottom overscroll
                     if (atBottom) {
-                      if (editing) {
-                        navToHidden(context);
-                      } else {
-                        context.goNamed(
-                          appListPath,
-                          extra: ListConfig(
-                            listCheck: (String id) =>
-                                !appInfo.hiddenSet.contains(id) &&
-                                !appInfo.banishedSet.contains(id),
-                            onSelected: (String id) => launchApp(id),
-                            title: null,
-                          ),
-                        );
-                      }
-
+                      swipeUp();
                       return true;
                     } else {
                       setState(() => atBottom = true);
@@ -359,6 +383,7 @@ If you want to support Liminal's development, or the development of more Empathe
                 },
                 child: editing
                     ? ReorderableListView(
+                        // TODO: I sure do hope (and doubt) this still works
                         onReorder: (int oldIndex, int newIndex) async {
                           if (oldIndex == newIndex) return;
 
@@ -408,10 +433,12 @@ If you want to support Liminal's development, or the development of more Empathe
                 () => context.goNamed(
                   appListPath,
                   extra: ListConfig(
-                    listCheck: (String id) =>
-                        !appInfo.homeSet.contains(id) &&
-                        !appInfo.hiddenSet.contains(id) &&
-                        !appInfo.banishedSet.contains(id),
+                    ids: <String>{
+                      ...appInfo.homeSet,
+                      ...appInfo.hiddenSet,
+                      ...appInfo.banishedSet,
+                    },
+                    include: false,
                     onSelected: (String id) => appInfo.addHomeApp(id),
                     title: EzTextBackground(EzRow(
                       children: <Widget>[
