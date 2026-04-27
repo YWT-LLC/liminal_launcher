@@ -17,18 +17,21 @@ class AppTileSetting extends StatelessWidget {
   final String darkIconKey;
   final String lightIconKey;
 
+  final String darkElevatedKey;
+  final String lightElevatedKey;
+
   /// [EzConfig.rebuildUI] passthrough
   final void Function() onComplete;
 
-  const AppTileSetting({
-    super.key,
-    required this.folder,
-    required this.onComplete,
-  })  : darkLabelKey = folder ? darkFolderLabelTypeKey : darkListLabelTypeKey,
+  const AppTileSetting(this.onComplete, {super.key, required this.folder})
+      : darkLabelKey = folder ? darkFolderLabelTypeKey : darkListLabelTypeKey,
         lightLabelKey =
             folder ? lightFolderLabelTypeKey : lightListLabelTypeKey,
         darkIconKey = folder ? darkFolderIconKey : darkListIconKey,
-        lightIconKey = folder ? lightFolderIconKey : lightListIconKey;
+        lightIconKey = folder ? lightFolderIconKey : lightListIconKey,
+        darkElevatedKey = folder ? darkElevatedFolderKey : darkElevatedListKey,
+        lightElevatedKey =
+            folder ? lightElevatedFolderKey : lightElevatedListKey;
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +39,15 @@ class AppTileSetting extends StatelessWidget {
 
     return EzElevatedIconButton(
       onPressed: () async {
+        final String label = folder ? 'Liminal Folder' : 'Liminal Launcher';
+        final Widget icon = Icon(
+          folder ? Icons.folder : Icons.launch,
+          size: appIconSize,
+        );
+
         LabelType labelType = folder ? folderLabels : listLabels;
         bool showIcon = folder ? folderIcons : listIcons;
+        bool elevated = folder ? elevatedFolders : elevatedLists;
         bool useWide = wideTiles;
 
         await ezModal(
@@ -51,27 +61,27 @@ class AppTileSetting extends StatelessWidget {
                       ? const BoxConstraints(minWidth: double.infinity)
                       : null,
                   child: showIcon
-                      ? folder
-                          ? EzTextIconButton(
-                              icon: Icon(Icons.folder, size: appIconSize),
-                              label: buildLabel('Liminal Folder', labelType),
+                      ? elevated
+                          ? EzElevatedIconButton(
+                              icon: icon,
+                              label: buildLabel(label, labelType),
                               style: TextButton.styleFrom(padding: padding),
                               onPressed: doNothing,
                             )
                           : EzTextIconButton(
-                              icon: Icon(Icons.launch, size: appIconSize),
-                              label: buildLabel('Liminal Launcher', labelType),
+                              icon: icon,
+                              label: buildLabel(label, labelType),
                               style: TextButton.styleFrom(padding: padding),
                               onPressed: doNothing,
                             )
-                      : folder
-                          ? EzTextButton(
-                              text: buildLabel('Liminal Folder', labelType),
+                      : elevated
+                          ? EzElevatedButton(
+                              text: buildLabel(label, labelType),
                               style: TextButton.styleFrom(padding: padding),
                               onPressed: doNothing,
                             )
                           : EzTextButton(
-                              text: buildLabel('Liminal Launcher', labelType),
+                              text: buildLabel(label, labelType),
                               style: TextButton.styleFrom(padding: padding),
                               onPressed: doNothing,
                             ),
@@ -103,7 +113,6 @@ class AppTileSetting extends StatelessWidget {
 
                 // Show icon
                 EzSwitchPair(
-                  key: UniqueKey(),
                   text: 'Show icon',
                   valueKey: EzConfig.isDark ? darkIconKey : lightIconKey,
                   afterChanged: (bool? value) {
@@ -115,6 +124,18 @@ class AppTileSetting extends StatelessWidget {
                     setModal(() => showIcon = value);
                   },
                 ),
+                EzConfig.spacer,
+
+                // Elevated
+                EzSwitchPair(
+                  text: 'Elevated button',
+                  valueKey:
+                      EzConfig.isDark ? darkElevatedKey : lightElevatedKey,
+                  afterChanged: (bool? value) {
+                    if (value == null) return;
+                    setModal(() => elevated = value);
+                  },
+                ),
                 EzConfig.separator,
 
                 // Wide tiles
@@ -122,14 +143,8 @@ class AppTileSetting extends StatelessWidget {
                   text: 'Use max width (shared)',
                   valueKey:
                       EzConfig.isDark ? darkWideTilesKey : lightWideTilesKey,
-                  afterChanged: (bool? choice) async {
+                  afterChanged: (bool? choice) {
                     if (choice == null) return;
-                    if (EzConfig.updateBoth) {
-                      await EzConfig.setBool(
-                        EzConfig.isDark ? lightWideTilesKey : darkWideTilesKey,
-                        choice,
-                      );
-                    }
                     setModal(() => useWide = choice);
                   },
                 ),
@@ -141,15 +156,20 @@ class AppTileSetting extends StatelessWidget {
 
         if (labelType != (folder ? folderLabels : listLabels) ||
             showIcon != (folder ? folderIcons : listIcons) ||
+            elevated != (folder ? elevatedFolders : elevatedLists) ||
             useWide != wideTiles) {
           if (EzConfig.updateBoth || EzConfig.isDark) {
             await EzConfig.setString(darkLabelKey, labelType.value);
             await EzConfig.setBool(darkIconKey, showIcon);
+            await EzConfig.setBool(darkElevatedKey, elevated);
+            await EzConfig.setBool(darkWideTilesKey, useWide);
           }
 
           if (EzConfig.updateBoth || !EzConfig.isDark) {
             await EzConfig.setString(lightLabelKey, labelType.value);
             await EzConfig.setBool(lightIconKey, showIcon);
+            await EzConfig.setBool(lightElevatedKey, elevated);
+            await EzConfig.setBool(lightWideTilesKey, useWide);
           }
 
           await EzConfig.rebuildUI(onComplete);
