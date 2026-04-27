@@ -97,9 +97,9 @@ class AppearanceSettingsScreen extends StatelessWidget {
                 androidPackage: androidPackage,
                 prependButton: <Widget>[
                   // Tile settings
-                  const AppTileSetting(folder: false, onComplete: doNothing),
+                  const AppTileSetting(doNothing, folder: false),
                   EzConfig.spacer,
-                  const AppTileSetting(folder: true, onComplete: doNothing),
+                  const AppTileSetting(doNothing, folder: true),
                   EzConfig.separator,
                 ],
                 includeBackgroundImage: false,
