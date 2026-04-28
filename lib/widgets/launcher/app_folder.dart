@@ -92,7 +92,6 @@ class _AppFolderState extends State<AppFolder> {
     if (editing != false) {
       return EzAnimHide(
         visible: rippleThrottle == null,
-        size: (context.findRenderObject() as RenderBox).size,
         child: EzScrollView(
           scrollDirection: Axis.horizontal,
           mainAxisAlignment: hAlign.mainAxis,
@@ -278,7 +277,6 @@ class _AppFolderState extends State<AppFolder> {
 
     return EzAnimHide(
       visible: rippleThrottle == null,
-      size: (context.findRenderObject() as RenderBox).size,
       child: open
           ? TapRegion(
               onTapOutside: (_) => toggleOpen,
