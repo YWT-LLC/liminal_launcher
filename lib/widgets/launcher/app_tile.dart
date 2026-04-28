@@ -57,8 +57,7 @@ class _AppTileState extends State<AppTile> {
         widget.rippleProgress!.value <= 0) {
       return;
     }
-    final Offset wya =
-        (context.findRenderObject() as RenderBox).localToGlobal(Offset.zero);
+    final Offset wya = ezWya(context);
     final double dy = (wya.dy - lastRipple.dy).abs();
 
     if (dy <= widget.rippleProgress!.value * heightOf(context)) {
