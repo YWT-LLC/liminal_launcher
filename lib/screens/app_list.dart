@@ -78,7 +78,8 @@ class _AppListScreenState extends State<AppListScreen> {
                 // Sort by...
                 MenuAnchor(
                   builder: (_, MenuController controller, __) => EzIconButton(
-                    onPressed: () => controller.isOpen ? controller.close() : controller.open(),
+                    onPressed: () =>
+                        controller.isOpen ? controller.close() : controller.open(),
                     icon: const Icon(Icons.sort),
                   ),
                   menuChildren: <EzMenuButton>[
@@ -267,7 +268,7 @@ class _AppListScreenState extends State<AppListScreen> {
             mod: 0.75,
             visible: !atTop,
             forceType: EzTransitionType.zoom,
-            child: FloatingActionButton(
+            kid: FloatingActionButton(
               onPressed: () {
                 scrollControl.animateTo(
                   0,
@@ -288,7 +289,7 @@ class _AppListScreenState extends State<AppListScreen> {
             mod: 0.75,
             visible: !atBottom,
             forceType: EzTransitionType.zoom,
-            child: FloatingActionButton(
+            kid: FloatingActionButton(
               onPressed: () {
                 scrollControl.animateTo(
                   scrollControl.position.maxScrollExtent,
