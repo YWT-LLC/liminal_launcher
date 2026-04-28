@@ -124,8 +124,14 @@ class _TheMagic extends StatelessWidget {
                   AppListScreen(rs.extra as ListConfig),
                   transitionsBuilder: (BuildContext tbc, Animation<double> a,
                           Animation<double> aa, Widget w) =>
-                      ezTransitionsBuilder(tbc, a, aa, w,
-                          force: EzTransitionType.slideY),
+                      ezTransitionsBuilder(
+                    tbc,
+                    a,
+                    aa,
+                    w,
+                    forceType: EzTransitionType.slideY,
+                    forceFade: true,
+                  ),
                 ),
               ),
 
