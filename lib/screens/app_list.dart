@@ -272,7 +272,7 @@ class _AppListScreenState extends State<AppListScreen> {
           child: EzAnimVis(
             mod: 0.75,
             visible: !atTop,
-            force: EzTransitionType.zoom,
+            forceType: EzTransitionType.zoom,
             child: FloatingActionButton(
               onPressed: () {
                 scrollControl.animateTo(
@@ -293,7 +293,7 @@ class _AppListScreenState extends State<AppListScreen> {
           child: EzAnimVis(
             mod: 0.75,
             visible: !atBottom,
-            force: EzTransitionType.zoom,
+            forceType: EzTransitionType.zoom,
             child: FloatingActionButton(
               onPressed: () {
                 scrollControl.animateTo(
