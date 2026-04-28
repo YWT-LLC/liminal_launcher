@@ -17,9 +17,8 @@ Future<List<AppInfo>> getApps() async {
     final List<dynamic>? appData = await platform.invokeMethod('getApps');
 
     if (appData == null) return <AppInfo>[];
-    final List<AppInfo> apps = appData
-        .map((dynamic app) => AppInfo.fromMap(Map<String, dynamic>.from(app)))
-        .toList();
+    final List<AppInfo> apps =
+        appData.map((dynamic app) => AppInfo.fromMap(Map<String, dynamic>.from(app))).toList();
     apps.remove(self);
     return apps;
   } catch (e) {

@@ -36,9 +36,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
     final String lowDir = dir.toLowerCase();
 
     String? appID = EzConfig.get(key);
-    AppInfo app = (appID == null || appID.isEmpty)
-        ? nullApp
-        : appInfo.appMap[appID] ?? nullApp;
+    AppInfo app = (appID == null || appID.isEmpty) ? nullApp : appInfo.appMap[appID] ?? nullApp;
 
     // Return the build //
 

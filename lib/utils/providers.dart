@@ -39,8 +39,7 @@ class AppInfoProvider extends ChangeNotifier {
   final Set<String> _hiddenSet = Set<String>.from(EzConfig.get(hiddenIDsKey));
   final List<String> _hiddenList = EzConfig.get(hiddenIDsKey);
 
-  final Set<String> _banishedSet =
-      Set<String>.from(EzConfig.get(banishedIDsKey));
+  final Set<String> _banishedSet = Set<String>.from(EzConfig.get(banishedIDsKey));
   final List<String> _banishedList = EzConfig.get(banishedIDsKey);
 
   AppInfoProvider(List<AppInfo> apps)
@@ -54,10 +53,8 @@ class AppInfoProvider extends ChangeNotifier {
 
     for (final String item in homeCopy) {
       if (item.contains(folderSplit)) {
-        _homeSet.addAll(item
-            .split(folderSplit)
-            .where((String item) => item.contains(idSplit))
-            .toSet());
+        _homeSet.addAll(
+            item.split(folderSplit).where((String item) => item.contains(idSplit)).toSet());
 
         folders.add(item);
       }
@@ -95,8 +92,7 @@ class AppInfoProvider extends ChangeNotifier {
 
         switch (eventType) {
           case 'installed':
-            final Map<String, dynamic>? appInfoMap =
-                event['appInfo'] as Map<String, dynamic>?;
+            final Map<String, dynamic>? appInfoMap = event['appInfo'] as Map<String, dynamic>?;
 
             if (appInfoMap != null) await _handleAppInstalled(appInfoMap);
             break;
@@ -104,9 +100,8 @@ class AppInfoProvider extends ChangeNotifier {
             final String? packageName = event['packageName'] as String?;
             if (packageName == null) return;
 
-            final List<AppInfo> apps = _apps
-                .where((AppInfo app) => app.package == packageName)
-                .toList();
+            final List<AppInfo> apps =
+                _apps.where((AppInfo app) => app.package == packageName).toList();
 
             if (apps.isNotEmpty) {
               for (final AppInfo app in apps) {
@@ -132,8 +127,7 @@ class AppInfoProvider extends ChangeNotifier {
       EzConfig.get(ascListKey),
     );
 
-    if (EzConfig.get(autoAddToHomeKey) == true &&
-        !_homeSet.contains(installed.id)) {
+    if (EzConfig.get(autoAddToHomeKey) == true && !_homeSet.contains(installed.id)) {
       _homeList.add(installed.id);
       _homeSet.add(installed.id);
       await EzConfig.setStringList(homeIDsKey, _homeList);
@@ -176,9 +170,8 @@ class AppInfoProvider extends ChangeNotifier {
             (asc) ? a.name.compareTo(b.name) : b.name.compareTo(a.name));
 
       case AppSort.publisher:
-        _apps.sort((AppInfo a, AppInfo b) => (asc)
-            ? a.package.compareTo(b.package)
-            : b.package.compareTo(a.package));
+        _apps.sort((AppInfo a, AppInfo b) =>
+            (asc) ? a.package.compareTo(b.package) : b.package.compareTo(a.package));
 
       case AppSort.date:
         _apps.sort((AppInfo a, AppInfo b) => (asc)
@@ -218,8 +211,8 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   Future<void> addToFolder(String appID, int folderIndex) async {
-    _homeList[folderIndex] = (homeList[folderIndex] + folderSplit + appID)
-        .replaceAll(folderSplit + emptyTag, '');
+    _homeList[folderIndex] =
+        (homeList[folderIndex] + folderSplit + appID).replaceAll(folderSplit + emptyTag, '');
 
     if (_homeSet.contains(appID)) {
       final int appIndex = _homeList.indexOf(appID);
@@ -308,9 +301,8 @@ class AppInfoProvider extends ChangeNotifier {
     final List<String> parts = fullName.split(folderSplit);
     if (parts[0] == newName) return false;
 
-    final String newFullName = (parts.length > 1)
-        ? <String>[newName, ...parts].join(folderSplit)
-        : newName;
+    final String newFullName =
+        (parts.length > 1) ? <String>[newName, ...parts].join(folderSplit) : newName;
     _homeList[folderIndex] = newFullName;
 
     await EzConfig.setStringList(homeIDsKey, _homeList);

@@ -43,8 +43,7 @@ class SettingsHomeScreen extends StatelessWidget {
             appName: appName,
             androidPackage: androidPackage,
           ),
-          if (EzConfig.showBackFAB &&
-              ezRootNav.currentState!.canPop()) ...<Widget>[
+          if (EzConfig.showBackFAB && ezRootNav.currentState!.canPop()) ...<Widget>[
             EzConfig.spacer,
             const EzBackFAB(showHome: true),
           ],
@@ -61,14 +60,11 @@ class _HeaderSettings extends StatelessWidget {
       label: 'Home header',
       icon: const Icon(LineIcons.clock),
       onPressed: () async {
-        final String timeKey =
-            EzConfig.isDark ? darkHomeTimeKey : lightHomeTimeKey;
+        final String timeKey = EzConfig.isDark ? darkHomeTimeKey : lightHomeTimeKey;
         final bool backupTime = EzConfig.get(timeKey);
 
-        final String dateKey =
-            EzConfig.isDark ? darkHomeDateKey : lightHomeDateKey;
-        final DateType backupDate =
-            DateTypeConfig.lookup(EzConfig.get(dateKey));
+        final String dateKey = EzConfig.isDark ? darkHomeDateKey : lightHomeDateKey;
+        final DateType backupDate = DateTypeConfig.lookup(EzConfig.get(dateKey));
 
         await ezModal(
           context: context,
@@ -77,8 +73,7 @@ class _HeaderSettings extends StatelessWidget {
               // Hide status bar
               EzSwitchPair(
                 text: 'Hide status bar',
-                valueKey:
-                    EzConfig.isDark ? darkHideStatusKey : lightHideStatusKey,
+                valueKey: EzConfig.isDark ? darkHideStatusKey : lightHideStatusKey,
                 afterChanged: (bool? choice) async {
                   if (choice == null) return;
                   if (EzConfig.updateBoth) {
@@ -153,8 +148,7 @@ class _HeaderSettings extends StatelessWidget {
                         await EzConfig.setString(darkHomeDateKey, choice.value);
                       }
                       if (EzConfig.updateBoth || !EzConfig.isDark) {
-                        await EzConfig.setString(
-                            lightHomeDateKey, choice.value);
+                        await EzConfig.setString(lightHomeDateKey, choice.value);
                       }
                     },
                   ),
@@ -228,13 +222,11 @@ class _AppListSettings extends StatelessWidget {
       label: 'App list',
       icon: const Icon(Icons.list),
       onPressed: () async {
-        final int timeoutBackup =
-            int.tryParse(await EzConfig.secGet(authTimeoutKey)) ??
-                (limSecDef[authTimeoutKey] as int);
+        final int timeoutBackup = int.tryParse(await EzConfig.secGet(authTimeoutKey)) ??
+            (limSecDef[authTimeoutKey] as int);
         timeoutText.text = timeoutBackup.toString();
 
-        final String wideKey =
-            EzConfig.isDark ? darkWideTilesKey : lightWideTilesKey;
+        final String wideKey = EzConfig.isDark ? darkWideTilesKey : lightWideTilesKey;
         final bool wideBackup = wideTiles;
 
         if (context.mounted) {
@@ -246,8 +238,7 @@ class _AppListSettings extends StatelessWidget {
                 Text(
                   'Theme dependent',
                   textAlign: TextAlign.center,
-                  style: EzConfig.styles.labelLarge
-                      ?.copyWith(fontWeight: FontWeight.bold),
+                  style: EzConfig.styles.labelLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 EzConfig.spacer,
 
@@ -271,8 +262,7 @@ class _AppListSettings extends StatelessWidget {
                   title: Text(
                     'Constant',
                     textAlign: TextAlign.center,
-                    style: EzConfig.styles.labelLarge
-                        ?.copyWith(fontWeight: FontWeight.bold),
+                    style: EzConfig.styles.labelLarge?.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ),
 
@@ -336,8 +326,7 @@ class _AppListSettings extends StatelessWidget {
                         autovalidateMode: AutovalidateMode.onUnfocus,
                         onTap: () async {
                           // Wait a half sec for the Spacer to resize first
-                          await Future<void>.delayed(
-                              const Duration(milliseconds: 500));
+                          await Future<void>.delayed(const Duration(milliseconds: 500));
 
                           // Scroll to the bottom
                           await timeoutScroll.animateTo(
@@ -361,8 +350,7 @@ class _AppListSettings extends StatelessWidget {
                           if (intVal == null || intVal < 0) {
                             return;
                           }
-                          await EzConfig.secSet(
-                              authTimeoutKey, intVal.toString());
+                          await EzConfig.secSet(authTimeoutKey, intVal.toString());
                         },
                       ),
                     ),

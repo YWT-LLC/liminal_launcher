@@ -107,9 +107,8 @@ class AppearanceSettingsScreen extends StatelessWidget {
                   // Wallpaper
                   EzImageSetting(
                     doNothing,
-                    configKey: EzConfig.isDark
-                        ? darkBackgroundImageKey
-                        : lightBackgroundImageKey,
+                    configKey:
+                        EzConfig.isDark ? darkBackgroundImageKey : lightBackgroundImageKey,
                     label: 'Wallpaper',
                     allowSolidColor: true,
                     clearLabel: 'Use OS',
@@ -134,15 +133,13 @@ class AppearanceSettingsScreen extends StatelessWidget {
                       );
 
                       if (hBackup !=
-                              ListAlignmentConfig.lookup(EzConfig.get(
-                                  EzConfig.isDark
-                                      ? darkHorizontalAlignKey
-                                      : lightHorizontalAlignKey)) ||
+                              ListAlignmentConfig.lookup(EzConfig.get(EzConfig.isDark
+                                  ? darkHorizontalAlignKey
+                                  : lightHorizontalAlignKey)) ||
                           vBackup !=
-                              ListAlignmentConfig.lookup(EzConfig.get(
-                                  EzConfig.isDark
-                                      ? darkVerticalAlignKey
-                                      : lightVerticalAlignKey))) {
+                              ListAlignmentConfig.lookup(EzConfig.get(EzConfig.isDark
+                                  ? darkVerticalAlignKey
+                                  : lightVerticalAlignKey))) {
                         await EzConfig.redrawUI(doNothing);
                       }
                     },
@@ -156,16 +153,12 @@ class AppearanceSettingsScreen extends StatelessWidget {
                   // Hide status bar
                   EzSwitchPair(
                     text: 'Hide status bar',
-                    valueKey: EzConfig.isDark
-                        ? darkHideStatusKey
-                        : lightHideStatusKey,
+                    valueKey: EzConfig.isDark ? darkHideStatusKey : lightHideStatusKey,
                     afterChanged: (bool? choice) async {
                       if (choice == null) return;
                       if (EzConfig.updateBoth) {
                         await EzConfig.setBool(
-                          EzConfig.isDark
-                              ? lightHideStatusKey
-                              : darkHideStatusKey,
+                          EzConfig.isDark ? lightHideStatusKey : darkHideStatusKey,
                           choice,
                         );
                       }

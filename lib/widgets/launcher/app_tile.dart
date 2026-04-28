@@ -95,14 +95,11 @@ class _AppTileState extends State<AppTile> {
               children: <Widget>[
                 TileButton(
                   app: widget.app,
-                  labelType:
-                      (widget.onHomeScreen == null) ? folderLabels : listLabels,
-                  showIcon:
-                      (widget.onHomeScreen == null) ? folderIcons : listIcons,
+                  labelType: (widget.onHomeScreen == null) ? folderLabels : listLabels,
+                  showIcon: (widget.onHomeScreen == null) ? folderIcons : listIcons,
                   onPressed: () => widget.onSelected(widget.app.id),
-                  onLongPress: () => widget.editable
-                      ? setState(() => editing = true)
-                      : doNothing,
+                  onLongPress: () =>
+                      widget.editable ? setState(() => editing = true) : doNothing,
                 ),
               ],
             )
@@ -154,8 +151,7 @@ class _AppTileState extends State<AppTile> {
                   onPressed: () => showDialog(
                     context: context,
                     builder: (BuildContext dCon) {
-                      final TextEditingController renameController =
-                          TextEditingController();
+                      final TextEditingController renameController = TextEditingController();
 
                       void onConfirm() async {
                         closeKeyboard(dCon);
@@ -163,8 +159,8 @@ class _AppTileState extends State<AppTile> {
                         final String name = renameController.text.trim();
                         if (validateRename(name) != null) return null;
 
-                        final bool success = await appInfo.renameApp(
-                            newName: name, appID: widget.app.id);
+                        final bool success =
+                            await appInfo.renameApp(newName: name, appID: widget.app.id);
 
                         if (success) {
                           if (dCon.mounted) {
@@ -215,8 +211,7 @@ class _AppTileState extends State<AppTile> {
                     !appInfo.hiddenSet.contains(widget.app.id)) ...<Widget>[
                   EzIconButton(
                     onPressed: () async {
-                      final bool success =
-                          await appInfo.addHomeApp(widget.app.id);
+                      final bool success = await appInfo.addHomeApp(widget.app.id);
 
                       if (success) {
                         setState(() => editing = false);
@@ -232,8 +227,7 @@ class _AppTileState extends State<AppTile> {
                 if (widget.onHomeScreen == true) ...<Widget>[
                   EzIconButton(
                     onPressed: () async {
-                      final bool success =
-                          await appInfo.removeHomeApp(widget.app.id);
+                      final bool success = await appInfo.removeHomeApp(widget.app.id);
 
                       if (success) {
                         setState(() => editing = false);
@@ -248,10 +242,9 @@ class _AppTileState extends State<AppTile> {
                 // Show/hide
                 EzIconButton(
                   onPressed: () async {
-                    final bool result =
-                        appInfo.hiddenSet.contains(widget.app.id)
-                            ? await appInfo.showApp(widget.app.id)
-                            : await appInfo.hideApp(widget.app.id);
+                    final bool result = appInfo.hiddenSet.contains(widget.app.id)
+                        ? await appInfo.showApp(widget.app.id)
+                        : await appInfo.hideApp(widget.app.id);
 
                     if (result) {
                       setState(() => editing = false);
@@ -269,8 +262,7 @@ class _AppTileState extends State<AppTile> {
                 // Banish
                 EzIconButton(
                   onPressed: () async {
-                    final bool banished =
-                        await appInfo.banishApp(widget.app.id);
+                    final bool banished = await appInfo.banishApp(widget.app.id);
 
                     if (banished) {
                       setState(() => editing = false);
@@ -359,15 +351,13 @@ class TileButton extends StatelessWidget {
         ? EzTextIconButton(
             label: buildLabel(app.name, labelType),
             icon: appIcon,
-            style: TextButton.styleFrom(
-                padding: EzInsets.wrap(EzConfig.marginVal)),
+            style: TextButton.styleFrom(padding: EzInsets.wrap(EzConfig.marginVal)),
             onPressed: onPressed,
             onLongPress: onLongPress,
           )
         : EzTextButton(
             text: buildLabel(app.name, labelType),
-            style: TextButton.styleFrom(
-                padding: EzInsets.wrap(EzConfig.marginVal)),
+            style: TextButton.styleFrom(padding: EzInsets.wrap(EzConfig.marginVal)),
             onPressed: onPressed,
             onLongPress: onLongPress,
           );

@@ -62,16 +62,13 @@ class LiminalCache extends EzAppCache {
         listLabels: LabelTypeConfig.lookup(EzConfig.get(darkListLabelTypeKey)),
         elevatedLists: EzConfig.get(darkElevatedListKey),
         folderIcons: EzConfig.get(darkFolderIconKey),
-        folderLabels:
-            LabelTypeConfig.lookup(EzConfig.get(darkFolderLabelTypeKey)),
+        folderLabels: LabelTypeConfig.lookup(EzConfig.get(darkFolderLabelTypeKey)),
         elevatedFolders: EzConfig.get(darkElevatedFolderKey),
         wideTiles: EzConfig.get(darkWideTilesKey),
       );
       _layout = LayoutCache(
-        horizontalAlign:
-            ListAlignmentConfig.lookup(EzConfig.get(darkHorizontalAlignKey)),
-        verticalAlign:
-            ListAlignmentConfig.lookup(EzConfig.get(darkVerticalAlignKey)),
+        horizontalAlign: ListAlignmentConfig.lookup(EzConfig.get(darkHorizontalAlignKey)),
+        verticalAlign: ListAlignmentConfig.lookup(EzConfig.get(darkVerticalAlignKey)),
       );
     } else {
       _launcher = LauncherCache(
@@ -85,16 +82,13 @@ class LiminalCache extends EzAppCache {
         listLabels: LabelTypeConfig.lookup(EzConfig.get(lightListLabelTypeKey)),
         elevatedLists: EzConfig.get(lightElevatedListKey),
         folderIcons: EzConfig.get(lightFolderIconKey),
-        folderLabels:
-            LabelTypeConfig.lookup(EzConfig.get(lightFolderLabelTypeKey)),
+        folderLabels: LabelTypeConfig.lookup(EzConfig.get(lightFolderLabelTypeKey)),
         elevatedFolders: EzConfig.get(lightElevatedFolderKey),
         wideTiles: EzConfig.get(lightWideTilesKey),
       );
       _layout = LayoutCache(
-        horizontalAlign:
-            ListAlignmentConfig.lookup(EzConfig.get(lightHorizontalAlignKey)),
-        verticalAlign:
-            ListAlignmentConfig.lookup(EzConfig.get(lightVerticalAlignKey)),
+        horizontalAlign: ListAlignmentConfig.lookup(EzConfig.get(lightHorizontalAlignKey)),
+        verticalAlign: ListAlignmentConfig.lookup(EzConfig.get(lightVerticalAlignKey)),
       );
     }
 

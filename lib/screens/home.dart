@@ -21,8 +21,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
-    with AfterLayoutMixin<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScreen> {
   // Define build data //
 
   bool atBottom = false;
@@ -39,8 +38,7 @@ class _HomeScreenState extends State<HomeScreen>
   /// appProvider.homeList -> AppTile/AppFolder
   /// TODO: I don't like this... should prolly be in build
   List<Widget> homeA2T() {
-    final EdgeInsets tilePadding =
-        EdgeInsets.symmetric(vertical: EzConfig.spacing / 2);
+    final EdgeInsets tilePadding = EdgeInsets.symmetric(vertical: EzConfig.spacing / 2);
     final List<Widget> tileList = <Widget>[];
 
     for (int index = 0; index < appInfo.homeList.length; index++) {
@@ -210,8 +208,7 @@ While in the relevant settings, you will see a toggle-able icon that indicates w
                     ),
                   ),
                   EzPlainText(
-                    text:
-                        " themes.\n\nLong press the home screen to edit, and you're off!",
+                    text: " themes.\n\nLong press the home screen to edit, and you're off!",
                     style: EzConfig.styles.bodyLarge,
                   ),
                 ],
@@ -233,10 +230,8 @@ If you want to support Liminal's development, or the development of more Empathe
                       'contributing',
                       style: EzConfig.styles.bodyLarge,
                       textAlign: TextAlign.center,
-                      url:
-                          Uri.parse('https://www.empathetech.net/#/contribute'),
-                      hint:
-                          'Open a link to the Empathetic contribution options.',
+                      url: Uri.parse('https://www.empathetech.net/#/contribute'),
+                      hint: 'Open a link to the Empathetic contribution options.',
                     ),
                     const EzPlainText(
                       text:
@@ -271,8 +266,7 @@ If you want to support Liminal's development, or the development of more Empathe
       GestureDetector(
         behavior: HitTestBehavior.opaque,
         onLongPressStart: (LongPressStartDetails details) async {
-          if (!editing &&
-              (bool.tryParse(await EzConfig.secGet(authToEditKey)) == true)) {
+          if (!editing && (bool.tryParse(await EzConfig.secGet(authToEditKey)) == true)) {
             // Check every time so no reset is required; O(1)
             bool authed = false;
 
@@ -290,8 +284,7 @@ If you want to support Liminal's development, or the development of more Empathe
             // Ripple transition to editing
             final AnimationController rippleController =
                 AnimationController(vsync: overlay, duration: animDur);
-            rippleController.addListener(
-                () => rippleProgress.value = rippleController.value);
+            rippleController.addListener(() => rippleProgress.value = rippleController.value);
 
             final OverlayEntry ripple = ezRipple(
               controller: rippleController,
@@ -327,8 +320,7 @@ If you want to support Liminal's development, or the development of more Empathe
           }
         },
         onHorizontalDragEnd: (DragEndDetails details) {
-          if (details.primaryVelocity != null &&
-              details.primaryVelocity! != 0) {
+          if (details.primaryVelocity != null && details.primaryVelocity! != 0) {
             AppInfo? toLaunch;
 
             if (details.primaryVelocity! < 0) {
@@ -362,8 +354,7 @@ If you want to support Liminal's development, or the development of more Empathe
             Expanded(
               child: NotificationListener<ScrollNotification>(
                 onNotification: (ScrollNotification notification) {
-                  if (notification is OverscrollNotification &&
-                      notification.overscroll > 0) {
+                  if (notification is OverscrollNotification && notification.overscroll > 0) {
                     if (atBottom) {
                       swipeUp();
                       return true;
@@ -376,8 +367,8 @@ If you want to support Liminal's development, or the development of more Empathe
                       setState(() => atBottom = false);
                     }
                   } else if (notification is ScrollEndNotification) {
-                    setState(() => atBottom = (notification.metrics.pixels ==
-                        notification.metrics.maxScrollExtent));
+                    setState(() => atBottom =
+                        (notification.metrics.pixels == notification.metrics.maxScrollExtent));
                   }
                   return false; // Let other notifications propagate
                 },

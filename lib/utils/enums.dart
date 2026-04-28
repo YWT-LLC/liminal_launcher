@@ -178,10 +178,7 @@ String buildLabel(String base, LabelType type) {
       return base;
 
     case LabelType.wingding:
-      return base
-          .split('')
-          .map((String char) => wingdingMap[char] ?? char)
-          .join();
+      return base.split('').map((String char) => wingdingMap[char] ?? char).join();
   }
 }
 
@@ -266,8 +263,7 @@ extension ListAlignmentConfig on ListAlignment {
   }
 }
 
-const List<DropdownMenuEntry<LabelType>> labelEntries =
-    <DropdownMenuEntry<LabelType>>[
+const List<DropdownMenuEntry<LabelType>> labelEntries = <DropdownMenuEntry<LabelType>>[
   DropdownMenuEntry<LabelType>(
     value: LabelType.none,
     label: 'None',

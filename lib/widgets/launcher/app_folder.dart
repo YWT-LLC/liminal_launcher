@@ -86,10 +86,8 @@ class _AppFolderState extends State<AppFolder> {
 
   @override
   Widget build(BuildContext context) {
-    final EdgeInsets colPadding =
-        EdgeInsets.symmetric(vertical: EzConfig.spacing / 2);
-    final EdgeInsets rowPadding =
-        EdgeInsets.symmetric(horizontal: EzConfig.spacing / 2);
+    final EdgeInsets colPadding = EdgeInsets.symmetric(vertical: EzConfig.spacing / 2);
+    final EdgeInsets rowPadding = EdgeInsets.symmetric(horizontal: EzConfig.spacing / 2);
 
     if (editing != false) {
       return EzAnimHide(
@@ -119,8 +117,7 @@ class _AppFolderState extends State<AppFolder> {
               onTap: () => showDialog(
                 context: context,
                 builder: (BuildContext dCon) {
-                  final TextEditingController renameController =
-                      TextEditingController();
+                  final TextEditingController renameController = TextEditingController();
 
                   void onConfirm() async {
                     closeKeyboard(dCon);
@@ -128,8 +125,7 @@ class _AppFolderState extends State<AppFolder> {
                     final String name = renameController.text.trim();
                     if (validateRename(name) != null) return null;
 
-                    final bool success =
-                        await appInfo.renameFolder(name, widget.index);
+                    final bool success = await appInfo.renameFolder(name, widget.index);
 
                     if (success) {
                       if (dCon.mounted) Navigator.of(dCon).pop(name);
@@ -185,8 +181,7 @@ class _AppFolderState extends State<AppFolder> {
                           if (oldIndex == newIndex) return;
 
                           // Local UI update first
-                          final String toMove =
-                              widget.appList.removeAt(oldIndex);
+                          final String toMove = widget.appList.removeAt(oldIndex);
                           widget.appList.insert(
                             oldIndex < newIndex ? newIndex - 1 : newIndex,
                             toMove,
@@ -228,8 +223,7 @@ class _AppFolderState extends State<AppFolder> {
                                     EzIconButton(
                                       icon: const Icon(Icons.remove),
                                       onPressed: () async {
-                                        await appInfo.removeFromFolder(
-                                            id, widget.index);
+                                        await appInfo.removeFromFolder(id, widget.index);
                                         widget.onEdit();
                                         setModal(() {});
                                       },
@@ -262,8 +256,7 @@ class _AppFolderState extends State<AppFolder> {
                 final bool success = await appInfo.deleteFolder(
                   widget.appList.isEmpty
                       ? '${widget.name}$folderSplit$emptyTag'
-                      : <String>[widget.name, ...widget.appList]
-                          .join(folderSplit),
+                      : <String>[widget.name, ...widget.appList].join(folderSplit),
                 );
 
                 if (success) widget.onEdit();
@@ -313,8 +306,7 @@ class _AppFolderState extends State<AppFolder> {
                         .toList() +
                     <Widget>[
                       EzSpacer(space: EzConfig.spacing / 2, vertical: false),
-                      EzIconButton(
-                          icon: const Icon(Icons.close), onPressed: toggleOpen),
+                      EzIconButton(icon: const Icon(Icons.close), onPressed: toggleOpen),
                     ],
               ),
             )
@@ -325,15 +317,13 @@ class _AppFolderState extends State<AppFolder> {
                     Icons.folder_open,
                     size: EzConfig.iconSize + EzConfig.padding,
                   ),
-                  style: TextButton.styleFrom(
-                      padding: EzInsets.wrap(EzConfig.marginVal)),
+                  style: TextButton.styleFrom(padding: EzInsets.wrap(EzConfig.marginVal)),
                   onPressed: toggleOpen,
                   onLongPress: () => setState(() => editing = true),
                 )
               : EzTextButton(
                   text: widget.name,
-                  style: TextButton.styleFrom(
-                      padding: EzInsets.wrap(EzConfig.marginVal)),
+                  style: TextButton.styleFrom(padding: EzInsets.wrap(EzConfig.marginVal)),
                   onPressed: toggleOpen,
                   onLongPress: () => setState(() => editing = true),
                 )),

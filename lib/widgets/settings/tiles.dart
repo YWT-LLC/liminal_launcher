@@ -25,13 +25,11 @@ class AppTileSetting extends StatelessWidget {
 
   const AppTileSetting(this.onComplete, {super.key, required this.folder})
       : darkLabelKey = folder ? darkFolderLabelTypeKey : darkListLabelTypeKey,
-        lightLabelKey =
-            folder ? lightFolderLabelTypeKey : lightListLabelTypeKey,
+        lightLabelKey = folder ? lightFolderLabelTypeKey : lightListLabelTypeKey,
         darkIconKey = folder ? darkFolderIconKey : darkListIconKey,
         lightIconKey = folder ? lightFolderIconKey : lightListIconKey,
         darkElevatedKey = folder ? darkElevatedFolderKey : darkElevatedListKey,
-        lightElevatedKey =
-            folder ? lightElevatedFolderKey : lightElevatedListKey;
+        lightElevatedKey = folder ? lightElevatedFolderKey : lightElevatedListKey;
 
   @override
   Widget build(BuildContext context) {
@@ -57,9 +55,7 @@ class AppTileSetting extends StatelessWidget {
               children: <Widget>[
                 // Preview
                 Container(
-                  constraints: useWide
-                      ? const BoxConstraints(minWidth: double.infinity)
-                      : null,
+                  constraints: useWide ? const BoxConstraints(minWidth: double.infinity) : null,
                   child: showIcon
                       ? elevated
                           ? EzElevatedIconButton(
@@ -129,8 +125,7 @@ class AppTileSetting extends StatelessWidget {
                 // Elevated
                 EzSwitchPair(
                   text: 'Elevated button',
-                  valueKey:
-                      EzConfig.isDark ? darkElevatedKey : lightElevatedKey,
+                  valueKey: EzConfig.isDark ? darkElevatedKey : lightElevatedKey,
                   afterChanged: (bool? value) {
                     if (value == null) return;
                     setModal(() => elevated = value);
@@ -141,8 +136,7 @@ class AppTileSetting extends StatelessWidget {
                 // Wide tiles
                 EzSwitchPair(
                   text: 'Use max width (shared)',
-                  valueKey:
-                      EzConfig.isDark ? darkWideTilesKey : lightWideTilesKey,
+                  valueKey: EzConfig.isDark ? darkWideTilesKey : lightWideTilesKey,
                   afterChanged: (bool? choice) {
                     if (choice == null) return;
                     setModal(() => useWide = choice);

@@ -23,8 +23,8 @@ Future<bool> _externalAuth(String reason) async {
 }
 
 Future<bool> liminalAuth(String reason) async {
-  final int timeout = int.tryParse(await EzConfig.secGet(authTimeoutKey)) ??
-      (limSecDef[authTimeoutKey] as int);
+  final int timeout =
+      int.tryParse(await EzConfig.secGet(authTimeoutKey)) ?? (limSecDef[authTimeoutKey] as int);
   final String lastAuth = await EzConfig.secGet(lastAuthKey);
 
   // Check quick exit(s)
@@ -33,8 +33,7 @@ Future<bool> liminalAuth(String reason) async {
   // Do the math
   final DateTime? saved = DateTime.tryParse(lastAuth);
 
-  if (saved == null ||
-      DateTime.now().difference(saved) > Duration(minutes: timeout)) {
+  if (saved == null || DateTime.now().difference(saved) > Duration(minutes: timeout)) {
     return _externalAuth(reason);
   } else {
     return Future<bool>.value(true);

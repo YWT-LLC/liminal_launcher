@@ -50,8 +50,7 @@ class _AppListScreenState extends State<AppListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final EdgeInsets listPadding =
-        EdgeInsets.symmetric(vertical: EzConfig.spacing / 2);
+    final EdgeInsets listPadding = EdgeInsets.symmetric(vertical: EzConfig.spacing / 2);
 
     return LiminalScaffold(
       GestureDetector(
@@ -79,9 +78,7 @@ class _AppListScreenState extends State<AppListScreen> {
                 // Sort by...
                 MenuAnchor(
                   builder: (_, MenuController controller, __) => EzIconButton(
-                    onPressed: () => controller.isOpen
-                        ? controller.close()
-                        : controller.open(),
+                    onPressed: () => controller.isOpen ? controller.close() : controller.open(),
                     icon: const Icon(Icons.sort),
                   ),
                   menuChildren: <EzMenuButton>[
@@ -203,8 +200,7 @@ class _AppListScreenState extends State<AppListScreen> {
             // App list
             NotificationListener<ScrollNotification>(
               onNotification: (ScrollNotification notification) {
-                if (notification is OverscrollNotification &&
-                    notification.overscroll < 0) {
+                if (notification is OverscrollNotification && notification.overscroll < 0) {
                   // Pop on top overscroll
                   if (atTop) {
                     Navigator.of(context).pop();
@@ -219,14 +215,13 @@ class _AppListScreenState extends State<AppListScreen> {
                   }
 
                   if (atBottom &&
-                      notification.metrics.pixels <
-                          notification.metrics.maxScrollExtent) {
+                      notification.metrics.pixels < notification.metrics.maxScrollExtent) {
                     setState(() => atBottom = false);
                   }
                 } else if (notification is ScrollEndNotification) {
                   atTop = (notification.metrics.pixels == 0);
-                  atBottom = (notification.metrics.pixels ==
-                      notification.metrics.maxScrollExtent);
+                  atBottom =
+                      (notification.metrics.pixels == notification.metrics.maxScrollExtent);
                   setState(() {});
                 }
                 return false;
@@ -238,8 +233,7 @@ class _AppListScreenState extends State<AppListScreen> {
                   physics: const ClampingScrollPhysics(),
                   children: appInfo.apps
                       .where((AppInfo app) =>
-                          (widget.config.ids.contains(app.id) ==
-                              widget.config.include) &&
+                          (widget.config.ids.contains(app.id) == widget.config.include) &&
                           (searching
                               ? app.name
                                   .toLowerCase()

@@ -3,8 +3,7 @@ import '../../utils/export.dart';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-const List<ButtonSegment<ListAlignment>> alignmentSegments =
-    <ButtonSegment<ListAlignment>>[
+const List<ButtonSegment<ListAlignment>> alignmentSegments = <ButtonSegment<ListAlignment>>[
   ButtonSegment<ListAlignment>(
     value: ListAlignment.start,
     label: Text('Start', textAlign: TextAlign.center),
@@ -98,8 +97,7 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
             child: ClipOval(
               child: Image.asset(
                 appIconPath,
-                semanticLabel:
-                    'Liminal Launcher icon used for alignment preview',
+                semanticLabel: 'Liminal Launcher icon used for alignment preview',
                 width: EzConfig.iconSize + EzConfig.padding,
                 height: EzConfig.iconSize + EzConfig.padding,
                 fit: BoxFit.cover,
