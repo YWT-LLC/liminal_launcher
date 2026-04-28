@@ -92,11 +92,9 @@ class _AppFolderState extends State<AppFolder> {
         EdgeInsets.symmetric(horizontal: EzConfig.spacing / 2);
 
     if (editing != false) {
-      return Visibility(
+      return EzAnimHide(
         visible: rippleThrottle == null,
-        maintainSize: true,
-        maintainState: true,
-        maintainAnimation: true,
+        size: (context.findRenderObject() as RenderBox).size,
         child: EzScrollView(
           scrollDirection: Axis.horizontal,
           mainAxisAlignment: hAlign.mainAxis,
@@ -285,11 +283,9 @@ class _AppFolderState extends State<AppFolder> {
       );
     }
 
-    return Visibility(
+    return EzAnimHide(
       visible: rippleThrottle == null,
-      maintainSize: true,
-      maintainState: true,
-      maintainAnimation: true,
+      size: (context.findRenderObject() as RenderBox).size,
       child: open
           ? TapRegion(
               onTapOutside: (_) => toggleOpen,

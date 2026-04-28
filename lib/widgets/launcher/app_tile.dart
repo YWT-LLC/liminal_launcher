@@ -83,11 +83,9 @@ class _AppTileState extends State<AppTile> {
 
   @override
   Widget build(BuildContext context) {
-    return Visibility(
+    return EzAnimHide(
       visible: rippleThrottle == null,
-      maintainSize: true,
-      maintainState: true,
-      maintainAnimation: true,
+      size: (context.findRenderObject() as RenderBox).size,
       child: editing == false
           ? EzRow(
               // The Row prevents the AppTile from auto-expanding
