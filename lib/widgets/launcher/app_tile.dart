@@ -351,13 +351,13 @@ class TileButton extends StatelessWidget {
         ? EzTextIconButton(
             label: buildLabel(app.name, labelType),
             icon: appIcon,
-            style: TextButton.styleFrom(padding: EzInsets.wrap(EzConfig.marginVal)),
+            style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
             onPressed: onPressed,
             onLongPress: onLongPress,
           )
         : EzTextButton(
             text: buildLabel(app.name, labelType),
-            style: TextButton.styleFrom(padding: EzInsets.wrap(EzConfig.marginVal)),
+            style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
             onPressed: onPressed,
             onLongPress: onLongPress,
           );

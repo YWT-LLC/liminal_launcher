@@ -317,13 +317,13 @@ class _AppFolderState extends State<AppFolder> {
                     Icons.folder_open,
                     size: EzConfig.iconSize + EzConfig.padding,
                   ),
-                  style: TextButton.styleFrom(padding: EzInsets.wrap(EzConfig.marginVal)),
+                  style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
                   onPressed: toggleOpen,
                   onLongPress: () => setState(() => editing = true),
                 )
               : EzTextButton(
                   text: widget.name,
-                  style: TextButton.styleFrom(padding: EzInsets.wrap(EzConfig.marginVal)),
+                  style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
                   onPressed: toggleOpen,
                   onLongPress: () => setState(() => editing = true),
                 )),
