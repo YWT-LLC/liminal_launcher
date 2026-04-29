@@ -32,145 +32,145 @@ class AppTileSetting extends StatelessWidget {
         lightElevatedKey = folder ? lightElevatedFolderKey : lightElevatedListKey;
 
   @override
-  Widget build(BuildContext context) {
-    final EdgeInsets padding = EzInsets.wrap(EzConfig.marginVal);
+  Widget build(BuildContext context) => EzElevatedIconButton(
+        onPressed: () async {
+          final String label = folder ? 'Liminal Folder' : 'Liminal Launcher';
+          final Widget icon = Icon(
+            folder ? Icons.folder : Icons.launch,
+            size: appIconSize,
+          );
 
-    return EzElevatedIconButton(
-      onPressed: () async {
-        final String label = folder ? 'Liminal Folder' : 'Liminal Launcher';
-        final Widget icon = Icon(
-          folder ? Icons.folder : Icons.launch,
-          size: appIconSize,
-        );
+          LabelType labelType = folder ? folderLabels : listLabels;
+          bool showIcon = folder ? folderIcons : listIcons;
+          bool elevated = folder ? elevatedFolders : elevatedLists;
+          bool useWide = wideTiles;
 
-        LabelType labelType = folder ? folderLabels : listLabels;
-        bool showIcon = folder ? folderIcons : listIcons;
-        bool elevated = folder ? elevatedFolders : elevatedLists;
-        bool useWide = wideTiles;
+          await ezModal(
+            context: context,
+            builder: (_) => StatefulBuilder(
+              builder: (BuildContext mCon, StateSetter setModal) => EzScrollView(
+                children: <Widget>[
+                  // Preview
+                  Container(
+                    constraints: useWide ? const BoxConstraints(minWidth: double.infinity) : null,
+                    child: showIcon
+                        ? elevated
+                            ? EzElevatedIconButton(
+                                icon: icon,
+                                label: buildLabel(label, labelType),
+                                style: TextButton.styleFrom(
+                                    padding: EzInsets.wrap(EzConfig.marginVal)),
+                                onPressed: doNothing,
+                              )
+                            : EzTextIconButton(
+                                icon: icon,
+                                label: buildLabel(label, labelType),
+                                style: TextButton.styleFrom(
+                                    padding: EzInsets.wrap(EzConfig.marginVal)),
+                                onPressed: doNothing,
+                              )
+                        : elevated
+                            ? EzElevatedButton(
+                                text: buildLabel(label, labelType),
+                                style: TextButton.styleFrom(
+                                    padding: EzInsets.wrap(EzConfig.marginVal)),
+                                onPressed: doNothing,
+                              )
+                            : EzTextButton(
+                                text: buildLabel(label, labelType),
+                                style: TextButton.styleFrom(
+                                    padding: EzInsets.wrap(EzConfig.marginVal)),
+                                onPressed: doNothing,
+                              ),
+                  ),
+                  EzConfig.separator,
 
-        await ezModal(
-          context: context,
-          builder: (_) => StatefulBuilder(
-            builder: (BuildContext mCon, StateSetter setModal) => EzScrollView(
-              children: <Widget>[
-                // Preview
-                Container(
-                  constraints: useWide ? const BoxConstraints(minWidth: double.infinity) : null,
-                  child: showIcon
-                      ? elevated
-                          ? EzElevatedIconButton(
-                              icon: icon,
-                              label: buildLabel(label, labelType),
-                              style: TextButton.styleFrom(padding: padding),
-                              onPressed: doNothing,
-                            )
-                          : EzTextIconButton(
-                              icon: icon,
-                              label: buildLabel(label, labelType),
-                              style: TextButton.styleFrom(padding: padding),
-                              onPressed: doNothing,
-                            )
-                      : elevated
-                          ? EzElevatedButton(
-                              text: buildLabel(label, labelType),
-                              style: TextButton.styleFrom(padding: padding),
-                              onPressed: doNothing,
-                            )
-                          : EzTextButton(
-                              text: buildLabel(label, labelType),
-                              style: TextButton.styleFrom(padding: padding),
-                              onPressed: doNothing,
-                            ),
-                ),
-                EzConfig.separator,
+                  // Label type
+                  EzRow(
+                    children: <Widget>[
+                      const EzText('Label type'),
+                      EzConfig.rowSpacer,
+                      EzDropdownMenu<LabelType>(
+                        widthEntries: <String>['Full name'],
+                        dropdownMenuEntries: labelEntries,
+                        enableSearch: false,
+                        initialSelection: labelType,
+                        onSelected: (LabelType? choice) {
+                          if (choice == null) return;
 
-                // Label type
-                EzRow(
-                  children: <Widget>[
-                    const EzText('Label type'),
-                    EzConfig.rowSpacer,
-                    EzDropdownMenu<LabelType>(
-                      widthEntries: <String>['Full name'],
-                      dropdownMenuEntries: labelEntries,
-                      enableSearch: false,
-                      initialSelection: labelType,
-                      onSelected: (LabelType? choice) {
-                        if (choice == null) return;
+                          if (labelType == LabelType.none) {
+                            showIcon = true;
+                          }
+                          setModal(() => labelType = choice);
+                        },
+                      ),
+                    ],
+                  ),
+                  EzConfig.spacer,
 
-                        if (labelType == LabelType.none) {
-                          showIcon = true;
-                        }
-                        setModal(() => labelType = choice);
-                      },
-                    ),
-                  ],
-                ),
-                EzConfig.spacer,
+                  // Show icon
+                  EzSwitchPair(
+                    text: 'Show icon',
+                    valueKey: EzConfig.isDark ? darkIconKey : lightIconKey,
+                    afterChanged: (bool? value) {
+                      if (value == null) return;
 
-                // Show icon
-                EzSwitchPair(
-                  text: 'Show icon',
-                  valueKey: EzConfig.isDark ? darkIconKey : lightIconKey,
-                  afterChanged: (bool? value) {
-                    if (value == null) return;
+                      if (value == false && labelType == LabelType.none) {
+                        labelType = LabelType.full;
+                      }
+                      setModal(() => showIcon = value);
+                    },
+                  ),
+                  EzConfig.spacer,
 
-                    if (value == false && labelType == LabelType.none) {
-                      labelType = LabelType.full;
-                    }
-                    setModal(() => showIcon = value);
-                  },
-                ),
-                EzConfig.spacer,
+                  // Elevated
+                  EzSwitchPair(
+                    text: 'Elevated button',
+                    valueKey: EzConfig.isDark ? darkElevatedKey : lightElevatedKey,
+                    afterChanged: (bool? value) {
+                      if (value == null) return;
+                      setModal(() => elevated = value);
+                    },
+                  ),
+                  EzConfig.separator,
 
-                // Elevated
-                EzSwitchPair(
-                  text: 'Elevated button',
-                  valueKey: EzConfig.isDark ? darkElevatedKey : lightElevatedKey,
-                  afterChanged: (bool? value) {
-                    if (value == null) return;
-                    setModal(() => elevated = value);
-                  },
-                ),
-                EzConfig.separator,
-
-                // Wide tiles
-                EzSwitchPair(
-                  text: 'Use max width (shared)',
-                  valueKey: EzConfig.isDark ? darkWideTilesKey : lightWideTilesKey,
-                  afterChanged: (bool? choice) {
-                    if (choice == null) return;
-                    setModal(() => useWide = choice);
-                  },
-                ),
-                EzConfig.separator,
-              ],
+                  // Wide tiles
+                  EzSwitchPair(
+                    text: 'Use max width (shared)',
+                    valueKey: EzConfig.isDark ? darkWideTilesKey : lightWideTilesKey,
+                    afterChanged: (bool? choice) {
+                      if (choice == null) return;
+                      setModal(() => useWide = choice);
+                    },
+                  ),
+                  EzConfig.separator,
+                ],
+              ),
             ),
-          ),
-        );
+          );
 
-        if (labelType != (folder ? folderLabels : listLabels) ||
-            showIcon != (folder ? folderIcons : listIcons) ||
-            elevated != (folder ? elevatedFolders : elevatedLists) ||
-            useWide != wideTiles) {
-          if (EzConfig.updateBoth || EzConfig.isDark) {
-            await EzConfig.setString(darkLabelKey, labelType.value);
-            await EzConfig.setBool(darkIconKey, showIcon);
-            await EzConfig.setBool(darkElevatedKey, elevated);
-            await EzConfig.setBool(darkWideTilesKey, useWide);
+          if (labelType != (folder ? folderLabels : listLabels) ||
+              showIcon != (folder ? folderIcons : listIcons) ||
+              elevated != (folder ? elevatedFolders : elevatedLists) ||
+              useWide != wideTiles) {
+            if (EzConfig.updateBoth || EzConfig.isDark) {
+              await EzConfig.setString(darkLabelKey, labelType.value);
+              await EzConfig.setBool(darkIconKey, showIcon);
+              await EzConfig.setBool(darkElevatedKey, elevated);
+              await EzConfig.setBool(darkWideTilesKey, useWide);
+            }
+
+            if (EzConfig.updateBoth || !EzConfig.isDark) {
+              await EzConfig.setString(lightLabelKey, labelType.value);
+              await EzConfig.setBool(lightIconKey, showIcon);
+              await EzConfig.setBool(lightElevatedKey, elevated);
+              await EzConfig.setBool(lightWideTilesKey, useWide);
+            }
+
+            await EzConfig.rebuildUI(onComplete);
           }
-
-          if (EzConfig.updateBoth || !EzConfig.isDark) {
-            await EzConfig.setString(lightLabelKey, labelType.value);
-            await EzConfig.setBool(lightIconKey, showIcon);
-            await EzConfig.setBool(lightElevatedKey, elevated);
-            await EzConfig.setBool(lightWideTilesKey, useWide);
-          }
-
-          await EzConfig.rebuildUI(onComplete);
-        }
-      },
-      icon: const Icon(Icons.settings),
-      label: '${folder ? 'Folder' : 'List'} tiles',
-    );
-  }
+        },
+        icon: const Icon(Icons.settings),
+        label: '${folder ? 'Folder' : 'List'} tiles',
+      );
 }
