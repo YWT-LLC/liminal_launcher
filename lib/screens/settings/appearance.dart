@@ -42,8 +42,6 @@ class AppearanceSettingsScreen extends StatelessWidget {
                 subSettings: <EzSubSetting>[],
                 fromStorage: () => EzSubSetting.blank,
                 build: (_) => EzGlobalSettings(
-                  appName: appName,
-                  androidPackage: androidPackage,
                   resetTitle: () => EzConfig.l10n.ssResetAppearance,
                   inDistress: const <String>{},
                 ),
@@ -65,11 +63,7 @@ class AppearanceSettingsScreen extends StatelessWidget {
                 fromStorage: () => EzConfig.get(advancedColorsKey) == true
                     ? EzSubSetting.advColor
                     : EzSubSetting.qckColor,
-                build: (EzSubSetting subSec) => EzColorSettings(
-                  target: subSec,
-                  appName: appName,
-                  androidPackage: androidPackage,
-                ),
+                build: (EzSubSetting subSec) => EzColorSettings(target: subSec),
               ),
 
               // Design //
@@ -90,8 +84,6 @@ class AppearanceSettingsScreen extends StatelessWidget {
                     : EzSubSetting.butDesign,
                 build: (EzSubSetting subSec) => EzDesignSettings(
                   target: subSec,
-                  appName: appName,
-                  androidPackage: androidPackage,
                   prependButton: <Widget>[
                     // Tile settings
                     const AppTileSetting(folder: false),
@@ -191,11 +183,7 @@ class AppearanceSettingsScreen extends StatelessWidget {
                 fromStorage: () => EzConfig.get(advancedTextKey) == true
                     ? EzSubSetting.advText
                     : EzSubSetting.qckText,
-                build: (EzSubSetting subSec) => EzTextSettings(
-                  target: subSec,
-                  appName: appName,
-                  androidPackage: androidPackage,
-                ),
+                build: (EzSubSetting subSec) => EzTextSettings(target: subSec),
               ),
             ],
             target: targetPass,
