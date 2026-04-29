@@ -67,7 +67,6 @@ class AppearanceSettingsScreen extends StatelessWidget {
                     : EzSubSetting.qckColor,
                 build: (EzSubSetting subSec) => EzColorSettings(
                   target: subSec,
-                  onUpdate: doNothing,
                   appName: appName,
                   androidPackage: androidPackage,
                 ),
@@ -91,21 +90,19 @@ class AppearanceSettingsScreen extends StatelessWidget {
                     : EzSubSetting.butDesign,
                 build: (EzSubSetting subSec) => EzDesignSettings(
                   target: subSec,
-                  onUpdate: doNothing,
                   appName: appName,
                   androidPackage: androidPackage,
                   prependButton: <Widget>[
                     // Tile settings
-                    const AppTileSetting(doNothing, folder: false),
+                    const AppTileSetting(folder: false),
                     EzConfig.spacer,
-                    const AppTileSetting(doNothing, folder: true),
+                    const AppTileSetting(folder: true),
                     EzConfig.separator,
                   ],
                   includeBackgroundImage: false,
                   prependPage: <Widget>[
                     // Wallpaper
                     EzImageSetting(
-                      doNothing,
                       configKey: EzConfig.isDark ? darkBackgroundImageKey : lightBackgroundImageKey,
                       label: 'Wallpaper',
                       allowSolidColor: true,
@@ -138,7 +135,7 @@ class AppearanceSettingsScreen extends StatelessWidget {
                                 ListAlignmentConfig.lookup(EzConfig.get(EzConfig.isDark
                                     ? darkVerticalAlignKey
                                     : lightVerticalAlignKey))) {
-                          await EzConfig.redrawUI(doNothing);
+                          await EzConfig.redrawUI();
                         }
                       },
                       label: 'Alignment',
@@ -196,7 +193,6 @@ class AppearanceSettingsScreen extends StatelessWidget {
                     : EzSubSetting.qckText,
                 build: (EzSubSetting subSec) => EzTextSettings(
                   target: subSec,
-                  onUpdate: doNothing,
                   appName: appName,
                   androidPackage: androidPackage,
                 ),
@@ -208,7 +204,7 @@ class AppearanceSettingsScreen extends StatelessWidget {
             // Rebuild (conditional)
             if (config.needsRebuild) ...<Widget>[
               config.layout.spacer,
-              const EzRebuildFAB(doNothing),
+              const EzRebuildFAB(),
             ],
 
             // Save/upload config

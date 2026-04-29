@@ -15,8 +15,6 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 
-// TODO: is the padding correct for the app tiles?
-
 void main() async {
   // Setup the app //
 
@@ -118,9 +116,9 @@ class _TheMagic extends StatelessWidget {
                     pbc,
                     rs,
                     AppListScreen(rs.extra as ListConfig),
-                    transitionsBuilder: (BuildContext tbc, Animation<double> a,
-                            Animation<double> aa, Widget w) =>
-                        ezTransitionsBuilder(
+                    transitionsBuilder:
+                        (BuildContext tbc, Animation<double> a, Animation<double> aa, Widget w) =>
+                            ezTransitionsBuilder(
                       tbc,
                       a,
                       aa,

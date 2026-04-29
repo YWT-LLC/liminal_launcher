@@ -27,7 +27,7 @@ class SettingsHomeScreen extends StatelessWidget {
             EzConfig.spacer,
             _AppListSettings(),
             EzConfig.spacer,
-            const EzThemeCoin(doNothing),
+            const EzThemeCoin(),
             EzConfig.divider,
             EzElevatedIconButton(
               onPressed: () => context.goNamed(appearanceSettingsPath),
@@ -160,7 +160,7 @@ class _HeaderSettings extends StatelessWidget {
 
           if (backupTime != EzConfig.get(timeKey) ||
               backupDate != DateTypeConfig.lookup(EzConfig.get(dateKey))) {
-            await EzConfig.rebuildUI(doNothing);
+            await EzConfig.rebuildUI();
           }
         },
       );
@@ -360,9 +360,7 @@ class _AppListSettings extends StatelessWidget {
           );
         }
 
-        if (wideBackup != EzConfig.get(wideKey)) {
-          await EzConfig.rebuildUI(doNothing);
-        }
+        if (wideBackup != EzConfig.get(wideKey)) await EzConfig.rebuildUI();
       },
     );
   }

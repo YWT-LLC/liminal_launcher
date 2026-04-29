@@ -20,10 +20,7 @@ class AppTileSetting extends StatelessWidget {
   final String darkElevatedKey;
   final String lightElevatedKey;
 
-  /// [EzConfig.rebuildUI] passthrough
-  final void Function() onComplete;
-
-  const AppTileSetting(this.onComplete, {super.key, required this.folder})
+  const AppTileSetting({super.key, required this.folder})
       : darkLabelKey = folder ? darkFolderLabelTypeKey : darkListLabelTypeKey,
         lightLabelKey = folder ? lightFolderLabelTypeKey : lightListLabelTypeKey,
         darkIconKey = folder ? darkFolderIconKey : darkListIconKey,
@@ -167,7 +164,7 @@ class AppTileSetting extends StatelessWidget {
               await EzConfig.setBool(lightWideTilesKey, useWide);
             }
 
-            await EzConfig.rebuildUI(onComplete);
+            await EzConfig.rebuildUI();
           }
         },
         icon: const Icon(Icons.settings),
