@@ -25,6 +25,8 @@ void main() async {
   );
 
   EzConfig.init(
+    appName: appName,
+    androidPackage: androidPackage,
     assetPaths: assetPaths,
     localeFallback: americanEnglish,
     l10nFallback: await EFUILang.delegate.load(americanEnglish),
@@ -95,7 +97,6 @@ class _TheMagic extends StatelessWidget {
         locale: storedLocale,
         el10n: storedEFUILang,
         appCache: LiminalCache(storedLocale, storedLang),
-        appName: appName,
         routerConfig: GoRouter(
           navigatorKey: ezRootNav,
           initialLocation: homePath,
