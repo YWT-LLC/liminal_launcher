@@ -38,11 +38,7 @@ class SettingsHomeScreen extends StatelessWidget {
         ),
         fabs: <Widget>[
           EzConfig.spacer,
-          EzConfigFAB(
-            context,
-            appName: appName,
-            androidPackage: androidPackage,
-          ),
+          const EzConfigFAB(),
           if (EzConfig.showBackFAB && ezRootNav.currentState!.canPop()) ...<Widget>[
             EzConfig.spacer,
             const EzBackFAB(showHome: true),
