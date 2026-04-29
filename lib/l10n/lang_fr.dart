@@ -9,5 +9,6 @@ class LangFr extends Lang {
   LangFr([String locale = 'fr']) : super(locale);
 
   @override
-  String get hsCounterLabel => 'Vous avez appuyé sur le bouton autant de fois que cela :';
+  String get hsCounterLabel =>
+      'Vous avez appuyé sur le bouton autant de fois que cela :';
 }
