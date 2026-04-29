@@ -220,8 +220,7 @@ While in the relevant settings, you will see a toggle-able icon that indicates w
                 EzRichText(
                   <InlineSpan>[
                     const EzPlainText(
-                      text:
-                          '''This version is not from the Play Store, so it should have been free.
+                      text: '''This version is not from the Play Store, so it should have been free.
 Rest assured, the free version of Liminal will always be identical to the Google Play version.
 
 If you want to support Liminal's development, or the development of more Empathetech software, please consider ''',
@@ -261,200 +260,198 @@ If you want to support Liminal's development, or the development of more Empathe
   // Return the build //
 
   @override
-  Widget build(BuildContext context) {
-    return LiminalScaffold(
-      GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onLongPressStart: (LongPressStartDetails details) async {
-          if (!editing && (bool.tryParse(await EzConfig.secGet(authToEditKey)) == true)) {
-            // Check every time so no reset is required; O(1)
-            bool authed = false;
+  Widget build(BuildContext context) => LiminalScaffold(
+        GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onLongPressStart: (LongPressStartDetails details) async {
+            if (!editing && (bool.tryParse(await EzConfig.secGet(authToEditKey)) == true)) {
+              // Check every time so no reset is required; O(1)
+              bool authed = false;
 
-            try {
-              authed = await liminalAuth('Authenticate to edit the launcher');
-            } catch (e) {
-              ezLog(e.toString());
-            }
-
-            if (!authed) return;
-          }
-
-          final Duration animDur = ezAnimDuration();
-          if (context.mounted && animDur > Duration.zero) {
-            // Ripple transition to editing
-            final AnimationController rippleController =
-                AnimationController(vsync: overlay, duration: animDur);
-            rippleController.addListener(() => rippleProgress.value = rippleController.value);
-
-            final OverlayEntry ripple = ezRipple(
-              controller: rippleController,
-              width: widthOf(context),
-              height: heightOf(context),
-              position: details.globalPosition,
-              color: EzConfig.colors.primary,
-              oMin: focusOpacity,
-            );
-            overlay.insert(ripple);
-            lastRipple = details.globalPosition;
-
-            await rippleController.forward().whenComplete(() {
-              rippleProgress = ValueNotifier<double>(0.0);
-              editing = !editing;
-              refresh();
-
-              ripple.remove();
-              rippleController.dispose();
-            });
-            return;
-          }
-
-          // Full transition to editing
-          editing = !editing;
-          refresh();
-        },
-        onVerticalDragEnd: (DragEndDetails details) async {
-          if (details.primaryVelocity != null) {
-            if (details.primaryVelocity! < 0) {
-              await swipeUp();
-            }
-          }
-        },
-        onHorizontalDragEnd: (DragEndDetails details) {
-          if (details.primaryVelocity != null && details.primaryVelocity! != 0) {
-            AppInfo? toLaunch;
-
-            if (details.primaryVelocity! < 0) {
-              // Swiped left
-              if (editing) {
-                doNothing();
-              } else {
-                toLaunch = appInfo.appMap[leftSwipeID];
+              try {
+                authed = await liminalAuth('Authenticate to edit the launcher');
+              } catch (e) {
+                ezLog(e.toString());
               }
-            } else {
-              // Swiped right
-              if (editing) {
-                editing = false;
+
+              if (!authed) return;
+            }
+
+            final Duration animDur = ezAnimDuration();
+            if (context.mounted && animDur > Duration.zero) {
+              // Ripple transition to editing
+              final AnimationController rippleController =
+                  AnimationController(vsync: overlay, duration: animDur);
+              rippleController.addListener(() => rippleProgress.value = rippleController.value);
+
+              final OverlayEntry ripple = ezRipple(
+                controller: rippleController,
+                width: widthOf(context),
+                height: heightOf(context),
+                position: details.globalPosition,
+                color: EzConfig.colors.primary,
+                oMin: focusOpacity,
+              );
+              overlay.insert(ripple);
+              lastRipple = details.globalPosition;
+
+              await rippleController.forward().whenComplete(() {
+                rippleProgress = ValueNotifier<double>(0.0);
+                editing = !editing;
                 refresh();
-              } else {
-                toLaunch = appInfo.appMap[rightSwipeID];
-              }
+
+                ripple.remove();
+                rippleController.dispose();
+              });
+              return;
             }
 
-            if (toLaunch != null) launchApp(toLaunch.package);
-          }
-        },
-        child: EzCol(
-          mainAxisAlignment: vAlign.mainAxis,
-          crossAxisAlignment: hAlign.crossAxis,
-          children: <Widget>[
-            // Clock I
-            if (vAlign == ListAlignment.start) clock(),
+            // Full transition to editing
+            editing = !editing;
+            refresh();
+          },
+          onVerticalDragEnd: (DragEndDetails details) async {
+            if (details.primaryVelocity != null) {
+              if (details.primaryVelocity! < 0) {
+                await swipeUp();
+              }
+            }
+          },
+          onHorizontalDragEnd: (DragEndDetails details) {
+            if (details.primaryVelocity != null && details.primaryVelocity! != 0) {
+              AppInfo? toLaunch;
 
-            // App list
-            Expanded(
-              child: NotificationListener<ScrollNotification>(
-                onNotification: (ScrollNotification notification) {
-                  if (notification is OverscrollNotification && notification.overscroll > 0) {
-                    if (atBottom) {
-                      swipeUp();
-                      return true;
-                    } else {
-                      setState(() => atBottom = true);
-                      return true;
+              if (details.primaryVelocity! < 0) {
+                // Swiped left
+                if (editing) {
+                  doNothing();
+                } else {
+                  toLaunch = appInfo.appMap[leftSwipeID];
+                }
+              } else {
+                // Swiped right
+                if (editing) {
+                  editing = false;
+                  refresh();
+                } else {
+                  toLaunch = appInfo.appMap[rightSwipeID];
+                }
+              }
+
+              if (toLaunch != null) launchApp(toLaunch.package);
+            }
+          },
+          child: EzCol(
+            mainAxisAlignment: vAlign.mainAxis,
+            crossAxisAlignment: hAlign.crossAxis,
+            children: <Widget>[
+              // Clock I
+              if (vAlign == ListAlignment.start) clock(),
+
+              // App list
+              Expanded(
+                child: NotificationListener<ScrollNotification>(
+                  onNotification: (ScrollNotification notification) {
+                    if (notification is OverscrollNotification && notification.overscroll > 0) {
+                      if (atBottom) {
+                        swipeUp();
+                        return true;
+                      } else {
+                        setState(() => atBottom = true);
+                        return true;
+                      }
+                    } else if (notification is ScrollUpdateNotification) {
+                      if (atBottom && notification.metrics.pixels < 0) {
+                        setState(() => atBottom = false);
+                      }
+                    } else if (notification is ScrollEndNotification) {
+                      setState(() => atBottom =
+                          (notification.metrics.pixels == notification.metrics.maxScrollExtent));
                     }
-                  } else if (notification is ScrollUpdateNotification) {
-                    if (atBottom && notification.metrics.pixels < 0) {
-                      setState(() => atBottom = false);
-                    }
-                  } else if (notification is ScrollEndNotification) {
-                    setState(() => atBottom =
-                        (notification.metrics.pixels == notification.metrics.maxScrollExtent));
-                  }
-                  return false; // Let other notifications propagate
-                },
-                child: editing
-                    ? ReorderableListView(
-                        // TODO: I sure do hope (and doubt) this still works
-                        // TODO: using on start, on end, and a timer based on hold time: implement put in folder
-                        // TODO: add long hold delay controls to button design, efui up
-                        onReorder: (int oldIndex, int newIndex) async {
-                          if (oldIndex == newIndex) return;
+                    return false; // Let other notifications propagate
+                  },
+                  child: editing
+                      ? ReorderableListView(
+                          // TODO: I sure do hope (and doubt) this still works
+                          // TODO: using on start, on end, and a timer based on hold time: implement put in folder
+                          // TODO: add long hold delay controls to button design, efui up
+                          onReorder: (int oldIndex, int newIndex) async {
+                            if (oldIndex == newIndex) return;
 
-                          // Local UI update first
-                          final Widget toMove = homeTiles.removeAt(oldIndex);
-                          homeTiles.insert(
-                            oldIndex < newIndex ? newIndex - 1 : newIndex,
-                            toMove,
-                          );
-                          setState(() {});
+                            // Local UI update first
+                            final Widget toMove = homeTiles.removeAt(oldIndex);
+                            homeTiles.insert(
+                              oldIndex < newIndex ? newIndex - 1 : newIndex,
+                              toMove,
+                            );
+                            setState(() {});
 
-                          // Storage update
-                          await appInfo.reorderHomeItem(
-                            oldIndex: oldIndex,
-                            newIndex: newIndex,
-                          );
-                          refresh();
-                        },
-                        children: homeTiles,
-                      )
-                    : ConstrainedBox(
-                        constraints: wideTiles
-                            ? BoxConstraints(minWidth: widthOf(context) * 0.8)
-                            : const BoxConstraints(),
-                        child: EzScrollView(
-                          mainAxisAlignment: vAlign.mainAxis,
-                          crossAxisAlignment: hAlign.crossAxis,
-                          physics: const ClampingScrollPhysics(),
+                            // Storage update
+                            await appInfo.reorderHomeItem(
+                              oldIndex: oldIndex,
+                              newIndex: newIndex,
+                            );
+                            refresh();
+                          },
                           children: homeTiles,
-                        ),
-                      ),
-              ),
-            ),
-
-            // Clock II
-            if (vAlign == ListAlignment.end) clock(),
-          ],
-        ),
-      ),
-      fabs: editing
-          ? <Widget>[
-              EzConfig.spacer,
-
-              // Add app
-              AddAppFAB(() => context.goNamed(
-                    appListPath,
-                    extra: ListConfig(
-                      ids: <String>{
-                        ...appInfo.homeSet,
-                        ...appInfo.hiddenSet,
-                        ...appInfo.banishedSet,
-                      },
-                      include: false,
-                      onSelected: (String id) => appInfo.addHomeApp(id),
-                      title: EzTextBackground(EzRow(
-                        children: <Widget>[
-                          Text('Home\t', style: EzConfig.styles.labelLarge),
-                          EzIcon(
-                            Icons.add,
-                            color: EzConfig.colors.onSurface,
+                        )
+                      : ConstrainedBox(
+                          constraints: wideTiles
+                              ? BoxConstraints(minWidth: widthOf(context) * 0.8)
+                              : const BoxConstraints(),
+                          child: EzScrollView(
+                            mainAxisAlignment: vAlign.mainAxis,
+                            crossAxisAlignment: hAlign.crossAxis,
+                            physics: const ClampingScrollPhysics(),
+                            children: homeTiles,
                           ),
-                        ],
-                      )),
-                    ),
-                  )),
-              EzConfig.spacer,
+                        ),
+                ),
+              ),
 
-              // Add folder
-              AddFolderFAB(() async {
-                await appInfo.addHomeFolder();
-                refresh();
-              }),
-              EzConfig.spacer,
+              // Clock II
+              if (vAlign == ListAlignment.end) clock(),
+            ],
+          ),
+        ),
+        fabs: editing
+            ? <Widget>[
+                EzConfig.spacer,
 
-              // Settings
-              SettingsFAB(() => context.goNamed(settingsHomePath)),
-            ]
-          : null,
-    );
-  }
+                // Add app
+                AddAppFAB(() => context.goNamed(
+                      appListPath,
+                      extra: ListConfig(
+                        ids: <String>{
+                          ...appInfo.homeSet,
+                          ...appInfo.hiddenSet,
+                          ...appInfo.banishedSet,
+                        },
+                        include: false,
+                        onSelected: (String id) => appInfo.addHomeApp(id),
+                        title: EzTextBackground(EzRow(
+                          children: <Widget>[
+                            Text('Home\t', style: EzConfig.styles.labelLarge),
+                            EzIcon(
+                              Icons.add,
+                              color: EzConfig.colors.onSurface,
+                            ),
+                          ],
+                        )),
+                      ),
+                    )),
+                EzConfig.spacer,
+
+                // Add folder
+                AddFolderFAB(() async {
+                  await appInfo.addHomeFolder();
+                  refresh();
+                }),
+                EzConfig.spacer,
+
+                // Settings
+                SettingsFAB(() => context.goNamed(settingsHomePath)),
+              ]
+            : null,
+      );
 }

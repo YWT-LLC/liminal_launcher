@@ -67,12 +67,10 @@ class LiminalLauncher extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider<AppInfoProvider>(
-      create: (_) => AppInfoProvider(installedApps),
-      child: _TheMagic(installedApps, storedLocale, storedEFUILang, storedLang),
-    );
-  }
+  Widget build(BuildContext context) => ChangeNotifierProvider<AppInfoProvider>(
+        create: (_) => AppInfoProvider(installedApps),
+        child: _TheMagic(installedApps, storedLocale, storedEFUILang, storedLang),
+      );
 }
 
 class _TheMagic extends StatelessWidget {
@@ -89,71 +87,69 @@ class _TheMagic extends StatelessWidget {
   );
 
   @override
-  Widget build(BuildContext context) {
-    return EzConfigurableApp(
-      localizationsDelegates: <LocalizationsDelegate<dynamic>>{
-        const LocaleNamesLocalizationsDelegate(),
-        ...EFUILang.localizationsDelegates,
-        ...Lang.localizationsDelegates,
-      },
-      supportedLocales: Lang.supportedLocales,
-      locale: storedLocale,
-      el10n: storedEFUILang,
-      appCache: LiminalCache(storedLocale, storedLang),
-      appName: appName,
-      routerConfig: GoRouter(
-        navigatorKey: ezRootNav,
-        initialLocation: homePath,
-        errorBuilder: (_, GoRouterState rs) => ErrorScreen(rs.error),
-        routes: <RouteBase>[
-          // Home
-          GoRoute(
-            path: homePath,
-            name: homePath,
-            pageBuilder: (BuildContext pbc, GoRouterState rs) =>
-                ezPageBuilder(pbc, rs, HomeScreen()),
-            routes: <RouteBase>[
-              // App list
-              GoRoute(
-                path: appListPath,
-                name: appListPath,
-                pageBuilder: (BuildContext pbc, GoRouterState rs) => ezPageBuilder(
-                  pbc,
-                  rs,
-                  AppListScreen(rs.extra as ListConfig),
-                  transitionsBuilder:
-                      (BuildContext tbc, Animation<double> a, Animation<double> aa, Widget w) =>
-                          ezTransitionsBuilder(
-                    tbc,
-                    a,
-                    aa,
-                    w,
-                    forceType: EzTransitionType.slideY,
-                    forceFade: true,
+  Widget build(BuildContext context) => EzConfigurableApp(
+        localizationsDelegates: <LocalizationsDelegate<dynamic>>{
+          const LocaleNamesLocalizationsDelegate(),
+          ...EFUILang.localizationsDelegates,
+          ...Lang.localizationsDelegates,
+        },
+        supportedLocales: Lang.supportedLocales,
+        locale: storedLocale,
+        el10n: storedEFUILang,
+        appCache: LiminalCache(storedLocale, storedLang),
+        appName: appName,
+        routerConfig: GoRouter(
+          navigatorKey: ezRootNav,
+          initialLocation: homePath,
+          errorBuilder: (_, GoRouterState rs) => ErrorScreen(rs.error),
+          routes: <RouteBase>[
+            // Home
+            GoRoute(
+              path: homePath,
+              name: homePath,
+              pageBuilder: (BuildContext pbc, GoRouterState rs) =>
+                  ezPageBuilder(pbc, rs, HomeScreen()),
+              routes: <RouteBase>[
+                // App list
+                GoRoute(
+                  path: appListPath,
+                  name: appListPath,
+                  pageBuilder: (BuildContext pbc, GoRouterState rs) => ezPageBuilder(
+                    pbc,
+                    rs,
+                    AppListScreen(rs.extra as ListConfig),
+                    transitionsBuilder: (BuildContext tbc, Animation<double> a,
+                            Animation<double> aa, Widget w) =>
+                        ezTransitionsBuilder(
+                      tbc,
+                      a,
+                      aa,
+                      w,
+                      forceType: EzTransitionType.slideY,
+                      forceFade: true,
+                    ),
                   ),
                 ),
-              ),
 
-              // Settings home
-              GoRoute(
-                path: settingsHomePath,
-                name: settingsHomePath,
-                pageBuilder: (BuildContext pbc, GoRouterState rs) =>
-                    ezPageBuilder(pbc, rs, SettingsHomeScreen()),
-                routes: <RouteBase>[
-                  // Appearance settings
-                  GoRoute(
-                    path: appearanceSettingsPath,
-                    name: appearanceSettingsPath,
-                    pageBuilder: (BuildContext pbc, GoRouterState rs) =>
-                        ezPageBuilder(pbc, rs, AppearanceSettingsScreen()),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+                // Settings home
+                GoRoute(
+                  path: settingsHomePath,
+                  name: settingsHomePath,
+                  pageBuilder: (BuildContext pbc, GoRouterState rs) =>
+                      ezPageBuilder(pbc, rs, SettingsHomeScreen()),
+                  routes: <RouteBase>[
+                    // Appearance settings
+                    GoRoute(
+                      path: appearanceSettingsPath,
+                      name: appearanceSettingsPath,
+                      pageBuilder: (BuildContext pbc, GoRouterState rs) =>
+                          ezPageBuilder(pbc, rs, AppearanceSettingsScreen()),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
 }
