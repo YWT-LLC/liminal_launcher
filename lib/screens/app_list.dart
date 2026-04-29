@@ -75,8 +75,7 @@ class _AppListScreenState extends State<AppListScreen> {
                   // Sort by...
                   MenuAnchor(
                     builder: (_, MenuController controller, __) => EzIconButton(
-                      onPressed: () =>
-                          controller.isOpen ? controller.close() : controller.open(),
+                      onPressed: () => controller.isOpen ? controller.close() : controller.open(),
                       icon: const Icon(Icons.sort),
                     ),
                     menuChildren: <EzMenuButton>[
@@ -233,9 +232,7 @@ class _AppListScreenState extends State<AppListScreen> {
                         .where((AppInfo app) =>
                             (widget.config.ids.contains(app.id) == widget.config.include) &&
                             (searching
-                                ? app.name
-                                    .toLowerCase()
-                                    .contains(searchControl.text.toLowerCase())
+                                ? app.name.toLowerCase().contains(searchControl.text.toLowerCase())
                                 : true))
                         .map((AppInfo app) => Padding(
                               key: ValueKey<String>(app.id),
@@ -264,7 +261,8 @@ class _AppListScreenState extends State<AppListScreen> {
             child: EzAnimVis(
               mod: 0.75,
               visible: !atTop,
-              forceType: EzTransitionType.zoom,
+              forceType: EzTransitionType.none,
+              forceFade: true,
               kid: FloatingActionButton(
                 onPressed: () {
                   scrollControl.animateTo(
@@ -285,7 +283,8 @@ class _AppListScreenState extends State<AppListScreen> {
             child: EzAnimVis(
               mod: 0.75,
               visible: !atBottom,
-              forceType: EzTransitionType.zoom,
+              forceType: EzTransitionType.none,
+              forceFade: true,
               kid: FloatingActionButton(
                 onPressed: () {
                   scrollControl.animateTo(
