@@ -24,8 +24,7 @@ class AppInfoProvider extends ChangeNotifier {
   final Map<String, AppInfo> _appMap;
 
   // App listeners
-  static const EventChannel _appEventChannel =
-      EventChannel('net.empathetech.liminal/app_events');
+  static const EventChannel _appEventChannel = EventChannel('net.empathetech.liminal/app_events');
   StreamSubscription<dynamic>? _appEventSubscription;
 
   // Renamed apps
@@ -53,8 +52,8 @@ class AppInfoProvider extends ChangeNotifier {
 
     for (final String item in homeCopy) {
       if (item.contains(folderSplit)) {
-        _homeSet.addAll(
-            item.split(folderSplit).where((String item) => item.contains(idSplit)).toSet());
+        _homeSet
+            .addAll(item.split(folderSplit).where((String item) => item.contains(idSplit)).toSet());
 
         folders.add(item);
       }
@@ -85,8 +84,7 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   void _listenToAppEvents() {
-    _appEventSubscription =
-        _appEventChannel.receiveBroadcastStream().listen((dynamic event) async {
+    _appEventSubscription = _appEventChannel.receiveBroadcastStream().listen((dynamic event) async {
       if (event is Map<dynamic, dynamic>) {
         final String eventType = event['eventType'] as String;
 
@@ -166,8 +164,8 @@ class AppInfoProvider extends ChangeNotifier {
   void sort(AppSort sort, bool asc) {
     switch (sort) {
       case AppSort.name:
-        _apps.sort((AppInfo a, AppInfo b) =>
-            (asc) ? a.name.compareTo(b.name) : b.name.compareTo(a.name));
+        _apps.sort(
+            (AppInfo a, AppInfo b) => (asc) ? a.name.compareTo(b.name) : b.name.compareTo(a.name));
 
       case AppSort.publisher:
         _apps.sort((AppInfo a, AppInfo b) =>
@@ -388,7 +386,6 @@ For example: if an app has always on location permissions, banishing it will not
                 textAlign: TextAlign.center,
               ),
         actions: ezActionPair(
-          context: currContext,
           onConfirm: () => Navigator.of(dCon).pop(true),
           confirmMsg: EzConfig.l10n.gContinue,
           confirmIsDestructive: true,

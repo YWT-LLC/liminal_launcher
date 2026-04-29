@@ -150,7 +150,6 @@ class _AppFolderState extends State<AppFolder> {
                         ),
                       ),
                       actions: ezActionPair(
-                        context: context,
                         confirmMsg: EzConfig.l10n.gApply,
                         onConfirm: onConfirm,
                         confirmIsDestructive: true,
