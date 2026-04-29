@@ -139,7 +139,7 @@ class _HeaderSettings extends StatelessWidget {
                                 type,
                               )))
                           .toList(),
-                      widthEntries: <String>['Wednesday, Sept'],
+                      widthEntry: 'Wednesday, Sept',
                       onSelected: (DateType? choice) async {
                         if (choice == null) return;
 

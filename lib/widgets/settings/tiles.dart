@@ -88,7 +88,7 @@ class AppTileSetting extends StatelessWidget {
                       const EzText('Label type'),
                       EzConfig.rowSpacer,
                       EzDropdownMenu<LabelType>(
-                        widthEntries: <String>['Full name'],
+                        widthEntry: 'Full name',
                         dropdownMenuEntries: labelEntries,
                         enableSearch: false,
                         initialSelection: labelType,
