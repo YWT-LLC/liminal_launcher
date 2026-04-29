@@ -6,19 +6,11 @@
 import '../widgets/export.dart';
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-class ErrorScreen extends StatefulWidget {
-  final GoException? error;
+class ErrorScreen extends StatelessWidget {
+  ErrorScreen() : super(key: ValueKey<int>(EzConfig.seed));
 
-  ErrorScreen(this.error) : super(key: ValueKey<int>(EzConfig.seed));
-
-  @override
-  State<ErrorScreen> createState() => _ErrorScreenState();
-}
-
-class _ErrorScreenState extends State<ErrorScreen> {
   @override
   Widget build(BuildContext context) => LiminalScaffold(Center(
         child: EzScrollView(children: <Widget>[

@@ -163,7 +163,7 @@ class _AppFolderState extends State<AppFolder> {
               ),
               EzConfig.rowSpacer,
 
-              // Edit apps TODO: post-audit(s): re-implement
+              // Edit apps TODO: re-implement
               if (widget.appSet.isNotEmpty) ...<Widget>[
                 EzIconButton(
                   icon: const Icon(Icons.edit),

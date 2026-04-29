@@ -100,7 +100,7 @@ class _TheMagic extends StatelessWidget {
         routerConfig: GoRouter(
           navigatorKey: ezRootNav,
           initialLocation: homePath,
-          errorBuilder: (_, GoRouterState rs) => ErrorScreen(rs.error),
+          errorBuilder: (_, __) => ErrorScreen(),
           routes: <RouteBase>[
             // Home
             GoRoute(

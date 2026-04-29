@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
   /// home apps to tiles
   /// appProvider.homeList -> AppTile/AppFolder
-  /// TODO: post-audit(s): I don't like this... should prolly be in build
+  /// TODO: I don't like this... should prolly be in build
   List<Widget> homeA2T() {
     final EdgeInsets tilePadding = EdgeInsets.symmetric(vertical: EzConfig.spacing / 2);
     final List<Widget> tileList = <Widget>[];
@@ -372,9 +372,9 @@ If you want to support Liminal's development, or the development of more Empathe
                   },
                   child: editing
                       ? ReorderableListView(
-                          // TODO: post-audit(s): I sure do hope (and doubt) this still works
-                          // TODO: post-audit(s): using on start, on end, and a timer based on hold time: implement put in folder
-                          // TODO: post-audit(s): add long hold delay controls to button design, efui up
+                          // TODO: I sure do hope (and doubt) this still works
+                          // TODO: using on start, on end, and a timer based on hold time: implement put in folder
+                          // TODO: add long hold delay controls to button design, efui up
                           onReorder: (int oldIndex, int newIndex) async {
                             if (oldIndex == newIndex) return;
 
