@@ -3,6 +3,13 @@ import '../../utils/export.dart';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
+class AlignmentSelectors extends StatefulWidget {
+  const AlignmentSelectors({super.key});
+
+  @override
+  State<AlignmentSelectors> createState() => _AlignmentSelectorsState();
+}
+
 const double _sizeMod = 0.333;
 
 const List<ButtonSegment<ListAlignment>> alignmentSegments = <ButtonSegment<ListAlignment>>[
@@ -19,13 +26,6 @@ const List<ButtonSegment<ListAlignment>> alignmentSegments = <ButtonSegment<List
     label: Text('End', textAlign: TextAlign.center),
   ),
 ];
-
-class AlignmentSelectors extends StatefulWidget {
-  const AlignmentSelectors({super.key});
-
-  @override
-  State<AlignmentSelectors> createState() => _AlignmentSelectorsState();
-}
 
 class _AlignmentSelectorsState extends State<AlignmentSelectors> {
   // Define the build data //
