@@ -12,20 +12,20 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class AppFolder extends StatefulWidget {
   final int index;
-  final List<String> items;
 
-  late final String name;
-  late final List<String> appList;
-  late final Set<String> appSet;
-
-  /// true: individual edits
-  /// false: not editing
-  /// null: all folders are being edited
-  /// Quantum supremacy
+  /// true == individual edits
+  /// null == group edits
+  /// false == false
+  /// Quantum supremacy achieved (⌐■_■)
   final bool? editing;
 
   final void Function() onEdit;
   final ValueNotifier<double>? rippleProgress;
+
+  final List<String> _items;
+  late final String _name;
+  late final List<String> _appList;
+  late final Set<String> _appSet;
 
   AppFolder({
     super.key,
@@ -33,10 +33,10 @@ class AppFolder extends StatefulWidget {
     required this.editing,
     required this.onEdit,
     this.rippleProgress,
-  }) : items = appInfo.homeList[index].split(folderSplit) {
-    name = items[0];
-    appList = (items[1] == emptyTag) ? <String>[] : items.sublist(1);
-    appSet = appList.toSet();
+  }) : _items = appInfo.homeList[index].split(folderSplit) {
+    _name = _items[0];
+    _appList = (_items[1] == emptyTag) ? <String>[] : _items.sublist(1);
+    _appSet = _appList.toSet();
   }
 
   @override
@@ -87,6 +87,7 @@ class _AppFolderState extends State<AppFolder> {
   @override
   Widget build(BuildContext context) => (editing != false)
       ? EzAnimHide(
+          mod: 0.75,
           visible: rippleThrottle == null,
           size: (context.findRenderObject() as RenderBox).size,
           kid: EzScrollView(
@@ -105,7 +106,7 @@ class _AppFolderState extends State<AppFolder> {
 
               // Name (and rename)
               EzLink(
-                widget.name,
+                widget._name,
                 style: EzConfig.styles.bodyLarge,
                 textColor: EzConfig.colors.onSurface,
                 textAlign: TextAlign.center,
@@ -136,7 +137,7 @@ class _AppFolderState extends State<AppFolder> {
 
                     return EzAlertDialog(
                       title: Text(
-                        "Rename '${widget.name}'?",
+                        "Rename '${widget._name}'?",
                         textAlign: TextAlign.center,
                       ),
                       content: Form(
@@ -164,7 +165,7 @@ class _AppFolderState extends State<AppFolder> {
               EzConfig.rowSpacer,
 
               // Edit apps TODO: re-implement
-              if (widget.appSet.isNotEmpty) ...<Widget>[
+              if (widget._appSet.isNotEmpty) ...<Widget>[
                 EzIconButton(
                   icon: const Icon(Icons.edit),
                   onPressed: () => ezModal(
@@ -176,8 +177,8 @@ class _AppFolderState extends State<AppFolder> {
                             if (oldIndex == newIndex) return;
 
                             // Local UI update first
-                            final String toMove = widget.appList.removeAt(oldIndex);
-                            widget.appList.insert(
+                            final String toMove = widget._appList.removeAt(oldIndex);
+                            widget._appList.insert(
                               oldIndex < newIndex ? newIndex - 1 : newIndex,
                               toMove,
                             );
@@ -192,7 +193,7 @@ class _AppFolderState extends State<AppFolder> {
                             widget.onEdit();
                             setModal(() {});
                           },
-                          children: widget.appList
+                          children: widget._appList
                               .map((String id) {
                                 final AppInfo? app = appInfo.appMap[id];
                                 if (app == null) return null;
@@ -249,12 +250,12 @@ class _AppFolderState extends State<AppFolder> {
                 icon: const Icon(Icons.delete),
                 onPressed: () async {
                   final bool success = await appInfo.deleteFolder(
-                    widget.appList.isEmpty
-                        ? '${widget.name}$folderSplit$emptyTag'
-                        : <String>[widget.name, ...widget.appList].join(folderSplit),
+                    widget._appList.isEmpty
+                        ? '${widget._name}$folderSplit$emptyTag'
+                        : <String>[widget._name, ...widget._appList].join(folderSplit),
                   );
 
-                  if (success) widget.onEdit();
+                  if (success) widget.onEdit(); // TODO: prolly this too
                 },
               ),
 
@@ -270,6 +271,7 @@ class _AppFolderState extends State<AppFolder> {
           ),
         )
       : EzAnimHide(
+          mod: 0.75,
           visible: rippleThrottle == null,
           size: (context.findRenderObject() as RenderBox).size,
           kid: open
@@ -279,52 +281,107 @@ class _AppFolderState extends State<AppFolder> {
                     scrollDirection: Axis.horizontal,
                     mainAxisAlignment: hAlign.mainAxis,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: widget.appList
-                            .map((String id) {
-                              final AppInfo? app = appInfo.appMap[id];
-                              if (app == null) return null;
+                    children: widget._appList
+                        .map((String id) {
+                          final AppInfo? app = appInfo.appMap[id];
+                          if (app == null) return null;
 
-                              return Padding(
-                                padding: EdgeInsets.symmetric(horizontal: EzConfig.spacing / 2),
-                                child: AppTile(
-                                  app: app,
-                                  onHomeScreen: null,
-                                  onSelected: (String id) => launchApp(id),
-                                  editing: editing,
-                                  onEdit: widget.onEdit,
-                                ),
-                              );
-                            })
-                            .whereType<Widget>()
-                            .toList() +
-                        <Widget>[
-                          EzSpacer(space: EzConfig.spacing / 2, vertical: false),
-                          EzIconButton(icon: const Icon(Icons.close), onPressed: toggleOpen),
-                        ],
+                          return Padding(
+                            padding: EdgeInsets.symmetric(horizontal: EzConfig.spacing / 2),
+                            child: AppTile(
+                              app: app,
+                              onHomeScreen: null,
+                              onSelected: (String id) => launchApp(id),
+                              editing: editing, // TODO: passthrough or false?
+                              onEdit: widget.onEdit,
+                            ),
+                          );
+                        })
+                        .whereType<Widget>()
+                        .toList(),
                   ),
                 )
-              : (folderIcons
-                  ? EzTextIconButton(
-                      label: buildLabel(widget.name, folderLabels),
-                      icon: Icon(
-                        Icons.folder_open,
-                        size: EzConfig.iconSize + EzConfig.padding,
-                      ),
-                      style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
-                      onPressed: toggleOpen,
-                      onLongPress: () => setState(() => editing = true),
-                    )
-                  : EzTextButton(
-                      text: widget.name,
-                      style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
-                      onPressed: toggleOpen,
-                      onLongPress: () => setState(() => editing = true),
-                    )),
+              : FolderButton(
+                  name: widget._name,
+                  buttonType: folderBT,
+                  labelType: folderLabels,
+                  onPressed: toggleOpen,
+                  onLongPress: () => setState(() => editing = true),
+                ),
         );
 
   @override
   void dispose() {
     widget.rippleProgress?.removeListener(rippling);
     super.dispose();
+  }
+}
+
+class FolderButton extends StatelessWidget {
+  final String name;
+  final ButtonType buttonType;
+  final LabelType labelType;
+  final void Function()? onPressed;
+  final void Function()? onLongPress;
+
+  const FolderButton({
+    super.key,
+    required this.name,
+    required this.buttonType,
+    required this.labelType,
+    this.onPressed,
+    this.onLongPress,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    switch (buttonType) {
+      case ButtonType.icon:
+        return Tooltip(
+          message: name,
+          child: GestureDetector(
+            onTap: onPressed,
+            onLongPress: onLongPress,
+            child: EzIcon(Icons.folder_open),
+          ),
+        );
+      case ButtonType.eIcon:
+        return EzIconButton(
+          tooltip: name,
+          onPressed: onPressed,
+          onLongPress: onLongPress,
+          icon: EzIcon(Icons.folder_open),
+        );
+      case ButtonType.text:
+        return EzTextButton(
+          text: buildLabel(name, labelType),
+          style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
+          onPressed: onPressed,
+          onLongPress: onLongPress,
+        );
+      case ButtonType.eText:
+        return EzElevatedButton(
+          text: buildLabel(name, labelType),
+          style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
+          onPressed: onPressed,
+          onLongPress: onLongPress,
+        );
+      case ButtonType.textIcon:
+        return EzTextIconButton(
+          label: buildLabel(name, labelType),
+          icon: EzIcon(Icons.folder_open),
+          style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
+          onPressed: onPressed,
+          onLongPress: onLongPress,
+        );
+      case ButtonType.eTextIcon:
+        return EzElevatedIconButton(
+          label: buildLabel(name, labelType),
+          icon: EzIcon(Icons.folder_open),
+          style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
+          onPressed: onPressed,
+          onLongPress: onLongPress,
+        );
+    }
   }
 }
