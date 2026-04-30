@@ -3,19 +3,19 @@
  * See LICENSE for distribution and usage details.
  */
 
-import '../../utils/export.dart';
-import '../../widgets/export.dart';
+import '../utils/export.dart';
+import '../widgets/export.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-class AppearanceSettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatelessWidget {
   /// Optionally override the starting position
   final int? targetPass;
 
-  AppearanceSettingsScreen({this.targetPass}) : super(key: ValueKey<int>(EzConfig.seed));
+  SettingsScreen({this.targetPass}) : super(key: ValueKey<int>(EzConfig.seed));
 
   @override
   Widget build(BuildContext context) => Consumer<EzConfigProvider>(
