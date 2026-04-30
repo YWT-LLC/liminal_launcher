@@ -86,6 +86,7 @@ class _AppTileState extends State<AppTile> {
 
   @override
   Widget build(BuildContext context) => EzAnimHide(
+        mod: 0.75,
         visible: rippleThrottle == null,
         size: (context.findRenderObject() as RenderBox).size,
         kid: editing == false
