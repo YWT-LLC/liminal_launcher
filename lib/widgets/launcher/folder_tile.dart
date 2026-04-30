@@ -94,7 +94,7 @@ class _AppFolderState extends State<AppFolder> with AfterLayoutMixin<AppFolder> 
   @override
   Widget build(BuildContext context) => (editing != false)
       ? EzAnimHide(
-          mod: 0.75,
+          mod: 0.5,
           visible: rippleThrottle == null,
           size: hideSize,
           kid: EzScrollView(
@@ -102,15 +102,7 @@ class _AppFolderState extends State<AppFolder> with AfterLayoutMixin<AppFolder> 
             mainAxisAlignment: hAlign.mainAxis,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              // Close/end edits
-              if (editing == true) ...<Widget>[
-                EzIconButton(
-                  onPressed: () => setState(() => editing = false),
-                  icon: const Icon(Icons.close),
-                ),
-                EzConfig.rowSpacer,
-              ],
-
+              // TODO: holding the spacers should end editing
               // Name (and rename)
               EzLink(
                 widget._name,
@@ -261,20 +253,11 @@ class _AppFolderState extends State<AppFolder> with AfterLayoutMixin<AppFolder> 
                   if (success) widget.onEdit();
                 },
               ),
-
-              // Close/end edits
-              if (editing == true) ...<Widget>[
-                EzConfig.rowSpacer,
-                EzIconButton(
-                  onPressed: () => setState(() => editing = false),
-                  icon: const Icon(Icons.close),
-                ),
-              ],
             ],
           ),
         )
       : EzAnimHide(
-          mod: 0.75,
+          mod: 0.5,
           visible: rippleThrottle == null,
           size: hideSize,
           kid: open

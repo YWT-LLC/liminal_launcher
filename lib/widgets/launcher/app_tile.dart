@@ -94,7 +94,7 @@ class _AppTileState extends State<AppTile> with AfterLayoutMixin<AppTile> {
 
   @override
   Widget build(BuildContext context) => EzAnimHide(
-        mod: 0.75,
+        mod: 0.5,
         visible: rippleThrottle == null,
         size: hideSize,
         kid: editing == false
@@ -121,15 +121,7 @@ class _AppTileState extends State<AppTile> with AfterLayoutMixin<AppTile> {
                 reverseHands: true,
                 showScrollHint: true,
                 children: <Widget>[
-                  // Close/end edits
-                  if (editing == true) ...<Widget>[
-                    EzIconButton(
-                      onPressed: () => setState(() => editing = false),
-                      icon: const Icon(Icons.close),
-                    ),
-                    EzConfig.rowSpacer,
-                  ],
-
+                  // TODO: holding the spacers should end editing
                   // App icon
                   if (widget.app.icon != null) ...<Widget>[
                     GestureDetector(
@@ -296,15 +288,6 @@ class _AppTileState extends State<AppTile> with AfterLayoutMixin<AppTile> {
                         }
                       },
                       icon: const Icon(Icons.delete),
-                    ),
-                  ],
-
-                  // Close/end edits
-                  if (editing == true) ...<Widget>[
-                    EzConfig.rowSpacer,
-                    EzIconButton(
-                      onPressed: () => setState(() => editing = false),
-                      icon: const Icon(Icons.close),
                     ),
                   ],
                 ],
