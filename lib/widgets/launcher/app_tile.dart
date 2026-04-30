@@ -93,206 +93,226 @@ class _AppTileState extends State<AppTile> with AfterLayoutMixin<AppTile> {
   // Return the build //
 
   @override
-  Widget build(BuildContext context) => EzAnimHide(
-        mod: 0.5,
-        visible: rippleThrottle == null,
-        size: hideSize,
-        kid: editing == false
-            ? EzRow(
-                // The Row prevents the AppTile from auto-expanding
-                reverseHands: false,
-                mainAxisAlignment: hAlign.mainAxis,
-                crossAxisAlignment: hAlign.crossAxis,
-                children: <Widget>[
-                  AppButton(
-                    app: widget.app,
-                    labelType: (widget.onHomeScreen == null) ? folderLabels : listLabels,
-                    buttonType: (widget.onHomeScreen == null) ? folderBT : listBT,
-                    onPressed: () => widget.onSelected(widget.app.id),
-                    onLongPress: () =>
-                        widget.onHomeScreen == null ? doNothing() : setState(() => editing = true),
-                  ),
-                ],
-              )
-            : EzScrollView(
-                mainAxisAlignment: hAlign.mainAxis,
-                crossAxisAlignment: hAlign.crossAxis,
-                scrollDirection: Axis.horizontal,
-                reverseHands: true,
-                showScrollHint: true,
-                children: <Widget>[
-                  // TODO: holding the spacers should end editing
-                  // App icon
-                  if (widget.app.icon != null) ...<Widget>[
-                    GestureDetector(
-                      onTap: () => widget.onSelected(widget.app.id),
-                      child: Image.memory(
-                        widget.app.icon!,
-                        semanticLabel: widget.app.name,
-                        width: appIconSize,
-                        height: appIconSize,
-                      ),
+  Widget build(BuildContext context) {
+    final Widget editSpacer = GestureDetector(
+      onLongPress: () => editing == true ? setState(() => editing = false) : null,
+      child: EzConfig.rowSpacer,
+    );
+
+    return EzAnimHide(
+      mod: 0.5,
+      visible: rippleThrottle == null,
+      size: hideSize,
+      kid: editing == false
+          ? EzRow(
+              // The Row prevents the AppTile from auto-expanding
+              reverseHands: false,
+              mainAxisAlignment: hAlign.mainAxis,
+              crossAxisAlignment: hAlign.crossAxis,
+              children: <Widget>[
+                AppButton(
+                  app: widget.app,
+                  labelType: (widget.onHomeScreen == null) ? folderLabels : listLabels,
+                  buttonType: (widget.onHomeScreen == null) ? folderBT : listBT,
+                  onPressed: () => widget.onSelected(widget.app.id),
+                  onLongPress: () =>
+                      widget.onHomeScreen == null ? doNothing() : setState(() => editing = true),
+                ),
+              ],
+            )
+          : EzScrollView(
+              mainAxisAlignment: hAlign.mainAxis,
+              crossAxisAlignment: hAlign.crossAxis,
+              scrollDirection: Axis.horizontal,
+              reverseHands: true,
+              showScrollHint: true,
+              children: <Widget>[
+                // Drag handle
+                EzIcon(
+                  Icons.drag_handle,
+                  color: EzConfig.colors.outline,
+                ),
+                EzConfig.rowSpacer,
+
+                // App icon
+                if (widget.app.icon != null) ...<Widget>[
+                  GestureDetector(
+                    onTap: () => widget.onSelected(widget.app.id),
+                    child: Image.memory(
+                      widget.app.icon!,
+                      semanticLabel: widget.app.name,
+                      width: appIconSize,
+                      height: appIconSize,
                     ),
-                    EzConfig.rowSpacer,
-                  ],
-
-                  // Info
-                  EzIconButton(
-                    onPressed: () async {
-                      await openSettings(widget.app.id);
-                      if (widget.onHomeScreen == false && context.mounted) {
-                        Navigator.of(context).pop();
-                      }
-                      widget.onEdit();
-                    },
-                    icon: const Icon(Icons.info),
                   ),
-                  EzConfig.rowSpacer,
+                  editSpacer,
+                ],
 
-                  // Rename
-                  EzIconButton(
-                    onPressed: () => showDialog(
-                      context: context,
-                      builder: (BuildContext dCon) {
-                        final TextEditingController renameController = TextEditingController();
+                // Info
+                EzIconButton(
+                  onPressed: () async {
+                    await openSettings(widget.app.id);
+                    if (widget.onHomeScreen == false && context.mounted) {
+                      Navigator.of(context).pop();
+                    }
+                    widget.onEdit();
+                  },
+                  icon: const Icon(Icons.info),
+                ),
+                editSpacer,
 
-                        void onConfirm() async {
-                          closeKeyboard(dCon);
+                // Rename
+                EzIconButton(
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (BuildContext dCon) {
+                      final TextEditingController renameController = TextEditingController();
 
-                          final String name = renameController.text.trim();
-                          if (validateRename(name) != null) return null;
+                      void onConfirm() async {
+                        closeKeyboard(dCon);
 
-                          final bool success =
-                              await appInfo.renameApp(newName: name, appID: widget.app.id);
+                        final String name = renameController.text.trim();
+                        if (validateRename(name) != null) return null;
 
-                          if (success) {
-                            if (dCon.mounted) {
-                              Navigator.of(dCon).pop(name);
-                            }
-                            widget.onEdit();
+                        final bool success =
+                            await appInfo.renameApp(newName: name, appID: widget.app.id);
+
+                        if (success) {
+                          if (dCon.mounted) {
+                            Navigator.of(dCon).pop(name);
                           }
+                          widget.onEdit();
                         }
+                      }
 
-                        void onDeny() {
-                          closeKeyboard(dCon);
-                          Navigator.of(dCon).pop();
-                        }
+                      void onDeny() {
+                        closeKeyboard(dCon);
+                        Navigator.of(dCon).pop();
+                      }
 
-                        return EzAlertDialog(
-                          title: Text(
-                            'Rename ${widget.app.name}?',
+                      return EzAlertDialog(
+                        title: Text(
+                          'Rename ${widget.app.name}?',
+                          textAlign: TextAlign.center,
+                        ),
+                        content: Form(
+                          child: TextFormField(
+                            controller: renameController,
                             textAlign: TextAlign.center,
+                            maxLines: 1,
+                            autofillHints: const <String>[AutofillHints.name],
+                            autovalidateMode: AutovalidateMode.onUnfocus,
+                            validator: validateRename,
                           ),
-                          content: Form(
-                            child: TextFormField(
-                              controller: renameController,
-                              textAlign: TextAlign.center,
-                              maxLines: 1,
-                              autofillHints: const <String>[AutofillHints.name],
-                              autovalidateMode: AutovalidateMode.onUnfocus,
-                              validator: validateRename,
-                            ),
-                          ),
-                          actions: ezActionPair(
-                            confirmMsg: EzConfig.l10n.gApply,
-                            onConfirm: onConfirm,
-                            confirmIsDestructive: true,
-                            denyMsg: EzConfig.l10n.gCancel,
-                            onDeny: onDeny,
-                          ),
-                          needsClose: false,
-                        );
-                      },
-                    ),
-                    icon: const Icon(Icons.edit),
+                        ),
+                        actions: ezActionPair(
+                          confirmMsg: EzConfig.l10n.gApply,
+                          onConfirm: onConfirm,
+                          confirmIsDestructive: true,
+                          denyMsg: EzConfig.l10n.gCancel,
+                          onDeny: onDeny,
+                        ),
+                        needsClose: false,
+                      );
+                    },
                   ),
-                  EzConfig.rowSpacer,
+                  icon: const Icon(Icons.edit),
+                ),
+                editSpacer,
 
-                  // Add to home
-                  if (!appInfo.homeSet.contains(widget.app.id) &&
-                      !appInfo.hiddenSet.contains(widget.app.id)) ...<Widget>[
-                    EzIconButton(
-                      onPressed: () async {
-                        final bool success = await appInfo.addHomeApp(widget.app.id);
-
-                        if (success) {
-                          setState(() => editing = false);
-                          widget.onEdit();
-                        }
-                      },
-                      icon: const Icon(Icons.add_to_home_screen),
-                    ),
-                    EzConfig.rowSpacer,
-                  ],
-
-                  // Remove from home
-                  if (widget.onHomeScreen == true) ...<Widget>[
-                    EzIconButton(
-                      onPressed: () async {
-                        final bool success = await appInfo.removeHomeApp(widget.app.id);
-
-                        if (success) {
-                          setState(() => editing = false);
-                          widget.onEdit();
-                        }
-                      },
-                      icon: const Icon(Icons.remove),
-                    ),
-                    EzConfig.rowSpacer,
-                  ],
-
-                  // Show/hide
+                // Add to home
+                if (!appInfo.homeSet.contains(widget.app.id) &&
+                    !appInfo.hiddenSet.contains(widget.app.id)) ...<Widget>[
                   EzIconButton(
                     onPressed: () async {
-                      final bool result = appInfo.hiddenSet.contains(widget.app.id)
-                          ? await appInfo.showApp(widget.app.id)
-                          : await appInfo.hideApp(widget.app.id);
+                      final bool success = await appInfo.addHomeApp(widget.app.id);
 
-                      if (result) {
+                      if (success) {
                         setState(() => editing = false);
                         widget.onEdit();
                       }
                     },
-                    icon: Icon(
-                      appInfo.hiddenSet.contains(widget.app.id)
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                    ),
+                    icon: const Icon(Icons.add_to_home_screen),
                   ),
-                  EzConfig.rowSpacer,
-
-                  // Banish
-                  EzIconButton(
-                    onPressed: () async {
-                      final bool banished = await appInfo.banishApp(widget.app.id);
-
-                      if (banished) {
-                        setState(() => editing = false);
-                        widget.onEdit();
-                      }
-                    },
-                    icon: const Icon(LineIcons.ghost),
-                  ),
-
-                  // Delete
-                  if (widget.app.removable) ...<Widget>[
-                    EzConfig.rowSpacer,
-                    EzIconButton(
-                      onPressed: () async {
-                        final bool deleted = await deleteApp(context, widget.app);
-
-                        if (deleted) {
-                          setState(() => editing = false);
-                          await appInfo.removeDeleted(widget.app.id);
-                          widget.onEdit();
-                        }
-                      },
-                      icon: const Icon(Icons.delete),
-                    ),
-                  ],
+                  editSpacer,
                 ],
-              ),
-      );
+
+                // Remove from home
+                if (widget.onHomeScreen == true) ...<Widget>[
+                  EzIconButton(
+                    onPressed: () async {
+                      final bool success = await appInfo.removeHomeApp(widget.app.id);
+
+                      if (success) {
+                        setState(() => editing = false);
+                        widget.onEdit();
+                      }
+                    },
+                    icon: const Icon(Icons.remove),
+                  ),
+                  editSpacer,
+                ],
+
+                // Show/hide
+                EzIconButton(
+                  onPressed: () async {
+                    final bool result = appInfo.hiddenSet.contains(widget.app.id)
+                        ? await appInfo.showApp(widget.app.id)
+                        : await appInfo.hideApp(widget.app.id);
+
+                    if (result) {
+                      setState(() => editing = false);
+                      widget.onEdit();
+                    }
+                  },
+                  icon: Icon(
+                    appInfo.hiddenSet.contains(widget.app.id)
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                  ),
+                ),
+                editSpacer,
+
+                // Banish
+                EzIconButton(
+                  onPressed: () async {
+                    final bool banished = await appInfo.banishApp(widget.app.id);
+
+                    if (banished) {
+                      setState(() => editing = false);
+                      widget.onEdit();
+                    }
+                  },
+                  icon: const Icon(LineIcons.ghost),
+                ),
+
+                // Delete
+                if (widget.app.removable) ...<Widget>[
+                  editSpacer,
+                  EzIconButton(
+                    onPressed: () async {
+                      final bool deleted = await deleteApp(context, widget.app);
+
+                      if (deleted) {
+                        setState(() => editing = false);
+                        await appInfo.removeDeleted(widget.app.id);
+                        widget.onEdit();
+                      }
+                    },
+                    icon: const Icon(Icons.delete),
+                  ),
+                ],
+
+                // Drag handle
+                EzIcon(
+                  Icons.drag_handle,
+                  color: EzConfig.colors.outline,
+                ),
+                EzConfig.rowSpacer,
+              ],
+            ),
+    );
+  }
 
   @override
   void dispose() {

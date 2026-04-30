@@ -92,209 +92,223 @@ class _AppFolderState extends State<AppFolder> with AfterLayoutMixin<AppFolder> 
   // Return the build //
 
   @override
-  Widget build(BuildContext context) => (editing != false)
-      ? EzAnimHide(
-          mod: 0.5,
-          visible: rippleThrottle == null,
-          size: hideSize,
-          kid: EzScrollView(
-            scrollDirection: Axis.horizontal,
-            mainAxisAlignment: hAlign.mainAxis,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              // TODO: holding the spacers should end editing
-              // Name (and rename)
-              EzLink(
-                widget._name,
-                style: EzConfig.styles.bodyLarge,
-                textColor: EzConfig.colors.onSurface,
-                textAlign: TextAlign.center,
-                hint: 'Activate to rename.',
-                onTap: () => showDialog(
-                  context: context,
-                  builder: (BuildContext dCon) {
-                    final TextEditingController renameController = TextEditingController();
+  Widget build(BuildContext context) {
+    final Widget editSpacer = GestureDetector(
+      onLongPress: () => editing == true ? setState(() => editing = false) : null,
+      child: EzConfig.rowSpacer,
+    );
 
-                    void onConfirm() async {
-                      closeKeyboard(dCon);
+    return (editing == false)
+        ? EzAnimHide(
+            mod: 0.5,
+            visible: rippleThrottle == null,
+            size: hideSize,
+            kid: open
+                ? TapRegion(
+                    onTapOutside: (_) => toggleOpen,
+                    child: EzScrollView(
+                      scrollDirection: Axis.horizontal,
+                      mainAxisAlignment: hAlign.mainAxis,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: widget._appList
+                          .map((String id) {
+                            final AppInfo? app = appInfo.appMap[id];
+                            if (app == null) return null;
 
-                      final String name = renameController.text.trim();
-                      if (validateRename(name) != null) return null;
+                            return Padding(
+                              padding: EdgeInsets.symmetric(horizontal: EzConfig.spacing / 2),
+                              child: AppTile(
+                                app: app,
+                                onHomeScreen: null,
+                                onSelected: (String id) => launchApp(id),
+                                editing: false,
+                                onEdit: doNothing,
+                              ),
+                            );
+                          })
+                          .whereType<Widget>()
+                          .toList(),
+                    ),
+                  )
+                : FolderButton(
+                    name: widget._name,
+                    buttonType: folderBT,
+                    labelType: folderLabels,
+                    onPressed: toggleOpen,
+                    onLongPress: () => setState(() => editing = true),
+                  ),
+          )
+        : EzAnimHide(
+            mod: 0.5,
+            visible: rippleThrottle == null,
+            size: hideSize,
+            kid: EzScrollView(
+              scrollDirection: Axis.horizontal,
+              mainAxisAlignment: hAlign.mainAxis,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                // TODO: holding the spacers should end editing
+                // Name (and rename)
+                EzLink(
+                  widget._name,
+                  style: EzConfig.styles.bodyLarge,
+                  textColor: EzConfig.colors.onSurface,
+                  textAlign: TextAlign.center,
+                  hint: 'Activate to rename.',
+                  onTap: () => showDialog(
+                    context: context,
+                    builder: (BuildContext dCon) {
+                      final TextEditingController renameController = TextEditingController();
 
-                      final bool success = await appInfo.renameFolder(name, widget.index);
+                      void onConfirm() async {
+                        closeKeyboard(dCon);
 
-                      if (success) {
-                        if (dCon.mounted) Navigator.of(dCon).pop(name);
-                        widget.onEdit();
+                        final String name = renameController.text.trim();
+                        if (validateRename(name) != null) return null;
+
+                        final bool success = await appInfo.renameFolder(name, widget.index);
+
+                        if (success) {
+                          if (dCon.mounted) Navigator.of(dCon).pop(name);
+                          widget.onEdit();
+                        }
                       }
-                    }
 
-                    void onDeny() {
-                      closeKeyboard(dCon);
-                      Navigator.of(dCon).pop();
-                    }
+                      void onDeny() {
+                        closeKeyboard(dCon);
+                        Navigator.of(dCon).pop();
+                      }
 
-                    return EzAlertDialog(
-                      title: Text(
-                        "Rename '${widget._name}'?",
-                        textAlign: TextAlign.center,
-                      ),
-                      content: Form(
-                        child: TextFormField(
-                          controller: renameController,
+                      return EzAlertDialog(
+                        title: Text(
+                          "Rename '${widget._name}'?",
                           textAlign: TextAlign.center,
-                          maxLines: 1,
-                          autofillHints: const <String>[AutofillHints.name],
-                          autovalidateMode: AutovalidateMode.onUnfocus,
-                          validator: validateRename,
+                        ),
+                        content: Form(
+                          child: TextFormField(
+                            controller: renameController,
+                            textAlign: TextAlign.center,
+                            maxLines: 1,
+                            autofillHints: const <String>[AutofillHints.name],
+                            autovalidateMode: AutovalidateMode.onUnfocus,
+                            validator: validateRename,
+                          ),
+                        ),
+                        actions: ezActionPair(
+                          confirmMsg: EzConfig.l10n.gApply,
+                          onConfirm: onConfirm,
+                          confirmIsDestructive: true,
+                          denyMsg: EzConfig.l10n.gCancel,
+                          onDeny: onDeny,
+                        ),
+                        needsClose: false,
+                      );
+                    },
+                  ),
+                ),
+                editSpacer,
+
+                // Edit apps
+                // TODO: once move and remove are working, add add
+                EzIconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () async {
+                    await ezModal(
+                      isDismissible: false,
+                      enableDrag: false,
+                      showDragHandle: false,
+                      context: context,
+                      builder: (_) => StatefulBuilder(
+                        builder: (_, StateSetter setModal) => Expanded(
+                          child: ReorderableListView(
+                            onReorder: (int oldIndex, int newIndex) {
+                              if (oldIndex == newIndex) return;
+
+                              // Local UI update first
+                              final String toMove = widget._appList.removeAt(oldIndex);
+                              widget._appList.insert(
+                                oldIndex < newIndex ? newIndex - 1 : newIndex,
+                                toMove,
+                              );
+                              setModal(() {});
+                            },
+                            children: widget._appList
+                                .map((String id) {
+                                  final AppInfo? app = appInfo.appMap[id];
+                                  if (app == null) return null;
+
+                                  return Padding(
+                                    key: ValueKey<String>(id),
+                                    padding: EdgeInsets.symmetric(vertical: EzConfig.spacing / 2),
+                                    child: EzRow(
+                                      // The Row prevents the AppTile from auto-expanding
+                                      reverseHands: false,
+                                      mainAxisAlignment: hAlign.mainAxis,
+                                      crossAxisAlignment: hAlign.crossAxis,
+                                      children: <Widget>[
+                                        // Drag handle
+                                        EzIcon(
+                                          Icons.drag_handle,
+                                          color: EzConfig.colors.outline,
+                                        ),
+                                        EzConfig.rowSpacer,
+
+                                        // App tile
+                                        AppButton(
+                                          app: app,
+                                          labelType: folderLabels,
+                                          buttonType: folderBT,
+                                        ),
+                                        EzConfig.rowSpacer,
+
+                                        // Remove button
+                                        EzIconButton(
+                                          icon: const Icon(Icons.remove),
+                                          onPressed: () {
+                                            widget._appList.remove(id);
+                                            setModal(() {});
+                                          },
+                                        ),
+                                        EzConfig.rowSpacer,
+
+                                        // Drag handle
+                                        EzIcon(
+                                          Icons.drag_handle,
+                                          color: EzConfig.colors.outline,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                })
+                                .whereType<Widget>()
+                                .toList(),
+                          ),
                         ),
                       ),
-                      actions: ezActionPair(
-                        confirmMsg: EzConfig.l10n.gApply,
-                        onConfirm: onConfirm,
-                        confirmIsDestructive: true,
-                        denyMsg: EzConfig.l10n.gCancel,
-                        onDeny: onDeny,
-                      ),
-                      needsClose: false,
                     );
+
+                    await appInfo.updateFolder(
+                      name: widget._name,
+                      index: widget.index,
+                      ids: widget._appList,
+                    );
+                    widget.onEdit();
                   },
                 ),
-              ),
-              EzConfig.rowSpacer,
+                editSpacer,
 
-              // Edit apps
-              // TODO: once move and remove are working, add add
-              EzIconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () async {
-                  await ezModal(
-                    isDismissible: false,
-                    enableDrag: false,
-                    showDragHandle: false,
-                    context: context,
-                    builder: (_) => StatefulBuilder(
-                      builder: (_, StateSetter setModal) => Expanded(
-                        child: ReorderableListView(
-                          onReorder: (int oldIndex, int newIndex) {
-                            if (oldIndex == newIndex) return;
-
-                            // Local UI update first
-                            final String toMove = widget._appList.removeAt(oldIndex);
-                            widget._appList.insert(
-                              oldIndex < newIndex ? newIndex - 1 : newIndex,
-                              toMove,
-                            );
-                            setModal(() {});
-                          },
-                          children: widget._appList
-                              .map((String id) {
-                                final AppInfo? app = appInfo.appMap[id];
-                                if (app == null) return null;
-
-                                return Padding(
-                                  key: ValueKey<String>(id),
-                                  padding: EdgeInsets.symmetric(vertical: EzConfig.spacing / 2),
-                                  child: EzRow(
-                                    // The Row prevents the AppTile from auto-expanding
-                                    reverseHands: false,
-                                    mainAxisAlignment: hAlign.mainAxis,
-                                    crossAxisAlignment: hAlign.crossAxis,
-                                    children: <Widget>[
-                                      // App tile
-                                      AppButton(
-                                        app: app,
-                                        labelType: folderLabels,
-                                        buttonType: folderBT,
-                                      ),
-                                      EzConfig.rowSpacer,
-
-                                      // Remove button
-                                      EzIconButton(
-                                        icon: const Icon(Icons.remove),
-                                        onPressed: () {
-                                          widget._appList.remove(id);
-                                          setModal(() {});
-                                        },
-                                      ),
-                                      EzConfig.rowSpacer,
-
-                                      // Drag handle
-                                      EzIcon(
-                                        Icons.drag_handle,
-                                        color: EzConfig.colors.outline,
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              })
-                              .whereType<Widget>()
-                              .toList(),
-                        ),
-                      ),
-                    ),
-                  );
-
-                  await appInfo.updateFolder(
-                    name: widget._name,
-                    index: widget.index,
-                    ids: widget._appList,
-                  );
-                  widget.onEdit();
-                },
-              ),
-              EzConfig.rowSpacer,
-
-              // Delete folder
-              EzIconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () async {
-                  final bool success = await appInfo.deleteFolder(widget.index);
-                  if (success) widget.onEdit();
-                },
-              ),
-            ],
-          ),
-        )
-      : EzAnimHide(
-          mod: 0.5,
-          visible: rippleThrottle == null,
-          size: hideSize,
-          kid: open
-              ? TapRegion(
-                  onTapOutside: (_) => toggleOpen,
-                  child: EzScrollView(
-                    scrollDirection: Axis.horizontal,
-                    mainAxisAlignment: hAlign.mainAxis,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: widget._appList
-                        .map((String id) {
-                          final AppInfo? app = appInfo.appMap[id];
-                          if (app == null) return null;
-
-                          return Padding(
-                            padding: EdgeInsets.symmetric(horizontal: EzConfig.spacing / 2),
-                            child: AppTile(
-                              app: app,
-                              onHomeScreen: null,
-                              onSelected: (String id) => launchApp(id),
-                              editing: false,
-                              onEdit: doNothing,
-                            ),
-                          );
-                        })
-                        .whereType<Widget>()
-                        .toList(),
-                  ),
-                )
-              : FolderButton(
-                  name: widget._name,
-                  buttonType: folderBT,
-                  labelType: folderLabels,
-                  onPressed: toggleOpen,
-                  onLongPress: () => setState(() => editing = true),
+                // Delete folder
+                EzIconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () async {
+                    final bool success = await appInfo.deleteFolder(widget.index);
+                    if (success) widget.onEdit();
+                  },
                 ),
-        );
+              ],
+            ),
+          );
+  }
 
   @override
   void dispose() {
