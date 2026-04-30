@@ -255,13 +255,13 @@ class AppInfoProvider extends ChangeNotifier {
   Future<void> updateFolder({
     required String name,
     required int index,
-    required List<String> oldIDs,
-    required List<String> newIDs,
+    required List<String> ids,
   }) async {
-    _homeList[index] = name + folderSplit + (newIDs.isEmpty ? emptyTag : newIDs.join(folderSplit));
+    final Set<String> newSet = ids.toSet();
+    final Set<String> oldSet = _homeList[index].split(folderSplit).sublist(1).toSet();
+    oldSet.remove(emptyTag);
 
-    final Set<String> oldSet = oldIDs.toSet();
-    final Set<String> newSet = newIDs.toSet();
+    _homeList[index] = name + folderSplit + (ids.isEmpty ? emptyTag : ids.join(folderSplit));
 
     for (final String id in oldSet.difference(newSet)) {
       homeSet.remove(id);
