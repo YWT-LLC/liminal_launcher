@@ -10,17 +10,17 @@ import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class ListConfig {
+  final Widget? title;
   final Set<String> ids;
   final bool include;
   final Future<void> Function(String id) onSelected;
-  final Widget? title;
 
   /// How the [AppListScreen] should behave
   const ListConfig({
+    required this.title,
     required this.ids,
     required this.include,
     required this.onSelected,
-    required this.title,
   });
 }
 
@@ -78,59 +78,18 @@ class _AppListScreenState extends State<AppListScreen> {
                       onPressed: () => controller.isOpen ? controller.close() : controller.open(),
                       icon: const Icon(Icons.sort),
                     ),
-                    menuChildren: <EzMenuButton>[
-                      // Name
-                      EzMenuButton(
-                        label: 'Name',
-                        textAlign: hAlign.textAlign,
-                        onPressed: () async {
-                          listSort = AppSort.name;
-                          await EzConfig.setString(listSortKey, listSort.value);
+                    menuChildren: AppSort.values
+                        .map((AppSort type) => EzMenuButton(
+                              label: type.name,
+                              textAlign: hAlign.textAlign,
+                              onPressed: () async {
+                                await EzConfig.setString(listSortKey, type.value);
 
-                          appInfo.sort(listSort, ascList);
-                          setState(() {});
-                        },
-                      ),
-
-                      // Publisher
-                      EzMenuButton(
-                        label: 'Publisher',
-                        textAlign: hAlign.textAlign,
-                        onPressed: () async {
-                          listSort = AppSort.publisher;
-                          await EzConfig.setString(listSortKey, listSort.value);
-
-                          appInfo.sort(listSort, ascList);
-                          setState(() {});
-                        },
-                      ),
-
-                      // Install date
-                      EzMenuButton(
-                        label: 'Install date',
-                        textAlign: hAlign.textAlign,
-                        onPressed: () async {
-                          listSort = AppSort.date;
-                          await EzConfig.setString(listSortKey, listSort.value);
-
-                          appInfo.sort(listSort, ascList);
-                          setState(() {});
-                        },
-                      ),
-
-                      // Package size
-                      EzMenuButton(
-                        label: 'Package size',
-                        textAlign: hAlign.textAlign,
-                        onPressed: () async {
-                          listSort = AppSort.size;
-                          await EzConfig.setString(listSortKey, listSort.value);
-
-                          appInfo.sort(listSort, ascList);
-                          setState(() {});
-                        },
-                      ),
-                    ],
+                                appInfo.sort(type, ascList);
+                                setState(() => listSort = type);
+                              },
+                            ))
+                        .toList(),
                   ),
                   EzConfig.rowSpacer,
 
@@ -141,8 +100,8 @@ class _AppListScreenState extends State<AppListScreen> {
                     ),
                     onPressed: () async {
                       ascList = !ascList;
-
                       await EzConfig.setBool(ascListKey, ascList);
+
                       appInfo.sort(listSort, ascList);
                       setState(() {});
                     },
@@ -256,45 +215,33 @@ class _AppListScreenState extends State<AppListScreen> {
           EzConfig.spacer,
 
           // Scroll to top
-          SizedBox(
-            height: EzConfig.iconSize + EzConfig.padding,
-            child: EzAnimVis(
-              mod: 0.75,
-              visible: !atTop,
-              forceType: EzTransitionType.none,
-              forceFade: true,
-              kid: FloatingActionButton(
-                onPressed: () {
-                  scrollControl.animateTo(
-                    0,
-                    duration: ezAnimDuration(),
-                    curve: Curves.easeOut,
-                  );
-                },
-                child: EzIcon(Icons.arrow_upward),
+          EzAnimHide(
+            mod: 0.75,
+            visible: !atTop,
+            size: Size(appIconSize, appIconSize),
+            kid: FloatingActionButton(
+              onPressed: () => scrollControl.animateTo(
+                0,
+                duration: ezAnimDuration(),
+                curve: Curves.easeOut,
               ),
+              child: EzIcon(Icons.arrow_upward),
             ),
           ),
           EzConfig.spacer,
 
           // Scroll to bottom
-          SizedBox(
-            height: EzConfig.iconSize + EzConfig.padding,
-            child: EzAnimVis(
-              mod: 0.75,
-              visible: !atBottom,
-              forceType: EzTransitionType.none,
-              forceFade: true,
-              kid: FloatingActionButton(
-                onPressed: () {
-                  scrollControl.animateTo(
-                    scrollControl.position.maxScrollExtent,
-                    duration: ezAnimDuration(),
-                    curve: Curves.easeOut,
-                  );
-                },
-                child: EzIcon(Icons.arrow_downward),
+          EzAnimHide(
+            mod: 0.75,
+            visible: !atBottom,
+            size: Size(appIconSize, appIconSize),
+            kid: FloatingActionButton(
+              onPressed: () => scrollControl.animateTo(
+                scrollControl.position.maxScrollExtent,
+                duration: ezAnimDuration(),
+                curve: Curves.easeOut,
               ),
+              child: EzIcon(Icons.arrow_downward),
             ),
           ),
         ],
