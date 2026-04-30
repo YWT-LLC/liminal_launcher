@@ -4,6 +4,7 @@
  */
 
 import '../../utils/export.dart';
+import '../export.dart';
 
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
@@ -47,35 +48,20 @@ class AppTileSetting extends StatelessWidget {
                   // Preview
                   Container(
                     constraints: useWide ? const BoxConstraints(minWidth: double.infinity) : null,
-                    child: showIcon
-                        ? elevated
-                            ? EzElevatedIconButton(
-                                icon: icon,
-                                label: buildLabel(label, labelType),
-                                style: TextButton.styleFrom(
-                                    padding: EzInsets.wrap(EzConfig.marginVal)),
-                                onPressed: doNothing,
-                              )
-                            : EzTextIconButton(
-                                icon: icon,
-                                label: buildLabel(label, labelType),
-                                style: TextButton.styleFrom(
-                                    padding: EzInsets.wrap(EzConfig.marginVal)),
-                                onPressed: doNothing,
-                              )
-                        : elevated
-                            ? EzElevatedButton(
-                                text: buildLabel(label, labelType),
-                                style: TextButton.styleFrom(
-                                    padding: EzInsets.wrap(EzConfig.marginVal)),
-                                onPressed: doNothing,
-                              )
-                            : EzTextButton(
-                                text: buildLabel(label, labelType),
-                                style: TextButton.styleFrom(
-                                    padding: EzInsets.wrap(EzConfig.marginVal)),
-                                onPressed: doNothing,
-                              ),
+                    child: AppButton(
+                      app: AppInfo(
+                        package: nullAppPackage,
+                        label: label,
+                        removable: false,
+                        installDate: 0,
+                        packageSize: 0,
+                      ),
+                      icon: icon,
+                      buttonType: BTConfig.build(labelType, icons: showIcon, elevated: elevated),
+                      labelType: labelType,
+                      onPressed: doNothing,
+                      onLongPress: doNothing,
+                    ),
                   ),
                   EzConfig.separator,
 
@@ -89,12 +75,25 @@ class AppTileSetting extends StatelessWidget {
                         dropdownMenuEntries: labelEntries,
                         enableSearch: false,
                         initialSelection: labelType,
-                        onSelected: (LabelType? choice) {
+                        onSelected: (LabelType? choice) async {
                           if (choice == null) return;
 
-                          if (labelType == LabelType.none) {
-                            showIcon = true;
+                          if (EzConfig.updateBoth || EzConfig.isDark) {
+                            await EzConfig.setString(darkLabelKey, choice.value);
+                            if (labelType == LabelType.none) {
+                              showIcon = true;
+                              await EzConfig.setBool(darkIconKey, true);
+                            }
                           }
+
+                          if (EzConfig.updateBoth || !EzConfig.isDark) {
+                            await EzConfig.setString(lightLabelKey, choice.value);
+                            if (labelType == LabelType.none) {
+                              showIcon = true;
+                              await EzConfig.setBool(lightIconKey, true);
+                            }
+                          }
+
                           setModal(() => labelType = choice);
                         },
                       ),
@@ -106,11 +105,25 @@ class AppTileSetting extends StatelessWidget {
                   EzSwitchPair(
                     text: 'Show icon',
                     valueKey: EzConfig.isDark ? darkIconKey : lightIconKey,
-                    afterChanged: (bool? value) {
+                    afterChanged: (bool? value) async {
                       if (value == null) return;
 
                       if (value == false && labelType == LabelType.none) {
                         labelType = LabelType.full;
+
+                        if (EzConfig.updateBoth || EzConfig.isDark) {
+                          await EzConfig.setString(darkLabelKey, LabelType.full.value);
+                        }
+                        if (EzConfig.updateBoth || !EzConfig.isDark) {
+                          await EzConfig.setString(lightLabelKey, LabelType.full.value);
+                        }
+                      }
+
+                      if (EzConfig.updateBoth) {
+                        await EzConfig.setBool(
+                          EzConfig.isDark ? lightIconKey : darkIconKey,
+                          elevated,
+                        );
                       }
                       setModal(() => showIcon = value);
                     },
@@ -121,9 +134,16 @@ class AppTileSetting extends StatelessWidget {
                   EzSwitchPair(
                     text: 'Elevated button',
                     valueKey: EzConfig.isDark ? darkElevatedKey : lightElevatedKey,
-                    afterChanged: (bool? value) {
-                      if (value == null) return;
-                      setModal(() => elevated = value);
+                    afterChanged: (bool? choice) async {
+                      if (choice == null) return;
+
+                      if (EzConfig.updateBoth) {
+                        await EzConfig.setBool(
+                          EzConfig.isDark ? lightElevatedKey : darkElevatedKey,
+                          elevated,
+                        );
+                      }
+                      setModal(() => elevated = choice);
                     },
                   ),
                   EzConfig.separator,
@@ -132,8 +152,15 @@ class AppTileSetting extends StatelessWidget {
                   EzSwitchPair(
                     text: 'Use max width (shared)',
                     valueKey: EzConfig.isDark ? darkWideTilesKey : lightWideTilesKey,
-                    afterChanged: (bool? choice) {
+                    afterChanged: (bool? choice) async {
                       if (choice == null) return;
+
+                      if (EzConfig.updateBoth) {
+                        await EzConfig.setBool(
+                          EzConfig.isDark ? lightWideTilesKey : darkWideTilesKey,
+                          useWide,
+                        );
+                      }
                       setModal(() => useWide = choice);
                     },
                   ),
@@ -142,49 +169,13 @@ class AppTileSetting extends StatelessWidget {
               ),
             ),
           );
-          bool needsRebuild = false;
 
-          if (labelType != (folder ? folderLabels : listLabels)) {
-            if (EzConfig.updateBoth || EzConfig.isDark) {
-              await EzConfig.setString(darkLabelKey, labelType.value);
-            }
-            if (EzConfig.updateBoth || !EzConfig.isDark) {
-              await EzConfig.setString(lightLabelKey, labelType.value);
-            }
-            needsRebuild = true;
+          if ((labelType != (folder ? folderLabels : listLabels)) ||
+              (showIcon != (folder ? folderIcons : listIcons)) ||
+              (elevated != (folder ? elevatedFolders : elevatedLists)) ||
+              (useWide != wideTiles)) {
+            await EzConfig.rebuildUI();
           }
-
-          if (showIcon != (folder ? folderIcons : listIcons)) {
-            if (EzConfig.updateBoth || EzConfig.isDark) {
-              await EzConfig.setBool(darkIconKey, showIcon);
-            }
-            if (EzConfig.updateBoth || !EzConfig.isDark) {
-              await EzConfig.setBool(lightIconKey, showIcon);
-            }
-            needsRebuild = true;
-          }
-
-          if (elevated != (folder ? elevatedFolders : elevatedLists)) {
-            if (EzConfig.updateBoth || EzConfig.isDark) {
-              await EzConfig.setBool(darkElevatedKey, elevated);
-            }
-            if (EzConfig.updateBoth || !EzConfig.isDark) {
-              await EzConfig.setBool(lightElevatedKey, elevated);
-            }
-            needsRebuild = true;
-          }
-
-          if (useWide != wideTiles) {
-            if (EzConfig.updateBoth || EzConfig.isDark) {
-              await EzConfig.setBool(darkWideTilesKey, useWide);
-            }
-            if (EzConfig.updateBoth || !EzConfig.isDark) {
-              await EzConfig.setBool(lightWideTilesKey, useWide);
-            }
-            needsRebuild = true;
-          }
-
-          if (needsRebuild) await EzConfig.rebuildUI();
         },
         icon: const Icon(Icons.settings),
         label: '${folder ? 'Folder' : 'List'} tiles',
