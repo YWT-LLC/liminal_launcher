@@ -8,6 +8,7 @@ import '../export.dart';
 
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:after_layout/after_layout.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class AppFolder extends StatefulWidget {
@@ -42,12 +43,14 @@ class AppFolder extends StatefulWidget {
   State<AppFolder> createState() => _AppFolderState();
 }
 
-class _AppFolderState extends State<AppFolder> {
+class _AppFolderState extends State<AppFolder> with AfterLayoutMixin<AppFolder> {
   // Define the build data //
 
   bool open = false;
   late bool? editing = widget.editing;
   Timer? rippleThrottle;
+
+  Size hideSize = Size(appIconSize, appIconSize);
 
   // Define custom functions //
 
@@ -81,6 +84,11 @@ class _AppFolderState extends State<AppFolder> {
     widget.rippleProgress?.addListener(rippling);
   }
 
+  @override
+  FutureOr<void> afterFirstLayout(BuildContext context) {
+    setState(() => hideSize = (context.findRenderObject() as RenderBox).size);
+  }
+
   // Return the build //
 
   @override
@@ -88,7 +96,7 @@ class _AppFolderState extends State<AppFolder> {
       ? EzAnimHide(
           mod: 0.75,
           visible: rippleThrottle == null,
-          size: (context.findRenderObject() as RenderBox).size,
+          size: hideSize,
           kid: EzScrollView(
             scrollDirection: Axis.horizontal,
             mainAxisAlignment: hAlign.mainAxis,
@@ -268,7 +276,7 @@ class _AppFolderState extends State<AppFolder> {
       : EzAnimHide(
           mod: 0.75,
           visible: rippleThrottle == null,
-          size: (context.findRenderObject() as RenderBox).size,
+          size: hideSize,
           kid: open
               ? TapRegion(
                   onTapOutside: (_) => toggleOpen,

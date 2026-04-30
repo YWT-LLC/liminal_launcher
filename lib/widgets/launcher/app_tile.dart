@@ -8,6 +8,7 @@ import '../../utils/export.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:after_layout/after_layout.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class AppTile extends StatefulWidget {
@@ -44,11 +45,13 @@ class AppTile extends StatefulWidget {
   State<AppTile> createState() => _AppTileState();
 }
 
-class _AppTileState extends State<AppTile> {
+class _AppTileState extends State<AppTile> with AfterLayoutMixin<AppTile> {
   // Define the build data //
 
   late bool? editing = widget.editing;
   Timer? rippleThrottle;
+
+  Size hideSize = Size(appIconSize, appIconSize);
 
   // Define custom functions //
 
@@ -82,13 +85,18 @@ class _AppTileState extends State<AppTile> {
     widget.rippleProgress?.addListener(rippling);
   }
 
+  @override
+  FutureOr<void> afterFirstLayout(BuildContext context) {
+    setState(() => hideSize = (context.findRenderObject() as RenderBox).size);
+  }
+
   // Return the build //
 
   @override
   Widget build(BuildContext context) => EzAnimHide(
         mod: 0.75,
         visible: rippleThrottle == null,
-        size: (context.findRenderObject() as RenderBox).size,
+        size: hideSize,
         kid: editing == false
             ? EzRow(
                 // The Row prevents the AppTile from auto-expanding
