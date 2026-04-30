@@ -15,11 +15,7 @@ class AppearanceSettingsScreen extends StatelessWidget {
   /// Optionally override the starting position
   final int? targetPass;
 
-  /// Optionally override the starting sub-page to advanced (or equivalent)
-  final bool? advancedPass;
-
-  AppearanceSettingsScreen({this.targetPass, this.advancedPass})
-      : super(key: ValueKey<int>(EzConfig.seed));
+  AppearanceSettingsScreen({this.targetPass}) : super(key: ValueKey<int>(EzConfig.seed));
 
   @override
   Widget build(BuildContext context) => Consumer<EzConfigProvider>(
