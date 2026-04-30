@@ -30,7 +30,7 @@ const String esDate = 'date';
 /// enum String 'size'
 const String esSize = 'size';
 
-extension AppSortConfig on AppSort {
+extension ASConfig on AppSort {
   String get value {
     switch (this) {
       case AppSort.name:
@@ -182,6 +182,29 @@ String buildLabel(String base, LabelType type) {
   }
 }
 
+// Button type //
+
+enum ButtonType { icon, eIcon, text, eText, textIcon, eTextIcon }
+
+extension BTConfig on ButtonType {
+  static ButtonType build(
+    LabelType label, {
+    required bool icons,
+    required bool elevated,
+  }) =>
+      label == LabelType.none
+          ? elevated
+              ? ButtonType.eIcon
+              : ButtonType.icon
+          : icons
+              ? elevated
+                  ? ButtonType.eTextIcon
+                  : ButtonType.textIcon
+              : elevated
+                  ? ButtonType.eText
+                  : ButtonType.text;
+}
+
 // List Alignment //
 
 enum ListAlignment { center, start, end }
@@ -195,7 +218,7 @@ const String esStart = 'start';
 /// enum String 'end'
 const String esEnd = 'end';
 
-extension ListAlignmentConfig on ListAlignment {
+extension LAConfig on ListAlignment {
   String get value {
     switch (this) {
       case ListAlignment.center:

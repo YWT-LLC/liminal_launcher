@@ -18,7 +18,6 @@ class LiminalCache extends EzAppCache {
 
   late LauncherCache _launcher;
   late DesignCache _design;
-  late LayoutCache _layout;
 
   LiminalCache(Locale locale, Lang l10n)
       : _locale = locale,
@@ -30,7 +29,6 @@ class LiminalCache extends EzAppCache {
 
   LauncherCache get launcher => _launcher;
   DesignCache get design => _design;
-  LayoutCache get layout => _layout;
 
   // Set //
 
@@ -51,44 +49,66 @@ class LiminalCache extends EzAppCache {
     final bool isDark = darkInit ?? EzConfig.isDark;
 
     if (isDark) {
+      // Launcher
       _launcher = LauncherCache(
         leftSwipe: EzConfig.get(darkLeftSwipeIDKey),
         rightSwipe: EzConfig.get(darkRightSwipeIDKey),
       );
+
+      // Local design
+      final bool listIcons = EzConfig.get(darkListIconKey);
+      final LabelType listLabels = LabelTypeConfig.lookup(EzConfig.get(darkListLabelTypeKey));
+      final bool elevatedLists = EzConfig.get(darkElevatedListKey);
+
+      final bool folderIcons = EzConfig.get(darkFolderIconKey);
+      final LabelType folderLabels = LabelTypeConfig.lookup(EzConfig.get(darkFolderLabelTypeKey));
+      final bool elevatedFolders = EzConfig.get(darkElevatedFolderKey);
+
       _design = DesignCache(
         homeDate: DateTypeConfig.lookup(EzConfig.get(darkHomeDateKey)),
         homeTime: EzConfig.get(darkHomeTimeKey),
-        listIcons: EzConfig.get(darkListIconKey),
-        listLabels: LabelTypeConfig.lookup(EzConfig.get(darkListLabelTypeKey)),
-        elevatedLists: EzConfig.get(darkElevatedListKey),
-        folderIcons: EzConfig.get(darkFolderIconKey),
-        folderLabels: LabelTypeConfig.lookup(EzConfig.get(darkFolderLabelTypeKey)),
-        elevatedFolders: EzConfig.get(darkElevatedFolderKey),
+        horizontalAlign: EzConfig.get(darkHorizontalAlignKey),
+        verticalAlign: EzConfig.get(darkVerticalAlignKey),
+        listIcons: listIcons,
+        listLabels: listLabels,
+        elevatedLists: elevatedLists,
+        listBT: BTConfig.build(listLabels, icons: listIcons, elevated: elevatedLists),
+        folderIcons: folderIcons,
+        folderLabels: folderLabels,
+        elevatedFolders: elevatedFolders,
+        folderBT: BTConfig.build(folderLabels, icons: folderIcons, elevated: elevatedFolders),
         wideTiles: EzConfig.get(darkWideTilesKey),
       );
-      _layout = LayoutCache(
-        horizontalAlign: ListAlignmentConfig.lookup(EzConfig.get(darkHorizontalAlignKey)),
-        verticalAlign: ListAlignmentConfig.lookup(EzConfig.get(darkVerticalAlignKey)),
-      );
     } else {
+      // Launcher
       _launcher = LauncherCache(
         leftSwipe: EzConfig.get(lightLeftSwipeIDKey),
         rightSwipe: EzConfig.get(lightRightSwipeIDKey),
       );
+
+      // Local design
+      final bool listIcons = EzConfig.get(lightListIconKey);
+      final LabelType listLabels = LabelTypeConfig.lookup(EzConfig.get(lightListLabelTypeKey));
+      final bool elevatedLists = EzConfig.get(lightElevatedListKey);
+
+      final bool folderIcons = EzConfig.get(lightFolderIconKey);
+      final LabelType folderLabels = LabelTypeConfig.lookup(EzConfig.get(lightFolderLabelTypeKey));
+      final bool elevatedFolders = EzConfig.get(lightElevatedFolderKey);
+
       _design = DesignCache(
         homeDate: DateTypeConfig.lookup(EzConfig.get(lightHomeDateKey)),
         homeTime: EzConfig.get(lightHomeTimeKey),
-        listIcons: EzConfig.get(lightListIconKey),
-        listLabels: LabelTypeConfig.lookup(EzConfig.get(lightListLabelTypeKey)),
-        elevatedLists: EzConfig.get(lightElevatedListKey),
-        folderIcons: EzConfig.get(lightFolderIconKey),
-        folderLabels: LabelTypeConfig.lookup(EzConfig.get(lightFolderLabelTypeKey)),
-        elevatedFolders: EzConfig.get(lightElevatedFolderKey),
+        horizontalAlign: EzConfig.get(lightHorizontalAlignKey),
+        verticalAlign: EzConfig.get(lightVerticalAlignKey),
+        listIcons: listIcons,
+        listLabels: listLabels,
+        elevatedLists: elevatedLists,
+        listBT: BTConfig.build(listLabels, icons: listIcons, elevated: elevatedLists),
+        folderIcons: folderIcons,
+        folderLabels: folderLabels,
+        elevatedFolders: elevatedFolders,
+        folderBT: BTConfig.build(folderLabels, icons: folderIcons, elevated: elevatedFolders),
         wideTiles: EzConfig.get(lightWideTilesKey),
-      );
-      _layout = LayoutCache(
-        horizontalAlign: ListAlignmentConfig.lookup(EzConfig.get(lightHorizontalAlignKey)),
-        verticalAlign: ListAlignmentConfig.lookup(EzConfig.get(lightVerticalAlignKey)),
       );
     }
 
@@ -122,36 +142,35 @@ class DesignCache {
   final DateType homeDate;
   final bool homeTime;
 
+  final ListAlignment horizontalAlign;
+  final ListAlignment verticalAlign;
+
   final bool listIcons;
   final LabelType listLabels;
   final bool elevatedLists;
+  final ButtonType listBT;
 
   final bool folderIcons;
   final LabelType folderLabels;
   final bool elevatedFolders;
+  final ButtonType folderBT;
 
   final bool wideTiles;
 
   DesignCache({
     required this.homeDate,
     required this.homeTime,
+    required this.horizontalAlign,
+    required this.verticalAlign,
     required this.listIcons,
     required this.listLabels,
     required this.elevatedLists,
+    required this.listBT,
     required this.folderIcons,
     required this.folderLabels,
-    required this.wideTiles,
     required this.elevatedFolders,
-  });
-}
-
-class LayoutCache {
-  final ListAlignment horizontalAlign;
-  final ListAlignment verticalAlign;
-
-  LayoutCache({
-    required this.horizontalAlign,
-    required this.verticalAlign,
+    required this.folderBT,
+    required this.wideTiles,
   });
 }
 
@@ -170,16 +189,18 @@ String get rightSwipeID => _pointer.launcher.rightSwipe;
 DateType get homeDate => _pointer.design.homeDate;
 bool get homeTime => _pointer.design.homeTime;
 
+ListAlignment get hAlign => _pointer.design.horizontalAlign;
+ListAlignment get vAlign => _pointer.design.verticalAlign;
+
 bool get listIcons => _pointer.design.listIcons;
 LabelType get listLabels => _pointer.design.listLabels;
 bool get elevatedLists => _pointer.design.elevatedLists;
+ButtonType get listBT => _pointer.design.listBT;
 
 bool get folderIcons => _pointer.design.folderIcons;
 LabelType get folderLabels => _pointer.design.folderLabels;
 bool get elevatedFolders => _pointer.design.elevatedFolders;
+ButtonType get folderBT => _pointer.design.folderBT;
 
 bool get wideTiles => _pointer.design.wideTiles;
-double get appIconSize => EzConfig.iconSize * 1.2 + EzConfig.padding;
-
-ListAlignment get hAlign => _pointer.layout.horizontalAlign;
-ListAlignment get vAlign => _pointer.layout.verticalAlign;
+double get appIconSize => EzConfig.iconSize + EzConfig.padding;

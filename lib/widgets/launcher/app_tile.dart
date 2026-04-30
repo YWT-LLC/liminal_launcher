@@ -16,12 +16,17 @@ class AppTile extends StatefulWidget {
   /// true == home list
   /// null == home folder
   /// false == false
-  /// Quantum supremacy
+  /// Quantum supremacy achieved (⌐■_■)
   final bool? onHomeScreen;
 
   final Future<void> Function(String id) onSelected;
-  final bool editable;
+
+  /// true == individual edits
+  /// null == group edits
+  /// false == false
+  /// Quantum supremacy achieved (⌐■_■)
   final bool? editing;
+
   final void Function() onEdit;
   final ValueNotifier<double>? rippleProgress;
 
@@ -30,7 +35,6 @@ class AppTile extends StatefulWidget {
     required this.app,
     required this.onHomeScreen,
     required this.onSelected,
-    this.editable = true,
     required this.editing,
     required this.onEdit,
     this.rippleProgress,
@@ -43,7 +47,7 @@ class AppTile extends StatefulWidget {
 class _AppTileState extends State<AppTile> {
   // Define the build data //
 
-  late bool? editing = widget.editable ? widget.editing : false;
+  late bool? editing = widget.editing;
   Timer? rippleThrottle;
 
   // Define custom functions //
@@ -51,8 +55,7 @@ class _AppTileState extends State<AppTile> {
   /// Handle rippling effect
   /// Transition to editing on home screen long press
   void rippling() {
-    if (widget.editable == false ||
-        rippleThrottle != null ||
+    if (rippleThrottle != null ||
         widget.rippleProgress == null ||
         widget.rippleProgress!.value <= 0) {
       return;
@@ -92,12 +95,12 @@ class _AppTileState extends State<AppTile> {
                 mainAxisAlignment: hAlign.mainAxis,
                 crossAxisAlignment: hAlign.crossAxis,
                 children: <Widget>[
-                  TileButton(
+                  AppButton(
                     app: widget.app,
                     labelType: (widget.onHomeScreen == null) ? folderLabels : listLabels,
-                    showIcon: (widget.onHomeScreen == null) ? folderIcons : listIcons,
+                    buttonType: (widget.onHomeScreen == null) ? folderBT : listBT,
                     onPressed: () => widget.onSelected(widget.app.id),
-                    onLongPress: () => widget.editable ? setState(() => editing = true) : doNothing,
+                    onLongPress: () => setState(() => editing = true),
                   ),
                 ],
               )
@@ -305,57 +308,84 @@ class _AppTileState extends State<AppTile> {
   }
 }
 
-class TileButton extends StatelessWidget {
+class AppButton extends StatelessWidget {
   final AppInfo app;
+  final ButtonType buttonType;
   final LabelType labelType;
-  final bool showIcon;
   final void Function()? onPressed;
   final void Function()? onLongPress;
 
-  const TileButton({
+  const AppButton({
     super.key,
     required this.app,
+    required this.buttonType,
     required this.labelType,
-    required this.showIcon,
     this.onPressed,
     this.onLongPress,
   });
 
+  Widget appIcon() => (app.icon == null)
+      ? Icon(
+          Icons.question_mark,
+          semanticLabel: app.name,
+          size: appIconSize,
+        )
+      : Image.memory(
+          app.icon!,
+          semanticLabel: app.name,
+          width: appIconSize,
+          height: appIconSize,
+        );
+
   @override
   Widget build(BuildContext context) {
-    late final Widget? appIcon = (app.icon == null)
-        ? null
-        : Image.memory(
-            app.icon!,
-            semanticLabel: app.name,
-            width: appIconSize,
-            height: appIconSize,
-          );
-
-    if (labelType == LabelType.none) {
-      return Tooltip(
-        message: app.name,
-        child: GestureDetector(
-          onTap: onPressed,
+    switch (buttonType) {
+      case ButtonType.icon:
+        return Tooltip(
+          message: app.name,
+          child: GestureDetector(
+            onTap: onPressed,
+            onLongPress: onLongPress,
+            child: appIcon(),
+          ),
+        );
+      case ButtonType.eIcon:
+        return EzIconButton(
+          tooltip: app.name,
+          onPressed: onPressed,
           onLongPress: onLongPress,
-          child: appIcon,
-        ),
-      );
+          icon: appIcon(),
+        );
+      case ButtonType.text:
+        return EzTextButton(
+          text: buildLabel(app.name, labelType),
+          style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
+          onPressed: onPressed,
+          onLongPress: onLongPress,
+        );
+      case ButtonType.eText:
+        return EzElevatedButton(
+          text: buildLabel(app.name, labelType),
+          style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
+          onPressed: onPressed,
+          onLongPress: onLongPress,
+        );
+      case ButtonType.textIcon:
+        return EzTextIconButton(
+          label: buildLabel(app.name, labelType),
+          icon: appIcon(),
+          style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
+          onPressed: onPressed,
+          onLongPress: onLongPress,
+        );
+      case ButtonType.eTextIcon:
+        return EzElevatedIconButton(
+          label: buildLabel(app.name, labelType),
+          icon: appIcon(),
+          style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
+          onPressed: onPressed,
+          onLongPress: onLongPress,
+        );
     }
-
-    return (showIcon && appIcon != null)
-        ? EzTextIconButton(
-            label: buildLabel(app.name, labelType),
-            icon: appIcon,
-            style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
-            onPressed: onPressed,
-            onLongPress: onLongPress,
-          )
-        : EzTextButton(
-            text: buildLabel(app.name, labelType),
-            style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
-            onPressed: onPressed,
-            onLongPress: onLongPress,
-          );
   }
 }

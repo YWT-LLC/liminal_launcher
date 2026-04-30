@@ -3,11 +3,10 @@
  * See LICENSE for distribution and usage details.
  */
 
-export 'launcher/app_folder.dart';
 export 'launcher/app_tile.dart';
-export 'launcher/button.dart';
 export 'launcher/clock.dart';
 export 'launcher/fabulous.dart';
+export 'launcher/folder_tile.dart';
 
 export 'settings/alignment.dart';
 export 'settings/swipe_selector.dart';

@@ -116,11 +116,11 @@ class AppearanceSettingsScreen extends StatelessWidget {
                         );
 
                         if (hBackup !=
-                                ListAlignmentConfig.lookup(EzConfig.get(EzConfig.isDark
+                                LAConfig.lookup(EzConfig.get(EzConfig.isDark
                                     ? darkHorizontalAlignKey
                                     : lightHorizontalAlignKey)) ||
                             vBackup !=
-                                ListAlignmentConfig.lookup(EzConfig.get(EzConfig.isDark
+                                LAConfig.lookup(EzConfig.get(EzConfig.isDark
                                     ? darkVerticalAlignKey
                                     : lightVerticalAlignKey))) {
                           await EzConfig.redrawUI();

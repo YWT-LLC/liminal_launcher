@@ -58,10 +58,10 @@ class _SwipeSelectorState extends State<SwipeSelector> {
           padding: EzInsets.wrap(EzConfig.marginVal),
         ),
         EzMargin(vertical: false),
-        TileButton(
+        AppButton(
           app: app,
           labelType: listLabels,
-          showIcon: listIcons,
+          buttonType: listBT,
           onPressed: () => context.pushNamed(
             appListPath,
             extra: ListConfig(

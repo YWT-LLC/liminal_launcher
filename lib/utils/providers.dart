@@ -75,7 +75,7 @@ class AppInfoProvider extends ChangeNotifier {
 
     // Sort based on the user's preferences
     sort(
-      AppSortConfig.lookup(EzConfig.get(listSortKey)),
+      ASConfig.lookup(EzConfig.get(listSortKey)),
       EzConfig.get(ascListKey),
     );
 
@@ -121,7 +121,7 @@ class AppInfoProvider extends ChangeNotifier {
     _appMap[installed.id] = installed;
 
     sort(
-      AppSortConfig.lookup(EzConfig.get(listSortKey)),
+      ASConfig.lookup(EzConfig.get(listSortKey)),
       EzConfig.get(ascListKey),
     );
 
@@ -460,7 +460,7 @@ For example: if an app has always on location permissions, banishing it will not
     _banishedList.clear();
 
     sort(
-      AppSortConfig.lookup(EzConfig.getDefault(listSortKey)),
+      ASConfig.lookup(EzConfig.getDefault(listSortKey)),
       EzConfig.getDefault(ascListKey),
     );
 

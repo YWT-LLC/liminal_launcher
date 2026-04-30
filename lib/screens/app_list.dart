@@ -39,7 +39,7 @@ class _AppListScreenState extends State<AppListScreen> {
   final ScrollController scrollControl = ScrollController();
   final TextEditingController searchControl = TextEditingController();
 
-  AppSort listSort = AppSortConfig.lookup(EzConfig.get(listSortKey));
+  AppSort listSort = ASConfig.lookup(EzConfig.get(listSortKey));
   bool ascList = EzConfig.get(ascListKey);
   bool atTop = true;
   bool atBottom = false;

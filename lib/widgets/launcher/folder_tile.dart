@@ -207,10 +207,10 @@ class _AppFolderState extends State<AppFolder> {
                                     crossAxisAlignment: hAlign.crossAxis,
                                     children: <Widget>[
                                       // App tile
-                                      TileButton(
+                                      AppButton(
                                         app: app,
                                         labelType: folderLabels,
-                                        showIcon: folderIcons,
+                                        buttonType: folderBT,
                                       ),
                                       EzConfig.rowSpacer,
 
