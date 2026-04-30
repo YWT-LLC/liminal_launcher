@@ -14,7 +14,7 @@ class AppTile extends StatefulWidget {
   final AppInfo app;
 
   /// true == home list
-  /// null == home folder TODO: don't allow edits in home folder
+  /// null == home folder
   /// false == false
   /// Quantum supremacy achieved (⌐■_■)
   final bool? onHomeScreen;
@@ -101,7 +101,8 @@ class _AppTileState extends State<AppTile> {
                     labelType: (widget.onHomeScreen == null) ? folderLabels : listLabels,
                     buttonType: (widget.onHomeScreen == null) ? folderBT : listBT,
                     onPressed: () => widget.onSelected(widget.app.id),
-                    onLongPress: () => setState(() => editing = true),
+                    onLongPress: () =>
+                        widget.onHomeScreen == null ? doNothing() : setState(() => editing = true),
                   ),
                 ],
               )
