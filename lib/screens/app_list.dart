@@ -6,6 +6,7 @@
 import '../utils/export.dart';
 import '../widgets/export.dart';
 
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
@@ -41,8 +42,10 @@ class _AppListScreenState extends State<AppListScreen> {
 
   AppSort listSort = ASConfig.lookup(EzConfig.get(listSortKey));
   bool ascList = EzConfig.get(ascListKey);
-  bool atTop = true;
+
   bool atBottom = false;
+  bool atTop = true;
+  Timer? closePause;
 
   bool searching = EzConfig.get(autoSearchKey);
 
@@ -50,166 +53,164 @@ class _AppListScreenState extends State<AppListScreen> {
 
   @override
   Widget build(BuildContext context) => LiminalScaffold(
-        GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onVerticalDragEnd: (DragEndDetails details) {
-            // Pop on swipe down (backup for non-scroll portions)
-            if (details.primaryVelocity != null) {
-              if (details.primaryVelocity! > 0) {
-                Navigator.of(context).pop();
-              }
-            }
-          },
-          child: EzCol(
-            mainAxisAlignment: vAlign.mainAxis,
-            crossAxisAlignment: hAlign.crossAxis,
-            children: <Widget>[
-              EzHeader(),
+        EzCol(
+          mainAxisAlignment: vAlign.mainAxis,
+          crossAxisAlignment: hAlign.crossAxis,
+          children: <Widget>[
+            EzHeader(),
 
-              // List controls
-              EzScrollView(
-                scrollDirection: Axis.horizontal,
-                mainAxisAlignment: hAlign.mainAxis,
-                crossAxisAlignment: vAlign.crossAxis,
-                children: <Widget>[
-                  // Sort by...
-                  MenuAnchor(
-                    builder: (_, MenuController controller, __) => EzIconButton(
-                      onPressed: () => controller.isOpen ? controller.close() : controller.open(),
-                      icon: const Icon(Icons.sort),
-                    ),
-                    menuChildren: AppSort.values
-                        .map((AppSort type) => EzMenuButton(
-                              label: type.name,
-                              textAlign: hAlign.textAlign,
-                              onPressed: () async {
-                                await EzConfig.setString(listSortKey, type.value);
-
-                                appInfo.sort(type, ascList);
-                                setState(() => listSort = type);
-                              },
-                            ))
-                        .toList(),
+            // List controls
+            EzScrollView(
+              scrollDirection: Axis.horizontal,
+              mainAxisAlignment: hAlign.mainAxis,
+              crossAxisAlignment: vAlign.crossAxis,
+              children: <Widget>[
+                // Sort by...
+                MenuAnchor(
+                  builder: (_, MenuController controller, __) => EzIconButton(
+                    onPressed: () => controller.isOpen ? controller.close() : controller.open(),
+                    icon: const Icon(Icons.sort),
                   ),
-                  EzConfig.rowSpacer,
+                  menuChildren: AppSort.values
+                      .map((AppSort type) => EzMenuButton(
+                            label: type.name,
+                            textAlign: hAlign.textAlign,
+                            onPressed: () async {
+                              await EzConfig.setString(listSortKey, type.value);
 
-                  // Order
-                  EzIconButton(
-                    icon: Icon(
-                      ascList ? Icons.arrow_upward : Icons.arrow_downward,
-                    ),
-                    onPressed: () async {
-                      ascList = !ascList;
-                      await EzConfig.setBool(ascListKey, ascList);
+                              appInfo.sort(type, ascList);
+                              setState(() => listSort = type);
+                            },
+                          ))
+                      .toList(),
+                ),
+                EzConfig.rowSpacer,
 
-                      appInfo.sort(listSort, ascList);
-                      setState(() {});
-                    },
+                // Order
+                EzIconButton(
+                  icon: Icon(
+                    ascList ? Icons.arrow_upward : Icons.arrow_downward,
                   ),
-                  EzConfig.rowSpacer,
+                  onPressed: () async {
+                    ascList = !ascList;
+                    await EzConfig.setBool(ascListKey, ascList);
 
-                  // Search
-                  AnimatedContainer(
-                    duration: ezAnimDuration(),
-                    width: searching ? 200 : null,
-                    curve: Curves.easeInOut,
-                    child: EzRow(
-                      children: <Widget>[
-                        EzIconButton(
-                          icon: const Icon(Icons.search),
-                          onPressed: () {
-                            if (searching) {
-                              closeKeyboard(context);
-                              searchControl.clear();
-                              setState(() => searching = false);
-                            } else {
-                              setState(() => searching = true);
-                            }
-                          },
-                        ),
-                        if (searching) ...<Widget>[
-                          EzMargin(vertical: false),
-                          Expanded(
-                            child: TextField(
-                              controller: searchControl,
-                              autofocus: searching,
-                              decoration: const InputDecoration(
-                                hintText: 'Search',
-                                border: InputBorder.none,
-                                isDense: true,
-                              ),
-                              onChanged: (_) => setState(() {}),
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              if (widget.config.title != null) ...<Widget>[
-                EzConfig.margin,
-                widget.config.title!,
-              ],
-              EzConfig.spacer,
-
-              // App list
-              NotificationListener<ScrollNotification>(
-                onNotification: (ScrollNotification notification) {
-                  if (notification is OverscrollNotification && notification.overscroll < 0) {
-                    // Pop on top overscroll
-                    if (atTop) {
-                      Navigator.of(context).pop();
-                      return true;
-                    } else {
-                      setState(() => atTop = true);
-                      return true;
-                    }
-                  } else if (notification is ScrollUpdateNotification) {
-                    if (atTop && notification.metrics.pixels > 0) {
-                      setState(() => atTop = false);
-                    }
-
-                    if (atBottom &&
-                        notification.metrics.pixels < notification.metrics.maxScrollExtent) {
-                      setState(() => atBottom = false);
-                    }
-                  } else if (notification is ScrollEndNotification) {
-                    atTop = (notification.metrics.pixels == 0);
-                    atBottom =
-                        (notification.metrics.pixels == notification.metrics.maxScrollExtent);
+                    appInfo.sort(listSort, ascList);
                     setState(() {});
-                  }
-                  return false;
-                },
-                child: Expanded(
-                  child: EzScrollView(
-                    mainAxisSize: MainAxisSize.max,
-                    controller: scrollControl,
-                    physics: const ClampingScrollPhysics(),
-                    children: appInfo.apps
-                        .where((AppInfo app) =>
-                            (widget.config.ids.contains(app.id) == widget.config.include) &&
-                            (searching
-                                ? app.name.toLowerCase().contains(searchControl.text.toLowerCase())
-                                : true))
-                        .map((AppInfo app) => Padding(
-                              key: ValueKey<String>(app.id),
-                              padding: EdgeInsets.symmetric(vertical: EzConfig.spacing / 2),
-                              child: AppTile(
-                                app: app,
-                                onHomeScreen: false,
-                                onSelected: widget.config.onSelected,
-                                editing: false,
-                                onEdit: () => setState(() {}),
-                              ),
-                            ))
-                        .toList(),
+                  },
+                ),
+                EzConfig.rowSpacer,
+
+                // Search
+                AnimatedContainer(
+                  duration: ezAnimDuration(),
+                  width: searching ? 200 : null,
+                  curve: Curves.easeInOut,
+                  child: EzRow(
+                    children: <Widget>[
+                      EzIconButton(
+                        icon: const Icon(Icons.search),
+                        onPressed: () {
+                          if (searching) {
+                            closeKeyboard(context);
+                            searchControl.clear();
+                            setState(() => searching = false);
+                          } else {
+                            setState(() => searching = true);
+                          }
+                        },
+                      ),
+                      if (searching) ...<Widget>[
+                        EzMargin(vertical: false),
+                        Expanded(
+                          child: TextField(
+                            controller: searchControl,
+                            autofocus: searching,
+                            decoration: const InputDecoration(
+                              hintText: 'Search',
+                              border: InputBorder.none,
+                              isDense: true,
+                            ),
+                            onChanged: (_) => setState(() {}),
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
-              ),
+              ],
+            ),
+            if (widget.config.title != null) ...<Widget>[
+              EzConfig.margin,
+              widget.config.title!,
             ],
-          ),
+            EzConfig.spacer,
+
+            // App list
+            NotificationListener<ScrollNotification>(
+              onNotification: (ScrollNotification notification) {
+                if (notification is OverscrollNotification && notification.overscroll < 0) {
+                  // Pop on top overscroll
+                  if (atTop) {
+                    Navigator.of(context).pop();
+                    return true;
+                  } else {
+                    closePause = Timer(
+                      const Duration(milliseconds: 250),
+                      () => setState(() => atTop = true),
+                    );
+                    return true;
+                  }
+                } else if (notification is ScrollUpdateNotification) {
+                  if (atTop && notification.metrics.pixels > 0) {
+                    setState(() => atTop = false);
+                  }
+
+                  if (atBottom &&
+                      notification.metrics.pixels < notification.metrics.maxScrollExtent) {
+                    setState(() => atBottom = false);
+                  }
+                } else if (notification is ScrollEndNotification) {
+                  if (notification.metrics.pixels == 0) {
+                    closePause = Timer(
+                      const Duration(milliseconds: 250),
+                      () => setState(() => atTop = true),
+                    );
+                  } else {
+                    atTop = false;
+                  }
+                  setState(() => atBottom =
+                      (notification.metrics.pixels == notification.metrics.maxScrollExtent));
+                }
+                return false;
+              },
+              child: Expanded(
+                child: EzScrollView(
+                  mainAxisSize: MainAxisSize.max,
+                  controller: scrollControl,
+                  physics: const ClampingScrollPhysics(),
+                  children: appInfo.apps
+                      .where((AppInfo app) =>
+                          (widget.config.ids.contains(app.id) == widget.config.include) &&
+                          (searching
+                              ? app.name.toLowerCase().contains(searchControl.text.toLowerCase())
+                              : true))
+                      .map((AppInfo app) => Padding(
+                            key: ValueKey<String>(app.id),
+                            padding: EdgeInsets.symmetric(vertical: EzConfig.spacing / 2),
+                            child: AppTile(
+                              app: app,
+                              onHomeScreen: false,
+                              onSelected: widget.config.onSelected,
+                              editing: false,
+                              onEdit: () => setState(() {}),
+                            ),
+                          ))
+                      .toList(),
+                ),
+              ),
+            ),
+          ],
         ),
         fabs: <Widget>[
           EzConfig.spacer,
