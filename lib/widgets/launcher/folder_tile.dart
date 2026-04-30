@@ -163,7 +163,7 @@ class _AppFolderState extends State<AppFolder> {
               ),
               EzConfig.rowSpacer,
 
-              // Edit apps TODO: re-implement -make all changes locally then save the result at the end
+              // Edit apps
               // TODO: once move and remove are working, add add
               EzIconButton(
                 icon: const Icon(Icons.edit),
