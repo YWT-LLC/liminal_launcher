@@ -22,10 +22,8 @@ class AppFolder extends StatefulWidget {
   final void Function() onEdit;
   final ValueNotifier<double>? rippleProgress;
 
-  final List<String> _items;
   late final String _name;
   late final List<String> _appList;
-  late final Set<String> _appSet;
 
   AppFolder({
     super.key,
@@ -33,10 +31,11 @@ class AppFolder extends StatefulWidget {
     required this.editing,
     required this.onEdit,
     this.rippleProgress,
-  }) : _items = appInfo.homeList[index].split(folderSplit) {
-    _name = _items[0];
-    _appList = (_items[1] == emptyTag) ? <String>[] : _items.sublist(1);
-    _appSet = _appList.toSet();
+  }) {
+    final List<String> items = appInfo.homeList[index].split(folderSplit);
+
+    _name = items[0];
+    _appList = (items[1] == emptyTag) ? <String>[] : items.sublist(1);
   }
 
   @override
@@ -164,16 +163,20 @@ class _AppFolderState extends State<AppFolder> {
               ),
               EzConfig.rowSpacer,
 
-              // Edit apps TODO: re-implement
-              if (widget._appSet.isNotEmpty) ...<Widget>[
-                EzIconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: () => ezModal(
+              // Edit apps TODO: re-implement -make all changes locally then save the result at the end
+              // TODO: once move and remove are working, add add
+              EzIconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: () async {
+                  await ezModal(
+                    isDismissible: false,
+                    enableDrag: false,
+                    showDragHandle: false,
                     context: context,
                     builder: (_) => StatefulBuilder(
                       builder: (_, StateSetter setModal) => Expanded(
                         child: ReorderableListView(
-                          onReorder: (int oldIndex, int newIndex) async {
+                          onReorder: (int oldIndex, int newIndex) {
                             if (oldIndex == newIndex) return;
 
                             // Local UI update first
@@ -182,15 +185,6 @@ class _AppFolderState extends State<AppFolder> {
                               oldIndex < newIndex ? newIndex - 1 : newIndex,
                               toMove,
                             );
-                            setModal(() {});
-
-                            // Storage update
-                            await appInfo.reorderFolderItem(
-                              oldIndex: oldIndex + 1, // name offset
-                              newIndex: newIndex + 1,
-                              folderIndex: widget.index,
-                            );
-                            widget.onEdit();
                             setModal(() {});
                           },
                           children: widget._appList
@@ -218,9 +212,8 @@ class _AppFolderState extends State<AppFolder> {
                                       // Remove button
                                       EzIconButton(
                                         icon: const Icon(Icons.remove),
-                                        onPressed: () async {
-                                          await appInfo.removeFromFolder(id, widget.index);
-                                          widget.onEdit();
+                                        onPressed: () {
+                                          widget._appList.remove(id);
                                           setModal(() {});
                                         },
                                       ),
@@ -240,22 +233,24 @@ class _AppFolderState extends State<AppFolder> {
                         ),
                       ),
                     ),
-                  ),
-                ),
-                EzConfig.rowSpacer,
-              ],
+                  );
+
+                  await appInfo.updateFolder(
+                    name: widget._name,
+                    index: widget.index,
+                    ids: widget._appList,
+                  );
+                  widget.onEdit();
+                },
+              ),
+              EzConfig.rowSpacer,
 
               // Delete folder
               EzIconButton(
                 icon: const Icon(Icons.delete),
                 onPressed: () async {
-                  final bool success = await appInfo.deleteFolder(
-                    widget._appList.isEmpty
-                        ? '${widget._name}$folderSplit$emptyTag'
-                        : <String>[widget._name, ...widget._appList].join(folderSplit),
-                  );
-
-                  if (success) widget.onEdit(); // TODO: prolly this too
+                  final bool success = await appInfo.deleteFolder(widget.index);
+                  if (success) widget.onEdit();
                 },
               ),
 
@@ -292,8 +287,8 @@ class _AppFolderState extends State<AppFolder> {
                               app: app,
                               onHomeScreen: null,
                               onSelected: (String id) => launchApp(id),
-                              editing: editing, // TODO: passthrough or false?
-                              onEdit: widget.onEdit,
+                              editing: false,
+                              onEdit: doNothing,
                             ),
                           );
                         })
