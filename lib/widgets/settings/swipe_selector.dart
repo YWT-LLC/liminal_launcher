@@ -14,7 +14,12 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 class SwipeSelector extends StatefulWidget {
   final bool left;
 
-  const SwipeSelector({super.key, required this.left});
+  final String _darkKey;
+  final String _lightKey;
+
+  const SwipeSelector({super.key, required this.left})
+      : _darkKey = left ? darkLeftSwipeIDKey : darkRightSwipeIDKey,
+        _lightKey = left ? lightLeftSwipeIDKey : lightRightSwipeIDKey;
 
   @override
   State<SwipeSelector> createState() => _SwipeSelectorState();
@@ -25,17 +30,10 @@ class _SwipeSelectorState extends State<SwipeSelector> {
   Widget build(BuildContext context) {
     // Define the build data //
 
-    final String key = widget.left
-        ? (EzConfig.isDark ? darkLeftSwipeIDKey : lightLeftSwipeIDKey)
-        : (EzConfig.isDark ? darkRightSwipeIDKey : lightRightSwipeIDKey);
-    late final String mirrorKey = widget.left
-        ? (EzConfig.isDark ? lightLeftSwipeIDKey : darkLeftSwipeIDKey)
-        : (EzConfig.isDark ? lightRightSwipeIDKey : darkRightSwipeIDKey);
-
     final String dir = widget.left ? 'Left' : 'Right';
     final String lowDir = dir.toLowerCase();
 
-    String? appID = EzConfig.get(key);
+    String? appID = EzConfig.get(EzConfig.isDark ? widget._darkKey : widget._lightKey);
     AppInfo app = (appID == null || appID.isEmpty) ? nullApp : appInfo.appMap[appID] ?? nullApp;
 
     // Return the build //
@@ -76,9 +74,11 @@ class _SwipeSelectorState extends State<SwipeSelector> {
                   return;
                 }
 
-                await EzConfig.setString(key, id);
-                if (EzConfig.updateBoth) {
-                  await EzConfig.setString(mirrorKey, id);
+                if (EzConfig.updateBoth || EzConfig.isDark) {
+                  await EzConfig.setString(widget._darkKey, id);
+                }
+                if (EzConfig.updateBoth || !EzConfig.isDark) {
+                  await EzConfig.setString(widget._lightKey, id);
                 }
 
                 setState(() => app = newApp);
@@ -91,11 +91,17 @@ class _SwipeSelectorState extends State<SwipeSelector> {
             ),
           ),
           onLongPress: () async {
-            await EzConfig.remove(key);
-            setState(() {
-              appID = null;
-              app = nullApp;
-            });
+            appID = null;
+            app = nullApp;
+
+            if (EzConfig.updateBoth || EzConfig.isDark) {
+              await EzConfig.remove(widget._darkKey);
+            }
+            if (EzConfig.updateBoth || !EzConfig.isDark) {
+              await EzConfig.remove(widget._lightKey);
+            }
+
+            setState(() {});
           },
         ),
       ],
