@@ -32,10 +32,7 @@ class AppTileSetting extends StatelessWidget {
   Widget build(BuildContext context) => EzElevatedIconButton(
         onPressed: () async {
           final String label = folder ? 'Liminal Folder' : 'Liminal Launcher';
-          final Widget icon = Icon(
-            folder ? Icons.folder : Icons.launch,
-            size: appIconSize,
-          );
+          final Widget icon = Icon(folder ? Icons.folder : Icons.launch, size: appIconSize);
 
           LabelType labelType = folder ? folderLabels : listLabels;
           bool showIcon = folder ? folderIcons : listIcons;
@@ -145,27 +142,49 @@ class AppTileSetting extends StatelessWidget {
               ),
             ),
           );
+          bool needsRebuild = false;
 
-          if (labelType != (folder ? folderLabels : listLabels) ||
-              showIcon != (folder ? folderIcons : listIcons) ||
-              elevated != (folder ? elevatedFolders : elevatedLists) ||
-              useWide != wideTiles) {
+          if (labelType != (folder ? folderLabels : listLabels)) {
             if (EzConfig.updateBoth || EzConfig.isDark) {
               await EzConfig.setString(darkLabelKey, labelType.value);
-              await EzConfig.setBool(darkIconKey, showIcon);
-              await EzConfig.setBool(darkElevatedKey, elevated);
-              await EzConfig.setBool(darkWideTilesKey, useWide);
             }
-
             if (EzConfig.updateBoth || !EzConfig.isDark) {
               await EzConfig.setString(lightLabelKey, labelType.value);
+            }
+            needsRebuild = true;
+          }
+
+          if (showIcon != (folder ? folderIcons : listIcons)) {
+            if (EzConfig.updateBoth || EzConfig.isDark) {
+              await EzConfig.setBool(darkIconKey, showIcon);
+            }
+            if (EzConfig.updateBoth || !EzConfig.isDark) {
               await EzConfig.setBool(lightIconKey, showIcon);
+            }
+            needsRebuild = true;
+          }
+
+          if (elevated != (folder ? elevatedFolders : elevatedLists)) {
+            if (EzConfig.updateBoth || EzConfig.isDark) {
+              await EzConfig.setBool(darkElevatedKey, elevated);
+            }
+            if (EzConfig.updateBoth || !EzConfig.isDark) {
               await EzConfig.setBool(lightElevatedKey, elevated);
+            }
+            needsRebuild = true;
+          }
+
+          if (useWide != wideTiles) {
+            if (EzConfig.updateBoth || EzConfig.isDark) {
+              await EzConfig.setBool(darkWideTilesKey, useWide);
+            }
+            if (EzConfig.updateBoth || !EzConfig.isDark) {
               await EzConfig.setBool(lightWideTilesKey, useWide);
             }
-
-            await EzConfig.rebuildUI();
+            needsRebuild = true;
           }
+
+          if (needsRebuild) await EzConfig.rebuildUI();
         },
         icon: const Icon(Icons.settings),
         label: '${folder ? 'Folder' : 'List'} tiles',

@@ -119,16 +119,10 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
               final ListAlignment selected = choice!.first;
 
               if (EzConfig.updateBoth || EzConfig.isDark) {
-                await EzConfig.setString(
-                  darkHorizontalAlignKey,
-                  selected.value,
-                );
+                await EzConfig.setString(darkHorizontalAlignKey, selected.value);
               }
               if (EzConfig.updateBoth || !EzConfig.isDark) {
-                await EzConfig.setString(
-                  lightHorizontalAlignKey,
-                  selected.value,
-                );
+                await EzConfig.setString(lightHorizontalAlignKey, selected.value);
               }
 
               setState(() => horizAlign = selected);
@@ -147,16 +141,10 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
               final ListAlignment selected = choice!.first;
 
               if (EzConfig.updateBoth || EzConfig.isDark) {
-                await EzConfig.setString(
-                  darkVerticalAlignKey,
-                  selected.value,
-                );
+                await EzConfig.setString(darkVerticalAlignKey, selected.value);
               }
               if (EzConfig.updateBoth || !EzConfig.isDark) {
-                await EzConfig.setString(
-                  lightVerticalAlignKey,
-                  selected.value,
-                );
+                await EzConfig.setString(lightVerticalAlignKey, selected.value);
               }
 
               setState(() => vertAlign = selected);
