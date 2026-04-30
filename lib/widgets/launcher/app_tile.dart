@@ -14,7 +14,7 @@ class AppTile extends StatefulWidget {
   final AppInfo app;
 
   /// true == home list
-  /// null == home folder
+  /// null == home folder TODO: don't allow edits in home folder
   /// false == false
   /// Quantum supremacy achieved (⌐■_■)
   final bool? onHomeScreen;
