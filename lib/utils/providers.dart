@@ -31,15 +31,14 @@ class AppInfoProvider extends ChangeNotifier {
   final Set<String> _renamedSet = Set<String>.from(EzConfig.get(renamedIDsKey));
 
   // Home apps
-  final Set<String> _homeSet = Set<String>.from(EzConfig.get(homeIDsKey));
   final List<String> _homeList = EzConfig.get(homeIDsKey);
+  final Set<String> _homeSet = Set<String>.from(EzConfig.get(homeIDsKey));
 
   // Hidden apps
-  final Set<String> _hiddenSet = Set<String>.from(EzConfig.get(hiddenIDsKey));
   final List<String> _hiddenList = EzConfig.get(hiddenIDsKey);
+  final Set<String> _hiddenSet = Set<String>.from(EzConfig.get(hiddenIDsKey));
 
   final Set<String> _banishedSet = Set<String>.from(EzConfig.get(banishedIDsKey));
-  final List<String> _banishedList = EzConfig.get(banishedIDsKey);
 
   AppInfoProvider(List<AppInfo> apps)
       : _apps = apps,
@@ -52,10 +51,9 @@ class AppInfoProvider extends ChangeNotifier {
 
     for (final String item in homeCopy) {
       if (item.contains(folderSplit)) {
+        folders.add(item);
         _homeSet
             .addAll(item.split(folderSplit).where((String item) => item.contains(idSplit)).toSet());
-
-        folders.add(item);
       }
     }
     _homeSet.removeAll(folders);
@@ -148,9 +146,32 @@ class AppInfoProvider extends ChangeNotifier {
   List<String> get hiddenList => _hiddenList;
 
   Set<String> get banishedSet => _banishedSet;
-  List<String> get banishedList => _banishedList;
 
-  // Post //
+  // Put //
+
+  Future<bool> addHomeApp(String appID) async {
+    if (_homeSet.contains(appID)) return false;
+
+    _homeList.add(appID);
+    _homeSet.add(appID);
+
+    await EzConfig.setStringList(homeIDsKey, _homeList);
+    notifyListeners();
+
+    return true;
+  }
+
+  Future<bool> removeHomeApp(String appID, {bool batch = false}) async {
+    if (!_homeSet.contains(appID)) return false;
+
+    _homeList.remove(appID);
+    _homeSet.remove(appID);
+
+    await EzConfig.setStringList(homeIDsKey, _homeList);
+    if (!batch) notifyListeners();
+
+    return true;
+  }
 
   Future<void> addHomeFolder() async {
     _homeList.add('Folder$folderSplit$emptyTag');
@@ -159,7 +180,7 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Put //
+  // Patch //
 
   void sort(AppSort sort, bool asc) {
     switch (sort) {
@@ -184,64 +205,6 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> addHomeApp(String appID) async {
-    if (_homeSet.contains(appID)) return false;
-
-    _homeList.add(appID);
-    _homeSet.add(appID);
-
-    await EzConfig.setStringList(homeIDsKey, _homeList);
-    notifyListeners();
-
-    return true;
-  }
-
-  Future<bool> removeHomeApp(String appID) async {
-    if (!_homeSet.contains(appID)) return false;
-
-    _homeList.remove(appID);
-    _homeSet.remove(appID);
-
-    await EzConfig.setStringList(homeIDsKey, _homeList);
-    notifyListeners();
-
-    return true;
-  }
-
-  Future<void> addToFolder(String appID, int folderIndex) async {
-    _homeList[folderIndex] =
-        (homeList[folderIndex] + folderSplit + appID).replaceAll(folderSplit + emptyTag, '');
-
-    if (_homeSet.contains(appID)) {
-      final int appIndex = _homeList.indexOf(appID);
-      _homeList.removeAt(appIndex);
-    } else {
-      _homeSet.add(appID);
-    }
-
-    await EzConfig.setStringList(homeIDsKey, _homeList);
-    notifyListeners();
-  }
-
-  Future<bool> removeFromFolder(String appID, int folderIndex) async {
-    _homeList[folderIndex] = _homeList[folderIndex].replaceFirst(
-      folderSplit + appID,
-      '',
-    );
-    _homeList.add(appID);
-
-    if (!_homeList[folderIndex].contains(folderSplit)) {
-      _homeList[folderIndex] = '${_homeList[folderIndex]}$folderSplit$emptyTag';
-    }
-
-    await EzConfig.setStringList(homeIDsKey, _homeList);
-    notifyListeners();
-
-    return true;
-  }
-
-  // Patch //
-
   Future<void> reorderHomeItem({
     required int oldIndex,
     required int newIndex,
@@ -251,26 +214,6 @@ class AppInfoProvider extends ChangeNotifier {
       oldIndex < newIndex ? newIndex - 1 : newIndex,
       id,
     );
-
-    await EzConfig.setStringList(homeIDsKey, _homeList);
-    notifyListeners();
-  }
-
-  Future<void> reorderFolderItem({
-    required int oldIndex,
-    required int newIndex,
-    required int folderIndex,
-  }) async {
-    final List<String> folderList = _homeList[folderIndex].split(folderSplit);
-
-    final String id = folderList.removeAt(oldIndex);
-    folderList.insert(
-      oldIndex < newIndex ? newIndex - 1 : newIndex,
-      id,
-    );
-
-    final String newFullName = folderList.join(folderSplit);
-    _homeList[folderIndex] = newFullName;
 
     await EzConfig.setStringList(homeIDsKey, _homeList);
     notifyListeners();
@@ -309,6 +252,28 @@ class AppInfoProvider extends ChangeNotifier {
     return true;
   }
 
+  Future<void> updateFolder({
+    required String name,
+    required int index,
+    required List<String> oldIDs,
+    required List<String> newIDs,
+  }) async {
+    _homeList[index] = name + folderSplit + (newIDs.isEmpty ? emptyTag : newIDs.join(folderSplit));
+
+    final Set<String> oldSet = oldIDs.toSet();
+    final Set<String> newSet = newIDs.toSet();
+
+    for (final String id in oldSet.difference(newSet)) {
+      homeSet.remove(id);
+    }
+    for (final String id in newSet.difference(oldSet)) {
+      homeSet.add(id);
+    }
+
+    await EzConfig.setStringList(homeIDsKey, _homeList);
+    notifyListeners();
+  }
+
   Future<bool> hideApp(String appID) async {
     if (_hiddenSet.contains(appID)) return false;
 
@@ -336,14 +301,14 @@ class AppInfoProvider extends ChangeNotifier {
     return true;
   }
 
-  Future<bool> showApp(String appID) async {
+  Future<bool> showApp(String appID, {bool batch = false}) async {
     if (!_hiddenSet.contains(appID)) return false;
 
     _hiddenList.remove(appID);
     _hiddenSet.remove(appID);
 
     await EzConfig.setStringList(hiddenIDsKey, _hiddenList);
-    notifyListeners();
+    if (!batch) notifyListeners();
 
     return true;
   }
@@ -396,10 +361,8 @@ For example: if an app has always on location permissions, banishing it will not
     );
     if (!confirmed) return false;
 
-    _banishedList.add(appID);
     _banishedSet.add(appID);
-
-    await EzConfig.setStringList(banishedIDsKey, _banishedList);
+    await EzConfig.setStringList(banishedIDsKey, _banishedSet.toList());
 
     final bool notified = await removeHomeApp(appID);
     if (!notified) notifyListeners();
@@ -407,24 +370,16 @@ For example: if an app has always on location permissions, banishing it will not
     return true;
   }
 
-  Future<void> _purgeApp(String appID) async {
-    if (!_banishedSet.contains(appID)) return;
-
-    _banishedList.remove(appID);
-    _banishedSet.remove(appID);
-
-    await EzConfig.setStringList(banishedIDsKey, _banishedList);
-    notifyListeners();
-
-    return;
-  }
-
   // Delete //
 
   Future<void> removeDeleted(String appID) async {
-    await _purgeApp(appID);
-    await showApp(appID);
-    await removeHomeApp(appID);
+    if (_banishedSet.contains(appID)) {
+      _banishedSet.remove(appID);
+      await EzConfig.setStringList(banishedIDsKey, _banishedSet.toList());
+    }
+
+    await showApp(appID, batch: true);
+    await removeHomeApp(appID, batch: true);
 
     _apps.remove(_appMap[appID]);
     _appMap.remove(appID);
@@ -432,22 +387,19 @@ For example: if an app has always on location permissions, banishing it will not
     notifyListeners();
   }
 
-  Future<bool> deleteFolder(String fullName) async {
-    try {
-      final List<String> ids = fullName.split(':').sublist(1);
-      for (final String id in ids) {
-        _homeSet.remove(id);
-      }
+  Future<bool> deleteFolder(int index) async {
+    if (index >= _homeList.length) return false;
 
-      _homeList.remove(fullName);
-      await EzConfig.setStringList(homeIDsKey, _homeList);
-
-      notifyListeners();
-      return true;
-    } catch (e) {
-      ezLog('Error deleting folder...\n$e');
-      return false;
+    final List<String> ids = _homeList[index].split(':').sublist(1);
+    for (final String id in ids) {
+      _homeSet.remove(id);
     }
+
+    _homeList.removeAt(index);
+    await EzConfig.setStringList(homeIDsKey, _homeList);
+
+    notifyListeners();
+    return true;
   }
 
   Future<void> reset() async {
@@ -457,7 +409,6 @@ For example: if an app has always on location permissions, banishing it will not
     _hiddenSet.clear();
     _hiddenList.clear();
     _banishedSet.clear();
-    _banishedList.clear();
 
     sort(
       ASConfig.lookup(EzConfig.getDefault(listSortKey)),
