@@ -310,6 +310,7 @@ class _AppTileState extends State<AppTile> {
 
 class AppButton extends StatelessWidget {
   final AppInfo app;
+  final Widget? icon;
   final ButtonType buttonType;
   final LabelType labelType;
   final void Function()? onPressed;
@@ -318,6 +319,7 @@ class AppButton extends StatelessWidget {
   const AppButton({
     super.key,
     required this.app,
+    this.icon,
     required this.buttonType,
     required this.labelType,
     this.onPressed,
@@ -325,11 +327,12 @@ class AppButton extends StatelessWidget {
   });
 
   Widget appIcon() => (app.icon == null)
-      ? Icon(
-          Icons.question_mark,
-          semanticLabel: app.name,
-          size: appIconSize,
-        )
+      ? icon ??
+          Icon(
+            Icons.question_mark,
+            semanticLabel: app.name,
+            size: appIconSize,
+          )
       : Image.memory(
           app.icon!,
           semanticLabel: app.name,
