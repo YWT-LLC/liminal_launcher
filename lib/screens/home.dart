@@ -421,7 +421,7 @@ If you want to support Liminal's development, or the development of more Empathe
                 EzConfig.spacer,
 
                 // Settings
-                SettingsFAB(() => context.goNamed(settingsHomePath)),
+                SettingsFAB(() => context.goNamed(settingsPath)),
               ]
             : null,
       );
