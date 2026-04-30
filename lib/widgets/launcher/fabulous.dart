@@ -3,8 +3,6 @@
  * See LICENSE for distribution and usage details.
  */
 
-import '../../screens/export.dart';
-
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
@@ -18,7 +16,6 @@ const EzUpdaterFAB updater = EzUpdaterFAB(
 );
 
 class AddAppFAB extends FloatingActionButton {
-  /// [FloatingActionButton] that opens a modal for adding more home apps
   AddAppFAB(void Function() onPressed, {super.key})
       : super(
           heroTag: 'add_app_fab',
@@ -29,7 +26,6 @@ class AddAppFAB extends FloatingActionButton {
 }
 
 class AddFolderFAB extends FloatingActionButton {
-  /// [FloatingActionButton] that adds another home folder
   AddFolderFAB(void Function() onPressed, {super.key})
       : super(
           heroTag: 'add_folder_fab',
@@ -40,7 +36,6 @@ class AddFolderFAB extends FloatingActionButton {
 }
 
 class SettingsFAB extends FloatingActionButton {
-  /// [FloatingActionButton] that will go to the [SettingsHomeScreen]
   SettingsFAB(void Function() onPressed, {super.key})
       : super(
           heroTag: 'settings_fab',
