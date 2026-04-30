@@ -67,8 +67,8 @@ class LiminalCache extends EzAppCache {
       _design = DesignCache(
         homeDate: DateTypeConfig.lookup(EzConfig.get(darkHomeDateKey)),
         homeTime: EzConfig.get(darkHomeTimeKey),
-        horizontalAlign: EzConfig.get(darkHorizontalAlignKey),
-        verticalAlign: EzConfig.get(darkVerticalAlignKey),
+        horizontalAlign: LAConfig.lookup(EzConfig.get(darkHorizontalAlignKey)),
+        verticalAlign: LAConfig.lookup(EzConfig.get(darkVerticalAlignKey)),
         listIcons: listIcons,
         listLabels: listLabels,
         elevatedLists: elevatedLists,
@@ -98,8 +98,8 @@ class LiminalCache extends EzAppCache {
       _design = DesignCache(
         homeDate: DateTypeConfig.lookup(EzConfig.get(lightHomeDateKey)),
         homeTime: EzConfig.get(lightHomeTimeKey),
-        horizontalAlign: EzConfig.get(lightHorizontalAlignKey),
-        verticalAlign: EzConfig.get(lightVerticalAlignKey),
+        horizontalAlign: LAConfig.lookup(EzConfig.get(lightHorizontalAlignKey)),
+        verticalAlign: LAConfig.lookup(EzConfig.get(lightVerticalAlignKey)),
         listIcons: listIcons,
         listLabels: listLabels,
         elevatedLists: elevatedLists,
