@@ -132,19 +132,10 @@ class _TheMagic extends StatelessWidget {
 
                 // Settings home
                 GoRoute(
-                  path: settingsHomePath,
-                  name: settingsHomePath,
+                  path: settingsPath,
+                  name: settingsPath,
                   pageBuilder: (BuildContext pbc, GoRouterState rs) =>
-                      ezPageBuilder(pbc, rs, SettingsHomeScreen()),
-                  routes: <RouteBase>[
-                    // Appearance settings
-                    GoRoute(
-                      path: appearanceSettingsPath,
-                      name: appearanceSettingsPath,
-                      pageBuilder: (BuildContext pbc, GoRouterState rs) =>
-                          ezPageBuilder(pbc, rs, AppearanceSettingsScreen()),
-                    ),
-                  ],
+                      ezPageBuilder(pbc, rs, SettingsScreen()),
                 ),
               ],
             ),

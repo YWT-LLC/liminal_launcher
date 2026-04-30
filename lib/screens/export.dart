@@ -5,21 +5,15 @@
 
 // Exports //
 
-export 'error.dart';
-
-export 'home.dart';
 export 'app_list.dart';
-
-export 'settings/home.dart';
-export 'settings/appearance.dart';
+export 'error.dart';
+export 'home.dart';
+export 'settings.dart';
 
 // Route names //
 
 /// app-list
 const String appListPath = 'app-list';
 
-/// settings-home
-const String settingsHomePath = 'settings-home';
-
-/// appearance-settings
-const String appearanceSettingsPath = 'appearance-settings';
+/// settings
+const String settingsPath = 'settings';
