@@ -30,14 +30,20 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
   late final OverlayState overlay = Overlay.of(context);
   ValueNotifier<double> rippleProgress = ValueNotifier<double>(0.0);
 
-  late List<Widget> homeTiles = homeA2T();
-
   // Define custom functions //
 
-  /// home apps to tiles
+  Widget clock() => (homeTime || homeDate != DateType.none)
+      ? Padding(
+          padding: EdgeInsets.only(
+            top: vAlign == ListAlignment.start ? 0 : EzConfig.spacing,
+            bottom: vAlign == ListAlignment.start ? EzConfig.spacing : 0,
+          ),
+          child: const Clock(),
+        )
+      : const SizedBox.shrink();
+
   /// appProvider.homeList -> AppTile/AppFolder
-  /// TODO: I don't like this... should prolly be in build
-  List<Widget> homeA2T() {
+  List<Widget> buildTiles() {
     final EdgeInsets tilePadding = EdgeInsets.symmetric(vertical: EzConfig.spacing / 2);
     final List<Widget> tileList = <Widget>[];
 
@@ -52,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           child: AppFolder(
             index: index,
             editing: editing ? null : false,
-            onEdit: refresh,
+            onEdit: () => setState(() {}),
             rippleProgress: rippleProgress,
           ),
         ));
@@ -67,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
             onHomeScreen: true,
             onSelected: (String id) => launchApp(id),
             editing: editing ? null : false,
-            onEdit: refresh,
+            onEdit: () => setState(() {}),
             rippleProgress: rippleProgress,
           ),
         ));
@@ -77,30 +83,20 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     return tileList;
   }
 
-  void refresh() {
-    homeTiles = homeA2T();
-    setState(() {});
-  }
-
-  Future<void> swipeUp() async {
-    if (editing) {
-      await navToHidden(context);
-    } else {
-      context.goNamed(
-        appListPath,
-        extra: ListConfig(
-          ids: <String>{...appInfo.hiddenSet, ...appInfo.banishedSet},
-          include: false,
-          onSelected: (String id) => launchApp(id),
-          title: null,
-        ),
-      );
-    }
-  }
+  Future<void> swipeUp() async => (editing)
+      ? await navToHidden(context)
+      : context.goNamed(
+          appListPath,
+          extra: ListConfig(
+            ids: <String>{...appInfo.hiddenSet, ...appInfo.banishedSet},
+            include: false,
+            onSelected: (String id) => launchApp(id),
+            title: null,
+          ),
+        );
 
   Future<void> navToHidden(BuildContext context) async {
     if (bool.tryParse(await EzConfig.secGet(authForHiddenKey)) == true) {
-      // Check every time so no reset is required; O(1)
       bool authed = false;
 
       try {
@@ -132,18 +128,6 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
       );
     }
   }
-
-  // Define custom Widgets //
-
-  Widget clock() => (homeTime || homeDate != DateType.none)
-      ? Padding(
-          padding: EdgeInsets.only(
-            top: vAlign == ListAlignment.start ? 0 : EzConfig.spacing,
-            bottom: vAlign == ListAlignment.start ? EzConfig.spacing : 0,
-          ),
-          child: const Clock(),
-        )
-      : const SizedBox.shrink();
 
   // Init //
 
@@ -298,8 +282,7 @@ If you want to support Liminal's development, or the development of more Empathe
               await rippleController.forward().whenComplete(() {
                 rippleProgress = ValueNotifier<double>(0.0);
                 editing = !editing;
-                refresh();
-
+                setState(() {});
                 ripple.remove();
                 rippleController.dispose();
               });
@@ -307,8 +290,7 @@ If you want to support Liminal's development, or the development of more Empathe
             }
 
             // Full transition to editing
-            editing = !editing;
-            refresh();
+            setState(() => editing = !editing);
           },
           onVerticalDragEnd: (DragEndDetails details) async {
             if (details.primaryVelocity != null) {
@@ -331,8 +313,7 @@ If you want to support Liminal's development, or the development of more Empathe
               } else {
                 // Swiped right
                 if (editing) {
-                  editing = false;
-                  refresh();
+                  setState(() => editing = false);
                 } else {
                   toLaunch = appInfo.appMap[rightSwipeID];
                 }
@@ -372,28 +353,18 @@ If you want to support Liminal's development, or the development of more Empathe
                   },
                   child: editing
                       ? ReorderableListView(
-                          // TODO: I sure do hope (and doubt) this still works
-                          // TODO: using on start, on end, and a timer based on hold time: implement put in folder
-                          // TODO: add long hold delay controls to button design, efui up
+                          // TODO: when it works: using on start, on end, and a timer based on hold time: implement put in folder
                           onReorder: (int oldIndex, int newIndex) async {
                             if (oldIndex == newIndex) return;
-
-                            // Local UI update first
-                            final Widget toMove = homeTiles.removeAt(oldIndex);
-                            homeTiles.insert(
-                              oldIndex < newIndex ? newIndex - 1 : newIndex,
-                              toMove,
-                            );
-                            setState(() {});
 
                             // Storage update
                             await appInfo.reorderHomeItem(
                               oldIndex: oldIndex,
                               newIndex: newIndex,
                             );
-                            refresh();
+                            setState(() {});
                           },
-                          children: homeTiles,
+                          children: buildTiles(),
                         )
                       : ConstrainedBox(
                           constraints: wideTiles
@@ -403,7 +374,7 @@ If you want to support Liminal's development, or the development of more Empathe
                             mainAxisAlignment: vAlign.mainAxis,
                             crossAxisAlignment: hAlign.crossAxis,
                             physics: const ClampingScrollPhysics(),
-                            children: homeTiles,
+                            children: buildTiles(),
                           ),
                         ),
                 ),
@@ -445,7 +416,7 @@ If you want to support Liminal's development, or the development of more Empathe
                 // Add folder
                 AddFolderFAB(() async {
                   await appInfo.addHomeFolder();
-                  refresh();
+                  setState(() {});
                 }),
                 EzConfig.spacer,
 
