@@ -3,6 +3,8 @@ import '../../utils/export.dart';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
+const double _sizeMod = 0.333;
+
 const List<ButtonSegment<ListAlignment>> alignmentSegments = <ButtonSegment<ListAlignment>>[
   ButtonSegment<ListAlignment>(
     value: ListAlignment.start,
@@ -28,19 +30,15 @@ class AlignmentSelectors extends StatefulWidget {
 class _AlignmentSelectorsState extends State<AlignmentSelectors> {
   // Define the build data //
 
-  static const double _sizeMod = 0.333;
-
-  ListAlignment horizAlign = hAlign;
-  ListAlignment vertAlign = vAlign;
+  ListAlignment h = hAlign;
+  ListAlignment v = vAlign;
 
   // Define custom functions //
-  Alignment merge({
-    required ListAlignment horizAlign,
-    required ListAlignment vertAlign,
-  }) {
-    switch (horizAlign) {
+
+  Alignment merge() {
+    switch (h) {
       case ListAlignment.start:
-        switch (vertAlign) {
+        switch (v) {
           case ListAlignment.start:
             return Alignment.topLeft;
           case ListAlignment.center:
@@ -49,7 +47,7 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
             return Alignment.bottomLeft;
         }
       case ListAlignment.center:
-        switch (vertAlign) {
+        switch (v) {
           case ListAlignment.start:
             return Alignment.topCenter;
           case ListAlignment.center:
@@ -58,7 +56,7 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
             return Alignment.bottomCenter;
         }
       case ListAlignment.end:
-        switch (vertAlign) {
+        switch (v) {
           case ListAlignment.start:
             return Alignment.topRight;
           case ListAlignment.center:
@@ -92,7 +90,7 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
 
             // Aligned circular icon
             Align(
-              alignment: merge(horizAlign: horizAlign, vertAlign: vertAlign),
+              alignment: merge(),
               child: ClipOval(
                 child: Image.asset(
                   appIconPath,
@@ -112,7 +110,7 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
           // Horizontal
           SegmentedButton<ListAlignment>(
             segments: alignmentSegments,
-            selected: <ListAlignment>{horizAlign},
+            selected: <ListAlignment>{h},
             showSelectedIcon: false,
             onSelectionChanged: (Set<ListAlignment>? choice) async {
               if (choice?.first == null) return;
@@ -125,7 +123,7 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
                 await EzConfig.setString(lightHorizontalAlignKey, selected.value);
               }
 
-              setState(() => horizAlign = selected);
+              setState(() => h = selected);
             },
           ),
           EzConfig.spacer,
@@ -134,7 +132,7 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
           SegmentedButton<ListAlignment>(
             segments: alignmentSegments,
             direction: Axis.vertical,
-            selected: <ListAlignment>{vertAlign},
+            selected: <ListAlignment>{v},
             showSelectedIcon: false,
             onSelectionChanged: (Set<ListAlignment>? choice) async {
               if (choice?.first == null) return;
@@ -147,7 +145,7 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
                 await EzConfig.setString(lightVerticalAlignKey, selected.value);
               }
 
-              setState(() => vertAlign = selected);
+              setState(() => v = selected);
             },
           ),
         ]),
