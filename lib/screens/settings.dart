@@ -141,35 +141,6 @@ class SettingsScreen extends StatelessWidget {
                     ),
                     EzConfig.spacer,
                   ],
-                  appendPage: <Widget>[
-                    EzConfig.spacer,
-                    // Hide status bar
-                    EzSwitchPair(
-                      text: 'Hide status bar',
-                      valueKey: EzConfig.isDark ? darkHideStatusKey : lightHideStatusKey,
-                      afterChanged: (bool? choice) async {
-                        if (choice == null) return;
-                        if (EzConfig.updateBoth) {
-                          await EzConfig.setBool(
-                            EzConfig.isDark ? lightHideStatusKey : darkHideStatusKey,
-                            choice,
-                          );
-                        }
-
-                        if (choice == true) {
-                          await SystemChrome.setEnabledSystemUIMode(
-                            SystemUiMode.manual,
-                            overlays: <SystemUiOverlay>[SystemUiOverlay.bottom],
-                          );
-                        } else {
-                          await SystemChrome.setEnabledSystemUIMode(
-                            SystemUiMode.manual,
-                            overlays: SystemUiOverlay.values,
-                          );
-                        }
-                      },
-                    ),
-                  ],
                 ),
               ),
 
