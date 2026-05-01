@@ -263,7 +263,7 @@ If you want to support Liminal's development, or the development of more Empathe
               if (!authed) return;
             }
 
-            final Duration animDur = ezAnimDuration();
+            final Duration animDur = ezAnimDuration(mod: 2.0);
             if (context.mounted && animDur > Duration.zero) {
               // Ripple transition to editing
               final AnimationController rippleController =
