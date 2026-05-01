@@ -160,13 +160,12 @@ class _AppListScreenState extends State<AppListScreen> {
               NotificationListener<ScrollNotification>(
                 onNotification: (ScrollNotification notification) {
                   if (notification is OverscrollNotification && notification.overscroll < 0) {
-                    // Pop on top overscroll
                     if (atTop) {
                       Navigator.of(context).pop();
                       return true;
                     } else {
                       closePause = Timer(
-                        const Duration(milliseconds: 100),
+                        scrollDelay,
                         () => setState(() => atTop = true),
                       );
                       return true;
@@ -183,7 +182,7 @@ class _AppListScreenState extends State<AppListScreen> {
                   } else if (notification is ScrollEndNotification) {
                     if (notification.metrics.pixels == 0) {
                       closePause = Timer(
-                        const Duration(milliseconds: 100),
+                        scrollDelay,
                         () => setState(() => atTop = true),
                       );
                     } else {
@@ -192,7 +191,7 @@ class _AppListScreenState extends State<AppListScreen> {
                     setState(() => atBottom =
                         (notification.metrics.pixels == notification.metrics.maxScrollExtent));
                   }
-                  return false;
+                  return false; // Let other notifications propagate
                 },
                 child: Expanded(
                   child: EzScrollView(
