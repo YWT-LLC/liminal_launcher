@@ -164,7 +164,7 @@ const Map<String, Type> limDesignKeys = <String, Type>{
 
 // Shared //
 
-/// [allEZConfigKeys], [limBTSKeys], [limDesignKeys], [limLauncherKeys], [limLayoutKeys]
+/// [allEZConfigKeys], [limBTSKeys], [limGlobalKeys], [limDesignKeys],
 const Map<String, Type> allLimKeys = <String, Type>{
   ...allEZConfigKeys,
   ...limBTSKeys,
