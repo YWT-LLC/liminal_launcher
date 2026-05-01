@@ -13,13 +13,10 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class SwipeSelector extends StatefulWidget {
   final bool left;
-
-  final String _darkKey;
-  final String _lightKey;
+  final String _key;
 
   const SwipeSelector({super.key, required this.left})
-      : _darkKey = left ? darkLeftSwipeIDKey : darkRightSwipeIDKey,
-        _lightKey = left ? lightLeftSwipeIDKey : lightRightSwipeIDKey;
+      : _key = left ? leftSwipeIDKey : rightSwipeIDKey;
 
   @override
   State<SwipeSelector> createState() => _SwipeSelectorState();
@@ -33,7 +30,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
     final String dir = widget.left ? 'Left' : 'Right';
     final String lowDir = dir.toLowerCase();
 
-    String? appID = EzConfig.get(EzConfig.isDark ? widget._darkKey : widget._lightKey);
+    String? appID = EzConfig.get(widget._key);
     AppInfo app = (appID == null || appID.isEmpty) ? nullApp : appInfo.appMap[appID] ?? nullApp;
 
     // Return the build //
@@ -74,14 +71,9 @@ class _SwipeSelectorState extends State<SwipeSelector> {
                   return;
                 }
 
-                if (EzConfig.updateBoth || EzConfig.isDark) {
-                  await EzConfig.setString(widget._darkKey, id);
-                }
-                if (EzConfig.updateBoth || !EzConfig.isDark) {
-                  await EzConfig.setString(widget._lightKey, id);
-                }
-
+                await EzConfig.setString(widget._key, id);
                 setState(() => app = newApp);
+
                 if (context.mounted) Navigator.of(context).pop();
               },
               title: EzText(
@@ -94,13 +86,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
             appID = null;
             app = nullApp;
 
-            if (EzConfig.updateBoth || EzConfig.isDark) {
-              await EzConfig.remove(widget._darkKey);
-            }
-            if (EzConfig.updateBoth || !EzConfig.isDark) {
-              await EzConfig.remove(widget._lightKey);
-            }
-
+            await EzConfig.remove(widget._key);
             setState(() {});
           },
         ),
