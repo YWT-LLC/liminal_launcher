@@ -98,51 +98,46 @@ class _AppFolderState extends State<AppFolder> with AfterLayoutMixin<AppFolder> 
       child: EzConfig.rowSpacer,
     );
 
-    return (editing == false)
-        ? EzAnimHide(
-            mod: 0.5,
-            visible: rippleThrottle == null,
-            size: hideSize,
-            kid: open
-                ? TapRegion(
-                    onTapOutside: (_) => toggleOpen,
-                    child: EzScrollView(
-                      scrollDirection: Axis.horizontal,
-                      mainAxisAlignment: hAlign.mainAxis,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: widget._appList
-                          .map((String id) {
-                            final AppInfo? app = appInfo.appMap[id];
-                            if (app == null) return null;
+    return EzAnimHide(
+      mod: 0.75,
+      visible: rippleThrottle == null,
+      size: hideSize,
+      kid: (editing == false)
+          ? (open
+              ? TapRegion(
+                  onTapOutside: (_) => toggleOpen,
+                  child: EzScrollView(
+                    scrollDirection: Axis.horizontal,
+                    mainAxisAlignment: hAlign.mainAxis,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: widget._appList
+                        .map((String id) {
+                          final AppInfo? app = appInfo.appMap[id];
+                          if (app == null) return null;
 
-                            return Padding(
-                              padding: EdgeInsets.symmetric(horizontal: EzConfig.spacing / 2),
-                              child: AppTile(
-                                app: app,
-                                onHomeScreen: null,
-                                onSelected: (String id) => launchApp(id),
-                                editing: false,
-                                onEdit: doNothing,
-                              ),
-                            );
-                          })
-                          .whereType<Widget>()
-                          .toList(),
-                    ),
-                  )
-                : FolderButton(
-                    name: widget._name,
-                    buttonType: folderBT,
-                    labelType: folderLabels,
-                    onPressed: toggleOpen,
-                    onLongPress: () => setState(() => editing = true),
+                          return Padding(
+                            padding: EdgeInsets.symmetric(horizontal: EzConfig.spacing / 2),
+                            child: AppTile(
+                              app: app,
+                              onHomeScreen: null,
+                              onSelected: (String id) => launchApp(id),
+                              editing: false,
+                              onEdit: doNothing,
+                            ),
+                          );
+                        })
+                        .whereType<Widget>()
+                        .toList(),
                   ),
-          )
-        : EzAnimHide(
-            mod: 0.5,
-            visible: rippleThrottle == null,
-            size: hideSize,
-            kid: EzScrollView(
+                )
+              : FolderButton(
+                  name: widget._name,
+                  buttonType: folderBT,
+                  labelType: folderLabels,
+                  onPressed: toggleOpen,
+                  onLongPress: () => setState(() => editing = true),
+                ))
+          : EzScrollView(
               scrollDirection: Axis.horizontal,
               mainAxisAlignment: hAlign.mainAxis,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -305,7 +300,7 @@ class _AppFolderState extends State<AppFolder> with AfterLayoutMixin<AppFolder> 
                 ),
               ],
             ),
-          );
+    );
   }
 
   @override
