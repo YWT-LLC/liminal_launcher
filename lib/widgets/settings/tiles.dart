@@ -178,6 +178,6 @@ class AppTileSetting extends StatelessWidget {
           }
         },
         icon: const Icon(Icons.settings),
-        label: '${folder ? 'Folder' : 'List'} tiles',
+        label: '${folder ? 'Folder' : 'App'} style',
       );
 }
