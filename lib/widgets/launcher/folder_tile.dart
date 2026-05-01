@@ -147,7 +147,6 @@ class _AppFolderState extends State<AppFolder> with AfterLayoutMixin<AppFolder> 
               mainAxisAlignment: hAlign.mainAxis,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                // TODO: holding the spacers should end editing
                 // Name (and rename)
                 EzLink(
                   widget._name,
@@ -209,7 +208,6 @@ class _AppFolderState extends State<AppFolder> with AfterLayoutMixin<AppFolder> 
                 editSpacer,
 
                 // Edit apps
-                // TODO: once move and remove are working, add add
                 EzIconButton(
                   icon: const Icon(Icons.edit),
                   onPressed: () async {

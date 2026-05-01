@@ -353,7 +353,6 @@ If you want to support Liminal's development, or the development of more Empathe
                   },
                   child: editing
                       ? ReorderableListView(
-                          // TODO: when it works: using on start, on end, and a timer based on hold time: implement put in folder
                           onReorder: (int oldIndex, int newIndex) async {
                             if (oldIndex == newIndex) return;
 
