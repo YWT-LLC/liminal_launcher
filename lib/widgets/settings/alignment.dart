@@ -95,8 +95,8 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
                 child: Image.asset(
                   appIconPath,
                   semanticLabel: 'Liminal Launcher icon used for alignment preview',
-                  width: EzConfig.iconSize + EzConfig.padding,
-                  height: EzConfig.iconSize + EzConfig.padding,
+                  width: appIconSize,
+                  height: appIconSize,
                   fit: BoxFit.cover,
                 ),
               ),
