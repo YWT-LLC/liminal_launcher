@@ -99,7 +99,7 @@ class _AppTileState extends State<AppTile> with AfterLayoutMixin<AppTile> {
         _EditSpacer(() => (editing == true) ? setState(() => editing = false) : doNothing());
 
     return EzAnimHide(
-      mod: 0.75,
+      mod: 0.667,
       visible: rippleThrottle == null,
       size: hideSize,
       kid: editing == false

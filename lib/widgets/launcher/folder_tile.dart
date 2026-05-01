@@ -99,7 +99,7 @@ class _AppFolderState extends State<AppFolder> with AfterLayoutMixin<AppFolder> 
     );
 
     return EzAnimHide(
-      mod: 0.75,
+      mod: 0.667,
       visible: rippleThrottle == null,
       size: hideSize,
       kid: (editing == false)
