@@ -16,7 +16,6 @@ class LiminalCache extends EzAppCache {
   Locale _locale;
   Lang _l10n;
 
-  late LauncherCache _launcher;
   late DesignCache _design;
 
   LiminalCache(Locale locale, Lang l10n)
@@ -27,7 +26,6 @@ class LiminalCache extends EzAppCache {
 
   Lang get l10n => _l10n;
 
-  LauncherCache get launcher => _launcher;
   DesignCache get design => _design;
 
   // Set //
@@ -49,13 +47,6 @@ class LiminalCache extends EzAppCache {
     final bool isDark = darkInit ?? EzConfig.isDark;
 
     if (isDark) {
-      // Launcher
-      _launcher = LauncherCache(
-        leftSwipe: EzConfig.get(darkLeftSwipeIDKey),
-        rightSwipe: EzConfig.get(darkRightSwipeIDKey),
-      );
-
-      // Local design
       final bool listIcons = EzConfig.get(darkListIconKey);
       final LabelType listLabels = LabelTypeConfig.lookup(EzConfig.get(darkListLabelTypeKey));
       final bool elevatedLists = EzConfig.get(darkElevatedListKey);
@@ -80,13 +71,6 @@ class LiminalCache extends EzAppCache {
         wideTiles: EzConfig.get(darkWideTilesKey),
       );
     } else {
-      // Launcher
-      _launcher = LauncherCache(
-        leftSwipe: EzConfig.get(lightLeftSwipeIDKey),
-        rightSwipe: EzConfig.get(lightRightSwipeIDKey),
-      );
-
-      // Local design
       final bool listIcons = EzConfig.get(lightListIconKey);
       final LabelType listLabels = LabelTypeConfig.lookup(EzConfig.get(lightListLabelTypeKey));
       final bool elevatedLists = EzConfig.get(lightElevatedListKey);
@@ -126,17 +110,7 @@ class LiminalCache extends EzAppCache {
   }
 }
 
-// Local sub-caches //
-
-class LauncherCache {
-  final String leftSwipe;
-  final String rightSwipe;
-
-  LauncherCache({
-    required this.leftSwipe,
-    required this.rightSwipe,
-  });
-}
+// Define //
 
 class DesignCache {
   final DateType homeDate;
@@ -174,7 +148,7 @@ class DesignCache {
   });
 }
 
-// Aliases //
+// Alias //
 
 LiminalCache get _pointer => EzConfig.appCache! as LiminalCache;
 
@@ -183,14 +157,8 @@ Lang get l10n => _pointer.l10n;
 AppInfoProvider get appInfo =>
     Provider.of<AppInfoProvider>(ezRootNav.currentContext!, listen: false);
 
-String get leftSwipeID => _pointer.launcher.leftSwipe;
-String get rightSwipeID => _pointer.launcher.rightSwipe;
-
-DateType get homeDate => _pointer.design.homeDate;
-bool get homeTime => _pointer.design.homeTime;
-
-ListAlignment get hAlign => _pointer.design.horizontalAlign;
-ListAlignment get vAlign => _pointer.design.verticalAlign;
+String get leftSwipeID => EzConfig.get(leftSwipeIDKey);
+String get rightSwipeID => EzConfig.get(rightSwipeIDKey);
 
 bool get listIcons => _pointer.design.listIcons;
 LabelType get listLabels => _pointer.design.listLabels;
@@ -204,3 +172,9 @@ ButtonType get folderBT => _pointer.design.folderBT;
 
 bool get wideTiles => _pointer.design.wideTiles;
 double get appIconSize => EzConfig.iconSize + EzConfig.padding;
+
+DateType get homeDate => _pointer.design.homeDate;
+bool get homeTime => _pointer.design.homeTime;
+
+ListAlignment get hAlign => _pointer.design.horizontalAlign;
+ListAlignment get vAlign => _pointer.design.verticalAlign;
