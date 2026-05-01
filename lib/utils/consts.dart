@@ -49,80 +49,52 @@ const String lastAuthKey = 'lastAuth';
 
 // BTS //
 
-const String shownIntroKey = 'shownIntro';
-
 const String renamedIDsKey = 'renamedIDs';
 const String homeIDsKey = 'homeIDs';
 const String hiddenIDsKey = 'hiddenIDs';
 const String banishedIDsKey = 'banishedIDs';
+
+const String shownIntroKey = 'shownIntro';
 
 const String ascListKey = 'ascList';
 const String listSortKey = 'listSort';
 
 /// Intro, ID lists, and sorting keys
 const Map<String, Type> limBTSKeys = <String, Type>{
-  // Intro
-  shownIntroKey: bool,
-
   // ID lists
   renamedIDsKey: List<String>,
   homeIDsKey: List<String>,
   hiddenIDsKey: List<String>,
   banishedIDsKey: List<String>,
 
+  // Intro
+  shownIntroKey: bool,
+
   // List(s) sort
   ascListKey: bool,
   listSortKey: String,
 };
 
-// Launcher //
-
-const String darkHideStatusKey = 'darkHideStatus';
-const String darkHomeTimeKey = 'darkHomeTime';
-const String darkHomeDateKey = 'darkHomeDate';
-
-const String lightHideStatusKey = 'lightHideStatus';
-const String lightHomeTimeKey = 'lightHomeTime';
-const String lightHomeDateKey = 'lightHomeDate';
-
-const String darkLeftSwipeIDKey = 'darkLeftSwipeID';
-const String darkRightSwipeIDKey = 'darkRightSwipeID';
-
-const String lightLeftSwipeIDKey = 'lightLeftSwipeID';
-const String lightRightSwipeIDKey = 'lightRightSwipeID';
-
-const String darkWideTilesKey = 'darkWideTiles';
-const String lightWideTilesKey = 'lightWideTiles';
+// Global //
 
 const String autoAddToHomeKey = 'autoAddToHome';
 const String autoSearchKey = 'autoSearch';
 
+const String leftSwipeIDKey = 'leftSwipeID';
+const String rightSwipeIDKey = 'rightSwipeID';
+
 /// Header, quick launch, and app list settings
-const Map<String, Type> limLauncherKeys = <String, Type>{
-  // Header
-  darkHideStatusKey: bool,
-  darkHomeTimeKey: bool,
-  darkHomeDateKey: String,
-  lightHideStatusKey: bool,
-  lightHomeTimeKey: bool,
-  lightHomeDateKey: String,
-
-  // Quick launch
-  darkLeftSwipeIDKey: String,
-  darkRightSwipeIDKey: String,
-  lightLeftSwipeIDKey: String,
-  lightRightSwipeIDKey: String,
-
-  // App list (themed)
-  darkWideTilesKey: bool,
-  lightWideTilesKey: bool,
-
-  // App list (global)
+const Map<String, Type> limGlobalKeys = <String, Type>{
+  // App list
   autoAddToHomeKey: bool,
   autoSearchKey: bool,
+
+  // Quick launch
+  leftSwipeIDKey: String,
+  rightSwipeIDKey: String,
 };
 
-// Design //
+// Design (button) //
 
 const String darkListLabelTypeKey = 'darkListLabelType';
 const String darkListIconKey = 'darkListIcon';
@@ -130,6 +102,7 @@ const String darkElevatedListKey = 'darkElevatedList';
 const String darkFolderLabelTypeKey = 'darkFolderLabelType';
 const String darkFolderIconKey = 'darkFolderIcon';
 const String darkElevatedFolderKey = 'darkElevatedFolder';
+const String darkWideTilesKey = 'darkWideTiles';
 
 const String lightListLabelTypeKey = 'lightListLabelType';
 const String lightListIconKey = 'lightListIcon';
@@ -137,10 +110,19 @@ const String lightElevatedListKey = 'lightElevatedList';
 const String lightFolderLabelTypeKey = 'lightFolderLabelType';
 const String lightFolderIconKey = 'lightFolderIcon';
 const String lightElevatedFolderKey = 'lightElevatedFolder';
+const String lightWideTilesKey = 'lightWideTiles';
 
+// Design (page) //
+
+const String darkHideStatusKey = 'darkHideStatus';
+const String darkHomeTimeKey = 'darkHomeTime';
+const String darkHomeDateKey = 'darkHomeDate';
 const String darkHorizontalAlignKey = 'darkHorizontalAlign';
 const String darkVerticalAlignKey = 'darkVerticalAlign';
 
+const String lightHideStatusKey = 'lightHideStatus';
+const String lightHomeTimeKey = 'lightHomeTime';
+const String lightHomeDateKey = 'lightHomeDate';
 const String lightHorizontalAlignKey = 'lightHorizontalAlign';
 const String lightVerticalAlignKey = 'lightVerticalAlign';
 
@@ -153,6 +135,7 @@ const Map<String, Type> limDesignKeys = <String, Type>{
   darkFolderLabelTypeKey: String,
   darkFolderIconKey: bool,
   darkElevatedFolderKey: bool,
+  darkWideTilesKey: bool,
 
   lightListLabelTypeKey: String,
   lightListIconKey: bool,
@@ -160,10 +143,18 @@ const Map<String, Type> limDesignKeys = <String, Type>{
   lightFolderLabelTypeKey: String,
   lightFolderIconKey: bool,
   lightElevatedFolderKey: bool,
+  lightWideTilesKey: bool,
 
+  // Page
+  darkHideStatusKey: bool,
+  darkHomeTimeKey: bool,
+  darkHomeDateKey: String,
   darkHorizontalAlignKey: String,
   darkVerticalAlignKey: String,
 
+  lightHideStatusKey: bool,
+  lightHomeTimeKey: bool,
+  lightHomeDateKey: String,
   lightHorizontalAlignKey: String,
   lightVerticalAlignKey: String,
 };
@@ -174,14 +165,14 @@ const Map<String, Type> limDesignKeys = <String, Type>{
 const Map<String, Type> allLimKeys = <String, Type>{
   ...allEZConfigKeys,
   ...limBTSKeys,
-  ...limLauncherKeys,
+  ...limGlobalKeys,
   ...limDesignKeys,
 };
 
 /// [EzConfig.init] passthrough
 final Set<String> neverResetKeys = <String>{
   ...limBTSKeys.keys,
-  ...limLauncherKeys.keys,
+  ...limGlobalKeys.keys,
 };
 
 /// [empathMobileConfig] with Liminal additions
@@ -189,54 +180,37 @@ final Map<String, Object> liminalDefault = <String, Object>{
   ...empathMobileConfig,
 
   // BTS //
-
-  // Intro
-  shownIntroKey: false,
-
   // ID lists
   renamedIDsKey: <String>[],
   homeIDsKey: <String>[],
   hiddenIDsKey: <String>[],
   banishedIDsKey: <String>[],
 
+  // Intro
+  shownIntroKey: false,
+
   // List(s) sort
   ascListKey: true,
   listSortKey: AppSort.name.value,
 
-  // Launcher //
-
-  // Header
-  darkHideStatusKey: false,
-  darkHomeTimeKey: true,
-  darkHomeDateKey: DateType.medium.value,
-
-  lightHideStatusKey: false,
-  lightHomeTimeKey: true,
-  lightHomeDateKey: DateType.compact.value,
-
-  // Quick launch
-  darkLeftSwipeIDKey: '',
-  darkRightSwipeIDKey: '',
-
-  lightLeftSwipeIDKey: '',
-  lightRightSwipeIDKey: '',
-
-  // App list (themed)
-  darkWideTilesKey: false,
-  lightWideTilesKey: false,
-
-  // App list (global)
+  // Global //
+  // App list
   autoAddToHomeKey: false,
   autoSearchKey: false,
 
-  // Design //
+  // Quick launch
+  leftSwipeIDKey: '',
+  rightSwipeIDKey: '',
 
+  // Design //
+  // Button
   darkListLabelTypeKey: LabelType.full.value,
   darkListIconKey: true,
   darkElevatedListKey: false,
   darkFolderLabelTypeKey: LabelType.none.value,
   darkFolderIconKey: true,
   darkElevatedFolderKey: false,
+  darkWideTilesKey: false,
 
   lightListLabelTypeKey: LabelType.full.value,
   lightListIconKey: true,
@@ -244,10 +218,18 @@ final Map<String, Object> liminalDefault = <String, Object>{
   lightFolderLabelTypeKey: LabelType.none.value,
   lightFolderIconKey: true,
   lightElevatedFolderKey: false,
+  lightWideTilesKey: false,
 
+  // Page
+  darkHideStatusKey: false,
+  darkHomeTimeKey: true,
+  darkHomeDateKey: DateType.medium.value,
   darkHorizontalAlignKey: ListAlignment.center.value,
   darkVerticalAlignKey: ListAlignment.start.value,
 
+  lightHideStatusKey: false,
+  lightHomeTimeKey: true,
+  lightHomeDateKey: DateType.compact.value,
   lightHorizontalAlignKey: ListAlignment.center.value,
   lightVerticalAlignKey: ListAlignment.start.value,
 };
