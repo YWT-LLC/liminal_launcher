@@ -83,7 +83,7 @@ class _AppListScreenState extends State<AppListScreen> {
                     ),
                     menuChildren: AppSort.values
                         .map((AppSort type) => EzMenuButton(
-                              label: type.name,
+                              label: type.name.replaceRange(0, 1, type.name[0].toUpperCase()),
                               textAlign: hAlign.textAlign,
                               onPressed: () async {
                                 await EzConfig.setString(listSortKey, type.value);
