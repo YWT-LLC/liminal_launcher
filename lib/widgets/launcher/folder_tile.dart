@@ -251,7 +251,7 @@ class _AppFolderState extends State<AppFolder> with AfterLayoutMixin<AppFolder> 
                                           Icons.drag_handle,
                                           color: EzConfig.colors.outline,
                                         ),
-                                        EzConfig.rowSpacer,
+                                        EzConfig.rowMargin,
 
                                         // App tile
                                         AppButton(
@@ -269,9 +269,9 @@ class _AppFolderState extends State<AppFolder> with AfterLayoutMixin<AppFolder> 
                                             setModal(() {});
                                           },
                                         ),
-                                        EzConfig.rowSpacer,
 
                                         // Drag handle
+                                        EzConfig.rowMargin,
                                         EzIcon(
                                           Icons.drag_handle,
                                           color: EzConfig.colors.outline,

@@ -132,7 +132,7 @@ class _AppTileState extends State<AppTile> with AfterLayoutMixin<AppTile> {
                   Icons.drag_handle,
                   color: EzConfig.colors.outline,
                 ),
-                EzConfig.rowSpacer,
+                EzConfig.rowMargin,
 
                 // App icon
                 if (widget.app.icon != null) ...<Widget>[
@@ -304,11 +304,11 @@ class _AppTileState extends State<AppTile> with AfterLayoutMixin<AppTile> {
                 ],
 
                 // Drag handle
+                EzConfig.rowMargin,
                 EzIcon(
                   Icons.drag_handle,
                   color: EzConfig.colors.outline,
                 ),
-                EzConfig.rowSpacer,
               ],
             ),
     );
