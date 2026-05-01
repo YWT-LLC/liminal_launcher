@@ -35,12 +35,14 @@ class AppTileSetting extends StatelessWidget {
           final String label = folder ? 'Liminal Folder' : 'Liminal Launcher';
           final Widget icon = folder
               ? Icon(Icons.folder_open, size: appIconSize)
-              : Image.asset(
-                  appIconPath,
-                  semanticLabel: 'Liminal Launcher icon',
-                  width: appIconSize,
-                  height: appIconSize,
-                  fit: BoxFit.cover,
+              : ClipOval(
+                  child: Image.asset(
+                    appIconPath,
+                    semanticLabel: 'Liminal Launcher icon',
+                    width: appIconSize,
+                    height: appIconSize,
+                    fit: BoxFit.cover,
+                  ),
                 );
 
           LabelType labelType = folder ? folderLabels : listLabels;
