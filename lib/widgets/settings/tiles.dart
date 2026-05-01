@@ -33,7 +33,15 @@ class AppTileSetting extends StatelessWidget {
   Widget build(BuildContext context) => EzElevatedIconButton(
         onPressed: () async {
           final String label = folder ? 'Liminal Folder' : 'Liminal Launcher';
-          final Widget icon = Icon(folder ? Icons.folder : Icons.launch, size: EzConfig.iconSize);
+          final Widget icon = folder
+              ? Icon(Icons.folder_open, size: appIconSize)
+              : Image.asset(
+                  appIconPath,
+                  semanticLabel: 'Liminal Launcher icon',
+                  width: appIconSize,
+                  height: appIconSize,
+                  fit: BoxFit.cover,
+                );
 
           LabelType labelType = folder ? folderLabels : listLabels;
           bool showIcon = folder ? folderIcons : listIcons;
