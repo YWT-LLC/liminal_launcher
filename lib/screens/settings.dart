@@ -26,6 +26,7 @@ class SettingsScreen extends StatelessWidget {
             pages: <EzSettingsSection>[
               // Global //
 
+              // TODO: add passthrough for 'extraX' and have the presets customize local liminal design stuffs too
               EzSettingsSection(
                 position: 0,
                 title: EzConfig.l10n.gGlobal,
