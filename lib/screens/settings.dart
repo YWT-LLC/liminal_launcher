@@ -42,7 +42,11 @@ class SettingsScreen extends StatelessWidget {
                 build: (_) => EzGlobalSettings(
                   resetTitle: () => EzConfig.l10n.ssResetAppearance,
                   inDistress: const <String>{},
-                  additionalSettings: <Widget>[_AppListSettings()],
+                  additionalSettings: <Widget>[
+                    EzConfig.spacer,
+                    _AppListSettings(),
+                  ],
+                  quickConfigSpacer: EzConfig.divider,
                 ),
               ),
 
@@ -399,7 +403,7 @@ class _AppListSettings extends StatelessWidget {
                   valueKey: authForHiddenKey,
                   secureKey: true,
                 ),
-                EzConfig.separator,
+                EzConfig.spacer,
 
                 // Re-auth timer
                 EzRow(
