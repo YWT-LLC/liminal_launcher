@@ -229,7 +229,7 @@ class _AppListScreenState extends State<AppListScreen> {
           EzAnimHide(
             mod: 0.5,
             visible: !atTop,
-            size: Size(appIconSize, appIconSize),
+            size: EzConfig.theme.floatingActionButtonTheme.sizeConstraints!.biggest,
             kid: FloatingActionButton(
               onPressed: () => scrollControl.animateTo(
                 0,
@@ -245,7 +245,7 @@ class _AppListScreenState extends State<AppListScreen> {
           EzAnimHide(
             mod: 0.5,
             visible: !atBottom,
-            size: Size(appIconSize, appIconSize),
+            size: EzConfig.theme.floatingActionButtonTheme.sizeConstraints!.biggest,
             kid: FloatingActionButton(
               onPressed: () => scrollControl.animateTo(
                 scrollControl.position.maxScrollExtent,
