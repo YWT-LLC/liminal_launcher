@@ -27,6 +27,7 @@ class SettingsScreen extends StatelessWidget {
               // Global //
 
               // TODO: add passthrough for 'extraX' and have the presets customize local liminal design stuffs too
+              // TOMaybe: should chalkboard config always force solid color background? leaning yes
               EzSettingsSection(
                 position: 0,
                 title: EzConfig.l10n.gGlobal,
