@@ -5,6 +5,7 @@
 
 import '../../utils/export.dart';
 
+import 'dart:math';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
@@ -94,10 +95,8 @@ class _AppTileState extends State<AppTile> with AfterLayoutMixin<AppTile> {
 
   @override
   Widget build(BuildContext context) {
-    final Widget editSpacer = GestureDetector(
-      onLongPress: () => editing == true ? setState(() => editing = false) : null,
-      child: EzConfig.rowSpacer,
-    );
+    final Widget editSpacer =
+        _EditSpacer(() => (editing == true) ? setState(() => editing = false) : doNothing());
 
     return EzAnimHide(
       mod: 0.5,
@@ -404,4 +403,16 @@ class AppButton extends StatelessWidget {
         );
     }
   }
+}
+
+class _EditSpacer extends StatelessWidget {
+  final void Function() dewIt;
+
+  const _EditSpacer(this.dewIt);
+
+  @override
+  Widget build(BuildContext context) => InkWell(
+        onLongPress: dewIt,
+        child: SizedBox(height: min(EzConfig.padding, EzConfig.spacing), width: EzConfig.spacing),
+      );
 }
