@@ -8,6 +8,7 @@ import '../utils/export.dart';
 import '../widgets/export.dart';
 import 'package:efui_bios/efui_bios.dart';
 
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:after_layout/after_layout.dart';
@@ -24,8 +25,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScreen> {
   // Define build data //
 
-  bool atBottom = false;
   bool editing = false;
+  bool atBottom = false;
+  Timer? openPause;
 
   late final OverlayState overlay = Overlay.of(context);
   ValueNotifier<double> rippleProgress = ValueNotifier<double>(0.0);
@@ -338,7 +340,10 @@ If you want to support Liminal's development, or the development of more Empathe
                         swipeUp();
                         return true;
                       } else {
-                        setState(() => atBottom = true);
+                        openPause = Timer(
+                          scrollDelay,
+                          () => setState(() => atBottom = true),
+                        );
                         return true;
                       }
                     } else if (notification is ScrollUpdateNotification) {
@@ -346,8 +351,14 @@ If you want to support Liminal's development, or the development of more Empathe
                         setState(() => atBottom = false);
                       }
                     } else if (notification is ScrollEndNotification) {
-                      setState(() => atBottom =
-                          (notification.metrics.pixels == notification.metrics.maxScrollExtent));
+                      if (notification.metrics.pixels == notification.metrics.maxScrollExtent) {
+                        openPause = Timer(
+                          scrollDelay,
+                          () => setState(() => atBottom = true),
+                        );
+                      } else {
+                        setState(() => atBottom = false);
+                      }
                     }
                     return false; // Let other notifications propagate
                   },
