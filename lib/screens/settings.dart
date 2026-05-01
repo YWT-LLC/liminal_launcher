@@ -94,6 +94,7 @@ class SettingsScreen extends StatelessWidget {
                     const AppTileSetting(folder: true),
                     EzConfig.separator,
                   ],
+                  styleLabel: 'Elevated style',
                   includeBackgroundImage: false,
                   prependPage: <Widget>[
                     // Wallpaper
@@ -107,7 +108,7 @@ class SettingsScreen extends StatelessWidget {
                       clearLabel: 'Use OS',
                       defaultFit: BoxFit.cover,
                     ),
-                    EzConfig.separator,
+                    EzConfig.spacer,
 
                     // Page alignment
                     EzElevatedIconButton(
@@ -136,10 +137,10 @@ class SettingsScreen extends StatelessWidget {
                           await EzConfig.redrawUI();
                         }
                       },
-                      label: 'Alignment',
+                      label: 'List alignment',
                       icon: const Icon(Icons.grid_3x3),
                     ),
-                    EzConfig.spacer,
+                    EzConfig.separator,
                   ],
                 ),
               ),
