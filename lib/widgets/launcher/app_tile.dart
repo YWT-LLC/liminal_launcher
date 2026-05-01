@@ -344,7 +344,7 @@ class AppButton extends StatelessWidget {
           Icon(
             Icons.question_mark,
             semanticLabel: app.name,
-            size: appIconSize,
+            size: EzConfig.iconSize,
           )
       : Image.memory(
           app.icon!,
