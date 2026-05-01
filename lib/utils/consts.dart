@@ -24,6 +24,9 @@ final AppInfo self = AppInfo(
   packageSize: 0,
 );
 
+/// Delay for home screen navigation when reaching the edge of a list
+const Duration scrollDelay = Duration(milliseconds: 100);
+
 //* App assets *//
 
 /// assets/images/app-icon.jpg
