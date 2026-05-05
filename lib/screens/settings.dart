@@ -26,8 +26,6 @@ class SettingsScreen extends StatelessWidget {
             pages: <EzSettingsSection>[
               // Global //
 
-              // TODO: add passthrough for 'extraX' and have the presets customize local liminal design stuffs too
-              // TOMaybe: should chalkboard config always force solid color background? leaning yes
               EzSettingsSection(
                 position: 0,
                 title: EzConfig.l10n.gGlobal,
@@ -49,6 +47,135 @@ class SettingsScreen extends StatelessWidget {
                     _AppListSettings(),
                   ],
                   quickConfigSpacer: EzConfig.divider,
+                  extraBig: () async {
+                    if (EzConfig.updateBoth || EzConfig.isDark) {
+                      // Button design
+                      await EzConfig.setString(darkListLabelTypeKey, LabelType.full.value);
+                      await EzConfig.setBool(darkListIconKey, true);
+                      await EzConfig.setBool(darkElevatedListKey, true);
+                      await EzConfig.setString(darkFolderLabelTypeKey, LabelType.full.value);
+                      await EzConfig.setBool(darkFolderIconKey, true);
+                      await EzConfig.setBool(darkElevatedFolderKey, true);
+                      await EzConfig.setBool(darkWideTilesKey, true);
+
+                      // Page design
+                      await EzConfig.setBool(darkHideStatusKey, false);
+                      await EzConfig.setBool(darkHomeTimeKey, true);
+                      await EzConfig.setString(darkHomeDateKey, DateType.long.value);
+                      await EzConfig.setString(darkHorizontalAlignKey,
+                          EzConfig.isLefty ? ListAlignment.end.value : ListAlignment.start.value);
+                      await EzConfig.setString(darkVerticalAlignKey, ListAlignment.start.value);
+                    }
+
+                    if (EzConfig.updateBoth || !EzConfig.isDark) {
+                      // Button design
+                      await EzConfig.setString(lightListLabelTypeKey, LabelType.full.value);
+                      await EzConfig.setBool(lightListIconKey, true);
+                      await EzConfig.setBool(lightElevatedListKey, true);
+                      await EzConfig.setString(lightFolderLabelTypeKey, LabelType.full.value);
+                      await EzConfig.setBool(lightFolderIconKey, true);
+                      await EzConfig.setBool(lightElevatedFolderKey, true);
+                      await EzConfig.setBool(lightWideTilesKey, true);
+
+                      // Page design
+                      await EzConfig.setBool(lightHideStatusKey, false);
+                      await EzConfig.setBool(lightHomeTimeKey, true);
+                      await EzConfig.setString(lightHomeDateKey, DateType.long.value);
+                      await EzConfig.setString(lightHorizontalAlignKey,
+                          EzConfig.isLefty ? ListAlignment.end.value : ListAlignment.start.value);
+                      await EzConfig.setString(lightVerticalAlignKey, ListAlignment.start.value);
+                    }
+                  },
+                  extraVis: () async {
+                    if (EzConfig.updateBoth || EzConfig.isDark) {
+                      // Button design
+                      await EzConfig.setString(darkListLabelTypeKey, LabelType.full.value);
+                      await EzConfig.setBool(darkListIconKey, true);
+                      await EzConfig.setBool(darkElevatedListKey, true);
+                      await EzConfig.setString(darkFolderLabelTypeKey, LabelType.full.value);
+                      await EzConfig.setBool(darkFolderIconKey, false);
+                      await EzConfig.setBool(darkElevatedFolderKey, true);
+                      await EzConfig.setBool(darkWideTilesKey, false);
+
+                      // Page design
+                      await EzConfig.setBool(darkHideStatusKey, true);
+                      await EzConfig.setBool(darkHomeTimeKey, true);
+                      await EzConfig.setString(darkHomeDateKey, DateType.medium.value);
+                      await EzConfig.setString(darkHorizontalAlignKey, ListAlignment.center.value);
+                      await EzConfig.setString(darkVerticalAlignKey, ListAlignment.start.value);
+                    }
+
+                    if (EzConfig.updateBoth || !EzConfig.isDark) {
+                      // Button design
+                      await EzConfig.setString(lightListLabelTypeKey, LabelType.full.value);
+                      await EzConfig.setBool(lightListIconKey, true);
+                      await EzConfig.setBool(lightElevatedListKey, true);
+                      await EzConfig.setString(lightFolderLabelTypeKey, LabelType.full.value);
+                      await EzConfig.setBool(lightFolderIconKey, false);
+                      await EzConfig.setBool(lightElevatedFolderKey, true);
+                      await EzConfig.setBool(lightWideTilesKey, false);
+
+                      // Page design
+                      await EzConfig.setBool(lightHideStatusKey, true);
+                      await EzConfig.setBool(lightHomeTimeKey, true);
+                      await EzConfig.setString(lightHomeDateKey, DateType.medium.value);
+                      await EzConfig.setString(lightHorizontalAlignKey, ListAlignment.center.value);
+                      await EzConfig.setString(lightVerticalAlignKey, ListAlignment.start.value);
+                    }
+                  },
+                  extraChalk: () async {
+                    // Button design
+                    await EzConfig.setString(darkListLabelTypeKey, LabelType.full.value);
+                    await EzConfig.setBool(darkListIconKey, false);
+                    await EzConfig.setBool(darkElevatedListKey, false);
+                    await EzConfig.setString(darkFolderLabelTypeKey, LabelType.full.value);
+                    await EzConfig.setBool(darkFolderIconKey, false);
+                    await EzConfig.setBool(darkElevatedFolderKey, false);
+                    await EzConfig.setBool(darkWideTilesKey, true);
+
+                    // Page design
+                    await EzConfig.setBool(darkHideStatusKey, false);
+                    await EzConfig.setBool(darkHomeTimeKey, false);
+                    await EzConfig.setString(darkHomeDateKey, DateType.medium.value);
+                    await EzConfig.setString(darkHorizontalAlignKey, ListAlignment.center.value);
+                    await EzConfig.setString(darkVerticalAlignKey, ListAlignment.start.value);
+                  },
+                  extraNebula: () async {
+                    // Button design
+                    await EzConfig.setString(darkListLabelTypeKey, LabelType.none.value);
+                    await EzConfig.setBool(darkListIconKey, true);
+                    await EzConfig.setBool(darkElevatedListKey, false);
+                    await EzConfig.setString(darkFolderLabelTypeKey, LabelType.initials.value);
+                    await EzConfig.setBool(darkFolderIconKey, false);
+                    await EzConfig.setBool(darkElevatedFolderKey, true);
+                    await EzConfig.setBool(darkWideTilesKey, true);
+
+                    // Page design
+                    await EzConfig.setBool(darkHideStatusKey, true);
+                    await EzConfig.setBool(darkHomeTimeKey, true);
+                    await EzConfig.setString(darkHomeDateKey, DateType.compact.value);
+                    await EzConfig.setString(darkHorizontalAlignKey,
+                        EzConfig.isLefty ? ListAlignment.end.value : ListAlignment.start.value);
+                    await EzConfig.setString(darkVerticalAlignKey, ListAlignment.end.value);
+                  },
+                  extraWall: () async {
+                    // Button design
+                    await EzConfig.setString(lightListLabelTypeKey, LabelType.full.value);
+                    await EzConfig.setBool(lightListIconKey, true);
+                    await EzConfig.setBool(lightElevatedListKey, false);
+                    await EzConfig.setString(lightFolderLabelTypeKey, LabelType.full.value);
+                    await EzConfig.setBool(lightFolderIconKey, true);
+                    await EzConfig.setBool(lightElevatedFolderKey, false);
+                    await EzConfig.setBool(lightWideTilesKey, false);
+
+                    // Page design
+                    await EzConfig.setBool(lightHideStatusKey, false);
+                    await EzConfig.setBool(lightHomeTimeKey, true);
+                    await EzConfig.setString(lightHomeDateKey, DateType.long.value);
+                    await EzConfig.setString(lightHorizontalAlignKey,
+                        EzConfig.isLefty ? ListAlignment.end.value : ListAlignment.start.value);
+                    await EzConfig.setString(lightVerticalAlignKey, ListAlignment.start.value);
+                  },
                 ),
               ),
 
