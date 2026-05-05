@@ -247,12 +247,10 @@ class SettingsScreen extends StatelessWidget {
 
                         await ezModal(
                           context: context,
-                          builder: (_) => EzScrollView(
-                            children: <Widget>[
-                              const AlignmentSelectors(),
-                              EzConfig.separator,
-                            ],
-                          ),
+                          builder: (_) => ezModalScroll(<Widget>[
+                            const AlignmentSelectors(),
+                            EzConfig.separator,
+                          ]),
                         );
 
                         if (hBackup !=
@@ -326,95 +324,93 @@ class _HeaderSettings extends StatelessWidget {
 
           await ezModal(
             context: context,
-            builder: (BuildContext mCon) => EzScrollView(
-              children: <Widget>[
-                // Hide status bar
-                EzSwitchPair(
-                  text: 'Hide status bar',
-                  valueKey: EzConfig.isDark ? darkHideStatusKey : lightHideStatusKey,
-                  afterChanged: (bool? choice) async {
-                    if (choice == null) return;
-                    if (EzConfig.updateBoth) {
-                      await EzConfig.setBool(
-                        EzConfig.isDark ? lightHideStatusKey : darkHideStatusKey,
-                        choice,
-                      );
-                    }
+            builder: (BuildContext mCon) => ezModalScroll(<Widget>[
+              // Hide status bar
+              EzSwitchPair(
+                text: 'Hide status bar',
+                valueKey: EzConfig.isDark ? darkHideStatusKey : lightHideStatusKey,
+                afterChanged: (bool? choice) async {
+                  if (choice == null) return;
+                  if (EzConfig.updateBoth) {
+                    await EzConfig.setBool(
+                      EzConfig.isDark ? lightHideStatusKey : darkHideStatusKey,
+                      choice,
+                    );
+                  }
 
-                    if (choice == true) {
-                      await SystemChrome.setEnabledSystemUIMode(
-                        SystemUiMode.manual,
-                        overlays: <SystemUiOverlay>[SystemUiOverlay.bottom],
-                      );
-                    } else {
-                      await SystemChrome.setEnabledSystemUIMode(
-                        SystemUiMode.manual,
-                        overlays: SystemUiOverlay.values,
-                      );
-                    }
-                  },
-                ),
-                EzConfig.spacer,
+                  if (choice == true) {
+                    await SystemChrome.setEnabledSystemUIMode(
+                      SystemUiMode.manual,
+                      overlays: <SystemUiOverlay>[SystemUiOverlay.bottom],
+                    );
+                  } else {
+                    await SystemChrome.setEnabledSystemUIMode(
+                      SystemUiMode.manual,
+                      overlays: SystemUiOverlay.values,
+                    );
+                  }
+                },
+              ),
+              EzConfig.spacer,
 
-                // Home Time
-                EzSwitchPair(
-                  text: 'Show time',
-                  valueKey: timeKey,
-                  afterChanged: (bool? choice) async {
-                    if (choice == null) return;
-                    if (EzConfig.updateBoth) {
-                      await EzConfig.setBool(
-                        EzConfig.isDark ? lightHomeTimeKey : darkHomeTimeKey,
-                        choice,
-                      );
-                    }
-                  },
-                ),
-                EzConfig.spacer,
+              // Home Time
+              EzSwitchPair(
+                text: 'Show time',
+                valueKey: timeKey,
+                afterChanged: (bool? choice) async {
+                  if (choice == null) return;
+                  if (EzConfig.updateBoth) {
+                    await EzConfig.setBool(
+                      EzConfig.isDark ? lightHomeTimeKey : darkHomeTimeKey,
+                      choice,
+                    );
+                  }
+                },
+              ),
+              EzConfig.spacer,
 
-                // Home Date
-                EzScrollView(
-                  scrollDirection: Axis.horizontal,
-                  reverseHands: true,
-                  children: <Widget>[
-                    // Label
-                    EzText(
-                      'Date type',
-                      style: EzConfig.styles.bodyLarge,
-                      textAlign: TextAlign.center,
-                    ),
-                    EzConfig.margin,
+              // Home Date
+              EzScrollView(
+                scrollDirection: Axis.horizontal,
+                reverseHands: true,
+                children: <Widget>[
+                  // Label
+                  EzText(
+                    'Date type',
+                    style: EzConfig.styles.bodyLarge,
+                    textAlign: TextAlign.center,
+                  ),
+                  EzConfig.margin,
 
-                    // Button
-                    EzDropdownMenu<DateType>(
-                      enableSearch: false,
-                      initialSelection: homeDate,
-                      dropdownMenuEntries: DateType.values
-                          .map((DateType type) => DropdownMenuEntry<DateType>(
-                              value: type,
-                              label: DateTypeConfig.buildDate(
-                                mCon,
-                                DateTime.now(),
-                                type,
-                              )))
-                          .toList(),
-                      widthEntry: 'Wednesday, Sept',
-                      onSelected: (DateType? choice) async {
-                        if (choice == null) return;
+                  // Button
+                  EzDropdownMenu<DateType>(
+                    enableSearch: false,
+                    initialSelection: homeDate,
+                    dropdownMenuEntries: DateType.values
+                        .map((DateType type) => DropdownMenuEntry<DateType>(
+                            value: type,
+                            label: DateTypeConfig.buildDate(
+                              mCon,
+                              DateTime.now(),
+                              type,
+                            )))
+                        .toList(),
+                    widthEntry: 'Wednesday, Sept',
+                    onSelected: (DateType? choice) async {
+                      if (choice == null) return;
 
-                        if (EzConfig.updateBoth || EzConfig.isDark) {
-                          await EzConfig.setString(darkHomeDateKey, choice.value);
-                        }
-                        if (EzConfig.updateBoth || !EzConfig.isDark) {
-                          await EzConfig.setString(lightHomeDateKey, choice.value);
-                        }
-                      },
-                    ),
-                  ],
-                ),
-                EzConfig.separator,
-              ],
-            ),
+                      if (EzConfig.updateBoth || EzConfig.isDark) {
+                        await EzConfig.setString(darkHomeDateKey, choice.value);
+                      }
+                      if (EzConfig.updateBoth || !EzConfig.isDark) {
+                        await EzConfig.setString(lightHomeDateKey, choice.value);
+                      }
+                    },
+                  ),
+                ],
+              ),
+              EzConfig.separator,
+            ]),
           );
 
           if (backupTime != EzConfig.get(timeKey) ||

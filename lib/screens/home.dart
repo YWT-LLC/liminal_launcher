@@ -142,101 +142,99 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
       if (context.mounted) {
         await ezModal(
           context: context,
-          builder: (_) => EzScrollView(
-            children: <Widget>[
-              Text(
-                'Welcome to Liminal Launcher',
-                textAlign: TextAlign.center,
-                style: EzConfig.styles.titleLarge,
-              ),
-              Text(
-                'I hope it serves you well!',
-                textAlign: TextAlign.center,
-                style: EzConfig.styles.bodyLarge,
-              ),
-              EzConfig.centerLine,
-              Text(
-                "It's geared toward minimalism, but with limitless customization.\nWho said minimal has to be boring?",
-                textAlign: TextAlign.center,
-                style: EzConfig.styles.bodyLarge,
-              ),
-              EzConfig.centerLine,
-              EzRichText(
-                <InlineSpan>[
-                  EzPlainText(
-                    text:
-                        '''Personalizing your launcher should be straightforward, with one potential exception: the dark and light theme appearances can be completely separate!
+          builder: (_) => ezModalScroll(<Widget>[
+            Text(
+              'Welcome to Liminal Launcher',
+              textAlign: TextAlign.center,
+              style: EzConfig.styles.titleLarge,
+            ),
+            Text(
+              'I hope it serves you well!',
+              textAlign: TextAlign.center,
+              style: EzConfig.styles.bodyLarge,
+            ),
+            EzConfig.centerLine,
+            Text(
+              "It's geared toward minimalism, but with limitless customization.\nWho said minimal has to be boring?",
+              textAlign: TextAlign.center,
+              style: EzConfig.styles.bodyLarge,
+            ),
+            EzConfig.centerLine,
+            EzRichText(
+              <InlineSpan>[
+                EzPlainText(
+                  text:
+                      '''Personalizing your launcher should be straightforward, with one potential exception: the dark and light theme appearances can be completely separate!
                 
 While in the relevant settings, you will see a toggle-able icon that indicates whether you're editing the dark ''',
-                    style: EzConfig.styles.bodyLarge,
+                  style: EzConfig.styles.bodyLarge,
+                ),
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.middle,
+                  child: EzIcon(Icons.dark_mode),
+                ),
+                EzPlainText(
+                  text: ', light ',
+                  style: EzConfig.styles.bodyLarge,
+                ),
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.middle,
+                  child: EzIcon(Icons.light_mode),
+                ),
+                EzPlainText(
+                  text: ', or both ',
+                  style: EzConfig.styles.bodyLarge,
+                ),
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.middle,
+                  child: FaIcon(
+                    FontAwesomeIcons.yinYang,
+                    size: EzConfig.iconSize,
                   ),
-                  WidgetSpan(
-                    alignment: PlaceholderAlignment.middle,
-                    child: EzIcon(Icons.dark_mode),
-                  ),
-                  EzPlainText(
-                    text: ', light ',
-                    style: EzConfig.styles.bodyLarge,
-                  ),
-                  WidgetSpan(
-                    alignment: PlaceholderAlignment.middle,
-                    child: EzIcon(Icons.light_mode),
-                  ),
-                  EzPlainText(
-                    text: ', or both ',
-                    style: EzConfig.styles.bodyLarge,
-                  ),
-                  WidgetSpan(
-                    alignment: PlaceholderAlignment.middle,
-                    child: FaIcon(
-                      FontAwesomeIcons.yinYang,
-                      size: EzConfig.iconSize,
-                    ),
-                  ),
-                  EzPlainText(
-                    text: " themes.\n\nLong press the home screen to edit, and you're off!",
-                    style: EzConfig.styles.bodyLarge,
-                  ),
-                ],
-                textAlign: TextAlign.center,
-                style: EzConfig.styles.bodyLarge,
-              ),
-              if (!isGPlay) ...<Widget>[
-                EzConfig.divider,
-                EzRichText(
-                  <InlineSpan>[
-                    const EzPlainText(
-                      text: '''This version is not from the Play Store, so it should have been free.
+                ),
+                EzPlainText(
+                  text: " themes.\n\nLong press the home screen to edit, and you're off!",
+                  style: EzConfig.styles.bodyLarge,
+                ),
+              ],
+              textAlign: TextAlign.center,
+              style: EzConfig.styles.bodyLarge,
+            ),
+            if (!isGPlay) ...<Widget>[
+              EzConfig.divider,
+              EzRichText(
+                <InlineSpan>[
+                  const EzPlainText(
+                    text: '''This version is not from the Play Store, so it should have been free.
 Rest assured, the free version of Liminal will always be identical to the Google Play version.
 
 If you want to support Liminal's development, or the development of more Empathetech software, please consider ''',
-                    ),
-                    EzInlineLink(
-                      'contributing',
-                      style: EzConfig.styles.bodyLarge,
-                      textAlign: TextAlign.center,
-                      url: Uri.parse('https://www.empathetech.net/#/contribute'),
-                      hint: 'Open a link to the Empathetic contribution options.',
-                    ),
-                    const EzPlainText(
-                      text:
-                          '.\n\nThis is the only non-tutorial pop-up, and its only appearance this install.',
-                    ),
-                  ],
-                  style: EzConfig.styles.bodyLarge,
-                  textBackground: false,
-                  textAlign: TextAlign.center,
-                ),
-              ],
-              EzConfig.centerLine,
-              Text(
-                'Thank you, and enjoy!',
-                textAlign: TextAlign.center,
+                  ),
+                  EzInlineLink(
+                    'contributing',
+                    style: EzConfig.styles.bodyLarge,
+                    textAlign: TextAlign.center,
+                    url: Uri.parse('https://www.empathetech.net/#/contribute'),
+                    hint: 'Open a link to the Empathetic contribution options.',
+                  ),
+                  const EzPlainText(
+                    text:
+                        '.\n\nThis is the only non-tutorial pop-up, and its only appearance this install.',
+                  ),
+                ],
                 style: EzConfig.styles.bodyLarge,
+                textBackground: false,
+                textAlign: TextAlign.center,
               ),
-              EzConfig.separator,
             ],
-          ),
+            EzConfig.centerLine,
+            Text(
+              'Thank you, and enjoy!',
+              textAlign: TextAlign.center,
+              style: EzConfig.styles.bodyLarge,
+            ),
+            EzConfig.separator,
+          ]),
         );
       }
       await EzConfig.setBool(shownIntroKey, true);
