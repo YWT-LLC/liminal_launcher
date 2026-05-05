@@ -53,130 +53,128 @@ class AppTileSetting extends StatelessWidget {
           await ezModal(
             context: context,
             builder: (_) => StatefulBuilder(
-              builder: (BuildContext mCon, StateSetter setModal) => EzScrollView(
-                children: <Widget>[
-                  // Preview
-                  Container(
-                    constraints: useWide ? const BoxConstraints(minWidth: double.infinity) : null,
-                    child: AppButton(
-                      app: AppInfo(
-                        package: nullAppPackage,
-                        label: label,
-                        removable: false,
-                        installDate: 0,
-                        packageSize: 0,
-                      ),
-                      icon: icon,
-                      buttonType: BTConfig.build(labelType, icons: showIcon, elevated: elevated),
-                      labelType: labelType,
-                      onPressed: doNothing,
-                      onLongPress: doNothing,
+              builder: (BuildContext mCon, StateSetter setModal) => ezModalScroll(<Widget>[
+                // Preview
+                Container(
+                  constraints: useWide ? const BoxConstraints(minWidth: double.infinity) : null,
+                  child: AppButton(
+                    app: AppInfo(
+                      package: nullAppPackage,
+                      label: label,
+                      removable: false,
+                      installDate: 0,
+                      packageSize: 0,
                     ),
+                    icon: icon,
+                    buttonType: BTConfig.build(labelType, icons: showIcon, elevated: elevated),
+                    labelType: labelType,
+                    onPressed: doNothing,
+                    onLongPress: doNothing,
                   ),
-                  EzConfig.separator,
+                ),
+                EzConfig.separator,
 
-                  // Label type
-                  EzRow(
-                    children: <Widget>[
-                      const EzText('Label type'),
-                      EzConfig.rowSpacer,
-                      EzDropdownMenu<LabelType>(
-                        widthEntry: 'Full name',
-                        dropdownMenuEntries: labelEntries,
-                        enableSearch: false,
-                        initialSelection: labelType,
-                        onSelected: (LabelType? choice) async {
-                          if (choice == null) return;
-
-                          if (EzConfig.updateBoth || EzConfig.isDark) {
-                            await EzConfig.setString(darkLabelKey, choice.value);
-                            if (labelType == LabelType.none) {
-                              showIcon = true;
-                              await EzConfig.setBool(darkIconKey, true);
-                            }
-                          }
-
-                          if (EzConfig.updateBoth || !EzConfig.isDark) {
-                            await EzConfig.setString(lightLabelKey, choice.value);
-                            if (labelType == LabelType.none) {
-                              showIcon = true;
-                              await EzConfig.setBool(lightIconKey, true);
-                            }
-                          }
-
-                          setModal(() => labelType = choice);
-                        },
-                      ),
-                    ],
-                  ),
-                  EzConfig.spacer,
-
-                  // Show icon
-                  EzSwitchPair(
-                    text: 'Show icon',
-                    valueKey: EzConfig.isDark ? darkIconKey : lightIconKey,
-                    afterChanged: (bool? value) async {
-                      if (value == null) return;
-
-                      if (value == false && labelType == LabelType.none) {
-                        labelType = LabelType.full;
+                // Label type
+                EzRow(
+                  children: <Widget>[
+                    const EzText('Label type'),
+                    EzConfig.rowSpacer,
+                    EzDropdownMenu<LabelType>(
+                      widthEntry: 'Full name',
+                      dropdownMenuEntries: labelEntries,
+                      enableSearch: false,
+                      initialSelection: labelType,
+                      onSelected: (LabelType? choice) async {
+                        if (choice == null) return;
 
                         if (EzConfig.updateBoth || EzConfig.isDark) {
-                          await EzConfig.setString(darkLabelKey, LabelType.full.value);
+                          await EzConfig.setString(darkLabelKey, choice.value);
+                          if (labelType == LabelType.none) {
+                            showIcon = true;
+                            await EzConfig.setBool(darkIconKey, true);
+                          }
                         }
+
                         if (EzConfig.updateBoth || !EzConfig.isDark) {
-                          await EzConfig.setString(lightLabelKey, LabelType.full.value);
+                          await EzConfig.setString(lightLabelKey, choice.value);
+                          if (labelType == LabelType.none) {
+                            showIcon = true;
+                            await EzConfig.setBool(lightIconKey, true);
+                          }
                         }
+
+                        setModal(() => labelType = choice);
+                      },
+                    ),
+                  ],
+                ),
+                EzConfig.spacer,
+
+                // Show icon
+                EzSwitchPair(
+                  text: 'Show icon',
+                  valueKey: EzConfig.isDark ? darkIconKey : lightIconKey,
+                  afterChanged: (bool? value) async {
+                    if (value == null) return;
+
+                    if (value == false && labelType == LabelType.none) {
+                      labelType = LabelType.full;
+
+                      if (EzConfig.updateBoth || EzConfig.isDark) {
+                        await EzConfig.setString(darkLabelKey, LabelType.full.value);
                       }
-
-                      if (EzConfig.updateBoth) {
-                        await EzConfig.setBool(
-                          EzConfig.isDark ? lightIconKey : darkIconKey,
-                          elevated,
-                        );
+                      if (EzConfig.updateBoth || !EzConfig.isDark) {
+                        await EzConfig.setString(lightLabelKey, LabelType.full.value);
                       }
-                      setModal(() => showIcon = value);
-                    },
-                  ),
-                  EzConfig.spacer,
+                    }
 
-                  // Elevated
-                  EzSwitchPair(
-                    text: 'Elevated button',
-                    valueKey: EzConfig.isDark ? darkElevatedKey : lightElevatedKey,
-                    afterChanged: (bool? choice) async {
-                      if (choice == null) return;
+                    if (EzConfig.updateBoth) {
+                      await EzConfig.setBool(
+                        EzConfig.isDark ? lightIconKey : darkIconKey,
+                        elevated,
+                      );
+                    }
+                    setModal(() => showIcon = value);
+                  },
+                ),
+                EzConfig.spacer,
 
-                      if (EzConfig.updateBoth) {
-                        await EzConfig.setBool(
-                          EzConfig.isDark ? lightElevatedKey : darkElevatedKey,
-                          elevated,
-                        );
-                      }
-                      setModal(() => elevated = choice);
-                    },
-                  ),
-                  EzConfig.separator,
+                // Elevated
+                EzSwitchPair(
+                  text: 'Elevated button',
+                  valueKey: EzConfig.isDark ? darkElevatedKey : lightElevatedKey,
+                  afterChanged: (bool? choice) async {
+                    if (choice == null) return;
 
-                  // Wide tiles
-                  EzSwitchPair(
-                    text: 'Use max width (shared)',
-                    valueKey: EzConfig.isDark ? darkWideTilesKey : lightWideTilesKey,
-                    afterChanged: (bool? choice) async {
-                      if (choice == null) return;
+                    if (EzConfig.updateBoth) {
+                      await EzConfig.setBool(
+                        EzConfig.isDark ? lightElevatedKey : darkElevatedKey,
+                        elevated,
+                      );
+                    }
+                    setModal(() => elevated = choice);
+                  },
+                ),
+                EzConfig.separator,
 
-                      if (EzConfig.updateBoth) {
-                        await EzConfig.setBool(
-                          EzConfig.isDark ? lightWideTilesKey : darkWideTilesKey,
-                          useWide,
-                        );
-                      }
-                      setModal(() => useWide = choice);
-                    },
-                  ),
-                  EzConfig.separator,
-                ],
-              ),
+                // Wide tiles
+                EzSwitchPair(
+                  text: 'Use max width (shared)',
+                  valueKey: EzConfig.isDark ? darkWideTilesKey : lightWideTilesKey,
+                  afterChanged: (bool? choice) async {
+                    if (choice == null) return;
+
+                    if (EzConfig.updateBoth) {
+                      await EzConfig.setBool(
+                        EzConfig.isDark ? lightWideTilesKey : darkWideTilesKey,
+                        useWide,
+                      );
+                    }
+                    setModal(() => useWide = choice);
+                  },
+                ),
+                EzConfig.separator,
+              ]),
             ),
           );
 

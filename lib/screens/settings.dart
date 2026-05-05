@@ -461,9 +461,8 @@ class _AppListSettings extends StatelessWidget {
         if (context.mounted) {
           await ezModal(
             context: context,
-            builder: (_) => EzScrollView(
-              controller: timeoutScroll,
-              children: <Widget>[
+            builder: (_) => ezModalScroll(
+              <Widget>[
                 // Swipe selectors
                 Text(
                   'Swipe left/right on the home screen (not while editing) to open the selected app.\n\nLong press to clear your selection.',
@@ -569,6 +568,7 @@ class _AppListSettings extends StatelessWidget {
                 EzSpacer(space: MediaQuery.of(context).viewInsets.bottom),
                 EzConfig.separator,
               ],
+              controller: timeoutScroll,
             ),
           );
         }
