@@ -20,9 +20,7 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
-  await SystemChrome.setPreferredOrientations(
-    <DeviceOrientation>[DeviceOrientation.portraitUp],
-  );
+  await SystemChrome.setPreferredOrientations(DeviceOrientation.values);
 
   EzConfig.init(
     appName: appName,
