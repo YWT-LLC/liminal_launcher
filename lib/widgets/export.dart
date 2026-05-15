@@ -9,6 +9,8 @@ export 'launcher/fabulous.dart';
 export 'launcher/folder_tile.dart';
 
 export 'settings/alignment.dart';
+export 'settings/app_list.dart';
+export 'settings/header.dart';
 export 'settings/swipe_selector.dart';
 export 'settings/tiles.dart';
 
