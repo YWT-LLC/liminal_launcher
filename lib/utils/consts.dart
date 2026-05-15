@@ -247,9 +247,6 @@ const Map<String, Object> limSecDef = <String, Object>{
 
 //* Custom fonts *//
 
-/// wingding
-const String wingding = 'Wingding';
-
 const Map<String, String> wingdingMap = <String, String>{
   // Lowercase
   'a': '\u{264B}',
