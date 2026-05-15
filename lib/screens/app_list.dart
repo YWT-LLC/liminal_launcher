@@ -209,9 +209,9 @@ class _AppListScreenState extends State<AppListScreen> {
                               padding: EdgeInsets.symmetric(vertical: EzConfig.spacing / 2),
                               child: AppTile(
                                 app: app,
-                                onHomeScreen: false,
+                                location: AppLocation.list,
+                                state: AppState.standard,
                                 onSelected: widget.config.onSelected,
-                                editing: false,
                                 onEdit: () => setState(() {}),
                               ),
                             ))
