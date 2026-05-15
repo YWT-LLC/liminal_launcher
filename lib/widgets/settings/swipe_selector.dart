@@ -52,7 +52,6 @@ class _SwipeSelectorState extends State<SwipeSelector> {
           ),
           hint: 'Choose app that opens on $lowDir swipe',
           style: EzConfig.styles.bodyLarge,
-          padding: EzInsets.wrap(EzConfig.marginVal),
         ),
         EzMargin(vertical: false),
         AppButton(
