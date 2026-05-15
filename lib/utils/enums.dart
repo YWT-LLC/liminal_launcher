@@ -12,9 +12,15 @@ import 'package:flutter/material.dart';
 /// Defaults to [Offset.zero]
 Offset lastRipple = Offset.zero;
 
-//* Launcher settings *//
+//* Runtime *//
 
-// AppList Sort //
+enum AppLocation { home, folder, list }
+
+enum AppState { standard, singleEdit, groupEdit, verbose }
+
+//* BTS *//
+
+// Sort //
 
 enum AppSort { name, publisher, date, size }
 
@@ -31,158 +37,62 @@ const String esDate = 'date';
 const String esSize = 'size';
 
 extension ASConfig on AppSort {
-  String get value {
-    switch (this) {
-      case AppSort.name:
-        return esName;
-      case AppSort.publisher:
-        return esPublisher;
-      case AppSort.date:
-        return esDate;
-      case AppSort.size:
-        return esSize;
-    }
-  }
+  String get value => switch (this) {
+        AppSort.name => esName,
+        AppSort.publisher => esPublisher,
+        AppSort.date => esDate,
+        AppSort.size => esSize,
+      };
 
-  static AppSort lookup(String value) {
-    switch (value) {
-      case esPublisher:
-        return AppSort.publisher;
-      case esDate:
-        return AppSort.date;
-      case esSize:
-        return AppSort.size;
-      default:
-        return AppSort.name;
-    }
-  }
+  static AppSort lookup(String value) => switch (value) {
+        esPublisher => AppSort.publisher,
+        esDate => AppSort.date,
+        esSize => AppSort.size,
+        esName || _ => AppSort.name,
+      };
 }
 
-// Date type //
+//* Design settings (button) *//
 
-enum DateType { none, compact, short, medium, long }
-
-/// enum String 'compact'
-const String esCompact = 'compact';
-
-/// enum String 'short'
-const String esShort = 'short';
-
-/// enum String 'medium'
-const String esMedium = 'medium';
-
-/// enum String 'long'
-const String esLong = 'long';
-
-extension DateTypeConfig on DateType {
-  String get value {
-    switch (this) {
-      case DateType.none:
-        return esNone;
-      case DateType.compact:
-        return esCompact;
-      case DateType.short:
-        return esShort;
-      case DateType.medium:
-        return esMedium;
-      case DateType.long:
-        return esLong;
-    }
-  }
-
-  static String buildDate(BuildContext context, DateTime time, DateType type) {
-    switch (type) {
-      case DateType.compact:
-        return MaterialLocalizations.of(context).formatCompactDate(time);
-      case DateType.short:
-        return MaterialLocalizations.of(context).formatShortDate(time);
-      case DateType.medium:
-        return MaterialLocalizations.of(context).formatMediumDate(time);
-      case DateType.long:
-        return MaterialLocalizations.of(context).formatFullDate(time);
-      default:
-        return '---';
-    }
-  }
-
-  static DateType lookup(String value) {
-    switch (value) {
-      case esCompact:
-        return DateType.compact;
-      case esShort:
-        return DateType.short;
-      case esMedium:
-        return DateType.medium;
-      case esLong:
-        return DateType.long;
-      default:
-        return DateType.none;
-    }
-  }
-}
-
-//* Design settings *//
-
-// (App && Folder) Label Type //
+// Label //
 
 enum LabelType { none, initials, full, wingding }
 
-/// enum String 'initials'
+/// enum [String] 'initials'
 const String esInitials = 'initials';
 
-/// enum String 'full'
+/// enum [String] 'full'
 const String esFull = 'full';
 
-extension LabelTypeConfig on LabelType {
-  String get value {
-    switch (this) {
-      case LabelType.none:
-        return esNone;
-      case LabelType.initials:
-        return esInitials;
-      case LabelType.full:
-        return esFull;
-      case LabelType.wingding:
-        return wingding;
-    }
-  }
+/// enum [String] wingding
+const String esWingding = 'wingding';
 
-  static LabelType lookup(String value) {
-    switch (value) {
-      case esNone:
-        return LabelType.none;
-      case esInitials:
-        return LabelType.initials;
-      case wingding:
-        return LabelType.wingding;
-      default:
-        return LabelType.full;
-    }
-  }
+extension LabelTypeConfig on LabelType {
+  String get value => switch (this) {
+        LabelType.none => esNone,
+        LabelType.initials => esInitials,
+        LabelType.full => esFull,
+        LabelType.wingding => esWingding,
+      };
+
+  static LabelType lookup(String value) => switch (value) {
+        esNone => LabelType.none,
+        esInitials => LabelType.initials,
+        esWingding => LabelType.wingding,
+        esFull || _ => LabelType.full,
+      };
 }
 
 /// Get the result of [base] parsed with [type]
-String buildLabel(String base, LabelType type) {
-  switch (type) {
-    case LabelType.none:
-      return '';
+String buildLabel(String base, LabelType type) => switch (type) {
+      LabelType.none => '',
+      LabelType.initials =>
+        base.split(' ').map((String word) => word.isNotEmpty ? word[0] : '').join().toUpperCase(),
+      LabelType.full => base,
+      LabelType.wingding => base.split('').map((String char) => wingdingMap[char] ?? char).join(),
+    };
 
-    case LabelType.initials:
-      return base
-          .split(' ')
-          .map((String word) => word.isNotEmpty ? word[0] : '')
-          .join()
-          .toUpperCase();
-
-    case LabelType.full:
-      return base;
-
-    case LabelType.wingding:
-      return base.split('').map((String char) => wingdingMap[char] ?? char).join();
-  }
-}
-
-// Button type //
+// Type //
 
 enum ButtonType { icon, eIcon, text, eText, textIcon, eTextIcon }
 
@@ -205,7 +115,51 @@ extension BTConfig on ButtonType {
                   : ButtonType.text;
 }
 
-// List Alignment //
+//* Design (page) *//
+
+// Date //
+
+enum DateType { none, compact, short, medium, long }
+
+/// enum String 'compact'
+const String esCompact = 'compact';
+
+/// enum String 'short'
+const String esShort = 'short';
+
+/// enum String 'medium'
+const String esMedium = 'medium';
+
+/// enum String 'long'
+const String esLong = 'long';
+
+extension DateTypeConfig on DateType {
+  String get value => switch (this) {
+        DateType.none => esNone,
+        DateType.compact => esCompact,
+        DateType.short => esShort,
+        DateType.medium => esMedium,
+        DateType.long => esLong,
+      };
+
+  static String buildDate(BuildContext context, DateTime time, DateType type) => switch (type) {
+        DateType.compact => MaterialLocalizations.of(context).formatCompactDate(time),
+        DateType.short => MaterialLocalizations.of(context).formatShortDate(time),
+        DateType.medium => MaterialLocalizations.of(context).formatMediumDate(time),
+        DateType.long => MaterialLocalizations.of(context).formatFullDate(time),
+        DateType.none || _ => '---',
+      };
+
+  static DateType lookup(String value) => switch (value) {
+        esCompact => DateType.compact,
+        esShort => DateType.short,
+        esMedium => DateType.medium,
+        esLong => DateType.long,
+        esNone || _ => DateType.none,
+      };
+}
+
+// Alignment //
 
 enum ListAlignment { center, start, end }
 
@@ -219,71 +173,41 @@ const String esStart = 'start';
 const String esEnd = 'end';
 
 extension LAConfig on ListAlignment {
-  String get value {
-    switch (this) {
-      case ListAlignment.center:
-        return esCenter;
-      case ListAlignment.start:
-        return esStart;
-      case ListAlignment.end:
-        return esEnd;
-    }
-  }
+  String get value => switch (this) {
+        ListAlignment.center => esCenter,
+        ListAlignment.start => esStart,
+        ListAlignment.end => esEnd,
+      };
 
-  Alignment get alignment {
-    switch (this) {
-      case ListAlignment.center:
-        return Alignment.center;
-      case ListAlignment.start:
-        return Alignment.centerLeft;
-      case ListAlignment.end:
-        return Alignment.centerRight;
-    }
-  }
+  Alignment get alignment => switch (this) {
+        ListAlignment.center => Alignment.center,
+        ListAlignment.start => Alignment.centerLeft,
+        ListAlignment.end => Alignment.centerRight,
+      };
 
-  MainAxisAlignment get mainAxis {
-    switch (this) {
-      case ListAlignment.center:
-        return MainAxisAlignment.center;
-      case ListAlignment.start:
-        return MainAxisAlignment.start;
-      case ListAlignment.end:
-        return MainAxisAlignment.end;
-    }
-  }
+  MainAxisAlignment get mainAxis => switch (this) {
+        ListAlignment.center => MainAxisAlignment.center,
+        ListAlignment.start => MainAxisAlignment.start,
+        ListAlignment.end => MainAxisAlignment.end,
+      };
 
-  CrossAxisAlignment get crossAxis {
-    switch (this) {
-      case ListAlignment.center:
-        return CrossAxisAlignment.center;
-      case ListAlignment.start:
-        return CrossAxisAlignment.start;
-      case ListAlignment.end:
-        return CrossAxisAlignment.end;
-    }
-  }
+  CrossAxisAlignment get crossAxis => switch (this) {
+        ListAlignment.center => CrossAxisAlignment.center,
+        ListAlignment.start => CrossAxisAlignment.start,
+        ListAlignment.end => CrossAxisAlignment.end,
+      };
 
-  TextAlign get textAlign {
-    switch (this) {
-      case ListAlignment.center:
-        return TextAlign.center;
-      case ListAlignment.start:
-        return TextAlign.start;
-      case ListAlignment.end:
-        return TextAlign.end;
-    }
-  }
+  TextAlign get textAlign => switch (this) {
+        ListAlignment.center => TextAlign.center,
+        ListAlignment.start => TextAlign.start,
+        ListAlignment.end => TextAlign.end,
+      };
 
-  static ListAlignment lookup(String value) {
-    switch (value) {
-      case esStart:
-        return ListAlignment.start;
-      case esEnd:
-        return ListAlignment.end;
-      default:
-        return ListAlignment.center;
-    }
-  }
+  static ListAlignment lookup(String value) => switch (value) {
+        esStart => ListAlignment.start,
+        esEnd => ListAlignment.end,
+        esCenter || _ => ListAlignment.center,
+      };
 }
 
 const List<DropdownMenuEntry<LabelType>> labelEntries = <DropdownMenuEntry<LabelType>>[
