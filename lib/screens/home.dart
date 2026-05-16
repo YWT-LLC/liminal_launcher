@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           padding: tilePadding,
           child: AppFolder(
             index: index,
-            editing: editing ? null : false,
+            state: editing ? AppState.groupEdit : AppState.standard,
             onEdit: () => setState(() {}),
             rippleProgress: rippleProgress,
           ),
@@ -72,9 +72,9 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           padding: tilePadding,
           child: AppTile(
             app: app,
-            onHomeScreen: true,
+            location: AppLocation.home,
+            state: editing ? AppState.groupEdit : AppState.standard,
             onSelected: (String id) => launchApp(id),
-            editing: editing ? null : false,
             onEdit: () => setState(() {}),
             rippleProgress: rippleProgress,
           ),
