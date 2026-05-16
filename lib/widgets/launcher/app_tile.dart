@@ -5,39 +5,25 @@
 
 import '../../utils/export.dart';
 
-import 'dart:math';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:after_layout/after_layout.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class AppTile extends StatefulWidget {
   final AppInfo app;
-
-  /// true == home list
-  /// null == home folder
-  /// false == false
-  /// Quantum supremacy achieved (⌐■_■)
-  final bool? onHomeScreen;
-
+  final AppLocation location;
+  final AppState state;
   final Future<void> Function(String id) onSelected;
-
-  /// true == individual edits
-  /// null == group edits
-  /// false == false
-  /// Quantum supremacy achieved (⌐■_■)
-  final bool? editing;
-
   final void Function() onEdit;
   final ValueNotifier<double>? rippleProgress;
 
   const AppTile({
     super.key,
     required this.app,
-    required this.onHomeScreen,
+    required this.location,
+    required this.state,
     required this.onSelected,
-    required this.editing,
     required this.onEdit,
     this.rippleProgress,
   });
@@ -46,15 +32,24 @@ class AppTile extends StatefulWidget {
   State<AppTile> createState() => _AppTileState();
 }
 
-class _AppTileState extends State<AppTile> with AfterLayoutMixin<AppTile> {
+class _AppTileState extends State<AppTile> {
   // Define the build data //
 
-  late bool? editing = widget.editing;
+  late final bool inList = widget.location == AppLocation.list;
+  late final bool inFolder = widget.location == AppLocation.home;
+
+  late AppState state = widget.state;
   Timer? rippleThrottle;
 
-  Size hideSize = Size(appIconSize, appIconSize);
-
   // Define custom functions //
+
+  Widget editSpacer() => GestureDetector(
+        onLongPress: () => switch (state) {
+          AppState.standard || AppState.verbose || AppState.groupEdit => null,
+          AppState.singleEdit => setState(() => state = AppState.standard),
+        },
+        child: EzConfig.rowSpacer,
+      );
 
   /// Handle rippling effect
   /// Transition to editing on home screen long press
@@ -68,7 +63,12 @@ class _AppTileState extends State<AppTile> with AfterLayoutMixin<AppTile> {
     final double dy = (wya.dy - lastRipple.dy).abs();
 
     if (dy <= widget.rippleProgress!.value * heightOf(context)) {
-      setState(() => editing = (editing == null) ? false : null);
+      setState(() => state = switch (state) {
+            AppState.standard => inList ? AppState.verbose : AppState.groupEdit,
+            AppState.verbose => AppState.standard,
+            AppState.singleEdit => inList ? AppState.verbose : AppState.groupEdit,
+            AppState.groupEdit => AppState.standard,
+          });
 
       final Duration animDur = ezAnimDuration();
       rippleThrottle = Timer(
@@ -86,24 +86,15 @@ class _AppTileState extends State<AppTile> with AfterLayoutMixin<AppTile> {
     widget.rippleProgress?.addListener(rippling);
   }
 
-  @override
-  FutureOr<void> afterFirstLayout(BuildContext context) {
-    setState(() => hideSize = (context.findRenderObject() as RenderBox).size);
-  }
-
   // Return the build //
 
   @override
-  Widget build(BuildContext context) {
-    final Widget editSpacer =
-        _EditSpacer(() => (editing == true) ? setState(() => editing = false) : doNothing());
-
-    return EzAnimHide(
-      mod: 0.667,
-      visible: rippleThrottle == null,
-      size: hideSize,
-      kid: editing == false
-          ? EzRow(
+  Widget build(BuildContext context) => EzAnimSwitch(
+        mod: 0.667,
+        forceType: EzTransitionType.none,
+        forceFade: true,
+        child: switch (state) {
+          AppState.standard => EzRow(
               // The Row prevents the AppTile from auto-expanding
               reverseHands: false,
               mainAxisAlignment: hAlign.mainAxis,
@@ -111,27 +102,30 @@ class _AppTileState extends State<AppTile> with AfterLayoutMixin<AppTile> {
               children: <Widget>[
                 AppButton(
                   app: widget.app,
-                  labelType: (widget.onHomeScreen == null) ? folderLabels : listLabels,
-                  buttonType: (widget.onHomeScreen == null) ? folderBT : listBT,
+                  labelType: inFolder ? folderLabels : listLabels,
+                  buttonType: inFolder ? folderBT : listBT,
                   onPressed: () => widget.onSelected(widget.app.id),
                   onLongPress: () =>
-                      widget.onHomeScreen == null ? doNothing() : setState(() => editing = true),
+                      inFolder ? doNothing() : setState(() => state = AppState.singleEdit),
                 ),
               ],
-            )
-          : EzScrollView(
+            ),
+          AppState.verbose => const SizedBox.shrink(), // TODO: implement
+          AppState.singleEdit || AppState.groupEdit => EzScrollView(
               mainAxisAlignment: hAlign.mainAxis,
               crossAxisAlignment: hAlign.crossAxis,
               scrollDirection: Axis.horizontal,
               reverseHands: true,
               showScrollHint: true,
               children: <Widget>[
-                // Drag handle
-                EzIcon(
-                  Icons.drag_handle,
-                  color: EzConfig.colors.outline,
-                ),
-                EzConfig.rowMargin,
+                if (!inList) ...<Widget>[
+                  // Drag handle
+                  EzIcon(
+                    Icons.drag_handle,
+                    color: EzConfig.colors.outline,
+                  ),
+                  EzConfig.rowMargin,
+                ],
 
                 // App icon
                 if (widget.app.icon != null) ...<Widget>[
@@ -144,21 +138,19 @@ class _AppTileState extends State<AppTile> with AfterLayoutMixin<AppTile> {
                       height: appIconSize,
                     ),
                   ),
-                  editSpacer,
+                  editSpacer(),
                 ],
 
                 // Info
                 EzIconButton(
                   onPressed: () async {
+                    if (inList && context.mounted) Navigator.of(context).pop();
                     await openSettings(widget.app.id);
-                    if (widget.onHomeScreen == false && context.mounted) {
-                      Navigator.of(context).pop();
-                    }
                     widget.onEdit();
                   },
                   icon: const Icon(Icons.info),
                 ),
-                editSpacer,
+                editSpacer(),
 
                 // Rename
                 EzIconButton(
@@ -217,7 +209,7 @@ class _AppTileState extends State<AppTile> with AfterLayoutMixin<AppTile> {
                   ),
                   icon: const Icon(Icons.edit),
                 ),
-                editSpacer,
+                editSpacer(),
 
                 // Add to home
                 if (!appInfo.homeSet.contains(widget.app.id) &&
@@ -227,29 +219,29 @@ class _AppTileState extends State<AppTile> with AfterLayoutMixin<AppTile> {
                       final bool success = await appInfo.addHomeApp(widget.app.id);
 
                       if (success) {
-                        setState(() => editing = false);
+                        if (state == AppState.singleEdit) setState(() => state = AppState.standard);
                         widget.onEdit();
                       }
                     },
                     icon: const Icon(Icons.add_to_home_screen),
                   ),
-                  editSpacer,
+                  editSpacer(),
                 ],
 
                 // Remove from home
-                if (widget.onHomeScreen == true) ...<Widget>[
+                if (!inList) ...<Widget>[
                   EzIconButton(
                     onPressed: () async {
                       final bool success = await appInfo.removeHomeApp(widget.app.id);
 
                       if (success) {
-                        setState(() => editing = false);
+                        if (mounted) setState(() => state = AppState.standard);
                         widget.onEdit();
                       }
                     },
                     icon: const Icon(Icons.remove),
                   ),
-                  editSpacer,
+                  editSpacer(),
                 ],
 
                 // Show/hide
@@ -260,7 +252,7 @@ class _AppTileState extends State<AppTile> with AfterLayoutMixin<AppTile> {
                         : await appInfo.hideApp(widget.app.id);
 
                     if (result) {
-                      setState(() => editing = false);
+                      if (mounted) setState(() => state = AppState.standard);
                       widget.onEdit();
                     }
                   },
@@ -270,7 +262,7 @@ class _AppTileState extends State<AppTile> with AfterLayoutMixin<AppTile> {
                         : Icons.visibility_off,
                   ),
                 ),
-                editSpacer,
+                editSpacer(),
 
                 // Banish
                 EzIconButton(
@@ -278,7 +270,7 @@ class _AppTileState extends State<AppTile> with AfterLayoutMixin<AppTile> {
                     final bool banished = await appInfo.banishApp(widget.app.id);
 
                     if (banished) {
-                      setState(() => editing = false);
+                      if (mounted) setState(() => state = AppState.standard);
                       widget.onEdit();
                     }
                   },
@@ -287,14 +279,14 @@ class _AppTileState extends State<AppTile> with AfterLayoutMixin<AppTile> {
 
                 // Delete
                 if (widget.app.removable) ...<Widget>[
-                  editSpacer,
+                  editSpacer(),
                   EzIconButton(
                     onPressed: () async {
                       final bool deleted = await deleteApp(context, widget.app);
 
                       if (deleted) {
-                        setState(() => editing = false);
                         await appInfo.removeDeleted(widget.app.id);
+                        if (mounted) setState(() => state = AppState.standard);
                         widget.onEdit();
                       }
                     },
@@ -302,16 +294,18 @@ class _AppTileState extends State<AppTile> with AfterLayoutMixin<AppTile> {
                   ),
                 ],
 
-                // Drag handle
-                EzConfig.rowMargin,
-                EzIcon(
-                  Icons.drag_handle,
-                  color: EzConfig.colors.outline,
-                ),
+                if (!inList) ...<Widget>[
+                  // Drag handle
+                  EzIcon(
+                    Icons.drag_handle,
+                    color: EzConfig.colors.outline,
+                  ),
+                  EzConfig.rowMargin,
+                ],
               ],
             ),
-    );
-  }
+        },
+      );
 
   @override
   void dispose() {
@@ -353,66 +347,45 @@ class AppButton extends StatelessWidget {
         );
 
   @override
-  Widget build(BuildContext context) {
-    switch (buttonType) {
-      case ButtonType.icon:
-        return Tooltip(
-          message: app.name,
-          child: GestureDetector(
-            onTap: onPressed,
+  Widget build(BuildContext context) => switch (buttonType) {
+        ButtonType.icon => Tooltip(
+            message: app.name,
+            child: GestureDetector(
+              onTap: onPressed,
+              onLongPress: onLongPress,
+              child: appIcon(),
+            )),
+        ButtonType.eIcon => EzIconButton(
+            tooltip: app.name,
+            onPressed: onPressed,
             onLongPress: onLongPress,
-            child: appIcon(),
+            icon: appIcon(),
           ),
-        );
-      case ButtonType.eIcon:
-        return EzIconButton(
-          tooltip: app.name,
-          onPressed: onPressed,
-          onLongPress: onLongPress,
-          icon: appIcon(),
-        );
-      case ButtonType.text:
-        return EzTextButton(
-          text: buildLabel(app.name, labelType),
-          style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
-          onPressed: onPressed,
-          onLongPress: onLongPress,
-        );
-      case ButtonType.eText:
-        return EzElevatedButton(
-          text: buildLabel(app.name, labelType),
-          style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
-          onPressed: onPressed,
-          onLongPress: onLongPress,
-        );
-      case ButtonType.textIcon:
-        return EzTextIconButton(
-          label: buildLabel(app.name, labelType),
-          icon: appIcon(),
-          style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
-          onPressed: onPressed,
-          onLongPress: onLongPress,
-        );
-      case ButtonType.eTextIcon:
-        return EzElevatedIconButton(
-          label: buildLabel(app.name, labelType),
-          icon: appIcon(),
-          style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
-          onPressed: onPressed,
-          onLongPress: onLongPress,
-        );
-    }
-  }
-}
-
-class _EditSpacer extends StatelessWidget {
-  final void Function() dewIt;
-
-  const _EditSpacer(this.dewIt);
-
-  @override
-  Widget build(BuildContext context) => InkWell(
-        onLongPress: dewIt,
-        child: SizedBox(height: min(EzConfig.padding, EzConfig.spacing), width: EzConfig.spacing),
-      );
+        ButtonType.text => EzTextButton(
+            text: buildLabel(app.name, labelType),
+            style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
+            onPressed: onPressed,
+            onLongPress: onLongPress,
+          ),
+        ButtonType.eText => EzElevatedButton(
+            text: buildLabel(app.name, labelType),
+            style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
+            onPressed: onPressed,
+            onLongPress: onLongPress,
+          ),
+        ButtonType.textIcon => EzTextIconButton(
+            label: buildLabel(app.name, labelType),
+            icon: appIcon(),
+            style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
+            onPressed: onPressed,
+            onLongPress: onLongPress,
+          ),
+        ButtonType.eTextIcon => EzElevatedIconButton(
+            label: buildLabel(app.name, labelType),
+            icon: appIcon(),
+            style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
+            onPressed: onPressed,
+            onLongPress: onLongPress,
+          ),
+      };
 }
