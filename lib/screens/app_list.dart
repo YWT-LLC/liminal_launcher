@@ -83,14 +83,13 @@ class _AppListScreenState extends State<AppListScreen> {
               lastRipple = details.globalPosition;
 
               await rippleController.forward().whenComplete(() {
-                setState(() {});
                 ripple.remove();
                 rippleController.dispose();
               });
               return;
             }
 
-            // Full transition to editing TODO (for no anim)
+            setState(() => rippleProgress.value = double.infinity);
           },
           onVerticalDragEnd: (DragEndDetails details) {
             // Pop on swipe down (backup for non-scroll portions)
@@ -196,41 +195,53 @@ class _AppListScreenState extends State<AppListScreen> {
               // App list
               NotificationListener<ScrollNotification>(
                 onNotification: (ScrollNotification notification) {
-                  if (notification is OverscrollNotification && notification.overscroll < 0) {
-                    if (notification.metrics.axis == Axis.horizontal) return false;
+                  switch (notification.runtimeType) {
+                    case const (OverscrollNotification):
+                      if (notification.metrics.axis == Axis.horizontal ||
+                          (notification as OverscrollNotification).overscroll >= 0) {
+                        return false;
+                      }
 
-                    if (atTop) {
-                      Navigator.of(context).pop();
-                      return true;
-                    } else {
-                      closePause = Timer(
-                        scrollDelay,
-                        () => setState(() => atTop = true),
-                      );
-                      return true;
-                    }
-                  } else if (notification is ScrollUpdateNotification) {
-                    if (atTop && notification.metrics.pixels > 0) {
-                      setState(() => atTop = false);
-                    }
+                      if (atTop) {
+                        Navigator.of(context).pop();
+                        return true;
+                      } else {
+                        closePause = Timer(
+                          scrollDelay,
+                          () => setState(() => atTop = true),
+                        );
+                        return true;
+                      }
 
-                    if (atBottom &&
-                        notification.metrics.pixels < notification.metrics.maxScrollExtent) {
-                      setState(() => atBottom = false);
-                    }
-                  } else if (notification is ScrollEndNotification) {
-                    if (notification.metrics.pixels == 0) {
-                      closePause = Timer(
-                        scrollDelay,
-                        () => setState(() => atTop = true),
-                      );
-                    } else {
-                      atTop = false;
-                    }
-                    setState(() => atBottom =
-                        (notification.metrics.pixels == notification.metrics.maxScrollExtent));
+                    case const (ScrollUpdateNotification):
+                      if (notification.metrics.axis == Axis.horizontal) return false;
+
+                      if (atTop && notification.metrics.pixels > 0) {
+                        setState(() => atTop = false);
+                      }
+                      if (atBottom &&
+                          notification.metrics.pixels < notification.metrics.maxScrollExtent) {
+                        setState(() => atBottom = false);
+                      }
+                      break;
+
+                    case const (ScrollEndNotification):
+                      if (notification.metrics.axis == Axis.horizontal) return false;
+
+                      if (notification.metrics.pixels == 0) {
+                        closePause = Timer(
+                          scrollDelay,
+                          () => setState(() => atTop = true),
+                        );
+                      } else {
+                        atTop = false;
+                      }
+                      setState(() => atBottom =
+                          (notification.metrics.pixels == notification.metrics.maxScrollExtent));
+                      break;
                   }
-                  return false; // Let other notifications propagate
+
+                  return false;
                 },
                 child: Expanded(
                   child: EzScrollView(
