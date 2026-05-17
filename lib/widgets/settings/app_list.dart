@@ -52,7 +52,6 @@ class AppListSettings extends StatelessWidget {
 
                   // Auto add to home
                   const EzSwitchPair(
-                    // TODO: rebuild? or is it always checked?
                     text: 'Auto-add new apps to home',
                     valueKey: autoAddToHomeKey,
                   ),
