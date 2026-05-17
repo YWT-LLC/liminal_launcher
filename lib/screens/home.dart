@@ -25,10 +25,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScreen> {
   // Define build data //
 
-  bool editing = false;
   bool atBottom = false;
   Timer? openPause;
 
+  bool editing = false;
   late final OverlayState overlay = Overlay.of(context);
   ValueNotifier<double> rippleProgress = ValueNotifier<double>(0.0);
 
