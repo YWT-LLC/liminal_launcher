@@ -51,6 +51,34 @@ class _AppTileState extends State<AppTile> {
         child: EzConfig.rowSpacer,
       );
 
+  Widget publisherLink() {
+    final List<String> parts = widget.app.package.split('.');
+    late final String toReturn;
+    late final Widget backup = Text(
+      widget.app.package,
+      style: EzConfig.styles.bodyLarge,
+      textAlign: hAlign.textAlign,
+    );
+
+    if (parts.length >= 2) {
+      toReturn = parts[1] + parts[0];
+    } else {
+      return backup;
+    }
+    final bool isUrl = ezUrlCheck(toReturn);
+
+    return isUrl
+        ? EzLink(
+            toReturn,
+            url: Uri.parse(toReturn),
+            inline: true,
+            hint: EzConfig.l10n.gOpenLink,
+            style: EzConfig.styles.bodyLarge,
+            textAlign: hAlign.textAlign,
+          )
+        : backup;
+  }
+
   /// Handle rippling effect
   /// Transition to editing on home screen long press
   void rippling() {
@@ -110,7 +138,42 @@ class _AppTileState extends State<AppTile> {
                 ),
               ],
             ),
-          AppState.verbose => const SizedBox.shrink(), // TODO: implement
+          AppState.verbose => EzTextBackground(EzScrollView(
+              mainAxisAlignment: hAlign.mainAxis,
+              crossAxisAlignment: hAlign.crossAxis,
+              scrollDirection: Axis.horizontal,
+              reverseHands: true,
+              showScrollHint: true,
+              children: <Widget>[
+                // Name && icon
+                AppButton(
+                  app: widget.app,
+                  labelType: inFolder ? folderLabels : listLabels,
+                  buttonType: inFolder ? folderBT : listBT,
+                  onPressed: () => widget.onSelected(widget.app.id),
+                ),
+                editSpacer(),
+
+                // Publisher
+                publisherLink(),
+                editSpacer(),
+
+                // Install date
+                Text(
+                  widget.app.installDate.toString(), // TODO: match date type (none -> default)
+                  style: EzConfig.styles.bodyLarge,
+                  textAlign: hAlign.textAlign,
+                ),
+                editSpacer(),
+
+                // Package size
+                Text(
+                  widget.app.packageSize.toString(),
+                  style: EzConfig.styles.bodyLarge,
+                  textAlign: hAlign.textAlign,
+                ),
+              ],
+            )),
           AppState.singleEdit || AppState.groupEdit => EzScrollView(
               mainAxisAlignment: hAlign.mainAxis,
               crossAxisAlignment: hAlign.crossAxis,
