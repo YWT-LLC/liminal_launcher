@@ -13,16 +13,17 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 class AppTile extends StatefulWidget {
   final AppInfo app;
   final AppLocation location;
+  final AppState state;
   final Future<void> Function(String id) onSelected;
   final ValueNotifier<double>? rippleProgress;
 
-  const AppTile({
-    super.key,
+  AppTile({
     required this.app,
     required this.location,
+    required this.state,
     required this.onSelected,
     this.rippleProgress,
-  });
+  }) : super(key: ValueKey<AppState>(state));
 
   @override
   State<AppTile> createState() => _AppTileState();
@@ -34,7 +35,7 @@ class _AppTileState extends State<AppTile> {
   late final bool inList = widget.location == AppLocation.list;
   late final bool inFolder = widget.location == AppLocation.home;
 
-  AppState state = AppState.standard;
+  late AppState state = widget.state;
   Timer? rippleThrottle;
 
   // Define custom functions //
@@ -96,15 +97,15 @@ class _AppTileState extends State<AppTile> {
 
     if (dy <= widget.rippleProgress!.value * heightOf(context)) {
       setState(() => state = switch (state) {
-            AppState.standard => inList ? AppState.verbose : AppState.groupEdit,
-            AppState.verbose => AppState.standard,
-            AppState.singleEdit => inList ? AppState.verbose : AppState.groupEdit,
-            AppState.groupEdit => AppState.standard,
+            AppState.standard ||
+            AppState.singleEdit =>
+              inList ? AppState.verbose : AppState.groupEdit,
+            AppState.verbose || AppState.groupEdit => AppState.standard,
           });
 
-      final Duration animDur = ezAnimDuration();
+      final Duration animDur = ezAnimDuration(mod: rippleMod);
       rippleThrottle = Timer(
-        animDur - (animDur * widget.rippleProgress!.value),
+        (animDur + const Duration(milliseconds: 50)) - (animDur * widget.rippleProgress!.value),
         () => rippleThrottle = null,
       );
     }
@@ -158,7 +159,15 @@ class _AppTileState extends State<AppTile> {
                 ),
                 editSpacer(),
 
-                // Publisher
+                // Publisher (plain text)
+                Text(
+                  widget.app.package,
+                  style: EzConfig.styles.labelLarge,
+                  textAlign: hAlign.textAlign,
+                ),
+                editSpacer(),
+
+                // Publisher (link)
                 publisherLink(),
                 editSpacer(),
 

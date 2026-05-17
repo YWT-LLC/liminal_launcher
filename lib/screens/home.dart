@@ -56,7 +56,11 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
         tileList.add(Padding(
           key: ValueKey<String>('${parts[0]}_$index'),
           padding: tilePadding,
-          child: FolderTile(index: index, rippleProgress: rippleProgress),
+          child: FolderTile(
+            index: index,
+            state: editing ? AppState.groupEdit : AppState.standard,
+            rippleProgress: rippleProgress,
+          ),
         ));
       } else {
         final AppInfo app = appInfo.appMap[parts[0]] ?? nullApp;
@@ -67,6 +71,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           child: AppTile(
             app: app,
             location: AppLocation.home,
+            state: editing ? AppState.groupEdit : AppState.standard,
             onSelected: (String id) => launchApp(id),
             rippleProgress: rippleProgress,
           ),
@@ -253,8 +258,13 @@ If you want to support Liminal's development, or the development of more Empathe
               if (!authed) return;
             }
 
-            final Duration animDur = ezAnimDuration(mod: 1.5);
-            if (context.mounted && animDur > Duration.zero) {
+            final Duration animDur = ezAnimDuration(mod: rippleMod);
+            if (context.mounted) {
+              if (animDur <= Duration.zero) {
+                setState(() => editing = !editing);
+                return;
+              }
+
               // Ripple transition to editing
               final AnimationController rippleController =
                   AnimationController(vsync: Overlay.of(context), duration: animDur);
@@ -278,8 +288,6 @@ If you want to support Liminal's development, or the development of more Empathe
               });
               return;
             }
-
-            // Full transition to editing TODO (for no anim)
           },
           onVerticalDragEnd: (DragEndDetails details) async {
             if (details.primaryVelocity != null) {
@@ -322,32 +330,41 @@ If you want to support Liminal's development, or the development of more Empathe
               Expanded(
                 child: NotificationListener<ScrollNotification>(
                   onNotification: (ScrollNotification notification) {
-                    if (notification is OverscrollNotification && notification.overscroll > 0) {
-                      if (atBottom) {
-                        swipeUp();
-                        return true;
-                      } else {
-                        openPause = Timer(
-                          scrollDelay,
-                          () => setState(() => atBottom = true),
-                        );
-                        return true;
-                      }
-                    } else if (notification is ScrollUpdateNotification) {
-                      if (atBottom && notification.metrics.pixels < 0) {
-                        setState(() => atBottom = false);
-                      }
-                    } else if (notification is ScrollEndNotification) {
-                      if (notification.metrics.pixels == notification.metrics.maxScrollExtent) {
-                        openPause = Timer(
-                          scrollDelay,
-                          () => setState(() => atBottom = true),
-                        );
-                      } else {
-                        setState(() => atBottom = false);
-                      }
+                    switch (notification.runtimeType) {
+                      case const (OverscrollNotification):
+                        if (notification.metrics.axis == Axis.horizontal ||
+                            (notification as OverscrollNotification).overscroll <= 0) {
+                          if (atBottom) {
+                            swipeUp();
+                            return true;
+                          } else {
+                            openPause = Timer(
+                              scrollDelay,
+                              () => setState(() => atBottom = true),
+                            );
+                            return true;
+                          }
+                        }
+                        break;
+
+                      case const (ScrollUpdateNotification):
+                        if (atBottom && notification.metrics.pixels < 0) {
+                          setState(() => atBottom = false);
+                        }
+                        break;
+
+                      case const (ScrollEndNotification):
+                        if (notification.metrics.pixels == notification.metrics.maxScrollExtent) {
+                          openPause = Timer(
+                            scrollDelay,
+                            () => setState(() => atBottom = true),
+                          );
+                        } else {
+                          setState(() => atBottom = false);
+                        }
+                        break;
                     }
-                    return false; // Let other notifications propagate
+                    return false;
                   },
                   child: editing
                       ? ReorderableListView(

@@ -12,16 +12,17 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class FolderTile extends StatefulWidget {
   final int index;
+  final AppState state;
   final ValueNotifier<double>? rippleProgress;
 
   late final String _name;
   late final List<String> _appList;
 
   FolderTile({
-    super.key,
     required this.index,
+    required this.state,
     this.rippleProgress,
-  }) {
+  }) : super(key: ValueKey<AppState>(state)) {
     final List<String> items = appInfo.homeList[index].split(folderSplit);
 
     _name = items[0];
@@ -36,7 +37,7 @@ class _AppFolderState extends State<FolderTile> {
   // Define the build data //
 
   bool open = false;
-  AppState state = AppState.standard;
+  late AppState state = widget.state;
   Timer? rippleThrottle;
 
   // Define custom functions //
@@ -64,9 +65,9 @@ class _AppFolderState extends State<FolderTile> {
             AppState.groupEdit => AppState.singleEdit,
           });
 
-      final Duration animDur = ezAnimDuration();
+      final Duration animDur = ezAnimDuration(mod: rippleMod);
       rippleThrottle = Timer(
-        animDur - (animDur * widget.rippleProgress!.value),
+        (animDur + const Duration(milliseconds: 50)) - (animDur * widget.rippleProgress!.value),
         () => rippleThrottle = null,
       );
     }
@@ -105,6 +106,7 @@ class _AppFolderState extends State<FolderTile> {
                             child: AppTile(
                               app: app,
                               location: AppLocation.folder,
+                              state: state,
                               onSelected: (String id) => launchApp(id),
                             ),
                           );

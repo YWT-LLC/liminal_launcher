@@ -51,6 +51,7 @@ class _AppListScreenState extends State<AppListScreen> {
   bool atBottom = false;
   Timer? closePause;
 
+  bool verbose = false;
   ValueNotifier<double> rippleProgress = ValueNotifier<double>(0.0);
 
   // Define custom functions //
@@ -64,8 +65,14 @@ class _AppListScreenState extends State<AppListScreen> {
         GestureDetector(
           behavior: HitTestBehavior.opaque,
           onLongPressStart: (LongPressStartDetails details) async {
-            final Duration animDur = ezAnimDuration(mod: 1.5);
-            if (context.mounted && animDur > Duration.zero) {
+            final Duration animDur = ezAnimDuration(mod: rippleMod);
+
+            if (context.mounted) {
+              if (animDur <= Duration.zero) {
+                setState(() => verbose = !verbose);
+                return;
+              }
+
               // Ripple transition to verbose
               final AnimationController rippleController =
                   AnimationController(vsync: Overlay.of(context), duration: animDur);
@@ -83,16 +90,14 @@ class _AppListScreenState extends State<AppListScreen> {
               lastRipple = details.globalPosition;
 
               await rippleController.forward().whenComplete(() {
+                setState(() => verbose = !verbose);
                 ripple.remove();
                 rippleController.dispose();
               });
               return;
             }
-
-            setState(() => rippleProgress.value = double.infinity);
           },
           onVerticalDragEnd: (DragEndDetails details) {
-            // Pop on swipe down (backup for non-scroll portions)
             if (details.primaryVelocity != null) {
               if (details.primaryVelocity! > 0) {
                 Navigator.of(context).pop();
@@ -260,6 +265,7 @@ class _AppListScreenState extends State<AppListScreen> {
                               child: AppTile(
                                 app: app,
                                 location: AppLocation.list,
+                                state: verbose ? AppState.verbose : AppState.standard,
                                 onSelected: widget.config.onSelected,
                                 rippleProgress: rippleProgress,
                               ),
