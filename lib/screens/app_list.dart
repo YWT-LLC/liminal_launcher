@@ -5,6 +5,7 @@
 
 import '../utils/export.dart';
 import '../widgets/export.dart';
+import 'package:efui_bios/efui_bios.dart';
 
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -42,12 +43,15 @@ class _AppListScreenState extends State<AppListScreen> {
 
   AppSort listSort = ASConfig.lookup(EzConfig.get(listSortKey));
   bool ascList = EzConfig.get(ascListKey);
+  bool searching = EzConfig.get(autoSearchKey);
 
   bool atBottom = false;
   bool atTop = true;
   Timer? closePause;
 
-  bool searching = EzConfig.get(autoSearchKey);
+  bool verbose = false;
+  late final OverlayState overlay = Overlay.of(context);
+  ValueNotifier<double> rippleProgress = ValueNotifier<double>(0.0);
 
   // Return the build //
 
@@ -55,6 +59,38 @@ class _AppListScreenState extends State<AppListScreen> {
   Widget build(BuildContext context) => LiminalScaffold(
         GestureDetector(
           behavior: HitTestBehavior.opaque,
+          onLongPressStart: (LongPressStartDetails details) async {
+            final Duration animDur = ezAnimDuration(mod: 1.5);
+            if (context.mounted && animDur > Duration.zero) {
+              // Ripple transition to verbose
+              final AnimationController rippleController =
+                  AnimationController(vsync: overlay, duration: animDur);
+              rippleController.addListener(() => rippleProgress.value = rippleController.value);
+
+              final OverlayEntry ripple = ezRipple(
+                controller: rippleController,
+                width: widthOf(context),
+                height: heightOf(context),
+                position: details.globalPosition,
+                color: EzConfig.colors.primary,
+                oMin: focusOpacity,
+              );
+              overlay.insert(ripple);
+              lastRipple = details.globalPosition;
+
+              await rippleController.forward().whenComplete(() {
+                rippleProgress = ValueNotifier<double>(0.0);
+                verbose = !verbose;
+                setState(() {});
+                ripple.remove();
+                rippleController.dispose();
+              });
+              return;
+            }
+
+            // Full transition to editing
+            setState(() => verbose = !verbose);
+          },
           onVerticalDragEnd: (DragEndDetails details) {
             // Pop on swipe down (backup for non-scroll portions)
             if (details.primaryVelocity != null) {
@@ -210,9 +246,10 @@ class _AppListScreenState extends State<AppListScreen> {
                               child: AppTile(
                                 app: app,
                                 location: AppLocation.list,
-                                state: AppState.standard,
+                                state: verbose ? AppState.verbose : AppState.standard,
                                 onSelected: widget.config.onSelected,
                                 onEdit: () => setState(() {}),
+                                rippleProgress: rippleProgress,
                               ),
                             ))
                         .toList(),
