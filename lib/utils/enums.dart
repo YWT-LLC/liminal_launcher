@@ -12,6 +12,9 @@ import 'package:flutter/material.dart';
 /// Defaults to [Offset.zero]
 Offset lastRipple = Offset.zero;
 
+/// 1.5
+double rippleMod = 1.5;
+
 //* Runtime *//
 
 enum AppLocation { home, folder, list }
