@@ -41,11 +41,13 @@ class _ClockState extends State<Clock> {
             Text(
               TimeOfDay.fromDateTime(now).format(context),
               style: EzConfig.styles.headlineLarge,
+              textAlign: hAlign.textAlign,
             ),
           if (homeDate != DateType.none)
             Text(
               DateTypeConfig.buildDate(context, now, homeDate),
               style: EzConfig.styles.labelLarge,
+              textAlign: hAlign.textAlign,
             ),
         ],
       ));
