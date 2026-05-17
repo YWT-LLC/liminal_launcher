@@ -197,6 +197,8 @@ class _AppListScreenState extends State<AppListScreen> {
               NotificationListener<ScrollNotification>(
                 onNotification: (ScrollNotification notification) {
                   if (notification is OverscrollNotification && notification.overscroll < 0) {
+                    if (notification.metrics.axis == Axis.horizontal) return false;
+
                     if (atTop) {
                       Navigator.of(context).pop();
                       return true;
@@ -261,7 +263,7 @@ class _AppListScreenState extends State<AppListScreen> {
         fabs: <Widget>[
           EzConfig.spacer,
 
-          // Scroll to top TODO: fix: is affected but lil horizontal scrolls
+          // Scroll to top
           EzAnimHide(
             mod: 0.5,
             visible: !atTop,
