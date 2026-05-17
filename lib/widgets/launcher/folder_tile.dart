@@ -10,20 +10,16 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-class AppFolder extends StatefulWidget {
+class FolderTile extends StatefulWidget {
   final int index;
-  final AppState state;
-  final void Function() onEdit;
   final ValueNotifier<double>? rippleProgress;
 
   late final String _name;
   late final List<String> _appList;
 
-  AppFolder({
+  FolderTile({
     super.key,
     required this.index,
-    required this.state,
-    required this.onEdit,
     this.rippleProgress,
   }) {
     final List<String> items = appInfo.homeList[index].split(folderSplit);
@@ -33,14 +29,14 @@ class AppFolder extends StatefulWidget {
   }
 
   @override
-  State<AppFolder> createState() => _AppFolderState();
+  State<FolderTile> createState() => _AppFolderState();
 }
 
-class _AppFolderState extends State<AppFolder> {
+class _AppFolderState extends State<FolderTile> {
   // Define the build data //
 
   bool open = false;
-  late AppState state = widget.state;
+  AppState state = AppState.standard;
   Timer? rippleThrottle;
 
   // Define custom functions //
@@ -109,9 +105,7 @@ class _AppFolderState extends State<AppFolder> {
                             child: AppTile(
                               app: app,
                               location: AppLocation.folder,
-                              state: AppState.standard,
                               onSelected: (String id) => launchApp(id),
-                              onEdit: doNothing,
                             ),
                           );
                         })
@@ -151,11 +145,7 @@ class _AppFolderState extends State<AppFolder> {
                         if (validateRename(name) != null) return null;
 
                         final bool success = await appInfo.renameFolder(name, widget.index);
-
-                        if (success) {
-                          if (dCon.mounted) Navigator.of(dCon).pop(name);
-                          widget.onEdit();
-                        }
+                        if (success && dCon.mounted) Navigator.of(dCon).pop(name);
                       }
 
                       void onDeny() {
@@ -275,7 +265,6 @@ class _AppFolderState extends State<AppFolder> {
                       index: widget.index,
                       ids: widget._appList,
                     );
-                    widget.onEdit();
                   },
                 ),
                 editSpacer(),
@@ -283,10 +272,7 @@ class _AppFolderState extends State<AppFolder> {
                 // Delete folder
                 EzIconButton(
                   icon: const Icon(Icons.delete),
-                  onPressed: () async {
-                    final bool success = await appInfo.deleteFolder(widget.index);
-                    if (success) widget.onEdit();
-                  },
+                  onPressed: () => appInfo.deleteFolder(widget.index),
                 ),
               ],
             ),

@@ -13,18 +13,14 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 class AppTile extends StatefulWidget {
   final AppInfo app;
   final AppLocation location;
-  final AppState state;
   final Future<void> Function(String id) onSelected;
-  final void Function() onEdit;
   final ValueNotifier<double>? rippleProgress;
 
   const AppTile({
     super.key,
     required this.app,
     required this.location,
-    required this.state,
     required this.onSelected,
-    required this.onEdit,
     this.rippleProgress,
   });
 
@@ -38,7 +34,7 @@ class _AppTileState extends State<AppTile> {
   late final bool inList = widget.location == AppLocation.list;
   late final bool inFolder = widget.location == AppLocation.home;
 
-  late AppState state = widget.state;
+  AppState state = AppState.standard;
   Timer? rippleThrottle;
 
   // Define custom functions //
@@ -48,12 +44,20 @@ class _AppTileState extends State<AppTile> {
           AppState.standard || AppState.verbose || AppState.groupEdit => null,
           AppState.singleEdit => setState(() => state = AppState.standard),
         },
-        child: EzConfig.rowSpacer,
+        child: state == AppState.verbose
+            ? SizedBox(
+                height: EzConfig.iconSize,
+                child: VerticalDivider(
+                  width: EzConfig.spacing,
+                  color: EzConfig.colors.secondary,
+                ),
+              )
+            : EzConfig.rowSpacer,
       );
 
   Widget publisherLink() {
     final List<String> parts = widget.app.package.split('.');
-    late final String toReturn;
+    late final String base;
     late final Widget backup = Text(
       widget.app.package,
       style: EzConfig.styles.bodyLarge,
@@ -61,16 +65,16 @@ class _AppTileState extends State<AppTile> {
     );
 
     if (parts.length >= 2) {
-      toReturn = parts[1] + parts[0];
+      base = '${parts[1]}.${parts[0]}';
     } else {
       return backup;
     }
-    final bool isUrl = ezUrlCheck(toReturn);
+    final bool isUrl = ezUrlCheck('https://$base');
 
     return isUrl
         ? EzLink(
-            toReturn,
-            url: Uri.parse(toReturn),
+            base,
+            url: Uri.parse('https://$base'),
             inline: true,
             hint: EzConfig.l10n.gOpenLink,
             style: EzConfig.styles.bodyLarge,
@@ -160,15 +164,19 @@ class _AppTileState extends State<AppTile> {
 
                 // Install date
                 Text(
-                  widget.app.installDate.toString(), // TODO: match date type (none -> default)
-                  style: EzConfig.styles.bodyLarge,
+                  DateTypeConfig.buildDate(
+                    context,
+                    DateTime.fromMillisecondsSinceEpoch(widget.app.installDate),
+                    DateType.compact,
+                  ),
+                  style: EzConfig.styles.labelLarge,
                   textAlign: hAlign.textAlign,
                 ),
                 editSpacer(),
 
                 // Package size
                 Text(
-                  widget.app.packageSize.toString(),
+                  '${(widget.app.packageSize / _toMB).toStringAsFixed(2)} MB',
                   style: EzConfig.styles.bodyLarge,
                   textAlign: hAlign.textAlign,
                 ),
@@ -209,7 +217,6 @@ class _AppTileState extends State<AppTile> {
                   onPressed: () async {
                     if (inList && context.mounted) Navigator.of(context).pop();
                     await openSettings(widget.app.id);
-                    widget.onEdit();
                   },
                   icon: const Icon(Icons.info),
                 ),
@@ -230,13 +237,7 @@ class _AppTileState extends State<AppTile> {
 
                         final bool success =
                             await appInfo.renameApp(newName: name, appID: widget.app.id);
-
-                        if (success) {
-                          if (dCon.mounted) {
-                            Navigator.of(dCon).pop(name);
-                          }
-                          widget.onEdit();
-                        }
+                        if (success && dCon.mounted) Navigator.of(dCon).pop(name);
                       }
 
                       void onDeny() {
@@ -281,9 +282,8 @@ class _AppTileState extends State<AppTile> {
                     onPressed: () async {
                       final bool success = await appInfo.addHomeApp(widget.app.id);
 
-                      if (success) {
-                        if (state == AppState.singleEdit) setState(() => state = AppState.standard);
-                        widget.onEdit();
+                      if (success && state == AppState.singleEdit) {
+                        setState(() => state = AppState.standard);
                       }
                     },
                     icon: const Icon(Icons.add_to_home_screen),
@@ -296,11 +296,7 @@ class _AppTileState extends State<AppTile> {
                   EzIconButton(
                     onPressed: () async {
                       final bool success = await appInfo.removeHomeApp(widget.app.id);
-
-                      if (success) {
-                        if (mounted) setState(() => state = AppState.standard);
-                        widget.onEdit();
-                      }
+                      if (success && mounted) setState(() => state = AppState.standard);
                     },
                     icon: const Icon(Icons.remove),
                   ),
@@ -310,14 +306,10 @@ class _AppTileState extends State<AppTile> {
                 // Show/hide
                 EzIconButton(
                   onPressed: () async {
-                    final bool result = appInfo.hiddenSet.contains(widget.app.id)
+                    final bool success = appInfo.hiddenSet.contains(widget.app.id)
                         ? await appInfo.showApp(widget.app.id)
                         : await appInfo.hideApp(widget.app.id);
-
-                    if (result) {
-                      if (mounted) setState(() => state = AppState.standard);
-                      widget.onEdit();
-                    }
+                    if (success && mounted) setState(() => state = AppState.standard);
                   },
                   icon: Icon(
                     appInfo.hiddenSet.contains(widget.app.id)
@@ -331,11 +323,7 @@ class _AppTileState extends State<AppTile> {
                 EzIconButton(
                   onPressed: () async {
                     final bool banished = await appInfo.banishApp(widget.app.id);
-
-                    if (banished) {
-                      if (mounted) setState(() => state = AppState.standard);
-                      widget.onEdit();
-                    }
+                    if (banished && mounted) setState(() => state = AppState.standard);
                   },
                   icon: const Icon(LineIcons.ghost),
                 ),
@@ -350,7 +338,6 @@ class _AppTileState extends State<AppTile> {
                       if (deleted) {
                         await appInfo.removeDeleted(widget.app.id);
                         if (mounted) setState(() => state = AppState.standard);
-                        widget.onEdit();
                       }
                     },
                     icon: const Icon(Icons.delete),
@@ -452,3 +439,5 @@ class AppButton extends StatelessWidget {
           ),
       };
 }
+
+const int _toMB = 1048576;
