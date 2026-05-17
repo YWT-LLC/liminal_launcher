@@ -36,7 +36,9 @@ class AppListScreen extends StatefulWidget {
 }
 
 class _AppListScreenState extends State<AppListScreen> {
-  // Define the fixed build data //
+  // Define the build data //
+
+  late Set<String> ids = widget.config.ids;
 
   final ScrollController scrollControl = ScrollController();
   final TextEditingController searchControl = TextEditingController();
@@ -45,13 +47,15 @@ class _AppListScreenState extends State<AppListScreen> {
   bool ascList = EzConfig.get(ascListKey);
   bool searching = EzConfig.get(autoSearchKey);
 
-  bool atBottom = false;
   bool atTop = true;
+  bool atBottom = false;
   Timer? closePause;
 
-  bool verbose = false;
-  late final OverlayState overlay = Overlay.of(context);
   ValueNotifier<double> rippleProgress = ValueNotifier<double>(0.0);
+
+  // Define custom functions //
+
+  void onRemove(String id) => setState(() => ids.remove(id));
 
   // Return the build //
 
@@ -64,7 +68,7 @@ class _AppListScreenState extends State<AppListScreen> {
             if (context.mounted && animDur > Duration.zero) {
               // Ripple transition to verbose
               final AnimationController rippleController =
-                  AnimationController(vsync: overlay, duration: animDur);
+                  AnimationController(vsync: Overlay.of(context), duration: animDur);
               rippleController.addListener(() => rippleProgress.value = rippleController.value);
 
               final OverlayEntry ripple = ezRipple(
@@ -75,12 +79,10 @@ class _AppListScreenState extends State<AppListScreen> {
                 color: EzConfig.colors.primary,
                 oMin: focusOpacity,
               );
-              overlay.insert(ripple);
+              Overlay.of(context).insert(ripple);
               lastRipple = details.globalPosition;
 
               await rippleController.forward().whenComplete(() {
-                rippleProgress = ValueNotifier<double>(0.0);
-                verbose = !verbose;
                 setState(() {});
                 ripple.remove();
                 rippleController.dispose();
@@ -88,8 +90,7 @@ class _AppListScreenState extends State<AppListScreen> {
               return;
             }
 
-            // Full transition to editing
-            setState(() => verbose = !verbose);
+            // Full transition to editing TODO (for no anim)
           },
           onVerticalDragEnd: (DragEndDetails details) {
             // Pop on swipe down (backup for non-scroll portions)
@@ -236,7 +237,7 @@ class _AppListScreenState extends State<AppListScreen> {
                     physics: const ClampingScrollPhysics(),
                     children: appInfo.apps
                         .where((AppInfo app) =>
-                            (widget.config.ids.contains(app.id) == widget.config.include) &&
+                            (ids.contains(app.id) == widget.config.include) &&
                             (searching
                                 ? app.name.toLowerCase().contains(searchControl.text.toLowerCase())
                                 : true))
@@ -246,9 +247,7 @@ class _AppListScreenState extends State<AppListScreen> {
                               child: AppTile(
                                 app: app,
                                 location: AppLocation.list,
-                                state: verbose ? AppState.verbose : AppState.standard,
                                 onSelected: widget.config.onSelected,
-                                onEdit: () => setState(() {}),
                                 rippleProgress: rippleProgress,
                               ),
                             ))
@@ -262,7 +261,7 @@ class _AppListScreenState extends State<AppListScreen> {
         fabs: <Widget>[
           EzConfig.spacer,
 
-          // Scroll to top
+          // Scroll to top TODO: fix: is affected but lil horizontal scrolls
           EzAnimHide(
             mod: 0.5,
             visible: !atTop,

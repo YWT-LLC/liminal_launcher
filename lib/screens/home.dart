@@ -29,7 +29,6 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
   Timer? openPause;
 
   bool editing = false;
-  late final OverlayState overlay = Overlay.of(context);
   ValueNotifier<double> rippleProgress = ValueNotifier<double>(0.0);
 
   // Define custom functions //
@@ -44,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
         )
       : const SizedBox.shrink();
 
-  /// appProvider.homeList -> AppTile/AppFolder
+  /// appProvider.homeList -> AppTile/FolderTile
   List<Widget> buildTiles() {
     final EdgeInsets tilePadding = EdgeInsets.symmetric(vertical: EzConfig.spacing / 2);
     final List<Widget> tileList = <Widget>[];
@@ -57,12 +56,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
         tileList.add(Padding(
           key: ValueKey<String>('${parts[0]}_$index'),
           padding: tilePadding,
-          child: AppFolder(
-            index: index,
-            state: editing ? AppState.groupEdit : AppState.standard,
-            onEdit: () => setState(() {}),
-            rippleProgress: rippleProgress,
-          ),
+          child: FolderTile(index: index, rippleProgress: rippleProgress),
         ));
       } else {
         final AppInfo app = appInfo.appMap[parts[0]] ?? nullApp;
@@ -73,9 +67,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           child: AppTile(
             app: app,
             location: AppLocation.home,
-            state: editing ? AppState.groupEdit : AppState.standard,
             onSelected: (String id) => launchApp(id),
-            onEdit: () => setState(() {}),
             rippleProgress: rippleProgress,
           ),
         ));
@@ -265,7 +257,7 @@ If you want to support Liminal's development, or the development of more Empathe
             if (context.mounted && animDur > Duration.zero) {
               // Ripple transition to editing
               final AnimationController rippleController =
-                  AnimationController(vsync: overlay, duration: animDur);
+                  AnimationController(vsync: Overlay.of(context), duration: animDur);
               rippleController.addListener(() => rippleProgress.value = rippleController.value);
 
               final OverlayEntry ripple = ezRipple(
@@ -276,21 +268,18 @@ If you want to support Liminal's development, or the development of more Empathe
                 color: EzConfig.colors.primary,
                 oMin: focusOpacity,
               );
-              overlay.insert(ripple);
+              Overlay.of(context).insert(ripple);
               lastRipple = details.globalPosition;
 
               await rippleController.forward().whenComplete(() {
-                rippleProgress = ValueNotifier<double>(0.0);
-                editing = !editing;
-                setState(() {});
+                setState(() => editing = !editing);
                 ripple.remove();
                 rippleController.dispose();
               });
               return;
             }
 
-            // Full transition to editing
-            setState(() => editing = !editing);
+            // Full transition to editing TODO (for no anim)
           },
           onVerticalDragEnd: (DragEndDetails details) async {
             if (details.primaryVelocity != null) {
@@ -364,26 +353,16 @@ If you want to support Liminal's development, or the development of more Empathe
                       ? ReorderableListView(
                           onReorder: (int oldIndex, int newIndex) async {
                             if (oldIndex == newIndex) return;
-
-                            // Storage update
-                            await appInfo.reorderHomeItem(
-                              oldIndex: oldIndex,
-                              newIndex: newIndex,
-                            );
+                            await appInfo.reorderHomeItem(oldIndex: oldIndex, newIndex: newIndex);
                             setState(() {});
                           },
                           children: buildTiles(),
                         )
-                      : ConstrainedBox(
-                          constraints: wideTiles
-                              ? BoxConstraints(minWidth: widthOf(context) * 0.8)
-                              : const BoxConstraints(),
-                          child: EzScrollView(
-                            mainAxisAlignment: vAlign.mainAxis,
-                            crossAxisAlignment: hAlign.crossAxis,
-                            physics: const ClampingScrollPhysics(),
-                            children: buildTiles(),
-                          ),
+                      : EzScrollView(
+                          mainAxisAlignment: vAlign.mainAxis,
+                          crossAxisAlignment: hAlign.crossAxis,
+                          physics: const ClampingScrollPhysics(),
+                          children: buildTiles(),
                         ),
                 ),
               ),
