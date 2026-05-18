@@ -29,8 +29,8 @@ const Duration scrollDelay = Duration(milliseconds: 100);
 
 //* App assets *//
 
-/// assets/images/app-icon.jpg
-const String appIconPath = 'assets/images/app-icon.jpg';
+/// assets/app-icon.png
+const String appIconPath = 'assets/app-icon.png';
 
 /// [appIconPath]
 const Set<String> assetPaths = <String>{appIconPath};
@@ -38,7 +38,7 @@ const Set<String> assetPaths = <String>{appIconPath};
 /// Credits for...
 /// [appIconPath]
 const Map<String, String> credits = <String, String>{
-  appIconPath: 'AI; tis a placeholder, human work coming soon.',
+  appIconPath: 'https://www.pexels.com/@klub-boks-1437055/',
 };
 
 //* EzConfig *//

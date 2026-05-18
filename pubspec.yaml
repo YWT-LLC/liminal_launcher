@@ -44,12 +44,11 @@ flutter:
 
   assets:
     - assets/
-    - assets/images/
-    - assets/images/app-icon.jpg      
+    - assets/app-icon.png
 
 flutter_launcher_icons:
-  image_path: assets/images/app-icon.jpg
-  adaptive_icon_foreground: assets/images/app-icon.jpg
+  image_path: assets/app-icon.png
+  adaptive_icon_foreground: assets/app-icon.png
   adaptive_icon_background: "#000000"
   android: true
   ios: false
