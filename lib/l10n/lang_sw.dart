@@ -4,9 +4,9 @@ import 'lang.dart';
 
 // ignore_for_file: type=lint
 
-/// The translations for Spanish Castilian (`es`).
-class LangEs extends Lang {
-  LangEs([String locale = 'es']) : super(locale);
+/// The translations for Swahili (`sw`).
+class LangSw extends Lang {
+  LangSw([String locale = 'sw']) : super(locale);
 
   @override
   String get hsCaw => 'Caw!';
