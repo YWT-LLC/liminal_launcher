@@ -53,35 +53,32 @@ class _AppTileState extends State<AppTile> {
                   color: EzConfig.colors.secondary,
                 ),
               )
-            : EzConfig.rowSpacer,
+            : SizedBox(height: EzConfig.iconSize, width: EzConfig.spacing),
       );
 
-  Widget publisherLink() {
+  List<Widget> publisherLink() {
     final List<String> parts = widget.app.package.split('.');
     late final String base;
-    late final Widget backup = Text(
-      widget.app.package,
-      style: EzConfig.styles.bodyLarge,
-      textAlign: hAlign.textAlign,
-    );
 
     if (parts.length >= 2) {
       base = '${parts[1]}.${parts[0]}';
     } else {
-      return backup;
+      return <Widget>[];
     }
     final bool isUrl = ezUrlCheck('https://$base');
 
     return isUrl
-        ? EzLink(
-            base,
-            url: Uri.parse('https://$base'),
-            inline: true,
-            hint: EzConfig.l10n.gOpenLink,
-            style: EzConfig.styles.bodyLarge,
-            textAlign: hAlign.textAlign,
-          )
-        : backup;
+        ? <Widget>[
+            EzLink(
+              base,
+              url: Uri.parse('https://$base'),
+              hint: EzConfig.l10n.gOpenLink,
+              style: EzConfig.styles.bodyLarge,
+              textAlign: hAlign.textAlign,
+            ),
+            editSpacer(),
+          ]
+        : <Widget>[];
   }
 
   /// Handle rippling effect
@@ -127,23 +124,15 @@ class _AppTileState extends State<AppTile> {
         forceType: EzTransitionType.none,
         forceFade: true,
         child: switch (state) {
-          AppState.standard => EzRow(
-              // The Row prevents the AppTile from auto-expanding
-              reverseHands: false,
-              mainAxisAlignment: hAlign.mainAxis,
-              crossAxisAlignment: hAlign.crossAxis,
-              children: <Widget>[
-                AppButton(
-                  app: widget.app,
-                  labelType: inFolder ? folderLabels : listLabels,
-                  buttonType: inFolder ? folderBT : listBT,
-                  onPressed: () => widget.onSelected(widget.app.id),
-                  onLongPress: () =>
-                      inFolder ? doNothing() : setState(() => state = AppState.singleEdit),
-                ),
-              ],
+          AppState.standard => AppButton(
+              app: widget.app,
+              labelType: inFolder ? folderLabels : listLabels,
+              buttonType: inFolder ? folderBT : listBT,
+              onPressed: () => widget.onSelected(widget.app.id),
+              onLongPress: () =>
+                  inFolder ? doNothing() : setState(() => state = AppState.singleEdit),
             ),
-          AppState.verbose => EzTextBackground(EzScrollView(
+          AppState.verbose => EzScrollView(
               mainAxisAlignment: hAlign.mainAxis,
               crossAxisAlignment: hAlign.crossAxis,
               scrollDirection: Axis.horizontal,
@@ -160,37 +149,30 @@ class _AppTileState extends State<AppTile> {
                 editSpacer(),
 
                 // Publisher (plain text)
-                Text(
-                  widget.app.package,
-                  style: EzConfig.styles.labelLarge,
-                  textAlign: hAlign.textAlign,
-                ),
+                EzText(widget.app.package, textAlign: hAlign.textAlign),
                 editSpacer(),
 
                 // Publisher (link)
-                publisherLink(),
-                editSpacer(),
+                ...publisherLink(),
 
                 // Install date
-                Text(
+                EzText(
                   DateTypeConfig.buildDate(
                     context,
                     DateTime.fromMillisecondsSinceEpoch(widget.app.installDate),
                     DateType.compact,
                   ),
-                  style: EzConfig.styles.labelLarge,
                   textAlign: hAlign.textAlign,
                 ),
                 editSpacer(),
 
                 // Package size
-                Text(
+                EzText(
                   '${(widget.app.packageSize / _toMB).toStringAsFixed(2)} MB',
-                  style: EzConfig.styles.bodyLarge,
                   textAlign: hAlign.textAlign,
                 ),
               ],
-            )),
+            ),
           AppState.singleEdit || AppState.groupEdit => EzScrollView(
               mainAxisAlignment: hAlign.mainAxis,
               crossAxisAlignment: hAlign.crossAxis,
