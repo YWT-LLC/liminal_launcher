@@ -91,7 +91,7 @@ class SettingsScreen extends StatelessWidget {
                       await EzConfig.setString(darkFolderLabelTypeKey, LabelType.full.value);
                       await EzConfig.setBool(darkFolderIconKey, false);
                       await EzConfig.setBool(darkElevatedFolderKey, true);
-                      await EzConfig.setBool(darkWideTilesKey, false);
+                      await EzConfig.setBool(darkWideTilesKey, true);
 
                       // Page design
                       await EzConfig.setBool(darkHideStatusKey, true);
@@ -109,7 +109,7 @@ class SettingsScreen extends StatelessWidget {
                       await EzConfig.setString(lightFolderLabelTypeKey, LabelType.full.value);
                       await EzConfig.setBool(lightFolderIconKey, false);
                       await EzConfig.setBool(lightElevatedFolderKey, true);
-                      await EzConfig.setBool(lightWideTilesKey, false);
+                      await EzConfig.setBool(lightWideTilesKey, true);
 
                       // Page design
                       await EzConfig.setBool(lightHideStatusKey, true);
@@ -162,7 +162,7 @@ class SettingsScreen extends StatelessWidget {
                     await EzConfig.setString(lightFolderLabelTypeKey, LabelType.full.value);
                     await EzConfig.setBool(lightFolderIconKey, true);
                     await EzConfig.setBool(lightElevatedFolderKey, false);
-                    await EzConfig.setBool(lightWideTilesKey, false);
+                    await EzConfig.setBool(lightWideTilesKey, true);
 
                     // Page design
                     await EzConfig.setBool(lightHideStatusKey, false);

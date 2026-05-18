@@ -213,7 +213,7 @@ final Map<String, Object> liminalDefault = <String, Object>{
   darkFolderLabelTypeKey: LabelType.none.value,
   darkFolderIconKey: true,
   darkElevatedFolderKey: false,
-  darkWideTilesKey: false,
+  darkWideTilesKey: true,
 
   lightListLabelTypeKey: LabelType.full.value,
   lightListIconKey: true,
@@ -221,7 +221,7 @@ final Map<String, Object> liminalDefault = <String, Object>{
   lightFolderLabelTypeKey: LabelType.none.value,
   lightFolderIconKey: true,
   lightElevatedFolderKey: false,
-  lightWideTilesKey: false,
+  lightWideTilesKey: true,
 
   // Page
   darkHideStatusKey: false,
