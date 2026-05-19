@@ -196,7 +196,7 @@ class _AppFolderState extends State<FolderTile> {
                       builder: (_) => StatefulBuilder(
                         builder: (_, StateSetter setModal) => Expanded(
                           child: ReorderableListView(
-                            onReorder: (int oldIndex, int newIndex) {
+                            onReorderItem: (int oldIndex, int newIndex) {
                               if (oldIndex == newIndex) return;
 
                               // Local UI update first

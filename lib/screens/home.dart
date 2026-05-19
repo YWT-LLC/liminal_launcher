@@ -368,7 +368,7 @@ If you want to support Liminal's development, or the development of more Empathe
                   },
                   child: editing
                       ? ReorderableListView(
-                          onReorder: (int oldIndex, int newIndex) async {
+                          onReorderItem: (int oldIndex, int newIndex) async {
                             if (oldIndex == newIndex) return;
                             await appInfo.reorderHomeItem(oldIndex: oldIndex, newIndex: newIndex);
                             setState(() {});
