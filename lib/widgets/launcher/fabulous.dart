@@ -10,8 +10,7 @@ const EzUpdaterFAB updater = EzUpdaterFAB(
   appVersion: '1.0.0',
   versionSource:
       'https://raw.githubusercontent.com/Empathetech-LLC/liminal_launcher/refs/heads/main/APP_VERSION',
-  gPlay: 'blarg',
-  appStore: 'blarg',
+  gPlay: 'https://play.google.com/store/apps/details?id=net.empathetech.liminal_launcher',
   github: 'https://github.com/Empathetech-LLC/liminal_launcher/releases',
 );
 
