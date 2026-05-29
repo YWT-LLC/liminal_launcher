@@ -43,8 +43,8 @@ class SettingsScreen extends StatelessWidget {
                     AppListSettings(),
                   ],
                   quickConfigSpacer: EzConfig.divider,
-                  extraBig: () async {
-                    if (EzConfig.updateBoth || EzConfig.isDark) {
+                  extraBig: (bool updateBoth) async {
+                    if (updateBoth || EzConfig.isDark) {
                       // Button design
                       await EzConfig.setString(darkListLabelTypeKey, LabelType.full.value);
                       await EzConfig.setBool(darkListIconKey, true);
@@ -63,7 +63,7 @@ class SettingsScreen extends StatelessWidget {
                       await EzConfig.setString(darkVerticalAlignKey, ListAlignment.start.value);
                     }
 
-                    if (EzConfig.updateBoth || !EzConfig.isDark) {
+                    if (updateBoth || !EzConfig.isDark) {
                       // Button design
                       await EzConfig.setString(lightListLabelTypeKey, LabelType.full.value);
                       await EzConfig.setBool(lightListIconKey, true);
@@ -82,8 +82,8 @@ class SettingsScreen extends StatelessWidget {
                       await EzConfig.setString(lightVerticalAlignKey, ListAlignment.start.value);
                     }
                   },
-                  extraVis: () async {
-                    if (EzConfig.updateBoth || EzConfig.isDark) {
+                  extraVis: (bool updateBoth) async {
+                    if (updateBoth || EzConfig.isDark) {
                       // Button design
                       await EzConfig.setString(darkListLabelTypeKey, LabelType.full.value);
                       await EzConfig.setBool(darkListIconKey, true);
@@ -101,7 +101,7 @@ class SettingsScreen extends StatelessWidget {
                       await EzConfig.setString(darkVerticalAlignKey, ListAlignment.start.value);
                     }
 
-                    if (EzConfig.updateBoth || !EzConfig.isDark) {
+                    if (updateBoth || !EzConfig.isDark) {
                       // Button design
                       await EzConfig.setString(lightListLabelTypeKey, LabelType.full.value);
                       await EzConfig.setBool(lightListIconKey, true);
@@ -119,7 +119,7 @@ class SettingsScreen extends StatelessWidget {
                       await EzConfig.setString(lightVerticalAlignKey, ListAlignment.start.value);
                     }
                   },
-                  extraChalk: () async {
+                  extraChalk: (_) async {
                     // Button design
                     await EzConfig.setString(darkListLabelTypeKey, LabelType.full.value);
                     await EzConfig.setBool(darkListIconKey, false);
@@ -136,7 +136,7 @@ class SettingsScreen extends StatelessWidget {
                     await EzConfig.setString(darkHorizontalAlignKey, ListAlignment.center.value);
                     await EzConfig.setString(darkVerticalAlignKey, ListAlignment.start.value);
                   },
-                  extraNebula: () async {
+                  extraNebula: (_) async {
                     // Button design
                     await EzConfig.setString(darkListLabelTypeKey, LabelType.none.value);
                     await EzConfig.setBool(darkListIconKey, true);
@@ -154,7 +154,7 @@ class SettingsScreen extends StatelessWidget {
                         EzConfig.isLefty ? ListAlignment.end.value : ListAlignment.start.value);
                     await EzConfig.setString(darkVerticalAlignKey, ListAlignment.end.value);
                   },
-                  extraWall: () async {
+                  extraWall: (_) async {
                     // Button design
                     await EzConfig.setString(lightListLabelTypeKey, LabelType.full.value);
                     await EzConfig.setBool(lightListIconKey, true);
