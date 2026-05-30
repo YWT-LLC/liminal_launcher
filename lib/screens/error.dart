@@ -14,24 +14,24 @@ class ErrorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => LiminalScaffold(Center(
         child: EzScrollView(children: <Widget>[
-          Text(
+          EzText(
             EzConfig.l10n.g404Wonder,
             style: EzConfig.styles.headlineLarge,
             textAlign: TextAlign.center,
           ),
           EzConfig.separator,
-          Text(
+          EzText(
             EzConfig.l10n.g404,
             style: ezSubTitleStyle(),
             textAlign: TextAlign.center,
           ),
           EzConfig.separator,
-          Text(
+          EzText(
             EzConfig.l10n.g404Note,
             style: EzConfig.styles.labelLarge,
             textAlign: TextAlign.center,
           ),
-          EzConfig.separator,
+          const EzFooter(spacing: 0),
         ]),
       ));
 }
