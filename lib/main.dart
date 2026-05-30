@@ -110,10 +110,10 @@ class _TheMagic extends StatelessWidget {
                     pbc,
                     rs,
                     AppListScreen(rs.extra as ListConfig),
-                    transitionsBuilder:
-                        (BuildContext tbc, Animation<double> a, Animation<double> aa, Widget w) =>
-                            ezTransitionsBuilder(
-                      tbc,
+                    transitionsBuilder: (BuildContext context, Animation<double> a,
+                            Animation<double> aa, Widget w) =>
+                        ezTransitionsBuilder(
+                      context,
                       a,
                       aa,
                       w,
@@ -127,8 +127,8 @@ class _TheMagic extends StatelessWidget {
                 GoRoute(
                   path: settingsPath,
                   name: settingsPath,
-                  pageBuilder: (BuildContext pbc, GoRouterState rs) =>
-                      ezPageBuilder(pbc, rs, SettingsScreen()),
+                  pageBuilder: (BuildContext context, GoRouterState state) =>
+                      ezPageBuilder(context, state, SettingsScreen()),
                 ),
               ],
             ),
