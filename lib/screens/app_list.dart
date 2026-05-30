@@ -286,6 +286,7 @@ class _AppListScreenState extends State<AppListScreen> {
             visible: !atTop,
             size: EzConfig.theme.floatingActionButtonTheme.sizeConstraints!.biggest,
             kid: FloatingActionButton(
+              heroTag: 'scroll_up_FAB',
               onPressed: () => scrollControl.animateTo(
                 0,
                 duration: ezAnimDuration(),
@@ -302,6 +303,7 @@ class _AppListScreenState extends State<AppListScreen> {
             visible: !atBottom,
             size: EzConfig.theme.floatingActionButtonTheme.sizeConstraints!.biggest,
             kid: FloatingActionButton(
+              heroTag: 'scroll_down_FAB',
               onPressed: () => scrollControl.animateTo(
                 scrollControl.position.maxScrollExtent,
                 duration: ezAnimDuration(),
