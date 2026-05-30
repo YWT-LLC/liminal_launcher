@@ -25,7 +25,7 @@ class LiminalScaffold extends StatelessWidget {
         small: Consumer<EzConfigProvider>(
           builder: (_, EzConfigProvider config, __) => Scaffold(
             key: ValueKey<int>(config.seed),
-            body: EzScreen(SafeArea(child: body)),
+            body: EzScreen(body, safeArea: true),
             backgroundColor: Colors.transparent,
             floatingActionButton: EzCol(children: <Widget>[
               updater,
