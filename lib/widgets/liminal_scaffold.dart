@@ -23,22 +23,18 @@ class LiminalScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) => EzAdaptiveParent(
         small: Consumer<EzConfigProvider>(
-          builder: (_, EzConfigProvider config, __) => Scaffold(
-            key: ValueKey<int>(config.seed),
+          builder: (_, EzConfigProvider config, __) => EzScaffold(
+            seed: config.seed,
             body: EzScreen(body, safeArea: true),
             backgroundColor: Colors.transparent,
-            floatingActionButton: EzCol(children: <Widget>[
+            fabs: <Widget>[
               updater,
               if (fabs != null) ...fabs!,
               if (config.design.showBackFAB && ezRootNav.currentState!.canPop()) ...<Widget>[
                 config.layout.spacer,
                 const EzBackFAB(),
               ],
-            ]),
-            floatingActionButtonLocation: EzConfig.isLefty
-                ? FloatingActionButtonLocation.startFloat
-                : FloatingActionButtonLocation.endFloat,
-            resizeToAvoidBottomInset: false,
+            ],
           ),
         ),
       );
