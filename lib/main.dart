@@ -25,6 +25,7 @@ void main() async {
     appName: appName,
     androidPackage: androidPackage,
     assetPaths: assetPaths,
+    orientations: DeviceOrientation.values,
     localeFallback: americanEnglish,
     l10nFallback: await EFUILang.delegate.load(americanEnglish),
     preferences: await SharedPreferencesWithCache.create(
