@@ -6,7 +6,6 @@
 import 'export.dart';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class LiminalScaffold extends StatelessWidget {
@@ -17,25 +16,27 @@ class LiminalScaffold extends StatelessWidget {
   /// BYO spacing widgets
   final List<Widget>? fabs;
 
+  /// For [EzConfig.backFABs]
+  final bool home;
+
   /// Standardized [Scaffold] for all screens
-  const LiminalScaffold(this.body, {super.key, this.fabs});
+  const LiminalScaffold(
+    this.body, {
+    super.key,
+    this.fabs,
+    this.home = false,
+  });
 
   @override
   Widget build(BuildContext context) => EzAdaptiveParent(
-        small: Consumer<EzConfigProvider>(
-          builder: (_, EzConfigProvider config, __) => EzScaffold(
-            seed: config.seed,
-            body: EzScreen(body, safeArea: true),
-            backgroundColor: Colors.transparent,
-            fabs: <Widget>[
-              updater,
-              if (fabs != null) ...fabs!,
-              if (config.design.showBackFAB && ezRootNav.currentState!.canPop()) ...<Widget>[
-                config.layout.spacer,
-                const EzBackFAB(),
-              ],
-            ],
-          ),
+        small: EzScaffold(
+          body: EzScreen(body, safeArea: true),
+          backgroundColor: Colors.transparent,
+          fabs: <Widget>[
+            updater,
+            if (fabs != null) ...fabs!,
+            ...EzConfig.backFABs(home),
+          ],
         ),
       );
 }
