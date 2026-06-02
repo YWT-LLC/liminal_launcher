@@ -11,8 +11,6 @@ import 'package:provider/provider.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class LiminalCache extends EzAppCache {
-  // Construct //
-
   Locale _locale;
   Lang _l10n;
 
@@ -22,22 +20,14 @@ class LiminalCache extends EzAppCache {
       : _locale = locale,
         _l10n = l10n;
 
-  // Get //
-
-  Lang get l10n => _l10n;
-
-  DesignCache get design => _design;
-
-  // Set //
-
   @override
   void init(bool isDark) => _buildLocalCache(darkInit: isDark);
 
   @override
   Future<void> rebuild() async {
     if (_locale != EzConfig.locale) {
-      _l10n = await Lang.delegate.load(EzConfig.locale);
       _locale = EzConfig.locale;
+      _l10n = await Lang.delegate.load(EzConfig.locale);
     }
 
     _buildLocalCache();
@@ -110,8 +100,6 @@ class LiminalCache extends EzAppCache {
   }
 }
 
-// Define //
-
 class DesignCache {
   final DateType homeDate;
   final bool homeTime;
@@ -148,11 +136,9 @@ class DesignCache {
   });
 }
 
-// Alias //
-
 LiminalCache get _pointer => EzConfig.appCache! as LiminalCache;
 
-Lang get l10n => _pointer.l10n;
+Lang get l10n => _pointer._l10n;
 
 AppInfoProvider get appInfo =>
     Provider.of<AppInfoProvider>(ezRootNav.currentContext!, listen: false);
@@ -160,21 +146,21 @@ AppInfoProvider get appInfo =>
 String get leftSwipeID => EzConfig.get(leftSwipeIDKey);
 String get rightSwipeID => EzConfig.get(rightSwipeIDKey);
 
-bool get listIcons => _pointer.design.listIcons;
-LabelType get listLabels => _pointer.design.listLabels;
-bool get elevatedLists => _pointer.design.elevatedLists;
-ButtonType get listBT => _pointer.design.listBT;
+bool get listIcons => _pointer._design.listIcons;
+LabelType get listLabels => _pointer._design.listLabels;
+bool get elevatedLists => _pointer._design.elevatedLists;
+ButtonType get listBT => _pointer._design.listBT;
 
-bool get folderIcons => _pointer.design.folderIcons;
-LabelType get folderLabels => _pointer.design.folderLabels;
-bool get elevatedFolders => _pointer.design.elevatedFolders;
-ButtonType get folderBT => _pointer.design.folderBT;
+bool get folderIcons => _pointer._design.folderIcons;
+LabelType get folderLabels => _pointer._design.folderLabels;
+bool get elevatedFolders => _pointer._design.elevatedFolders;
+ButtonType get folderBT => _pointer._design.folderBT;
 
-bool get wideTiles => _pointer.design.wideTiles;
+bool get wideTiles => _pointer._design.wideTiles;
 double get appIconSize => EzConfig.iconSize + EzConfig.padding;
 
-DateType get homeDate => _pointer.design.homeDate;
-bool get homeTime => _pointer.design.homeTime;
+DateType get homeDate => _pointer._design.homeDate;
+bool get homeTime => _pointer._design.homeTime;
 
-ListAlignment get hAlign => _pointer.design.horizontalAlign;
-ListAlignment get vAlign => _pointer.design.verticalAlign;
+ListAlignment get hAlign => _pointer._design.horizontalAlign;
+ListAlignment get vAlign => _pointer._design.verticalAlign;
