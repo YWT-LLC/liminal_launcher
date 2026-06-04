@@ -40,7 +40,9 @@ class SettingsScreen extends StatelessWidget {
                   resetTitle: () => EzConfig.l10n.ssResetAppearance,
                   additionalSettings: <Widget>[
                     EzConfig.spacer,
-                    AppListSettings(),
+                    const AppListSettings(),
+                    EzConfig.spacer,
+                    AppSecSettings(),
                   ],
                   quickConfigSpacer: EzConfig.divider,
                   extraBig: (bool updateBoth) async {
