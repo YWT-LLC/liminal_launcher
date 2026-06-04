@@ -115,6 +115,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           include: true,
           onSelected: (String id) => launchApp(id),
           title: EzTextBackground(EzRow(
+            reverseHands: false,
             children: <Widget>[
               Text('Hidden\t', style: EzConfig.styles.labelLarge),
               EzIcon(
@@ -405,6 +406,7 @@ If you want to support Liminal's development, or the development of more Empathe
                         include: false,
                         onSelected: (String id) => appInfo.addHomeApp(id),
                         title: EzTextBackground(EzRow(
+                          reverseHands: false,
                           children: <Widget>[
                             Text('Home\t', style: EzConfig.styles.labelLarge),
                             EzIcon(
