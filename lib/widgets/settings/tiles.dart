@@ -56,7 +56,8 @@ class AppTileSetting extends StatelessWidget {
               builder: (BuildContext mCon, StateSetter setModal) => ezModalScroll(<Widget>[
                 // Preview
                 Container(
-                  constraints: useWide ? const BoxConstraints(minWidth: double.infinity) : null,
+                  width: useWide ? double.infinity : null,
+                  decoration: ShapeDecoration(shape: EzConfig.buttonShape.shape),
                   child: AppButton(
                     app: AppInfo(
                       package: nullAppPackage,
