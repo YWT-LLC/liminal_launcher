@@ -33,7 +33,7 @@ class _AppTileState extends State<AppTile> {
   // Define the build data //
 
   late final bool inList = widget.location == AppLocation.list;
-  late final bool inFolder = widget.location == AppLocation.home;
+  late final bool inFolder = widget.location == AppLocation.folder;
 
   late AppState state = widget.state;
   Timer? rippleThrottle;
@@ -124,14 +124,32 @@ class _AppTileState extends State<AppTile> {
         forceType: EzTransitionType.none,
         forceFade: true,
         child: switch (state) {
-          AppState.standard => AppButton(
-              app: widget.app,
-              labelType: inFolder ? folderLabels : listLabels,
-              buttonType: inFolder ? folderBT : listBT,
-              onPressed: () => widget.onSelected(widget.app.id),
-              onLongPress: () =>
-                  inFolder ? doNothing() : setState(() => state = AppState.singleEdit),
-            ),
+          AppState.standard => wideTiles
+              ? InkWell(
+                  onTap: () => widget.onSelected(widget.app.id),
+                  onLongPress: () =>
+                      inFolder ? doNothing() : setState(() => state = AppState.singleEdit),
+                  child: Container(
+                    width: double.infinity,
+                    decoration: ShapeDecoration(shape: EzConfig.buttonShape.shape),
+                    child: AppButton(
+                      app: widget.app,
+                      labelType: inFolder ? folderLabels : listLabels,
+                      buttonType: inFolder ? folderBT : listBT,
+                      onPressed: () => widget.onSelected(widget.app.id),
+                      onLongPress: () =>
+                          inFolder ? doNothing() : setState(() => state = AppState.singleEdit),
+                    ),
+                  ),
+                )
+              : AppButton(
+                  app: widget.app,
+                  labelType: inFolder ? folderLabels : listLabels,
+                  buttonType: inFolder ? folderBT : listBT,
+                  onPressed: () => widget.onSelected(widget.app.id),
+                  onLongPress: () =>
+                      inFolder ? doNothing() : setState(() => state = AppState.singleEdit),
+                ),
           AppState.verbose => EzScrollView(
               mainAxisAlignment: hAlign.mainAxis,
               crossAxisAlignment: hAlign.crossAxis,
