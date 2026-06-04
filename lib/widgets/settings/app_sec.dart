@@ -25,7 +25,7 @@ class AppSecSettings extends StatelessWidget {
           final Size fieldSize = ezTextSize(
             '55',
             context: context,
-            style: EzConfig.styles.bodyLarge,
+            style: EzConfig.bodyStyle,
           );
 
           final int timeoutBackup = int.tryParse(await EzConfig.secGet(authTimeoutKey)) ??
@@ -63,7 +63,7 @@ class AppSecSettings extends StatelessWidget {
                         child: Text(
                           'Auth timeout (mins)',
                           textAlign: TextAlign.start,
-                          style: EzConfig.styles.bodyLarge,
+                          style: EzConfig.bodyStyle,
                         ),
                       ),
                       EzConfig.rowSpacer,

@@ -38,13 +38,13 @@ class AppListSettings extends StatelessWidget {
               Text(
                 '',
                 textAlign: TextAlign.center,
-                style: EzConfig.styles.titleLarge,
+                style: EzConfig.titleStyle,
               ),
 
               Text(
                 'Swipe left/right on the home screen (not while editing) to open the selected app.\n\nLong press to clear your selection.',
                 textAlign: TextAlign.center,
-                style: EzConfig.styles.bodyLarge,
+                style: EzConfig.bodyStyle,
               ),
               EzConfig.spacer,
               const SwipeSelector(left: true),

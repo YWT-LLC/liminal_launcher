@@ -73,7 +73,7 @@ class _AppTileState extends State<AppTile> {
               base,
               url: Uri.parse('https://$base'),
               hint: EzConfig.l10n.gOpenLink,
-              style: EzConfig.styles.bodyLarge,
+              style: EzConfig.bodyStyle,
               textAlign: hAlign.textAlign,
             ),
             editSpacer(),

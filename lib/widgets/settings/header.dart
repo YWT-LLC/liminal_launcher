@@ -79,7 +79,7 @@ class HeaderSettings extends StatelessWidget {
                   // Label
                   EzText(
                     'Date type',
-                    style: EzConfig.styles.bodyLarge,
+                    style: EzConfig.bodyStyle,
                     textAlign: TextAlign.center,
                   ),
                   EzConfig.margin,

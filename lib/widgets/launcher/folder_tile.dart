@@ -147,7 +147,7 @@ class _AppFolderState extends State<FolderTile> {
                 // Name (and rename)
                 EzLink(
                   widget._name,
-                  style: EzConfig.styles.bodyLarge,
+                  style: EzConfig.bodyStyle,
                   textColor: EzConfig.colors.onSurface,
                   textAlign: TextAlign.center,
                   hint: 'Activate to rename.',

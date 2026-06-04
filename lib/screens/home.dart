@@ -117,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           title: EzTextBackground(EzRow(
             reverseHands: false,
             children: <Widget>[
-              Text('Hidden\t', style: EzConfig.styles.labelLarge),
+              Text('Hidden\t', style: EzConfig.labelStyle),
               EzIcon(
                 Icons.visibility_off,
                 color: EzConfig.colors.onSurface,
@@ -144,18 +144,18 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
             Text(
               'Welcome to Liminal Launcher',
               textAlign: TextAlign.center,
-              style: EzConfig.styles.titleLarge,
+              style: EzConfig.titleStyle,
             ),
             Text(
               'I hope it serves you well!',
               textAlign: TextAlign.center,
-              style: EzConfig.styles.bodyLarge,
+              style: EzConfig.bodyStyle,
             ),
             EzConfig.centerLine,
             Text(
               "It's geared toward minimalism, but with limitless customization.\nWho said minimal has to be boring?",
               textAlign: TextAlign.center,
-              style: EzConfig.styles.bodyLarge,
+              style: EzConfig.bodyStyle,
             ),
             EzConfig.centerLine,
             EzRichText(
@@ -165,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       '''Personalizing your launcher should be straightforward, with one potential exception: the dark and light theme appearances can be completely separate!
                 
 While in the relevant settings, you will see a toggle-able icon that indicates whether you're editing the dark ''',
-                  style: EzConfig.styles.bodyLarge,
+                  style: EzConfig.bodyStyle,
                 ),
                 WidgetSpan(
                   alignment: PlaceholderAlignment.middle,
@@ -173,7 +173,7 @@ While in the relevant settings, you will see a toggle-able icon that indicates w
                 ),
                 EzPlainText(
                   text: ', light ',
-                  style: EzConfig.styles.bodyLarge,
+                  style: EzConfig.bodyStyle,
                 ),
                 WidgetSpan(
                   alignment: PlaceholderAlignment.middle,
@@ -181,7 +181,7 @@ While in the relevant settings, you will see a toggle-able icon that indicates w
                 ),
                 EzPlainText(
                   text: ', or both ',
-                  style: EzConfig.styles.bodyLarge,
+                  style: EzConfig.bodyStyle,
                 ),
                 WidgetSpan(
                   alignment: PlaceholderAlignment.middle,
@@ -192,11 +192,11 @@ While in the relevant settings, you will see a toggle-able icon that indicates w
                 ),
                 EzPlainText(
                   text: " themes.\n\nLong press the home screen to edit, and you're off!",
-                  style: EzConfig.styles.bodyLarge,
+                  style: EzConfig.bodyStyle,
                 ),
               ],
               textAlign: TextAlign.center,
-              style: EzConfig.styles.bodyLarge,
+              style: EzConfig.bodyStyle,
             ),
             if (!isGPlay) ...<Widget>[
               EzConfig.divider,
@@ -210,7 +210,7 @@ If you want to support Liminal's development, or the development of more Empathe
                   ),
                   EzInlineLink(
                     'contributing',
-                    style: EzConfig.styles.bodyLarge,
+                    style: EzConfig.bodyStyle,
                     textAlign: TextAlign.center,
                     url: Uri.parse('https://www.empathetech.net/#/contribute'),
                     hint: 'Open a link to the Empathetic contribution options.',
@@ -220,7 +220,7 @@ If you want to support Liminal's development, or the development of more Empathe
                         '.\n\nThis is the only non-tutorial pop-up, and its only appearance this install.',
                   ),
                 ],
-                style: EzConfig.styles.bodyLarge,
+                style: EzConfig.bodyStyle,
                 textBackground: false,
                 textAlign: TextAlign.center,
               ),
@@ -229,7 +229,7 @@ If you want to support Liminal's development, or the development of more Empathe
             Text(
               'Thank you, and enjoy!',
               textAlign: TextAlign.center,
-              style: EzConfig.styles.bodyLarge,
+              style: EzConfig.bodyStyle,
             ),
             EzConfig.separator,
           ]),
@@ -408,7 +408,7 @@ If you want to support Liminal's development, or the development of more Empathe
                         title: EzTextBackground(EzRow(
                           reverseHands: false,
                           children: <Widget>[
-                            Text('Home\t', style: EzConfig.styles.labelLarge),
+                            Text('Home\t', style: EzConfig.labelStyle),
                             EzIcon(
                               Icons.add,
                               color: EzConfig.colors.onSurface,

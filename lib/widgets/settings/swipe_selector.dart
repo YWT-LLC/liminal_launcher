@@ -45,13 +45,13 @@ class _SwipeSelectorState extends State<SwipeSelector> {
             builder: (_) => EzAlertDialog(
               content: Text(
                 'Choose a quick access app that will open when you swipe $lowDir on the home screen.',
-                style: EzConfig.styles.bodyLarge,
+                style: EzConfig.bodyStyle,
                 textAlign: TextAlign.center,
               ),
             ),
           ),
           hint: 'Choose app that opens on $lowDir swipe',
-          style: EzConfig.styles.bodyLarge,
+          style: EzConfig.bodyStyle,
         ),
         EzMargin(vertical: false),
         AppButton(
@@ -77,7 +77,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
               },
               title: EzText(
                 'Selecting $lowDir swipe',
-                style: EzConfig.styles.labelLarge,
+                style: EzConfig.labelStyle,
               ),
             ),
           ),
