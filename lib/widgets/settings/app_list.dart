@@ -32,19 +32,22 @@ class AppListSettings extends StatelessWidget {
                 text: 'Auto-search the apps list',
                 valueKey: autoSearchKey,
               ),
-              EzConfig.divider,
+              EzConfig.separator,
 
               // Swipe selectors
-              Text(
-                '',
-                textAlign: TextAlign.center,
-                style: EzConfig.titleStyle,
+              EzDivider(
+                title: Text(
+                  'Quick launch',
+                  textAlign: TextAlign.center,
+                  style: EzConfig.titleStyle,
+                ),
+                height: 0,
               ),
-
+              EzNewLine(style: EzConfig.labelStyle),
               Text(
-                'Swipe left/right on the home screen (not while editing) to open the selected app.\n\nLong press to clear your selection.',
+                'Swipe left/right on the home screen (except when editing) to open the selected app.\nLong press to clear your selection.',
                 textAlign: TextAlign.center,
-                style: EzConfig.bodyStyle,
+                style: EzConfig.labelStyle,
               ),
               EzConfig.spacer,
               const SwipeSelector(left: true),
