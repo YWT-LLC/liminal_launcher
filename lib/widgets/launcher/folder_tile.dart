@@ -216,7 +216,6 @@ class _AppFolderState extends State<FolderTile> {
                                     key: ValueKey<String>(id),
                                     padding: EdgeInsets.symmetric(vertical: EzConfig.spacing / 2),
                                     child: EzRow(
-                                      // The Row prevents the AppTile from auto-expanding
                                       reverseHands: false,
                                       mainAxisAlignment: hAlign.mainAxis,
                                       crossAxisAlignment: hAlign.crossAxis,
