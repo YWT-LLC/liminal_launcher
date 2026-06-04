@@ -115,13 +115,29 @@ class _AppFolderState extends State<FolderTile> {
                         .toList(),
                   ),
                 )
-              : FolderButton(
-                  name: widget._name,
-                  buttonType: folderBT,
-                  labelType: folderLabels,
-                  onPressed: () => setState(() => open = !open),
-                  onLongPress: () => setState(() => state = AppState.singleEdit),
-                ),
+              : wideTiles
+                  ? InkWell(
+                      onTap: () => setState(() => open = !open),
+                      onLongPress: () => setState(() => state = AppState.singleEdit),
+                      child: Container(
+                        width: double.infinity,
+                        decoration: ShapeDecoration(shape: EzConfig.buttonShape.shape),
+                        child: FolderButton(
+                          name: widget._name,
+                          buttonType: folderBT,
+                          labelType: folderLabels,
+                          onPressed: () => setState(() => open = !open),
+                          onLongPress: () => setState(() => state = AppState.singleEdit),
+                        ),
+                      ),
+                    )
+                  : FolderButton(
+                      name: widget._name,
+                      buttonType: folderBT,
+                      labelType: folderLabels,
+                      onPressed: () => setState(() => open = !open),
+                      onLongPress: () => setState(() => state = AppState.singleEdit),
+                    ),
           AppState.verbose => const SizedBox.shrink(), // Shouldn't be possible
           AppState.singleEdit || AppState.groupEdit => EzScrollView(
               scrollDirection: Axis.horizontal,
