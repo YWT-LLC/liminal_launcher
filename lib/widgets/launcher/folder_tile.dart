@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class FolderTile extends StatefulWidget {
+  final AppInfoProvider appInfo;
   final int index;
   final AppState state;
   final ValueNotifier<double>? rippleProgress;
@@ -19,6 +20,7 @@ class FolderTile extends StatefulWidget {
   late final List<String> _appList;
 
   FolderTile({
+    required this.appInfo,
     required this.index,
     required this.state,
     this.rippleProgress,
@@ -99,12 +101,13 @@ class _AppFolderState extends State<FolderTile> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: widget._appList
                         .map((String id) {
-                          final AppInfo? app = appInfo.appMap[id];
+                          final AppInfo? app = widget.appInfo.appMap[id];
                           if (app == null) return null;
 
                           return Padding(
                             padding: EdgeInsets.symmetric(horizontal: EzConfig.spacing / 2),
                             child: AppTile(
+                              appInfo: widget.appInfo,
                               app: app,
                               location: AppLocation.folder,
                               state: state,
@@ -163,7 +166,7 @@ class _AppFolderState extends State<FolderTile> {
                         final String name = renameController.text.trim();
                         if (validateRename(name) != null) return null;
 
-                        final bool success = await appInfo.renameFolder(name, widget.index);
+                        final bool success = await widget.appInfo.renameFolder(name, widget.index);
                         if (success && dCon.mounted) Navigator.of(dCon).pop(name);
                       }
 
@@ -226,7 +229,7 @@ class _AppFolderState extends State<FolderTile> {
                             },
                             children: widget._appList
                                 .map((String id) {
-                                  final AppInfo? app = appInfo.appMap[id];
+                                  final AppInfo? app = widget.appInfo.appMap[id];
                                   if (app == null) return null;
 
                                   return Padding(
@@ -278,7 +281,7 @@ class _AppFolderState extends State<FolderTile> {
                       ),
                     );
 
-                    await appInfo.updateFolder(
+                    await widget.appInfo.updateFolder(
                       name: widget._name,
                       index: widget.index,
                       ids: widget._appList,
@@ -290,7 +293,7 @@ class _AppFolderState extends State<FolderTile> {
                 // Delete folder
                 EzIconButton(
                   icon: const Icon(Icons.delete),
-                  onPressed: () => appInfo.deleteFolder(widget.index),
+                  onPressed: () => widget.appInfo.deleteFolder(widget.index),
                 ),
               ],
             ),
