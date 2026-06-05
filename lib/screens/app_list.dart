@@ -9,6 +9,7 @@ import 'package:efui_bios/efui_bios.dart';
 
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class ListConfig {
@@ -49,7 +50,7 @@ class _AppListScreenState extends State<AppListScreen> {
 
   bool atTop = true;
   bool atBottom = false;
-  Timer? closePause;
+  Timer? overscrollPause;
 
   bool verbose = false;
   ValueNotifier<double> rippleProgress = ValueNotifier<double>(0.0);
@@ -61,41 +62,42 @@ class _AppListScreenState extends State<AppListScreen> {
   // Return the build //
 
   @override
-  Widget build(BuildContext context) => LiminalScaffold(
+  Widget build(BuildContext context) {
+    return Consumer<AppInfoProvider>(
+      builder: (_, AppInfoProvider appInfo, __) => LiminalScaffold(
         GestureDetector(
           behavior: HitTestBehavior.opaque,
           onLongPressStart: (LongPressStartDetails details) async {
+            if (!context.mounted) return;
+
             final Duration animDur = ezAnimDuration(mod: rippleMod);
-
-            if (context.mounted) {
-              if (animDur <= Duration.zero) {
-                setState(() => verbose = !verbose);
-                return;
-              }
-
-              // Ripple transition to verbose
-              final AnimationController rippleController =
-                  AnimationController(vsync: Overlay.of(context), duration: animDur);
-              rippleController.addListener(() => rippleProgress.value = rippleController.value);
-
-              final OverlayEntry ripple = ezRipple(
-                controller: rippleController,
-                width: widthOf(context),
-                height: heightOf(context),
-                position: details.globalPosition,
-                color: EzConfig.colors.primary,
-                oMin: focusOpacity,
-              );
-              Overlay.of(context).insert(ripple);
-              lastRipple = details.globalPosition;
-
-              await rippleController.forward().whenComplete(() {
-                setState(() => verbose = !verbose);
-                ripple.remove();
-                rippleController.dispose();
-              });
+            if (animDur <= Duration.zero) {
+              setState(() => verbose = !verbose);
               return;
             }
+
+            // Ripple transition to verbose
+            final AnimationController rippleController =
+                AnimationController(vsync: Overlay.of(context), duration: animDur);
+            rippleController.addListener(() => rippleProgress.value = rippleController.value);
+
+            final OverlayEntry ripple = ezRipple(
+              controller: rippleController,
+              width: widthOf(context),
+              height: heightOf(context),
+              position: details.globalPosition,
+              color: EzConfig.colors.primary,
+              oMin: focusOpacity,
+            );
+            Overlay.of(context).insert(ripple);
+            lastRipple = details.globalPosition;
+
+            await rippleController.forward().whenComplete(() {
+              setState(() => verbose = !verbose);
+              ripple.remove();
+              rippleController.dispose();
+            });
+            return;
           },
           onVerticalDragEnd: (DragEndDetails details) {
             if (details.primaryVelocity != null) {
@@ -139,15 +141,12 @@ class _AppListScreenState extends State<AppListScreen> {
 
                   // Order
                   EzIconButton(
-                    icon: Icon(
-                      ascList ? Icons.arrow_upward : Icons.arrow_downward,
-                    ),
+                    icon: Icon(ascList ? Icons.arrow_upward : Icons.arrow_downward),
                     onPressed: () async {
-                      ascList = !ascList;
                       await EzConfig.setBool(ascListKey, ascList);
 
                       appInfo.sort(listSort, ascList);
-                      setState(() {});
+                      setState(() => ascList = !ascList);
                     },
                   ),
                   EzConfig.rowSpacer,
@@ -182,7 +181,7 @@ class _AppListScreenState extends State<AppListScreen> {
                                 border: InputBorder.none,
                                 isDense: true,
                               ),
-                              onChanged: (_) => setState(() {}),
+                              onChanged: (_) => setState(() {}), // TODO: test without
                             ),
                           ),
                         ],
@@ -211,7 +210,7 @@ class _AppListScreenState extends State<AppListScreen> {
                         Navigator.of(context).pop();
                         return true;
                       } else {
-                        closePause = Timer(
+                        overscrollPause = Timer(
                           scrollDelay,
                           () => setState(() => atTop = true),
                         );
@@ -234,7 +233,7 @@ class _AppListScreenState extends State<AppListScreen> {
                       if (notification.metrics.axis == Axis.horizontal) return false;
 
                       if (notification.metrics.pixels == 0) {
-                        closePause = Timer(
+                        overscrollPause = Timer(
                           scrollDelay,
                           () => setState(() => atTop = true),
                         );
@@ -263,6 +262,7 @@ class _AppListScreenState extends State<AppListScreen> {
                               key: ValueKey<String>(app.id),
                               padding: EdgeInsets.symmetric(vertical: EzConfig.spacing / 2),
                               child: AppTile(
+                                appInfo: appInfo,
                                 app: app,
                                 location: AppLocation.list,
                                 state: verbose ? AppState.verbose : AppState.standard,
@@ -313,7 +313,9 @@ class _AppListScreenState extends State<AppListScreen> {
             ),
           ),
         ],
-      );
+      ),
+    );
+  }
 
   @override
   void dispose() {
