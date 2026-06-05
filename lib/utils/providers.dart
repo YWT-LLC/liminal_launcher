@@ -147,6 +147,12 @@ class AppInfoProvider extends ChangeNotifier {
 
   Set<String> get banishedSet => _banishedSet;
 
+  Set<String> hybridIDs(Set<ListContent> contents) => <String>{
+        if (contents.contains(ListContent.home)) ..._homeSet,
+        if (contents.contains(ListContent.hidden)) ..._hiddenSet,
+        if (contents.contains(ListContent.banished)) ..._banishedSet,
+      };
+
   // Put //
 
   Future<bool> addHomeApp(String appID) async {
