@@ -31,7 +31,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
     final String dir = widget.left ? 'Left' : 'Right';
     final String lowDir = dir.toLowerCase();
 
-    final AppInfoProvider appInfo = Provider.of<AppInfoProvider>(context); // TODO: test me too
+    final AppInfoProvider appInfo = Provider.of<AppInfoProvider>(context);
 
     String? appID = EzConfig.get(widget._key);
     AppInfo app = (appID == null || appID.isEmpty) ? nullApp : appInfo.appMap[appID] ?? nullApp;
