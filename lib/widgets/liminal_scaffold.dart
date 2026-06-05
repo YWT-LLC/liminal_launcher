@@ -12,20 +12,11 @@ class LiminalScaffold extends StatelessWidget {
   /// [Scaffold.body] passthrough
   final Widget body;
 
-  /// [FloatingActionButton]s to add on top of the [EzUpdaterFAB]
-  /// BYO spacing widgets
+  /// [FloatingActionButton]s
   final List<Widget>? fabs;
 
-  /// For [EzConfig.backFABs]
-  final bool home;
-
   /// Standardized [Scaffold] for all screens
-  const LiminalScaffold(
-    this.body, {
-    super.key,
-    this.fabs,
-    this.home = false,
-  });
+  const LiminalScaffold(this.body, {super.key, this.fabs});
 
   @override
   Widget build(BuildContext context) => EzAdaptiveParent(
@@ -35,7 +26,7 @@ class LiminalScaffold extends StatelessWidget {
           fabs: <Widget>[
             updater,
             if (fabs != null) ...fabs!,
-            ...EzConfig.backFABs(home),
+            ...EzConfig.backFABs(false),
           ],
         ),
       );
