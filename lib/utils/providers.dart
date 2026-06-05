@@ -24,7 +24,7 @@ class AppInfoProvider extends ChangeNotifier {
   final Map<String, AppInfo> _appMap;
 
   // App listeners
-  static const EventChannel _appEventChannel = EventChannel('net.empathetech.liminal/app_events');
+  static const EventChannel _appEventChannel = EventChannel('$androidPackage/app_events');
   StreamSubscription<dynamic>? _appEventSubscription;
 
   // Renamed apps
@@ -205,10 +205,7 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> reorderHomeItem({
-    required int oldIndex,
-    required int newIndex,
-  }) async {
+  Future<void> reorderHomeItem({required int oldIndex, required int newIndex}) async {
     final String id = _homeList.removeAt(oldIndex);
     _homeList.insert(
       oldIndex < newIndex ? newIndex - 1 : newIndex,
@@ -219,10 +216,7 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> renameApp({
-    required String appID,
-    required String newName,
-  }) async {
+  Future<bool> renameApp({required String appID, required String newName}) async {
     final AppInfo? app = _appMap[appID];
     if (app == null || app.name == newName) return false;
 
