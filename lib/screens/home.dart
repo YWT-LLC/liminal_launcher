@@ -10,6 +10,7 @@ import 'package:efui_bios/efui_bios.dart';
 
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -26,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
   // Define build data //
 
   bool atBottom = false;
-  Timer? openPause;
+  Timer? overscrollPause;
 
   bool editing = false;
   ValueNotifier<double> rippleProgress = ValueNotifier<double>(0.0);
@@ -44,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
       : const SizedBox.shrink();
 
   /// appProvider.homeList -> AppTile/FolderTile
-  List<Widget> buildTiles() {
+  List<Widget> buildTiles(AppInfoProvider appInfo) {
     final EdgeInsets tilePadding = EdgeInsets.symmetric(vertical: EzConfig.spacing / 2);
     final List<Widget> tileList = <Widget>[];
 
@@ -57,6 +58,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           key: ValueKey<String>('${parts[0]}_$index'),
           padding: tilePadding,
           child: FolderTile(
+            appInfo: appInfo,
             index: index,
             state: editing ? AppState.groupEdit : AppState.standard,
             rippleProgress: rippleProgress,
@@ -69,6 +71,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           key: ValueKey<String>(app.id),
           padding: tilePadding,
           child: AppTile(
+            appInfo: appInfo,
             app: app,
             location: AppLocation.home,
             state: editing ? AppState.groupEdit : AppState.standard,
@@ -82,8 +85,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     return tileList;
   }
 
-  Future<void> swipeUp() async => (editing)
-      ? await navToHidden(context)
+  Future<void> swipeUp(AppInfoProvider appInfo) async => (editing)
+      ? await navToHidden(appInfo)
       : context.goNamed(
           appListPath,
           extra: ListConfig(
@@ -94,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           ),
         );
 
-  Future<void> navToHidden(BuildContext context) async {
+  Future<void> navToHidden(AppInfoProvider appInfo) async {
     if (bool.tryParse(await EzConfig.secGet(authForHiddenKey)) == true) {
       bool authed = false;
 
@@ -107,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
       if (!authed) return;
     }
 
-    if (context.mounted) {
+    if (mounted) {
       context.goNamed(
         appListPath,
         extra: ListConfig(
@@ -242,7 +245,9 @@ If you want to support Liminal's development, or the development of more Empathe
   // Return the build //
 
   @override
-  Widget build(BuildContext context) => LiminalScaffold(
+  Widget build(BuildContext context) {
+    return Consumer<AppInfoProvider>(
+      builder: (_, AppInfoProvider appInfo, __) => LiminalScaffold(
         GestureDetector(
           behavior: HitTestBehavior.opaque,
           onLongPressStart: (LongPressStartDetails details) async {
@@ -293,7 +298,7 @@ If you want to support Liminal's development, or the development of more Empathe
           onVerticalDragEnd: (DragEndDetails details) async {
             if (details.primaryVelocity != null) {
               if (details.primaryVelocity! < 0) {
-                await swipeUp();
+                await swipeUp(appInfo);
               }
             }
           },
@@ -336,10 +341,10 @@ If you want to support Liminal's development, or the development of more Empathe
                         if (notification.metrics.axis == Axis.horizontal ||
                             (notification as OverscrollNotification).overscroll <= 0) {
                           if (atBottom) {
-                            swipeUp();
+                            swipeUp(appInfo);
                             return true;
                           } else {
-                            openPause = Timer(
+                            overscrollPause = Timer(
                               scrollDelay,
                               () => setState(() => atBottom = true),
                             );
@@ -356,7 +361,7 @@ If you want to support Liminal's development, or the development of more Empathe
 
                       case const (ScrollEndNotification):
                         if (notification.metrics.pixels == notification.metrics.maxScrollExtent) {
-                          openPause = Timer(
+                          overscrollPause = Timer(
                             scrollDelay,
                             () => setState(() => atBottom = true),
                           );
@@ -372,15 +377,14 @@ If you want to support Liminal's development, or the development of more Empathe
                           onReorderItem: (int oldIndex, int newIndex) async {
                             if (oldIndex == newIndex) return;
                             await appInfo.reorderHomeItem(oldIndex: oldIndex, newIndex: newIndex);
-                            setState(() {});
                           },
-                          children: buildTiles(),
+                          children: buildTiles(appInfo),
                         )
                       : EzScrollView(
                           mainAxisAlignment: vAlign.mainAxis,
                           crossAxisAlignment: hAlign.crossAxis,
                           physics: const ClampingScrollPhysics(),
-                          children: buildTiles(),
+                          children: buildTiles(appInfo),
                         ),
                 ),
               ),
@@ -420,15 +424,14 @@ If you want to support Liminal's development, or the development of more Empathe
                 EzConfig.spacer,
 
                 // Add folder
-                AddFolderFAB(() async {
-                  await appInfo.addHomeFolder();
-                  setState(() {});
-                }),
+                AddFolderFAB(appInfo.addHomeFolder),
                 EzConfig.spacer,
 
                 // Settings
                 SettingsFAB(() => context.goNamed(settingsPath)),
               ]
             : null,
-      );
+      ),
+    );
+  }
 }
