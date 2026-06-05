@@ -21,6 +21,8 @@ enum AppLocation { home, folder, list }
 
 enum AppState { standard, singleEdit, groupEdit, verbose }
 
+enum ListContent { home, hidden, banished }
+
 //* BTS *//
 
 // Sort //
