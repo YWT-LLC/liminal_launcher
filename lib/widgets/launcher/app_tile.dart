@@ -11,6 +11,7 @@ import 'package:line_icons/line_icons.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class AppTile extends StatefulWidget {
+  final AppInfoProvider appInfo;
   final AppInfo app;
   final AppLocation location;
   final AppState state;
@@ -18,6 +19,7 @@ class AppTile extends StatefulWidget {
   final ValueNotifier<double>? rippleProgress;
 
   AppTile({
+    required this.appInfo,
     required this.app,
     required this.location,
     required this.state,
@@ -246,7 +248,7 @@ class _AppTileState extends State<AppTile> {
                         if (validateRename(name) != null) return null;
 
                         final bool success =
-                            await appInfo.renameApp(newName: name, appID: widget.app.id);
+                            await widget.appInfo.renameApp(newName: name, appID: widget.app.id);
                         if (success && dCon.mounted) Navigator.of(dCon).pop(name);
                       }
 
@@ -286,11 +288,11 @@ class _AppTileState extends State<AppTile> {
                 editSpacer(),
 
                 // Add to home
-                if (!appInfo.homeSet.contains(widget.app.id) &&
-                    !appInfo.hiddenSet.contains(widget.app.id)) ...<Widget>[
+                if (!widget.appInfo.homeSet.contains(widget.app.id) &&
+                    !widget.appInfo.hiddenSet.contains(widget.app.id)) ...<Widget>[
                   EzIconButton(
                     onPressed: () async {
-                      final bool success = await appInfo.addHomeApp(widget.app.id);
+                      final bool success = await widget.appInfo.addHomeApp(widget.app.id);
 
                       if (success && state == AppState.singleEdit) {
                         setState(() => state = AppState.standard);
@@ -305,7 +307,7 @@ class _AppTileState extends State<AppTile> {
                 if (!inList) ...<Widget>[
                   EzIconButton(
                     onPressed: () async {
-                      final bool success = await appInfo.removeHomeApp(widget.app.id);
+                      final bool success = await widget.appInfo.removeHomeApp(widget.app.id);
                       if (success && mounted) setState(() => state = AppState.standard);
                     },
                     icon: const Icon(Icons.remove),
@@ -316,13 +318,13 @@ class _AppTileState extends State<AppTile> {
                 // Show/hide
                 EzIconButton(
                   onPressed: () async {
-                    final bool success = appInfo.hiddenSet.contains(widget.app.id)
-                        ? await appInfo.showApp(widget.app.id)
-                        : await appInfo.hideApp(widget.app.id);
+                    final bool success = widget.appInfo.hiddenSet.contains(widget.app.id)
+                        ? await widget.appInfo.showApp(widget.app.id)
+                        : await widget.appInfo.hideApp(widget.app.id);
                     if (success && mounted) setState(() => state = AppState.standard);
                   },
                   icon: Icon(
-                    appInfo.hiddenSet.contains(widget.app.id)
+                    widget.appInfo.hiddenSet.contains(widget.app.id)
                         ? Icons.visibility
                         : Icons.visibility_off,
                   ),
@@ -332,7 +334,7 @@ class _AppTileState extends State<AppTile> {
                 // Banish
                 EzIconButton(
                   onPressed: () async {
-                    final bool banished = await appInfo.banishApp(widget.app.id);
+                    final bool banished = await widget.appInfo.banishApp(widget.app.id);
                     if (banished && mounted) setState(() => state = AppState.standard);
                   },
                   icon: const Icon(LineIcons.ghost),
@@ -346,7 +348,7 @@ class _AppTileState extends State<AppTile> {
                       final bool deleted = await deleteApp(context, widget.app);
 
                       if (deleted) {
-                        await appInfo.removeDeleted(widget.app.id);
+                        await widget.appInfo.removeDeleted(widget.app.id);
                         if (mounted) setState(() => state = AppState.standard);
                       }
                     },
