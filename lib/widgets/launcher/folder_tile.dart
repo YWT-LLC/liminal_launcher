@@ -241,11 +241,13 @@ class _AppFolderState extends State<FolderTile> {
                                       crossAxisAlignment: hAlign.crossAxis,
                                       children: <Widget>[
                                         // Drag handle
-                                        EzIcon(
-                                          Icons.drag_handle,
-                                          color: EzConfig.colors.outline,
-                                        ),
-                                        EzConfig.rowMargin,
+                                        if (state == AppState.groupEdit) ...<Widget>[
+                                          EzIcon(
+                                            Icons.drag_handle,
+                                            color: EzConfig.colors.outline,
+                                          ),
+                                          EzConfig.rowMargin,
+                                        ],
 
                                         // App tile
                                         AppButton(
@@ -265,11 +267,13 @@ class _AppFolderState extends State<FolderTile> {
                                         ),
 
                                         // Drag handle
-                                        EzConfig.rowMargin,
-                                        EzIcon(
-                                          Icons.drag_handle,
-                                          color: EzConfig.colors.outline,
-                                        ),
+                                        if (state == AppState.groupEdit) ...<Widget>[
+                                          EzConfig.rowMargin,
+                                          EzIcon(
+                                            Icons.drag_handle,
+                                            color: EzConfig.colors.outline,
+                                          ),
+                                        ],
                                       ],
                                     ),
                                   );

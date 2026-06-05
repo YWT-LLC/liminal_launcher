@@ -201,7 +201,7 @@ class _AppTileState extends State<AppTile> {
               reverseHands: true,
               showScrollHint: true,
               children: <Widget>[
-                if (!inList) ...<Widget>[
+                if (!inList && state != AppState.singleEdit) ...<Widget>[
                   // Drag handle
                   EzIcon(
                     Icons.drag_handle,
@@ -356,7 +356,7 @@ class _AppTileState extends State<AppTile> {
                   ),
                 ],
 
-                if (!inList) ...<Widget>[
+                if (!inList && state != AppState.singleEdit) ...<Widget>[
                   // Drag handle
                   EzIcon(
                     Icons.drag_handle,
