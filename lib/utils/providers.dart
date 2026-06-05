@@ -137,15 +137,10 @@ class AppInfoProvider extends ChangeNotifier {
   List<AppInfo> get apps => _apps;
   Map<String, AppInfo> get appMap => _appMap;
 
-  Set<String> get renamed => _renamedSet;
-
   Set<String> get homeSet => _homeSet;
   List<String> get homeList => _homeList;
 
   Set<String> get hiddenSet => _hiddenSet;
-  List<String> get hiddenList => _hiddenList;
-
-  Set<String> get banishedSet => _banishedSet;
 
   Set<String> hybridIDs(Set<ListContent> contents) => <String>{
         if (contents.contains(ListContent.home)) ..._homeSet,
@@ -264,10 +259,10 @@ class AppInfoProvider extends ChangeNotifier {
     _homeList[index] = name + folderSplit + (ids.isEmpty ? emptyTag : ids.join(folderSplit));
 
     for (final String id in oldSet.difference(newSet)) {
-      homeSet.remove(id);
+      _homeSet.remove(id);
     }
     for (final String id in newSet.difference(oldSet)) {
-      homeSet.add(id);
+      _homeSet.add(id);
     }
 
     await EzConfig.setStringList(homeIDsKey, _homeList);
@@ -321,7 +316,7 @@ class AppInfoProvider extends ChangeNotifier {
     }
     final BuildContext currContext = ezRootNav.currentContext!;
 
-    final AppInfo? currApp = appMap[appID];
+    final AppInfo? currApp = _appMap[appID];
     if (currApp == null) return false;
     final String name = currApp.name;
 
