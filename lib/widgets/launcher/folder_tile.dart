@@ -44,14 +44,17 @@ class _AppFolderState extends State<FolderTile> {
 
   // Define custom functions //
 
-  Widget editSpacer() => GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onLongPress: () => switch (state) {
-          AppState.standard || AppState.verbose || AppState.groupEdit => null,
-          AppState.singleEdit => setState(() => state = AppState.standard),
-        },
-        child: EzConfig.rowSpacer,
-      );
+  Widget rowSpacer() => switch (state) {
+        AppState.standard ||
+        AppState.groupEdit ||
+        AppState.verbose =>
+          SizedBox(height: EzConfig.iconSize, width: EzConfig.spacing),
+        AppState.singleEdit => GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onLongPress: () => setState(() => state = AppState.standard),
+            child: SizedBox(height: EzConfig.iconSize, width: EzConfig.spacing),
+          ),
+      };
 
   void rippling() {
     if (rippleThrottle != null ||
@@ -202,7 +205,7 @@ class _AppFolderState extends State<FolderTile> {
                     },
                   ),
                 ),
-                editSpacer(),
+                rowSpacer(),
 
                 // Edit apps
                 EzIconButton(
@@ -292,7 +295,7 @@ class _AppFolderState extends State<FolderTile> {
                     );
                   },
                 ),
-                editSpacer(),
+                rowSpacer(),
 
                 // Delete folder
                 EzIconButton(
