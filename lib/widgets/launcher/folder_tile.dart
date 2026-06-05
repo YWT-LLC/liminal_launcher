@@ -43,6 +43,7 @@ class _AppFolderState extends State<FolderTile> {
   // Define custom functions //
 
   Widget editSpacer() => GestureDetector(
+        behavior: HitTestBehavior.opaque,
         onLongPress: () => switch (state) {
           AppState.standard || AppState.verbose || AppState.groupEdit => null,
           AppState.singleEdit => setState(() => state = AppState.standard),

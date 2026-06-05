@@ -41,6 +41,7 @@ class _AppTileState extends State<AppTile> {
   // Define custom functions //
 
   Widget editSpacer() => GestureDetector(
+        behavior: HitTestBehavior.opaque,
         onLongPress: () => switch (state) {
           AppState.standard || AppState.verbose || AppState.groupEdit => null,
           AppState.singleEdit => setState(() => state = AppState.standard),
