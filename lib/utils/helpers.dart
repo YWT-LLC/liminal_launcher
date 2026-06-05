@@ -15,10 +15,7 @@ Future<bool> _externalAuth(String reason) async {
     biometricOnly: false,
   );
 
-  if (authed) {
-    await EzConfig.secSet(lastAuthKey, DateTime.now().toString());
-  }
-
+  if (authed) await EzConfig.secSet(lastAuthKey, DateTime.now().toString());
   return authed;
 }
 
@@ -33,9 +30,7 @@ Future<bool> liminalAuth(String reason) async {
   // Do the math
   final DateTime? saved = DateTime.tryParse(lastAuth);
 
-  if (saved == null || DateTime.now().difference(saved) > Duration(minutes: timeout)) {
-    return _externalAuth(reason);
-  } else {
-    return Future<bool>.value(true);
-  }
+  return (saved == null || DateTime.now().difference(saved) > Duration(minutes: timeout))
+      ? _externalAuth(reason)
+      : Future<bool>.value(true);
 }
