@@ -64,7 +64,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
           onPressed: () => context.pushNamed(
             appListPath,
             extra: ListConfig(
-              ids: appInfo.banishedSet,
+              contents: <ListContent>{ListContent.banished},
               include: false,
               onSelected: (String id) async {
                 final AppInfo? newApp = appInfo.appMap[id];

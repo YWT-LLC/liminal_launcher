@@ -90,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
       : context.goNamed(
           appListPath,
           extra: ListConfig(
-            ids: <String>{...appInfo.hiddenSet, ...appInfo.banishedSet},
+            contents: <ListContent>{ListContent.hidden, ListContent.banished},
             include: false,
             onSelected: (String id) => launchApp(id),
             title: null,
@@ -114,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
       context.goNamed(
         appListPath,
         extra: ListConfig(
-          ids: appInfo.hiddenSet,
+          contents: <ListContent>{ListContent.hidden},
           include: true,
           onSelected: (String id) => launchApp(id),
           title: EzTextBackground(EzRow(
@@ -402,10 +402,10 @@ If you want to support Liminal's development, or the development of more Empathe
                 AddAppFAB(() => context.goNamed(
                       appListPath,
                       extra: ListConfig(
-                        ids: <String>{
-                          ...appInfo.homeSet,
-                          ...appInfo.hiddenSet,
-                          ...appInfo.banishedSet,
+                        contents: <ListContent>{
+                          ListContent.home,
+                          ListContent.hidden,
+                          ListContent.banished,
                         },
                         include: false,
                         onSelected: (String id) => appInfo.addHomeApp(id),
@@ -413,10 +413,7 @@ If you want to support Liminal's development, or the development of more Empathe
                           reverseHands: false,
                           children: <Widget>[
                             Text('Home\t', style: EzConfig.labelStyle),
-                            EzIcon(
-                              Icons.add,
-                              color: EzConfig.colors.onSurface,
-                            ),
+                            EzIcon(Icons.add, color: EzConfig.colors.onSurface),
                           ],
                         )),
                       ),

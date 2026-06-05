@@ -14,14 +14,14 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class ListConfig {
   final Widget? title;
-  final Set<String> ids;
+  final Set<ListContent> contents;
   final bool include;
   final Future<void> Function(String id) onSelected;
 
   /// How the [AppListScreen] should behave
   const ListConfig({
     required this.title,
-    required this.ids,
+    required this.contents,
     required this.include,
     required this.onSelected,
   });
@@ -39,8 +39,6 @@ class AppListScreen extends StatefulWidget {
 class _AppListScreenState extends State<AppListScreen> {
   // Define the build data //
 
-  late Set<String> ids = widget.config.ids;
-
   final ScrollController scrollControl = ScrollController();
   final TextEditingController searchControl = TextEditingController();
 
@@ -54,10 +52,6 @@ class _AppListScreenState extends State<AppListScreen> {
 
   bool verbose = false;
   ValueNotifier<double> rippleProgress = ValueNotifier<double>(0.0);
-
-  // Define custom functions //
-
-  void onRemove(String id) => setState(() => ids.remove(id));
 
   // Return the build //
 
@@ -254,7 +248,8 @@ class _AppListScreenState extends State<AppListScreen> {
                     physics: const ClampingScrollPhysics(),
                     children: appInfo.apps
                         .where((AppInfo app) =>
-                            (ids.contains(app.id) == widget.config.include) &&
+                            (appInfo.hybridIDs(widget.config.contents).contains(app.id) ==
+                                widget.config.include) &&
                             (searching
                                 ? app.name.toLowerCase().contains(searchControl.text.toLowerCase())
                                 : true))
