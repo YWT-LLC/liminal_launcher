@@ -374,6 +374,7 @@ If you want to support Liminal's development, or the development of more Empathe
                   },
                   child: editing
                       ? ReorderableListView(
+                          // TODO: Fix the order bug (...again?)
                           onReorderItem: (int oldIndex, int newIndex) async {
                             if (oldIndex == newIndex) return;
                             await appInfo.reorderHomeItem(oldIndex: oldIndex, newIndex: newIndex);
