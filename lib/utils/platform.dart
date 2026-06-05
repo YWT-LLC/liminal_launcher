@@ -5,7 +5,6 @@
 
 import './export.dart';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
@@ -52,7 +51,7 @@ Future<void> openSettings(String appID) async {
 }
 
 /// Reminder: Android shows a built-in uninstall dialog
-Future<bool> deleteApp(BuildContext context, AppInfo app) async {
+Future<bool> deleteApp(AppInfo app) async {
   try {
     await platform.invokeMethod('deleteApp', <String, dynamic>{
       'packageName': app.package,

@@ -345,7 +345,7 @@ class _AppTileState extends State<AppTile> {
                   editSpacer(),
                   EzIconButton(
                     onPressed: () async {
-                      final bool deleted = await deleteApp(context, widget.app);
+                      final bool deleted = await deleteApp(widget.app);
 
                       if (deleted) {
                         await widget.appInfo.removeDeleted(widget.app.id);
