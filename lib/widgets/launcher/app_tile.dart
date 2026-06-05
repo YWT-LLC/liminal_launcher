@@ -42,22 +42,20 @@ class _AppTileState extends State<AppTile> {
 
   // Define custom functions //
 
-  Widget editSpacer() => GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onLongPress: () => switch (state) {
-          AppState.standard || AppState.verbose || AppState.groupEdit => null,
-          AppState.singleEdit => setState(() => state = AppState.standard),
-        },
-        child: state == AppState.verbose
-            ? SizedBox(
-                height: EzConfig.iconSize,
-                child: VerticalDivider(
-                  width: EzConfig.spacing,
-                  color: EzConfig.colors.secondary,
-                ),
-              )
-            : SizedBox(height: EzConfig.iconSize, width: EzConfig.spacing),
-      );
+  Widget rowSpacer() => switch (state) {
+        AppState.standard ||
+        AppState.groupEdit =>
+          SizedBox(height: EzConfig.iconSize, width: EzConfig.spacing),
+        AppState.verbose => SizedBox(
+            height: EzConfig.iconSize,
+            child: VerticalDivider(width: EzConfig.spacing, color: EzConfig.colors.secondary),
+          ),
+        AppState.singleEdit => GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onLongPress: () => setState(() => state = AppState.standard),
+            child: SizedBox(height: EzConfig.iconSize, width: EzConfig.spacing),
+          ),
+      };
 
   List<Widget> publisherLink() {
     final List<String> parts = widget.app.package.split('.');
@@ -79,7 +77,7 @@ class _AppTileState extends State<AppTile> {
               style: EzConfig.bodyStyle,
               textAlign: hAlign.textAlign,
             ),
-            editSpacer(),
+            rowSpacer(),
           ]
         : <Widget>[];
   }
@@ -167,11 +165,11 @@ class _AppTileState extends State<AppTile> {
                   buttonType: inFolder ? folderBT : listBT,
                   onPressed: () => widget.onSelected(widget.app.id),
                 ),
-                editSpacer(),
+                rowSpacer(),
 
                 // Publisher (plain text)
                 EzText(widget.app.package, textAlign: hAlign.textAlign),
-                editSpacer(),
+                rowSpacer(),
 
                 // Publisher (link)
                 ...publisherLink(),
@@ -185,7 +183,7 @@ class _AppTileState extends State<AppTile> {
                   ),
                   textAlign: hAlign.textAlign,
                 ),
-                editSpacer(),
+                rowSpacer(),
 
                 // Package size
                 EzText(
@@ -221,7 +219,7 @@ class _AppTileState extends State<AppTile> {
                       height: appIconSize,
                     ),
                   ),
-                  editSpacer(),
+                  rowSpacer(),
                 ],
 
                 // Info
@@ -232,7 +230,7 @@ class _AppTileState extends State<AppTile> {
                   },
                   icon: const Icon(Icons.info),
                 ),
-                editSpacer(),
+                rowSpacer(),
 
                 // Rename
                 EzIconButton(
@@ -285,7 +283,7 @@ class _AppTileState extends State<AppTile> {
                   ),
                   icon: const Icon(Icons.edit),
                 ),
-                editSpacer(),
+                rowSpacer(),
 
                 // Add to home
                 if (!widget.appInfo.homeSet.contains(widget.app.id) &&
@@ -300,7 +298,7 @@ class _AppTileState extends State<AppTile> {
                     },
                     icon: const Icon(Icons.add_to_home_screen),
                   ),
-                  editSpacer(),
+                  rowSpacer(),
                 ],
 
                 // Remove from home
@@ -312,7 +310,7 @@ class _AppTileState extends State<AppTile> {
                     },
                     icon: const Icon(Icons.remove),
                   ),
-                  editSpacer(),
+                  rowSpacer(),
                 ],
 
                 // Show/hide
@@ -329,7 +327,7 @@ class _AppTileState extends State<AppTile> {
                         : Icons.visibility_off,
                   ),
                 ),
-                editSpacer(),
+                rowSpacer(),
 
                 // Banish
                 EzIconButton(
@@ -342,7 +340,7 @@ class _AppTileState extends State<AppTile> {
 
                 // Delete
                 if (widget.app.removable) ...<Widget>[
-                  editSpacer(),
+                  rowSpacer(),
                   EzIconButton(
                     onPressed: () async {
                       final bool deleted = await deleteApp(widget.app);
