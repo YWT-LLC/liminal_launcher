@@ -7,7 +7,6 @@ import './export.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class LiminalCache extends EzAppCache {
@@ -139,9 +138,6 @@ class DesignCache {
 LiminalCache get _pointer => EzConfig.appCache! as LiminalCache;
 
 Lang get l10n => _pointer._l10n;
-
-AppInfoProvider get appInfo =>
-    Provider.of<AppInfoProvider>(ezRootNav.currentContext!, listen: false);
 
 String get leftSwipeID => EzConfig.get(leftSwipeIDKey);
 String get rightSwipeID => EzConfig.get(rightSwipeIDKey);
