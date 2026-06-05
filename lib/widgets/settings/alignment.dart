@@ -35,37 +35,23 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
 
   // Define custom functions //
 
-  Alignment merge() {
-    switch (h) {
-      case ListAlignment.start:
-        switch (v) {
-          case ListAlignment.start:
-            return Alignment.topLeft;
-          case ListAlignment.center:
-            return Alignment.centerLeft;
-          case ListAlignment.end:
-            return Alignment.bottomLeft;
-        }
-      case ListAlignment.center:
-        switch (v) {
-          case ListAlignment.start:
-            return Alignment.topCenter;
-          case ListAlignment.center:
-            return Alignment.center;
-          case ListAlignment.end:
-            return Alignment.bottomCenter;
-        }
-      case ListAlignment.end:
-        switch (v) {
-          case ListAlignment.start:
-            return Alignment.topRight;
-          case ListAlignment.center:
-            return Alignment.centerRight;
-          case ListAlignment.end:
-            return Alignment.bottomRight;
-        }
-    }
-  }
+  Alignment merge() => switch (h) {
+        ListAlignment.start => switch (v) {
+            ListAlignment.start => Alignment.topLeft,
+            ListAlignment.center => Alignment.centerLeft,
+            ListAlignment.end => Alignment.bottomLeft,
+          },
+        ListAlignment.center => switch (v) {
+            ListAlignment.start => Alignment.topCenter,
+            ListAlignment.center => Alignment.center,
+            ListAlignment.end => Alignment.bottomCenter,
+          },
+        ListAlignment.end => switch (v) {
+            ListAlignment.start => Alignment.topRight,
+            ListAlignment.center => Alignment.centerRight,
+            ListAlignment.end => Alignment.bottomRight,
+          },
+      };
 
   // Return the build //
 
