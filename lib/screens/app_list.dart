@@ -175,7 +175,7 @@ class _AppListScreenState extends State<AppListScreen> {
                                 border: InputBorder.none,
                                 isDense: true,
                               ),
-                              onChanged: (_) => setState(() {}), // TODO: test without
+                              onChanged: (_) => setState(() {}),
                             ),
                           ),
                         ],
