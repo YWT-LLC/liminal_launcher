@@ -8,6 +8,7 @@ import '../../../utils/export.dart';
 import '../../../widgets/export.dart';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
@@ -29,6 +30,8 @@ class _SwipeSelectorState extends State<SwipeSelector> {
 
     final String dir = widget.left ? 'Left' : 'Right';
     final String lowDir = dir.toLowerCase();
+
+    final AppInfoProvider appInfo = Provider.of<AppInfoProvider>(context); // TODO: test me too
 
     String? appID = EzConfig.get(widget._key);
     AppInfo app = (appID == null || appID.isEmpty) ? nullApp : appInfo.appMap[appID] ?? nullApp;
