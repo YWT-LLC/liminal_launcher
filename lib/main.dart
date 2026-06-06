@@ -21,7 +21,7 @@ void main() async {
 
   await SystemChrome.setPreferredOrientations(DeviceOrientation.values);
 
-  EzConfig.init(
+  EzCM.init(
     appName: appName,
     androidPackage: androidPackage,
     assetPaths: assetPaths,
@@ -94,14 +94,14 @@ class _TheMagic extends StatelessWidget {
         routerConfig: GoRouter(
           navigatorKey: ezRootNav,
           initialLocation: homePath,
-          errorBuilder: (_, __) => ErrorScreen(),
+          errorBuilder: (_, __) => const ErrorScreen(),
           routes: <RouteBase>[
             // Home
             GoRoute(
               path: homePath,
               name: homePath,
               pageBuilder: (BuildContext pbc, GoRouterState rs) =>
-                  ezPageBuilder(pbc, rs, HomeScreen()),
+                  ezPageBuilder(pbc, rs, const HomeScreen()),
               routes: <RouteBase>[
                 // App list
                 GoRoute(
@@ -129,7 +129,7 @@ class _TheMagic extends StatelessWidget {
                   path: settingsPath,
                   name: settingsPath,
                   pageBuilder: (BuildContext context, GoRouterState state) =>
-                      ezPageBuilder(context, state, SettingsScreen()),
+                      ezPageBuilder(context, state, const SettingsScreen()),
                 ),
               ],
             ),
