@@ -172,7 +172,7 @@ const Map<String, Type> allLimKeys = <String, Type>{
   ...limDesignKeys,
 };
 
-/// [EzConfig.init] passthrough
+/// [EzCM.init] passthrough
 final Set<String> neverResetKeys = <String>{
   ...limBTSKeys.keys,
   ...limGlobalKeys.keys,
