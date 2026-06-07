@@ -6,16 +6,17 @@
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-const EzUpdaterFAB updater = EzUpdaterFAB(
-  appVersion: '1.0.0',
-  versionSource:
-      'https://raw.githubusercontent.com/Empathetech-LLC/liminal_launcher/refs/heads/main/APP_VERSION',
-  gPlay: 'https://play.google.com/store/apps/details?id=net.empathetech.liminal_launcher',
-  github: 'https://github.com/Empathetech-LLC/liminal_launcher/releases',
-);
+EzUpdaterFAB updater(EzCP config) => EzUpdaterFAB(
+      config,
+      appVersion: '1.0.0',
+      versionSource:
+          'https://raw.githubusercontent.com/Empathetech-LLC/liminal_launcher/refs/heads/main/APP_VERSION',
+      gPlay: 'https://play.google.com/store/apps/details?id=net.empathetech.liminal_launcher',
+      github: 'https://github.com/Empathetech-LLC/liminal_launcher/releases',
+    );
 
 class AddAppFAB extends FloatingActionButton {
-  AddAppFAB(void Function() onPressed, {super.key})
+  AddAppFAB(EzCP config, void Function() onPressed, {super.key})
       : super(
           heroTag: 'add_app_fab',
           onPressed: onPressed,
@@ -25,7 +26,7 @@ class AddAppFAB extends FloatingActionButton {
 }
 
 class AddFolderFAB extends FloatingActionButton {
-  AddFolderFAB(void Function() onPressed, {super.key})
+  AddFolderFAB(EzCP config, void Function() onPressed, {super.key})
       : super(
           heroTag: 'add_folder_fab',
           onPressed: onPressed,
@@ -35,11 +36,11 @@ class AddFolderFAB extends FloatingActionButton {
 }
 
 class SettingsFAB extends FloatingActionButton {
-  SettingsFAB(void Function() onPressed, {super.key})
+  SettingsFAB(EzCP config, void Function() onPressed, {super.key})
       : super(
           heroTag: 'settings_fab',
           onPressed: onPressed,
-          tooltip: EzConfig.l10n.ssNavHint,
+          tooltip: config.efuiL10n.ssNavHint,
           child: EzIcon(Icons.settings),
         );
 }

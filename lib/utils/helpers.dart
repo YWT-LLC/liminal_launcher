@@ -15,14 +15,14 @@ Future<bool> _externalAuth(String reason) async {
     biometricOnly: false,
   );
 
-  if (authed) await EzConfig.secSet(lastAuthKey, DateTime.now().toString());
+  if (authed) await EzCM.secSet(lastAuthKey, DateTime.now().toString());
   return authed;
 }
 
 Future<bool> liminalAuth(String reason) async {
   final int timeout =
-      int.tryParse(await EzConfig.secGet(authTimeoutKey)) ?? (limSecDef[authTimeoutKey] as int);
-  final String lastAuth = await EzConfig.secGet(lastAuthKey);
+      int.tryParse(await EzCM.secGet(authTimeoutKey)) ?? (limSecDef[authTimeoutKey] as int);
+  final String lastAuth = await EzCM.secGet(lastAuthKey);
 
   // Check quick exit(s)
   if (timeout <= 0 || lastAuth.isEmpty) return _externalAuth(reason);

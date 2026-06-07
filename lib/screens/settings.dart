@@ -20,25 +20,26 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<EzCP>(
       builder: (_, EzCP config, __) => LiminalScaffold(
-        EzSettingsHub(
+        config,
+        body: EzSettingsHub(
           pages: <EzSettingsSection>[
             // Global //
 
             EzSettingsSection(
               position: 0,
-              title: config.l10n.gGlobal,
+              title: config.efuiL10n.gGlobal,
               icon: Icon(
                 EzCM.onMobile
                     ? EzCM.platform == TargetPlatform.iOS
                         ? Icons.phone_iphone
                         : Icons.phone_android
                     : Icons.computer,
-                semanticLabel: config.l10n.gGlobal,
+                semanticLabel: config.efuiL10n.gGlobal,
               ),
               subSettings: <EzSubSetting>[],
               fromStorage: () => EzSubSetting.blank,
               build: (_) => EzGlobalSettings(
-                resetTitle: () => config.l10n.ssResetAppearance,
+                resetTitle: () => config.efuiL10n.ssResetAppearance,
                 additionalSettings: <Widget>[
                   config.spacer,
                   const AppListSettings(),
@@ -182,10 +183,10 @@ class SettingsScreen extends StatelessWidget {
 
             EzSettingsSection(
               position: 1,
-              title: config.l10n.gColor,
+              title: config.efuiL10n.gColor,
               icon: Icon(
                 Icons.palette,
-                semanticLabel: config.l10n.gColor,
+                semanticLabel: config.efuiL10n.gColor,
               ),
               subSettings: <EzSubSetting>[
                 EzSubSetting.qckColor,
@@ -201,10 +202,10 @@ class SettingsScreen extends StatelessWidget {
 
             EzSettingsSection(
               position: 2,
-              title: config.l10n.gDesign,
+              title: config.efuiL10n.gDesign,
               icon: Icon(
                 Icons.design_services,
-                semanticLabel: config.l10n.gDesign,
+                semanticLabel: config.efuiL10n.gDesign,
               ),
               subSettings: <EzSubSetting>[
                 EzSubSetting.butDesign,
@@ -229,14 +230,16 @@ class SettingsScreen extends StatelessWidget {
                   config.spacer,
 
                   config.isDark
-                      ? const EzImageSetting(
+                      ? EzImageSetting(
+                          config,
                           pathKey: darkBackgroundImageKey,
                           fitKey: darkBackgroundFitKey,
                           label: 'Wallpaper',
                           allowSolidColor: true,
                           clearLabel: 'Use OS',
                         )
-                      : const EzImageSetting(
+                      : EzImageSetting(
+                          config,
                           pathKey: lightBackgroundImageKey,
                           fitKey: lightBackgroundFitKey,
                           label: 'Wallpaper',
@@ -278,10 +281,10 @@ class SettingsScreen extends StatelessWidget {
 
             EzSettingsSection(
               position: 3,
-              title: config.l10n.gText,
+              title: config.efuiL10n.gText,
               icon: Icon(
                 Icons.text_format,
-                semanticLabel: config.l10n.gText,
+                semanticLabel: config.efuiL10n.gText,
               ),
               subSettings: <EzSubSetting>[
                 EzSubSetting.qckText,
@@ -298,12 +301,12 @@ class SettingsScreen extends StatelessWidget {
           // Rebuild (conditional)
           if (config.needsRebuild) ...<Widget>[
             config.spacer,
-            const EzRebuildFAB(),
+            EzRebuildFAB(config),
           ],
 
           // Save/upload config
           config.spacer,
-          const EzConfigFAB(),
+          EzConfigFAB(config),
         ],
       ),
     );
