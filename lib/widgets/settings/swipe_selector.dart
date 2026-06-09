@@ -8,15 +8,17 @@ import '../../../utils/export.dart';
 import '../../../widgets/export.dart';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class SwipeSelector extends StatefulWidget {
+  final EzCP config;
+  final AppInfoProvider appInfo;
   final bool left;
   final String _key;
 
-  const SwipeSelector({super.key, required this.left})
+  const SwipeSelector(this.config, this.appInfo, {super.key, required this.left})
       : _key = left ? leftSwipeIDKey : rightSwipeIDKey;
 
   @override
@@ -31,56 +33,60 @@ class _SwipeSelectorState extends State<SwipeSelector> {
     final String dir = widget.left ? 'Left' : 'Right';
     final String lowDir = dir.toLowerCase();
 
-    final AppInfoProvider appInfo = Provider.of<AppInfoProvider>(context);
-
-    String? appID = EzConfig.get(widget._key);
-    AppInfo app = (appID == null || appID.isEmpty) ? nullApp : appInfo.appMap[appID] ?? nullApp;
+    String? appID = EzCM.get(widget._key);
+    AppInfo app =
+        (appID == null || appID.isEmpty) ? nullApp : widget.appInfo.appMap[appID] ?? nullApp;
 
     // Return the build //
 
     return EzRow(
+      widget.config,
       children: <Widget>[
         EzLink(
-          '$dir app',
-          textColor: EzConfig.colors.onSurface,
+          widget.config,
+          text: '$dir app',
+          textColor: widget.config.colors.onSurface,
           onTap: () => showDialog(
             context: context,
             builder: (_) => EzAlertDialog(
+              widget.config,
               content: Text(
                 'Choose a quick access app that will open when you swipe $lowDir on the home screen.',
-                style: EzConfig.bodyStyle,
+                style: widget.config.bodyStyle,
                 textAlign: TextAlign.center,
               ),
             ),
           ),
           hint: 'Choose app that opens on $lowDir swipe',
-          style: EzConfig.bodyStyle,
+          style: widget.config.bodyStyle,
         ),
-        EzMargin(vertical: false),
+        widget.config.rowMargin,
         AppButton(
+          widget.config,
           app: app,
-          labelType: listLabels,
-          buttonType: listBT,
+          labelType: listLabels(widget.config),
+          buttonType: listBT(widget.config),
           onPressed: () => context.pushNamed(
             appListPath,
             extra: ListConfig(
               contents: <ListContent>{ListContent.banished},
               include: false,
               onSelected: (String id) async {
-                final AppInfo? newApp = appInfo.appMap[id];
+                final AppInfo? newApp = widget.appInfo.appMap[id];
                 if (newApp == null || newApp == app) {
                   if (context.mounted) Navigator.of(context).pop();
                   return;
                 }
 
-                await EzConfig.setString(widget._key, id);
+                await EzCM.setString(widget._key, id);
                 setState(() => app = newApp);
 
                 if (context.mounted) Navigator.of(context).pop();
               },
               title: EzText(
-                'Selecting $lowDir swipe',
-                style: EzConfig.labelStyle,
+                widget.config,
+                text: 'Selecting $lowDir swipe',
+                style: widget.config.labelStyle,
               ),
             ),
           ),
@@ -88,7 +94,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
             appID = null;
             app = nullApp;
 
-            await EzConfig.remove(widget._key);
+            await EzCM.remove(widget._key);
             setState(() {});
           },
         ),

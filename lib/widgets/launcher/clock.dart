@@ -10,7 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class Clock extends StatefulWidget {
-  const Clock({super.key});
+  final EzCP config;
+
+  const Clock(this.config, {super.key});
 
   @override
   State<Clock> createState() => _ClockState();
@@ -24,7 +26,7 @@ class _ClockState extends State<Clock> {
   void initState() {
     super.initState();
 
-    ticker = homeTime
+    ticker = homeTime(widget.config)
         ? Timer.periodic(const Duration(seconds: 1), (_) {
             if (mounted) setState(() => now = DateTime.now());
           })
@@ -34,20 +36,21 @@ class _ClockState extends State<Clock> {
   }
 
   @override
-  Widget build(BuildContext context) => EzTextBackground(EzCol(
-        crossAxisAlignment: hAlign.crossAxis,
+  Widget build(BuildContext context) => EzTextBackground(widget.config,
+      text: EzCol(
+        crossAxisAlignment: hAlign(widget.config).crossAxis,
         children: <Widget>[
-          if (homeTime)
+          if (homeTime(widget.config))
             Text(
               TimeOfDay.fromDateTime(now).format(context),
-              style: EzConfig.headlineStyle,
-              textAlign: hAlign.textAlign,
+              style: widget.config.headlineStyle,
+              textAlign: hAlign(widget.config).textAlign,
             ),
-          if (homeDate != DateType.none)
+          if (homeDate(widget.config) != DateType.none)
             Text(
-              DateTypeConfig.buildDate(context, now, homeDate),
-              style: EzConfig.labelStyle,
-              textAlign: hAlign.textAlign,
+              DateTypeConfig.buildDate(context, now, homeDate(widget.config)),
+              style: widget.config.labelStyle,
+              textAlign: hAlign(widget.config).textAlign,
             ),
         ],
       ));

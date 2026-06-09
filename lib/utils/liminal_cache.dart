@@ -20,35 +20,33 @@ class LiminalCache extends EzAppCache {
         _l10n = l10n;
 
   @override
-  void init(bool isDark) => _buildLocalCache(darkInit: isDark);
+  void init(bool isDark) => _buildLocalCache(isDark);
 
   @override
-  Future<void> rebuild() async {
-    if (_locale != EzConfig.locale) {
-      _locale = EzConfig.locale;
-      _l10n = await Lang.delegate.load(EzConfig.locale);
+  Future<void> rebuild(EzCP config) async {
+    if (_locale != config.locale) {
+      _locale = config.locale;
+      _l10n = await Lang.delegate.load(config.locale);
     }
 
-    _buildLocalCache();
+    _buildLocalCache(config.isDark);
   }
 
-  void _buildLocalCache({bool? darkInit}) async {
-    final bool isDark = darkInit ?? EzConfig.isDark;
-
+  void _buildLocalCache(bool isDark) async {
     if (isDark) {
-      final bool listIcons = EzConfig.get(darkListIconKey);
-      final LabelType listLabels = LabelTypeConfig.lookup(EzConfig.get(darkListLabelTypeKey));
-      final bool elevatedLists = EzConfig.get(darkElevatedListKey);
+      final bool listIcons = EzCM.get(darkListIconKey);
+      final LabelType listLabels = LabelTypeConfig.lookup(EzCM.get(darkListLabelTypeKey));
+      final bool elevatedLists = EzCM.get(darkElevatedListKey);
 
-      final bool folderIcons = EzConfig.get(darkFolderIconKey);
-      final LabelType folderLabels = LabelTypeConfig.lookup(EzConfig.get(darkFolderLabelTypeKey));
-      final bool elevatedFolders = EzConfig.get(darkElevatedFolderKey);
+      final bool folderIcons = EzCM.get(darkFolderIconKey);
+      final LabelType folderLabels = LabelTypeConfig.lookup(EzCM.get(darkFolderLabelTypeKey));
+      final bool elevatedFolders = EzCM.get(darkElevatedFolderKey);
 
       _design = DesignCache(
-        homeDate: DateTypeConfig.lookup(EzConfig.get(darkHomeDateKey)),
-        homeTime: EzConfig.get(darkHomeTimeKey),
-        horizontalAlign: LAConfig.lookup(EzConfig.get(darkHorizontalAlignKey)),
-        verticalAlign: LAConfig.lookup(EzConfig.get(darkVerticalAlignKey)),
+        homeDate: DateTypeConfig.lookup(EzCM.get(darkHomeDateKey)),
+        homeTime: EzCM.get(darkHomeTimeKey),
+        horizontalAlign: LAConfig.lookup(EzCM.get(darkHorizontalAlignKey)),
+        verticalAlign: LAConfig.lookup(EzCM.get(darkVerticalAlignKey)),
         listIcons: listIcons,
         listLabels: listLabels,
         elevatedLists: elevatedLists,
@@ -57,22 +55,22 @@ class LiminalCache extends EzAppCache {
         folderLabels: folderLabels,
         elevatedFolders: elevatedFolders,
         folderBT: BTConfig.build(folderLabels, icons: folderIcons, elevated: elevatedFolders),
-        wideTiles: EzConfig.get(darkWideTilesKey),
+        wideTiles: EzCM.get(darkWideTilesKey),
       );
     } else {
-      final bool listIcons = EzConfig.get(lightListIconKey);
-      final LabelType listLabels = LabelTypeConfig.lookup(EzConfig.get(lightListLabelTypeKey));
-      final bool elevatedLists = EzConfig.get(lightElevatedListKey);
+      final bool listIcons = EzCM.get(lightListIconKey);
+      final LabelType listLabels = LabelTypeConfig.lookup(EzCM.get(lightListLabelTypeKey));
+      final bool elevatedLists = EzCM.get(lightElevatedListKey);
 
-      final bool folderIcons = EzConfig.get(lightFolderIconKey);
-      final LabelType folderLabels = LabelTypeConfig.lookup(EzConfig.get(lightFolderLabelTypeKey));
-      final bool elevatedFolders = EzConfig.get(lightElevatedFolderKey);
+      final bool folderIcons = EzCM.get(lightFolderIconKey);
+      final LabelType folderLabels = LabelTypeConfig.lookup(EzCM.get(lightFolderLabelTypeKey));
+      final bool elevatedFolders = EzCM.get(lightElevatedFolderKey);
 
       _design = DesignCache(
-        homeDate: DateTypeConfig.lookup(EzConfig.get(lightHomeDateKey)),
-        homeTime: EzConfig.get(lightHomeTimeKey),
-        horizontalAlign: LAConfig.lookup(EzConfig.get(lightHorizontalAlignKey)),
-        verticalAlign: LAConfig.lookup(EzConfig.get(lightVerticalAlignKey)),
+        homeDate: DateTypeConfig.lookup(EzCM.get(lightHomeDateKey)),
+        homeTime: EzCM.get(lightHomeTimeKey),
+        horizontalAlign: LAConfig.lookup(EzCM.get(lightHorizontalAlignKey)),
+        verticalAlign: LAConfig.lookup(EzCM.get(lightVerticalAlignKey)),
         listIcons: listIcons,
         listLabels: listLabels,
         elevatedLists: elevatedLists,
@@ -81,11 +79,11 @@ class LiminalCache extends EzAppCache {
         folderLabels: folderLabels,
         elevatedFolders: elevatedFolders,
         folderBT: BTConfig.build(folderLabels, icons: folderIcons, elevated: elevatedFolders),
-        wideTiles: EzConfig.get(lightWideTilesKey),
+        wideTiles: EzCM.get(lightWideTilesKey),
       );
     }
 
-    if (EzConfig.get(isDark ? darkHideStatusKey : lightHideStatusKey) == true) {
+    if (EzCM.get(isDark ? darkHideStatusKey : lightHideStatusKey) == true) {
       await SystemChrome.setEnabledSystemUIMode(
         SystemUiMode.manual,
         overlays: <SystemUiOverlay>[SystemUiOverlay.bottom],
@@ -135,28 +133,28 @@ class DesignCache {
   });
 }
 
-LiminalCache get _pointer => EzConfig.appCache! as LiminalCache;
+LiminalCache _pointer(EzCP config) => config.appCache! as LiminalCache;
 
-Lang get l10n => _pointer._l10n;
+Lang l10n(EzCP config) => _pointer(config)._l10n;
 
-String get leftSwipeID => EzConfig.get(leftSwipeIDKey);
-String get rightSwipeID => EzConfig.get(rightSwipeIDKey);
+String leftSwipeID(EzCP config) => EzCM.get(leftSwipeIDKey);
+String rightSwipeID(EzCP config) => EzCM.get(rightSwipeIDKey);
 
-bool get listIcons => _pointer._design.listIcons;
-LabelType get listLabels => _pointer._design.listLabels;
-bool get elevatedLists => _pointer._design.elevatedLists;
-ButtonType get listBT => _pointer._design.listBT;
+bool listIcons(EzCP config) => _pointer(config)._design.listIcons;
+LabelType listLabels(EzCP config) => _pointer(config)._design.listLabels;
+bool elevatedLists(EzCP config) => _pointer(config)._design.elevatedLists;
+ButtonType listBT(EzCP config) => _pointer(config)._design.listBT;
 
-bool get folderIcons => _pointer._design.folderIcons;
-LabelType get folderLabels => _pointer._design.folderLabels;
-bool get elevatedFolders => _pointer._design.elevatedFolders;
-ButtonType get folderBT => _pointer._design.folderBT;
+bool folderIcons(EzCP config) => _pointer(config)._design.folderIcons;
+LabelType folderLabels(EzCP config) => _pointer(config)._design.folderLabels;
+bool elevatedFolders(EzCP config) => _pointer(config)._design.elevatedFolders;
+ButtonType folderBT(EzCP config) => _pointer(config)._design.folderBT;
 
-bool get wideTiles => _pointer._design.wideTiles;
-double get appIconSize => EzConfig.iconSize + EzConfig.padding;
+bool wideTiles(EzCP config) => _pointer(config)._design.wideTiles;
+double appIconSize(EzCP config) => config.iconSize + config.padding;
 
-DateType get homeDate => _pointer._design.homeDate;
-bool get homeTime => _pointer._design.homeTime;
+DateType homeDate(EzCP config) => _pointer(config)._design.homeDate;
+bool homeTime(EzCP config) => _pointer(config)._design.homeTime;
 
-ListAlignment get hAlign => _pointer._design.horizontalAlign;
-ListAlignment get vAlign => _pointer._design.verticalAlign;
+ListAlignment hAlign(EzCP config) => _pointer(config)._design.horizontalAlign;
+ListAlignment vAlign(EzCP config) => _pointer(config)._design.verticalAlign;

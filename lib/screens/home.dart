@@ -17,7 +17,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen() : super(key: ValueKey<int>(EzConfig.seed));
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -34,19 +34,19 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
   // Define custom functions //
 
-  Widget clock() => (homeTime || homeDate != DateType.none)
+  Widget clock(EzCP config) => (homeTime(config) || homeDate(config) != DateType.none)
       ? Padding(
           padding: EdgeInsets.only(
-            top: vAlign == ListAlignment.start ? 0 : EzConfig.spacing,
-            bottom: vAlign == ListAlignment.start ? EzConfig.spacing : 0,
+            top: vAlign(config) == ListAlignment.start ? 0 : config.spacing,
+            bottom: vAlign(config) == ListAlignment.start ? config.spacing : 0,
           ),
-          child: const Clock(),
+          child: Clock(config),
         )
       : const SizedBox.shrink();
 
   /// appProvider.homeList -> AppTile/FolderTile
-  List<Widget> buildTiles(AppInfoProvider appInfo) {
-    final EdgeInsets tilePadding = EdgeInsets.symmetric(vertical: EzConfig.spacing / 2);
+  List<Widget> buildTiles(EzCP config, AppInfoProvider appInfo) {
+    final EdgeInsets tilePadding = EdgeInsets.symmetric(vertical: config.spacing / 2);
     final List<Widget> tileList = <Widget>[];
 
     for (int index = 0; index < appInfo.homeList.length; index++) {
@@ -58,6 +58,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           key: ValueKey<String>('${parts[0]}_$index'),
           padding: tilePadding,
           child: FolderTile(
+            config,
             appInfo: appInfo,
             index: index,
             state: editing ? AppState.groupEdit : AppState.standard,
@@ -71,6 +72,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           key: ValueKey<String>(app.id),
           padding: tilePadding,
           child: AppTile(
+            config,
             appInfo: appInfo,
             app: app,
             location: AppLocation.home,
@@ -85,8 +87,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     return tileList;
   }
 
-  Future<void> swipeUp(AppInfoProvider appInfo) async => (editing)
-      ? await navToHidden(appInfo)
+  Future<void> swipeUp(EzCP config, AppInfoProvider appInfo) async => (editing)
+      ? await navToHidden(config, appInfo)
       : context.goNamed(
           appListPath,
           extra: ListConfig(
@@ -97,8 +99,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           ),
         );
 
-  Future<void> navToHidden(AppInfoProvider appInfo) async {
-    if (bool.tryParse(await EzConfig.secGet(authForHiddenKey)) == true) {
+  Future<void> navToHidden(EzCP config, AppInfoProvider appInfo) async {
+    if (bool.tryParse(await EzCM.secGet(authForHiddenKey)) == true) {
       bool authed = false;
 
       try {
@@ -117,16 +119,19 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           contents: <ListContent>{ListContent.hidden},
           include: true,
           onSelected: (String id) => launchApp(id),
-          title: EzTextBackground(EzRow(
-            reverseHands: false,
-            children: <Widget>[
-              Text('Hidden\t', style: EzConfig.labelStyle),
-              EzIcon(
-                Icons.visibility_off,
-                color: EzConfig.colors.onSurface,
-              ),
-            ],
-          )),
+          title: EzTextBackground(config,
+              text: EzRow(
+                config,
+                reverseHands: false,
+                children: <Widget>[
+                  Text('Hidden\t', style: config.labelStyle),
+                  EzIcon(
+                    config,
+                    Icons.visibility_off,
+                    color: config.colors.onSurface,
+                  ),
+                ],
+              )),
         ),
       );
     }
@@ -136,75 +141,80 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
   @override
   void afterFirstLayout(BuildContext context) async {
+    final EzCP config = Provider.of<EzCP>(context, listen: false);
+
     // Check for welcome message
-    if (!EzConfig.get(shownIntroKey)) {
+    if (!EzCM.get(shownIntroKey)) {
       final bool isGPlay = await isGPlayInstall();
 
       if (context.mounted) {
         await ezModal(
+          config,
           context: context,
-          builder: (_) => ezModalScroll(<Widget>[
+          builder: (_) => ezModalScroll(config, children: <Widget>[
             Text(
               'Welcome to Liminal Launcher',
               textAlign: TextAlign.center,
-              style: EzConfig.titleStyle,
+              style: config.titleStyle,
             ),
             Text(
               'I hope it serves you well!',
               textAlign: TextAlign.center,
-              style: EzConfig.bodyStyle,
+              style: config.bodyStyle,
             ),
-            EzConfig.centerLine,
+            config.centerLine,
             Text(
               "It's geared toward minimalism, but with limitless customization.\nWho said minimal has to be boring?",
               textAlign: TextAlign.center,
-              style: EzConfig.bodyStyle,
+              style: config.bodyStyle,
             ),
-            EzConfig.centerLine,
+            config.centerLine,
             EzRichText(
-              <InlineSpan>[
+              config,
+              children: <InlineSpan>[
                 EzPlainText(
                   text:
                       '''Personalizing your launcher should be straightforward, with one potential exception: the dark and light theme appearances can be completely separate!
                 
 While in the relevant settings, you will see a toggle-able icon that indicates whether you're editing the dark ''',
-                  style: EzConfig.bodyStyle,
+                  style: config.bodyStyle,
                 ),
                 WidgetSpan(
                   alignment: PlaceholderAlignment.middle,
-                  child: EzIcon(Icons.dark_mode),
+                  child: EzIcon(config, Icons.dark_mode),
                 ),
                 EzPlainText(
                   text: ', light ',
-                  style: EzConfig.bodyStyle,
+                  style: config.bodyStyle,
                 ),
                 WidgetSpan(
                   alignment: PlaceholderAlignment.middle,
-                  child: EzIcon(Icons.light_mode),
+                  child: EzIcon(config, Icons.light_mode),
                 ),
                 EzPlainText(
                   text: ', or both ',
-                  style: EzConfig.bodyStyle,
+                  style: config.bodyStyle,
                 ),
                 WidgetSpan(
                   alignment: PlaceholderAlignment.middle,
                   child: FaIcon(
                     FontAwesomeIcons.yinYang,
-                    size: EzConfig.iconSize,
+                    size: config.iconSize,
                   ),
                 ),
                 EzPlainText(
                   text: " themes.\n\nLong press the home screen to edit, and you're off!",
-                  style: EzConfig.bodyStyle,
+                  style: config.bodyStyle,
                 ),
               ],
               textAlign: TextAlign.center,
-              style: EzConfig.bodyStyle,
+              style: config.bodyStyle,
             ),
             if (!isGPlay) ...<Widget>[
-              EzConfig.divider,
+              config.divider,
               EzRichText(
-                <InlineSpan>[
+                config,
+                children: <InlineSpan>[
                   const EzPlainText(
                     text: '''This version is not from the Play Store, so it should have been free.
 Rest assured, the free version of Liminal will always be identical to the Google Play version.
@@ -212,8 +222,9 @@ Rest assured, the free version of Liminal will always be identical to the Google
 If you want to support Liminal's development, or the development of more Empathetech software, please consider ''',
                   ),
                   EzInlineLink(
-                    'contributing',
-                    style: EzConfig.bodyStyle,
+                    config,
+                    text: 'contributing',
+                    style: config.bodyStyle,
                     textAlign: TextAlign.center,
                     url: Uri.parse('https://www.empathetech.net/#/contribute'),
                     hint: 'Open a link to the Empathetic contribution options.',
@@ -223,22 +234,22 @@ If you want to support Liminal's development, or the development of more Empathe
                         '.\n\nThis is the only non-tutorial pop-up, and its only appearance this install.',
                   ),
                 ],
-                style: EzConfig.bodyStyle,
+                style: config.bodyStyle,
                 textBackground: false,
                 textAlign: TextAlign.center,
               ),
             ],
-            EzConfig.centerLine,
+            config.centerLine,
             Text(
               'Thank you, and enjoy!',
               textAlign: TextAlign.center,
-              style: EzConfig.bodyStyle,
+              style: config.bodyStyle,
             ),
-            EzConfig.separator,
+            config.separator,
           ]),
         );
       }
-      await EzConfig.setBool(shownIntroKey, true);
+      await EzCM.setBool(shownIntroKey, true);
     }
   }
 
@@ -246,12 +257,13 @@ If you want to support Liminal's development, or the development of more Empathe
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppInfoProvider>(
-      builder: (_, AppInfoProvider appInfo, __) => LiminalScaffold(
-        GestureDetector(
+    return Consumer2<AppInfoProvider, EzCP>(
+      builder: (_, AppInfoProvider appInfo, EzCP config, __) => LiminalScaffold(
+        config,
+        body: GestureDetector(
           behavior: HitTestBehavior.opaque,
           onLongPressStart: (LongPressStartDetails details) async {
-            if (!editing && (bool.tryParse(await EzConfig.secGet(authToEditKey)) == true)) {
+            if (!editing && (bool.tryParse(await EzCM.secGet(authToEditKey)) == true)) {
               // Check every time so no reset is required; O(1)
               bool authed = false;
 
@@ -264,7 +276,7 @@ If you want to support Liminal's development, or the development of more Empathe
               if (!authed) return;
             }
 
-            final Duration animDur = ezAnimDuration(mod: rippleMod);
+            final Duration animDur = ezDuration(config.animDur, mod: rippleMod);
             if (context.mounted) {
               if (animDur <= Duration.zero) {
                 setState(() => editing = !editing);
@@ -281,7 +293,7 @@ If you want to support Liminal's development, or the development of more Empathe
                 width: widthOf(context),
                 height: heightOf(context),
                 position: details.globalPosition,
-                color: EzConfig.colors.primary,
+                color: config.colors.primary,
                 oMin: focusOpacity,
               );
               Overlay.of(context).insert(ripple);
@@ -298,7 +310,7 @@ If you want to support Liminal's development, or the development of more Empathe
           onVerticalDragEnd: (DragEndDetails details) async {
             if (details.primaryVelocity != null) {
               if (details.primaryVelocity! < 0) {
-                await swipeUp(appInfo);
+                await swipeUp(config, appInfo);
               }
             }
           },
@@ -311,14 +323,14 @@ If you want to support Liminal's development, or the development of more Empathe
                 if (editing) {
                   doNothing();
                 } else {
-                  toLaunch = appInfo.appMap[leftSwipeID];
+                  toLaunch = appInfo.appMap[leftSwipeID(config)];
                 }
               } else {
                 // Swiped right
                 if (editing) {
                   setState(() => editing = false);
                 } else {
-                  toLaunch = appInfo.appMap[rightSwipeID];
+                  toLaunch = appInfo.appMap[rightSwipeID(config)];
                 }
               }
 
@@ -326,11 +338,11 @@ If you want to support Liminal's development, or the development of more Empathe
             }
           },
           child: EzCol(
-            mainAxisAlignment: vAlign.mainAxis,
-            crossAxisAlignment: hAlign.crossAxis,
+            mainAxisAlignment: vAlign(config).mainAxis,
+            crossAxisAlignment: hAlign(config).crossAxis,
             children: <Widget>[
               // Clock I
-              if (vAlign == ListAlignment.start) clock(),
+              if (vAlign(config) == ListAlignment.start) clock(config),
 
               // App list
               Expanded(
@@ -341,7 +353,7 @@ If you want to support Liminal's development, or the development of more Empathe
                         if (notification.metrics.axis == Axis.horizontal ||
                             (notification as OverscrollNotification).overscroll <= 0) {
                           if (atBottom) {
-                            swipeUp(appInfo);
+                            swipeUp(config, appInfo);
                             return true;
                           } else {
                             overscrollPause = Timer(
@@ -379,56 +391,66 @@ If you want to support Liminal's development, or the development of more Empathe
                             if (oldIndex == newIndex) return;
                             await appInfo.reorderHomeItem(oldIndex: oldIndex, newIndex: newIndex);
                           },
-                          children: buildTiles(appInfo),
+                          children: buildTiles(config, appInfo),
                         )
                       : EzScrollView(
-                          mainAxisAlignment: vAlign.mainAxis,
-                          crossAxisAlignment: hAlign.crossAxis,
+                          config,
+                          mainAxisAlignment: vAlign(config).mainAxis,
+                          crossAxisAlignment: hAlign(config).crossAxis,
                           physics: const ClampingScrollPhysics(),
-                          children: buildTiles(appInfo),
+                          children: buildTiles(config, appInfo),
                         ),
                 ),
               ),
 
               // Clock II
-              if (vAlign == ListAlignment.end) clock(),
+              if (vAlign(config) == ListAlignment.end) clock(config),
             ],
           ),
         ),
         fabs: editing
             ? <Widget>[
-                EzConfig.spacer,
+                config.spacer,
 
                 // Add app
-                AddAppFAB(() => context.goNamed(
-                      appListPath,
-                      extra: ListConfig(
-                        contents: <ListContent>{
-                          ListContent.home,
-                          ListContent.hidden,
-                          ListContent.banished,
-                        },
-                        include: false,
-                        onSelected: (String id) => appInfo.addHomeApp(id),
-                        title: EzTextBackground(EzRow(
-                          reverseHands: false,
-                          children: <Widget>[
-                            Text('Home\t', style: EzConfig.labelStyle),
-                            EzIcon(Icons.add, color: EzConfig.colors.onSurface),
-                          ],
-                        )),
-                      ),
-                    )),
-                EzConfig.spacer,
+                AddAppFAB(
+                  config,
+                  () => context.goNamed(
+                    appListPath,
+                    extra: ListConfig(
+                      contents: <ListContent>{
+                        ListContent.home,
+                        ListContent.hidden,
+                        ListContent.banished,
+                      },
+                      include: false,
+                      onSelected: (String id) => appInfo.addHomeApp(id),
+                      title: EzTextBackground(config,
+                          text: EzRow(
+                            config,
+                            reverseHands: false,
+                            children: <Widget>[
+                              Text('Home\t', style: config.labelStyle),
+                              EzIcon(config, Icons.add, color: config.colors.onSurface),
+                            ],
+                          )),
+                    ),
+                  ),
+                ),
+                config.spacer,
 
                 // Add folder
-                AddFolderFAB(appInfo.addHomeFolder),
-                EzConfig.spacer,
+                AddFolderFAB(config, appInfo.addHomeFolder),
+                config.spacer,
 
                 // Settings
-                SettingsFAB(() => context.goNamed(settingsPath)),
+                SettingsFAB(
+                  config,
+                  () => context.goNamed(settingsPath),
+                ),
               ]
             : null,
+        isHome: true,
       ),
     );
   }

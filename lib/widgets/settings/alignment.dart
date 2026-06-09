@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class AlignmentSelectors extends StatefulWidget {
-  const AlignmentSelectors({super.key});
+  final EzCP config;
+
+  const AlignmentSelectors(this.config, {super.key});
 
   @override
   State<AlignmentSelectors> createState() => _AlignmentSelectorsState();
@@ -30,8 +32,8 @@ const List<ButtonSegment<ListAlignment>> alignmentSegments = <ButtonSegment<List
 class _AlignmentSelectorsState extends State<AlignmentSelectors> {
   // Define the build data //
 
-  ListAlignment h = hAlign;
-  ListAlignment v = vAlign;
+  late ListAlignment h = hAlign(widget.config);
+  late ListAlignment v = vAlign(widget.config);
 
   // Define custom functions //
 
@@ -59,19 +61,19 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
   Widget build(BuildContext context) => EzCol(children: <Widget>[
         // Preview
         Container(
-          color: EzConfig.colors.onSurface,
+          color: widget.config.colors.onSurface,
           height: heightOf(context) * _sizeMod,
           width: widthOf(context) * _sizeMod,
           child: Stack(children: <Widget>[
             // Background
             Container(
               decoration: BoxDecoration(
-                color: EzConfig.colors.surface,
-                image: (EzConfig.backgroundImagePath == noImageValue)
+                color: widget.config.colors.surface,
+                image: (widget.config.backgroundImagePath == noImageValue)
                     ? null
-                    : EzConfig.backgroundImage,
+                    : widget.config.backgroundImage,
               ),
-              margin: EdgeInsets.all(EzConfig.marginVal * _sizeMod),
+              margin: EdgeInsets.all(widget.config.marginVal * _sizeMod),
             ),
 
             // Aligned circular icon
@@ -81,15 +83,15 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
                 child: Image.asset(
                   appIconPath,
                   semanticLabel: 'Liminal Launcher icon used for alignment preview',
-                  width: appIconSize,
-                  height: appIconSize,
+                  width: appIconSize(widget.config),
+                  height: appIconSize(widget.config),
                   fit: BoxFit.cover,
                 ),
               ),
             ),
           ]),
         ),
-        EzConfig.separator,
+        widget.config.separator,
 
         // Controls
         EzWrap(children: <Widget>[
@@ -102,17 +104,17 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
               if (choice?.first == null) return;
               final ListAlignment selected = choice!.first;
 
-              if (EzConfig.updateBoth || EzConfig.isDark) {
-                await EzConfig.setString(darkHorizontalAlignKey, selected.value);
+              if (EzCM.updateBoth || widget.config.isDark) {
+                await EzCM.setString(darkHorizontalAlignKey, selected.value);
               }
-              if (EzConfig.updateBoth || !EzConfig.isDark) {
-                await EzConfig.setString(lightHorizontalAlignKey, selected.value);
+              if (EzCM.updateBoth || !widget.config.isDark) {
+                await EzCM.setString(lightHorizontalAlignKey, selected.value);
               }
 
               setState(() => h = selected);
             },
           ),
-          EzConfig.spacer,
+          widget.config.spacer,
 
           // Vertical
           SegmentedButton<ListAlignment>(
@@ -124,11 +126,11 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
               if (choice?.first == null) return;
               final ListAlignment selected = choice!.first;
 
-              if (EzConfig.updateBoth || EzConfig.isDark) {
-                await EzConfig.setString(darkVerticalAlignKey, selected.value);
+              if (EzCM.updateBoth || widget.config.isDark) {
+                await EzCM.setString(darkVerticalAlignKey, selected.value);
               }
-              if (EzConfig.updateBoth || !EzConfig.isDark) {
-                await EzConfig.setString(lightVerticalAlignKey, selected.value);
+              if (EzCM.updateBoth || !widget.config.isDark) {
+                await EzCM.setString(lightVerticalAlignKey, selected.value);
               }
 
               setState(() => v = selected);

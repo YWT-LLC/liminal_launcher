@@ -10,51 +10,58 @@ import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class AppSecSettings extends StatelessWidget {
+  final EzCP config;
   final TextEditingController _timeoutText;
   final ScrollController _timeoutScroll;
 
-  AppSecSettings({super.key})
+  AppSecSettings(this.config, {super.key})
       : _timeoutText = TextEditingController(),
         _timeoutScroll = ScrollController();
 
   @override
   Widget build(BuildContext context) => EzElevatedIconButton(
+        config,
         label: 'Security',
         icon: const Icon(Icons.security),
         onPressed: () async {
           final Size fieldSize = ezTextSize(
             '55',
             context: context,
-            style: EzConfig.bodyStyle,
+            style: config.bodyStyle,
           );
 
-          final int timeoutBackup = int.tryParse(await EzConfig.secGet(authTimeoutKey)) ??
-              (limSecDef[authTimeoutKey] as int);
+          final int timeoutBackup =
+              int.tryParse(await EzCM.secGet(authTimeoutKey)) ?? (limSecDef[authTimeoutKey] as int);
           _timeoutText.text = timeoutBackup.toString();
 
           if (context.mounted) {
             await ezModal(
+              config,
               context: context,
               builder: (_) => ezModalScroll(
-                <Widget>[
+                config,
+                children: <Widget>[
                   // Auth to edit
-                  const EzSwitchPair(
+                  EzSwitchPair(
+                    config,
                     text: 'Auth to edit lists/settings',
                     valueKey: authToEditKey,
                     secureKey: true,
                   ),
-                  EzConfig.spacer,
+                  config.spacer,
 
                   // Auth for hidden
-                  const EzSwitchPair(
+                  EzSwitchPair(
+                    config,
                     text: 'Auth to see hidden apps',
                     valueKey: authForHiddenKey,
                     secureKey: true,
                   ),
-                  EzConfig.spacer,
+                  config.spacer,
 
                   // Re-auth timer
                   EzRow(
+                    config,
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
@@ -63,18 +70,17 @@ class AppSecSettings extends StatelessWidget {
                         child: Text(
                           'Auth timeout (mins)',
                           textAlign: TextAlign.start,
-                          style: EzConfig.bodyStyle,
+                          style: config.bodyStyle,
                         ),
                       ),
-                      EzConfig.rowSpacer,
+                      config.rowSpacer,
 
                       // Field
                       ConstrainedBox(
                         constraints: BoxConstraints(
                           maxHeight:
-                              max(fieldSize.height + EzConfig.padding, kMinInteractiveDimension),
-                          maxWidth:
-                              max(fieldSize.width + EzConfig.padding, kMinInteractiveDimension),
+                              max(fieldSize.height + config.padding, kMinInteractiveDimension),
+                          maxWidth: max(fieldSize.width + config.padding, kMinInteractiveDimension),
                         ),
                         child: TextFormField(
                           controller: _timeoutText,
@@ -90,7 +96,7 @@ class AppSecSettings extends StatelessWidget {
                             // Scroll to the bottom
                             await _timeoutScroll.animateTo(
                               _timeoutScroll.position.maxScrollExtent,
-                              duration: ezAnimDuration(),
+                              duration: ezDuration(config.animDur),
                               curve: Curves.easeInOut,
                             );
                           },
@@ -109,14 +115,14 @@ class AppSecSettings extends StatelessWidget {
                             if (intVal == null || intVal < 0) {
                               return;
                             }
-                            await EzConfig.secSet(authTimeoutKey, intVal.toString());
+                            await EzCM.secSet(authTimeoutKey, intVal.toString());
                           },
                         ),
                       ),
                     ],
                   ),
-                  EzSpacer(space: MediaQuery.of(context).viewInsets.bottom),
-                  EzConfig.separator,
+                  EzSpacer(MediaQuery.of(context).viewInsets.bottom),
+                  config.separator,
                 ],
                 controller: _timeoutScroll,
               ),

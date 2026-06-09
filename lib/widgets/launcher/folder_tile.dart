@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class FolderTile extends StatefulWidget {
+  final EzCP config;
   final AppInfoProvider appInfo;
   final int index;
   final AppState state;
@@ -19,7 +20,8 @@ class FolderTile extends StatefulWidget {
   late final String _name;
   late final List<String> _appList;
 
-  FolderTile({
+  FolderTile(
+    this.config, {
     required this.appInfo,
     required this.index,
     required this.state,
@@ -48,11 +50,11 @@ class _AppFolderState extends State<FolderTile> {
         AppState.standard ||
         AppState.groupEdit ||
         AppState.verbose =>
-          SizedBox(height: EzConfig.iconSize, width: EzConfig.spacing),
+          SizedBox(height: widget.config.iconSize, width: widget.config.spacing),
         AppState.singleEdit => GestureDetector(
             behavior: HitTestBehavior.opaque,
             onLongPress: () => setState(() => state = AppState.standard),
-            child: SizedBox(height: EzConfig.iconSize, width: EzConfig.spacing),
+            child: SizedBox(height: widget.config.iconSize, width: widget.config.spacing),
           ),
       };
 
@@ -71,7 +73,7 @@ class _AppFolderState extends State<FolderTile> {
             AppState.groupEdit => AppState.singleEdit,
           });
 
-      final Duration animDur = ezAnimDuration(mod: rippleMod);
+      final Duration animDur = ezDuration(widget.config.animDur, mod: rippleMod);
       rippleThrottle = Timer(
         (animDur + const Duration(milliseconds: 50)) - (animDur * widget.rippleProgress!.value),
         () => rippleThrottle = null,
@@ -91,6 +93,7 @@ class _AppFolderState extends State<FolderTile> {
 
   @override
   Widget build(BuildContext context) => EzAnimSwitch(
+        widget.config,
         mod: 0.667,
         forceType: EzTransitionType.none,
         forceFade: true,
@@ -99,8 +102,9 @@ class _AppFolderState extends State<FolderTile> {
               ? TapRegion(
                   onTapOutside: (_) => setState(() => open = !open),
                   child: EzScrollView(
+                    widget.config,
                     scrollDirection: Axis.horizontal,
-                    mainAxisAlignment: hAlign.mainAxis,
+                    mainAxisAlignment: hAlign(widget.config).mainAxis,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: widget._appList
                         .map((String id) {
@@ -108,8 +112,9 @@ class _AppFolderState extends State<FolderTile> {
                           if (app == null) return null;
 
                           return Padding(
-                            padding: EdgeInsets.symmetric(horizontal: EzConfig.spacing / 2),
+                            padding: EdgeInsets.symmetric(horizontal: widget.config.spacing / 2),
                             child: AppTile(
+                              widget.config,
                               appInfo: widget.appInfo,
                               app: app,
                               location: AppLocation.folder,
@@ -122,40 +127,44 @@ class _AppFolderState extends State<FolderTile> {
                         .toList(),
                   ),
                 )
-              : wideTiles
+              : wideTiles(widget.config)
                   ? InkWell(
                       onTap: () => setState(() => open = !open),
                       onLongPress: () => setState(() => state = AppState.singleEdit),
                       child: Container(
                         width: double.infinity,
-                        decoration: ShapeDecoration(shape: EzConfig.buttonShape.shape),
+                        decoration: ShapeDecoration(shape: widget.config.buttonShape.shape),
                         child: FolderButton(
+                          widget.config,
                           name: widget._name,
-                          buttonType: folderBT,
-                          labelType: folderLabels,
+                          buttonType: folderBT(widget.config),
+                          labelType: folderLabels(widget.config),
                           onPressed: () => setState(() => open = !open),
                           onLongPress: () => setState(() => state = AppState.singleEdit),
                         ),
                       ),
                     )
                   : FolderButton(
+                      widget.config,
                       name: widget._name,
-                      buttonType: folderBT,
-                      labelType: folderLabels,
+                      buttonType: folderBT(widget.config),
+                      labelType: folderLabels(widget.config),
                       onPressed: () => setState(() => open = !open),
                       onLongPress: () => setState(() => state = AppState.singleEdit),
                     ),
           AppState.verbose => const SizedBox.shrink(), // Shouldn't be possible
           AppState.singleEdit || AppState.groupEdit => EzScrollView(
+              widget.config,
               scrollDirection: Axis.horizontal,
-              mainAxisAlignment: hAlign.mainAxis,
+              mainAxisAlignment: hAlign(widget.config).mainAxis,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 // Name (and rename)
                 EzLink(
-                  widget._name,
-                  style: EzConfig.bodyStyle,
-                  textColor: EzConfig.colors.onSurface,
+                  widget.config,
+                  text: widget._name,
+                  style: widget.config.bodyStyle,
+                  textColor: widget.config.colors.onSurface,
                   textAlign: TextAlign.center,
                   hint: 'Activate to rename.',
                   onTap: () => showDialog(
@@ -179,6 +188,7 @@ class _AppFolderState extends State<FolderTile> {
                       }
 
                       return EzAlertDialog(
+                        widget.config,
                         title: Text(
                           "Rename '${widget._name}'?",
                           textAlign: TextAlign.center,
@@ -194,10 +204,11 @@ class _AppFolderState extends State<FolderTile> {
                           ),
                         ),
                         actions: ezActionPair(
-                          confirmMsg: EzConfig.l10n.gApply,
+                          widget.config,
+                          confirmMsg: widget.config.ezL10n.gApply,
                           onConfirm: onConfirm,
                           confirmIsDestructive: true,
-                          denyMsg: EzConfig.l10n.gCancel,
+                          denyMsg: widget.config.ezL10n.gCancel,
                           onDeny: onDeny,
                         ),
                         needsClose: false,
@@ -209,9 +220,11 @@ class _AppFolderState extends State<FolderTile> {
 
                 // Edit apps
                 EzIconButton(
+                  widget.config,
                   icon: const Icon(Icons.edit),
                   onPressed: () async {
                     await ezModal(
+                      widget.config,
                       isDismissible: false,
                       enableDrag: false,
                       showDragHandle: false,
@@ -237,31 +250,36 @@ class _AppFolderState extends State<FolderTile> {
 
                                   return Padding(
                                     key: ValueKey<String>(id),
-                                    padding: EdgeInsets.symmetric(vertical: EzConfig.spacing / 2),
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: widget.config.spacing / 2),
                                     child: EzRow(
+                                      widget.config,
                                       reverseHands: false,
-                                      mainAxisAlignment: hAlign.mainAxis,
-                                      crossAxisAlignment: hAlign.crossAxis,
+                                      mainAxisAlignment: hAlign(widget.config).mainAxis,
+                                      crossAxisAlignment: hAlign(widget.config).crossAxis,
                                       children: <Widget>[
                                         // Drag handle
                                         if (state == AppState.groupEdit) ...<Widget>[
                                           EzIcon(
+                                            widget.config,
                                             Icons.drag_handle,
-                                            color: EzConfig.colors.outline,
+                                            color: widget.config.colors.outline,
                                           ),
-                                          EzConfig.rowMargin,
+                                          widget.config.rowMargin,
                                         ],
 
                                         // App tile
                                         AppButton(
+                                          widget.config,
                                           app: app,
-                                          labelType: folderLabels,
-                                          buttonType: folderBT,
+                                          labelType: folderLabels(widget.config),
+                                          buttonType: folderBT(widget.config),
                                         ),
-                                        EzConfig.rowSpacer,
+                                        widget.config.rowSpacer,
 
                                         // Remove button
                                         EzIconButton(
+                                          widget.config,
                                           icon: const Icon(Icons.remove),
                                           onPressed: () {
                                             widget._appList.remove(id);
@@ -271,10 +289,11 @@ class _AppFolderState extends State<FolderTile> {
 
                                         // Drag handle
                                         if (state == AppState.groupEdit) ...<Widget>[
-                                          EzConfig.rowMargin,
+                                          widget.config.rowMargin,
                                           EzIcon(
+                                            widget.config,
                                             Icons.drag_handle,
-                                            color: EzConfig.colors.outline,
+                                            color: widget.config.colors.outline,
                                           ),
                                         ],
                                       ],
@@ -299,6 +318,7 @@ class _AppFolderState extends State<FolderTile> {
 
                 // Delete folder
                 EzIconButton(
+                  widget.config,
                   icon: const Icon(Icons.delete),
                   onPressed: () => widget.appInfo.deleteFolder(widget.index),
                 ),
@@ -315,13 +335,15 @@ class _AppFolderState extends State<FolderTile> {
 }
 
 class FolderButton extends StatelessWidget {
+  final EzCP config;
   final String name;
   final ButtonType buttonType;
   final LabelType labelType;
   final void Function()? onPressed;
   final void Function()? onLongPress;
 
-  const FolderButton({
+  const FolderButton(
+    this.config, {
     super.key,
     required this.name,
     required this.buttonType,
@@ -337,37 +359,42 @@ class FolderButton extends StatelessWidget {
             child: GestureDetector(
               onTap: onPressed,
               onLongPress: onLongPress,
-              child: Icon(Icons.folder_open, size: appIconSize),
+              child: Icon(Icons.folder_open, size: appIconSize(config)),
             )),
         ButtonType.eIcon => EzIconButton(
+            config,
             tooltip: name,
             onPressed: onPressed,
             onLongPress: onLongPress,
-            icon: Icon(Icons.folder_open, size: appIconSize),
+            icon: Icon(Icons.folder_open, size: appIconSize(config)),
           ),
         ButtonType.text => EzTextButton(
+            config,
             text: buildLabel(name, labelType),
-            style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
+            style: TextButton.styleFrom(padding: EdgeInsets.all(config.padding)),
             onPressed: onPressed,
             onLongPress: onLongPress,
           ),
         ButtonType.eText => EzElevatedButton(
+            config,
             text: buildLabel(name, labelType),
-            style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
+            style: TextButton.styleFrom(padding: EdgeInsets.all(config.padding)),
             onPressed: onPressed,
             onLongPress: onLongPress,
           ),
         ButtonType.textIcon => EzTextIconButton(
+            config,
             label: buildLabel(name, labelType),
-            icon: Icon(Icons.folder_open, size: appIconSize),
-            style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
+            icon: Icon(Icons.folder_open, size: appIconSize(config)),
+            style: TextButton.styleFrom(padding: EdgeInsets.all(config.padding)),
             onPressed: onPressed,
             onLongPress: onLongPress,
           ),
         ButtonType.eTextIcon => EzElevatedIconButton(
+            config,
             label: buildLabel(name, labelType),
-            icon: Icon(Icons.folder_open, size: appIconSize),
-            style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
+            icon: Icon(Icons.folder_open, size: appIconSize(config)),
+            style: TextButton.styleFrom(padding: EdgeInsets.all(config.padding)),
             onPressed: onPressed,
             onLongPress: onLongPress,
           ),

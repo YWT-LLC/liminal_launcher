@@ -28,17 +28,17 @@ class AppInfoProvider extends ChangeNotifier {
   StreamSubscription<dynamic>? _appEventSubscription;
 
   // Renamed apps
-  final Set<String> _renamedSet = Set<String>.from(EzConfig.get(renamedIDsKey));
+  final Set<String> _renamedSet = Set<String>.from(EzCM.get(renamedIDsKey));
 
   // Home apps
-  final List<String> _homeList = EzConfig.get(homeIDsKey);
-  final Set<String> _homeSet = Set<String>.from(EzConfig.get(homeIDsKey));
+  final List<String> _homeList = EzCM.get(homeIDsKey);
+  final Set<String> _homeSet = Set<String>.from(EzCM.get(homeIDsKey));
 
   // Hidden apps
-  final List<String> _hiddenList = EzConfig.get(hiddenIDsKey);
-  final Set<String> _hiddenSet = Set<String>.from(EzConfig.get(hiddenIDsKey));
+  final List<String> _hiddenList = EzCM.get(hiddenIDsKey);
+  final Set<String> _hiddenSet = Set<String>.from(EzCM.get(hiddenIDsKey));
 
-  final Set<String> _banishedSet = Set<String>.from(EzConfig.get(banishedIDsKey));
+  final Set<String> _banishedSet = Set<String>.from(EzCM.get(banishedIDsKey));
 
   AppInfoProvider(List<AppInfo> apps)
       : _apps = apps,
@@ -73,8 +73,8 @@ class AppInfoProvider extends ChangeNotifier {
 
     // Sort based on the user's preferences
     sort(
-      ASConfig.lookup(EzConfig.get(listSortKey)),
-      EzConfig.get(ascListKey),
+      ASConfig.lookup(EzCM.get(listSortKey)),
+      EzCM.get(ascListKey),
     );
 
     // Listen //
@@ -119,14 +119,14 @@ class AppInfoProvider extends ChangeNotifier {
     _appMap[installed.id] = installed;
 
     sort(
-      ASConfig.lookup(EzConfig.get(listSortKey)),
-      EzConfig.get(ascListKey),
+      ASConfig.lookup(EzCM.get(listSortKey)),
+      EzCM.get(ascListKey),
     );
 
-    if (EzConfig.get(autoAddToHomeKey) == true && !_homeSet.contains(installed.id)) {
+    if (EzCM.get(autoAddToHomeKey) == true && !_homeSet.contains(installed.id)) {
       _homeList.add(installed.id);
       _homeSet.add(installed.id);
-      await EzConfig.setStringList(homeIDsKey, _homeList);
+      await EzCM.setStringList(homeIDsKey, _homeList);
     }
 
     notifyListeners();
@@ -156,7 +156,7 @@ class AppInfoProvider extends ChangeNotifier {
     _homeList.add(appID);
     _homeSet.add(appID);
 
-    await EzConfig.setStringList(homeIDsKey, _homeList);
+    await EzCM.setStringList(homeIDsKey, _homeList);
     notifyListeners();
 
     return true;
@@ -168,7 +168,7 @@ class AppInfoProvider extends ChangeNotifier {
     _homeList.remove(appID);
     _homeSet.remove(appID);
 
-    await EzConfig.setStringList(homeIDsKey, _homeList);
+    await EzCM.setStringList(homeIDsKey, _homeList);
     if (!batch) notifyListeners();
 
     return true;
@@ -177,7 +177,7 @@ class AppInfoProvider extends ChangeNotifier {
   Future<void> addHomeFolder() async {
     _homeList.add('Folder$folderSplit$emptyTag');
 
-    await EzConfig.setStringList(homeIDsKey, _homeList);
+    await EzCM.setStringList(homeIDsKey, _homeList);
     notifyListeners();
   }
 
@@ -213,7 +213,7 @@ class AppInfoProvider extends ChangeNotifier {
       id,
     );
 
-    await EzConfig.setStringList(homeIDsKey, _homeList);
+    await EzCM.setStringList(homeIDsKey, _homeList);
     notifyListeners();
   }
 
@@ -226,7 +226,7 @@ class AppInfoProvider extends ChangeNotifier {
     _renamedSet.removeWhere((String entry) => entry.startsWith(appID));
     _renamedSet.add(appID + idSplit + newName);
 
-    await EzConfig.setStringList(renamedIDsKey, _renamedSet.toList());
+    await EzCM.setStringList(renamedIDsKey, _renamedSet.toList());
     notifyListeners();
 
     return true;
@@ -241,7 +241,7 @@ class AppInfoProvider extends ChangeNotifier {
         (parts.length > 1) ? <String>[newName, ...parts].join(folderSplit) : newName;
     _homeList[folderIndex] = newFullName;
 
-    await EzConfig.setStringList(homeIDsKey, _homeList);
+    await EzCM.setStringList(homeIDsKey, _homeList);
     notifyListeners();
 
     return true;
@@ -265,19 +265,20 @@ class AppInfoProvider extends ChangeNotifier {
       _homeSet.add(id);
     }
 
-    await EzConfig.setStringList(homeIDsKey, _homeList);
+    await EzCM.setStringList(homeIDsKey, _homeList);
     notifyListeners();
   }
 
-  Future<bool> hideApp(String appID) async {
+  Future<bool> hideApp(EzCP config, String appID) async {
     if (_hiddenSet.contains(appID)) return false;
 
     if (_hiddenSet.isEmpty && ezRootNav.currentContext != null) {
       await showDialog(
         context: ezRootNav.currentContext!,
-        builder: (_) => const EzAlertDialog(
-          title: Text('Reminder', textAlign: TextAlign.center),
-          content: Text(
+        builder: (_) => EzAlertDialog(
+          config,
+          title: const Text('Reminder', textAlign: TextAlign.center),
+          content: const Text(
             'Swipe up while editing to open the hidden apps list.',
             textAlign: TextAlign.center,
           ),
@@ -288,7 +289,7 @@ class AppInfoProvider extends ChangeNotifier {
     _hiddenList.add(appID);
     _hiddenSet.add(appID);
 
-    await EzConfig.setStringList(hiddenIDsKey, _hiddenList);
+    await EzCM.setStringList(hiddenIDsKey, _hiddenList);
 
     final bool notified = await removeHomeApp(appID);
     if (!notified) notifyListeners();
@@ -302,13 +303,13 @@ class AppInfoProvider extends ChangeNotifier {
     _hiddenList.remove(appID);
     _hiddenSet.remove(appID);
 
-    await EzConfig.setStringList(hiddenIDsKey, _hiddenList);
+    await EzCM.setStringList(hiddenIDsKey, _hiddenList);
     if (!batch) notifyListeners();
 
     return true;
   }
 
-  Future<bool> banishApp(String appID) async {
+  Future<bool> banishApp(EzCP config, String appID) async {
     if (_banishedSet.contains(appID) ||
         ezRootNav.currentContext == null ||
         !ezRootNav.currentContext!.mounted) {
@@ -323,6 +324,7 @@ class AppInfoProvider extends ChangeNotifier {
     final bool confirmed = await showDialog(
       context: currContext,
       builder: (BuildContext dCon) => EzAlertDialog(
+        config,
         title: Text(
           'Banish $name?',
           textAlign: TextAlign.center,
@@ -346,8 +348,9 @@ For example: if an app has always on location permissions, banishing it will not
                 textAlign: TextAlign.center,
               ),
         actions: ezActionPair(
+          config,
           onConfirm: () => Navigator.of(dCon).pop(true),
-          confirmMsg: EzConfig.l10n.gContinue,
+          confirmMsg: config.ezL10n.gContinue,
           confirmIsDestructive: true,
           onDeny: () => Navigator.of(dCon).pop(false),
         ),
@@ -357,7 +360,7 @@ For example: if an app has always on location permissions, banishing it will not
     if (!confirmed) return false;
 
     _banishedSet.add(appID);
-    await EzConfig.setStringList(banishedIDsKey, _banishedSet.toList());
+    await EzCM.setStringList(banishedIDsKey, _banishedSet.toList());
 
     final bool notified = await removeHomeApp(appID);
     if (!notified) notifyListeners();
@@ -370,7 +373,7 @@ For example: if an app has always on location permissions, banishing it will not
   Future<void> removeDeleted(String appID) async {
     if (_banishedSet.contains(appID)) {
       _banishedSet.remove(appID);
-      await EzConfig.setStringList(banishedIDsKey, _banishedSet.toList());
+      await EzCM.setStringList(banishedIDsKey, _banishedSet.toList());
     }
 
     await showApp(appID, batch: true);
@@ -391,7 +394,7 @@ For example: if an app has always on location permissions, banishing it will not
     }
 
     _homeList.removeAt(index);
-    await EzConfig.setStringList(homeIDsKey, _homeList);
+    await EzCM.setStringList(homeIDsKey, _homeList);
 
     notifyListeners();
     return true;
@@ -406,8 +409,8 @@ For example: if an app has always on location permissions, banishing it will not
     _banishedSet.clear();
 
     sort(
-      ASConfig.lookup(EzConfig.getDefault(listSortKey)),
-      EzConfig.getDefault(ascListKey),
+      ASConfig.lookup(EzCM.getDefault(listSortKey)),
+      EzCM.getDefault(ascListKey),
     );
 
     notifyListeners();

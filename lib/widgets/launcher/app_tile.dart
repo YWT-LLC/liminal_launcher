@@ -11,6 +11,7 @@ import 'package:line_icons/line_icons.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class AppTile extends StatefulWidget {
+  final EzCP config;
   final AppInfoProvider appInfo;
   final AppInfo app;
   final AppLocation location;
@@ -18,7 +19,8 @@ class AppTile extends StatefulWidget {
   final Future<void> Function(String id) onSelected;
   final ValueNotifier<double>? rippleProgress;
 
-  AppTile({
+  AppTile(
+    this.config, {
     required this.appInfo,
     required this.app,
     required this.location,
@@ -45,15 +47,16 @@ class _AppTileState extends State<AppTile> {
   Widget rowSpacer() => switch (state) {
         AppState.standard ||
         AppState.groupEdit =>
-          SizedBox(height: EzConfig.iconSize, width: EzConfig.spacing),
+          SizedBox(height: widget.config.iconSize, width: widget.config.spacing),
         AppState.verbose => SizedBox(
-            height: EzConfig.iconSize,
-            child: VerticalDivider(width: EzConfig.spacing, color: EzConfig.colors.secondary),
+            height: widget.config.iconSize,
+            child: VerticalDivider(
+                width: widget.config.spacing, color: widget.config.colors.secondary),
           ),
         AppState.singleEdit => GestureDetector(
             behavior: HitTestBehavior.opaque,
             onLongPress: () => setState(() => state = AppState.standard),
-            child: SizedBox(height: EzConfig.iconSize, width: EzConfig.spacing),
+            child: SizedBox(height: widget.config.iconSize, width: widget.config.spacing),
           ),
       };
 
@@ -71,11 +74,12 @@ class _AppTileState extends State<AppTile> {
     return isUrl
         ? <Widget>[
             EzLink(
-              base,
+              widget.config,
+              text: base,
               url: Uri.parse('https://$base'),
-              hint: EzConfig.l10n.gOpenLink,
-              style: EzConfig.bodyStyle,
-              textAlign: hAlign.textAlign,
+              hint: widget.config.ezL10n.gOpenLink,
+              style: widget.config.bodyStyle,
+              textAlign: hAlign(widget.config).textAlign,
             ),
             rowSpacer(),
           ]
@@ -101,7 +105,7 @@ class _AppTileState extends State<AppTile> {
             AppState.verbose || AppState.groupEdit => AppState.standard,
           });
 
-      final Duration animDur = ezAnimDuration(mod: rippleMod);
+      final Duration animDur = ezDuration(widget.config.animDur, mod: rippleMod);
       rippleThrottle = Timer(
         (animDur + const Duration(milliseconds: 50)) - (animDur * widget.rippleProgress!.value),
         () => rippleThrottle = null,
@@ -121,22 +125,24 @@ class _AppTileState extends State<AppTile> {
 
   @override
   Widget build(BuildContext context) => EzAnimSwitch(
+        widget.config,
         mod: 0.667,
         forceType: EzTransitionType.none,
         forceFade: true,
         child: switch (state) {
-          AppState.standard => wideTiles
+          AppState.standard => wideTiles(widget.config)
               ? InkWell(
                   onTap: () => widget.onSelected(widget.app.id),
                   onLongPress: () =>
                       inFolder ? doNothing() : setState(() => state = AppState.singleEdit),
                   child: Container(
                     width: double.infinity,
-                    decoration: ShapeDecoration(shape: EzConfig.buttonShape.shape),
+                    decoration: ShapeDecoration(shape: widget.config.buttonShape.shape),
                     child: AppButton(
+                      widget.config,
                       app: widget.app,
-                      labelType: inFolder ? folderLabels : listLabels,
-                      buttonType: inFolder ? folderBT : listBT,
+                      labelType: inFolder ? folderLabels(widget.config) : listLabels(widget.config),
+                      buttonType: inFolder ? folderBT(widget.config) : listBT(widget.config),
                       onPressed: () => widget.onSelected(widget.app.id),
                       onLongPress: () =>
                           inFolder ? doNothing() : setState(() => state = AppState.singleEdit),
@@ -144,31 +150,38 @@ class _AppTileState extends State<AppTile> {
                   ),
                 )
               : AppButton(
+                  widget.config,
                   app: widget.app,
-                  labelType: inFolder ? folderLabels : listLabels,
-                  buttonType: inFolder ? folderBT : listBT,
+                  labelType: inFolder ? folderLabels(widget.config) : listLabels(widget.config),
+                  buttonType: inFolder ? folderBT(widget.config) : listBT(widget.config),
                   onPressed: () => widget.onSelected(widget.app.id),
                   onLongPress: () =>
                       inFolder ? doNothing() : setState(() => state = AppState.singleEdit),
                 ),
           AppState.verbose => EzScrollView(
-              mainAxisAlignment: hAlign.mainAxis,
-              crossAxisAlignment: hAlign.crossAxis,
+              widget.config,
+              mainAxisAlignment: hAlign(widget.config).mainAxis,
+              crossAxisAlignment: hAlign(widget.config).crossAxis,
               scrollDirection: Axis.horizontal,
               reverseHands: true,
               showScrollHint: true,
               children: <Widget>[
                 // Name && icon
                 AppButton(
+                  widget.config,
                   app: widget.app,
-                  labelType: inFolder ? folderLabels : listLabels,
-                  buttonType: inFolder ? folderBT : listBT,
+                  labelType: inFolder ? folderLabels(widget.config) : listLabels(widget.config),
+                  buttonType: inFolder ? folderBT(widget.config) : listBT(widget.config),
                   onPressed: () => widget.onSelected(widget.app.id),
                 ),
                 rowSpacer(),
 
                 // Publisher (plain text)
-                EzText(widget.app.package, textAlign: hAlign.textAlign),
+                EzText(
+                  widget.config,
+                  text: widget.app.package,
+                  textAlign: hAlign(widget.config).textAlign,
+                ),
                 rowSpacer(),
 
                 // Publisher (link)
@@ -176,25 +189,28 @@ class _AppTileState extends State<AppTile> {
 
                 // Install date
                 EzText(
-                  DateTypeConfig.buildDate(
+                  widget.config,
+                  text: DateTypeConfig.buildDate(
                     context,
                     DateTime.fromMillisecondsSinceEpoch(widget.app.installDate),
                     DateType.compact,
                   ),
-                  textAlign: hAlign.textAlign,
+                  textAlign: hAlign(widget.config).textAlign,
                 ),
                 rowSpacer(),
 
                 // Package size
                 EzText(
-                  '${(widget.app.packageSize / _toMB).toStringAsFixed(2)} MB',
-                  textAlign: hAlign.textAlign,
+                  widget.config,
+                  text: '${(widget.app.packageSize / _toMB).toStringAsFixed(2)} MB',
+                  textAlign: hAlign(widget.config).textAlign,
                 ),
               ],
             ),
           AppState.singleEdit || AppState.groupEdit => EzScrollView(
-              mainAxisAlignment: hAlign.mainAxis,
-              crossAxisAlignment: hAlign.crossAxis,
+              widget.config,
+              mainAxisAlignment: hAlign(widget.config).mainAxis,
+              crossAxisAlignment: hAlign(widget.config).crossAxis,
               scrollDirection: Axis.horizontal,
               reverseHands: true,
               showScrollHint: true,
@@ -202,10 +218,11 @@ class _AppTileState extends State<AppTile> {
                 if (!inList && state != AppState.singleEdit) ...<Widget>[
                   // Drag handle
                   EzIcon(
+                    widget.config,
                     Icons.drag_handle,
-                    color: EzConfig.colors.outline,
+                    color: widget.config.colors.outline,
                   ),
-                  EzConfig.rowMargin,
+                  widget.config.rowMargin,
                 ],
 
                 // App icon
@@ -215,8 +232,8 @@ class _AppTileState extends State<AppTile> {
                     child: Image.memory(
                       widget.app.icon!,
                       semanticLabel: widget.app.name,
-                      width: appIconSize,
-                      height: appIconSize,
+                      width: appIconSize(widget.config),
+                      height: appIconSize(widget.config),
                     ),
                   ),
                   rowSpacer(),
@@ -224,6 +241,7 @@ class _AppTileState extends State<AppTile> {
 
                 // Info
                 EzIconButton(
+                  widget.config,
                   onPressed: () async {
                     if (inList && context.mounted) Navigator.of(context).pop();
                     await openSettings(widget.app.id);
@@ -234,6 +252,7 @@ class _AppTileState extends State<AppTile> {
 
                 // Rename
                 EzIconButton(
+                  widget.config,
                   onPressed: () => showDialog(
                     context: context,
                     builder: (BuildContext dCon) {
@@ -256,6 +275,7 @@ class _AppTileState extends State<AppTile> {
                       }
 
                       return EzAlertDialog(
+                        widget.config,
                         title: Text(
                           'Rename ${widget.app.name}?',
                           textAlign: TextAlign.center,
@@ -271,10 +291,11 @@ class _AppTileState extends State<AppTile> {
                           ),
                         ),
                         actions: ezActionPair(
-                          confirmMsg: EzConfig.l10n.gApply,
+                          widget.config,
+                          confirmMsg: widget.config.ezL10n.gApply,
                           onConfirm: onConfirm,
                           confirmIsDestructive: true,
-                          denyMsg: EzConfig.l10n.gCancel,
+                          denyMsg: widget.config.ezL10n.gCancel,
                           onDeny: onDeny,
                         ),
                         needsClose: false,
@@ -289,6 +310,7 @@ class _AppTileState extends State<AppTile> {
                 if (!widget.appInfo.homeSet.contains(widget.app.id) &&
                     !widget.appInfo.hiddenSet.contains(widget.app.id)) ...<Widget>[
                   EzIconButton(
+                    widget.config,
                     onPressed: () async {
                       final bool success = await widget.appInfo.addHomeApp(widget.app.id);
 
@@ -304,6 +326,7 @@ class _AppTileState extends State<AppTile> {
                 // Remove from home
                 if (!inList) ...<Widget>[
                   EzIconButton(
+                    widget.config,
                     onPressed: () async {
                       final bool success = await widget.appInfo.removeHomeApp(widget.app.id);
                       if (success && mounted) setState(() => state = AppState.standard);
@@ -315,10 +338,11 @@ class _AppTileState extends State<AppTile> {
 
                 // Show/hide
                 EzIconButton(
+                  widget.config,
                   onPressed: () async {
                     final bool success = widget.appInfo.hiddenSet.contains(widget.app.id)
                         ? await widget.appInfo.showApp(widget.app.id)
-                        : await widget.appInfo.hideApp(widget.app.id);
+                        : await widget.appInfo.hideApp(widget.config, widget.app.id);
                     if (success && mounted) setState(() => state = AppState.standard);
                   },
                   icon: Icon(
@@ -331,8 +355,10 @@ class _AppTileState extends State<AppTile> {
 
                 // Banish
                 EzIconButton(
+                  widget.config,
                   onPressed: () async {
-                    final bool banished = await widget.appInfo.banishApp(widget.app.id);
+                    final bool banished =
+                        await widget.appInfo.banishApp(widget.config, widget.app.id);
                     if (banished && mounted) setState(() => state = AppState.standard);
                   },
                   icon: const Icon(LineIcons.ghost),
@@ -342,6 +368,7 @@ class _AppTileState extends State<AppTile> {
                 if (widget.app.removable) ...<Widget>[
                   rowSpacer(),
                   EzIconButton(
+                    widget.config,
                     onPressed: () async {
                       final bool deleted = await deleteApp(widget.app);
 
@@ -357,10 +384,11 @@ class _AppTileState extends State<AppTile> {
                 if (!inList && state != AppState.singleEdit) ...<Widget>[
                   // Drag handle
                   EzIcon(
+                    widget.config,
                     Icons.drag_handle,
-                    color: EzConfig.colors.outline,
+                    color: widget.config.colors.outline,
                   ),
-                  EzConfig.rowMargin,
+                  widget.config.rowMargin,
                 ],
               ],
             ),
@@ -375,6 +403,7 @@ class _AppTileState extends State<AppTile> {
 }
 
 class AppButton extends StatelessWidget {
+  final EzCP config;
   final AppInfo app;
   final Widget? icon;
   final ButtonType buttonType;
@@ -382,7 +411,8 @@ class AppButton extends StatelessWidget {
   final void Function()? onPressed;
   final void Function()? onLongPress;
 
-  const AppButton({
+  const AppButton(
+    this.config, {
     super.key,
     required this.app,
     this.icon,
@@ -397,13 +427,13 @@ class AppButton extends StatelessWidget {
           Icon(
             Icons.question_mark,
             semanticLabel: app.name,
-            size: EzConfig.iconSize,
+            size: config.iconSize,
           )
       : Image.memory(
           app.icon!,
           semanticLabel: app.name,
-          width: appIconSize,
-          height: appIconSize,
+          width: appIconSize(config),
+          height: appIconSize(config),
         );
 
   @override
@@ -416,34 +446,39 @@ class AppButton extends StatelessWidget {
               child: appIcon(),
             )),
         ButtonType.eIcon => EzIconButton(
+            config,
             tooltip: app.name,
             onPressed: onPressed,
             onLongPress: onLongPress,
             icon: appIcon(),
           ),
         ButtonType.text => EzTextButton(
+            config,
             text: buildLabel(app.name, labelType),
-            style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
+            style: TextButton.styleFrom(padding: EdgeInsets.all(config.padding)),
             onPressed: onPressed,
             onLongPress: onLongPress,
           ),
         ButtonType.eText => EzElevatedButton(
+            config,
             text: buildLabel(app.name, labelType),
-            style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
+            style: TextButton.styleFrom(padding: EdgeInsets.all(config.padding)),
             onPressed: onPressed,
             onLongPress: onLongPress,
           ),
         ButtonType.textIcon => EzTextIconButton(
+            config,
             label: buildLabel(app.name, labelType),
             icon: appIcon(),
-            style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
+            style: TextButton.styleFrom(padding: EdgeInsets.all(config.padding)),
             onPressed: onPressed,
             onLongPress: onLongPress,
           ),
         ButtonType.eTextIcon => EzElevatedIconButton(
+            config,
             label: buildLabel(app.name, labelType),
             icon: appIcon(),
-            style: TextButton.styleFrom(padding: EdgeInsets.all(EzConfig.padding)),
+            style: TextButton.styleFrom(padding: EdgeInsets.all(config.padding)),
             onPressed: onPressed,
             onLongPress: onLongPress,
           ),

@@ -21,7 +21,7 @@ class AddAppFAB extends FloatingActionButton {
           heroTag: 'add_app_fab',
           onPressed: onPressed,
           tooltip: 'Add more home apps',
-          child: EzIcon(Icons.add),
+          child: EzIcon(config, Icons.add),
         );
 }
 
@@ -31,7 +31,7 @@ class AddFolderFAB extends FloatingActionButton {
           heroTag: 'add_folder_fab',
           onPressed: onPressed,
           tooltip: 'Add an app folder',
-          child: EzIcon(Icons.create_new_folder),
+          child: EzIcon(config, Icons.create_new_folder),
         );
 }
 
@@ -40,7 +40,7 @@ class SettingsFAB extends FloatingActionButton {
       : super(
           heroTag: 'settings_fab',
           onPressed: onPressed,
-          tooltip: config.efuiL10n.ssNavHint,
-          child: EzIcon(Icons.settings),
+          tooltip: config.ezL10n.ssNavHint,
+          child: EzIcon(config, Icons.settings),
         );
 }

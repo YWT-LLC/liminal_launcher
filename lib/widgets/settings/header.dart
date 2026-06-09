@@ -11,31 +11,36 @@ import 'package:line_icons/line_icons.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class HeaderSettings extends StatelessWidget {
-  const HeaderSettings({super.key});
+  final EzCP config;
+
+  const HeaderSettings(this.config, {super.key});
 
   @override
   Widget build(BuildContext context) => EzElevatedIconButton(
+        config,
         label: 'Home header',
         icon: const Icon(LineIcons.clock),
         onPressed: () async {
-          final String timeKey = EzConfig.isDark ? darkHomeTimeKey : lightHomeTimeKey;
-          final bool backupTime = EzConfig.get(timeKey);
+          final String timeKey = config.isDark ? darkHomeTimeKey : lightHomeTimeKey;
+          final bool backupTime = EzCM.get(timeKey);
 
-          final String dateKey = EzConfig.isDark ? darkHomeDateKey : lightHomeDateKey;
-          final DateType backupDate = DateTypeConfig.lookup(EzConfig.get(dateKey));
+          final String dateKey = config.isDark ? darkHomeDateKey : lightHomeDateKey;
+          final DateType backupDate = DateTypeConfig.lookup(EzCM.get(dateKey));
 
           await ezModal(
+            config,
             context: context,
-            builder: (BuildContext mCon) => ezModalScroll(<Widget>[
+            builder: (BuildContext mCon) => ezModalScroll(config, children: <Widget>[
               // Hide status bar
               EzSwitchPair(
+                config,
                 text: 'Hide status bar',
-                valueKey: EzConfig.isDark ? darkHideStatusKey : lightHideStatusKey,
+                valueKey: config.isDark ? darkHideStatusKey : lightHideStatusKey,
                 afterChanged: (bool? choice) async {
                   if (choice == null) return;
-                  if (EzConfig.updateBoth) {
-                    await EzConfig.setBool(
-                      EzConfig.isDark ? lightHideStatusKey : darkHideStatusKey,
+                  if (EzCM.updateBoth) {
+                    await EzCM.setBool(
+                      config.isDark ? lightHideStatusKey : darkHideStatusKey,
                       choice,
                     );
                   }
@@ -53,41 +58,45 @@ class HeaderSettings extends StatelessWidget {
                   }
                 },
               ),
-              EzConfig.spacer,
+              config.spacer,
 
               // Home Time
               EzSwitchPair(
+                config,
                 text: 'Show time',
                 valueKey: timeKey,
                 afterChanged: (bool? choice) async {
                   if (choice == null) return;
-                  if (EzConfig.updateBoth) {
-                    await EzConfig.setBool(
-                      EzConfig.isDark ? lightHomeTimeKey : darkHomeTimeKey,
+                  if (EzCM.updateBoth) {
+                    await EzCM.setBool(
+                      config.isDark ? lightHomeTimeKey : darkHomeTimeKey,
                       choice,
                     );
                   }
                 },
               ),
-              EzConfig.spacer,
+              config.spacer,
 
               // Home Date
               EzScrollView(
+                config,
                 scrollDirection: Axis.horizontal,
                 reverseHands: true,
                 children: <Widget>[
                   // Label
                   EzText(
-                    'Date type',
-                    style: EzConfig.bodyStyle,
+                    config,
+                    text: 'Date type',
+                    style: config.bodyStyle,
                     textAlign: TextAlign.center,
                   ),
-                  EzConfig.margin,
+                  config.margin,
 
                   // Button
                   EzDropdownMenu<DateType>(
+                    config,
                     enableSearch: false,
-                    initialSelection: homeDate,
+                    initialSelection: homeDate(config),
                     dropdownMenuEntries: DateType.values
                         .map((DateType type) => DropdownMenuEntry<DateType>(
                             value: type,
@@ -101,23 +110,23 @@ class HeaderSettings extends StatelessWidget {
                     onSelected: (DateType? choice) async {
                       if (choice == null) return;
 
-                      if (EzConfig.updateBoth || EzConfig.isDark) {
-                        await EzConfig.setString(darkHomeDateKey, choice.value);
+                      if (EzCM.updateBoth || config.isDark) {
+                        await EzCM.setString(darkHomeDateKey, choice.value);
                       }
-                      if (EzConfig.updateBoth || !EzConfig.isDark) {
-                        await EzConfig.setString(lightHomeDateKey, choice.value);
+                      if (EzCM.updateBoth || !config.isDark) {
+                        await EzCM.setString(lightHomeDateKey, choice.value);
                       }
                     },
                   ),
                 ],
               ),
-              EzConfig.separator,
+              config.separator,
             ]),
           );
 
-          if (backupTime != EzConfig.get(timeKey) ||
-              backupDate != DateTypeConfig.lookup(EzConfig.get(dateKey))) {
-            await EzConfig.rebuildUI();
+          if (backupTime != EzCM.get(timeKey) ||
+              backupDate != DateTypeConfig.lookup(EzCM.get(dateKey))) {
+            await config.rebuildUI(<EzSettingType>{EzSettingType.design});
           }
         },
       );

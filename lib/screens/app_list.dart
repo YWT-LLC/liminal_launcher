@@ -30,7 +30,7 @@ class ListConfig {
 class AppListScreen extends StatefulWidget {
   final ListConfig config;
 
-  AppListScreen(this.config) : super(key: ValueKey<int>(EzConfig.seed));
+  const AppListScreen(this.config, {super.key});
 
   @override
   State<AppListScreen> createState() => _AppListScreenState();
@@ -42,9 +42,9 @@ class _AppListScreenState extends State<AppListScreen> {
   final ScrollController scrollControl = ScrollController();
   final TextEditingController searchControl = TextEditingController();
 
-  AppSort listSort = ASConfig.lookup(EzConfig.get(listSortKey));
-  bool ascList = EzConfig.get(ascListKey);
-  bool searching = EzConfig.get(autoSearchKey);
+  AppSort listSort = ASConfig.lookup(EzCM.get(listSortKey));
+  bool ascList = EzCM.get(ascListKey);
+  bool searching = EzCM.get(autoSearchKey);
 
   bool atTop = true;
   bool atBottom = false;
@@ -57,14 +57,15 @@ class _AppListScreenState extends State<AppListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppInfoProvider>(
-      builder: (_, AppInfoProvider appInfo, __) => LiminalScaffold(
-        GestureDetector(
+    return Consumer2<AppInfoProvider, EzCP>(
+      builder: (_, AppInfoProvider appInfo, EzCP config, __) => LiminalScaffold(
+        config,
+        body: GestureDetector(
           behavior: HitTestBehavior.opaque,
           onLongPressStart: (LongPressStartDetails details) async {
             if (!context.mounted) return;
 
-            final Duration animDur = ezAnimDuration(mod: rippleMod);
+            final Duration animDur = ezDuration(config.animDur, mod: rippleMod);
             if (animDur <= Duration.zero) {
               setState(() => verbose = !verbose);
               return;
@@ -80,7 +81,7 @@ class _AppListScreenState extends State<AppListScreen> {
               width: widthOf(context),
               height: heightOf(context),
               position: details.globalPosition,
-              color: EzConfig.colors.primary,
+              color: config.colors.primary,
               oMin: focusOpacity,
             );
             Overlay.of(context).insert(ripple);
@@ -101,29 +102,32 @@ class _AppListScreenState extends State<AppListScreen> {
             }
           },
           child: EzCol(
-            mainAxisAlignment: vAlign.mainAxis,
-            crossAxisAlignment: hAlign.crossAxis,
+            mainAxisAlignment: vAlign(config).mainAxis,
+            crossAxisAlignment: hAlign(config).crossAxis,
             children: <Widget>[
-              EzHeader(),
+              EzHeader(spacing: config.spacing, margin: config.marginVal),
 
               // List controls
               EzScrollView(
+                config,
                 scrollDirection: Axis.horizontal,
-                mainAxisAlignment: hAlign.mainAxis,
-                crossAxisAlignment: vAlign.crossAxis,
+                mainAxisAlignment: hAlign(config).mainAxis,
+                crossAxisAlignment: vAlign(config).crossAxis,
                 children: <Widget>[
                   // Sort by...
                   MenuAnchor(
                     builder: (_, MenuController controller, __) => EzIconButton(
+                      config,
                       onPressed: () => controller.isOpen ? controller.close() : controller.open(),
                       icon: const Icon(Icons.sort),
                     ),
                     menuChildren: AppSort.values
                         .map((AppSort type) => EzMenuButton(
+                              config,
                               label: type.name.replaceRange(0, 1, type.name[0].toUpperCase()),
-                              textAlign: hAlign.textAlign,
+                              textAlign: hAlign(config).textAlign,
                               onPressed: () async {
-                                await EzConfig.setString(listSortKey, type.value);
+                                await EzCM.setString(listSortKey, type.value);
 
                                 appInfo.sort(type, ascList);
                                 setState(() => listSort = type);
@@ -131,28 +135,31 @@ class _AppListScreenState extends State<AppListScreen> {
                             ))
                         .toList(),
                   ),
-                  EzConfig.rowSpacer,
+                  config.rowSpacer,
 
                   // Order
                   EzIconButton(
+                    config,
                     icon: Icon(ascList ? Icons.arrow_upward : Icons.arrow_downward),
                     onPressed: () async {
-                      await EzConfig.setBool(ascListKey, ascList);
+                      await EzCM.setBool(ascListKey, ascList);
 
                       appInfo.sort(listSort, ascList);
                       setState(() => ascList = !ascList);
                     },
                   ),
-                  EzConfig.rowSpacer,
+                  config.rowSpacer,
 
                   // Search
                   AnimatedContainer(
-                    duration: ezAnimDuration(),
+                    duration: ezDuration(config.animDur),
                     width: searching ? 200 : null,
                     curve: Curves.easeInOut,
                     child: EzRow(
+                      config,
                       children: <Widget>[
                         EzIconButton(
+                          config,
                           icon: const Icon(Icons.search),
                           onPressed: () {
                             if (searching) {
@@ -165,7 +172,7 @@ class _AppListScreenState extends State<AppListScreen> {
                           },
                         ),
                         if (searching) ...<Widget>[
-                          EzMargin(vertical: false),
+                          config.rowMargin,
                           Expanded(
                             child: TextField(
                               controller: searchControl,
@@ -185,10 +192,10 @@ class _AppListScreenState extends State<AppListScreen> {
                 ],
               ),
               if (widget.config.title != null) ...<Widget>[
-                EzConfig.margin,
+                config.margin,
                 widget.config.title!,
               ],
-              EzConfig.spacer,
+              config.spacer,
 
               // App list
               NotificationListener<ScrollNotification>(
@@ -243,6 +250,7 @@ class _AppListScreenState extends State<AppListScreen> {
                 },
                 child: Expanded(
                   child: EzScrollView(
+                    config,
                     mainAxisSize: MainAxisSize.max,
                     controller: scrollControl,
                     physics: const ClampingScrollPhysics(),
@@ -255,8 +263,9 @@ class _AppListScreenState extends State<AppListScreen> {
                                 : true))
                         .map((AppInfo app) => Padding(
                               key: ValueKey<String>(app.id),
-                              padding: EdgeInsets.symmetric(vertical: EzConfig.spacing / 2),
+                              padding: EdgeInsets.symmetric(vertical: config.spacing / 2),
                               child: AppTile(
+                                config,
                                 appInfo: appInfo,
                                 app: app,
                                 location: AppLocation.list,
@@ -273,38 +282,40 @@ class _AppListScreenState extends State<AppListScreen> {
           ),
         ),
         fabs: <Widget>[
-          EzConfig.spacer,
+          config.spacer,
 
           // Scroll to top
           EzAnimHide(
+            config,
             mod: 0.5,
             visible: !atTop,
-            size: EzConfig.theme.floatingActionButtonTheme.sizeConstraints!.biggest,
+            size: config.theme.floatingActionButtonTheme.sizeConstraints!.biggest,
             kid: FloatingActionButton(
               heroTag: 'scroll_up_FAB',
               onPressed: () => scrollControl.animateTo(
                 0,
-                duration: ezAnimDuration(),
+                duration: ezDuration(config.animDur),
                 curve: Curves.easeOut,
               ),
-              child: EzIcon(Icons.arrow_upward),
+              child: EzIcon(config, Icons.arrow_upward),
             ),
           ),
-          EzConfig.spacer,
+          config.spacer,
 
           // Scroll to bottom
           EzAnimHide(
+            config,
             mod: 0.5,
             visible: !atBottom,
-            size: EzConfig.theme.floatingActionButtonTheme.sizeConstraints!.biggest,
+            size: config.theme.floatingActionButtonTheme.sizeConstraints!.biggest,
             kid: FloatingActionButton(
               heroTag: 'scroll_down_FAB',
               onPressed: () => scrollControl.animateTo(
                 scrollControl.position.maxScrollExtent,
-                duration: ezAnimDuration(),
+                duration: ezDuration(config.animDur),
                 curve: Curves.easeOut,
               ),
-              child: EzIcon(Icons.arrow_downward),
+              child: EzIcon(config, Icons.arrow_downward),
             ),
           ),
         ],

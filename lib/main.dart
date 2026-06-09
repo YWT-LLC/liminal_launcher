@@ -100,20 +100,26 @@ class _TheMagic extends StatelessWidget {
             GoRoute(
               path: homePath,
               name: homePath,
-              pageBuilder: (BuildContext pbc, GoRouterState rs) =>
-                  ezPageBuilder(pbc, rs, const HomeScreen()),
+              pageBuilder: (BuildContext pbc, GoRouterState rs) => ezPageBuilder(
+                Provider.of<EzCP>(context, listen: false),
+                pbc,
+                rs,
+                const HomeScreen(),
+              ),
               routes: <RouteBase>[
                 // App list
                 GoRoute(
                   path: appListPath,
                   name: appListPath,
                   pageBuilder: (BuildContext pbc, GoRouterState rs) => ezPageBuilder(
+                    Provider.of<EzCP>(context, listen: false),
                     pbc,
                     rs,
                     AppListScreen(rs.extra as ListConfig),
                     transitionsBuilder: (BuildContext context, Animation<double> a,
                             Animation<double> aa, Widget w) =>
                         ezTransitionsBuilder(
+                      Provider.of<EzCP>(context, listen: false),
                       context,
                       a,
                       aa,
@@ -128,8 +134,12 @@ class _TheMagic extends StatelessWidget {
                 GoRoute(
                   path: settingsPath,
                   name: settingsPath,
-                  pageBuilder: (BuildContext context, GoRouterState state) =>
-                      ezPageBuilder(context, state, const SettingsScreen()),
+                  pageBuilder: (BuildContext context, GoRouterState state) => ezPageBuilder(
+                    Provider.of<EzCP>(context, listen: false),
+                    context,
+                    state,
+                    const SettingsScreen(),
+                  ),
                 ),
               ],
             ),

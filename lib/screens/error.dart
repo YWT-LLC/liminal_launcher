@@ -17,21 +17,24 @@ class ErrorScreen extends StatelessWidget {
     return Consumer<EzCP>(
       builder: (_, EzCP config, __) => LiminalScaffold(config,
           body: Center(
-            child: EzScrollView(children: <Widget>[
+            child: EzScrollView(config, children: <Widget>[
               EzText(
-                config.efuiL10n.g404Wonder,
+                config,
+                text: config.ezL10n.g404Wonder,
                 style: config.headlineStyle,
                 textAlign: TextAlign.center,
               ),
               config.separator,
               EzText(
-                config.efuiL10n.g404,
+                config,
+                text: config.ezL10n.g404,
                 style: ezSubTitleStyle(config.styles),
                 textAlign: TextAlign.center,
               ),
               config.separator,
               EzText(
-                config.efuiL10n.g404Note,
+                config,
+                text: config.ezL10n.g404Note,
                 style: config.labelStyle,
                 textAlign: TextAlign.center,
               ),

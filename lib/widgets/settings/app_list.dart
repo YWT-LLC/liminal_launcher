@@ -7,55 +7,69 @@ import '../../utils/export.dart';
 import '../../widgets/export.dart';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class AppListSettings extends StatelessWidget {
-  const AppListSettings({super.key});
+  final EzCP config;
+
+  const AppListSettings(this.config, {super.key});
 
   @override
   Widget build(BuildContext context) => EzElevatedIconButton(
+        config,
         label: 'App list',
         icon: const Icon(Icons.list),
         onPressed: () => ezModal(
+          config,
           context: context,
-          builder: (_) => ezModalScroll(
-            <Widget>[
-              // Auto add to home
-              const EzSwitchPair(
-                text: 'Auto-add new apps to home',
-                valueKey: autoAddToHomeKey,
-              ),
-              EzConfig.spacer,
+          builder: (_) {
+            final AppInfoProvider appInfo = Provider.of<AppInfoProvider>(context, listen: false);
+            // TODO: Make sure the list isn't editable n shit (any other places to check?)
 
-              // Auto search
-              const EzSwitchPair(
-                text: 'Auto-search the apps list',
-                valueKey: autoSearchKey,
-              ),
-              EzConfig.separator,
-
-              // Swipe selectors
-              EzDivider(
-                title: Text(
-                  'Quick launch',
-                  textAlign: TextAlign.center,
-                  style: EzConfig.titleStyle,
+            return ezModalScroll(
+              config,
+              children: <Widget>[
+                // Auto add to home
+                EzSwitchPair(
+                  config,
+                  text: 'Auto-add new apps to home',
+                  valueKey: autoAddToHomeKey,
                 ),
-                height: 0,
-              ),
-              EzNewLine(style: EzConfig.labelStyle),
-              Text(
-                'Swipe left/right on the home screen (except when editing) to open the selected app.\nLong press to clear your selection.',
-                textAlign: TextAlign.center,
-                style: EzConfig.labelStyle,
-              ),
-              EzConfig.spacer,
-              const SwipeSelector(left: true),
-              EzConfig.spacer,
-              const SwipeSelector(left: false),
-              EzConfig.separator,
-            ],
-          ),
+                config.spacer,
+
+                // Auto search
+                EzSwitchPair(
+                  config,
+                  text: 'Auto-search the apps list',
+                  valueKey: autoSearchKey,
+                ),
+                config.separator,
+
+                // Swipe selectors
+                EzTitledDivider(
+                  Text(
+                    'Quick launch',
+                    textAlign: TextAlign.center,
+                    style: config.titleStyle,
+                  ),
+                  height: 0,
+                  margin: config.marginVal,
+                ),
+                EzNewLine(config.labelStyle),
+                Text(
+                  'Swipe left/right on the home screen (except when editing) to open the selected app.\nLong press to clear your selection.',
+                  textAlign: TextAlign.center,
+                  style: config.labelStyle,
+                ),
+                config.spacer,
+                SwipeSelector(config, appInfo, left: true),
+                config.spacer,
+                SwipeSelector(config, appInfo, left: false),
+                config.separator,
+              ],
+            );
+          },
         ),
       );
 }

@@ -9,24 +9,29 @@ import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class LiminalScaffold extends StatelessWidget {
-  /// [Scaffold.body] passthrough
+  final EzCP config;
   final Widget body;
-
-  /// [FloatingActionButton]s
   final List<Widget>? fabs;
+  final bool isHome;
 
-  /// Standardized [Scaffold] for all screens
-  const LiminalScaffold(this.body, {super.key, this.fabs});
+  const LiminalScaffold(
+    this.config, {
+    super.key,
+    required this.body,
+    this.fabs,
+    this.isHome = false,
+  });
 
   @override
   Widget build(BuildContext context) => EzAdaptiveParent(
         small: EzScaffold(
-          body: EzScreen(body, safeArea: true),
+          config,
+          body: EzScreen(config, safeArea: true, child: body),
           backgroundColor: Colors.transparent,
           fabs: <Widget>[
-            updater,
+            updater(config),
             if (fabs != null) ...fabs!,
-            ...EzConfig.backFABs(false),
+            ...config.backFABs(isHome),
           ],
         ),
       );
