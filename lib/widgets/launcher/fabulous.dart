@@ -18,7 +18,7 @@ EzUpdaterFAB updater(EzCP config) => EzUpdaterFAB(
 class AddAppFAB extends FloatingActionButton {
   AddAppFAB(EzCP config, void Function() onPressed, {super.key})
       : super(
-          heroTag: 'add_app_fab',
+          heroTag: 'add_app_FAB',
           onPressed: onPressed,
           tooltip: 'Add more home apps',
           child: EzIcon(config, Icons.add),
@@ -28,7 +28,7 @@ class AddAppFAB extends FloatingActionButton {
 class AddFolderFAB extends FloatingActionButton {
   AddFolderFAB(EzCP config, void Function() onPressed, {super.key})
       : super(
-          heroTag: 'add_folder_fab',
+          heroTag: 'add_folder_FAB',
           onPressed: onPressed,
           tooltip: 'Add an app folder',
           child: EzIcon(config, Icons.create_new_folder),
@@ -38,7 +38,7 @@ class AddFolderFAB extends FloatingActionButton {
 class SettingsFAB extends FloatingActionButton {
   SettingsFAB(EzCP config, void Function() onPressed, {super.key})
       : super(
-          heroTag: 'settings_fab',
+          heroTag: 'settings_FAB',
           onPressed: onPressed,
           tooltip: config.ezL10n.ssNavHint,
           child: EzIcon(config, Icons.settings),
