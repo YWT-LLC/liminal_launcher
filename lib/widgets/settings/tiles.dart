@@ -23,8 +23,8 @@ class AppTileSetting extends StatelessWidget {
   final String lightElevatedKey;
 
   const AppTileSetting(this.config, {super.key, required this.folder})
-      : darkLabelKey = folder ? darkFolderLabelTypeKey : darkListLabelTypeKey,
-        lightLabelKey = folder ? lightFolderLabelTypeKey : lightListLabelTypeKey,
+      : darkLabelKey = folder ? darkFolderLabelKey : darkListLabelKey,
+        lightLabelKey = folder ? lightFolderLabelKey : lightListLabelKey,
         darkIconKey = folder ? darkFolderIconKey : darkListIconKey,
         lightIconKey = folder ? lightFolderIconKey : lightListIconKey,
         darkElevatedKey = folder ? darkElevatedFolderKey : darkElevatedListKey,

@@ -99,18 +99,18 @@ const Map<String, Type> limGlobalKeys = <String, Type>{
 
 // Design (button) //
 
-const String darkListLabelTypeKey = 'darkListLabelType';
+const String darkListLabelKey = 'darkListLabel';
 const String darkListIconKey = 'darkListIcon';
 const String darkElevatedListKey = 'darkElevatedList';
-const String darkFolderLabelTypeKey = 'darkFolderLabelType';
+const String darkFolderLabelKey = 'darkFolderLabel';
 const String darkFolderIconKey = 'darkFolderIcon';
 const String darkElevatedFolderKey = 'darkElevatedFolder';
 const String darkWideTilesKey = 'darkWideTiles';
 
-const String lightListLabelTypeKey = 'lightListLabelType';
+const String lightListLabelKey = 'lightListLabel';
 const String lightListIconKey = 'lightListIcon';
 const String lightElevatedListKey = 'lightElevatedList';
-const String lightFolderLabelTypeKey = 'lightFolderLabelType';
+const String lightFolderLabelKey = 'lightFolderLabel';
 const String lightFolderIconKey = 'lightFolderIcon';
 const String lightElevatedFolderKey = 'lightElevatedFolder';
 const String lightWideTilesKey = 'lightWideTiles';
@@ -132,18 +132,18 @@ const String lightVerticalAlignKey = 'lightVerticalAlign';
 /// Wallpaper and app tile settings
 const Map<String, Type> limDesignKeys = <String, Type>{
   // Button
-  darkListLabelTypeKey: String,
+  darkListLabelKey: String,
   darkListIconKey: bool,
   darkElevatedListKey: bool,
-  darkFolderLabelTypeKey: String,
+  darkFolderLabelKey: String,
   darkFolderIconKey: bool,
   darkElevatedFolderKey: bool,
   darkWideTilesKey: bool,
 
-  lightListLabelTypeKey: String,
+  lightListLabelKey: String,
   lightListIconKey: bool,
   lightElevatedListKey: bool,
-  lightFolderLabelTypeKey: String,
+  lightFolderLabelKey: String,
   lightFolderIconKey: bool,
   lightElevatedFolderKey: bool,
   lightWideTilesKey: bool,
@@ -207,18 +207,18 @@ final Map<String, Object> liminalDefault = <String, Object>{
 
   // Design //
   // Button
-  darkListLabelTypeKey: LabelType.full.value,
+  darkListLabelKey: LabelType.full.value,
   darkListIconKey: true,
   darkElevatedListKey: false,
-  darkFolderLabelTypeKey: LabelType.none.value,
+  darkFolderLabelKey: LabelType.full.value,
   darkFolderIconKey: true,
   darkElevatedFolderKey: false,
   darkWideTilesKey: true,
 
-  lightListLabelTypeKey: LabelType.full.value,
+  lightListLabelKey: LabelType.full.value,
   lightListIconKey: true,
   lightElevatedListKey: false,
-  lightFolderLabelTypeKey: LabelType.none.value,
+  lightFolderLabelKey: LabelType.full.value,
   lightFolderIconKey: true,
   lightElevatedFolderKey: false,
   lightWideTilesKey: true,
