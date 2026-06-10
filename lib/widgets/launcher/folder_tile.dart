@@ -69,8 +69,8 @@ class _AppFolderState extends State<FolderTile> {
 
     if (dy <= widget.rippleProgress!.value * heightOf(context)) {
       setState(() => state = switch (state) {
-            AppState.standard || AppState.verbose || AppState.singleEdit => AppState.groupEdit,
-            AppState.groupEdit => AppState.singleEdit,
+            AppState.standard || AppState.singleEdit => AppState.groupEdit,
+            AppState.verbose || AppState.groupEdit => AppState.standard,
           });
 
       final Duration animDur = ezDuration(widget.config.animDur, mod: rippleMod);
