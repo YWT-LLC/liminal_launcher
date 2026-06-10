@@ -24,8 +24,7 @@ class AppListSettings extends StatelessWidget {
           config,
           context: context,
           builder: (_) {
-            final AppInfoProvider appInfo = Provider.of<AppInfoProvider>(context, listen: false);
-            // TODO: Make sure the list isn't editable n shit (any other places to check?)
+            final AppInfoProvider appInfo = Provider.of<AppInfoProvider>(context);
 
             return ezModalScroll(
               config,
