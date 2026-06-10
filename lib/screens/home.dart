@@ -141,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
   @override
   void afterFirstLayout(BuildContext context) async {
-    final EzCP config = Provider.of<EzCP>(context, listen: false);
+    final EzCP config = configWatcher(context);
 
     // Check for welcome message
     if (!EzCM.get(shownIntroKey)) {
