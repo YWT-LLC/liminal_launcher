@@ -392,9 +392,11 @@ If you want to support Liminal's development, or the development of more Empathe
                             builder: (_, StateSetter setList) => ReorderableListView(
                               onReorderItem: (int oldIndex, int newIndex) {
                                 if (oldIndex == newIndex) return;
-                                final Widget moving = tiles.removeAt(oldIndex);
-                                tiles.insert(
-                                    (oldIndex < newIndex) ? newIndex - 1 : newIndex, moving);
+
+                                final Widget element = tiles.removeAt(oldIndex);
+                                tiles.insert(newIndex, element);
+
+                                appInfo.reorderHome(oldIndex, newIndex);
                                 setList(() {});
                               },
                               children: tiles,
@@ -407,7 +409,6 @@ If you want to support Liminal's development, or the development of more Empathe
                           crossAxisAlignment: hAlign(config).crossAxis,
                           physics: const ClampingScrollPhysics(),
                           children: buildTiles(config, appInfo),
-                          // TODO: share again? aka build less, whichever is truer
                         ),
                 ),
               ),
