@@ -42,9 +42,7 @@ class AppInfoProvider extends ChangeNotifier {
 
   AppInfoProvider(List<AppInfo> apps)
       : _apps = apps,
-        _appMap = <String, AppInfo>{
-          for (AppInfo app in apps) app.id: app,
-        } {
+        _appMap = <String, AppInfo>{for (AppInfo app in apps) app.id: app} {
     // Iterate through the home set and split any folders
     final Set<String> homeCopy = Set<String>.from(_homeSet);
     final Set<String> folders = <String>{};
@@ -72,44 +70,42 @@ class AppInfoProvider extends ChangeNotifier {
     }
 
     // Sort based on the user's preferences
-    sort(
-      ASConfig.lookup(EzCM.get(listSortKey)),
-      EzCM.get(ascListKey),
-    );
+    sort(ASConfig.lookup(EzCM.get(listSortKey)), EzCM.get(ascListKey));
 
-    // Listen //
+    // Listen to events (installs, external deletes, etc.)
     _listenToAppEvents();
   }
 
   void _listenToAppEvents() {
-    _appEventSubscription = _appEventChannel.receiveBroadcastStream().listen((dynamic event) async {
-      if (event is Map<dynamic, dynamic>) {
-        final String eventType = event['eventType'] as String;
+    _appEventSubscription = _appEventChannel.receiveBroadcastStream().listen(
+      (dynamic event) async {
+        if (event is Map<dynamic, dynamic>) {
+          final String eventType = event['eventType'] as String;
 
-        switch (eventType) {
-          case 'installed':
-            final Map<String, dynamic>? appInfoMap = event['appInfo'] as Map<String, dynamic>?;
+          switch (eventType) {
+            case 'installed':
+              final Map<String, dynamic>? appInfoMap = event['appInfo'] as Map<String, dynamic>?;
 
-            if (appInfoMap != null) await _handleAppInstalled(appInfoMap);
-            break;
-          case 'uninstalled':
-            final String? packageName = event['packageName'] as String?;
-            if (packageName == null) return;
+              if (appInfoMap != null) await _handleAppInstalled(appInfoMap);
+              break;
+            case 'uninstalled':
+              final String? packageName = event['packageName'] as String?;
+              if (packageName == null) return;
 
-            final List<AppInfo> apps =
-                _apps.where((AppInfo app) => app.package == packageName).toList();
+              final List<AppInfo> apps =
+                  _apps.where((AppInfo app) => app.package == packageName).toList();
 
-            if (apps.isNotEmpty) {
-              for (final AppInfo app in apps) {
-                await removeDeleted(app.id);
+              if (apps.isNotEmpty) {
+                for (final AppInfo app in apps) {
+                  await removeDeletedApp(app.id);
+                }
               }
-            }
-            break;
+              break;
+          }
         }
-      }
-    }, onError: (dynamic error) {
-      ezLog('Error listening to app events: $error');
-    });
+      },
+      onError: (dynamic error) => ezLog('Error listening to app events: $error'),
+    );
   }
 
   Future<void> _handleAppInstalled(Map<String, dynamic> appInfoMap) async {
@@ -162,18 +158,6 @@ class AppInfoProvider extends ChangeNotifier {
     return true;
   }
 
-  Future<bool> removeHomeApp(String appID, {bool batch = false}) async {
-    if (!_homeSet.contains(appID)) return false;
-
-    _homeList.remove(appID);
-    _homeSet.remove(appID);
-
-    await EzCM.setStringList(homeIDsKey, _homeList);
-    if (!batch) notifyListeners();
-
-    return true;
-  }
-
   Future<void> addHomeFolder() async {
     _homeList.add('Folder$folderSplit$emptyTag');
 
@@ -184,36 +168,17 @@ class AppInfoProvider extends ChangeNotifier {
   // Patch //
 
   void sort(AppSort sort, bool asc) {
-    switch (sort) {
-      case AppSort.name:
-        _apps.sort(
-            (AppInfo a, AppInfo b) => (asc) ? a.name.compareTo(b.name) : b.name.compareTo(a.name));
+    _apps.sort(switch (sort) {
+      AppSort.name => (AppInfo a, AppInfo b) =>
+          (asc) ? a.name.compareTo(b.name) : b.name.compareTo(a.name),
+      AppSort.publisher => (AppInfo a, AppInfo b) =>
+          (asc) ? a.package.compareTo(b.package) : b.package.compareTo(a.package),
+      AppSort.date => (AppInfo a, AppInfo b) =>
+          (asc) ? a.installDate.compareTo(b.installDate) : b.installDate.compareTo(a.installDate),
+      AppSort.size => (AppInfo a, AppInfo b) =>
+          (asc) ? a.packageSize.compareTo(b.packageSize) : b.packageSize.compareTo(a.packageSize),
+    });
 
-      case AppSort.publisher:
-        _apps.sort((AppInfo a, AppInfo b) =>
-            (asc) ? a.package.compareTo(b.package) : b.package.compareTo(a.package));
-
-      case AppSort.date:
-        _apps.sort((AppInfo a, AppInfo b) => (asc)
-            ? a.installDate.compareTo(b.installDate)
-            : b.installDate.compareTo(a.installDate));
-
-      case AppSort.size:
-        _apps.sort((AppInfo a, AppInfo b) => (asc)
-            ? a.packageSize.compareTo(b.packageSize)
-            : b.packageSize.compareTo(a.packageSize));
-    }
-    notifyListeners();
-  }
-
-  Future<void> reorderHomeItem({required int oldIndex, required int newIndex}) async {
-    final String id = _homeList.removeAt(oldIndex);
-    _homeList.insert(
-      oldIndex < newIndex ? newIndex - 1 : newIndex,
-      id,
-    );
-
-    await EzCM.setStringList(homeIDsKey, _homeList);
     notifyListeners();
   }
 
@@ -233,13 +198,10 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   Future<bool> renameFolder(String newName, int folderIndex) async {
-    final String fullName = _homeList[folderIndex];
-    final List<String> parts = fullName.split(folderSplit);
-    if (parts[0] == newName) return false;
+    final List<String> parts = _homeList[folderIndex].split(folderSplit);
 
-    final String newFullName =
-        (parts.length > 1) ? <String>[newName, ...parts].join(folderSplit) : newName;
-    _homeList[folderIndex] = newFullName;
+    parts[0] = newName;
+    _homeList[folderIndex] = parts.join(folderSplit);
 
     await EzCM.setStringList(homeIDsKey, _homeList);
     notifyListeners();
@@ -247,34 +209,27 @@ class AppInfoProvider extends ChangeNotifier {
     return true;
   }
 
-  Future<void> updateFolder({
-    required String name,
-    required int index,
-    required List<String> ids,
-  }) async {
-    final Set<String> newSet = ids.toSet();
+  Future<void> updateFolder(int index, String name, List<String> newIDs) async {
+    final Set<String> newSet = newIDs.toSet();
     final Set<String> oldSet = _homeList[index].split(folderSplit).sublist(1).toSet();
-    oldSet.remove(emptyTag);
 
-    _homeList[index] = name + folderSplit + (ids.isEmpty ? emptyTag : ids.join(folderSplit));
+    _homeSet.removeAll(oldSet.difference(newSet));
+    _homeSet.addAll(newSet.difference(oldSet));
 
-    for (final String id in oldSet.difference(newSet)) {
-      _homeSet.remove(id);
-    }
-    for (final String id in newSet.difference(oldSet)) {
-      _homeSet.add(id);
-    }
-
-    await EzCM.setStringList(homeIDsKey, _homeList);
+    await EzCM.setStringList(homeIDsKey, <String>[name, ...newIDs]);
     notifyListeners();
   }
 
-  Future<bool> hideApp(EzCP config, String appID) async {
-    if (_hiddenSet.contains(appID)) return false;
+  // TODO: 1 implement
+  // TODO: 2 make sure this only runs when changes have been made
+  Future<void> updateHomeList() async {}
 
-    if (_hiddenSet.isEmpty && ezRootNav.currentContext != null) {
+  Future<bool> hideApp(EzCP config, {required BuildContext context, required String id}) async {
+    if (_hiddenSet.contains(id)) return false;
+
+    if (_hiddenSet.isEmpty) {
       await showDialog(
-        context: ezRootNav.currentContext!,
+        context: context,
         builder: (_) => EzAlertDialog(
           config,
           title: const Text('Reminder', textAlign: TextAlign.center),
@@ -286,12 +241,12 @@ class AppInfoProvider extends ChangeNotifier {
       );
     }
 
-    _hiddenList.add(appID);
-    _hiddenSet.add(appID);
+    _hiddenList.add(id);
+    _hiddenSet.add(id);
 
     await EzCM.setStringList(hiddenIDsKey, _hiddenList);
 
-    final bool notified = await removeHomeApp(appID);
+    final bool notified = await removeHomeApp(id);
     if (!notified) notifyListeners();
 
     return true;
@@ -309,20 +264,15 @@ class AppInfoProvider extends ChangeNotifier {
     return true;
   }
 
-  Future<bool> banishApp(EzCP config, String appID) async {
-    if (_banishedSet.contains(appID) ||
-        ezRootNav.currentContext == null ||
-        !ezRootNav.currentContext!.mounted) {
-      return false;
-    }
-    final BuildContext currContext = ezRootNav.currentContext!;
+  Future<bool> banishApp(EzCP config, {required BuildContext context, required String id}) async {
+    if (_banishedSet.contains(id)) return false;
 
-    final AppInfo? currApp = _appMap[appID];
+    final AppInfo? currApp = _appMap[id];
     if (currApp == null) return false;
     final String name = currApp.name;
 
     final bool confirmed = await showDialog(
-      context: currContext,
+      context: context,
       builder: (BuildContext dCon) => EzAlertDialog(
         config,
         title: Text(
@@ -359,10 +309,10 @@ For example: if an app has always on location permissions, banishing it will not
     );
     if (!confirmed) return false;
 
-    _banishedSet.add(appID);
+    _banishedSet.add(id);
     await EzCM.setStringList(banishedIDsKey, _banishedSet.toList());
 
-    final bool notified = await removeHomeApp(appID);
+    final bool notified = await removeHomeApp(id);
     if (!notified) notifyListeners();
 
     return true;
@@ -370,7 +320,33 @@ For example: if an app has always on location permissions, banishing it will not
 
   // Delete //
 
-  Future<void> removeDeleted(String appID) async {
+  Future<bool> removeHomeApp(String appID, {bool batch = false}) async {
+    if (!_homeSet.contains(appID)) return false;
+
+    _homeList.remove(appID);
+    _homeSet.remove(appID);
+
+    await EzCM.setStringList(homeIDsKey, _homeList);
+    if (!batch) notifyListeners();
+
+    return true;
+  }
+
+  Future<bool> deleteFolder(int index) async {
+    if (index >= _homeList.length) return false;
+
+    for (final String id in _homeList[index].split(folderSplit)) {
+      _homeSet.remove(id);
+    }
+
+    _homeList.removeAt(index);
+    await EzCM.setStringList(homeIDsKey, _homeList);
+
+    notifyListeners();
+    return true;
+  }
+
+  Future<void> removeDeletedApp(String appID) async {
     if (_banishedSet.contains(appID)) {
       _banishedSet.remove(appID);
       await EzCM.setStringList(banishedIDsKey, _banishedSet.toList());
@@ -383,21 +359,6 @@ For example: if an app has always on location permissions, banishing it will not
     _appMap.remove(appID);
 
     notifyListeners();
-  }
-
-  Future<bool> deleteFolder(int index) async {
-    if (index >= _homeList.length) return false;
-
-    final List<String> ids = _homeList[index].split(':').sublist(1);
-    for (final String id in ids) {
-      _homeSet.remove(id);
-    }
-
-    _homeList.removeAt(index);
-    await EzCM.setStringList(homeIDsKey, _homeList);
-
-    notifyListeners();
-    return true;
   }
 
   Future<void> reset() async {
@@ -415,6 +376,8 @@ For example: if an app has always on location permissions, banishing it will not
 
     notifyListeners();
   }
+
+  // Dispose //
 
   @override
   void dispose() {
