@@ -55,7 +55,7 @@ Future<bool> deleteApp(AppInfo app) async {
   try {
     await platform.invokeMethod('deleteApp', <String, dynamic>{
       'packageName': app.package,
-    });
+    }); // TODO: return real results
     return true;
   } catch (e) {
     ezLog('Failed to delete ${app.package}: $e');
