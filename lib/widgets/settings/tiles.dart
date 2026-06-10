@@ -193,7 +193,7 @@ class AppTileSetting extends StatelessWidget {
               (showIcon != (folder ? folderIcons(config) : listIcons(config))) ||
               (elevated != (folder ? elevatedFolders(config) : elevatedLists(config))) ||
               (useWide != wideTiles(config))) {
-            await config.rebuildUI(<EzSettingType>{EzSettingType.design});
+            await config.rebuildUI(<EzCacheType>{EzCacheType.design});
           }
         },
         icon: const Icon(Icons.settings),

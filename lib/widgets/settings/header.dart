@@ -126,7 +126,7 @@ class HeaderSettings extends StatelessWidget {
 
           if (backupTime != EzCM.get(timeKey) ||
               backupDate != DateTypeConfig.lookup(EzCM.get(dateKey))) {
-            await config.rebuildUI(<EzSettingType>{EzSettingType.design});
+            await config.rebuildUI(<EzCacheType>{EzCacheType.design});
           }
         },
       );

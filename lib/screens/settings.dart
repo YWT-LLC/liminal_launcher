@@ -271,7 +271,7 @@ class SettingsScreen extends StatelessWidget {
                           vAlign(config) !=
                               LAConfig.lookup(EzCM.get(
                                   config.isDark ? darkVerticalAlignKey : lightVerticalAlignKey))) {
-                        await config.rebuildUI(<EzSettingType>{EzSettingType.design});
+                        await config.rebuildUI(<EzCacheType>{EzCacheType.design});
                       }
                     },
                     label: 'List alignment',
