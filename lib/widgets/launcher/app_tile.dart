@@ -342,7 +342,11 @@ class _AppTileState extends State<AppTile> {
                   onPressed: () async {
                     final bool success = widget.appInfo.hiddenSet.contains(widget.app.id)
                         ? await widget.appInfo.showApp(widget.app.id)
-                        : await widget.appInfo.hideApp(widget.config, widget.app.id);
+                        : await widget.appInfo.hideApp(
+                            widget.config,
+                            context: context,
+                            id: widget.app.id,
+                          );
                     if (success && mounted) setState(() => state = AppState.standard);
                   },
                   icon: Icon(
@@ -357,8 +361,11 @@ class _AppTileState extends State<AppTile> {
                 EzIconButton(
                   widget.config,
                   onPressed: () async {
-                    final bool banished =
-                        await widget.appInfo.banishApp(widget.config, widget.app.id);
+                    final bool banished = await widget.appInfo.banishApp(
+                      widget.config,
+                      context: context,
+                      id: widget.app.id,
+                    );
                     if (banished && mounted) setState(() => state = AppState.standard);
                   },
                   icon: const Icon(LineIcons.ghost),
@@ -373,7 +380,7 @@ class _AppTileState extends State<AppTile> {
                       final bool deleted = await deleteApp(widget.app);
 
                       if (deleted) {
-                        await widget.appInfo.removeDeleted(widget.app.id);
+                        await widget.appInfo.removeDeletedApp(widget.app.id);
                         if (mounted) setState(() => state = AppState.standard);
                       }
                     },

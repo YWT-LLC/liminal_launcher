@@ -307,11 +307,7 @@ class _AppFolderState extends State<FolderTile> {
                       ),
                     );
 
-                    await widget.appInfo.updateFolder(
-                      name: widget._name,
-                      index: widget.index,
-                      ids: widget._appList,
-                    );
+                    await widget.appInfo.updateFolder(widget.index, widget._name, widget._appList);
                   },
                 ),
                 rowSpacer(),
