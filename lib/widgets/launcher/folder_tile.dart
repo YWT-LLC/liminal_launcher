@@ -223,11 +223,10 @@ class _AppFolderState extends State<FolderTile> {
                   widget.config,
                   icon: const Icon(Icons.edit),
                   onPressed: () async {
+                    final List<String> apps = widget._appList;
+
                     await ezModal(
                       widget.config,
-                      isDismissible: false,
-                      enableDrag: false,
-                      showDragHandle: false,
                       context: context,
                       builder: (_) => StatefulBuilder(
                         builder: (_, StateSetter setModal) => Expanded(
@@ -235,15 +234,12 @@ class _AppFolderState extends State<FolderTile> {
                             onReorderItem: (int oldIndex, int newIndex) {
                               if (oldIndex == newIndex) return;
 
-                              // Local UI update first
-                              final String toMove = widget._appList.removeAt(oldIndex);
-                              widget._appList.insert(
-                                oldIndex < newIndex ? newIndex - 1 : newIndex,
-                                toMove,
-                              );
+                              final String element = apps.removeAt(oldIndex);
+                              apps.insert(newIndex, element);
+
                               setModal(() {});
                             },
-                            children: widget._appList
+                            children: apps
                                 .map((String id) {
                                   final AppInfo? app = widget.appInfo.appMap[id];
                                   if (app == null) return null;
@@ -307,7 +303,7 @@ class _AppFolderState extends State<FolderTile> {
                       ),
                     );
 
-                    await widget.appInfo.updateFolder(widget.index, widget._name, widget._appList);
+                    await widget.appInfo.updateFolder(widget.index, widget._name, apps);
                   },
                 ),
                 rowSpacer(),
