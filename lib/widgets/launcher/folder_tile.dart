@@ -255,14 +255,12 @@ class _AppFolderState extends State<FolderTile> {
                                       crossAxisAlignment: hAlign(widget.config).crossAxis,
                                       children: <Widget>[
                                         // Drag handle
-                                        if (state == AppState.groupEdit) ...<Widget>[
-                                          EzIcon(
-                                            widget.config,
-                                            Icons.drag_handle,
-                                            color: widget.config.colors.outline,
-                                          ),
-                                          widget.config.rowMargin,
-                                        ],
+                                        EzIcon(
+                                          widget.config,
+                                          Icons.drag_handle,
+                                          color: widget.config.colors.outline,
+                                        ),
+                                        widget.config.rowMargin,
 
                                         // App tile
                                         AppButton(
@@ -277,21 +275,16 @@ class _AppFolderState extends State<FolderTile> {
                                         EzIconButton(
                                           widget.config,
                                           icon: const Icon(Icons.remove),
-                                          onPressed: () {
-                                            widget._appList.remove(id);
-                                            setModal(() {});
-                                          },
+                                          onPressed: () => setModal(() => apps.remove(id)),
                                         ),
 
                                         // Drag handle
-                                        if (state == AppState.groupEdit) ...<Widget>[
-                                          widget.config.rowMargin,
-                                          EzIcon(
-                                            widget.config,
-                                            Icons.drag_handle,
-                                            color: widget.config.colors.outline,
-                                          ),
-                                        ],
+                                        widget.config.rowMargin,
+                                        EzIcon(
+                                          widget.config,
+                                          Icons.drag_handle,
+                                          color: widget.config.colors.outline,
+                                        ),
                                       ],
                                     ),
                                   );
