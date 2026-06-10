@@ -66,7 +66,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           ),
         ));
       } else {
-        final AppInfo app = appInfo.appMap[parts[0]] ?? nullApp;
+        final AppInfo? app = appInfo.appMap[parts[0]];
+        if (app == null) continue; // TODO: add more "garbage collection"
 
         tileList.add(Padding(
           key: ValueKey<String>(app.id),
