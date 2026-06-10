@@ -105,7 +105,7 @@ class _AppListScreenState extends State<AppListScreen> {
             mainAxisAlignment: vAlign(config).mainAxis,
             crossAxisAlignment: hAlign(config).crossAxis,
             children: <Widget>[
-              EzHeader(spacing: config.spacing, margin: config.marginVal),
+              EzHeader(config),
 
               // List controls
               EzScrollView(
