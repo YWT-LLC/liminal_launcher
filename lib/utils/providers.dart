@@ -220,10 +220,6 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // TODO: 1 implement
-  // TODO: 2 make sure this only runs when changes have been made
-  Future<void> updateHomeList() async {}
-
   Future<bool> hideApp(EzCP config, {required BuildContext context, required String id}) async {
     if (_hiddenSet.contains(id)) return false;
 
