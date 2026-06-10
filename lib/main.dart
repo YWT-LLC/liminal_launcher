@@ -100,26 +100,22 @@ class _TheMagic extends StatelessWidget {
             GoRoute(
               path: homePath,
               name: homePath,
-              pageBuilder: (BuildContext pbc, GoRouterState rs) => ezPageBuilder(
-                Provider.of<EzCP>(context, listen: false),
-                pbc,
-                rs,
-                const HomeScreen(),
-              ),
+              pageBuilder: (BuildContext pbc, GoRouterState pbs) =>
+                  ezPageBuilder(configWatcher(pbc), pbc, pbs, const HomeScreen()),
               routes: <RouteBase>[
                 // App list
                 GoRoute(
                   path: appListPath,
                   name: appListPath,
-                  pageBuilder: (BuildContext pbc, GoRouterState rs) => ezPageBuilder(
-                    Provider.of<EzCP>(context, listen: false),
+                  pageBuilder: (BuildContext pbc, GoRouterState pbs) => ezPageBuilder(
+                    configWatcher(pbc),
                     pbc,
-                    rs,
-                    AppListScreen(rs.extra as ListConfig),
+                    pbs,
+                    AppListScreen(pbs.extra as ListConfig),
                     transitionsBuilder: (BuildContext context, Animation<double> a,
                             Animation<double> aa, Widget w) =>
                         ezTransitionsBuilder(
-                      Provider.of<EzCP>(context, listen: false),
+                      configWatcher(pbc),
                       context,
                       a,
                       aa,
@@ -134,12 +130,8 @@ class _TheMagic extends StatelessWidget {
                 GoRoute(
                   path: settingsPath,
                   name: settingsPath,
-                  pageBuilder: (BuildContext context, GoRouterState state) => ezPageBuilder(
-                    Provider.of<EzCP>(context, listen: false),
-                    context,
-                    state,
-                    const SettingsScreen(),
-                  ),
+                  pageBuilder: (BuildContext pbc, GoRouterState pbs) =>
+                      ezPageBuilder(configWatcher(pbc), pbc, pbs, const SettingsScreen()),
                 ),
               ],
             ),
