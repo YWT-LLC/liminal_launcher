@@ -385,20 +385,29 @@ If you want to support Liminal's development, or the development of more Empathe
                     return false;
                   },
                   child: editing
-                      ? ReorderableListView(
-                          // TODO: Fix the order bug (...again?)
-                          onReorderItem: (int oldIndex, int newIndex) async {
-                            if (oldIndex == newIndex) return;
-                            await appInfo.reorderHomeItem(oldIndex: oldIndex, newIndex: newIndex);
-                          },
-                          children: buildTiles(config, appInfo),
-                        )
+                      ? Builder(builder: (_) {
+                          final List<Widget> tiles = buildTiles(config, appInfo);
+
+                          return StatefulBuilder(
+                            builder: (_, StateSetter setList) => ReorderableListView(
+                              onReorderItem: (int oldIndex, int newIndex) {
+                                if (oldIndex == newIndex) return;
+                                final Widget moving = tiles.removeAt(oldIndex);
+                                tiles.insert(
+                                    (oldIndex < newIndex) ? newIndex - 1 : newIndex, moving);
+                                setList(() {});
+                              },
+                              children: tiles,
+                            ),
+                          );
+                        })
                       : EzScrollView(
                           config,
                           mainAxisAlignment: vAlign(config).mainAxis,
                           crossAxisAlignment: hAlign(config).crossAxis,
                           physics: const ClampingScrollPhysics(),
                           children: buildTiles(config, appInfo),
+                          // TODO: share again? aka build less, whichever is truer
                         ),
                 ),
               ),
