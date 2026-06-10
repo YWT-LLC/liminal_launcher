@@ -230,68 +230,80 @@ class _AppFolderState extends State<FolderTile> {
                       context: context,
                       builder: (_) => StatefulBuilder(
                         builder: (_, StateSetter setModal) => Expanded(
-                          child: ReorderableListView(
-                            onReorderItem: (int oldIndex, int newIndex) {
-                              if (oldIndex == newIndex) return;
+                          child: Stack(children: <Widget>[
+                            ReorderableListView(
+                              onReorderItem: (int oldIndex, int newIndex) {
+                                if (oldIndex == newIndex) return;
 
-                              final String element = apps.removeAt(oldIndex);
-                              apps.insert(newIndex, element);
+                                final String element = apps.removeAt(oldIndex);
+                                apps.insert(newIndex, element);
 
-                              setModal(() {});
-                            },
-                            children: apps
-                                .map((String id) {
-                                  final AppInfo? app = widget.appInfo.appMap[id];
-                                  if (app == null) return null;
+                                setModal(() {});
+                              },
+                              children: apps
+                                  .map((String id) {
+                                    final AppInfo? app = widget.appInfo.appMap[id];
+                                    if (app == null) return null;
 
-                                  return Padding(
-                                    key: ValueKey<String>(id),
-                                    padding:
-                                        EdgeInsets.symmetric(vertical: widget.config.spacing / 2),
-                                    child: EzRow(
-                                      widget.config,
-                                      reverseHands: false,
-                                      mainAxisAlignment: hAlign(widget.config).mainAxis,
-                                      crossAxisAlignment: hAlign(widget.config).crossAxis,
-                                      children: <Widget>[
-                                        // Drag handle
-                                        EzIcon(
-                                          widget.config,
-                                          Icons.drag_handle,
-                                          color: widget.config.colors.outline,
-                                        ),
-                                        widget.config.rowMargin,
+                                    return Padding(
+                                      key: ValueKey<String>(id),
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: widget.config.spacing / 2),
+                                      child: EzRow(
+                                        widget.config,
+                                        reverseHands: false,
+                                        mainAxisAlignment: hAlign(widget.config).mainAxis,
+                                        crossAxisAlignment: hAlign(widget.config).crossAxis,
+                                        children: <Widget>[
+                                          // Drag handle
+                                          EzIcon(
+                                            widget.config,
+                                            Icons.drag_handle,
+                                            color: widget.config.colors.outline,
+                                          ),
+                                          widget.config.rowMargin,
 
-                                        // App tile
-                                        AppButton(
-                                          widget.config,
-                                          app: app,
-                                          labelType: folderLabels(widget.config),
-                                          buttonType: folderBT(widget.config),
-                                        ),
-                                        widget.config.rowSpacer,
+                                          // App tile
+                                          AppButton(
+                                            widget.config,
+                                            app: app,
+                                            labelType: folderLabels(widget.config),
+                                            buttonType: folderBT(widget.config),
+                                          ),
+                                          widget.config.rowSpacer,
 
-                                        // Remove button
-                                        EzIconButton(
-                                          widget.config,
-                                          icon: const Icon(Icons.remove),
-                                          onPressed: () => setModal(() => apps.remove(id)),
-                                        ),
+                                          // Remove button
+                                          EzIconButton(
+                                            widget.config,
+                                            icon: const Icon(Icons.remove),
+                                            onPressed: () => setModal(() => apps.remove(id)),
+                                          ),
 
-                                        // Drag handle
-                                        widget.config.rowMargin,
-                                        EzIcon(
-                                          widget.config,
-                                          Icons.drag_handle,
-                                          color: widget.config.colors.outline,
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                })
-                                .whereType<Widget>()
-                                .toList(),
-                          ),
+                                          // Drag handle
+                                          widget.config.rowMargin,
+                                          EzIcon(
+                                            widget.config,
+                                            Icons.drag_handle,
+                                            color: widget.config.colors.outline,
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  })
+                                  .whereType<Widget>()
+                                  .toList(),
+                            ),
+                            Positioned(
+                              bottom: widget.config.marginVal,
+                              right: widget.config.onLeft ? 0 : widget.config.marginVal,
+                              left: widget.config.onLeft ? widget.config.marginVal : 0,
+                              child: FloatingActionButton(
+                                heroTag: 'add_to_folder_FAB',
+                                onPressed: doNothing,
+                                child: EzIcon(widget.config, Icons.add),
+                              ),
+                            ),
+                          ]),
                         ),
                       ),
                     );
