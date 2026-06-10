@@ -209,6 +209,11 @@ class AppInfoProvider extends ChangeNotifier {
     return true;
   }
 
+  void reorderHome(int oldIndex, int newIndex) {
+    final String element = _homeList.removeAt(oldIndex);
+    _homeList.insert(newIndex, element);
+  }
+
   Future<void> updateFolder(int index, String name, List<String> newIDs) async {
     final Set<String> newSet = newIDs.toSet();
     final Set<String> oldSet = _homeList[index].split(folderSplit).sublist(1).toSet();
