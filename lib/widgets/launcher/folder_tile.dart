@@ -294,13 +294,24 @@ class _AppFolderState extends State<FolderTile> {
                                   .toList(),
                             ),
                             Positioned(
-                              bottom: widget.config.marginVal,
-                              right: widget.config.onLeft ? 0 : widget.config.marginVal,
-                              left: widget.config.onLeft ? widget.config.marginVal : 0,
-                              child: FloatingActionButton(
-                                heroTag: 'add_to_folder_FAB',
-                                onPressed: doNothing,
-                                child: EzIcon(widget.config, Icons.add),
+                              bottom: widget.config.spargin,
+                              child: EzRow(
+                                widget.config,
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: widget.config.spargin),
+                                    child: FloatingActionButton(
+                                      heroTag: 'add_to_folder_FAB',
+                                      onPressed: doNothing, // TODODOTO
+                                      tooltip: 'Add apps',
+                                      child: EzIcon(widget.config, Icons.add),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ]),
