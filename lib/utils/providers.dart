@@ -135,7 +135,7 @@ class AppInfoProvider extends ChangeNotifier {
   Set<String> get hiddenSet => _hiddenSet;
 
   Set<String> hybridIDs(ListConfig listConfig) => <String>{
-        if (listConfig.localContent != null) ...listConfig.localContent!,
+        if (listConfig.localContent != null) ...listConfig.localContent!.value,
         if (listConfig.listContent.contains(ListContent.home)) ..._homeSet,
         if (listConfig.listContent.contains(ListContent.hidden)) ..._hiddenSet,
         if (listConfig.listContent.contains(ListContent.banished)) ..._banishedSet,
