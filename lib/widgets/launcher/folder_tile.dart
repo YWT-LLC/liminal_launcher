@@ -231,18 +231,21 @@ class _AppFolderState extends State<FolderTile> {
                     await ezModal(
                       widget.config,
                       context: context,
+                      showDragHandle: false,
                       builder: (_) => StatefulBuilder(
-                        builder: (_, StateSetter setModal) => EzCol(children: <Widget>[
+                        builder: (BuildContext mCon, StateSetter setModal) =>
+                            EzCol(children: <Widget>[
                           // Name (and rename (II))
-                          EzLink(
+                          EzIconLink(
                             widget.config,
-                            text: name,
+                            label: name,
+                            icon: EzIcon(widget.config, Icons.edit),
                             style: widget.config.titleStyle,
                             textColor: widget.config.colors.onSurface,
                             textAlign: TextAlign.center,
                             hint: 'Activate to rename.',
                             onTap: () => showDialog(
-                              context: context,
+                              context: mCon,
                               builder: (BuildContext dCon) {
                                 final TextEditingController renameController =
                                     TextEditingController();
@@ -366,28 +369,42 @@ class _AppFolderState extends State<FolderTile> {
                               ),
                               Positioned(
                                 bottom: widget.config.spargin,
-                                left: widget.config.onLeft ? widget.config.spargin : 0,
-                                right: widget.config.onLeft ? 0 : widget.config.spargin,
-                                child: FloatingActionButton(
-                                  heroTag: 'add_to_folder_FAB',
-                                  onPressed: () => context.goNamed(
-                                    appListPath,
-                                    extra: ListConfig(
-                                      localContent: apps.toSet(),
-                                      listContent: <ListContent>{
-                                        ListContent.hidden,
-                                        ListContent.banished,
-                                      },
-                                      include: false,
-                                      onSelected: (String id) async => setModal(() => apps.add(id)),
-                                      title: EzText(
-                                        widget.config,
-                                        text: "Add to '${widget._name}'",
-                                        style: widget.config.labelStyle,
+                                left: widget.config.onLeft ? widget.config.spargin : null,
+                                right: widget.config.onLeft ? null : widget.config.spargin,
+                                child: EzCol(
+                                  children: <Widget>[
+                                    /// Add apps
+                                    FloatingActionButton(
+                                      heroTag: 'add_to_folder_FAB',
+                                      onPressed: () => mCon.goNamed(
+                                        appListPath,
+                                        extra: ListConfig(
+                                          localContent: ValueNotifier<List<String>>(apps),
+                                          listContent: <ListContent>{
+                                            ListContent.hidden,
+                                            ListContent.banished,
+                                          },
+                                          include: false,
+                                          onSelected: (String id) async =>
+                                              setModal(() => apps.add(id)),
+                                          title: EzText(
+                                            widget.config,
+                                            text: "Add to '$name'",
+                                            style: widget.config.labelStyle,
+                                          ),
+                                        ),
                                       ),
+                                      child: EzIcon(widget.config, Icons.add),
                                     ),
-                                  ),
-                                  child: EzIcon(widget.config, Icons.add),
+                                    widget.config.spacer,
+
+                                    /// Done
+                                    FloatingActionButton(
+                                      heroTag: 'done_folder_edits_FAB',
+                                      onPressed: () => Navigator.of(mCon).pop(),
+                                      child: EzIcon(widget.config, Icons.done),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ]),
@@ -396,7 +413,7 @@ class _AppFolderState extends State<FolderTile> {
                       ),
                     );
 
-                    await widget.appInfo.updateFolder(widget.index, widget._name, apps);
+                    await widget.appInfo.updateFolder(widget.index, name, apps);
                   },
                 ),
                 rowSpacer(),
