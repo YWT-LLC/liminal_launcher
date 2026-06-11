@@ -386,8 +386,8 @@ class _AppFolderState extends State<FolderTile> {
                                             ListContent.banished,
                                           },
                                           include: false,
-                                          onSelected: (String id) async =>
-                                              appsNotif.value = List<String>.from(apps)..add(id),
+                                          onSelected: (String id) async => appsNotif.value =
+                                              List<String>.from(appsNotif.value)..add(id),
                                           title: EzText(
                                             widget.config,
                                             text: "Add to '${renameCon.text}'",
@@ -414,11 +414,11 @@ class _AppFolderState extends State<FolderTile> {
                       ]),
                     );
 
-                    await widget.appInfo.updateFolder(
-                      widget.index,
-                      renameCon.text,
-                      appsNotif.value,
-                    );
+                    await ezNoTouch(() async => await widget.appInfo.updateFolder(
+                          widget.index,
+                          renameCon.text,
+                          appsNotif.value,
+                        ));
                   },
                 ),
                 rowSpacer(),

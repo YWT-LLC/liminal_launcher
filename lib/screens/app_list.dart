@@ -38,6 +38,18 @@ class _AppListScreenState extends State<AppListScreen> {
   bool verbose = false;
   ValueNotifier<double> rippleProgress = ValueNotifier<double>(0.0);
 
+  // Init //
+
+  void _onLocalContentChanged() {
+    if (mounted) setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    widget.config.localContent?.addListener(_onLocalContentChanged);
+  }
+
   // Return the build //
 
   @override
@@ -310,6 +322,7 @@ class _AppListScreenState extends State<AppListScreen> {
 
   @override
   void dispose() {
+    widget.config.localContent?.removeListener(_onLocalContentChanged);
     scrollControl.dispose();
     searchControl.dispose();
     super.dispose();
