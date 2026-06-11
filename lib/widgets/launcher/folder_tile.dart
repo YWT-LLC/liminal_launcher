@@ -265,12 +265,12 @@ class _AppFolderState extends State<FolderTile> {
                                           ),
                                           widget.config.rowMargin,
 
-                                          // App tile
-                                          AppButton(
-                                            widget.config,
-                                            app: app,
-                                            labelType: folderLabels(widget.config),
-                                            buttonType: folderBT(widget.config),
+                                          // App icon
+                                          Image.memory(
+                                            app.icon!,
+                                            semanticLabel: app.name,
+                                            width: appIconSize(widget.config),
+                                            height: appIconSize(widget.config),
                                           ),
                                           widget.config.rowSpacer,
 
@@ -326,6 +326,7 @@ class _AppFolderState extends State<FolderTile> {
                                           ),
                                         ),
                                       ),
+                                      child: EzIcon(widget.config, Icons.add),
                                     ),
                                   ),
                                 ],
