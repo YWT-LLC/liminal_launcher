@@ -12,21 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-class ListConfig {
-  final Widget? title;
-  final Set<ListContent> contents;
-  final bool include;
-  final Future<void> Function(String id) onSelected;
-
-  /// How the [AppListScreen] should behave
-  const ListConfig({
-    required this.title,
-    required this.contents,
-    required this.include,
-    required this.onSelected,
-  });
-}
-
 class AppListScreen extends StatefulWidget {
   final ListConfig config;
 
@@ -256,7 +241,7 @@ class _AppListScreenState extends State<AppListScreen> {
                     physics: const ClampingScrollPhysics(),
                     children: appInfo.apps
                         .where((AppInfo app) =>
-                            (appInfo.hybridIDs(widget.config.contents).contains(app.id) ==
+                            (appInfo.hybridIDs(widget.config).contains(app.id) ==
                                 widget.config.include) &&
                             (searching
                                 ? app.name.toLowerCase().contains(searchControl.text.toLowerCase())
