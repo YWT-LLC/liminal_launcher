@@ -130,7 +130,7 @@ class _AppTileState extends State<AppTile> {
         forceType: EzTransitionType.none,
         forceFade: true,
         child: switch (state) {
-          AppState.standard => wideTiles(widget.config)
+          AppState.standard => widget.location != AppLocation.folder && wideTiles(widget.config)
               ? InkWell(
                   onTap: () => widget.onSelected(widget.app.id),
                   onLongPress: () =>
