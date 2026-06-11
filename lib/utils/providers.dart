@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
+// TODO: check everything here - am I accounting for empty?
+
 /// ,
 const String folderSplit = ',';
 
@@ -138,10 +140,11 @@ class AppInfoProvider extends ChangeNotifier {
 
   Set<String> get hiddenSet => _hiddenSet;
 
-  Set<String> hybridIDs(Set<ListContent> contents) => <String>{
-        if (contents.contains(ListContent.home)) ..._homeSet,
-        if (contents.contains(ListContent.hidden)) ..._hiddenSet,
-        if (contents.contains(ListContent.banished)) ..._banishedSet,
+  Set<String> hybridIDs(ListConfig listConfig) => <String>{
+        if (listConfig.localContent != null) ...listConfig.localContent!,
+        if (listConfig.listContent.contains(ListContent.home)) ..._homeSet,
+        if (listConfig.listContent.contains(ListContent.hidden)) ..._hiddenSet,
+        if (listConfig.listContent.contains(ListContent.banished)) ..._banishedSet,
       };
 
   // Put //
@@ -215,13 +218,22 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   Future<void> updateFolder(int index, String name, List<String> newIDs) async {
-    final Set<String> newSet = newIDs.toSet();
     final Set<String> oldSet = _homeList[index].split(folderSplit).sublist(1).toSet();
+    final Set<String> newSet = newIDs.toSet();
+
+    _homeList[index] = <String>[
+      name,
+      ...(newIDs.isEmpty ? <String>[emptyTag] : newIDs),
+    ].join(folderSplit);
 
     _homeSet.removeAll(oldSet.difference(newSet));
-    _homeSet.addAll(newSet.difference(oldSet));
 
-    await EzCM.setStringList(homeIDsKey, <String>[name, ...newIDs]);
+    for (final String id in newSet.difference(oldSet)) {
+      final bool wasThere = _homeList.remove(id);
+      if (!wasThere) _homeSet.add(id);
+    }
+
+    await EzCM.setStringList(homeIDsKey, _homeList);
     notifyListeners();
   }
 
