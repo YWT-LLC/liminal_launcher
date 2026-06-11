@@ -93,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
       : context.goNamed(
           appListPath,
           extra: ListConfig(
-            contents: <ListContent>{ListContent.hidden, ListContent.banished},
+            listContent: <ListContent>{ListContent.hidden, ListContent.banished},
             include: false,
             onSelected: (String id) => launchApp(id),
             title: null,
@@ -117,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
       context.goNamed(
         appListPath,
         extra: ListConfig(
-          contents: <ListContent>{ListContent.hidden},
+          listContent: <ListContent>{ListContent.hidden},
           include: true,
           onSelected: (String id) => launchApp(id),
           title: EzTextBackground(config,
@@ -429,7 +429,7 @@ If you want to support Liminal's development, or the development of more Empathe
                   () => context.goNamed(
                     appListPath,
                     extra: ListConfig(
-                      contents: <ListContent>{
+                      listContent: <ListContent>{
                         ListContent.home,
                         ListContent.hidden,
                         ListContent.banished,
