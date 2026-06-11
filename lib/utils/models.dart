@@ -92,7 +92,7 @@ final AppInfo nullApp = AppInfo(
 
 class ListConfig {
   final Widget? title;
-  final Set<String>? localContent;
+  final ValueNotifier<List<String>>? localContent;
   final Set<ListContent> listContent;
   final bool include;
   final Future<void> Function(String id) onSelected;
