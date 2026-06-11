@@ -3,11 +3,13 @@
  * See LICENSE for distribution and usage details.
  */
 
+import '../../screens/export.dart';
 import '../../utils/export.dart';
 import '../export.dart';
 
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class FolderTile extends StatefulWidget {
@@ -306,9 +308,24 @@ class _AppFolderState extends State<FolderTile> {
                                         EdgeInsets.symmetric(horizontal: widget.config.spargin),
                                     child: FloatingActionButton(
                                       heroTag: 'add_to_folder_FAB',
-                                      onPressed: doNothing, // TODODOTO
-                                      tooltip: 'Add apps',
-                                      child: EzIcon(widget.config, Icons.add),
+                                      onPressed: () => context.goNamed(
+                                        appListPath,
+                                        extra: ListConfig(
+                                          localContent: apps.toSet(),
+                                          listContent: <ListContent>{
+                                            ListContent.hidden,
+                                            ListContent.banished,
+                                          },
+                                          include: false,
+                                          onSelected: (String id) async =>
+                                              setModal(() => apps.add(id)),
+                                          title: EzText(
+                                            widget.config,
+                                            text: "Add to '${widget._name}'",
+                                            style: widget.config.labelStyle,
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ],
