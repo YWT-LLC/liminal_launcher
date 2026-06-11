@@ -3,6 +3,9 @@
  * See LICENSE for distribution and usage details.
  */
 
+import './export.dart';
+
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 /// ---
@@ -90,4 +93,20 @@ String? validateRename(String? newName) {
   if (!validNameRegExp.hasMatch(newName)) return 'Invalid; $_pattern';
 
   return null;
+}
+
+class ListConfig {
+  final Widget? title;
+  final Set<String>? localContent;
+  final Set<ListContent> listContent;
+  final bool include;
+  final Future<void> Function(String id) onSelected;
+
+  const ListConfig({
+    required this.title,
+    this.localContent,
+    required this.listContent,
+    required this.include,
+    required this.onSelected,
+  });
 }
