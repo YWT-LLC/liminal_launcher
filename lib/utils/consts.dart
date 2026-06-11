@@ -5,6 +5,7 @@
 
 import './export.dart';
 
+import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 //* App config *//
@@ -304,3 +305,27 @@ const Map<String, String> wingdingMap = <String, String>{
   'Y': '\u{2721}',
   'Z': '\u{262A}',
 };
+
+//* Runtime *//
+
+/// 'empty'
+const String emptyTag = 'empty';
+
+/// ,
+const String folderSplit = ',';
+
+/// :
+const String idSplit = ':';
+
+/// ---
+const String nullAppLabel = '---';
+
+/// empty [String]
+const String nullAppPackage = '';
+
+// Not const //
+
+Offset lastRipple = Offset.zero;
+
+/// 1.5
+double rippleMod = 1.5;

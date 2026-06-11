@@ -3,17 +3,10 @@
  * See LICENSE for distribution and usage details.
  */
 
-import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
-
 import './export.dart';
+
 import 'package:flutter/material.dart';
-
-/// Tracks the position of the last ripple LongPress
-/// Defaults to [Offset.zero]
-Offset lastRipple = Offset.zero;
-
-/// 1.5
-double rippleMod = 1.5;
+import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 //* Runtime *//
 
@@ -25,20 +18,18 @@ enum ListContent { home, hidden, banished }
 
 //* BTS *//
 
-// Sort //
-
 enum AppSort { name, publisher, date, size }
 
-/// enum String 'name'
+/// enum [String] 'name'
 const String esName = 'name';
 
-/// enum String 'publisher'
+/// enum [String] 'publisher'
 const String esPublisher = 'publisher';
 
-/// enum String 'date'
+/// enum [String] 'date'
 const String esDate = 'date';
 
-/// enum String 'size'
+/// enum [String] 'size'
 const String esSize = 'size';
 
 extension ASConfig on AppSort {
@@ -126,16 +117,16 @@ extension BTConfig on ButtonType {
 
 enum DateType { none, compact, short, medium, long }
 
-/// enum String 'compact'
+/// enum [String] 'compact'
 const String esCompact = 'compact';
 
-/// enum String 'short'
+/// enum [String] 'short'
 const String esShort = 'short';
 
-/// enum String 'medium'
+/// enum [String] 'medium'
 const String esMedium = 'medium';
 
-/// enum String 'long'
+/// enum [String] 'long'
 const String esLong = 'long';
 
 extension DateTypeConfig on DateType {
@@ -168,13 +159,13 @@ extension DateTypeConfig on DateType {
 
 enum ListAlignment { center, start, end }
 
-/// enum String 'center'
+/// enum [String] 'center'
 const String esCenter = 'center';
 
-/// enum String 'start'
+/// enum [String] 'start'
 const String esStart = 'start';
 
-/// enum String 'end'
+/// enum [String] 'end'
 const String esEnd = 'end';
 
 extension LAConfig on ListAlignment {
@@ -216,20 +207,8 @@ extension LAConfig on ListAlignment {
 }
 
 const List<DropdownMenuEntry<LabelType>> labelEntries = <DropdownMenuEntry<LabelType>>[
-  DropdownMenuEntry<LabelType>(
-    value: LabelType.none,
-    label: 'None',
-  ),
-  DropdownMenuEntry<LabelType>(
-    value: LabelType.initials,
-    label: 'Initials',
-  ),
-  DropdownMenuEntry<LabelType>(
-    value: LabelType.full,
-    label: 'Full name',
-  ),
-  DropdownMenuEntry<LabelType>(
-    value: LabelType.wingding,
-    label: 'Wingding',
-  ),
+  DropdownMenuEntry<LabelType>(value: LabelType.none, label: 'None'),
+  DropdownMenuEntry<LabelType>(value: LabelType.initials, label: 'Initials'),
+  DropdownMenuEntry<LabelType>(value: LabelType.full, label: 'Full name'),
+  DropdownMenuEntry<LabelType>(value: LabelType.wingding, label: 'Wingding'),
 ];

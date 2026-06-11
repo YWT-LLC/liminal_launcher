@@ -8,24 +8,7 @@ import './export.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-/// ---
-const String nullAppLabel = '---';
-
-/// empty string
-const String nullAppPackage = '';
-
-/// :
-const String idSplit = ':';
-
-/// Helpful for creating [AppInfo] lists
-/// [nullAppLabel], [nullAppPackage], false, 0, 0
-final AppInfo nullApp = AppInfo(
-  label: nullAppLabel,
-  package: nullAppPackage,
-  removable: false,
-  installDate: 0,
-  packageSize: 0,
-);
+// App Info //
 
 class AppInfo {
   final String _package;
@@ -94,6 +77,18 @@ String? validateRename(String? newName) {
 
   return null;
 }
+
+/// Helpful for creating [AppInfo] lists
+/// [nullAppLabel], [nullAppPackage], false, 0, 0
+final AppInfo nullApp = AppInfo(
+  label: nullAppLabel,
+  package: nullAppPackage,
+  removable: false,
+  installDate: 0,
+  packageSize: 0,
+);
+
+// List Config //
 
 class ListConfig {
   final Widget? title;

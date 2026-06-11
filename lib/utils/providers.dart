@@ -12,12 +12,6 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 // TODO: check everything here - am I accounting for empty?
 
-/// ,
-const String folderSplit = ',';
-
-/// empty
-const String emptyTag = 'empty';
-
 class AppInfoProvider extends ChangeNotifier {
   // Construct //
 

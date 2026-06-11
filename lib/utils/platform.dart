@@ -8,7 +8,7 @@ import './export.dart';
 import 'package:flutter/services.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-const MethodChannel platform = MethodChannel('net.empathetech.liminal/query');
+const MethodChannel platform = MethodChannel('$androidPackage/query');
 
 /// Get all installed apps
 Future<List<AppInfo>> getApps() async {
