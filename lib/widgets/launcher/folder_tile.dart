@@ -225,115 +225,174 @@ class _AppFolderState extends State<FolderTile> {
                   widget.config,
                   icon: const Icon(Icons.edit),
                   onPressed: () async {
+                    String name = widget._name;
                     final List<String> apps = widget._appList;
 
                     await ezModal(
                       widget.config,
                       context: context,
                       builder: (_) => StatefulBuilder(
-                        builder: (_, StateSetter setModal) => Expanded(
-                          child: Stack(children: <Widget>[
-                            ReorderableListView(
-                              onReorderItem: (int oldIndex, int newIndex) {
-                                if (oldIndex == newIndex) return;
+                        builder: (_, StateSetter setModal) => EzCol(children: <Widget>[
+                          // Name (and rename (II))
+                          EzLink(
+                            widget.config,
+                            text: name,
+                            style: widget.config.titleStyle,
+                            textColor: widget.config.colors.onSurface,
+                            textAlign: TextAlign.center,
+                            hint: 'Activate to rename.',
+                            onTap: () => showDialog(
+                              context: context,
+                              builder: (BuildContext dCon) {
+                                final TextEditingController renameController =
+                                    TextEditingController();
 
-                                final String element = apps.removeAt(oldIndex);
-                                apps.insert(newIndex, element);
+                                void onConfirm() {
+                                  closeKeyboard(dCon);
 
-                                setModal(() {});
-                              },
-                              children: apps
-                                  .map((String id) {
-                                    final AppInfo? app = widget.appInfo.appMap[id];
-                                    if (app == null) return null;
+                                  final String newName = renameController.text.trim();
+                                  if (validateRename(newName) != null) return;
 
-                                    return Padding(
-                                      key: ValueKey<String>(id),
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: widget.config.spacing / 2),
-                                      child: EzRow(
-                                        widget.config,
-                                        reverseHands: false,
-                                        mainAxisAlignment: hAlign(widget.config).mainAxis,
-                                        crossAxisAlignment: hAlign(widget.config).crossAxis,
-                                        children: <Widget>[
-                                          // Drag handle
-                                          EzIcon(
-                                            widget.config,
-                                            Icons.drag_handle,
-                                            color: widget.config.colors.outline,
-                                          ),
-                                          widget.config.rowMargin,
+                                  setModal(() => name = newName);
+                                  Navigator.of(dCon).pop(newName);
+                                }
 
-                                          // App icon
-                                          Image.memory(
-                                            app.icon!,
-                                            semanticLabel: app.name,
-                                            width: appIconSize(widget.config),
-                                            height: appIconSize(widget.config),
-                                          ),
-                                          widget.config.rowSpacer,
+                                void onDeny() {
+                                  closeKeyboard(dCon);
+                                  Navigator.of(dCon).pop();
+                                }
 
-                                          // Remove button
-                                          EzIconButton(
-                                            widget.config,
-                                            icon: const Icon(Icons.remove),
-                                            onPressed: () => setModal(() => apps.remove(id)),
-                                          ),
-
-                                          // Drag handle
-                                          widget.config.rowMargin,
-                                          EzIcon(
-                                            widget.config,
-                                            Icons.drag_handle,
-                                            color: widget.config.colors.outline,
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  })
-                                  .whereType<Widget>()
-                                  .toList(),
-                            ),
-                            Positioned(
-                              bottom: widget.config.spargin,
-                              child: EzRow(
-                                widget.config,
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: widget.config.spargin),
-                                    child: FloatingActionButton(
-                                      heroTag: 'add_to_folder_FAB',
-                                      onPressed: () => context.goNamed(
-                                        appListPath,
-                                        extra: ListConfig(
-                                          localContent: apps.toSet(),
-                                          listContent: <ListContent>{
-                                            ListContent.hidden,
-                                            ListContent.banished,
-                                          },
-                                          include: false,
-                                          onSelected: (String id) async =>
-                                              setModal(() => apps.add(id)),
-                                          title: EzText(
-                                            widget.config,
-                                            text: "Add to '${widget._name}'",
-                                            style: widget.config.labelStyle,
-                                          ),
-                                        ),
-                                      ),
-                                      child: EzIcon(widget.config, Icons.add),
+                                return EzAlertDialog(
+                                  widget.config,
+                                  title: Text(
+                                    "Rename '$name'?",
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  content: Form(
+                                    child: TextFormField(
+                                      controller: renameController,
+                                      textAlign: TextAlign.center,
+                                      maxLines: 1,
+                                      autofillHints: const <String>[AutofillHints.name],
+                                      autovalidateMode: AutovalidateMode.onUnfocus,
+                                      validator: validateRename,
                                     ),
                                   ),
-                                ],
-                              ),
+                                  actions: ezActionPair(
+                                    widget.config,
+                                    confirmMsg: widget.config.ezL10n.gApply,
+                                    onConfirm: onConfirm,
+                                    confirmIsDestructive: true,
+                                    denyMsg: widget.config.ezL10n.gCancel,
+                                    onDeny: onDeny,
+                                  ),
+                                  needsClose: false,
+                                );
+                              },
                             ),
-                          ]),
-                        ),
+                          ),
+                          widget.config.spacer,
+
+                          // Apps
+                          Expanded(
+                            child: Stack(children: <Widget>[
+                              ReorderableListView(
+                                onReorderItem: (int oldIndex, int newIndex) {
+                                  if (oldIndex == newIndex) return;
+
+                                  final String element = apps.removeAt(oldIndex);
+                                  apps.insert(newIndex, element);
+
+                                  setModal(() {});
+                                },
+                                children: apps
+                                    .map((String id) {
+                                      final AppInfo? app = widget.appInfo.appMap[id];
+                                      if (app == null) return null;
+
+                                      return InkWell(
+                                        key: ValueKey<String>(id),
+                                        child: Container(
+                                          width: double.infinity,
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: widget.config.spacing / 2),
+                                          child: EzRow(
+                                            widget.config,
+                                            reverseHands: false,
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                            children: <Widget>[
+                                              // Drag handle
+                                              EzIcon(
+                                                widget.config,
+                                                Icons.drag_handle,
+                                                color: widget.config.colors.outline,
+                                              ),
+
+                                              // App icon && remove button
+                                              EzRow(
+                                                widget.config,
+                                                reverseHands: false,
+                                                children: <Widget>[
+                                                  Image.memory(
+                                                    app.icon!,
+                                                    semanticLabel: app.name,
+                                                    width: appIconSize(widget.config),
+                                                    height: appIconSize(widget.config),
+                                                  ),
+                                                  widget.config.rowSpacer,
+                                                  EzIconButton(
+                                                    widget.config,
+                                                    icon: const Icon(Icons.remove),
+                                                    onPressed: () =>
+                                                        setModal(() => apps.remove(id)),
+                                                  ),
+                                                ],
+                                              ),
+
+                                              // Drag handle
+                                              EzIcon(
+                                                widget.config,
+                                                Icons.drag_handle,
+                                                color: widget.config.colors.outline,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    })
+                                    .whereType<Widget>()
+                                    .toList(),
+                              ),
+                              Positioned(
+                                bottom: widget.config.spargin,
+                                left: widget.config.onLeft ? widget.config.spargin : 0,
+                                right: widget.config.onLeft ? 0 : widget.config.spargin,
+                                child: FloatingActionButton(
+                                  heroTag: 'add_to_folder_FAB',
+                                  onPressed: () => context.goNamed(
+                                    appListPath,
+                                    extra: ListConfig(
+                                      localContent: apps.toSet(),
+                                      listContent: <ListContent>{
+                                        ListContent.hidden,
+                                        ListContent.banished,
+                                      },
+                                      include: false,
+                                      onSelected: (String id) async => setModal(() => apps.add(id)),
+                                      title: EzText(
+                                        widget.config,
+                                        text: "Add to '${widget._name}'",
+                                        style: widget.config.labelStyle,
+                                      ),
+                                    ),
+                                  ),
+                                  child: EzIcon(widget.config, Icons.add),
+                                ),
+                              ),
+                            ]),
+                          ),
+                        ]),
                       ),
                     );
 
