@@ -172,12 +172,12 @@ class _AppFolderState extends State<FolderTile> {
                   onTap: () => showDialog(
                     context: context,
                     builder: (BuildContext dCon) {
-                      final TextEditingController renameController = TextEditingController();
+                      final TextEditingController renameCon = TextEditingController();
 
                       void onConfirm() async {
                         closeKeyboard(dCon);
 
-                        final String name = renameController.text.trim();
+                        final String name = renameCon.text.trim();
                         if (validateRename(name) != null) return null;
 
                         final bool success = await widget.appInfo.renameFolder(name, widget.index);
@@ -197,7 +197,7 @@ class _AppFolderState extends State<FolderTile> {
                         ),
                         content: Form(
                           child: TextFormField(
-                            controller: renameController,
+                            controller: renameCon,
                             textAlign: TextAlign.center,
                             maxLines: 1,
                             autofillHints: const <String>[AutofillHints.name],
@@ -225,88 +225,89 @@ class _AppFolderState extends State<FolderTile> {
                   widget.config,
                   icon: const Icon(Icons.edit),
                   onPressed: () async {
-                    String name = widget._name;
-                    final List<String> apps = widget._appList;
+                    final TextEditingController renameCon =
+                        TextEditingController(text: widget._name);
+                    final ValueNotifier<List<String>> appsNotif =
+                        ValueNotifier<List<String>>(widget._appList);
 
                     await ezModal(
                       widget.config,
                       context: context,
                       showDragHandle: false,
-                      builder: (_) => StatefulBuilder(
-                        builder: (BuildContext mCon, StateSetter setModal) =>
-                            EzCol(children: <Widget>[
-                          // Name (and rename (II))
-                          EzIconLink(
-                            widget.config,
-                            label: name,
-                            icon: EzIcon(widget.config, Icons.edit),
-                            style: widget.config.titleStyle,
-                            textColor: widget.config.colors.onSurface,
-                            textAlign: TextAlign.center,
-                            hint: 'Activate to rename.',
-                            onTap: () => showDialog(
-                              context: mCon,
-                              builder: (BuildContext dCon) {
-                                final TextEditingController renameController =
-                                    TextEditingController();
+                      builder: (BuildContext mCon) => EzCol(children: <Widget>[
+                        EzHeader(widget.config),
 
-                                void onConfirm() {
-                                  closeKeyboard(dCon);
+                        // Name (and rename (II))
+                        EzIconLink(
+                          widget.config,
+                          label: renameCon.text,
+                          icon: EzIcon(widget.config, Icons.edit),
+                          style: widget.config.titleStyle,
+                          textColor: widget.config.colors.onSurface,
+                          textAlign: TextAlign.center,
+                          hint: 'Activate to rename.',
+                          onTap: () => showDialog(
+                            context: mCon,
+                            builder: (BuildContext dCon) {
+                              void onConfirm() {
+                                closeKeyboard(dCon);
 
-                                  final String newName = renameController.text.trim();
-                                  if (validateRename(newName) != null) return;
+                                final String newName = renameCon.text.trim();
+                                if (validateRename(newName) != null) return;
 
-                                  setModal(() => name = newName);
-                                  Navigator.of(dCon).pop(newName);
-                                }
+                                Navigator.of(dCon).pop(newName);
+                              }
 
-                                void onDeny() {
-                                  closeKeyboard(dCon);
-                                  Navigator.of(dCon).pop();
-                                }
+                              void onDeny() {
+                                closeKeyboard(dCon);
+                                Navigator.of(dCon).pop();
+                              }
 
-                                return EzAlertDialog(
-                                  widget.config,
-                                  title: Text(
-                                    "Rename '$name'?",
+                              return EzAlertDialog(
+                                widget.config,
+                                title: Text(
+                                  "Rename '${renameCon.text}'?",
+                                  textAlign: TextAlign.center,
+                                ),
+                                content: Form(
+                                  child: TextFormField(
+                                    controller: renameCon,
                                     textAlign: TextAlign.center,
+                                    maxLines: 1,
+                                    autofillHints: const <String>[AutofillHints.name],
+                                    autovalidateMode: AutovalidateMode.onUnfocus,
+                                    validator: validateRename,
                                   ),
-                                  content: Form(
-                                    child: TextFormField(
-                                      controller: renameController,
-                                      textAlign: TextAlign.center,
-                                      maxLines: 1,
-                                      autofillHints: const <String>[AutofillHints.name],
-                                      autovalidateMode: AutovalidateMode.onUnfocus,
-                                      validator: validateRename,
-                                    ),
-                                  ),
-                                  actions: ezActionPair(
-                                    widget.config,
-                                    confirmMsg: widget.config.ezL10n.gApply,
-                                    onConfirm: onConfirm,
-                                    confirmIsDestructive: true,
-                                    denyMsg: widget.config.ezL10n.gCancel,
-                                    onDeny: onDeny,
-                                  ),
-                                  needsClose: false,
-                                );
-                              },
-                            ),
+                                ),
+                                actions: ezActionPair(
+                                  widget.config,
+                                  confirmMsg: widget.config.ezL10n.gApply,
+                                  onConfirm: onConfirm,
+                                  confirmIsDestructive: true,
+                                  denyMsg: widget.config.ezL10n.gCancel,
+                                  onDeny: onDeny,
+                                ),
+                                needsClose: false,
+                              );
+                            },
                           ),
-                          widget.config.spacer,
+                        ),
+                        widget.config.spacer,
 
-                          // Apps
-                          Expanded(
-                            child: Stack(children: <Widget>[
+                        // Apps
+                        Expanded(
+                          child: ValueListenableBuilder<List<String>>(
+                            valueListenable: appsNotif,
+                            builder: (_, List<String> apps, __) => Stack(children: <Widget>[
                               ReorderableListView(
                                 onReorderItem: (int oldIndex, int newIndex) {
                                   if (oldIndex == newIndex) return;
 
-                                  final String element = apps.removeAt(oldIndex);
-                                  apps.insert(newIndex, element);
+                                  final List<String> update = List<String>.from(apps);
+                                  final String element = update.removeAt(oldIndex);
+                                  update.insert(newIndex, element);
 
-                                  setModal(() {});
+                                  appsNotif.value = update;
                                 },
                                 children: apps
                                     .map((String id) {
@@ -347,8 +348,8 @@ class _AppFolderState extends State<FolderTile> {
                                                   EzIconButton(
                                                     widget.config,
                                                     icon: const Icon(Icons.remove),
-                                                    onPressed: () =>
-                                                        setModal(() => apps.remove(id)),
+                                                    onPressed: () => appsNotif.value =
+                                                        List<String>.from(apps)..remove(id),
                                                   ),
                                                 ],
                                               ),
@@ -379,17 +380,17 @@ class _AppFolderState extends State<FolderTile> {
                                       onPressed: () => mCon.goNamed(
                                         appListPath,
                                         extra: ListConfig(
-                                          localContent: ValueNotifier<List<String>>(apps),
+                                          localContent: appsNotif,
                                           listContent: <ListContent>{
                                             ListContent.hidden,
                                             ListContent.banished,
                                           },
                                           include: false,
                                           onSelected: (String id) async =>
-                                              setModal(() => apps.add(id)),
+                                              appsNotif.value = List<String>.from(apps)..add(id),
                                           title: EzText(
                                             widget.config,
-                                            text: "Add to '$name'",
+                                            text: "Add to '${renameCon.text}'",
                                             style: widget.config.labelStyle,
                                           ),
                                         ),
@@ -409,11 +410,15 @@ class _AppFolderState extends State<FolderTile> {
                               ),
                             ]),
                           ),
-                        ]),
-                      ),
+                        ),
+                      ]),
                     );
 
-                    await widget.appInfo.updateFolder(widget.index, name, apps);
+                    await widget.appInfo.updateFolder(
+                      widget.index,
+                      renameCon.text,
+                      appsNotif.value,
+                    );
                   },
                 ),
                 rowSpacer(),
