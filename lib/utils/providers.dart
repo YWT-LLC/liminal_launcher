@@ -10,8 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-// TODO: check everything here - am I accounting for empty?
-
 class AppInfoProvider extends ChangeNotifier {
   // Construct //
 
