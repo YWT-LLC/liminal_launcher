@@ -162,32 +162,32 @@ class SecureCache {
   Duration get authTimeout => _authTimeout;
 }
 
-LiminalCache _pointer(EzCP config) => config.appCache! as LiminalCache;
+LiminalCache limCache(EzCP config) => config.appCache! as LiminalCache;
 
-Lang l10n(EzCP config) => _pointer(config)._l10n;
+Lang l10n(EzCP config) => limCache(config)._l10n;
 
 String leftSwipeID(EzCP config) => EzCM.get(leftSwipeIDKey);
 String rightSwipeID(EzCP config) => EzCM.get(rightSwipeIDKey);
 
-bool listIcons(EzCP config) => _pointer(config)._design.listIcons;
-LabelType listLabels(EzCP config) => _pointer(config)._design.listLabels;
-bool elevatedLists(EzCP config) => _pointer(config)._design.elevatedLists;
-ButtonType listBT(EzCP config) => _pointer(config)._design.listBT;
+bool listIcons(EzCP config) => limCache(config)._design.listIcons;
+LabelType listLabels(EzCP config) => limCache(config)._design.listLabels;
+bool elevatedLists(EzCP config) => limCache(config)._design.elevatedLists;
+ButtonType listBT(EzCP config) => limCache(config)._design.listBT;
 
-bool folderIcons(EzCP config) => _pointer(config)._design.folderIcons;
-LabelType folderLabels(EzCP config) => _pointer(config)._design.folderLabels;
-bool elevatedFolders(EzCP config) => _pointer(config)._design.elevatedFolders;
-ButtonType folderBT(EzCP config) => _pointer(config)._design.folderBT;
+bool folderIcons(EzCP config) => limCache(config)._design.folderIcons;
+LabelType folderLabels(EzCP config) => limCache(config)._design.folderLabels;
+bool elevatedFolders(EzCP config) => limCache(config)._design.elevatedFolders;
+ButtonType folderBT(EzCP config) => limCache(config)._design.folderBT;
 
-bool wideTiles(EzCP config) => _pointer(config)._design.wideTiles;
+bool wideTiles(EzCP config) => limCache(config)._design.wideTiles;
 double appIconSize(EzCP config) => config.iconSize + config.padding;
 
-DateType homeDate(EzCP config) => _pointer(config)._design.homeDate;
-bool homeTime(EzCP config) => _pointer(config)._design.homeTime;
+DateType homeDate(EzCP config) => limCache(config)._design.homeDate;
+bool homeTime(EzCP config) => limCache(config)._design.homeTime;
 
-ListAlignment hAlign(EzCP config) => _pointer(config)._design.horizontalAlign;
-ListAlignment vAlign(EzCP config) => _pointer(config)._design.verticalAlign;
+ListAlignment hAlign(EzCP config) => limCache(config)._design.horizontalAlign;
+ListAlignment vAlign(EzCP config) => limCache(config)._design.verticalAlign;
 
-bool authToEdit(EzCP config) => _pointer(config)._security.authToEdit;
-bool authForHidden(EzCP config) => _pointer(config)._security.authForHidden;
-Duration authTimeout(EzCP config) => _pointer(config)._security.authTimeout;
+bool authToEdit(EzCP config) => limCache(config)._security.authToEdit;
+bool authForHidden(EzCP config) => limCache(config)._security.authForHidden;
+Duration authTimeout(EzCP config) => limCache(config)._security.authTimeout;
