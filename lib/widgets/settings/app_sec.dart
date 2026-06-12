@@ -29,10 +29,7 @@ class AppSecSettings extends StatelessWidget {
             context: context,
             style: config.bodyStyle,
           );
-
-          final int timeoutBackup =
-              int.tryParse(await EzCM.secGet(authTimeoutKey)) ?? (limSecDef[authTimeoutKey] as int);
-          _timeoutText.text = timeoutBackup.toString();
+          _timeoutText.text = authTimeout(config).inMinutes.toString();
 
           if (context.mounted) {
             await ezModal(
