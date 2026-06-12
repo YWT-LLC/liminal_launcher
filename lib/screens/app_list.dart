@@ -38,6 +38,41 @@ class _AppListScreenState extends State<AppListScreen> {
   bool verbose = false;
   ValueNotifier<double> rippleProgress = ValueNotifier<double>(0.0);
 
+  // Define custom functions //
+
+  Future<void> ripple(EzCP config, LongPressStartDetails details) async {
+    if (!context.mounted) return;
+
+    final Duration animDur = ezDuration(config.animDur, mod: rippleMod);
+    if (animDur <= Duration.zero) {
+      setState(() => verbose = !verbose);
+      return;
+    }
+
+    // Ripple transition to verbose
+    final AnimationController rippleController =
+        AnimationController(vsync: Overlay.of(context), duration: animDur);
+    rippleController.addListener(() => rippleProgress.value = rippleController.value);
+
+    final OverlayEntry ripple = ezRipple(
+      controller: rippleController,
+      width: widthOf(context),
+      height: heightOf(context),
+      position: details.globalPosition,
+      color: config.colors.primary,
+      oMin: focusOpacity,
+    );
+    Overlay.of(context).insert(ripple);
+    lastRipple = details.globalPosition;
+
+    await rippleController.forward().whenComplete(() {
+      setState(() => verbose = !verbose);
+      ripple.remove();
+      rippleController.dispose();
+    });
+    return;
+  }
+
   // Init //
 
   void _onLocalContentChanged() {
@@ -59,38 +94,7 @@ class _AppListScreenState extends State<AppListScreen> {
         config,
         body: GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onLongPressStart: (LongPressStartDetails details) async {
-            if (!context.mounted) return;
-
-            final Duration animDur = ezDuration(config.animDur, mod: rippleMod);
-            if (animDur <= Duration.zero) {
-              setState(() => verbose = !verbose);
-              return;
-            }
-
-            // Ripple transition to verbose
-            final AnimationController rippleController =
-                AnimationController(vsync: Overlay.of(context), duration: animDur);
-            rippleController.addListener(() => rippleProgress.value = rippleController.value);
-
-            final OverlayEntry ripple = ezRipple(
-              controller: rippleController,
-              width: widthOf(context),
-              height: heightOf(context),
-              position: details.globalPosition,
-              color: config.colors.primary,
-              oMin: focusOpacity,
-            );
-            Overlay.of(context).insert(ripple);
-            lastRipple = details.globalPosition;
-
-            await rippleController.forward().whenComplete(() {
-              setState(() => verbose = !verbose);
-              ripple.remove();
-              rippleController.dispose();
-            });
-            return;
-          },
+          onLongPressStart: (LongPressStartDetails details) => ripple(config, details),
           onVerticalDragEnd: (DragEndDetails details) {
             if (details.primaryVelocity != null) {
               if (details.primaryVelocity! > 0) {

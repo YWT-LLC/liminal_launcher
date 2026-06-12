@@ -46,6 +46,39 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
         )
       : const SizedBox.shrink();
 
+  Future<void> ripple(EzCP config, LongPressStartDetails details) async {
+    if (!context.mounted) return;
+
+    final Duration animDur = ezDuration(config.animDur, mod: rippleMod);
+    if (animDur <= Duration.zero) {
+      setState(() => editing = !editing);
+      return;
+    }
+
+    // Ripple transition to editing
+    final AnimationController rippleController =
+        AnimationController(vsync: Overlay.of(context), duration: animDur);
+    rippleController.addListener(() => rippleProgress.value = rippleController.value);
+
+    final OverlayEntry ripple = ezRipple(
+      controller: rippleController,
+      width: widthOf(context),
+      height: heightOf(context),
+      position: details.globalPosition,
+      color: config.colors.primary,
+      oMin: focusOpacity,
+    );
+    Overlay.of(context).insert(ripple);
+    lastRipple = details.globalPosition;
+
+    await rippleController.forward().whenComplete(() {
+      setState(() => editing = !editing);
+      ripple.remove();
+      rippleController.dispose();
+    });
+    return;
+  }
+
   /// appProvider.homeList -> AppTile/FolderTile
   List<Widget> buildTiles(EzCP config, AppInfoProvider appInfo) {
     final EdgeInsets tilePadding = EdgeInsets.symmetric(vertical: config.spacing / 2);
@@ -258,50 +291,18 @@ If you want to support Liminal's development, or the development of more Empathe
     }
   }
 
+  // Return the build //
+
   @override
   Widget build(BuildContext context) {
-    return Consumer2<AppInfoProvider, EzCP>(builder: (_, AppInfoProvider appInfo, EzCP config, __) {
-      Future<void> ripple(LongPressStartDetails details) async {
-        final Duration animDur = ezDuration(config.animDur, mod: rippleMod);
-        if (context.mounted) {
-          if (animDur <= Duration.zero) {
-            setState(() => editing = !editing);
-            return;
-          }
-
-          // Ripple transition to editing
-          final AnimationController rippleController =
-              AnimationController(vsync: Overlay.of(context), duration: animDur);
-          rippleController.addListener(() => rippleProgress.value = rippleController.value);
-
-          final OverlayEntry ripple = ezRipple(
-            controller: rippleController,
-            width: widthOf(context),
-            height: heightOf(context),
-            position: details.globalPosition,
-            color: config.colors.primary,
-            oMin: focusOpacity,
-          );
-          Overlay.of(context).insert(ripple);
-          lastRipple = details.globalPosition;
-
-          await rippleController.forward().whenComplete(() {
-            setState(() => editing = !editing);
-            ripple.remove();
-            rippleController.dispose();
-          });
-          return;
-        }
-      }
-
-      // Return the build //
-
-      return LiminalScaffold(
+    return Consumer2<AppInfoProvider, EzCP>(
+      builder: (_, AppInfoProvider appInfo, EzCP config, __) => LiminalScaffold(
         config,
         body: GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onLongPressStart: (LongPressStartDetails details) async =>
-              editing ? await ripple(details) : await canEdit(config, () => ripple(details)),
+          onLongPressStart: (LongPressStartDetails details) async => editing
+              ? await ripple(config, details)
+              : await canEdit(config, () => ripple(config, details)),
           onVerticalDragEnd: (DragEndDetails details) async {
             if (details.primaryVelocity != null) {
               if (details.primaryVelocity! < 0) {
@@ -456,8 +457,8 @@ If you want to support Liminal's development, or the development of more Empathe
               ]
             : null,
         isHome: true,
-      );
-    });
+      ),
+    );
   }
 
   @override
