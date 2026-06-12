@@ -139,7 +139,7 @@ class _AppTileState extends State<AppTile> {
                   ),
                   child: Container(
                     width: double.infinity,
-                    alignment: hAlign(widget.config).alignment,
+                    alignment: LAConfig.merge(h: hAlign(widget.config), v: vAlign(widget.config)),
                     child: AppButton(
                       widget.config,
                       app: widget.app,

@@ -138,7 +138,8 @@ class _AppFolderState extends State<FolderTile> {
                       ),
                       child: Container(
                         width: double.infinity,
-                        alignment: hAlign(widget.config).alignment,
+                        alignment:
+                            LAConfig.merge(h: hAlign(widget.config), v: vAlign(widget.config)),
                         child: FolderButton(
                           widget.config,
                           name: widget._name,
