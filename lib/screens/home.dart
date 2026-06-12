@@ -78,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
             app: app,
             location: AppLocation.home,
             state: editing ? AppState.groupEdit : AppState.standard,
-            onSelected: (String id) => launchApp(id),
+            onSelected: (AppInfo app) => launchApp(app),
             rippleProgress: rippleProgress,
           ),
         ));
@@ -95,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           extra: ListConfig(
             listContent: <ListContent>{ListContent.hidden, ListContent.banished},
             include: false,
-            onSelected: (String id) => launchApp(id),
+            onSelected: (AppInfo app) => launchApp(app),
             title: null,
           ),
         );
@@ -118,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
         extra: ListConfig(
           listContent: <ListContent>{ListContent.hidden},
           include: true,
-          onSelected: (String id) => launchApp(id),
+          onSelected: (AppInfo app) => launchApp(app),
           title: EzTextBackground(
             config,
             text: EzRow(config, reverseHands: false, children: <Widget>[
@@ -322,7 +322,7 @@ If you want to support Liminal's development, or the development of more Empathe
                 }
               }
 
-              if (toLaunch != null) launchApp(toLaunch.package);
+              if (toLaunch != null) launchApp(toLaunch);
             }
           },
           child: EzCol(
@@ -422,7 +422,7 @@ If you want to support Liminal's development, or the development of more Empathe
                         ListContent.banished,
                       },
                       include: false,
-                      onSelected: (String id) => appInfo.addHomeApp(id),
+                      onSelected: (AppInfo app) => appInfo.addHomeApp(app.id),
                       title: EzTextBackground(config,
                           text: EzRow(
                             config,

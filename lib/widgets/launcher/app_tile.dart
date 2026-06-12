@@ -16,7 +16,7 @@ class AppTile extends StatefulWidget {
   final AppInfo app;
   final AppLocation location;
   final AppState state;
-  final Future<void> Function(String id) onSelected;
+  final Future<void> Function(AppInfo app) onSelected;
   final ValueNotifier<double>? rippleProgress;
 
   AppTile(
@@ -132,7 +132,7 @@ class _AppTileState extends State<AppTile> {
         child: switch (state) {
           AppState.standard => widget.location != AppLocation.folder && wideTiles(widget.config)
               ? InkWell(
-                  onTap: () => widget.onSelected(widget.app.id),
+                  onTap: () => widget.onSelected(widget.app),
                   onLongPress: () => inFolder
                       ? doNothing()
                       : canEdit(
@@ -147,7 +147,7 @@ class _AppTileState extends State<AppTile> {
                       app: widget.app,
                       labelType: inFolder ? folderLabels(widget.config) : listLabels(widget.config),
                       buttonType: inFolder ? folderBT(widget.config) : listBT(widget.config),
-                      onPressed: () => widget.onSelected(widget.app.id),
+                      onPressed: () => widget.onSelected(widget.app),
                       onLongPress: () => inFolder
                           ? doNothing()
                           : canEdit(
@@ -162,7 +162,7 @@ class _AppTileState extends State<AppTile> {
                   app: widget.app,
                   labelType: inFolder ? folderLabels(widget.config) : listLabels(widget.config),
                   buttonType: inFolder ? folderBT(widget.config) : listBT(widget.config),
-                  onPressed: () => widget.onSelected(widget.app.id),
+                  onPressed: () => widget.onSelected(widget.app),
                   onLongPress: () => inFolder
                       ? doNothing()
                       : canEdit(
@@ -184,7 +184,7 @@ class _AppTileState extends State<AppTile> {
                   app: widget.app,
                   labelType: inFolder ? folderLabels(widget.config) : listLabels(widget.config),
                   buttonType: inFolder ? folderBT(widget.config) : listBT(widget.config),
-                  onPressed: () => widget.onSelected(widget.app.id),
+                  onPressed: () => widget.onSelected(widget.app),
                 ),
                 rowSpacer(),
 
@@ -240,7 +240,7 @@ class _AppTileState extends State<AppTile> {
                 // App icon
                 if (widget.app.icon != null) ...<Widget>[
                   GestureDetector(
-                    onTap: () => widget.onSelected(widget.app.id),
+                    onTap: () => widget.onSelected(widget.app),
                     child: Image.memory(
                       widget.app.icon!,
                       semanticLabel: widget.app.name,
@@ -256,7 +256,7 @@ class _AppTileState extends State<AppTile> {
                   widget.config,
                   onPressed: () async {
                     if (inList && context.mounted) Navigator.of(context).pop();
-                    await openSettings(widget.app.id);
+                    await openSettings(widget.app);
                   },
                   icon: const Icon(Icons.info),
                 ),
@@ -388,14 +388,7 @@ class _AppTileState extends State<AppTile> {
                   rowSpacer(),
                   EzIconButton(
                     widget.config,
-                    onPressed: () async {
-                      final bool deleted = await deleteApp(widget.app);
-
-                      if (deleted) {
-                        await widget.appInfo.removeDeletedApp(widget.app.id);
-                        if (mounted) setState(() => state = AppState.standard);
-                      }
-                    },
+                    onPressed: () async => await openDelete(widget.app),
                     icon: const Icon(Icons.delete),
                   ),
                 ],

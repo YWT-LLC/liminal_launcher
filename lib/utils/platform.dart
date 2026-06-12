@@ -14,11 +14,12 @@ const MethodChannel platform = MethodChannel('$androidPackage/query');
 Future<List<AppInfo>> getApps() async {
   try {
     final List<dynamic>? appData = await platform.invokeMethod('getApps');
-
     if (appData == null) return <AppInfo>[];
+
     final List<AppInfo> apps =
         appData.map((dynamic app) => AppInfo.fromMap(Map<String, dynamic>.from(app))).toList();
     apps.remove(self);
+
     return apps;
   } catch (e) {
     ezLog('Failed to get apps: $e');
@@ -26,39 +27,32 @@ Future<List<AppInfo>> getApps() async {
   }
 }
 
-Future<void> launchApp(String appID) async {
-  final String package = appID.split(idSplit).first;
-
+Future<void> launchApp(AppInfo app) async {
   try {
     await platform.invokeMethod('launchApp', <String, dynamic>{
-      'packageName': package,
+      'packageName': app.package,
     });
   } catch (e) {
-    ezLog('Failed to launch $package: $e');
+    ezLog('Failed to launch ${app.package}: $e');
   }
 }
 
-Future<void> openSettings(String appID) async {
-  final String package = appID.split(idSplit).first;
-
+Future<void> openSettings(AppInfo app) async {
   try {
     await platform.invokeMethod('openSettings', <String, dynamic>{
-      'packageName': package,
+      'packageName': app.package,
     });
   } catch (e) {
-    ezLog('Failed to open the settings for $package: $e');
+    ezLog('Failed to open ${app.package} settings: $e');
   }
 }
 
-/// Reminder: Android shows a built-in uninstall dialog
-Future<bool> deleteApp(AppInfo app) async {
+Future<void> openDelete(AppInfo app) async {
   try {
     await platform.invokeMethod('deleteApp', <String, dynamic>{
       'packageName': app.package,
-    }); // TODO: return real results
-    return true;
+    });
   } catch (e) {
     ezLog('Failed to delete ${app.package}: $e');
-    return false;
   }
 }

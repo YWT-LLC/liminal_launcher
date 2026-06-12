@@ -71,14 +71,13 @@ class _SwipeSelectorState extends State<SwipeSelector> {
             extra: ListConfig(
               listContent: <ListContent>{ListContent.banished},
               include: false,
-              onSelected: (String id) async {
-                final AppInfo? newApp = widget.appInfo.appMap[id];
-                if (newApp == null || newApp == app) {
+              onSelected: (AppInfo newApp) async {
+                if (newApp == app) {
                   if (context.mounted) Navigator.of(context).pop();
                   return;
                 }
 
-                await EzCM.setString(widget._key, id);
+                await EzCM.setString(widget._key, newApp.id);
                 setState(() => app = newApp);
 
                 if (context.mounted) Navigator.of(context).pop();

@@ -95,7 +95,7 @@ class ListConfig {
   final ValueNotifier<List<String>>? localContent;
   final Set<ListContent> listContent;
   final bool include;
-  final Future<void> Function(String id) onSelected;
+  final Future<void> Function(AppInfo app) onSelected;
 
   const ListConfig({
     required this.title,

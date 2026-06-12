@@ -93,7 +93,7 @@ class AppInfoProvider extends ChangeNotifier {
 
               if (apps.isNotEmpty) {
                 for (final AppInfo app in apps) {
-                  await removeDeletedApp(app.id);
+                  await _removeDeletedApp(app.id);
                 }
               }
               break;
@@ -353,7 +353,7 @@ For example: if an app has always on location permissions, banishing it will not
     return true;
   }
 
-  Future<void> removeDeletedApp(String appID) async {
+  Future<void> _removeDeletedApp(String appID) async {
     if (_banishedSet.contains(appID)) {
       _banishedSet.remove(appID);
       await EzCM.setStringList(banishedIDsKey, _banishedSet.toList());

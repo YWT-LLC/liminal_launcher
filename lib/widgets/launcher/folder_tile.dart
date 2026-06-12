@@ -121,7 +121,7 @@ class _AppFolderState extends State<FolderTile> {
                               app: app,
                               location: AppLocation.folder,
                               state: state,
-                              onSelected: (String id) => launchApp(id),
+                              onSelected: (AppInfo app) => launchApp(app),
                             ),
                           );
                         })
@@ -395,8 +395,8 @@ class _AppFolderState extends State<FolderTile> {
                                             ListContent.banished,
                                           },
                                           include: false,
-                                          onSelected: (String id) async => appsNotif.value =
-                                              List<String>.from(appsNotif.value)..add(id),
+                                          onSelected: (AppInfo app) async => appsNotif.value =
+                                              List<String>.from(appsNotif.value)..add(app.id),
                                           title: EzText(
                                             widget.config,
                                             text: "Add to '${renameCon.text}'",
