@@ -137,8 +137,9 @@ class _AppTileState extends State<AppTile> {
                     widget.config,
                     () async => setState(() => state = AppState.singleEdit),
                   ),
-                  child: SizedBox(
+                  child: Container(
                     width: double.infinity,
+                    alignment: hAlign(widget.config).alignment,
                     child: AppButton(
                       widget.config,
                       app: widget.app,
