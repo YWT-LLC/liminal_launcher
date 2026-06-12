@@ -14,6 +14,7 @@ class LiminalCache extends EzAppCache {
   Lang _l10n;
 
   late DesignCache _design;
+  late SecureCache _security;
 
   LiminalCache(Locale locale, Lang l10n)
       : _locale = locale,
@@ -83,6 +84,16 @@ class LiminalCache extends EzAppCache {
       );
     }
 
+    final bool defATE = limSecDef[authToEditKey] as bool;
+    final bool defAFH = limSecDef[authForHiddenKey] as bool;
+    final int defAT = limSecDef[authTimeoutKey] as int;
+
+    _security = SecureCache(
+      authToEdit: bool.tryParse(await EzCM.secGet(authToEditKey)) ?? defATE,
+      authForHidden: bool.tryParse(await EzCM.secGet(authForHiddenKey)) ?? defAFH,
+      authTimeout: Duration(minutes: int.tryParse(await EzCM.secGet(authTimeoutKey)) ?? defAT),
+    );
+
     if (EzCM.get(isDark ? darkHideStatusKey : lightHideStatusKey) == true) {
       await SystemChrome.setEnabledSystemUIMode(
         SystemUiMode.manual,
@@ -133,6 +144,24 @@ class DesignCache {
   });
 }
 
+class SecureCache {
+  final bool _authToEdit;
+  final bool _authForHidden;
+  final Duration _authTimeout;
+
+  SecureCache({
+    required bool authToEdit,
+    required bool authForHidden,
+    required Duration authTimeout,
+  })  : _authToEdit = authToEdit,
+        _authForHidden = authForHidden,
+        _authTimeout = authTimeout;
+
+  bool get authToEdit => _authToEdit;
+  bool get authForHidden => _authForHidden;
+  Duration get authTimeout => _authTimeout;
+}
+
 LiminalCache _pointer(EzCP config) => config.appCache! as LiminalCache;
 
 Lang l10n(EzCP config) => _pointer(config)._l10n;
@@ -158,3 +187,7 @@ bool homeTime(EzCP config) => _pointer(config)._design.homeTime;
 
 ListAlignment hAlign(EzCP config) => _pointer(config)._design.horizontalAlign;
 ListAlignment vAlign(EzCP config) => _pointer(config)._design.verticalAlign;
+
+bool authToEdit(EzCP config) => _pointer(config)._security.authToEdit;
+bool authForHidden(EzCP config) => _pointer(config)._security.authForHidden;
+Duration authTimeout(EzCP config) => _pointer(config)._security.authTimeout;
