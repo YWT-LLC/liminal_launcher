@@ -207,6 +207,7 @@ class AppInfoProvider extends ChangeNotifier {
   void reorderHome(int oldIndex, int newIndex) {
     final String element = _homeList.removeAt(oldIndex);
     _homeList.insert(newIndex, element);
+    // don't notifyListeners();
   }
 
   Future<void> updateFolder(int index, String name, List<String> newIDs) async {
@@ -362,6 +363,17 @@ For example: if an app has always on location permissions, banishing it will not
 
     _apps.remove(_appMap[appID]);
     _appMap.remove(appID);
+
+    notifyListeners();
+  }
+
+  void cleanup(List<int> aisles) {
+    aisles.sort((int a, int b) => b.compareTo(a));
+
+    for (final int index in aisles) {
+      final String element = _homeList.removeAt(index);
+      _homeSet.remove(element);
+    }
 
     notifyListeners();
   }
