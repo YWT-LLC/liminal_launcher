@@ -124,6 +124,8 @@ class AppSecSettings extends StatelessWidget {
                 controller: _timeoutScroll,
               ),
             );
+
+            await limCache(config).rebuild(config);
           }
         },
       );
