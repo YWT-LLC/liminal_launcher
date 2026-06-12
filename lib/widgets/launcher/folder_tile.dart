@@ -138,7 +138,7 @@ class _AppFolderState extends State<FolderTile> {
                       ),
                       child: Container(
                         width: double.infinity,
-                        decoration: ShapeDecoration(shape: widget.config.buttonShape.shape),
+                        alignment: hAlign(widget.config).alignment,
                         child: FolderButton(
                           widget.config,
                           name: widget._name,
