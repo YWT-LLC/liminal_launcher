@@ -462,7 +462,7 @@ If you want to support Liminal's development, or the development of more Empathe
 
   @override
   void dispose() {
-    Provider.of<AppInfoProvider>(context, listen: false).cleanup(_janitor);
+    if (_janitor.isNotEmpty) Provider.of<AppInfoProvider>(context, listen: false).cleanup(_janitor);
     super.dispose();
   }
 }
