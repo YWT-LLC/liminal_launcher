@@ -104,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     if (authForHidden(config)) {
       bool authed = false;
       try {
-        authed = await liminalAuth('Authenticate to see hidden apps');
+        authed = await liminalAuth(config, 'Authenticate to see hidden apps');
       } catch (e) {
         ezLog(e.toString());
       }
@@ -294,7 +294,7 @@ If you want to support Liminal's development, or the development of more Empathe
         body: GestureDetector(
           behavior: HitTestBehavior.opaque,
           onLongPressStart: (LongPressStartDetails details) async =>
-              editing ? await ripple(details) : await canEdit(() => ripple(details)),
+              editing ? await ripple(details) : await canEdit(config, () => ripple(details)),
           onVerticalDragEnd: (DragEndDetails details) async {
             if (details.primaryVelocity != null) {
               if (details.primaryVelocity! < 0) {
