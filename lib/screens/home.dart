@@ -281,8 +281,10 @@ If you want to support Liminal's development, or the development of more Empathe
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<AppInfoProvider, EzCP>(
-      builder: (_, AppInfoProvider appInfo, EzCP config, __) => LiminalScaffold(
+    return Consumer2<AppInfoProvider, EzCP>(builder: (_, AppInfoProvider appInfo, EzCP config, __) {
+      final bool topClock = topAlign.contains(vAlign(config));
+
+      return LiminalScaffold(
         config,
         body: GestureDetector(
           behavior: HitTestBehavior.opaque,
@@ -321,10 +323,7 @@ If you want to support Liminal's development, or the development of more Empathe
             crossAxisAlignment: hAlign(config).crossAxis,
             children: <Widget>[
               // Clock I
-              if (vAlign(config) == ListAlignment.start) ...<Widget>[
-                Clock(config),
-                config.spacer,
-              ],
+              if (topClock) ...<Widget>[Clock(config), config.spacer],
 
               // App list
               Expanded(
@@ -366,40 +365,41 @@ If you want to support Liminal's development, or the development of more Empathe
                     }
                     return false;
                   },
-                  child: editing
-                      ? Builder(builder: (_) {
-                          final List<Widget> tiles = buildTiles(config, appInfo);
+                  child: Container(
+                    alignment: LAConfig.merge(h: hAlign(config), v: vAlign(config)),
+                    child: editing
+                        ? Builder(builder: (_) {
+                            final List<Widget> tiles = buildTiles(config, appInfo);
 
-                          return StatefulBuilder(
-                            builder: (_, StateSetter setList) => ReorderableListView(
-                              onReorderItem: (int oldIndex, int newIndex) {
-                                if (oldIndex == newIndex) return;
+                            return StatefulBuilder(
+                              builder: (_, StateSetter setList) => ReorderableListView(
+                                shrinkWrap: true,
+                                onReorderItem: (int oldIndex, int newIndex) {
+                                  if (oldIndex == newIndex) return;
 
-                                final Widget element = tiles.removeAt(oldIndex);
-                                tiles.insert(newIndex, element);
+                                  final Widget element = tiles.removeAt(oldIndex);
+                                  tiles.insert(newIndex, element);
 
-                                appInfo.reorderHome(oldIndex, newIndex);
-                                setList(() {});
-                              },
-                              children: tiles,
-                            ),
-                          );
-                        })
-                      : EzScrollView(
-                          config,
-                          mainAxisAlignment: vAlign(config).mainAxis,
-                          crossAxisAlignment: hAlign(config).crossAxis,
-                          physics: const ClampingScrollPhysics(),
-                          children: buildTiles(config, appInfo),
-                        ),
+                                  appInfo.reorderHome(oldIndex, newIndex);
+                                  setList(() {});
+                                },
+                                children: tiles,
+                              ),
+                            );
+                          })
+                        : EzScrollView(
+                            config,
+                            mainAxisAlignment: vAlign(config).mainAxis,
+                            crossAxisAlignment: hAlign(config).crossAxis,
+                            physics: const ClampingScrollPhysics(),
+                            children: buildTiles(config, appInfo),
+                          ),
+                  ),
                 ),
               ),
 
               // Clock II
-              if (vAlign(config) == ListAlignment.end) ...<Widget>[
-                config.spacer,
-                Clock(config),
-              ],
+              if (!topClock) ...<Widget>[config.spacer, Clock(config)],
             ],
           ),
         ),
@@ -446,8 +446,8 @@ If you want to support Liminal's development, or the development of more Empathe
               ]
             : null,
         isHome: true,
-      ),
-    );
+      );
+    });
   }
 
   @override
