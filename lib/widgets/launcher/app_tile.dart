@@ -130,46 +130,48 @@ class _AppTileState extends State<AppTile> {
         forceType: EzTransitionType.none,
         forceFade: true,
         child: switch (state) {
-          AppState.standard => widget.location != AppLocation.folder && wideTiles(widget.config)
+          AppState.standard => !inFolder && wideTiles(widget.config)
               ? InkWell(
                   onTap: () => widget.onSelected(widget.app),
-                  onLongPress: () => inFolder
-                      ? doNothing()
-                      : canEdit(
-                          widget.config,
-                          () async => setState(() => state = AppState.singleEdit),
-                        ),
-                  child: Container(
+                  onLongPress: () => canEdit(
+                    widget.config,
+                    () async => setState(() => state = AppState.singleEdit),
+                  ),
+                  child: SizedBox(
                     width: double.infinity,
-                    decoration: ShapeDecoration(shape: widget.config.buttonShape.shape),
                     child: AppButton(
                       widget.config,
                       app: widget.app,
-                      labelType: inFolder ? folderLabels(widget.config) : listLabels(widget.config),
-                      buttonType: inFolder ? folderBT(widget.config) : listBT(widget.config),
+                      labelType: listLabels(widget.config),
+                      buttonType: listBT(widget.config),
                       onPressed: () => widget.onSelected(widget.app),
-                      onLongPress: () => inFolder
-                          ? doNothing()
-                          : canEdit(
-                              widget.config,
-                              () async => setState(() => state = AppState.singleEdit),
-                            ),
+                      onLongPress: () => canEdit(
+                        widget.config,
+                        () async => setState(() => state = AppState.singleEdit),
+                      ),
                     ),
                   ),
                 )
-              : AppButton(
-                  widget.config,
-                  app: widget.app,
-                  labelType: inFolder ? folderLabels(widget.config) : listLabels(widget.config),
-                  buttonType: inFolder ? folderBT(widget.config) : listBT(widget.config),
-                  onPressed: () => widget.onSelected(widget.app),
-                  onLongPress: () => inFolder
-                      ? doNothing()
-                      : canEdit(
-                          widget.config,
-                          () async => setState(() => state = AppState.singleEdit),
-                        ),
-                ),
+              : inFolder
+                  ? AppButton(
+                      widget.config,
+                      app: widget.app,
+                      labelType: folderLabels(widget.config),
+                      buttonType: folderBT(widget.config),
+                      onPressed: () => widget.onSelected(widget.app),
+                      onLongPress: doNothing,
+                    )
+                  : AppButton(
+                      widget.config,
+                      app: widget.app,
+                      labelType: listLabels(widget.config),
+                      buttonType: listBT(widget.config),
+                      onPressed: () => widget.onSelected(widget.app),
+                      onLongPress: () => canEdit(
+                        widget.config,
+                        () async => setState(() => state = AppState.singleEdit),
+                      ),
+                    ),
           AppState.verbose => EzScrollView(
               widget.config,
               mainAxisAlignment: hAlign(widget.config).mainAxis,
