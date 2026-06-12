@@ -133,8 +133,9 @@ class _AppTileState extends State<AppTile> {
           AppState.standard => widget.location != AppLocation.folder && wideTiles(widget.config)
               ? InkWell(
                   onTap: () => widget.onSelected(widget.app.id),
-                  onLongPress: () =>
-                      inFolder ? doNothing() : setState(() => state = AppState.singleEdit),
+                  onLongPress: () => inFolder
+                      ? doNothing()
+                      : canEdit(() async => setState(() => state = AppState.singleEdit)),
                   child: Container(
                     width: double.infinity,
                     decoration: ShapeDecoration(shape: widget.config.buttonShape.shape),
@@ -144,8 +145,9 @@ class _AppTileState extends State<AppTile> {
                       labelType: inFolder ? folderLabels(widget.config) : listLabels(widget.config),
                       buttonType: inFolder ? folderBT(widget.config) : listBT(widget.config),
                       onPressed: () => widget.onSelected(widget.app.id),
-                      onLongPress: () =>
-                          inFolder ? doNothing() : setState(() => state = AppState.singleEdit),
+                      onLongPress: () => inFolder
+                          ? doNothing()
+                          : canEdit(() async => setState(() => state = AppState.singleEdit)),
                     ),
                   ),
                 )
@@ -155,8 +157,9 @@ class _AppTileState extends State<AppTile> {
                   labelType: inFolder ? folderLabels(widget.config) : listLabels(widget.config),
                   buttonType: inFolder ? folderBT(widget.config) : listBT(widget.config),
                   onPressed: () => widget.onSelected(widget.app.id),
-                  onLongPress: () =>
-                      inFolder ? doNothing() : setState(() => state = AppState.singleEdit),
+                  onLongPress: () => inFolder
+                      ? doNothing()
+                      : canEdit(() async => setState(() => state = AppState.singleEdit)),
                 ),
           AppState.verbose => EzScrollView(
               widget.config,
