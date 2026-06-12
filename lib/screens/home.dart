@@ -32,6 +32,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
   bool editing = false;
   ValueNotifier<double> rippleProgress = ValueNotifier<double>(0.0);
 
+  final List<int> _janitor = <int>[];
+
   // Define custom functions //
 
   Widget clock(EzCP config) => (homeTime(config) || homeDate(config) != DateType.none)
@@ -67,7 +69,10 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
         ));
       } else {
         final AppInfo? app = appInfo.appMap[parts[0]];
-        if (app == null) continue; // TODO: add more "garbage collection"
+        if (app == null) {
+          _janitor.add(index);
+          continue;
+        }
 
         tileList.add(Padding(
           key: ValueKey<String>(app.id),
@@ -451,5 +456,11 @@ If you want to support Liminal's development, or the development of more Empathe
         isHome: true,
       );
     });
+  }
+
+  @override
+  void dispose() {
+    Provider.of<AppInfoProvider>(context, listen: false).cleanup(_janitor);
+    super.dispose();
   }
 }
