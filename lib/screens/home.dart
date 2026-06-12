@@ -36,16 +36,6 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
   // Define custom functions //
 
-  Widget clock(EzCP config) => (homeTime(config) || homeDate(config) != DateType.none)
-      ? Padding(
-          padding: EdgeInsets.only(
-            top: vAlign(config) == ListAlignment.start ? 0 : config.spacing,
-            bottom: vAlign(config) == ListAlignment.start ? config.spacing : 0,
-          ),
-          child: Clock(config),
-        )
-      : const SizedBox.shrink();
-
   Future<void> ripple(EzCP config, LongPressStartDetails details) async {
     if (!context.mounted) return;
 
@@ -159,16 +149,12 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           listContent: <ListContent>{ListContent.hidden},
           include: true,
           onSelected: (AppInfo app) => launchApp(app),
-          title: EzTextBackground(
+          title: EzTextIconButton(
             config,
-            text: EzRow(config, reverseHands: false, children: <Widget>[
-              Text('Hidden\t', style: config.labelStyle),
-              EzIcon(
-                config,
-                Icons.visibility_off,
-                color: config.colors.onSurface,
-              ),
-            ]),
+            onPressed: doNothing,
+            label: 'Hidden',
+            icon: EzIcon(config, Icons.visibility_off, color: config.colors.onSurface),
+            textStyle: config.labelStyle,
           ),
         ),
       );
@@ -316,11 +302,7 @@ If you want to support Liminal's development, or the development of more Empathe
 
               if (details.primaryVelocity! < 0) {
                 // Swiped left
-                if (editing) {
-                  doNothing();
-                } else {
-                  toLaunch = appInfo.appMap[leftSwipeID(config)];
-                }
+                toLaunch = editing ? null : appInfo.appMap[leftSwipeID(config)];
               } else {
                 // Swiped right
                 if (editing) {
@@ -338,7 +320,10 @@ If you want to support Liminal's development, or the development of more Empathe
             crossAxisAlignment: hAlign(config).crossAxis,
             children: <Widget>[
               // Clock I
-              if (vAlign(config) == ListAlignment.start) clock(config),
+              if (vAlign(config) == ListAlignment.start) ...<Widget>[
+                Clock(config),
+                config.spacer,
+              ],
 
               // App list
               Expanded(
@@ -410,7 +395,10 @@ If you want to support Liminal's development, or the development of more Empathe
               ),
 
               // Clock II
-              if (vAlign(config) == ListAlignment.end) clock(config),
+              if (vAlign(config) == ListAlignment.end) ...<Widget>[
+                config.spacer,
+                Clock(config),
+              ],
             ],
           ),
         ),
