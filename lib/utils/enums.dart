@@ -79,6 +79,13 @@ extension LabelTypeConfig on LabelType {
       };
 }
 
+const List<DropdownMenuEntry<LabelType>> labelEntries = <DropdownMenuEntry<LabelType>>[
+  DropdownMenuEntry<LabelType>(value: LabelType.none, label: 'None'),
+  DropdownMenuEntry<LabelType>(value: LabelType.initials, label: 'Initials'),
+  DropdownMenuEntry<LabelType>(value: LabelType.full, label: 'Full name'),
+  DropdownMenuEntry<LabelType>(value: LabelType.wingding, label: 'Wingding'),
+];
+
 /// Get the result of [base] parsed with [type]
 String buildLabel(String base, LabelType type) => switch (type) {
       LabelType.none => '',
@@ -175,12 +182,6 @@ extension LAConfig on ListAlignment {
         ListAlignment.end => esEnd,
       };
 
-  Alignment get alignment => switch (this) {
-        ListAlignment.center => Alignment.center,
-        ListAlignment.start => Alignment.centerLeft,
-        ListAlignment.end => Alignment.centerRight,
-      };
-
   MainAxisAlignment get mainAxis => switch (this) {
         ListAlignment.center => MainAxisAlignment.center,
         ListAlignment.start => MainAxisAlignment.start,
@@ -204,11 +205,27 @@ extension LAConfig on ListAlignment {
         esEnd => ListAlignment.end,
         esCenter || _ => ListAlignment.center,
       };
+
+  static Alignment merge({required ListAlignment h, required ListAlignment v}) => switch (h) {
+        ListAlignment.start => switch (v) {
+            ListAlignment.start => Alignment.topLeft,
+            ListAlignment.center => Alignment.centerLeft,
+            ListAlignment.end => Alignment.bottomLeft,
+          },
+        ListAlignment.center => switch (v) {
+            ListAlignment.start => Alignment.topCenter,
+            ListAlignment.center => Alignment.center,
+            ListAlignment.end => Alignment.bottomCenter,
+          },
+        ListAlignment.end => switch (v) {
+            ListAlignment.start => Alignment.topRight,
+            ListAlignment.center => Alignment.centerRight,
+            ListAlignment.end => Alignment.bottomRight,
+          },
+      };
 }
 
-const List<DropdownMenuEntry<LabelType>> labelEntries = <DropdownMenuEntry<LabelType>>[
-  DropdownMenuEntry<LabelType>(value: LabelType.none, label: 'None'),
-  DropdownMenuEntry<LabelType>(value: LabelType.initials, label: 'Initials'),
-  DropdownMenuEntry<LabelType>(value: LabelType.full, label: 'Full name'),
-  DropdownMenuEntry<LabelType>(value: LabelType.wingding, label: 'Wingding'),
-];
+const Set<ListAlignment> topAlign = <ListAlignment>{
+  ListAlignment.start,
+  ListAlignment.center,
+};

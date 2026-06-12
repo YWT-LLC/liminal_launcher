@@ -12,6 +12,8 @@ class AlignmentSelectors extends StatefulWidget {
   State<AlignmentSelectors> createState() => _AlignmentSelectorsState();
 }
 
+// Define the build data //
+
 const double _sizeMod = 0.333;
 
 const List<ButtonSegment<ListAlignment>> alignmentSegments = <ButtonSegment<ListAlignment>>[
@@ -30,30 +32,8 @@ const List<ButtonSegment<ListAlignment>> alignmentSegments = <ButtonSegment<List
 ];
 
 class _AlignmentSelectorsState extends State<AlignmentSelectors> {
-  // Define the build data //
-
   late ListAlignment h = hAlign(widget.config);
   late ListAlignment v = vAlign(widget.config);
-
-  // Define custom functions //
-
-  Alignment merge() => switch (h) {
-        ListAlignment.start => switch (v) {
-            ListAlignment.start => Alignment.topLeft,
-            ListAlignment.center => Alignment.centerLeft,
-            ListAlignment.end => Alignment.bottomLeft,
-          },
-        ListAlignment.center => switch (v) {
-            ListAlignment.start => Alignment.topCenter,
-            ListAlignment.center => Alignment.center,
-            ListAlignment.end => Alignment.bottomCenter,
-          },
-        ListAlignment.end => switch (v) {
-            ListAlignment.start => Alignment.topRight,
-            ListAlignment.center => Alignment.centerRight,
-            ListAlignment.end => Alignment.bottomRight,
-          },
-      };
 
   // Return the build //
 
@@ -78,7 +58,7 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
 
             // Aligned circular icon
             Align(
-              alignment: merge(),
+              alignment: LAConfig.merge(h: h, v: v),
               child: ClipOval(
                 child: Image.asset(
                   appIconPath,
