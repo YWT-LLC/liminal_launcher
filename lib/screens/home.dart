@@ -32,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
   bool editing = false;
   ValueNotifier<double> rippleProgress = ValueNotifier<double>(0.0);
 
-  final List<int> _janitor = <int>[];
+  List<int> _janitor = <int>[];
 
   // Define custom functions //
 
@@ -50,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
   List<Widget> buildTiles(EzCP config, AppInfoProvider appInfo) {
     final EdgeInsets tilePadding = EdgeInsets.symmetric(vertical: config.spacing / 2);
     final List<Widget> tileList = <Widget>[];
+    final List<int> errors = <int>[];
 
     for (int index = 0; index < appInfo.homeList.length; index++) {
       final String item = appInfo.homeList[index];
@@ -70,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
       } else {
         final AppInfo? app = appInfo.appMap[parts[0]];
         if (app == null) {
-          _janitor.add(index);
+          errors.add(index);
           continue;
         }
 
@@ -90,6 +91,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
       }
     }
 
+    _janitor = errors;
     return tileList;
   }
 
