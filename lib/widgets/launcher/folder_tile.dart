@@ -132,8 +132,10 @@ class _AppFolderState extends State<FolderTile> {
               : wideTiles(widget.config)
                   ? InkWell(
                       onTap: () => setState(() => open = !open),
-                      onLongPress: () =>
-                          canEdit(() async => setState(() => state = AppState.singleEdit)),
+                      onLongPress: () => canEdit(
+                        widget.config,
+                        () async => setState(() => state = AppState.singleEdit),
+                      ),
                       child: Container(
                         width: double.infinity,
                         decoration: ShapeDecoration(shape: widget.config.buttonShape.shape),
@@ -143,8 +145,10 @@ class _AppFolderState extends State<FolderTile> {
                           buttonType: folderBT(widget.config),
                           labelType: folderLabels(widget.config),
                           onPressed: () => setState(() => open = !open),
-                          onLongPress: () =>
-                              canEdit(() async => setState(() => state = AppState.singleEdit)),
+                          onLongPress: () => canEdit(
+                            widget.config,
+                            () async => setState(() => state = AppState.singleEdit),
+                          ),
                         ),
                       ),
                     )
@@ -154,8 +158,10 @@ class _AppFolderState extends State<FolderTile> {
                       buttonType: folderBT(widget.config),
                       labelType: folderLabels(widget.config),
                       onPressed: () => setState(() => open = !open),
-                      onLongPress: () =>
-                          canEdit(() async => setState(() => state = AppState.singleEdit)),
+                      onLongPress: () => canEdit(
+                        widget.config,
+                        () async => setState(() => state = AppState.singleEdit),
+                      ),
                     ),
           AppState.verbose => const SizedBox.shrink(), // Shouldn't be possible
           AppState.singleEdit || AppState.groupEdit => EzScrollView(
