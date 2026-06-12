@@ -316,6 +316,7 @@ If you want to support Liminal's development, or the development of more Empathe
             }
           },
           child: EzCol(
+            mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: vAlign(config).mainAxis,
             crossAxisAlignment: hAlign(config).crossAxis,
             children: <Widget>[
