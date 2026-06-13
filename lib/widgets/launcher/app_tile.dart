@@ -178,10 +178,11 @@ class _AppTileState extends State<AppTile> {
                   ),
         AppState.verbose => EzScrollView(
             widget.config,
-            mainAxisAlignment: hA.mainAxis,
-            scrollDirection: Axis.horizontal,
             reverseHands: true,
             showScrollHint: true,
+            thumbVisibility: false,
+            mainAxisAlignment: hA.mainAxis,
+            scrollDirection: Axis.horizontal,
             children: <Widget>[
               // Name && icon
               AppButton(
@@ -231,8 +232,9 @@ class _AppTileState extends State<AppTile> {
               widget.config,
               reverseHands: true,
               showScrollHint: true,
-              mainAxisSize: MainAxisSize.max,
+              thumbVisibility: false,
               mainAxisAlignment: hA.mainAxis,
+              mainAxisSize: MainAxisSize.max,
               scrollDirection: Axis.horizontal,
               children: <Widget>[
                 if (!inList && state != AppState.singleEdit) ...<Widget>[

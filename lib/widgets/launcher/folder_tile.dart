@@ -108,8 +108,9 @@ class _AppFolderState extends State<FolderTile> {
                 onTapOutside: (_) => setState(() => open = !open),
                 child: EzScrollView(
                   widget.config,
-                  scrollDirection: Axis.horizontal,
+                  thumbVisibility: false,
                   mainAxisAlignment: hA.mainAxis,
+                  scrollDirection: Axis.horizontal,
                   children: widget._appList
                       .map((String id) {
                         final AppInfo? app = widget.appInfo.appMap[id];
@@ -173,6 +174,7 @@ class _AppFolderState extends State<FolderTile> {
               widget.config,
               reverseHands: true,
               showScrollHint: true,
+              thumbVisibility: false,
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: hA.mainAxis,
               scrollDirection: Axis.horizontal,
