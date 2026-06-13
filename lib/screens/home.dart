@@ -423,15 +423,13 @@ If you want to support Liminal's development, or the development of more Empathe
                       },
                       include: false,
                       onSelected: (AppInfo app) => appInfo.addHomeApp(app.id),
-                      title: EzTextBackground(config,
-                          text: EzRow(
-                            config,
-                            reverseHands: false,
-                            children: <Widget>[
-                              Text('Home\t', style: config.labelStyle),
-                              EzIcon(config, Icons.add, color: config.colors.onSurface),
-                            ],
-                          )),
+                      title: EzTextIconButton(
+                        config,
+                        onPressed: doNothing,
+                        label: 'Home',
+                        icon: EzIcon(config, Icons.add, color: config.colors.onSurface),
+                        textStyle: config.labelStyle,
+                      ),
                     ),
                   ),
                 ),

@@ -82,10 +82,11 @@ class _SwipeSelectorState extends State<SwipeSelector> {
 
                 if (context.mounted) Navigator.of(context).pop();
               },
-              title: EzText(
+              title: EzTextButton(
                 widget.config,
+                onPressed: doNothing,
                 text: 'Selecting $lowDir swipe',
-                style: widget.config.labelStyle,
+                textStyle: widget.config.labelStyle,
               ),
             ),
           ),

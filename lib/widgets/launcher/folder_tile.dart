@@ -414,10 +414,11 @@ class _AppFolderState extends State<FolderTile> {
                                           include: false,
                                           onSelected: (AppInfo app) async => appsNotif.value =
                                               List<String>.from(appsNotif.value)..add(app.id),
-                                          title: EzText(
+                                          title: EzTextButton(
                                             widget.config,
+                                            onPressed: doNothing,
                                             text: "Add to '${renameCon.text}'",
-                                            style: widget.config.labelStyle,
+                                            textStyle: widget.config.labelStyle,
                                           ),
                                         ),
                                       ),
