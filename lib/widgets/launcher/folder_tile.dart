@@ -94,82 +94,99 @@ class _AppFolderState extends State<FolderTile> {
   // Return the build //
 
   @override
-  Widget build(BuildContext context) => EzAnimSwitch(
-        widget.config,
-        mod: 0.667,
-        forceType: EzTransitionType.none,
-        forceFade: true,
-        child: switch (state) {
-          AppState.standard => open
-              ? TapRegion(
-                  onTapOutside: (_) => setState(() => open = !open),
-                  child: EzScrollView(
-                    widget.config,
-                    scrollDirection: Axis.horizontal,
-                    mainAxisAlignment: hAlign(widget.config).mainAxis,
-                    children: widget._appList
-                        .map((String id) {
-                          final AppInfo? app = widget.appInfo.appMap[id];
-                          if (app == null) return null;
+  Widget build(BuildContext context) {
+    final ListAlignment hA = hAlign(widget.config);
 
-                          return Padding(
-                            padding: EdgeInsets.symmetric(horizontal: widget.config.spacing / 2),
-                            child: AppTile(
-                              widget.config,
-                              appInfo: widget.appInfo,
-                              app: app,
-                              location: AppLocation.folder,
-                              state: state,
-                              onSelected: (AppInfo app) => launchApp(app),
-                            ),
-                          );
-                        })
-                        .whereType<Widget>()
-                        .toList(),
-                  ),
-                )
-              : wideTiles(widget.config)
-                  ? InkWell(
-                      onTap: () => setState(() => open = !open),
-                      onLongPress: () => canEdit(
-                        widget.config,
-                        () async => setState(() => state = AppState.singleEdit),
-                      ),
-                      child: Container(
-                        width: double.infinity,
-                        alignment:
-                            LAConfig.merge(h: hAlign(widget.config), v: vAlign(widget.config)),
-                        child: FolderButton(
-                          widget.config,
-                          name: widget._name,
-                          buttonType: folderBT(widget.config),
-                          labelType: folderLabels(widget.config),
-                          onPressed: () => setState(() => open = !open),
-                          onLongPress: () => canEdit(
+    return EzAnimSwitch(
+      widget.config,
+      mod: 0.667,
+      forceType: EzTransitionType.none,
+      forceFade: true,
+      child: switch (state) {
+        AppState.standard => open
+            ? TapRegion(
+                onTapOutside: (_) => setState(() => open = !open),
+                child: EzScrollView(
+                  widget.config,
+                  scrollDirection: Axis.horizontal,
+                  mainAxisAlignment: hA.mainAxis,
+                  children: widget._appList
+                      .map((String id) {
+                        final AppInfo? app = widget.appInfo.appMap[id];
+                        if (app == null) return null;
+
+                        return Padding(
+                          padding: EdgeInsets.symmetric(horizontal: widget.config.spacing / 2),
+                          child: AppTile(
                             widget.config,
-                            () async => setState(() => state = AppState.singleEdit),
+                            appInfo: widget.appInfo,
+                            app: app,
+                            location: AppLocation.folder,
+                            state: state,
+                            onSelected: (AppInfo app) => launchApp(app),
                           ),
+                        );
+                      })
+                      .whereType<Widget>()
+                      .toList(),
+                ),
+              )
+            : wideTiles(widget.config)
+                ? InkWell(
+                    onTap: () => setState(() => open = !open),
+                    onLongPress: () => canEdit(
+                      widget.config,
+                      () async => setState(() => state = AppState.singleEdit),
+                    ),
+                    child: Container(
+                      width: double.infinity,
+                      alignment: LAConfig.merge(h: hA, v: vAlign(widget.config)),
+                      child: FolderButton(
+                        widget.config,
+                        name: widget._name,
+                        buttonType: folderBT(widget.config),
+                        labelType: folderLabels(widget.config),
+                        onPressed: () => setState(() => open = !open),
+                        onLongPress: () => canEdit(
+                          widget.config,
+                          () async => setState(() => state = AppState.singleEdit),
                         ),
                       ),
-                    )
-                  : FolderButton(
-                      widget.config,
-                      name: widget._name,
-                      buttonType: folderBT(widget.config),
-                      labelType: folderLabels(widget.config),
-                      onPressed: () => setState(() => open = !open),
-                      onLongPress: () => canEdit(
-                        widget.config,
-                        () async => setState(() => state = AppState.singleEdit),
-                      ),
                     ),
-          AppState.verbose => const SizedBox.shrink(), // Shouldn't be possible
-          AppState.singleEdit || AppState.groupEdit => EzScrollView(
+                  )
+                : FolderButton(
+                    widget.config,
+                    name: widget._name,
+                    buttonType: folderBT(widget.config),
+                    labelType: folderLabels(widget.config),
+                    onPressed: () => setState(() => open = !open),
+                    onLongPress: () => canEdit(
+                      widget.config,
+                      () async => setState(() => state = AppState.singleEdit),
+                    ),
+                  ),
+        AppState.verbose => const SizedBox.shrink(), // Shouldn't be possible
+        AppState.singleEdit || AppState.groupEdit => Container(
+            width: double.infinity,
+            alignment: LAConfig.merge(h: hA, v: ListAlignment.center),
+            child: EzScrollView(
               widget.config,
+              reverseHands: true,
+              showScrollHint: true,
               mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: hA.mainAxis,
               scrollDirection: Axis.horizontal,
-              mainAxisAlignment: hAlign(widget.config).mainAxis,
               children: <Widget>[
+                // Drag handle
+                if (state == AppState.groupEdit) ...<Widget>[
+                  EzIcon(
+                    widget.config,
+                    Icons.drag_handle,
+                    color: widget.config.colors.outline,
+                  ),
+                  widget.config.rowMargin,
+                ],
+
                 // Name (and rename)
                 EzLink(
                   widget.config,
@@ -438,10 +455,22 @@ class _AppFolderState extends State<FolderTile> {
                   icon: const Icon(Icons.delete),
                   onPressed: () => widget.appInfo.deleteFolder(widget.index),
                 ),
+
+                // Drag handle
+                if (state == AppState.groupEdit) ...<Widget>[
+                  widget.config.rowMargin,
+                  EzIcon(
+                    widget.config,
+                    Icons.drag_handle,
+                    color: widget.config.colors.outline,
+                  ),
+                ],
               ],
             ),
-        },
-      );
+          ),
+      },
+    );
+  }
 
   @override
   void dispose() {
