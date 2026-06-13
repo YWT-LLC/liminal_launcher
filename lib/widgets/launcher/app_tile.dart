@@ -126,7 +126,6 @@ class _AppTileState extends State<AppTile> {
   @override
   Widget build(BuildContext context) {
     final ListAlignment hA = hAlign(widget.config);
-    final ListAlignment vA = vAlign(widget.config);
 
     return EzAnimSwitch(
       widget.config,
@@ -143,7 +142,7 @@ class _AppTileState extends State<AppTile> {
                 ),
                 child: Container(
                   width: double.infinity,
-                  alignment: LAConfig.merge(h: hA, v: vA),
+                  alignment: LAConfig.merge(h: hA, v: ListAlignment.center),
                   child: AppButton(
                     widget.config,
                     app: widget.app,
@@ -255,7 +254,7 @@ class _AppTileState extends State<AppTile> {
                       semanticLabel: widget.app.name,
                       width: appIconSize(widget.config),
                       height: appIconSize(widget.config),
-                      alignment: LAConfig.merge(h: hA, v: vA),
+                      alignment: LAConfig.merge(h: hA, v: ListAlignment.center),
                     ),
                   ),
                   rowSpacer(),
