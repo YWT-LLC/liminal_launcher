@@ -334,7 +334,7 @@ If you want to support Liminal's development, or the development of more Empathe
                   onNotification: (ScrollNotification notification) {
                     switch (notification.runtimeType) {
                       case const (OverscrollNotification):
-                        if (notification.metrics.axis == Axis.horizontal ||
+                        if (notification.metrics.axis == Axis.vertical &&
                             (notification as OverscrollNotification).overscroll <= 0) {
                           if (atBottom) {
                             swipeUp(config, appInfo);
