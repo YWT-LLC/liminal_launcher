@@ -89,8 +89,11 @@ class _AppListScreenState extends State<AppListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<AppInfoProvider, EzCP>(
-      builder: (_, AppInfoProvider appInfo, EzCP config, __) => LiminalScaffold(
+    return Consumer2<AppInfoProvider, EzCP>(builder: (_, AppInfoProvider appInfo, EzCP config, __) {
+      final ListAlignment hA = hAlign(config);
+      final ListAlignment vA = vAlign(config);
+
+      return LiminalScaffold(
         config,
         body: GestureDetector(
           behavior: HitTestBehavior.opaque,
@@ -103,17 +106,18 @@ class _AppListScreenState extends State<AppListScreen> {
             }
           },
           child: EzCol(
-            mainAxisAlignment: vAlign(config).mainAxis,
-            crossAxisAlignment: hAlign(config).crossAxis,
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: vA.mainAxis,
+            crossAxisAlignment: hA.crossAxis,
             children: <Widget>[
               EzHeader(config),
 
               // List controls
               EzScrollView(
                 config,
+                showScrollHint: true,
                 scrollDirection: Axis.horizontal,
-                mainAxisAlignment: hAlign(config).mainAxis,
-                crossAxisAlignment: vAlign(config).crossAxis,
+                mainAxisAlignment: hA.mainAxis,
                 children: <Widget>[
                   // Sort by...
                   MenuAnchor(
@@ -126,7 +130,7 @@ class _AppListScreenState extends State<AppListScreen> {
                         .map((AppSort type) => EzMenuButton(
                               config,
                               label: type.name.replaceRange(0, 1, type.name[0].toUpperCase()),
-                              textAlign: hAlign(config).textAlign,
+                              textAlign: hA.textAlign,
                               onPressed: () async {
                                 await EzCM.setString(listSortKey, type.value);
 
@@ -192,11 +196,8 @@ class _AppListScreenState extends State<AppListScreen> {
                   ),
                 ],
               ),
-              if (widget.config.title != null) ...<Widget>[
-                config.margin,
-                widget.config.title!,
-              ],
-              config.spacer,
+              if (widget.config.title != null) widget.config.title!, // TODO: always margin spacing
+              EzSpacer((config.spacing * 2) - ((config.spacing * 0.5) + config.marginVal)),
 
               // App list
               NotificationListener<ScrollNotification>(
@@ -252,8 +253,10 @@ class _AppListScreenState extends State<AppListScreen> {
                 child: Expanded(
                   child: EzScrollView(
                     config,
-                    mainAxisSize: MainAxisSize.max,
                     controller: scrollControl,
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: vA.mainAxis,
+                    crossAxisAlignment: hA.crossAxis,
                     physics: const ClampingScrollPhysics(),
                     children: appInfo.apps
                         .where((AppInfo app) =>
@@ -320,8 +323,8 @@ class _AppListScreenState extends State<AppListScreen> {
             ),
           ),
         ],
-      ),
-    );
+      );
+    });
   }
 
   @override
