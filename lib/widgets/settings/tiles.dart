@@ -59,25 +59,46 @@ class AppTileSetting extends StatelessWidget {
               builder: (BuildContext mCon, StateSetter setModal) =>
                   ezModalScroll(config, children: <Widget>[
                 // Preview
-                Container(
-                  width: useWide ? double.infinity : null,
-                  decoration: ShapeDecoration(shape: config.buttonShape.shape),
-                  child: AppButton(
-                    config,
-                    app: AppInfo(
-                      package: nullAppPackage,
-                      label: label,
-                      removable: false,
-                      installDate: 0,
-                      packageSize: 0,
-                    ),
-                    icon: icon,
-                    buttonType: BTConfig.build(labelType, icons: showIcon, elevated: elevated),
-                    labelType: labelType,
-                    onPressed: doNothing,
-                    onLongPress: doNothing,
-                  ),
-                ),
+                useWide
+                    ? InkWell(
+                        onTap: doNothing,
+                        child: Container(
+                          width: double.infinity,
+                          alignment: LAConfig.merge(h: hAlign(config), v: ListAlignment.center),
+                          child: AppButton(
+                            config,
+                            app: AppInfo(
+                              package: nullAppPackage,
+                              label: label,
+                              removable: false,
+                              installDate: 0,
+                              packageSize: 0,
+                            ),
+                            icon: icon,
+                            buttonType:
+                                BTConfig.build(labelType, icons: showIcon, elevated: elevated),
+                            labelType: labelType,
+                            onPressed: doNothing,
+                            onLongPress: doNothing,
+                          ),
+                        ),
+                      )
+                    : AppButton(
+                        config,
+                        app: AppInfo(
+                          package: nullAppPackage,
+                          label: label,
+                          removable: false,
+                          installDate: 0,
+                          packageSize: 0,
+                        ),
+                        icon: icon,
+                        buttonType: BTConfig.build(labelType, icons: showIcon, elevated: elevated),
+                        labelType: labelType,
+                        onPressed: doNothing,
+                        onLongPress: doNothing,
+                      ),
+
                 config.separator,
 
                 // Label type
