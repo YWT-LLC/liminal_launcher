@@ -196,7 +196,7 @@ class _AppListScreenState extends State<AppListScreen> {
                   ),
                 ],
               ),
-              if (widget.config.title != null) widget.config.title!, // TODO: always margin spacing
+              if (widget.config.title != null) widget.config.title!,
               EzSpacer((config.spacing * 2) - ((config.spacing * 0.5) + config.marginVal)),
 
               // App list
