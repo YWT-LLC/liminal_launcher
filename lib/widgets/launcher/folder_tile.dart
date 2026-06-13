@@ -107,7 +107,6 @@ class _AppFolderState extends State<FolderTile> {
                     widget.config,
                     scrollDirection: Axis.horizontal,
                     mainAxisAlignment: hAlign(widget.config).mainAxis,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: widget._appList
                         .map((String id) {
                           final AppInfo? app = widget.appInfo.appMap[id];
@@ -167,9 +166,9 @@ class _AppFolderState extends State<FolderTile> {
           AppState.verbose => const SizedBox.shrink(), // Shouldn't be possible
           AppState.singleEdit || AppState.groupEdit => EzScrollView(
               widget.config,
+              mainAxisSize: MainAxisSize.max,
               scrollDirection: Axis.horizontal,
               mainAxisAlignment: hAlign(widget.config).mainAxis,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 // Name (and rename)
                 EzLink(

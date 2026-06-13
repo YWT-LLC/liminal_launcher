@@ -60,7 +60,6 @@ class AppSecSettings extends StatelessWidget {
                   EzRow(
                     config,
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       // Label
                       Flexible(
