@@ -36,24 +36,28 @@ class _ClockState extends State<Clock> {
   }
 
   @override
-  Widget build(BuildContext context) => EzTextBackground(widget.config,
-      text: EzCol(
-        crossAxisAlignment: hAlign(widget.config).crossAxis,
-        children: <Widget>[
-          if (homeTime(widget.config))
-            Text(
-              TimeOfDay.fromDateTime(now).format(context),
-              style: widget.config.headlineStyle,
-              textAlign: hAlign(widget.config).textAlign,
-            ),
-          if (homeDate(widget.config) != DateType.none)
-            Text(
-              DateTypeConfig.buildDate(context, now, homeDate(widget.config)),
-              style: widget.config.labelStyle,
-              textAlign: hAlign(widget.config).textAlign,
-            ),
-        ],
-      ));
+  Widget build(BuildContext context) => EzTextBackground(
+        widget.config,
+        padding: EdgeInsets.all(widget.config.padding),
+        text: EzCol(
+          mainAxisAlignment: vAlign(widget.config).mainAxis,
+          crossAxisAlignment: hAlign(widget.config).crossAxis,
+          children: <Widget>[
+            if (homeTime(widget.config))
+              Text(
+                TimeOfDay.fromDateTime(now).format(context),
+                style: widget.config.headlineStyle,
+                textAlign: hAlign(widget.config).textAlign,
+              ),
+            if (homeDate(widget.config) != DateType.none)
+              Text(
+                DateTypeConfig.buildDate(context, now, homeDate(widget.config)),
+                style: widget.config.labelStyle,
+                textAlign: hAlign(widget.config).textAlign,
+              ),
+          ],
+        ),
+      );
 
   @override
   void dispose() {
