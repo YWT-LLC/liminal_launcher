@@ -283,6 +283,9 @@ If you want to support Liminal's development, or the development of more Empathe
   Widget build(BuildContext context) {
     return Consumer2<AppInfoProvider, EzCP>(builder: (_, AppInfoProvider appInfo, EzCP config, __) {
       final bool topClock = topAlign.contains(vAlign(config));
+      final double clockSpacing = (config.spacing * 2) - (config.padding + (config.spacing / 2));
+      final Widget clockSpacer =
+          (clockSpacing > 0 ? EzSpacer(clockSpacing) : const SizedBox.shrink());
 
       return LiminalScaffold(
         config,
@@ -323,7 +326,7 @@ If you want to support Liminal's development, or the development of more Empathe
             crossAxisAlignment: hAlign(config).crossAxis,
             children: <Widget>[
               // Clock I
-              if (topClock) ...<Widget>[Clock(config), config.spacer],
+              if (topClock) ...<Widget>[Clock(config), clockSpacer],
 
               // App list
               Expanded(
@@ -399,7 +402,7 @@ If you want to support Liminal's development, or the development of more Empathe
               ),
 
               // Clock II
-              if (!topClock) ...<Widget>[config.spacer, Clock(config)],
+              if (!topClock) ...<Widget>[clockSpacer, Clock(config)],
             ],
           ),
         ),
