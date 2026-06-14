@@ -124,7 +124,7 @@ class _AppListScreenState extends State<AppListScreen> {
                     builder: (_, MenuController controller, __) => EzIconButton(
                       config,
                       onPressed: () => controller.isOpen ? controller.close() : controller.open(),
-                      icon: const Icon(Icons.sort),
+                      icon: EzIcon(config, Icons.sort),
                     ),
                     menuChildren: AppSort.values
                         .map((AppSort type) => EzMenuButton(
@@ -165,7 +165,7 @@ class _AppListScreenState extends State<AppListScreen> {
                       children: <Widget>[
                         EzIconButton(
                           config,
-                          icon: const Icon(Icons.search),
+                          icon: EzIcon(config, Icons.search),
                           onPressed: () {
                             if (searching) {
                               closeKeyboard(context);

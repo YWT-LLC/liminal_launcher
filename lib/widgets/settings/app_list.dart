@@ -19,7 +19,7 @@ class AppListSettings extends StatelessWidget {
   Widget build(BuildContext context) => EzElevatedIconButton(
         config,
         label: 'App list',
-        icon: const Icon(Icons.list),
+        icon: EzIcon(config, Icons.list),
         onPressed: () => ezModal(
           config,
           context: context,

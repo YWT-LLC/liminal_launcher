@@ -19,7 +19,7 @@ class HeaderSettings extends StatelessWidget {
   Widget build(BuildContext context) => EzElevatedIconButton(
         config,
         label: 'Home header',
-        icon: const Icon(LineIcons.clock),
+        icon: EzIcon(config, LineIcons.clock),
         onPressed: () async {
           final String timeKey = config.isDark ? darkHomeTimeKey : lightHomeTimeKey;
           final bool backupTime = EzCM.get(timeKey);

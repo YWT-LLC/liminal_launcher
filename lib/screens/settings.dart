@@ -275,7 +275,7 @@ class SettingsScreen extends StatelessWidget {
                       }
                     },
                     label: 'List alignment',
-                    icon: const Icon(Icons.grid_3x3),
+                    icon: EzIcon(config, Icons.grid_3x3),
                   ),
                   config.separator,
                 ],

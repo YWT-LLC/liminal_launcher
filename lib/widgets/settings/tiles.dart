@@ -217,7 +217,7 @@ class AppTileSetting extends StatelessWidget {
             await config.rebuildUI(<EzCacheType>{EzCacheType.design});
           }
         },
-        icon: const Icon(Icons.settings),
+        icon: EzIcon(config, Icons.settings),
         label: '${folder ? 'Folder' : 'App'} style',
       );
 }

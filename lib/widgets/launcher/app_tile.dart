@@ -269,7 +269,7 @@ class _AppTileState extends State<AppTile> {
                     if (inList && context.mounted) Navigator.of(context).pop();
                     await openSettings(widget.app);
                   },
-                  icon: const Icon(Icons.info),
+                  icon: EzIcon(widget.config, Icons.info),
                 ),
                 rowSpacer(),
 
@@ -325,7 +325,7 @@ class _AppTileState extends State<AppTile> {
                       );
                     },
                   ),
-                  icon: const Icon(Icons.edit),
+                  icon: EzIcon(widget.config, Icons.edit),
                 ),
                 rowSpacer(),
 
@@ -341,7 +341,7 @@ class _AppTileState extends State<AppTile> {
                         setState(() => state = AppState.standard);
                       }
                     },
-                    icon: const Icon(Icons.add_to_home_screen),
+                    icon: EzIcon(widget.config, Icons.add_to_home_screen),
                   ),
                   rowSpacer(),
                 ],
@@ -354,7 +354,7 @@ class _AppTileState extends State<AppTile> {
                       final bool success = await widget.appInfo.removeHomeApp(widget.app.id);
                       if (success && mounted) setState(() => state = AppState.standard);
                     },
-                    icon: const Icon(Icons.remove),
+                    icon: EzIcon(widget.config, Icons.remove),
                   ),
                   rowSpacer(),
                 ],
@@ -391,7 +391,7 @@ class _AppTileState extends State<AppTile> {
                     );
                     if (banished && mounted) setState(() => state = AppState.standard);
                   },
-                  icon: const Icon(LineIcons.ghost),
+                  icon: EzIcon(widget.config, LineIcons.ghost),
                 ),
 
                 // Delete
@@ -400,7 +400,7 @@ class _AppTileState extends State<AppTile> {
                   EzIconButton(
                     widget.config,
                     onPressed: () async => await openDelete(widget.app),
-                    icon: const Icon(Icons.delete),
+                    icon: EzIcon(widget.config, Icons.delete),
                   ),
                 ],
 

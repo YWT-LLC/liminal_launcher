@@ -22,7 +22,7 @@ class AppSecSettings extends StatelessWidget {
   Widget build(BuildContext context) => EzElevatedIconButton(
         config,
         label: 'Security',
-        icon: const Icon(Icons.security),
+        icon: EzIcon(config, Icons.security),
         onPressed: () async {
           final Size fieldSize = ezTextSize(
             '55',
