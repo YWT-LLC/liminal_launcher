@@ -198,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
               children: <InlineSpan>[
                 EzPlainText(
                   text:
-                      '''Personalizing your launcher should be straightforward, with one potential exception: the dark and light theme appearances can be completely separate!
+                      '''Personalizing your launcher is simple, with one potential exception: most settings (appearance AND app list) can be completely separate for dark/light themes!
                 
 While in the relevant settings, you will see a toggle-able icon that indicates whether you're editing the dark ''',
                   style: config.bodyStyle,
@@ -227,7 +227,7 @@ While in the relevant settings, you will see a toggle-able icon that indicates w
                   ),
                 ),
                 EzPlainText(
-                  text: " themes.\n\nLong press the home screen to edit, and you're off!",
+                  text: ' themes.\n\nLong press the home screen to get started!',
                   style: config.bodyStyle,
                 ),
               ],
