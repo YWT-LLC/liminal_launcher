@@ -296,26 +296,16 @@ If you want to support Liminal's development, or the development of more Empathe
               : await canEdit(config, () => ripple(config, details)),
           onVerticalDragEnd: (DragEndDetails details) async {
             if (details.primaryVelocity != null) {
-              if (details.primaryVelocity! < 0) {
-                await swipeUp(config, appInfo);
-              }
+              if (details.primaryVelocity! < 0) await swipeUp(config, appInfo);
             }
           },
           onHorizontalDragEnd: (DragEndDetails details) {
             if (details.primaryVelocity != null && details.primaryVelocity! != 0) {
-              AppInfo? toLaunch;
-
-              if (details.primaryVelocity! < 0) {
-                // Swiped left
-                toLaunch = editing ? null : appInfo.appMap[leftSwipeID(config)];
-              } else {
-                // Swiped right
-                if (editing) {
-                  setState(() => editing = false);
-                } else {
-                  toLaunch = appInfo.appMap[rightSwipeID(config)];
-                }
-              }
+              final AppInfo? toLaunch = editing
+                  ? null
+                  : ((details.primaryVelocity! < 0)
+                      ? appInfo.appMap[leftSwipeID(config)]
+                      : appInfo.appMap[rightSwipeID(config)]);
 
               if (toLaunch != null) launchApp(toLaunch);
             }
@@ -335,7 +325,7 @@ If you want to support Liminal's development, or the development of more Empathe
                     switch (notification.runtimeType) {
                       case const (OverscrollNotification):
                         if (notification.metrics.axis == Axis.vertical &&
-                            (notification as OverscrollNotification).overscroll <= 0) {
+                            (notification as OverscrollNotification).overscroll > 0) {
                           if (atBottom) {
                             swipeUp(config, appInfo);
                             return true;
