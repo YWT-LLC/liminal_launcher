@@ -48,6 +48,25 @@ class _AppFolderState extends State<FolderTile> {
 
   // Define custom functions //
 
+  List<Widget> showApps() => widget._appList
+      .map((String id) {
+        final AppInfo? app = widget.appInfo.appMap[id];
+        if (app == null) return null;
+
+        return Padding(
+            padding: EdgeInsets.symmetric(horizontal: widget.config.spacing / 2),
+            child: AppTile(
+              widget.config,
+              appInfo: widget.appInfo,
+              app: app,
+              location: AppLocation.folder,
+              state: state,
+              onSelected: (AppInfo app) => launchApp(app),
+            ));
+      })
+      .whereType<Widget>()
+      .toList();
+
   Widget rowSpacer() => switch (state) {
         AppState.standard ||
         AppState.groupEdit ||
@@ -105,33 +124,24 @@ class _AppFolderState extends State<FolderTile> {
       child: switch (state) {
         AppState.standard => open
             ? TapRegion(
-                onTapOutside: (_) => setState(() => open = !open),
+                onTapOutside: (_) => setState(() => open = false),
                 child: EzScrollView(
                   widget.config,
+                  reverseHands: true,
                   thumbVisibility: false,
                   mainAxisAlignment: hA.mainAxis,
                   scrollDirection: Axis.horizontal,
-                  children: widget._appList
-                      .map((String id) {
-                        final AppInfo? app = widget.appInfo.appMap[id];
-                        if (app == null) return null;
+                  children: <Widget>[
+                    ...showApps(),
 
-                        return Padding(
-                          padding: EdgeInsets.symmetric(horizontal: widget.config.spacing / 2),
-                          child: AppTile(
-                            widget.config,
-                            appInfo: widget.appInfo,
-                            app: app,
-                            location: AppLocation.folder,
-                            state: state,
-                            onSelected: (AppInfo app) => launchApp(app),
-                          ),
-                        );
-                      })
-                      .whereType<Widget>()
-                      .toList(),
-                ),
-              )
+                    // Close folder
+                    EzIconButton(
+                      widget.config,
+                      icon: EzIcon(widget.config, Icons.close),
+                      onPressed: () => setState(() => open = false),
+                    ),
+                  ],
+                ))
             : wideTiles(widget.config)
                 ? InkWell(
                     onTap: () => setState(() => open = !open),
@@ -251,7 +261,7 @@ class _AppFolderState extends State<FolderTile> {
                 // Edit apps
                 EzIconButton(
                   widget.config,
-                  icon: const Icon(Icons.edit),
+                  icon: EzIcon(widget.config, Icons.edit),
                   onPressed: () async {
                     final TextEditingController renameCon =
                         TextEditingController(text: widget._name);
@@ -375,7 +385,7 @@ class _AppFolderState extends State<FolderTile> {
                                                   widget.config.rowSpacer,
                                                   EzIconButton(
                                                     widget.config,
-                                                    icon: const Icon(Icons.remove),
+                                                    icon: EzIcon(widget.config, Icons.remove),
                                                     onPressed: () => appsNotif.value =
                                                         List<String>.from(apps)..remove(id),
                                                   ),
@@ -455,7 +465,7 @@ class _AppFolderState extends State<FolderTile> {
                 // Delete folder
                 EzIconButton(
                   widget.config,
-                  icon: const Icon(Icons.delete),
+                  icon: EzIcon(widget.config, Icons.delete),
                   onPressed: () => widget.appInfo.deleteFolder(widget.index),
                 ),
 
