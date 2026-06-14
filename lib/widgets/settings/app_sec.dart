@@ -12,11 +12,8 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 class AppSecSettings extends StatelessWidget {
   final EzCP config;
   final TextEditingController _timeoutText;
-  final ScrollController _timeoutScroll;
 
-  AppSecSettings(this.config, {super.key})
-      : _timeoutText = TextEditingController(),
-        _timeoutScroll = ScrollController();
+  AppSecSettings(this.config, {super.key}) : _timeoutText = TextEditingController();
 
   @override
   Widget build(BuildContext context) => EzElevatedIconButton(
@@ -24,15 +21,17 @@ class AppSecSettings extends StatelessWidget {
         label: 'Security',
         icon: EzIcon(config, Icons.security),
         onPressed: () async {
+          bool forEdit = authToEdit(config);
+          bool forHide = authForHidden(config);
+
+          _timeoutText.text = authTimeout(config).inMinutes.toString();
           final Size fieldSize = ezTextSize(
             '55',
             context: context,
             style: config.bodyStyle,
           );
-
-          _timeoutText.text = authTimeout(config).inMinutes.toString();
-          bool forEdit = authToEdit(config);
-          bool forAuth = authForHidden(config);
+          final double sep = config.spacing * 2;
+          double bottomSpace = sep;
 
           if (context.mounted) {
             await ezModal(
@@ -60,14 +59,14 @@ class AppSecSettings extends StatelessWidget {
                     // Auth for hidden
                     EzSwitchPair(
                       config,
-                      key: ValueKey<String>('fas-$forAuth'),
-                      value: forAuth,
+                      key: ValueKey<String>('fas-$forHide'),
+                      value: forHide,
                       text: 'Auth to see hidden apps',
                       onChanged: (bool? value) async {
                         if (value == null) return;
 
                         await EzCM.secSet(authForHiddenKey, value.toString());
-                        setModal(() => forAuth = value);
+                        setModal(() => forHide = value);
                       },
                     ),
                     config.spacer,
@@ -103,16 +102,14 @@ class AppSecSettings extends StatelessWidget {
                             keyboardType: TextInputType.number,
                             autovalidateMode: AutovalidateMode.onUnfocus,
                             onTap: () async {
-                              // Wait a half sec for the Spacer to resize first
-                              await Future<void>.delayed(const Duration(milliseconds: 500));
+                              // Wait a bit for the keyboard to open
+                              await Future<void>.delayed(const Duration(milliseconds: 300));
 
-                              // Scroll to the bottom
-                              await _timeoutScroll.animateTo(
-                                _timeoutScroll.position.maxScrollExtent,
-                                duration: ezDuration(config.animDur),
-                                curve: Curves.easeInOut,
-                              );
+                              setModal(() =>
+                                  bottomSpace = (sep + MediaQuery.of(context).viewInsets.bottom));
                             },
+                            onTapAlwaysCalled: true,
+                            onTapOutside: (_) => setModal(() => bottomSpace = sep),
                             validator: (String? value) {
                               if (value == null) return null;
                               final int? intVal = int.tryParse(value);
@@ -124,23 +121,22 @@ class AppSecSettings extends StatelessWidget {
                               final int? intVal = int.tryParse(stringVal);
                               if (intVal == null || intVal < 0) return;
 
+                              setModal(() => bottomSpace = sep);
                               await EzCM.secSet(authTimeoutKey, intVal.toString());
                             },
                           ),
                         ),
                       ],
                     ),
-                    EzSpacer(MediaQuery.of(context).viewInsets.bottom),
-                    config.separator,
+                    EzSpacer(bottomSpace),
                   ],
-                  controller: _timeoutScroll,
                 ),
               ),
             );
 
             if (_timeoutText.text != authTimeout(config).inMinutes.toString() ||
                 forEdit != authToEdit(config) ||
-                forAuth != authForHidden(config)) {
+                forHide != authForHidden(config)) {
               await config.rebuildUI(noECT);
             }
           }
