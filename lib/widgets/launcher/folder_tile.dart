@@ -15,6 +15,7 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 class FolderTile extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
+  final int lane;
   final int index;
   final AppState state;
   final ValueNotifier<double>? rippleProgress;
@@ -25,11 +26,12 @@ class FolderTile extends StatefulWidget {
   FolderTile(
     this.config, {
     required this.appInfo,
+    required this.lane,
     required this.index,
     required this.state,
     this.rippleProgress,
   }) : super(key: ValueKey<AppState>(state)) {
-    final List<String> items = appInfo.homeList[index].split(folderSplit);
+    final List<String> items = appInfo.homeList(config, lane)[index].split(folderSplit);
 
     _name = items[0];
     _appList = (items[1] == emptyTag) ? <String>[] : items.sublist(1);
@@ -218,8 +220,13 @@ class _AppFolderState extends State<FolderTile> {
                         final String name = renameCon.text.trim();
                         if (validateRename(name) != null) return null;
 
-                        final bool success = await widget.appInfo.renameFolder(name, widget.index);
-                        if (success && dCon.mounted) Navigator.of(dCon).pop(name);
+                        await widget.appInfo.renameFolder(
+                          widget.config,
+                          name,
+                          lane: widget.lane,
+                          index: widget.index,
+                        );
+                        if (dCon.mounted) Navigator.of(dCon).pop();
                       }
 
                       void onDeny() {
@@ -454,9 +461,11 @@ class _AppFolderState extends State<FolderTile> {
                     );
 
                     await ezNoTouch(() async => await widget.appInfo.updateFolder(
-                          widget.index,
-                          renameCon.text,
-                          appsNotif.value,
+                          widget.config,
+                          lane: widget.lane,
+                          index: widget.index,
+                          name: renameCon.text,
+                          ids: appsNotif.value,
                         ));
                   },
                 ),
@@ -466,7 +475,11 @@ class _AppFolderState extends State<FolderTile> {
                 EzIconButton(
                   widget.config,
                   icon: EzIcon(widget.config, Icons.delete),
-                  onPressed: () => widget.appInfo.deleteFolder(widget.index),
+                  onPressed: () => widget.appInfo.deleteFolder(
+                    widget.config,
+                    lane: widget.lane,
+                    index: widget.index,
+                  ),
                 ),
 
                 // Drag handle

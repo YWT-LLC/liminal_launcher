@@ -15,6 +15,7 @@ class AppTile extends StatefulWidget {
   final AppInfoProvider appInfo;
   final AppInfo app;
   final AppLocation location;
+  final int? lane;
   final AppState state;
   final Future<void> Function(AppInfo app) onSelected;
   final ValueNotifier<double>? rippleProgress;
@@ -24,6 +25,7 @@ class AppTile extends StatefulWidget {
     required this.appInfo,
     required this.app,
     required this.location,
+    this.lane,
     required this.state,
     required this.onSelected,
     this.rippleProgress,
@@ -330,16 +332,19 @@ class _AppTileState extends State<AppTile> {
                 rowSpacer(),
 
                 // Add to home
-                if (!widget.appInfo.homeSet.contains(widget.app.id) &&
+                if (inList &&
+                    widget.appInfo.numLanes(widget.config) == 1 &&
+                    !widget.appInfo.homeSet(widget.config).contains(widget.app.id) &&
                     !widget.appInfo.hiddenSet.contains(widget.app.id)) ...<Widget>[
                   EzIconButton(
                     widget.config,
                     onPressed: () async {
-                      final bool success = await widget.appInfo.addHomeApp(widget.app.id);
-
-                      if (success && state == AppState.singleEdit) {
-                        setState(() => state = AppState.standard);
-                      }
+                      await widget.appInfo.addHomeApp(
+                        widget.config,
+                        lane: 0,
+                        id: widget.app.id,
+                      );
+                      setState(() => state = AppState.standard);
                     },
                     icon: EzIcon(widget.config, Icons.add_to_home_screen),
                   ),
@@ -351,7 +356,12 @@ class _AppTileState extends State<AppTile> {
                   EzIconButton(
                     widget.config,
                     onPressed: () async {
-                      final bool success = await widget.appInfo.removeHomeApp(widget.app.id);
+                      final bool success = await widget.appInfo.removeHomeApp(
+                        widget.config,
+                        lane: widget.lane,
+                        id: widget.app.id,
+                      );
+
                       if (success && mounted) setState(() => state = AppState.standard);
                     },
                     icon: EzIcon(widget.config, Icons.remove),
@@ -363,14 +373,15 @@ class _AppTileState extends State<AppTile> {
                 EzIconButton(
                   widget.config,
                   onPressed: () async {
-                    final bool success = widget.appInfo.hiddenSet.contains(widget.app.id)
+                    widget.appInfo.hiddenSet.contains(widget.app.id)
                         ? await widget.appInfo.showApp(widget.app.id)
                         : await widget.appInfo.hideApp(
                             widget.config,
                             context: context,
                             id: widget.app.id,
                           );
-                    if (success && mounted) setState(() => state = AppState.standard);
+
+                    if (mounted) setState(() => state = AppState.standard);
                   },
                   icon: Icon(
                     widget.appInfo.hiddenSet.contains(widget.app.id)
