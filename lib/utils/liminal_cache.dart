@@ -13,8 +13,9 @@ class LiminalCache extends EzAppCache {
   Locale _locale;
   Lang _l10n;
 
-  late DesignCache _design;
+  late HomeCache _home;
   late SecureCache _security;
+  late DesignCache _design;
 
   LiminalCache(Locale locale, Lang l10n)
       : _locale = locale,
@@ -34,6 +35,18 @@ class LiminalCache extends EzAppCache {
   }
 
   void _buildLocalCache(bool isDark) async {
+    final bool defATE = limSecDef[authToEditKey] as bool;
+    final bool defAFH = limSecDef[authForHiddenKey] as bool;
+    final int defAT = limSecDef[authTimeoutKey] as int;
+
+    _home = HomeCache(interlinked: EzCM.get(interlinkedKey));
+
+    _security = SecureCache(
+      authToEdit: bool.tryParse(await EzCM.secGet(authToEditKey)) ?? defATE,
+      authForHidden: bool.tryParse(await EzCM.secGet(authForHiddenKey)) ?? defAFH,
+      authTimeout: Duration(minutes: int.tryParse(await EzCM.secGet(authTimeoutKey)) ?? defAT),
+    );
+
     if (isDark) {
       final bool listIcons = EzCM.get(darkListIconKey);
       final LabelType listLabels = LabelTypeConfig.lookup(EzCM.get(darkListLabelKey));
@@ -84,16 +97,6 @@ class LiminalCache extends EzAppCache {
       );
     }
 
-    final bool defATE = limSecDef[authToEditKey] as bool;
-    final bool defAFH = limSecDef[authForHiddenKey] as bool;
-    final int defAT = limSecDef[authTimeoutKey] as int;
-
-    _security = SecureCache(
-      authToEdit: bool.tryParse(await EzCM.secGet(authToEditKey)) ?? defATE,
-      authForHidden: bool.tryParse(await EzCM.secGet(authForHiddenKey)) ?? defAFH,
-      authTimeout: Duration(minutes: int.tryParse(await EzCM.secGet(authTimeoutKey)) ?? defAT),
-    );
-
     if (EzCM.get(isDark ? darkHideStatusKey : lightHideStatusKey) == true) {
       await SystemChrome.setEnabledSystemUIMode(
         SystemUiMode.manual,
@@ -106,6 +109,30 @@ class LiminalCache extends EzAppCache {
       );
     }
   }
+}
+
+class HomeCache {
+  final bool interlinked;
+
+  HomeCache({required this.interlinked});
+}
+
+class SecureCache {
+  final bool _authToEdit;
+  final bool _authForHidden;
+  final Duration _authTimeout;
+
+  SecureCache({
+    required bool authToEdit,
+    required bool authForHidden,
+    required Duration authTimeout,
+  })  : _authToEdit = authToEdit,
+        _authForHidden = authForHidden,
+        _authTimeout = authTimeout;
+
+  bool get authToEdit => _authToEdit;
+  bool get authForHidden => _authForHidden;
+  Duration get authTimeout => _authTimeout;
 }
 
 class DesignCache {
@@ -144,30 +171,18 @@ class DesignCache {
   });
 }
 
-class SecureCache {
-  final bool _authToEdit;
-  final bool _authForHidden;
-  final Duration _authTimeout;
-
-  SecureCache({
-    required bool authToEdit,
-    required bool authForHidden,
-    required Duration authTimeout,
-  })  : _authToEdit = authToEdit,
-        _authForHidden = authForHidden,
-        _authTimeout = authTimeout;
-
-  bool get authToEdit => _authToEdit;
-  bool get authForHidden => _authForHidden;
-  Duration get authTimeout => _authTimeout;
-}
-
 LiminalCache _cache(EzCP config) => config.appCache! as LiminalCache;
 
 Lang l10n(EzCP config) => _cache(config)._l10n;
 
+bool interlinked(EzCP config) => _cache(config)._home.interlinked;
+
 String leftSwipeID(EzCP config) => EzCM.get(leftSwipeIDKey);
 String rightSwipeID(EzCP config) => EzCM.get(rightSwipeIDKey);
+
+bool authToEdit(EzCP config) => _cache(config)._security.authToEdit;
+bool authForHidden(EzCP config) => _cache(config)._security.authForHidden;
+Duration authTimeout(EzCP config) => _cache(config)._security.authTimeout;
 
 bool listIcons(EzCP config) => _cache(config)._design.listIcons;
 LabelType listLabels(EzCP config) => _cache(config)._design.listLabels;
@@ -187,7 +202,3 @@ bool homeTime(EzCP config) => _cache(config)._design.homeTime;
 
 ListAlignment hAlign(EzCP config) => _cache(config)._design.horizontalAlign;
 ListAlignment vAlign(EzCP config) => _cache(config)._design.verticalAlign;
-
-bool authToEdit(EzCP config) => _cache(config)._security.authToEdit;
-bool authForHidden(EzCP config) => _cache(config)._security.authForHidden;
-Duration authTimeout(EzCP config) => _cache(config)._security.authTimeout;
