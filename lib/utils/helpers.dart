@@ -3,10 +3,10 @@
  * See LICENSE for distribution and usage details.
  */
 
-import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
-
 import './export.dart';
+
 import 'package:local_auth/local_auth.dart';
+import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 Future<void> canEdit(EzCP config, Future<void> Function() onSuccess) async {
   if (!authToEdit(config)) {
@@ -24,6 +24,17 @@ Future<void> canEdit(EzCP config, Future<void> Function() onSuccess) async {
   if (authed) await onSuccess.call();
 }
 
+Future<bool> _externalAuth(String reason) async {
+  final bool authed = await LocalAuthentication().authenticate(
+    localizedReason: reason,
+    persistAcrossBackgrounding: true,
+    biometricOnly: false,
+  );
+
+  if (authed) await EzCM.secSet(lastAuthKey, DateTime.now().toString());
+  return authed;
+}
+
 Future<bool> liminalAuth(EzCP config, String reason) async {
   final String lastAuth = await EzCM.secGet(lastAuthKey);
 
@@ -36,15 +47,4 @@ Future<bool> liminalAuth(EzCP config, String reason) async {
   return (saved == null || DateTime.now().difference(saved) > authTimeout(config))
       ? _externalAuth(reason)
       : Future<bool>.value(true);
-}
-
-Future<bool> _externalAuth(String reason) async {
-  final bool authed = await LocalAuthentication().authenticate(
-    localizedReason: reason,
-    persistAcrossBackgrounding: true,
-    biometricOnly: false,
-  );
-
-  if (authed) await EzCM.secSet(lastAuthKey, DateTime.now().toString());
-  return authed;
 }
