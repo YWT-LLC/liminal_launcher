@@ -29,12 +29,12 @@ class AppListSettings extends StatelessWidget {
             return ezModalScroll(
               config,
               children: <Widget>[
-                // Auto add to home
+                // Feeling fancy?
                 EzSwitchPair(
                   config,
-                  text: 'Auto-add new apps to home',
-                  valueKey: autoAddToHomeKey,
-                ),
+                  text: 'Linked home lists',
+                  valueKey: interlinkedKey,
+                ), // TODO: can change => select which one is staying (re-use advanced `line x line`?)
                 config.spacer,
 
                 // Auto search
