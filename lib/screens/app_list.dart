@@ -13,9 +13,9 @@ import 'package:provider/provider.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class AppListScreen extends StatefulWidget {
-  final ListConfig config;
+  final ListConfig listConfig;
 
-  const AppListScreen(this.config, {super.key});
+  const AppListScreen(this.listConfig, {super.key});
 
   @override
   State<AppListScreen> createState() => _AppListScreenState();
@@ -82,7 +82,7 @@ class _AppListScreenState extends State<AppListScreen> {
   @override
   void initState() {
     super.initState();
-    widget.config.localContent?.addListener(_onLocalContentChanged);
+    widget.listConfig.localContent?.addListener(_onLocalContentChanged);
   }
 
   // Return the build //
@@ -196,7 +196,7 @@ class _AppListScreenState extends State<AppListScreen> {
                   ),
                 ],
               ),
-              if (widget.config.title != null) widget.config.title!,
+              if (widget.listConfig.title != null) widget.listConfig.title!,
               EzSpacer((config.spacing * 2) - ((config.spacing * 0.5) + config.marginVal)),
 
               // App list
@@ -260,8 +260,8 @@ class _AppListScreenState extends State<AppListScreen> {
                     physics: const ClampingScrollPhysics(),
                     children: appInfo.apps
                         .where((AppInfo app) =>
-                            (appInfo.hybridIDs(widget.config).contains(app.id) ==
-                                widget.config.include) &&
+                            (appInfo.hybridIDs(config, widget.listConfig).contains(app.id) ==
+                                widget.listConfig.include) &&
                             (searching
                                 ? app.name.toLowerCase().contains(searchControl.text.toLowerCase())
                                 : true))
@@ -274,7 +274,7 @@ class _AppListScreenState extends State<AppListScreen> {
                                 app: app,
                                 location: AppLocation.list,
                                 state: verbose ? AppState.verbose : AppState.standard,
-                                onSelected: widget.config.onSelected,
+                                onSelected: widget.listConfig.onSelected,
                                 rippleProgress: rippleProgress,
                               ),
                             ))
@@ -329,7 +329,7 @@ class _AppListScreenState extends State<AppListScreen> {
 
   @override
   void dispose() {
-    widget.config.localContent?.removeListener(_onLocalContentChanged);
+    widget.listConfig.localContent?.removeListener(_onLocalContentChanged);
     scrollControl.dispose();
     searchControl.dispose();
     super.dispose();
