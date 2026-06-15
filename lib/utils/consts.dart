@@ -44,19 +44,13 @@ const Map<String, String> credits = <String, String>{
 
 //* EzConfig *//
 
-// Secure //
-
-const String authToEditKey = 'authToEdit';
-const String authForHiddenKey = 'authForHidden';
-const String authTimeoutKey = 'authTimeout';
-const String lastAuthKey = 'lastAuth';
-
 // BTS //
 
 const String renamedIDsKey = 'renamedIDs';
-const String homeIDsKey = 'homeIDs';
 const String hiddenIDsKey = 'hiddenIDs';
 const String banishedIDsKey = 'banishedIDs';
+const String darkHomeDataKey = 'darkHomeIDs';
+const String lightHomeDataKey = 'lightHomeIDs';
 
 const String shownIntroKey = 'shownIntro';
 
@@ -67,9 +61,10 @@ const String listSortKey = 'listSort';
 const Map<String, Type> limBTSKeys = <String, Type>{
   // ID lists
   renamedIDsKey: List<String>,
-  homeIDsKey: List<String>,
   hiddenIDsKey: List<String>,
   banishedIDsKey: List<String>,
+  darkHomeDataKey: List<String>,
+  lightHomeDataKey: List<String>,
 
   // Intro
   shownIntroKey: bool,
@@ -79,24 +74,34 @@ const Map<String, Type> limBTSKeys = <String, Type>{
   listSortKey: String,
 };
 
-// Global //
+// List //
 
-const String autoAddToHomeKey = 'autoAddToHome';
+const String interlinkedKey = 'interlinked';
+
 const String autoSearchKey = 'autoSearch';
 
 const String leftSwipeIDKey = 'leftSwipeID';
 const String rightSwipeIDKey = 'rightSwipeID';
 
 /// Header, quick launch, and app list settings
-const Map<String, Type> limGlobalKeys = <String, Type>{
+const Map<String, Type> limListKeys = <String, Type>{
+  // Home list
+  interlinkedKey: bool,
+
   // App list
-  autoAddToHomeKey: bool,
   autoSearchKey: bool,
 
   // Quick launch
   leftSwipeIDKey: String,
   rightSwipeIDKey: String,
 };
+
+// Secure //
+
+const String authToEditKey = 'authToEdit';
+const String authForHiddenKey = 'authForHidden';
+const String authTimeoutKey = 'authTimeout';
+const String lastAuthKey = 'lastAuth';
 
 // Design (button) //
 
@@ -165,18 +170,18 @@ const Map<String, Type> limDesignKeys = <String, Type>{
 
 // Shared //
 
-/// [allEZConfigKeys], [limBTSKeys], [limGlobalKeys], [limDesignKeys],
+/// [allEZConfigKeys], [limBTSKeys], [limListKeys], [limDesignKeys],
 const Map<String, Type> allLimKeys = <String, Type>{
   ...allEZConfigKeys,
   ...limBTSKeys,
-  ...limGlobalKeys,
+  ...limListKeys,
   ...limDesignKeys,
 };
 
 /// [EzCM.init] passthrough
 final Set<String> neverResetKeys = <String>{
   ...limBTSKeys.keys,
-  ...limGlobalKeys.keys,
+  ...limListKeys.keys,
 };
 
 /// [empathMobileConfig] with Liminal additions
@@ -186,9 +191,10 @@ final Map<String, Object> liminalDefault = <String, Object>{
   // BTS //
   // ID lists
   renamedIDsKey: <String>[],
-  homeIDsKey: <String>[],
   hiddenIDsKey: <String>[],
   banishedIDsKey: <String>[],
+  darkHomeDataKey: <String>['[]'],
+  lightHomeDataKey: <String>['[]'],
 
   // Intro
   shownIntroKey: false,
@@ -197,9 +203,11 @@ final Map<String, Object> liminalDefault = <String, Object>{
   ascListKey: true,
   listSortKey: AppSort.name.value,
 
-  // Global //
-  // App list
-  autoAddToHomeKey: false,
+  // List //
+  // Home
+  interlinkedKey: true,
+
+  // All
   autoSearchKey: false,
 
   // Quick launch
@@ -246,8 +254,30 @@ const Map<String, Object> limSecDef = <String, Object>{
   lastAuthKey: '',
 };
 
-//* Custom fonts *//
+//* Runtime *//
 
+/// :01001100: == :L:
+const String listSplit = ':01001100:';
+
+/// :01001001: == :I:
+const String idSplit = ':01001001:';
+
+/// :01010011: == :S:
+const String spacerSplit = ':01010011:';
+
+/// :01000110: == :F:
+const String folderSplit = ':01000110:';
+
+/// 'empty'
+const String emptyTag = 'empty';
+
+/// ---
+const String nullAppLabel = '---';
+
+/// empty [String]
+const String nullAppPackage = '';
+
+/// 00W
 const Map<String, String> wingdingMap = <String, String>{
   // Lowercase
   'a': '\u{264B}',
@@ -305,23 +335,6 @@ const Map<String, String> wingdingMap = <String, String>{
   'Y': '\u{2721}',
   'Z': '\u{262A}',
 };
-
-//* Runtime *//
-
-/// 'empty'
-const String emptyTag = 'empty';
-
-/// ,
-const String folderSplit = ',';
-
-/// :
-const String idSplit = ':';
-
-/// ---
-const String nullAppLabel = '---';
-
-/// empty [String]
-const String nullAppPackage = '';
 
 // Not const //
 
