@@ -8,47 +8,66 @@ import './export.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class AppInfoProvider extends ChangeNotifier {
   // Construct //
 
-  // App info
+  // All
   final List<AppInfo> _apps;
   final Map<String, AppInfo> _appMap;
 
-  // App listeners
   static const EventChannel _appEventChannel = EventChannel('$androidPackage/app_events');
   StreamSubscription<dynamic>? _appEventSubscription;
 
-  // Renamed apps
+  // Renamed
   final Set<String> _renamedSet = Set<String>.from(EzCM.get(renamedIDsKey));
 
-  // Home apps
-  final List<String> _homeList = EzCM.get(homeIDsKey);
-  final Set<String> _homeSet = Set<String>.from(EzCM.get(homeIDsKey));
-
-  // Hidden apps
-  final List<String> _hiddenList = EzCM.get(hiddenIDsKey);
+  // Hidden
   final Set<String> _hiddenSet = Set<String>.from(EzCM.get(hiddenIDsKey));
 
+  // Banished
   final Set<String> _banishedSet = Set<String>.from(EzCM.get(banishedIDsKey));
+
+  // Home
+  late final List<List<String>> _darkHomeMatrix;
+  late final List<List<String>> _lightHomeMatrix;
+
+  final Set<String> _darkHomeSet = <String>{};
+  final Set<String> _lightHomeSet = <String>{};
 
   AppInfoProvider(List<AppInfo> apps)
       : _apps = apps,
         _appMap = <String, AppInfo>{for (AppInfo app in apps) app.id: app} {
-    // Iterate through the home set and split any folders
-    final Set<String> homeCopy = Set<String>.from(_homeSet);
-    final Set<String> folders = <String>{};
+    // Build the matrices
+    _darkHomeMatrix = _buildHomeMatrix(EzCM.get(darkHomeDataKey));
+    _lightHomeMatrix = _buildHomeMatrix(EzCM.get(lightHomeDataKey));
 
-    for (final String item in homeCopy) {
-      if (item.contains(folderSplit)) {
-        folders.add(item);
-        _homeSet
-            .addAll(item.split(folderSplit).where((String item) => item.contains(idSplit)).toSet());
+    // Iterate through the sub-lists to properly populate the home sets
+    for (final List<String> lane in _darkHomeMatrix) {
+      for (final String entry in lane) {
+        if (entry.contains(folderSplit)) {
+          for (final String app in entry.split(folderSplit)) {
+            if (app != emptyTag) _darkHomeSet.add(app);
+          }
+        } else {
+          _darkHomeSet.add(entry);
+        }
       }
     }
-    _homeSet.removeAll(folders);
+
+    for (final List<String> lane in _lightHomeMatrix) {
+      for (final String entry in lane) {
+        if (entry.contains(folderSplit)) {
+          for (final String app in entry.split(folderSplit)) {
+            if (app != emptyTag) _lightHomeSet.add(app);
+          }
+        } else {
+          _lightHomeSet.add(entry);
+        }
+      }
+    }
 
     // Gather renamed apps
     if (_renamedSet.isNotEmpty) {
@@ -79,18 +98,18 @@ class AppInfoProvider extends ChangeNotifier {
           switch (eventType) {
             case 'installed':
               final Map<String, dynamic>? appInfoMap = event['appInfo'] as Map<String, dynamic>?;
-
               if (appInfoMap != null) await _handleAppInstalled(appInfoMap);
+
               break;
             case 'uninstalled':
               final String? packageName = event['packageName'] as String?;
               if (packageName == null) return;
 
-              final List<AppInfo> apps =
+              final List<AppInfo> uninstalled =
                   _apps.where((AppInfo app) => app.package == packageName).toList();
 
-              if (apps.isNotEmpty) {
-                for (final AppInfo app in apps) {
+              if (uninstalled.isNotEmpty) {
+                for (final AppInfo app in uninstalled) {
                   await _removeDeletedApp(app.id);
                 }
               }
@@ -108,17 +127,7 @@ class AppInfoProvider extends ChangeNotifier {
     _apps.add(installed);
     _appMap[installed.id] = installed;
 
-    sort(
-      ASConfig.lookup(EzCM.get(listSortKey)),
-      EzCM.get(ascListKey),
-    );
-
-    if (EzCM.get(autoAddToHomeKey) == true && !_homeSet.contains(installed.id)) {
-      _homeList.add(installed.id);
-      _homeSet.add(installed.id);
-      await EzCM.setStringList(homeIDsKey, _homeList);
-    }
-
+    sort(ASConfig.lookup(EzCM.get(listSortKey)), EzCM.get(ascListKey));
     notifyListeners();
   }
 
@@ -127,36 +136,56 @@ class AppInfoProvider extends ChangeNotifier {
   List<AppInfo> get apps => _apps;
   Map<String, AppInfo> get appMap => _appMap;
 
-  Set<String> get homeSet => _homeSet;
-  List<String> get homeList => _homeList;
-
   Set<String> get hiddenSet => _hiddenSet;
 
-  Set<String> hybridIDs(ListConfig listConfig) => <String>{
+  Set<String> homeSet(EzCP config) => config.isDark ? _darkHomeSet : _lightHomeSet;
+
+  int numLanes(EzCP config) => config.isDark ? _darkHomeMatrix.length : _lightHomeMatrix.length;
+
+  List<String> homeList(EzCP config, int lane) =>
+      config.isDark ? _darkHomeMatrix[lane] : _darkHomeMatrix[lane];
+
+  Set<String> hybridIDs(EzCP config, ListConfig listConfig) => <String>{
         if (listConfig.localContent != null) ...listConfig.localContent!.value,
-        if (listConfig.listContent.contains(ListContent.home)) ..._homeSet,
+        if (listConfig.listContent.contains(ListContent.home))
+          ...(config.isDark ? _darkHomeSet : _lightHomeSet),
         if (listConfig.listContent.contains(ListContent.hidden)) ..._hiddenSet,
         if (listConfig.listContent.contains(ListContent.banished)) ..._banishedSet,
       };
 
   // Put //
 
-  Future<bool> addHomeApp(String appID) async {
-    if (_homeSet.contains(appID)) return false;
+  Future<void> addHomeApp(EzCP config, {required int lane, required String id}) async {
+    if ((interlinked(config) || config.isDark) && !_darkHomeSet.contains(id)) {
+      _darkHomeMatrix[lane].add(id);
+      _darkHomeSet.add(id);
 
-    _homeList.add(appID);
-    _homeSet.add(appID);
+      unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
+    }
 
-    await EzCM.setStringList(homeIDsKey, _homeList);
+    if ((interlinked(config) || !config.isDark) && !_lightHomeSet.contains(id)) {
+      _lightHomeMatrix[lane].add(id);
+      _lightHomeSet.add(id);
+
+      unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
+    }
+
     notifyListeners();
-
-    return true;
   }
 
-  Future<void> addHomeFolder() async {
-    _homeList.add('Folder$folderSplit$emptyTag');
+  Future<void> addHomeFolder(EzCP config, int lane) async {
+    if (interlinked(config) || config.isDark) {
+      _darkHomeMatrix[lane].add('Folder$folderSplit$emptyTag');
 
-    await EzCM.setStringList(homeIDsKey, _homeList);
+      unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
+    }
+
+    if (interlinked(config) || !config.isDark) {
+      _lightHomeMatrix[lane].add('Folder$folderSplit$emptyTag');
+
+      unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
+    }
+
     notifyListeners();
   }
 
@@ -165,13 +194,13 @@ class AppInfoProvider extends ChangeNotifier {
   void sort(AppSort sort, bool asc) {
     _apps.sort(switch (sort) {
       AppSort.name => (AppInfo a, AppInfo b) =>
-          (asc) ? a.name.compareTo(b.name) : b.name.compareTo(a.name),
+          asc ? a.name.compareTo(b.name) : b.name.compareTo(a.name),
       AppSort.publisher => (AppInfo a, AppInfo b) =>
-          (asc) ? a.package.compareTo(b.package) : b.package.compareTo(a.package),
+          asc ? a.package.compareTo(b.package) : b.package.compareTo(a.package),
       AppSort.date => (AppInfo a, AppInfo b) =>
-          (asc) ? a.installDate.compareTo(b.installDate) : b.installDate.compareTo(a.installDate),
+          asc ? a.installDate.compareTo(b.installDate) : b.installDate.compareTo(a.installDate),
       AppSort.size => (AppInfo a, AppInfo b) =>
-          (asc) ? a.packageSize.compareTo(b.packageSize) : b.packageSize.compareTo(a.packageSize),
+          asc ? a.packageSize.compareTo(b.packageSize) : b.packageSize.compareTo(a.packageSize),
     });
 
     notifyListeners();
@@ -185,54 +214,128 @@ class AppInfoProvider extends ChangeNotifier {
 
     _renamedSet.removeWhere((String entry) => entry.startsWith(appID));
     _renamedSet.add(appID + idSplit + newName);
+    unawaited(EzCM.setStringList(renamedIDsKey, _renamedSet.toList()));
 
-    await EzCM.setStringList(renamedIDsKey, _renamedSet.toList());
     notifyListeners();
-
     return true;
   }
 
-  Future<bool> renameFolder(String newName, int folderIndex) async {
-    final List<String> parts = _homeList[folderIndex].split(folderSplit);
+  Future<void> renameFolder(
+    EzCP config,
+    String newName, {
+    required int lane,
+    required int index,
+  }) async {
+    if (interlinked(config) || config.isDark) {
+      final List<String> parts = _darkHomeMatrix[lane][index].split(folderSplit);
 
-    parts[0] = newName;
-    _homeList[folderIndex] = parts.join(folderSplit);
+      parts[0] = newName;
+      _darkHomeMatrix[lane][index] = parts.join(folderSplit);
 
-    await EzCM.setStringList(homeIDsKey, _homeList);
-    notifyListeners();
-
-    return true;
-  }
-
-  void reorderHome(int oldIndex, int newIndex) {
-    final String element = _homeList.removeAt(oldIndex);
-    _homeList.insert(newIndex, element);
-    // don't notifyListeners();
-  }
-
-  Future<void> updateFolder(int index, String name, List<String> newIDs) async {
-    final Set<String> oldSet = _homeList[index].split(folderSplit).sublist(1).toSet();
-    final Set<String> newSet = newIDs.toSet();
-
-    _homeList[index] = <String>[
-      name,
-      ...(newIDs.isEmpty ? <String>[emptyTag] : newIDs),
-    ].join(folderSplit);
-
-    _homeSet.removeAll(oldSet.difference(newSet));
-
-    for (final String id in newSet.difference(oldSet)) {
-      final bool wasThere = _homeList.remove(id);
-      if (!wasThere) _homeSet.add(id);
+      unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
     }
 
-    await EzCM.setStringList(homeIDsKey, _homeList);
+    if (interlinked(config) || !config.isDark) {
+      final List<String> parts = _lightHomeMatrix[lane][index].split(folderSplit);
+
+      parts[0] = newName;
+      _lightHomeMatrix[lane][index] = parts.join(folderSplit);
+
+      unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
+    }
+
     notifyListeners();
   }
 
-  Future<bool> hideApp(EzCP config, {required BuildContext context, required String id}) async {
-    if (_hiddenSet.contains(id)) return false;
+  void reorderHomeList(
+    EzCP config, {
+    required int index,
+    required int oldIndex,
+    required int newIndex,
+  }) {
+    if (interlinked(config) || config.isDark) {
+      final String element = _darkHomeMatrix[index].removeAt(oldIndex);
+      _darkHomeMatrix[index].insert(newIndex, element);
 
+      unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
+    }
+
+    if (interlinked(config) || !config.isDark) {
+      final String element = _lightHomeMatrix[index].removeAt(oldIndex);
+      _lightHomeMatrix[index].insert(newIndex, element);
+
+      unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
+    }
+
+    // don't notifyListeners(); twill happen when the user exits edit mode
+  }
+
+  Future<void> updateFolder(
+    EzCP config, {
+    required int lane,
+    required int index,
+    required String name,
+    required List<String> ids,
+  }) async {
+    if (interlinked(config) || config.isDark) {
+      // Get the old && new ID sets
+      final Set<String> oldSet = _darkHomeMatrix[lane][index].split(folderSplit).sublist(1).toSet();
+      final Set<String> newSet = ids.toSet();
+
+      // Update the matrix entry
+      _darkHomeMatrix[lane][index] = <String>[
+        name,
+        ...(ids.isEmpty ? <String>[emptyTag] : ids),
+      ].join(folderSplit);
+
+      // Remove those removed
+      _darkHomeSet.removeAll(oldSet.difference(newSet));
+
+      // Add those added
+      for (final String id in newSet.difference(oldSet)) {
+        final bool wasInList = _darkHomeMatrix[lane].remove(id);
+        if (!wasInList) _darkHomeSet.add(id);
+      }
+
+      // Save results
+      unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
+    }
+
+    if (interlinked(config) || !config.isDark) {
+      // Get the old && new ID sets
+      final Set<String> oldSet =
+          _lightHomeMatrix[lane][index].split(folderSplit).sublist(1).toSet();
+      final Set<String> newSet = ids.toSet();
+
+      // Update the matrix entry
+      _lightHomeMatrix[lane][index] = <String>[
+        name,
+        ...(ids.isEmpty ? <String>[emptyTag] : ids),
+      ].join(folderSplit);
+
+      // Remove those removed
+      _lightHomeSet.removeAll(oldSet.difference(newSet));
+
+      // Add those added
+      for (final String id in newSet.difference(oldSet)) {
+        final bool wasInList = _lightHomeMatrix[lane].remove(id);
+        if (!wasInList) _lightHomeSet.add(id);
+      }
+
+      // Save results
+      unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
+    }
+
+    notifyListeners();
+  }
+
+  Future<void> hideApp(
+    EzCP config, {
+    required BuildContext context,
+    required String id,
+    int? lane,
+  }) async {
+    if (_hiddenSet.contains(id)) return;
     if (_hiddenSet.isEmpty) {
       await showDialog(
         context: context,
@@ -247,30 +350,29 @@ class AppInfoProvider extends ChangeNotifier {
       );
     }
 
-    _hiddenList.add(id);
     _hiddenSet.add(id);
+    unawaited(EzCM.setStringList(hiddenIDsKey, _hiddenSet.toList()));
 
-    await EzCM.setStringList(hiddenIDsKey, _hiddenList);
-
-    final bool notified = await removeHomeApp(id);
+    final bool notified = await removeHomeApp(config, id: id, lane: lane);
     if (!notified) notifyListeners();
-
-    return true;
   }
 
   Future<bool> showApp(String appID, {bool batch = false}) async {
     if (!_hiddenSet.contains(appID)) return false;
-
-    _hiddenList.remove(appID);
     _hiddenSet.remove(appID);
 
-    await EzCM.setStringList(hiddenIDsKey, _hiddenList);
+    unawaited(EzCM.setStringList(hiddenIDsKey, _hiddenSet.toList()));
     if (!batch) notifyListeners();
 
     return true;
   }
 
-  Future<bool> banishApp(EzCP config, {required BuildContext context, required String id}) async {
+  Future<bool> banishApp(
+    EzCP config, {
+    required BuildContext context,
+    required String id,
+    int? lane,
+  }) async {
     if (_banishedSet.contains(id)) return false;
 
     final AppInfo? currApp = _appMap[id];
@@ -316,9 +418,9 @@ For example: if an app has always on location permissions, banishing it will not
     if (!confirmed) return false;
 
     _banishedSet.add(id);
-    await EzCM.setStringList(banishedIDsKey, _banishedSet.toList());
+    unawaited(EzCM.setStringList(banishedIDsKey, _banishedSet.toList()));
 
-    final bool notified = await removeHomeApp(id);
+    final bool notified = await removeHomeApp(config, id: id, lane: lane);
     if (!notified) notifyListeners();
 
     return true;
@@ -326,70 +428,104 @@ For example: if an app has always on location permissions, banishing it will not
 
   // Delete //
 
-  Future<bool> removeHomeApp(String appID, {bool batch = false}) async {
-    if (!_homeSet.contains(appID)) return false;
+  Future<bool> removeHomeApp(
+    EzCP config, {
+    int? lane,
+    required String id,
+    bool batch = false,
+  }) async {
+    bool found = false;
 
-    _homeList.remove(appID);
-    _homeSet.remove(appID);
+    if (interlinked(config) || config.isDark) {
+      found = found || _darkHomeSet.contains(id);
 
-    await EzCM.setStringList(homeIDsKey, _homeList);
+      _darkHomeSet.remove(id);
+      if (lane != null) {
+        _darkHomeMatrix[lane].remove(id);
+      } else {
+        for (final List<String> subList in _darkHomeMatrix) {
+          final bool removed = subList.remove(id);
+          if (removed) break;
+        }
+      }
+
+      unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
+    }
+
+    if (interlinked(config) || !config.isDark) {
+      found = found || _lightHomeSet.contains(id);
+
+      _lightHomeSet.remove(id);
+      if (lane != null) {
+        _lightHomeMatrix[lane].remove(id);
+      } else {
+        for (final List<String> subList in _lightHomeMatrix) {
+          final bool removed = subList.remove(id);
+          if (removed) break;
+        }
+      }
+
+      unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
+    }
+
     if (!batch) notifyListeners();
-
-    return true;
+    return found;
   }
 
-  Future<bool> deleteFolder(int index) async {
-    if (index >= _homeList.length) return false;
+  Future<void> deleteFolder(EzCP config, {required int lane, required int index}) async {
+    if (interlinked(config) || config.isDark) {
+      for (final String entry in _darkHomeMatrix[lane][index].split(folderSplit)) {
+        _darkHomeSet.remove(entry);
+      }
+      _darkHomeMatrix[lane].removeAt(index);
 
-    for (final String id in _homeList[index].split(folderSplit)) {
-      _homeSet.remove(id);
+      unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
     }
 
-    _homeList.removeAt(index);
-    await EzCM.setStringList(homeIDsKey, _homeList);
+    if (interlinked(config) || !config.isDark) {
+      for (final String entry in _lightHomeMatrix[lane][index].split(folderSplit)) {
+        _lightHomeSet.remove(entry);
+      }
+      _lightHomeMatrix[lane].removeAt(index);
 
-    notifyListeners();
-    return true;
-  }
-
-  Future<void> _removeDeletedApp(String appID) async {
-    if (_banishedSet.contains(appID)) {
-      _banishedSet.remove(appID);
-      await EzCM.setStringList(banishedIDsKey, _banishedSet.toList());
-    }
-
-    await showApp(appID, batch: true);
-    await removeHomeApp(appID, batch: true);
-
-    _apps.remove(_appMap[appID]);
-    _appMap.remove(appID);
-
-    notifyListeners();
-  }
-
-  void cleanup(List<int> aisles) {
-    aisles.sort((int a, int b) => b.compareTo(a));
-
-    for (final int index in aisles) {
-      final String element = _homeList.removeAt(index);
-      _homeSet.remove(element);
+      unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
     }
 
     notifyListeners();
   }
 
-  Future<void> reset() async {
-    _renamedSet.clear();
-    _homeSet.clear();
-    _homeList.clear();
-    _hiddenSet.clear();
-    _hiddenList.clear();
-    _banishedSet.clear();
+  Future<void> _removeDeletedApp(String id) async {
+    if (_banishedSet.contains(id)) {
+      _banishedSet.remove(id);
+      unawaited(EzCM.setStringList(banishedIDsKey, _banishedSet.toList()));
+    }
 
-    sort(
-      ASConfig.lookup(EzCM.getDefault(listSortKey)),
-      EzCM.getDefault(ascListKey),
-    );
+    await showApp(id, batch: true);
+    await removeHomeApp(Provider.of<EzCP>(ezRootNav.currentContext!, listen: false),
+        id: id, batch: true); // TODO: test
+
+    _apps.remove(_appMap[id]);
+    _appMap.remove(id);
+
+    notifyListeners();
+  }
+
+  void cleanup(EzCP config, {required int lane, required List<int> entries}) {
+    entries.sort((int a, int b) => b.compareTo(a));
+
+    if (interlinked(config) || config.isDark) {
+      for (final int entry in entries) {
+        final String element = _darkHomeMatrix[lane].removeAt(entry);
+        _darkHomeSet.remove(element);
+      }
+    }
+
+    if (interlinked(config) || !config.isDark) {
+      for (final int entry in entries) {
+        final String element = _lightHomeMatrix[lane].removeAt(entry);
+        _lightHomeSet.remove(element);
+      }
+    }
 
     notifyListeners();
   }
@@ -402,3 +538,13 @@ For example: if an app has always on location permissions, banishing it will not
     super.dispose();
   }
 }
+
+// Local helpers  //
+
+List<List<String>> _buildHomeMatrix(List<String> data) =>
+    data.map((String outtie) => outtie.split(listSplit)).toList();
+
+Future<bool> _saveHomeMatrix(List<List<String>> matrix, bool isDark) => EzCM.setStringList(
+      isDark ? darkHomeDataKey : lightHomeDataKey,
+      matrix.map((List<String> innie) => innie.join(listSplit)).toList(),
+    );
