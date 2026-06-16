@@ -32,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
   bool editing = false;
   ValueNotifier<double> rippleProgress = ValueNotifier<double>(0.0);
 
-  List<int> _janitor = <int>[];
+  final Map<int, List<int>> _janitor = <int, List<int>>{};
 
   // Define custom functions //
 
@@ -69,23 +69,79 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     return;
   }
 
+  List<Widget> buildGrid(EzCP config, AppInfoProvider appInfo) {
+    final List<Widget> lanes = <Widget>[];
+    final int numLanes = appInfo.numLanes(config);
+
+    for (int lane = 0; lane < numLanes; lane++) {
+      lanes.add(ConstrainedBox(
+        constraints: BoxConstraints(
+          minHeight: double.infinity,
+          maxHeight: double.infinity,
+          minWidth: appIconSize(config) + config.spacing,
+          maxWidth: widthOf(context) / numLanes,
+        ),
+        child: editing
+            ? Builder(builder: (_) {
+                final List<Widget> tiles = _buildTiles(config, appInfo, lane);
+
+                return StatefulBuilder(
+                  key: ValueKey<String>('lane-$lane'),
+                  builder: (_, StateSetter setList) => ReorderableListView(
+                    shrinkWrap: true,
+                    onReorderItem: (int oldIndex, int newIndex) {
+                      if (oldIndex == newIndex) return;
+
+                      final Widget element = tiles.removeAt(oldIndex);
+                      tiles.insert(newIndex, element);
+
+                      appInfo.reorderHomeList(
+                        config,
+                        lane: lane,
+                        oldIndex: oldIndex,
+                        newIndex: newIndex,
+                      );
+                      setList(() {});
+                    },
+                    children: tiles,
+                  ),
+                );
+              })
+            : EzScrollView(
+                config,
+                key: ValueKey<String>('lane-$lane'),
+                mainAxisAlignment: vAlign(config).mainAxis,
+                crossAxisAlignment: hAlign(config).crossAxis,
+                physics: const ClampingScrollPhysics(),
+                children: _buildTiles(config, appInfo, lane),
+              ),
+      ));
+    }
+
+    return lanes;
+  }
+
   /// appProvider.homeList -> AppTile/FolderTile
-  List<Widget> buildTiles(EzCP config, AppInfoProvider appInfo) {
+  List<Widget> _buildTiles(EzCP config, AppInfoProvider appInfo, int lane) {
+    final List<String> entries = appInfo.homeList(config, lane);
+
     final EdgeInsets tilePadding = EdgeInsets.symmetric(vertical: config.spacing / 2);
-    final List<Widget> tileList = <Widget>[];
+    final List<Widget> toReturn = <Widget>[];
     final List<int> errors = <int>[];
 
-    for (int index = 0; index < appInfo.homeList.length; index++) {
-      final String item = appInfo.homeList[index];
+    // TODO: update to a switch and include custom spacers
+    for (int index = 0; index < entries.length; index++) {
+      final String item = entries[index];
       final List<String> parts = item.split(folderSplit);
 
       if (parts.length > 1) {
-        tileList.add(Padding(
+        toReturn.add(Padding(
           key: ValueKey<String>('${parts[0]}_$index'),
           padding: tilePadding,
           child: FolderTile(
             config,
             appInfo: appInfo,
+            lane: lane,
             index: index,
             state: editing ? AppState.groupEdit : AppState.standard,
             rippleProgress: rippleProgress,
@@ -98,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           continue;
         }
 
-        tileList.add(Padding(
+        toReturn.add(Padding(
           key: ValueKey<String>(app.id),
           padding: tilePadding,
           child: AppTile(
@@ -106,6 +162,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
             appInfo: appInfo,
             app: app,
             location: AppLocation.home,
+            lane: lane,
             state: editing ? AppState.groupEdit : AppState.standard,
             onSelected: (AppInfo app) => launchApp(app),
             rippleProgress: rippleProgress,
@@ -114,8 +171,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
       }
     }
 
-    _janitor = errors;
-    return tileList;
+    _janitor[lane] = errors;
+    return toReturn;
   }
 
   Future<void> swipeUp(EzCP config, AppInfoProvider appInfo) async => (editing)
@@ -358,35 +415,16 @@ If you want to support Liminal's development, or the development of more Empathe
                     }
                     return false;
                   },
-                  child: Container(
-                    alignment: LAConfig.merge(h: hAlign(config), v: vAlign(config)),
-                    child: editing
-                        ? Builder(builder: (_) {
-                            final List<Widget> tiles = buildTiles(config, appInfo);
-
-                            return StatefulBuilder(
-                              builder: (_, StateSetter setList) => ReorderableListView(
-                                shrinkWrap: true,
-                                onReorderItem: (int oldIndex, int newIndex) {
-                                  if (oldIndex == newIndex) return;
-
-                                  final Widget element = tiles.removeAt(oldIndex);
-                                  tiles.insert(newIndex, element);
-
-                                  appInfo.reorderHome(oldIndex, newIndex);
-                                  setList(() {});
-                                },
-                                children: tiles,
-                              ),
-                            );
-                          })
-                        : EzScrollView(
-                            config,
-                            mainAxisAlignment: vAlign(config).mainAxis,
-                            crossAxisAlignment: hAlign(config).crossAxis,
-                            physics: const ClampingScrollPhysics(),
-                            children: buildTiles(config, appInfo),
-                          ),
+                  // TODO: lanes split here, built tiles multiple times?
+                  // TODO: how to be efficient af?
+                  child: EzScrollView(
+                    config,
+                    showScrollHint: true, // TODO: make this a setting
+                    mainAxisSize: MainAxisSize.max,
+                    scrollDirection: Axis.horizontal,
+                    mainAxisAlignment: hAlign(config).mainAxis,
+                    crossAxisAlignment: vAlign(config).crossAxis,
+                    children: buildGrid(config, appInfo),
                   ),
                 ),
               ),
@@ -400,34 +438,41 @@ If you want to support Liminal's development, or the development of more Empathe
             ? <Widget>[
                 config.spacer,
 
-                // Add app
-                AddAppFAB(
-                  config,
-                  () => context.goNamed(
-                    appListPath,
-                    extra: ListConfig(
-                      listContent: <ListContent>{
-                        ListContent.home,
-                        ListContent.hidden,
-                        ListContent.banished,
-                      },
-                      include: false,
-                      onSelected: (AppInfo app) => appInfo.addHomeApp(app.id),
-                      title: EzTextIconButton(
-                        config,
-                        onPressed: doNothing,
-                        label: 'Home',
-                        icon: EzIcon(config, Icons.add, color: config.colors.onSurface),
-                        textStyle: config.labelStyle,
-                      ),
-                    ),
-                  ),
-                ),
-                config.spacer,
+                // // Add app
+                // AddAppFAB(
+                //   config,
+                //   () => context.goNamed(
+                //     appListPath,
+                //     extra: ListConfig(
+                //       listContent: <ListContent>{
+                //         ListContent.home,
+                //         ListContent.hidden,
+                //         ListContent.banished,
+                //       },
+                //       include: false,
+                //       onSelected: (AppInfo app) => appInfo.addHomeApp(
+                //         config,
+                //         lane: blarg,
+                //         id: app.id,
+                //       ),
+                //       title: EzTextIconButton(
+                //         config,
+                //         onPressed: doNothing,
+                //         label: 'Home',
+                //         icon: EzIcon(config, Icons.add, color: config.colors.onSurface),
+                //         textStyle: config.labelStyle,
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                // config.spacer,
 
-                // Add folder
-                AddFolderFAB(config, appInfo.addHomeFolder),
-                config.spacer,
+                // // Add folder
+                // AddFolderFAB(
+                //   config,
+                //   () => appInfo.addHomeFolder(config, blarg),
+                // ),
+                // config.spacer,
 
                 // Settings
                 SettingsFAB(
@@ -443,7 +488,16 @@ If you want to support Liminal's development, or the development of more Empathe
 
   @override
   void dispose() {
-    if (_janitor.isNotEmpty) Provider.of<AppInfoProvider>(context, listen: false).cleanup(_janitor);
+    final AppInfoProvider appWatcher = Provider.of<AppInfoProvider>(context, listen: false);
+
+    if (_janitor.isNotEmpty) {
+      _janitor.forEach((int lane, List<int> entries) => appWatcher.cleanup(
+            configWatcher(context),
+            lane: lane,
+            entries: entries,
+          ));
+    }
+
     super.dispose();
   }
 }
