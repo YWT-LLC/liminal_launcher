@@ -19,13 +19,13 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
-  await SystemChrome.setPreferredOrientations(DeviceOrientation.values);
+  await SystemChrome.setPreferredOrientations(<DeviceOrientation>[DeviceOrientation.portraitUp]);
 
   EzCM.init(
     appName: appName,
     androidPackage: androidPackage,
     assetPaths: assetPaths,
-    orientations: DeviceOrientation.values,
+    orientations: <DeviceOrientation>[DeviceOrientation.portraitUp],
     localeFallback: americanEnglish,
     l10nFallback: await EFUILang.delegate.load(americanEnglish),
     preferences: await SharedPreferencesWithCache.create(
