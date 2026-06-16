@@ -77,23 +77,25 @@ const Map<String, Type> limBTSKeys = <String, Type>{
 // List //
 
 const String interlinkedKey = 'interlinked';
-
-const String autoSearchKey = 'autoSearch';
+const String homeHintsKey = 'homeHints';
 
 const String leftSwipeIDKey = 'leftSwipeID';
 const String rightSwipeIDKey = 'rightSwipeID';
+
+const String autoSearchKey = 'autoSearch';
 
 /// Header, quick launch, and app list settings
 const Map<String, Type> limListKeys = <String, Type>{
   // Home list
   interlinkedKey: bool,
-
-  // App list
-  autoSearchKey: bool,
+  homeHintsKey: bool,
 
   // Quick launch
   leftSwipeIDKey: String,
   rightSwipeIDKey: String,
+
+  // App list
+  autoSearchKey: bool,
 };
 
 // Secure //
@@ -206,13 +208,14 @@ final Map<String, Object> liminalDefault = <String, Object>{
   // List //
   // Home
   interlinkedKey: true,
-
-  // All
-  autoSearchKey: false,
+  homeHintsKey: true,
 
   // Quick launch
   leftSwipeIDKey: '',
   rightSwipeIDKey: '',
+
+  // All
+  autoSearchKey: false,
 
   // Design //
   // Button
