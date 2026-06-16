@@ -29,12 +29,23 @@ class AppListSettings extends StatelessWidget {
             return ezModalScroll(
               config,
               children: <Widget>[
-                // Feeling fancy?
+                // Interlinked
+                // TODO: can change => select which one is staying (re-use advanced `line x line`?)
+                // TODO: tooltipper
                 EzSwitchPair(
                   config,
                   text: 'Linked home lists',
                   valueKey: interlinkedKey,
-                ), // TODO: can change => select which one is staying (re-use advanced `line x line`?)
+                ),
+                config.spacer,
+
+                // Home scroll hints
+                // TODO: tool tipper to explain what this means
+                EzSwitchPair(
+                  config,
+                  text: 'Home scroll hints',
+                  valueKey: homeHintsKey,
+                ),
                 config.spacer,
 
                 // Auto search
