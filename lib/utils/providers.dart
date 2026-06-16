@@ -156,14 +156,14 @@ class AppInfoProvider extends ChangeNotifier {
   // Put //
 
   Future<void> addHomeApp(EzCP config, {required int lane, required String id}) async {
-    if ((interlinked(config) || config.isDark) && !_darkHomeSet.contains(id)) {
+    if ((interlinked || config.isDark) && !_darkHomeSet.contains(id)) {
       _darkHomeMatrix[lane].add(id);
       _darkHomeSet.add(id);
 
       unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
     }
 
-    if ((interlinked(config) || !config.isDark) && !_lightHomeSet.contains(id)) {
+    if ((interlinked || !config.isDark) && !_lightHomeSet.contains(id)) {
       _lightHomeMatrix[lane].add(id);
       _lightHomeSet.add(id);
 
@@ -174,13 +174,13 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   Future<void> addHomeFolder(EzCP config, int lane) async {
-    if (interlinked(config) || config.isDark) {
+    if (interlinked || config.isDark) {
       _darkHomeMatrix[lane].add('Folder$folderSplit$emptyTag');
 
       unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
     }
 
-    if (interlinked(config) || !config.isDark) {
+    if (interlinked || !config.isDark) {
       _lightHomeMatrix[lane].add('Folder$folderSplit$emptyTag');
 
       unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
@@ -226,7 +226,7 @@ class AppInfoProvider extends ChangeNotifier {
     required int lane,
     required int index,
   }) async {
-    if (interlinked(config) || config.isDark) {
+    if (interlinked || config.isDark) {
       final List<String> parts = _darkHomeMatrix[lane][index].split(folderSplit);
 
       parts[0] = newName;
@@ -235,7 +235,7 @@ class AppInfoProvider extends ChangeNotifier {
       unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
     }
 
-    if (interlinked(config) || !config.isDark) {
+    if (interlinked || !config.isDark) {
       final List<String> parts = _lightHomeMatrix[lane][index].split(folderSplit);
 
       parts[0] = newName;
@@ -253,14 +253,14 @@ class AppInfoProvider extends ChangeNotifier {
     required int oldIndex,
     required int newIndex,
   }) {
-    if (interlinked(config) || config.isDark) {
+    if (interlinked || config.isDark) {
       final String element = _darkHomeMatrix[lane].removeAt(oldIndex);
       _darkHomeMatrix[lane].insert(newIndex, element);
 
       unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
     }
 
-    if (interlinked(config) || !config.isDark) {
+    if (interlinked || !config.isDark) {
       final String element = _lightHomeMatrix[lane].removeAt(oldIndex);
       _lightHomeMatrix[lane].insert(newIndex, element);
 
@@ -277,7 +277,7 @@ class AppInfoProvider extends ChangeNotifier {
     required String name,
     required List<String> ids,
   }) async {
-    if (interlinked(config) || config.isDark) {
+    if (interlinked || config.isDark) {
       // Get the old && new ID sets
       final Set<String> oldSet = _darkHomeMatrix[lane][index].split(folderSplit).sublist(1).toSet();
       final Set<String> newSet = ids.toSet();
@@ -301,7 +301,7 @@ class AppInfoProvider extends ChangeNotifier {
       unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
     }
 
-    if (interlinked(config) || !config.isDark) {
+    if (interlinked || !config.isDark) {
       // Get the old && new ID sets
       final Set<String> oldSet =
           _lightHomeMatrix[lane][index].split(folderSplit).sublist(1).toSet();
@@ -436,7 +436,7 @@ For example: if an app has always on location permissions, banishing it will not
   }) async {
     bool found = false;
 
-    if (interlinked(config) || config.isDark) {
+    if (interlinked || config.isDark) {
       found = found || _darkHomeSet.contains(id);
 
       _darkHomeSet.remove(id);
@@ -452,7 +452,7 @@ For example: if an app has always on location permissions, banishing it will not
       unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
     }
 
-    if (interlinked(config) || !config.isDark) {
+    if (interlinked || !config.isDark) {
       found = found || _lightHomeSet.contains(id);
 
       _lightHomeSet.remove(id);
@@ -473,7 +473,7 @@ For example: if an app has always on location permissions, banishing it will not
   }
 
   Future<void> deleteFolder(EzCP config, {required int lane, required int index}) async {
-    if (interlinked(config) || config.isDark) {
+    if (interlinked || config.isDark) {
       for (final String entry in _darkHomeMatrix[lane][index].split(folderSplit)) {
         _darkHomeSet.remove(entry);
       }
@@ -482,7 +482,7 @@ For example: if an app has always on location permissions, banishing it will not
       unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
     }
 
-    if (interlinked(config) || !config.isDark) {
+    if (interlinked || !config.isDark) {
       for (final String entry in _lightHomeMatrix[lane][index].split(folderSplit)) {
         _lightHomeSet.remove(entry);
       }
@@ -513,14 +513,14 @@ For example: if an app has always on location permissions, banishing it will not
   void cleanup(EzCP config, {required int lane, required List<int> entries}) {
     entries.sort((int a, int b) => b.compareTo(a));
 
-    if (interlinked(config) || config.isDark) {
+    if (interlinked || config.isDark) {
       for (final int entry in entries) {
         final String element = _darkHomeMatrix[lane].removeAt(entry);
         _darkHomeSet.remove(element);
       }
     }
 
-    if (interlinked(config) || !config.isDark) {
+    if (interlinked || !config.isDark) {
       for (final int entry in entries) {
         final String element = _lightHomeMatrix[lane].removeAt(entry);
         _lightHomeSet.remove(element);
