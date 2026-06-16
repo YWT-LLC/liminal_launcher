@@ -89,7 +89,7 @@ class _AppListScreenState extends State<AppListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<AppInfoProvider, EzCP>(builder: (_, AppInfoProvider appInfo, EzCP config, __) {
+    return Consumer2<EzCP, AppInfoProvider>(builder: (_, EzCP config, AppInfoProvider appInfo, __) {
       final ListAlignment hA = hAlign(config);
       final ListAlignment vA = vAlign(config);
 

@@ -360,7 +360,7 @@ If you want to support Liminal's development, or the development of more Empathe
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<AppInfoProvider, EzCP>(builder: (_, AppInfoProvider appInfo, EzCP config, __) {
+    return Consumer2<EzCP, AppInfoProvider>(builder: (_, EzCP config, AppInfoProvider appInfo, __) {
       final bool topClock = topAlign.contains(vAlign(config));
       final double clockSpacing = (config.spacing * 2) - (config.padding + (config.spacing / 2));
       final Widget clockSpacer =
