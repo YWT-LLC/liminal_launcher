@@ -15,23 +15,13 @@ EzUpdaterFAB updater(EzCP config) => EzUpdaterFAB(
       github: 'https://github.com/Empathetech-LLC/liminal_launcher/releases',
     );
 
-class AddAppFAB extends FloatingActionButton {
-  AddAppFAB(EzCP config, void Function() onPressed, {super.key})
+class AddFAB extends FloatingActionButton {
+  AddFAB(EzCP config, void Function() onPressed, {super.key})
       : super(
           heroTag: 'add_app_FAB',
           onPressed: onPressed,
           tooltip: 'Add more home apps',
           child: EzIcon(config, Icons.add),
-        );
-}
-
-class AddFolderFAB extends FloatingActionButton {
-  AddFolderFAB(EzCP config, void Function() onPressed, {super.key})
-      : super(
-          heroTag: 'add_folder_FAB',
-          onPressed: onPressed,
-          tooltip: 'Add an app folder',
-          child: EzIcon(config, Icons.create_new_folder),
         );
 }
 
