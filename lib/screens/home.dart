@@ -361,8 +361,8 @@ If you want to support Liminal's development, or the development of more Empathe
               final AppInfo? toLaunch = editing
                   ? null
                   : ((details.primaryVelocity! < 0)
-                      ? appInfo.appMap[leftSwipeID(config)]
-                      : appInfo.appMap[rightSwipeID(config)]);
+                      ? appInfo.appMap[leftSwipeID]
+                      : appInfo.appMap[rightSwipeID]);
 
               if (toLaunch != null) launchApp(toLaunch);
             }
@@ -417,7 +417,7 @@ If you want to support Liminal's development, or the development of more Empathe
                   },
                   child: EzScrollView(
                     config,
-                    showScrollHint: true, // TODO: make this a setting
+                    showScrollHint: homeHints,
                     mainAxisSize: MainAxisSize.max,
                     scrollDirection: Axis.horizontal,
                     mainAxisAlignment: hAlign(config).mainAxis,
