@@ -271,6 +271,9 @@ const String spacerSplit = ':01010011:';
 /// :01000110: == :F:
 const String folderSplit = ':01000110:';
 
+/// r'(:(I|S|F):)'... but the binaries
+final RegExp tileRegex = RegExp(r':(01001001|01010011|01000110):');
+
 /// 'empty'
 const String emptyTag = 'empty';
 
