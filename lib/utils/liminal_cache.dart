@@ -13,7 +13,6 @@ class LiminalCache extends EzAppCache {
   Locale _locale;
   Lang _l10n;
 
-  late HomeCache _home;
   late SecureCache _security;
   late DesignCache _design;
 
@@ -38,8 +37,6 @@ class LiminalCache extends EzAppCache {
     final bool defATE = limSecDef[authToEditKey] as bool;
     final bool defAFH = limSecDef[authForHiddenKey] as bool;
     final int defAT = limSecDef[authTimeoutKey] as int;
-
-    _home = HomeCache(interlinked: EzCM.get(interlinkedKey));
 
     _security = SecureCache(
       authToEdit: bool.tryParse(await EzCM.secGet(authToEditKey)) ?? defATE,
@@ -111,12 +108,6 @@ class LiminalCache extends EzAppCache {
   }
 }
 
-class HomeCache {
-  final bool interlinked;
-
-  HomeCache({required this.interlinked});
-}
-
 class SecureCache {
   final bool _authToEdit;
   final bool _authForHidden;
@@ -175,10 +166,11 @@ LiminalCache _cache(EzCP config) => config.appCache! as LiminalCache;
 
 Lang l10n(EzCP config) => _cache(config)._l10n;
 
-bool interlinked(EzCP config) => _cache(config)._home.interlinked;
+bool get interlinked => EzCM.get(interlinkedKey);
+bool get homeHints => EzCM.get(homeHintsKey);
 
-String leftSwipeID(EzCP config) => EzCM.get(leftSwipeIDKey);
-String rightSwipeID(EzCP config) => EzCM.get(rightSwipeIDKey);
+String get leftSwipeID => EzCM.get(leftSwipeIDKey);
+String get rightSwipeID => EzCM.get(rightSwipeIDKey);
 
 bool authToEdit(EzCP config) => _cache(config)._security.authToEdit;
 bool authForHidden(EzCP config) => _cache(config)._security.authForHidden;
