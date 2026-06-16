@@ -24,9 +24,41 @@ class LimSpacer extends StatelessWidget {
   @override
   Widget build(BuildContext context) => switch (state) {
         AppState.standard => SizedBox(height: height, width: width),
-        AppState.singleEdit => SizedBox(height: height, width: width), // TODO: con delete
-        AppState.groupEdit ||
-        AppState.verbose =>
-          SizedBox(height: height, width: width), // TODO con delete, and resize corner icons
+        AppState.singleEdit => Container(
+            height: height,
+            width: width,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: config.colors.secondary,
+                width: config.borderWidth,
+              ),
+              borderRadius: EzButtonShape.roundRect.radius,
+              shape: BoxShape.rectangle,
+            ),
+            child: Center(
+              child: GestureDetector(
+                onTap: doNothing, // todo
+                child: EzIcon(config, Icons.delete),
+              ),
+            ),
+          ),
+        AppState.groupEdit || AppState.verbose => Container(
+            height: height,
+            width: width,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: config.colors.primary,
+                width: config.borderWidth,
+              ),
+              borderRadius: EzButtonShape.roundRect.radius,
+              shape: BoxShape.rectangle,
+            ),
+            child: Center(
+              child: GestureDetector(
+                onTap: doNothing, // todo
+                child: EzIcon(config, Icons.delete),
+              ),
+            ),
+          ),
       };
 }
