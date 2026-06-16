@@ -34,16 +34,7 @@ class LiminalCache extends EzAppCache {
   }
 
   Future<void> _buildLocalCache(bool isDark) async {
-    final bool defATE = limSecDef[authToEditKey] as bool;
-    final bool defAFH = limSecDef[authForHiddenKey] as bool;
-    final int defAT = limSecDef[authTimeoutKey] as int;
-
-    _security = SecureCache(
-      authToEdit: bool.tryParse(await EzCM.secGet(authToEditKey)) ?? defATE,
-      authForHidden: bool.tryParse(await EzCM.secGet(authForHiddenKey)) ?? defAFH,
-      authTimeout: Duration(minutes: int.tryParse(await EzCM.secGet(authTimeoutKey)) ?? defAT),
-    );
-
+    // Design cache
     if (isDark) {
       final bool listIcons = EzCM.get(darkListIconKey);
       final LabelType listLabels = LabelTypeConfig.lookup(EzCM.get(darkListLabelKey));
@@ -105,25 +96,18 @@ class LiminalCache extends EzAppCache {
         overlays: SystemUiOverlay.values,
       );
     }
+
+    // Secure cache
+    final bool defATE = limSecDef[authToEditKey] as bool;
+    final bool defAFH = limSecDef[authForHiddenKey] as bool;
+    final int defAT = limSecDef[authTimeoutKey] as int;
+
+    _security = SecureCache(
+      authToEdit: bool.tryParse(await EzCM.secGet(authToEditKey)) ?? defATE,
+      authForHidden: bool.tryParse(await EzCM.secGet(authForHiddenKey)) ?? defAFH,
+      authTimeout: Duration(minutes: int.tryParse(await EzCM.secGet(authTimeoutKey)) ?? defAT),
+    );
   }
-}
-
-class SecureCache {
-  final bool _authToEdit;
-  final bool _authForHidden;
-  final Duration _authTimeout;
-
-  SecureCache({
-    required bool authToEdit,
-    required bool authForHidden,
-    required Duration authTimeout,
-  })  : _authToEdit = authToEdit,
-        _authForHidden = authForHidden,
-        _authTimeout = authTimeout;
-
-  bool get authToEdit => _authToEdit;
-  bool get authForHidden => _authForHidden;
-  Duration get authTimeout => _authTimeout;
 }
 
 class DesignCache {
@@ -162,6 +146,26 @@ class DesignCache {
   });
 }
 
+class SecureCache {
+  final bool _authToEdit;
+  final bool _authForHidden;
+  final Duration _authTimeout;
+
+  SecureCache({
+    required bool authToEdit,
+    required bool authForHidden,
+    required Duration authTimeout,
+  })  : _authToEdit = authToEdit,
+        _authForHidden = authForHidden,
+        _authTimeout = authTimeout;
+
+  bool get authToEdit => _authToEdit;
+  bool get authForHidden => _authForHidden;
+  Duration get authTimeout => _authTimeout;
+}
+
+// Aliases/helpers //
+
 LiminalCache _cache(EzCP config) => config.appCache! as LiminalCache;
 
 Lang l10n(EzCP config) => _cache(config)._l10n;
@@ -173,10 +177,6 @@ String get leftSwipeID => EzCM.get(leftSwipeIDKey);
 String get rightSwipeID => EzCM.get(rightSwipeIDKey);
 
 bool get autoSearch => EzCM.get(autoSearchKey);
-
-bool authToEdit(EzCP config) => _cache(config)._security.authToEdit;
-bool authForHidden(EzCP config) => _cache(config)._security.authForHidden;
-Duration authTimeout(EzCP config) => _cache(config)._security.authTimeout;
 
 bool listIcons(EzCP config) => _cache(config)._design.listIcons;
 LabelType listLabels(EzCP config) => _cache(config)._design.listLabels;
@@ -196,3 +196,7 @@ bool homeTime(EzCP config) => _cache(config)._design.homeTime;
 
 ListAlignment hAlign(EzCP config) => _cache(config)._design.horizontalAlign;
 ListAlignment vAlign(EzCP config) => _cache(config)._design.verticalAlign;
+
+bool authToEdit(EzCP config) => _cache(config)._security.authToEdit;
+bool authForHidden(EzCP config) => _cache(config)._security.authForHidden;
+Duration authTimeout(EzCP config) => _cache(config)._security.authTimeout;
