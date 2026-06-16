@@ -415,8 +415,6 @@ If you want to support Liminal's development, or the development of more Empathe
                     }
                     return false;
                   },
-                  // TODO: lanes split here, built tiles multiple times?
-                  // TODO: how to be efficient af?
                   child: EzScrollView(
                     config,
                     showScrollHint: true, // TODO: make this a setting
@@ -437,44 +435,6 @@ If you want to support Liminal's development, or the development of more Empathe
         fabs: editing
             ? <Widget>[
                 config.spacer,
-
-                // // Add app
-                // AddAppFAB(
-                //   config,
-                //   () => context.goNamed(
-                //     appListPath,
-                //     extra: ListConfig(
-                //       listContent: <ListContent>{
-                //         ListContent.home,
-                //         ListContent.hidden,
-                //         ListContent.banished,
-                //       },
-                //       include: false,
-                //       onSelected: (AppInfo app) => appInfo.addHomeApp(
-                //         config,
-                //         lane: blarg,
-                //         id: app.id,
-                //       ),
-                //       title: EzTextIconButton(
-                //         config,
-                //         onPressed: doNothing,
-                //         label: 'Home',
-                //         icon: EzIcon(config, Icons.add, color: config.colors.onSurface),
-                //         textStyle: config.labelStyle,
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                // config.spacer,
-
-                // // Add folder
-                // AddFolderFAB(
-                //   config,
-                //   () => appInfo.addHomeFolder(config, blarg),
-                // ),
-                // config.spacer,
-
-                // Settings
                 SettingsFAB(
                   config,
                   () => context.goNamed(settingsPath),
