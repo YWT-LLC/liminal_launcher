@@ -30,20 +30,56 @@ class AppListSettings extends StatelessWidget {
               config,
               children: <Widget>[
                 // Interlinked
-                // TODO: can change => select which one is staying (re-use advanced `line x line`?)
-                // TODO: tooltipper
                 EzSwitchPair(
                   config,
                   text: 'Linked home lists',
+                  tipper: 'The home list can be dark/light theme based too!',
                   valueKey: interlinkedKey,
+                  canChange: (bool choice) async {
+                    if (choice == false) return true;
+
+                    final bool? keepDark = await showDialog(
+                      context: context,
+                      builder: (BuildContext dCon) => EzAlertDialog(
+                        config,
+                        title: const Text('Keep which layout?', textAlign: TextAlign.center),
+                        actions: <Widget>[
+                          EzMaterialAction(
+                            config,
+                            text: 'Dark',
+                            onPressed: () => Navigator.of(dCon).pop(true),
+                          ),
+                          EzMaterialAction(
+                            config,
+                            text: 'Light',
+                            onPressed: () => Navigator.of(dCon).pop(false),
+                          ),
+                          EzMaterialAction(
+                            config,
+                            text: 'Cancel',
+                            onPressed: () => Navigator.of(dCon).pop(null),
+                          ),
+                        ],
+                        needsClose: false,
+                      ),
+                    ); // todo: add fancy line x line stuffs
+
+                    if (keepDark != null) {
+                      await appInfo.cloneMatrix(keepDark);
+                      return true;
+                    } else {
+                      return false;
+                    }
+                  },
                 ),
                 config.spacer,
 
                 // Home scroll hints
-                // TODO: tool tipper to explain what this means
                 EzSwitchPair(
                   config,
                   text: 'Home scroll hints',
+                  tipper:
+                      'If you have a lot of home lanes,\nthis will add scroll arrows when there is content off-screen.',
                   valueKey: homeHintsKey,
                 ),
                 config.spacer,
