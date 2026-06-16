@@ -501,8 +501,11 @@ For example: if an app has always on location permissions, banishing it will not
     }
 
     await showApp(id, batch: true);
-    await removeHomeApp(Provider.of<EzCP>(ezRootNav.currentContext!, listen: false),
-        id: id, batch: true); // TODO: test
+    await removeHomeApp(
+      Provider.of<EzCP>(ezRootNav.currentContext!, listen: false),
+      id: id,
+      batch: true,
+    );
 
     _apps.remove(_appMap[id]);
     _appMap.remove(id);
