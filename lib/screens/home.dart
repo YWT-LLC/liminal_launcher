@@ -124,50 +124,72 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
   /// appProvider.homeList -> AppTile/FolderTile
   List<Widget> _buildTiles(EzCP config, AppInfoProvider appInfo, int lane) {
     final List<String> entries = appInfo.homeList(config, lane);
-
     final EdgeInsets tilePadding = EdgeInsets.symmetric(vertical: config.spacing / 2);
+
     final List<Widget> toReturn = <Widget>[];
     final List<int> errors = <int>[];
 
-    // TODO: update to a switch and include custom spacers
     for (int index = 0; index < entries.length; index++) {
-      final String item = entries[index];
-      final List<String> parts = item.split(folderSplit);
+      final String entry = entries[index];
 
-      if (parts.length > 1) {
-        toReturn.add(Padding(
-          key: ValueKey<String>('${parts[0]}_$index'),
-          padding: tilePadding,
-          child: FolderTile(
-            config,
-            appInfo: appInfo,
-            lane: lane,
-            index: index,
-            state: editing ? AppState.groupEdit : AppState.standard,
-            rippleProgress: rippleProgress,
-          ),
-        ));
-      } else {
-        final AppInfo? app = appInfo.appMap[parts[0]];
-        if (app == null) {
-          errors.add(index);
-          continue;
-        }
+      final RegExpMatch? splitMatch = tileRegex.firstMatch(entry);
+      final String? delim = splitMatch?.group(0);
 
-        toReturn.add(Padding(
-          key: ValueKey<String>(app.id),
-          padding: tilePadding,
-          child: AppTile(
+      switch (delim) {
+        case idSplit:
+          final AppInfo? app = appInfo.appMap[entry];
+          if (app == null) {
+            errors.add(index);
+            continue;
+          }
+
+          toReturn.add(Padding(
+            key: ValueKey<String>(app.id),
+            padding: tilePadding,
+            child: AppTile(
+              config,
+              appInfo: appInfo,
+              app: app,
+              location: AppLocation.home,
+              lane: lane,
+              state: editing ? AppState.groupEdit : AppState.standard,
+              onSelected: (AppInfo app) => launchApp(app),
+              rippleProgress: rippleProgress,
+            ),
+          ));
+          break;
+
+        case spacerSplit:
+          final List<String> data = entry.split(spacerSplit);
+          final double height = double.tryParse(data[0]) ?? config.spacing;
+          final double width = double.tryParse(data[1]) ?? appIconSize(config);
+
+          toReturn.add(LimSpacer(
             config,
-            appInfo: appInfo,
-            app: app,
-            location: AppLocation.home,
-            lane: lane,
+            key: ValueKey<String>('$index-$height-$width-$editing'),
+            height: height,
+            width: width,
             state: editing ? AppState.groupEdit : AppState.standard,
-            onSelected: (AppInfo app) => launchApp(app),
-            rippleProgress: rippleProgress,
-          ),
-        ));
+          ));
+          break;
+
+        case folderSplit:
+          toReturn.add(Padding(
+            key: ValueKey<String>('$index-${entry.split(folderSplit)[0]}'),
+            padding: tilePadding,
+            child: FolderTile(
+              config,
+              appInfo: appInfo,
+              lane: lane,
+              index: index,
+              state: editing ? AppState.groupEdit : AppState.standard,
+              rippleProgress: rippleProgress,
+            ),
+          ));
+          break;
+
+        default:
+          break;
       }
     }
 
@@ -435,10 +457,15 @@ If you want to support Liminal's development, or the development of more Empathe
         fabs: editing
             ? <Widget>[
                 config.spacer,
-                SettingsFAB(
-                  config,
-                  () => context.goNamed(settingsPath),
-                ),
+
+                // Add (iff one list)
+                if (appInfo.numLanes(config) == 1) ...<Widget>[
+                  AddFAB(config, doNothing),
+                  config.spacer,
+                ],
+
+                // Settings
+                SettingsFAB(config, () => context.goNamed(settingsPath)),
               ]
             : null,
         isHome: true,
