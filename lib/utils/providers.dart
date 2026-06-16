@@ -249,20 +249,20 @@ class AppInfoProvider extends ChangeNotifier {
 
   void reorderHomeList(
     EzCP config, {
-    required int index,
+    required int lane,
     required int oldIndex,
     required int newIndex,
   }) {
     if (interlinked(config) || config.isDark) {
-      final String element = _darkHomeMatrix[index].removeAt(oldIndex);
-      _darkHomeMatrix[index].insert(newIndex, element);
+      final String element = _darkHomeMatrix[lane].removeAt(oldIndex);
+      _darkHomeMatrix[lane].insert(newIndex, element);
 
       unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
     }
 
     if (interlinked(config) || !config.isDark) {
-      final String element = _lightHomeMatrix[index].removeAt(oldIndex);
-      _lightHomeMatrix[index].insert(newIndex, element);
+      final String element = _lightHomeMatrix[lane].removeAt(oldIndex);
+      _lightHomeMatrix[lane].insert(newIndex, element);
 
       unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
     }
