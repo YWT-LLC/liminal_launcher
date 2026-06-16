@@ -34,7 +34,6 @@ class LimSpacer extends StatelessWidget {
                 width: config.borderWidth,
               ),
               borderRadius: EzButtonShape.roundRect.radius,
-              shape: BoxShape.rectangle,
             ),
             child: Center(
               child: GestureDetector(
@@ -52,7 +51,6 @@ class LimSpacer extends StatelessWidget {
                 width: config.borderWidth,
               ),
               borderRadius: EzButtonShape.roundRect.radius,
-              shape: BoxShape.rectangle,
             ),
             child: Center(
               child: GestureDetector(

@@ -28,7 +28,6 @@ Future<bool> _externalAuth(String reason) async {
   final bool authed = await LocalAuthentication().authenticate(
     localizedReason: reason,
     persistAcrossBackgrounding: true,
-    biometricOnly: false,
   );
 
   if (authed) await EzCM.secSet(lastAuthKey, DateTime.now().toString());

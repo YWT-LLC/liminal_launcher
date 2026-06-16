@@ -98,7 +98,6 @@ class AppSecSettings extends StatelessWidget {
                             controller: _timeoutText,
                             textAlign: TextAlign.center,
                             textAlignVertical: TextAlignVertical.top,
-                            maxLines: 1,
                             keyboardType: TextInputType.number,
                             autovalidateMode: AutovalidateMode.onUnfocus,
                             onTap: () async {

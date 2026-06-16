@@ -214,11 +214,11 @@ class _AppFolderState extends State<FolderTile> {
                     builder: (BuildContext dCon) {
                       final TextEditingController renameCon = TextEditingController();
 
-                      void onConfirm() async {
+                      Future<void> onConfirm() async {
                         closeKeyboard(dCon);
 
                         final String name = renameCon.text.trim();
-                        if (validateRename(name) != null) return null;
+                        if (validateRename(name) != null) return;
 
                         await widget.appInfo.renameFolder(
                           widget.config,
@@ -244,7 +244,6 @@ class _AppFolderState extends State<FolderTile> {
                           child: TextFormField(
                             controller: renameCon,
                             textAlign: TextAlign.center,
-                            maxLines: 1,
                             autofillHints: const <String>[AutofillHints.name],
                             autovalidateMode: AutovalidateMode.onUnfocus,
                             validator: validateRename,
@@ -318,7 +317,6 @@ class _AppFolderState extends State<FolderTile> {
                                   child: TextFormField(
                                     controller: renameCon,
                                     textAlign: TextAlign.center,
-                                    maxLines: 1,
                                     autofillHints: const <String>[AutofillHints.name],
                                     autovalidateMode: AutovalidateMode.onUnfocus,
                                     validator: validateRename,

@@ -30,10 +30,10 @@ class LiminalCache extends EzAppCache {
       _l10n = await Lang.delegate.load(config.locale);
     }
 
-    _buildLocalCache(config.isDark);
+    await _buildLocalCache(config.isDark);
   }
 
-  void _buildLocalCache(bool isDark) async {
+  Future<void> _buildLocalCache(bool isDark) async {
     final bool defATE = limSecDef[authToEditKey] as bool;
     final bool defAFH = limSecDef[authForHiddenKey] as bool;
     final int defAT = limSecDef[authTimeoutKey] as int;

@@ -57,7 +57,7 @@ class AppListSettings extends StatelessWidget {
                           EzMaterialAction(
                             config,
                             text: 'Cancel',
-                            onPressed: () => Navigator.of(dCon).pop(null),
+                            onPressed: () => Navigator.of(dCon).pop(),
                           ),
                         ],
                         needsClose: false,

@@ -77,7 +77,6 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
       lanes.add(ConstrainedBox(
         constraints: BoxConstraints(
           minHeight: double.infinity,
-          maxHeight: double.infinity,
           minWidth: appIconSize(config) + config.spacing,
           maxWidth: widthOf(context) / numLanes,
         ),
@@ -243,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
   // Init //
 
   @override
-  void afterFirstLayout(BuildContext context) async {
+  Future<void> afterFirstLayout(BuildContext context) async {
     final EzCP config = configWatcher(context);
 
     // Check for welcome message

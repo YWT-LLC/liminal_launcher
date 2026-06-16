@@ -283,11 +283,11 @@ class _AppTileState extends State<AppTile> {
                     builder: (BuildContext dCon) {
                       final TextEditingController renameController = TextEditingController();
 
-                      void onConfirm() async {
+                      Future<void> onConfirm() async {
                         closeKeyboard(dCon);
 
                         final String name = renameController.text.trim();
-                        if (validateRename(name) != null) return null;
+                        if (validateRename(name) != null) return;
 
                         final bool success =
                             await widget.appInfo.renameApp(newName: name, appID: widget.app.id);
@@ -309,7 +309,6 @@ class _AppTileState extends State<AppTile> {
                           child: TextFormField(
                             controller: renameController,
                             textAlign: TextAlign.center,
-                            maxLines: 1,
                             autofillHints: const <String>[AutofillHints.name],
                             autovalidateMode: AutovalidateMode.onUnfocus,
                             validator: validateRename,
