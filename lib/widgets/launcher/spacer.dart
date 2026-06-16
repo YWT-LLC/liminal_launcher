@@ -14,12 +14,13 @@ class LimSpacer extends StatelessWidget {
   final double width;
   final AppState state;
 
-  LimSpacer(
+  const LimSpacer(
     this.config, {
+    super.key,
     required this.height,
     required this.width,
     required this.state,
-  }) : super(key: ValueKey<AppState>(state));
+  });
 
   @override
   Widget build(BuildContext context) => switch (state) {
