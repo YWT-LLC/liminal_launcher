@@ -172,6 +172,8 @@ bool get homeHints => EzCM.get(homeHintsKey);
 String get leftSwipeID => EzCM.get(leftSwipeIDKey);
 String get rightSwipeID => EzCM.get(rightSwipeIDKey);
 
+bool get autoSearch => EzCM.get(autoSearchKey);
+
 bool authToEdit(EzCP config) => _cache(config)._security.authToEdit;
 bool authForHidden(EzCP config) => _cache(config)._security.authForHidden;
 Duration authTimeout(EzCP config) => _cache(config)._security.authTimeout;
