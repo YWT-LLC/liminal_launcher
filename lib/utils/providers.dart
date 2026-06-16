@@ -31,11 +31,11 @@ class AppInfoProvider extends ChangeNotifier {
   final Set<String> _banishedSet = Set<String>.from(EzCM.get(banishedIDsKey));
 
   // Home
-  late final List<List<String>> _darkHomeMatrix;
-  late final List<List<String>> _lightHomeMatrix;
+  late List<List<String>> _darkHomeMatrix;
+  late List<List<String>> _lightHomeMatrix;
 
-  final Set<String> _darkHomeSet = <String>{};
-  final Set<String> _lightHomeSet = <String>{};
+  Set<String> _darkHomeSet = <String>{};
+  Set<String> _lightHomeSet = <String>{};
 
   AppInfoProvider(List<AppInfo> apps)
       : _apps = apps,
@@ -424,6 +424,22 @@ For example: if an app has always on location permissions, banishing it will not
     if (!notified) notifyListeners();
 
     return true;
+  }
+
+  Future<void> cloneMatrix(bool keepDark) async {
+    if (keepDark) {
+      _lightHomeMatrix = List<List<String>>.from(_darkHomeMatrix);
+      _lightHomeSet = Set<String>.from(_darkHomeSet);
+
+      unawaited(_saveHomeMatrix(_darkHomeMatrix, false));
+    } else {
+      _darkHomeMatrix = List<List<String>>.from(_lightHomeMatrix);
+      _darkHomeSet = Set<String>.from(_lightHomeSet);
+
+      unawaited(_saveHomeMatrix(_lightHomeMatrix, true));
+    }
+
+    notifyListeners();
   }
 
   // Delete //
