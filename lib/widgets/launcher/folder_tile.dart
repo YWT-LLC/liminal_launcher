@@ -21,6 +21,7 @@ class FolderTile extends StatefulWidget {
   final ValueNotifier<double>? rippleProgress;
 
   late final String _name;
+  late final IconData _icon;
   late final List<String> _appList;
 
   FolderTile(
@@ -34,7 +35,13 @@ class FolderTile extends StatefulWidget {
     final List<String> items = appInfo.homeList(config, lane)[index].split(folderSplit);
 
     _name = items[0];
-    _appList = items.sublist(2);
+
+    final int? iconCode = int.tryParse(items[1]);
+    _icon = _icon =
+        // ignore: non_const_argument_for_const_parameter
+        iconCode != null ? IconData(iconCode, fontFamily: 'MaterialIcons') : Icons.folder_open;
+
+    _appList = items.length > 2 ? items.sublist(2) : <String>[];
   }
 
   @override
@@ -157,6 +164,7 @@ class _AppFolderState extends State<FolderTile> {
                       child: FolderButton(
                         widget.config,
                         name: widget._name,
+                        icon: widget._icon,
                         buttonType: folderBT(widget.config),
                         labelType: folderLabels(widget.config),
                         onPressed: () => setState(() => open = !open),
@@ -170,6 +178,7 @@ class _AppFolderState extends State<FolderTile> {
                 : FolderButton(
                     widget.config,
                     name: widget._name,
+                    icon: widget._icon,
                     buttonType: folderBT(widget.config),
                     labelType: folderLabels(widget.config),
                     onPressed: () => setState(() => open = !open),
@@ -223,7 +232,7 @@ class _AppFolderState extends State<FolderTile> {
                         await widget.appInfo.renameFolder(
                           widget.config,
                           name,
-                          Icons.folder,
+                          Icons.folder_open, // TODO
                           lane: widget.lane,
                           index: widget.index,
                         );
@@ -464,7 +473,7 @@ class _AppFolderState extends State<FolderTile> {
                           lane: widget.lane,
                           index: widget.index,
                           name: renameCon.text,
-                          icon: Icons.folder,
+                          icon: Icons.folder_open, // TODO
                           ids: appsNotif.value,
                         ));
                   },
@@ -508,6 +517,7 @@ class _AppFolderState extends State<FolderTile> {
 class FolderButton extends StatelessWidget {
   final EzCP config;
   final String name;
+  final IconData icon;
   final ButtonType buttonType;
   final LabelType labelType;
   final void Function()? onPressed;
@@ -517,6 +527,7 @@ class FolderButton extends StatelessWidget {
     this.config, {
     super.key,
     required this.name,
+    required this.icon,
     required this.buttonType,
     required this.labelType,
     this.onPressed,
@@ -530,14 +541,14 @@ class FolderButton extends StatelessWidget {
             child: GestureDetector(
               onTap: onPressed,
               onLongPress: onLongPress,
-              child: Icon(Icons.folder_open, size: appIconSize(config)),
+              child: Icon(icon, size: appIconSize(config)),
             )),
         ButtonType.eIcon => EzIconButton(
             config,
             tooltip: name,
             onPressed: onPressed,
             onLongPress: onLongPress,
-            icon: Icon(Icons.folder_open, size: appIconSize(config)),
+            icon: Icon(icon, size: appIconSize(config)),
           ),
         ButtonType.text => EzTextButton(
             config,
@@ -556,7 +567,7 @@ class FolderButton extends StatelessWidget {
         ButtonType.textIcon => EzTextIconButton(
             config,
             label: buildLabel(name, labelType),
-            icon: Icon(Icons.folder_open, size: appIconSize(config)),
+            icon: Icon(icon, size: appIconSize(config)),
             style: TextButton.styleFrom(padding: EdgeInsets.all(config.padding)),
             onPressed: onPressed,
             onLongPress: onLongPress,
@@ -564,7 +575,7 @@ class FolderButton extends StatelessWidget {
         ButtonType.eTextIcon => EzElevatedIconButton(
             config,
             label: buildLabel(name, labelType),
-            icon: Icon(Icons.folder_open, size: appIconSize(config)),
+            icon: Icon(icon, size: appIconSize(config)),
             style: TextButton.styleFrom(padding: EdgeInsets.all(config.padding)),
             onPressed: onPressed,
             onLongPress: onLongPress,
