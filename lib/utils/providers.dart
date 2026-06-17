@@ -48,7 +48,8 @@ class AppInfoProvider extends ChangeNotifier {
     for (final List<String> lane in _darkHomeMatrix) {
       for (final String entry in lane) {
         if (entry.contains(folderSplit)) {
-          _darkHomeSet.addAll(entry.split(folderSplit).sublist(2));
+          final List<String> items = entry.split(folderSplit);
+          if (items.length > 2) _darkHomeSet.addAll(items.sublist(2));
         } else {
           _darkHomeSet.add(entry);
         }
@@ -58,7 +59,8 @@ class AppInfoProvider extends ChangeNotifier {
     for (final List<String> lane in _lightHomeMatrix) {
       for (final String entry in lane) {
         if (entry.contains(folderSplit)) {
-          _lightHomeSet.addAll(entry.split(folderSplit).sublist(2));
+          final List<String> items = entry.split(folderSplit);
+          if (items.length > 2) _lightHomeSet.addAll(items.sublist(2));
         } else {
           _lightHomeSet.add(entry);
         }
@@ -171,13 +173,13 @@ class AppInfoProvider extends ChangeNotifier {
 
   Future<void> addHomeFolder(EzCP config, int lane) async {
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane].add('Folder$folderSplit${Icons.folder.codePoint}');
+      _darkHomeMatrix[lane].add('Folder$folderSplit${Icons.folder_open.codePoint}');
 
       unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane].add('Folder$folderSplit${Icons.folder.codePoint}');
+      _lightHomeMatrix[lane].add('Folder$folderSplit${Icons.folder_open.codePoint}');
 
       unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
     }
@@ -279,7 +281,8 @@ class AppInfoProvider extends ChangeNotifier {
   }) async {
     if (interlinked || config.isDark) {
       // Get the old && new ID sets
-      final Set<String> oldSet = _darkHomeMatrix[lane][index].split(folderSplit).sublist(2).toSet();
+      final List<String> oldIDs = _darkHomeMatrix[lane][index].split(folderSplit);
+      final Set<String> oldSet = oldIDs.length > 2 ? oldIDs.sublist(2).toSet() : <String>{};
       final Set<String> newSet = ids.toSet();
 
       // Update the matrix entry
