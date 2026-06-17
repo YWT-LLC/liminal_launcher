@@ -262,20 +262,20 @@ const Map<String, Object> limSecDef = <String, Object>{
 /// :01001100: == :L:
 const String listSplit = ':01001100:';
 
+/// :01000110: == :F:
+const String folderSplit = ':01000110:';
+
 /// :01001001: == :I:
 const String idSplit = ':01001001:';
 
 /// :01010011: == :S:
 const String spacerSplit = ':01010011:';
 
-/// :01000110: == :F:
-const String folderSplit = ':01000110:';
+/// :01010111: == :W:
+const String widgetSplit = ':01010111:';
 
 /// r'(:(I|S|F):)'... but the binaries
 final RegExp tileRegex = RegExp(r':(01001001|01010011|01000110):');
-
-/// 'empty'
-const String emptyTag = 'empty';
 
 /// ---
 const String nullAppLabel = '---';
