@@ -48,9 +48,7 @@ class AppInfoProvider extends ChangeNotifier {
     for (final List<String> lane in _darkHomeMatrix) {
       for (final String entry in lane) {
         if (entry.contains(folderSplit)) {
-          for (final String app in entry.split(folderSplit)) {
-            if (app != emptyTag) _darkHomeSet.add(app);
-          }
+          _darkHomeSet.addAll(entry.split(folderSplit).sublist(2));
         } else {
           _darkHomeSet.add(entry);
         }
@@ -60,9 +58,7 @@ class AppInfoProvider extends ChangeNotifier {
     for (final List<String> lane in _lightHomeMatrix) {
       for (final String entry in lane) {
         if (entry.contains(folderSplit)) {
-          for (final String app in entry.split(folderSplit)) {
-            if (app != emptyTag) _lightHomeSet.add(app);
-          }
+          _lightHomeSet.addAll(entry.split(folderSplit).sublist(2));
         } else {
           _lightHomeSet.add(entry);
         }
@@ -175,13 +171,13 @@ class AppInfoProvider extends ChangeNotifier {
 
   Future<void> addHomeFolder(EzCP config, int lane) async {
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane].add('Folder$folderSplit$emptyTag');
+      _darkHomeMatrix[lane].add('Folder$folderSplit${Icons.folder.codePoint}');
 
       unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane].add('Folder$folderSplit$emptyTag');
+      _lightHomeMatrix[lane].add('Folder$folderSplit${Icons.folder.codePoint}');
 
       unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
     }
@@ -222,14 +218,16 @@ class AppInfoProvider extends ChangeNotifier {
 
   Future<void> renameFolder(
     EzCP config,
-    String newName, {
+    String name,
+    IconData icon, {
     required int lane,
     required int index,
   }) async {
     if (interlinked || config.isDark) {
       final List<String> parts = _darkHomeMatrix[lane][index].split(folderSplit);
 
-      parts[0] = newName;
+      parts[0] = name;
+      parts[1] = icon.codePoint.toString();
       _darkHomeMatrix[lane][index] = parts.join(folderSplit);
 
       unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
@@ -238,7 +236,8 @@ class AppInfoProvider extends ChangeNotifier {
     if (interlinked || !config.isDark) {
       final List<String> parts = _lightHomeMatrix[lane][index].split(folderSplit);
 
-      parts[0] = newName;
+      parts[0] = name;
+      parts[1] = icon.codePoint.toString();
       _lightHomeMatrix[lane][index] = parts.join(folderSplit);
 
       unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
@@ -275,17 +274,19 @@ class AppInfoProvider extends ChangeNotifier {
     required int lane,
     required int index,
     required String name,
+    required IconData icon,
     required List<String> ids,
   }) async {
     if (interlinked || config.isDark) {
       // Get the old && new ID sets
-      final Set<String> oldSet = _darkHomeMatrix[lane][index].split(folderSplit).sublist(1).toSet();
+      final Set<String> oldSet = _darkHomeMatrix[lane][index].split(folderSplit).sublist(2).toSet();
       final Set<String> newSet = ids.toSet();
 
       // Update the matrix entry
       _darkHomeMatrix[lane][index] = <String>[
         name,
-        ...(ids.isEmpty ? <String>[emptyTag] : ids),
+        icon.codePoint.toString(),
+        if (ids.isNotEmpty) ...ids,
       ].join(folderSplit);
 
       // Remove those removed
@@ -310,7 +311,8 @@ class AppInfoProvider extends ChangeNotifier {
       // Update the matrix entry
       _lightHomeMatrix[lane][index] = <String>[
         name,
-        ...(ids.isEmpty ? <String>[emptyTag] : ids),
+        icon.codePoint.toString(),
+        if (ids.isNotEmpty) ...ids,
       ].join(folderSplit);
 
       // Remove those removed

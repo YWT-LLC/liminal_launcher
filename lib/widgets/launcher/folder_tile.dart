@@ -34,7 +34,7 @@ class FolderTile extends StatefulWidget {
     final List<String> items = appInfo.homeList(config, lane)[index].split(folderSplit);
 
     _name = items[0];
-    _appList = (items[1] == emptyTag) ? <String>[] : items.sublist(1);
+    _appList = items.sublist(2);
   }
 
   @override
@@ -223,6 +223,7 @@ class _AppFolderState extends State<FolderTile> {
                         await widget.appInfo.renameFolder(
                           widget.config,
                           name,
+                          Icons.folder,
                           lane: widget.lane,
                           index: widget.index,
                         );
@@ -463,6 +464,7 @@ class _AppFolderState extends State<FolderTile> {
                           lane: widget.lane,
                           index: widget.index,
                           name: renameCon.text,
+                          icon: Icons.folder,
                           ids: appsNotif.value,
                         ));
                   },
