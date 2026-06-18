@@ -159,20 +159,6 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           ));
           break;
 
-        case spacerSplit:
-          final List<String> data = entry.split(spacerSplit);
-          final double height = double.tryParse(data[0]) ?? config.spacing;
-          final double width = double.tryParse(data[1]) ?? appIconSize(config);
-
-          toReturn.add(LimSpacer(
-            config,
-            key: ValueKey<String>('$index-$height-$width-$editing'),
-            height: height,
-            width: width,
-            state: editing ? AppState.groupEdit : AppState.standard,
-          ));
-          break;
-
         case folderSplit:
           toReturn.add(Padding(
             key: ValueKey<String>('$index-${entry.split(folderSplit)[0]}'),
@@ -185,6 +171,28 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
               state: editing ? AppState.groupEdit : AppState.standard,
               rippleProgress: rippleProgress,
             ),
+          ));
+          break;
+
+        case widgetSplit:
+          toReturn.add(Padding(
+            key: ValueKey<String>('$index-${entry.split(widgetSplit)[0]}'),
+            padding: tilePadding,
+            child: renderWidget(config, entry),
+          ));
+          break;
+
+        case spacerSplit:
+          final List<String> data = entry.split(spacerSplit);
+          final double height = double.tryParse(data[0]) ?? config.spacing;
+          final double width = double.tryParse(data[1]) ?? appIconSize(config);
+
+          toReturn.add(LimSpacer(
+            config,
+            key: ValueKey<String>('$index-$height-$width-$editing'),
+            height: height,
+            width: width,
+            state: editing ? AppState.groupEdit : AppState.standard,
           ));
           break;
 
@@ -549,17 +557,6 @@ If you want to support Liminal's development, or the development of more Empathe
                               ),
                             ),
 
-                            // Widgets
-                            Padding(
-                              padding: EzInsets.wrap(config.spacing),
-                              child: EzElevatedIconButton(
-                                config,
-                                onPressed: doNothing,
-                                label: 'Widgets',
-                                icon: EzIcon(config, Icons.widgets),
-                              ),
-                            ),
-
                             // Folder
                             Padding(
                               padding: EzInsets.wrap(config.spacing),
@@ -568,6 +565,96 @@ If you want to support Liminal's development, or the development of more Empathe
                                 onPressed: () => appInfo.addHomeFolder(config, 0),
                                 label: 'Folder',
                                 icon: EzIcon(config, Icons.folder_open),
+                              ),
+                            ),
+
+                            // Widgets
+                            Padding(
+                              padding: EzInsets.wrap(config.spacing),
+                              child: EzElevatedIconButton(
+                                config,
+                                onPressed: () => ezModal(
+                                  config,
+                                  context: context,
+                                  builder: (BuildContext wCon) => ezModalScroll(
+                                    config,
+                                    children: <Widget>[
+                                      // Calendar
+                                      EzIconButton(
+                                        config,
+                                        onPressed: () => appInfo.addHomeWidget(
+                                          config,
+                                          0,
+                                          WidWidGetGet.calendar,
+                                          WidgetSize.button,
+                                        ),
+                                        icon: EzIcon(config, Icons.edit_calendar),
+                                      ),
+
+                                      // Clock
+                                      EzIconButton(
+                                        config,
+                                        onPressed: () => appInfo.addHomeWidget(
+                                          config,
+                                          0,
+                                          WidWidGetGet.clock,
+                                          WidgetSize.button,
+                                        ),
+                                        icon: EzIcon(config, Icons.watch),
+                                      ), // TODO differentiate these two
+
+                                      // Search
+                                      EzIconButton(
+                                        config,
+                                        onPressed: () => appInfo.addHomeWidget(
+                                          config,
+                                          0,
+                                          WidWidGetGet.search,
+                                          WidgetSize.button,
+                                        ),
+                                        icon: EzIcon(config, Icons.search),
+                                      ),
+
+                                      // Stopwatch
+                                      EzIconButton(
+                                        config,
+                                        onPressed: () => appInfo.addHomeWidget(
+                                          config,
+                                          0,
+                                          WidWidGetGet.stopwatch,
+                                          WidgetSize.button,
+                                        ),
+                                        icon: EzIcon(config, Icons.watch),
+                                      ), // THISN
+
+                                      // Timer
+                                      EzIconButton(
+                                        config,
+                                        onPressed: () => appInfo.addHomeWidget(
+                                          config,
+                                          0,
+                                          WidWidGetGet.timer,
+                                          WidgetSize.button,
+                                        ),
+                                        icon: EzIcon(config, Icons.timer),
+                                      ),
+
+                                      // Toggle media
+                                      EzIconButton(
+                                        config,
+                                        onPressed: () => appInfo.addHomeWidget(
+                                          config,
+                                          0,
+                                          WidWidGetGet.toggleMedia,
+                                          WidgetSize.button,
+                                        ),
+                                        icon: EzIcon(config, Icons.headphones),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                label: 'Widgets',
+                                icon: EzIcon(config, Icons.widgets),
                               ),
                             ),
 
@@ -588,7 +675,7 @@ If you want to support Liminal's development, or the development of more Empathe
                               child: EzElevatedIconButton(
                                 config,
                                 onPressed: () => appInfo.addHomeLane(config),
-                                label: 'Lanes',
+                                label: 'Lane',
                                 icon: EzIcon(config, Icons.view_column_outlined),
                               ),
                             ),
