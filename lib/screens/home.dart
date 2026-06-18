@@ -198,33 +198,45 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     if (editing) {
       toReturn.insert(
         0,
-        EzRow(config, children: <Widget>[
-          Padding(
-            key: ValueKey<String>('lane-$lane-controls'),
-            padding: tilePadding,
-            child: MenuAnchor(
-              builder: (_, MenuController controller, __) => EzIconButton(
-                config,
-                onPressed: () => controller.isOpen ? controller.close() : controller.open(),
-                icon: EzIcon(config, Icons.edit),
+        EzRow(
+          config,
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          key: ValueKey<String>('lane-$lane-controls'),
+          children: <Widget>[
+            Padding(
+              padding: tilePadding,
+              child: MenuAnchor(
+                builder: (_, MenuController controller, __) => EzIconButton(
+                  config,
+                  onPressed: () => controller.isOpen ? controller.close() : controller.open(),
+                  icon: EzIcon(config, Icons.edit),
+                ),
+                menuChildren: <Widget>[
+                  // Left
+                  if (lane != 0) // TODO: wurks in end mode? centa?
+                    MenuItemButton(
+                      onPressed: doNothing,
+                      child: EzIcon(config, Icons.keyboard_arrow_left),
+                    ),
+
+                  // Begone
+                  MenuItemButton(
+                    onPressed: () => appInfo.deleteLane(config, lane),
+                    child: EzIcon(config, Icons.delete),
+                  ),
+
+                  // Right
+                  if (lane != appInfo.numLanes(config))
+                    MenuItemButton(
+                      onPressed: doNothing,
+                      child: EzIcon(config, Icons.keyboard_arrow_right),
+                    ),
+                ],
               ),
-              menuChildren: <Widget>[
-                MenuItemButton(
-                  onPressed: doNothing,
-                  child: EzIcon(config, Icons.keyboard_arrow_left),
-                ),
-                MenuItemButton(
-                  onPressed: () => appInfo.deleteLane(config, lane),
-                  child: EzIcon(config, Icons.delete),
-                ),
-                MenuItemButton(
-                  onPressed: doNothing,
-                  child: EzIcon(config, Icons.keyboard_arrow_right),
-                ),
-              ],
             ),
-          ),
-        ]),
+          ],
+        ),
       );
     }
     return toReturn;
