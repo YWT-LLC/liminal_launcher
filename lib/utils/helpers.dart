@@ -4,7 +4,9 @@
  */
 
 import './export.dart';
+import '../widgets/export.dart';
 
+import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
@@ -46,4 +48,20 @@ Future<bool> liminalAuth(EzCP config, String reason) async {
   return (saved == null || DateTime.now().difference(saved) > authTimeout(config))
       ? _externalAuth(reason)
       : Future<bool>.value(true);
+}
+
+Widget renderWidget(EzCP config, String entry) {
+  final List<String> data = entry.split(widgetSplit);
+  final String type = data[0];
+  // final String size = data[1];
+
+  return switch (type) {
+    esCalendar => CalendarWidget(config),
+    esClock => ClockWidget(config),
+    esSearch => SearchWidget(config),
+    esStopwatch => StopwatchWidget(config),
+    esTimer => TimerWidget(config),
+    esToggleMedia => ToggleMediaWidget(config),
+    _ => const SizedBox.shrink(),
+  };
 }
