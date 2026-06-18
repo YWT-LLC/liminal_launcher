@@ -274,8 +274,8 @@ const String spacerSplit = ':01010011:';
 /// :01010111: == :W:
 const String widgetSplit = ':01010111:';
 
-/// r'(:(I|S|F):)'... but the binaries
-final RegExp tileRegex = RegExp(r':(01001001|01010011|01000110):');
+/// r'(:(I|W|F|S):)'... but the binaries
+final RegExp tileRegex = RegExp(r':(01001001|01010111|01000110|01010011):');
 
 /// ---
 const String nullAppLabel = '---';
