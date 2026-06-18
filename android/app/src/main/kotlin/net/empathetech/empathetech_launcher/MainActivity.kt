@@ -122,12 +122,12 @@ class MainActivity : FlutterFragmentActivity() {
 
         "openStopwatch" -> {
           try {
-            val intent = Intent(AlarmClock.ACTION_SHOW_STOPWATCH)
+            val intent = Intent(AlarmClock.ACTION_SHOW_ALARMS)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
             result.success(true)
           } catch (e: Exception) {
-            result.error("STOPWATCH_ERROR", "Could not open stopwatch", e.message)
+            result.error("STOPWATCH_ERROR", "Could not open clock app", e.message)
           }
         }
 
@@ -150,11 +150,17 @@ class MainActivity : FlutterFragmentActivity() {
         }
 
         "toggleMedia" -> {
-          val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-          val event = KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE)
-          audioManager.dispatchMediaKeyEvent(event)      
-          result.success(null)
-        }
+          try {
+            val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            
+            audioManager.dispatchMediaKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE))
+            audioManager.dispatchMediaKeyEvent(KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE))
+            
+            result.success(true)
+          } catch (e: Exception) {
+            result.error("MEDIA_ERROR", "Could not toggle media", e.message)
+          }
+        } 
         
         else -> result.notImplemented() 
       }
