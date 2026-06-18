@@ -187,6 +187,22 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> addHomeWidget(EzCP config, int lane, WidWidGetGet type, WidgetSize size) async {
+    if (interlinked || config.isDark) {
+      _darkHomeMatrix[lane].add('${type.value}$widgetSplit${size.value}');
+
+      unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
+    }
+
+    if (interlinked || !config.isDark) {
+      _lightHomeMatrix[lane].add('${type.value}$widgetSplit${size.value}');
+
+      unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
+    }
+
+    notifyListeners();
+  }
+
   Future<void> addHomeLane(EzCP config) async {
     if (interlinked || config.isDark) {
       _darkHomeMatrix.add(<String>[]);
