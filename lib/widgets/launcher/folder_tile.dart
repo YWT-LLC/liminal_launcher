@@ -37,7 +37,7 @@ class FolderTile extends StatefulWidget {
     _name = items[0];
 
     final int? iconCode = int.tryParse(items[1]);
-    _icon = _icon =
+    _icon =
         // ignore: non_const_argument_for_const_parameter
         iconCode != null ? IconData(iconCode, fontFamily: 'MaterialIcons') : Icons.folder_open;
 
