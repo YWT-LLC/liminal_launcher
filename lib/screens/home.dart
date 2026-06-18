@@ -214,7 +214,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                 ),
                 menuChildren: <Widget>[
                   // Left
-                  if (lane != 0) // TODO: wurks in end mode? centa?
+                  if (lane > 0) // TODO: wurks in end mode? centa?
                     MenuItemButton(
                       onPressed: doNothing,
                       child: EzIcon(config, Icons.keyboard_arrow_left),
@@ -227,7 +227,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                   ),
 
                   // Right
-                  if (lane != appInfo.numLanes(config))
+                  if (lane < appInfo.numLanes(config) - 1)
                     MenuItemButton(
                       onPressed: doNothing,
                       child: EzIcon(config, Icons.keyboard_arrow_right),
@@ -505,9 +505,10 @@ If you want to support Liminal's development, or the development of more Empathe
 
                 // Add (iff one list)
                 if (appInfo.numLanes(config) == 1) ...<Widget>[
-                  AddFAB(
-                    config,
-                    () => ezModal(
+                  AddFAB(config, () async {
+                    final double screenWidth = widthOf(context);
+
+                    await ezModal(
                       config,
                       context: context,
                       builder: (BuildContext mCon) => ezModalScroll(
@@ -599,25 +600,24 @@ If you want to support Liminal's development, or the development of more Empathe
                             config,
                             children: <Widget>[
                               Text(
-                                '${(widthOf(context) / (config.iconSize + config.padding + config.spacing)).toStringAsFixed(2)} lanes on screen',
+                                '${(screenWidth / (config.iconSize + config.padding + config.spacing)).toStringAsFixed(2)} lanes on screen',
                                 textAlign: TextAlign.center,
                                 style: config.labelStyle,
                               ),
                               EzToolTipper(
                                 config,
                                 message:
-                                    '''With your icon size (${config.iconSize.toStringAsFixed(1)}), padding (${config.padding.toStringAsFixed(0)}), and spacing (${config.spacing.toStringAsFixed(1)}) settings,
-you can fit up to ${(widthOf(context) / (config.iconSize + config.padding + config.spacing)).toStringAsFixed(2)} lanes on your screen at once.
+                                    '''With your current...\n\nicon size (${config.iconSize.toStringAsFixed(1)}),\npadding (${config.padding.toStringAsFixed(0)}),\n& spacing (${config.spacing.toStringAsFixed(1)})
 
-With the minimum values, you could fit up to ${(widthOf(context) / (minIconSize + minPadding + minSpacing)).toStringAsFixed(2)} lanes.''',
+...settings, you can fit up to ${(screenWidth / (config.iconSize + config.padding + config.spacing)).toStringAsFixed(2)} lanes on your screen. With the minimum values, you could fit up to ${(screenWidth / (minIconSize + minPadding + minSpacing)).toStringAsFixed(2)} lanes.''',
                               ), // TODO: second part doesn't appear iff already at min
                             ],
                           ),
                           config.separator,
                         ],
                       ),
-                    ),
-                  ),
+                    );
+                  }),
                   config.spacer,
                 ],
 
