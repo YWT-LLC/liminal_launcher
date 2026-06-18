@@ -8,10 +8,10 @@ import '../../utils/export.dart';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-class CreateCalendarWidget extends StatelessWidget {
+class CalendarWidget extends StatelessWidget {
   final EzCP config;
 
-  const CreateCalendarWidget(this.config, {super.key});
+  const CalendarWidget(this.config, {super.key});
 
   @override
   Widget build(BuildContext context) => EzIconButton(
