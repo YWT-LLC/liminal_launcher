@@ -8,15 +8,9 @@ import './export.dart';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-//* Runtime *//
+//* BTS *//
 
 enum AppLocation { home, folder, list }
-
-enum AppState { standard, singleEdit, groupEdit, verbose }
-
-enum ListContent { home, hidden, banished }
-
-//* BTS *//
 
 enum AppSort { name, publisher, date, size }
 
@@ -48,6 +42,29 @@ extension ASConfig on AppSort {
       };
 }
 
+enum AppState { standard, singleEdit, groupEdit, verbose }
+
+enum ListContent { home, hidden, banished }
+
+enum WidgetSize { icon, elevated, unbound }
+
+/// enum [String] 'icon'
+const String esIcon = 'icon';
+
+/// enum [String] 'elevated'
+const String esElevated = 'elevated';
+
+/// enum [String] 'unbound'
+const String esUnbound = 'unbound';
+
+extension WSConfig on WidgetSize {
+  String get value => switch (this) {
+        WidgetSize.icon => esIcon,
+        WidgetSize.elevated => esElevated,
+        WidgetSize.unbound => esUnbound,
+      };
+}
+
 //* Design settings (button) *//
 
 // Label //
@@ -63,7 +80,7 @@ const String esFull = 'full';
 /// enum [String] wingding
 const String esWingding = 'wingding';
 
-extension LabelTypeConfig on LabelType {
+extension LTConfig on LabelType {
   String get value => switch (this) {
         LabelType.none => esNone,
         LabelType.initials => esInitials,
@@ -136,7 +153,7 @@ const String esMedium = 'medium';
 /// enum [String] 'long'
 const String esLong = 'long';
 
-extension DateTypeConfig on DateType {
+extension DTConfig on DateType {
   String get value => switch (this) {
         DateType.none => esNone,
         DateType.compact => esCompact,
