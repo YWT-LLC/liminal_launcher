@@ -15,8 +15,8 @@ export 'settings/header.dart';
 export 'settings/swipe_selector.dart';
 export 'settings/tiles.dart';
 
+export 'widget-ception/calendar.dart';
 export 'widget-ception/clock.dart';
-export 'widget-ception/create_calendar.dart';
 export 'widget-ception/search.dart';
 export 'widget-ception/stopwatch.dart';
 export 'widget-ception/timer.dart';
