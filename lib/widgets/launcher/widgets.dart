@@ -11,6 +11,8 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 // TODO: short and long press for everything
 // TODO: have a tool tipper on the add screen that describes what it does ahead of time
 
+// TODO: toggle media, create calendar event, open stopwatch, open timer(s), search (use URL launcher)
+
 class NowPlayingWidget extends StatelessWidget {
   final EzCP config;
 
