@@ -79,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
     for (int lane = 0; lane < numLanes; lane++) {
       lanes.add(ConstrainedBox(
-        constraints:
+        constraints: // TODO: this needs more tweaking now that all kinds can coexist
             BoxConstraints(minHeight: double.infinity, minWidth: minWidth, maxWidth: maxWidth),
         child: editing
             ? Builder(builder: (_) {
