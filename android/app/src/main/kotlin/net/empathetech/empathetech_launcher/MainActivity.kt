@@ -14,6 +14,8 @@ import android.graphics.drawable.Drawable
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Build
+import android.provider.AlarmClock
+import android.provider.CalendarContract
 import android.provider.Settings
 import android.util.Log
 import android.view.KeyEvent
@@ -50,6 +52,7 @@ class MainActivity : FlutterFragmentActivity() {
 
     MethodChannel(flutterEngine.dartExecutor.binaryMessenger, METHOD_CHANNEL).setMethodCallHandler { call, result ->
       when (call.method) {
+        // Core
         "getApps" -> {
           try{
             result.success(getInstalledApps())
@@ -57,6 +60,7 @@ class MainActivity : FlutterFragmentActivity() {
             result.error("APPS_ERROR", "Could not retrieve installed apps", e.message)
           }
         }
+
         "launchApp" -> {
           try {
             val packageName: String? = call.argument<String>("packageName")
@@ -71,6 +75,7 @@ class MainActivity : FlutterFragmentActivity() {
             result.error("LAUNCH_ERROR", "Could not launch app", e.message)
           }
         }
+
         "openSettings" -> {
           try {
             val packageName: String? = call.argument<String>("packageName")
@@ -85,6 +90,7 @@ class MainActivity : FlutterFragmentActivity() {
             result.error("LAUNCH_ERROR", "Could not open settings", e.message)
           }
         }
+
         "deleteApp" -> {
           try {
             val packageName: String? = call.argument<String>("packageName")
@@ -99,12 +105,57 @@ class MainActivity : FlutterFragmentActivity() {
             result.error("DELETE_ERROR", "Could not uninstall app", e.message)
           }
         }
+
+        // Widgets
+        "createCalendarEvent" -> {
+          try {
+            val intent = Intent(Intent.ACTION_INSERT).apply {
+              data = CalendarContract.Events.CONTENT_URI
+              addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            startActivity(intent)
+            result.success(true)
+          } catch (e: Exception) {
+            result.error("CALENDAR_ERROR", "Could not open calendar", e.message)
+          }
+        }
+
+        "openStopwatch" -> {
+          try {
+            val intent = Intent(AlarmClock.ACTION_SHOW_STOPWATCH)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            result.success(true)
+          } catch (e: Exception) {
+            result.error("STOPWATCH_ERROR", "Could not open stopwatch", e.message)
+          }
+        }
+
+        "setTimer" -> {
+          try { 
+            val length = call.argument<Int>("length") ?: 300 
+            val skipUi = call.argument<Boolean>("skipUi") ?: true 
+
+            val intent = Intent(AlarmClock.ACTION_SET_TIMER).apply {
+              putExtra(AlarmClock.EXTRA_LENGTH, length)
+              putExtra(AlarmClock.EXTRA_SKIP_UI, skipUi)
+              addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            
+            startActivity(intent)
+            result.success(true)
+          } catch (e: Exception) {
+             result.error("TIMER_ERROR", "Could not set timer", e.message)
+          }
+        }
+
         "toggleMedia" -> {
           val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
           val event = KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE)
           audioManager.dispatchMediaKeyEvent(event)      
           result.success(null)
         }
+        
         else -> result.notImplemented() 
       }
     }

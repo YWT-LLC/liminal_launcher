@@ -10,6 +10,8 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 const MethodChannel platform = MethodChannel('$androidPackage/query');
 
+// Core //
+
 Future<List<AppInfo>> getApps() async {
   try {
     final List<dynamic>? appData = await platform.invokeMethod('getApps');
@@ -53,6 +55,35 @@ Future<void> openDelete(AppInfo app) async {
     });
   } catch (e) {
     ezLog('Failed to delete ${app.package}: $e');
+  }
+}
+
+// Widgets //
+
+Future<void> createCalendarEvent() async {
+  try {
+    await platform.invokeMethod('createCalendarEvent');
+  } catch (e) {
+    ezLog('Failed to create calendar event: $e');
+  }
+}
+
+Future<void> openStopwatch() async {
+  try {
+    await platform.invokeMethod('openStopwatch');
+  } catch (e) {
+    ezLog('Failed to open stopwatch: $e');
+  }
+}
+
+Future<void> setTimer({int? seconds, bool auto = true}) async {
+  try {
+    await platform.invokeMethod('setTimer', <String, dynamic>{
+      if (seconds != null) 'length': seconds,
+      'skipUi': auto,
+    });
+  } catch (e) {
+    ezLog('Failed to set timer: $e');
   }
 }
 
