@@ -8,6 +8,7 @@ export 'launcher/clock.dart';
 export 'launcher/fabulous.dart';
 export 'launcher/folder_tile.dart';
 export 'launcher/spacer.dart';
+export 'launcher/widgets.dart';
 
 export 'settings/alignment.dart';
 export 'settings/app_list.dart';
