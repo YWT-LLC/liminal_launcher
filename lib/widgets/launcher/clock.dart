@@ -51,7 +51,7 @@ class _ClockState extends State<Clock> {
               ),
             if (homeDate(widget.config) != DateType.none)
               Text(
-                DateTypeConfig.buildDate(context, now, homeDate(widget.config)),
+                DTConfig.buildDate(context, now, homeDate(widget.config)),
                 style: widget.config.labelStyle,
                 textAlign: hAlign(widget.config).textAlign,
               ),

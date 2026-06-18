@@ -210,7 +210,7 @@ class _AppTileState extends State<AppTile> {
               // Install date
               EzText(
                 widget.config,
-                text: DateTypeConfig.buildDate(
+                text: DTConfig.buildDate(
                   context,
                   DateTime.fromMillisecondsSinceEpoch(widget.app.installDate),
                   DateType.compact,
