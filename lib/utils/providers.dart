@@ -171,15 +171,39 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addHomeFolder(EzCP config, int lane) async {
+  Future<void> addHomeFolder(EzCP config, {required int lane, required int count}) async {
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane].add('Folder$folderSplit${Icons.folder_open.codePoint}');
+      for (int i = 0; i < count; i++) {
+        _darkHomeMatrix[lane].add('Folder$folderSplit${Icons.folder_open.codePoint}');
+      }
 
       unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane].add('Folder$folderSplit${Icons.folder_open.codePoint}');
+      for (int i = 0; i < count; i++) {
+        _lightHomeMatrix[lane].add('Folder$folderSplit${Icons.folder_open.codePoint}');
+      }
+
+      unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
+    }
+
+    notifyListeners();
+  }
+
+  Future<void> addHomeLane(EzCP config, int count) async {
+    if (interlinked || config.isDark) {
+      for (int i = 0; i < count; i++) {
+        _darkHomeMatrix.add(<String>[]);
+      }
+
+      unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
+    }
+
+    if (interlinked || !config.isDark) {
+      for (int i = 0; i < count; i++) {
+        _lightHomeMatrix.add(<String>[]);
+      }
 
       unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
     }
@@ -493,7 +517,12 @@ For example: if an app has always on location permissions, banishing it will not
     return found;
   }
 
-  Future<void> deleteFolder(EzCP config, {required int lane, required int index}) async {
+  Future<void> deleteFolder(
+    EzCP config, {
+    required int lane,
+    required int index,
+    bool batch = false,
+  }) async {
     if (interlinked || config.isDark) {
       for (final String entry in _darkHomeMatrix[lane][index].split(folderSplit)) {
         _darkHomeSet.remove(entry);
@@ -510,6 +539,40 @@ For example: if an app has always on location permissions, banishing it will not
       _lightHomeMatrix[lane].removeAt(index);
 
       unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
+    }
+
+    if (!batch) notifyListeners();
+  }
+
+  Future<void> deleteLane(EzCP config, int lane) async {
+    if (interlinked || config.isDark) {
+      final List<String> entries = _darkHomeMatrix[lane];
+
+      for (int index = 0; index < entries.length; index++) {
+        for (final String entry in entries) {
+          entry.contains(folderSplit)
+              ? await deleteFolder(config, lane: lane, index: index, batch: true)
+              : await removeHomeApp(config, lane: lane, id: entry, batch: true);
+        }
+      }
+      _darkHomeMatrix.removeAt(lane);
+
+      unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
+    }
+
+    if (interlinked || !config.isDark) {
+      final List<String> entries = _lightHomeMatrix[lane];
+
+      for (int index = 0; index < entries.length; index++) {
+        for (final String entry in entries) {
+          entry.contains(folderSplit)
+              ? await deleteFolder(config, lane: lane, index: index, batch: true)
+              : await removeHomeApp(config, lane: lane, id: entry, batch: true);
+        }
+      }
+      _lightHomeMatrix.removeAt(lane);
+
+      unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), true));
     }
 
     notifyListeners();
