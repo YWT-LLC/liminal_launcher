@@ -195,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
     _janitor[lane] = errors;
 
-    if (editing) {
+    if (editing && appInfo.numLanes(config) > 1) {
       toReturn.insert(
         0,
         EzRow(
@@ -505,28 +505,16 @@ If you want to support Liminal's development, or the development of more Empathe
 
                 // Add (iff one list)
                 if (appInfo.numLanes(config) == 1) ...<Widget>[
-                  AddFAB(config, () async {
-                    final TextEditingController numCon = TextEditingController(text: '1');
-
-                    final Size sizeLimit = ezTextSize(
-                      '100',
-                      context: context,
-                      style: config.bodyStyle,
-                    );
-
-                    final double fieldWidth =
-                        max(sizeLimit.width + config.padding, kMinInteractiveDimension);
-                    final double fieldHeight =
-                        max(sizeLimit.height + config.padding, kMinInteractiveDimension);
-
-                    await ezModal(
+                  AddFAB(
+                    config,
+                    () => ezModal(
                       config,
                       context: context,
                       builder: (BuildContext mCon) => ezModalScroll(
                         config,
                         children: <Widget>[
-                          // Single-ish
                           EzWrap(children: <Widget>[
+                            // Apps
                             Padding(
                               padding: EzInsets.wrap(config.spacing),
                               child: EzElevatedIconButton(
@@ -559,15 +547,8 @@ If you want to support Liminal's development, or the development of more Empathe
                                 icon: EzIcon(config, Icons.apps),
                               ),
                             ),
-                            Padding(
-                              padding: EzInsets.wrap(config.spacing),
-                              child: EzElevatedIconButton(
-                                config,
-                                onPressed: doNothing,
-                                label: 'Spacer',
-                                icon: EzIcon(config, Icons.space_bar),
-                              ),
-                            ),
+
+                            // Widgets
                             Padding(
                               padding: EzInsets.wrap(config.spacing),
                               child: EzElevatedIconButton(
@@ -577,79 +558,66 @@ If you want to support Liminal's development, or the development of more Empathe
                                 icon: EzIcon(config, Icons.widgets),
                               ),
                             ),
-                          ]),
 
-                          // Batch-ish
-                          EzTitledDivider(
-                            EzRow(
-                              config,
-                              children: <Widget>[
-                                Text(
-                                  '${(widthOf(context) / (config.iconSize + config.padding + config.spacing)).toStringAsFixed(2)} lanes on screen',
-                                  textAlign: TextAlign.center,
-                                  style: config.labelStyle,
-                                ),
-                                EzToolTipper(
-                                  config,
-                                  message:
-                                      '''With your icon size (${config.iconSize.toStringAsFixed(1)}), padding (${config.padding.toStringAsFixed(0)}), and spacing (${config.spacing.toStringAsFixed(1)}) settings,
-you can fit up to ${(widthOf(context) / (config.iconSize + config.padding + config.spacing)).toStringAsFixed(2)} lanes on your screen at once.
-
-With the minimum values, you could fit up to ${(widthOf(context) / (minIconSize + minPadding + minSpacing)).toStringAsFixed(2)} lanes.''',
-                                ), // TODO: second part doesn't appear iff already at min
-                              ],
+                            // Folder
+                            Padding(
+                              padding: EzInsets.wrap(config.spacing),
+                              child: EzElevatedIconButton(
+                                config,
+                                onPressed: () => appInfo.addHomeFolder(config, 0),
+                                label: 'Folder',
+                                icon: EzIcon(config, Icons.folder_open),
+                              ),
                             ),
-                            height: config.spacing * 3,
-                            margin: config.marginVal,
-                          ),
 
+                            // Spacer
+                            Padding(
+                              padding: EzInsets.wrap(config.spacing),
+                              child: EzElevatedIconButton(
+                                config,
+                                onPressed: doNothing,
+                                label: 'Spacer',
+                                icon: EzIcon(config, Icons.space_bar),
+                              ),
+                            ),
+
+                            // Lane
+                            Padding(
+                              padding: EzInsets.wrap(config.spacing),
+                              child: EzElevatedIconButton(
+                                config,
+                                onPressed: () => appInfo.addHomeLane(config),
+                                label: 'Lanes',
+                                icon: EzIcon(config, Icons.view_column_outlined),
+                              ),
+                            ),
+                          ]),
+                          EzSpacer(config.spacing / 2),
+
+                          // Screen space note
                           EzRow(
                             config,
                             children: <Widget>[
-                              // Options
-                              EzWrap(children: <Widget>[
-                                Padding(
-                                  padding: EzInsets.wrap(config.spacing),
-                                  child: EzElevatedIconButton(
-                                    config,
-                                    onPressed: () =>
-                                        appInfo.addHomeLane(config, int.tryParse(numCon.text) ?? 1),
-                                    label: 'Lanes',
-                                    icon: EzIcon(config, Icons.view_column_outlined),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EzInsets.wrap(config.spacing),
-                                  child: EzElevatedIconButton(
-                                    config,
-                                    onPressed: () => appInfo.addHomeFolder(
-                                      config,
-                                      lane: 0, // TODO: limimts (here and field)
-                                      count: int.tryParse(numCon.text) ?? 1,
-                                    ),
-                                    label: 'Folders',
-                                    icon: EzIcon(config, Icons.folder_open),
-                                  ),
-                                ),
-                              ]),
-                              config.rowSpacer,
+                              Text(
+                                '${(widthOf(context) / (config.iconSize + config.padding + config.spacing)).toStringAsFixed(2)} lanes on screen',
+                                textAlign: TextAlign.center,
+                                style: config.labelStyle,
+                              ),
+                              EzToolTipper(
+                                config,
+                                message:
+                                    '''With your icon size (${config.iconSize.toStringAsFixed(1)}), padding (${config.padding.toStringAsFixed(0)}), and spacing (${config.spacing.toStringAsFixed(1)}) settings,
+you can fit up to ${(widthOf(context) / (config.iconSize + config.padding + config.spacing)).toStringAsFixed(2)} lanes on your screen at once.
 
-                              // Counter
-                              ConstrainedBox(
-                                constraints: BoxConstraints.tight(Size(fieldWidth, fieldHeight)),
-                                child: TextFormField(
-                                  controller: numCon,
-                                  textAlign: TextAlign.center,
-                                  keyboardType: const TextInputType.numberWithOptions(),
-                                ),
-                              )
+With the minimum values, you could fit up to ${(widthOf(context) / (minIconSize + minPadding + minSpacing)).toStringAsFixed(2)} lanes.''',
+                              ), // TODO: second part doesn't appear iff already at min
                             ],
                           ),
                           config.separator,
                         ],
                       ),
-                    );
-                  }),
+                    ),
+                  ),
                   config.spacer,
                 ],
 
