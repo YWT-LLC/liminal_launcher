@@ -46,21 +46,53 @@ enum AppState { standard, singleEdit, groupEdit, verbose }
 
 enum ListContent { home, hidden, banished }
 
-enum WidgetSize { icon, elevated, unbound }
+enum WidWidGetGet { calendar, clock, search, stopwatch, timer, toggleMedia }
 
-/// enum [String] 'icon'
-const String esIcon = 'icon';
+/// enum [String] 'calendar'
+const String esCalendar = 'calendar';
 
-/// enum [String] 'elevated'
-const String esElevated = 'elevated';
+/// enum [String] 'clock'
+const String esClock = 'clock';
+
+/// enum [String] 'search'
+const String esSearch = 'search';
+
+/// enum [String] 'stopwatch'
+const String esStopwatch = 'stopwatch';
+
+/// enum [String] 'timer'
+const String esTimer = 'timer';
+
+/// enum [String] 'toggleMedia'
+const String esToggleMedia = 'toggleMedia';
+
+extension WWGGConfig on WidWidGetGet {
+  String get value => switch (this) {
+        WidWidGetGet.calendar => esCalendar,
+        WidWidGetGet.clock => esClock,
+        WidWidGetGet.search => esSearch,
+        WidWidGetGet.stopwatch => esStopwatch,
+        WidWidGetGet.timer => esTimer,
+        WidWidGetGet.toggleMedia => esToggleMedia,
+      };
+}
+
+enum WidgetSize { system, button, tile, unbound }
+
+/// enum [String] 'button'
+const String esButton = 'button';
+
+/// enum [String] 'tile'
+const String esTile = 'tile';
 
 /// enum [String] 'unbound'
 const String esUnbound = 'unbound';
 
 extension WSConfig on WidgetSize {
   String get value => switch (this) {
-        WidgetSize.icon => esIcon,
-        WidgetSize.elevated => esElevated,
+        WidgetSize.system => esSystem,
+        WidgetSize.button => esButton,
+        WidgetSize.tile => esTile,
         WidgetSize.unbound => esUnbound,
       };
 }
