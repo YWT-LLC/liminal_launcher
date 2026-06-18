@@ -9,6 +9,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
+// TODO: Move to widgets and make different versions (analog shout-out)
+// TODO: should I make widgets widgets a DIR?
+
 class Clock extends StatefulWidget {
   final EzCP config;
 
