@@ -25,7 +25,7 @@ class HeaderSettings extends StatelessWidget {
           final bool backupTime = EzCM.get(timeKey);
 
           final String dateKey = config.isDark ? darkHomeDateKey : lightHomeDateKey;
-          final DateType backupDate = DateTypeConfig.lookup(EzCM.get(dateKey));
+          final DateType backupDate = DTConfig.lookup(EzCM.get(dateKey));
 
           await ezModal(
             config,
@@ -100,7 +100,7 @@ class HeaderSettings extends StatelessWidget {
                     dropdownMenuEntries: DateType.values
                         .map((DateType type) => DropdownMenuEntry<DateType>(
                             value: type,
-                            label: DateTypeConfig.buildDate(
+                            label: DTConfig.buildDate(
                               mCon,
                               DateTime.now(),
                               type,
@@ -124,8 +124,7 @@ class HeaderSettings extends StatelessWidget {
             ]),
           );
 
-          if (backupTime != EzCM.get(timeKey) ||
-              backupDate != DateTypeConfig.lookup(EzCM.get(dateKey))) {
+          if (backupTime != EzCM.get(timeKey) || backupDate != DTConfig.lookup(EzCM.get(dateKey))) {
             await config.rebuildUI(<EzCacheType>{EzCacheType.design});
           }
         },
