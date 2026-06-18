@@ -171,19 +171,15 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addHomeFolder(EzCP config, {required int lane, required int count}) async {
+  Future<void> addHomeFolder(EzCP config, int lane) async {
     if (interlinked || config.isDark) {
-      for (int i = 0; i < count; i++) {
-        _darkHomeMatrix[lane].add('Folder$folderSplit${Icons.folder_open.codePoint}');
-      }
+      _darkHomeMatrix[lane].add('Folder$folderSplit${Icons.folder_open.codePoint}');
 
       unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
     }
 
     if (interlinked || !config.isDark) {
-      for (int i = 0; i < count; i++) {
-        _lightHomeMatrix[lane].add('Folder$folderSplit${Icons.folder_open.codePoint}');
-      }
+      _lightHomeMatrix[lane].add('Folder$folderSplit${Icons.folder_open.codePoint}');
 
       unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
     }
@@ -191,19 +187,15 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addHomeLane(EzCP config, int count) async {
+  Future<void> addHomeLane(EzCP config) async {
     if (interlinked || config.isDark) {
-      for (int i = 0; i < count; i++) {
-        _darkHomeMatrix.add(<String>[]);
-      }
+      _darkHomeMatrix.add(<String>[]);
 
       unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
     }
 
     if (interlinked || !config.isDark) {
-      for (int i = 0; i < count; i++) {
-        _lightHomeMatrix.add(<String>[]);
-      }
+      _lightHomeMatrix.add(<String>[]);
 
       unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
     }
