@@ -524,8 +524,12 @@ For example: if an app has always on location permissions, banishing it will not
     bool batch = false,
   }) async {
     if (interlinked || config.isDark) {
-      for (final String entry in _darkHomeMatrix[lane][index].split(folderSplit)) {
-        _darkHomeSet.remove(entry);
+      final List<String> entries = _darkHomeMatrix[lane][index].split(folderSplit);
+
+      if (entries.isNotEmpty) {
+        for (final String entry in entries) {
+          _darkHomeSet.remove(entry);
+        }
       }
       _darkHomeMatrix[lane].removeAt(index);
 
@@ -533,8 +537,12 @@ For example: if an app has always on location permissions, banishing it will not
     }
 
     if (interlinked || !config.isDark) {
-      for (final String entry in _lightHomeMatrix[lane][index].split(folderSplit)) {
-        _lightHomeSet.remove(entry);
+      final List<String> entries = _lightHomeMatrix[lane][index].split(folderSplit);
+
+      if (entries.isNotEmpty) {
+        for (final String entry in entries) {
+          _lightHomeSet.remove(entry);
+        }
       }
       _lightHomeMatrix[lane].removeAt(index);
 
@@ -549,6 +557,7 @@ For example: if an app has always on location permissions, banishing it will not
       final List<String> entries = _darkHomeMatrix[lane];
 
       for (int index = 0; index < entries.length; index++) {
+        if (entries[index].isEmpty) continue;
         for (final String entry in entries) {
           entry.contains(folderSplit)
               ? await deleteFolder(config, lane: lane, index: index, batch: true)
@@ -564,6 +573,7 @@ For example: if an app has always on location permissions, banishing it will not
       final List<String> entries = _lightHomeMatrix[lane];
 
       for (int index = 0; index < entries.length; index++) {
+        if (entries[index].isEmpty) continue;
         for (final String entry in entries) {
           entry.contains(folderSplit)
               ? await deleteFolder(config, lane: lane, index: index, batch: true)
