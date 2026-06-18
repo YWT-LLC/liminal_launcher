@@ -440,7 +440,7 @@ If you want to support Liminal's development, or the development of more Empathe
             crossAxisAlignment: hAlign(config).crossAxis,
             children: <Widget>[
               // Clock I
-              if (topClock) ...<Widget>[Clock(config), clockSpacer],
+              if (topClock) ...<Widget>[ClockWidget(config), clockSpacer],
 
               // App list
               Expanded(
@@ -495,7 +495,7 @@ If you want to support Liminal's development, or the development of more Empathe
               ),
 
               // Clock II
-              if (!topClock) ...<Widget>[clockSpacer, Clock(config)],
+              if (!topClock) ...<Widget>[clockSpacer, ClockWidget(config)],
             ],
           ),
         ),
