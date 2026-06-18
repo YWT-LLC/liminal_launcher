@@ -37,15 +37,15 @@ class LiminalCache extends EzAppCache {
     // Design cache
     if (isDark) {
       final bool listIcons = EzCM.get(darkListIconKey);
-      final LabelType listLabels = LabelTypeConfig.lookup(EzCM.get(darkListLabelKey));
+      final LabelType listLabels = LTConfig.lookup(EzCM.get(darkListLabelKey));
       final bool elevatedLists = EzCM.get(darkElevatedListKey);
 
       final bool folderIcons = EzCM.get(darkFolderIconKey);
-      final LabelType folderLabels = LabelTypeConfig.lookup(EzCM.get(darkFolderLabelKey));
+      final LabelType folderLabels = LTConfig.lookup(EzCM.get(darkFolderLabelKey));
       final bool elevatedFolders = EzCM.get(darkElevatedFolderKey);
 
       _design = DesignCache(
-        homeDate: DateTypeConfig.lookup(EzCM.get(darkHomeDateKey)),
+        homeDate: DTConfig.lookup(EzCM.get(darkHomeDateKey)),
         homeTime: EzCM.get(darkHomeTimeKey),
         horizontalAlign: LAConfig.lookup(EzCM.get(darkHorizontalAlignKey)),
         verticalAlign: LAConfig.lookup(EzCM.get(darkVerticalAlignKey)),
@@ -61,15 +61,15 @@ class LiminalCache extends EzAppCache {
       );
     } else {
       final bool listIcons = EzCM.get(lightListIconKey);
-      final LabelType listLabels = LabelTypeConfig.lookup(EzCM.get(lightListLabelKey));
+      final LabelType listLabels = LTConfig.lookup(EzCM.get(lightListLabelKey));
       final bool elevatedLists = EzCM.get(lightElevatedListKey);
 
       final bool folderIcons = EzCM.get(lightFolderIconKey);
-      final LabelType folderLabels = LabelTypeConfig.lookup(EzCM.get(lightFolderLabelKey));
+      final LabelType folderLabels = LTConfig.lookup(EzCM.get(lightFolderLabelKey));
       final bool elevatedFolders = EzCM.get(lightElevatedFolderKey);
 
       _design = DesignCache(
-        homeDate: DateTypeConfig.lookup(EzCM.get(lightHomeDateKey)),
+        homeDate: DTConfig.lookup(EzCM.get(lightHomeDateKey)),
         homeTime: EzCM.get(lightHomeTimeKey),
         horizontalAlign: LAConfig.lookup(EzCM.get(lightHorizontalAlignKey)),
         verticalAlign: LAConfig.lookup(EzCM.get(lightVerticalAlignKey)),
