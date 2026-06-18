@@ -8,6 +8,7 @@ import '../utils/export.dart';
 import '../widgets/export.dart';
 import 'package:efui_bios/efui_bios.dart';
 
+import 'dart:math';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -459,7 +460,123 @@ If you want to support Liminal's development, or the development of more Empathe
 
                 // Add (iff one list)
                 if (appInfo.numLanes(config) == 1) ...<Widget>[
-                  AddFAB(config, doNothing),
+                  AddFAB(config, () async {
+                    final TextEditingController numCon = TextEditingController(text: '1');
+
+                    final Size sizeLimit = ezTextSize(
+                      '100',
+                      context: context,
+                      style: config.bodyStyle,
+                    );
+
+                    final double fieldWidth =
+                        max(sizeLimit.width + config.padding, kMinInteractiveDimension);
+                    final double fieldHeight =
+                        max(sizeLimit.height + config.padding, kMinInteractiveDimension);
+
+                    await ezModal(
+                      config,
+                      context: context,
+                      builder: (BuildContext mCon) => ezModalScroll(
+                        config,
+                        children: <Widget>[
+                          // Single
+                          EzWrap(children: <Widget>[
+                            Padding(
+                              padding: EzInsets.wrap(config.spacing),
+                              child: EzElevatedIconButton(
+                                config,
+                                onPressed: doNothing,
+                                label: 'Apps',
+                                icon: EzIcon(config, Icons.apps),
+                              ),
+                            ),
+                            Padding(
+                              padding: EzInsets.wrap(config.spacing),
+                              child: EzElevatedIconButton(
+                                config,
+                                onPressed: doNothing,
+                                label: 'Spacer',
+                                icon: EzIcon(config, Icons.space_bar),
+                              ),
+                            ),
+                            Padding(
+                              padding: EzInsets.wrap(config.spacing),
+                              child: EzElevatedIconButton(
+                                config,
+                                onPressed: doNothing,
+                                label: 'Widgets',
+                                icon: EzIcon(config, Icons.widgets),
+                              ),
+                            ),
+                          ]),
+
+                          // (Optionally) batch)
+                          EzTitledDivider(
+                            EzRow(
+                              config,
+                              children: <Widget>[
+                                Text(
+                                  '${(widthOf(context) / (config.iconSize + config.padding + config.spacing)).toStringAsFixed(2)} lanes on screen',
+                                  textAlign: TextAlign.center,
+                                  style: config.labelStyle,
+                                ),
+                                EzToolTipper(
+                                  config,
+                                  message:
+                                      '''With your icon size (${config.iconSize.toStringAsFixed(1)}), padding (${config.padding.toStringAsFixed(0)}), and spacing (${config.spacing.toStringAsFixed(1)}) settings,
+you can fit up to ${(widthOf(context) / (config.iconSize + config.padding + config.spacing)).toStringAsFixed(2)} lanes on your screen at once.
+
+With the minimum values, you could fit up to ${(widthOf(context) / (minIconSize + minPadding + minSpacing)).toStringAsFixed(2)} lanes.''',
+                                ), // TODO: second part doesn't appear iff already at min
+                              ],
+                            ),
+                            height: config.spacing * 3,
+                            margin: config.marginVal,
+                          ),
+
+                          EzRow(
+                            config,
+                            children: <Widget>[
+                              // Options
+                              EzWrap(children: <Widget>[
+                                Padding(
+                                  padding: EzInsets.wrap(config.spacing),
+                                  child: EzElevatedIconButton(
+                                    config,
+                                    onPressed: doNothing,
+                                    label: 'Lanes',
+                                    icon: EzIcon(config, Icons.view_column_outlined),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EzInsets.wrap(config.spacing),
+                                  child: EzElevatedIconButton(
+                                    config,
+                                    onPressed: doNothing,
+                                    label: 'Folders',
+                                    icon: EzIcon(config, Icons.folder_open),
+                                  ),
+                                ),
+                              ]),
+                              config.rowSpacer,
+
+                              // Counter
+                              ConstrainedBox(
+                                constraints: BoxConstraints.tight(Size(fieldWidth, fieldHeight)),
+                                child: TextFormField(
+                                  controller: numCon,
+                                  textAlign: TextAlign.center,
+                                  keyboardType: const TextInputType.numberWithOptions(),
+                                ),
+                              )
+                            ],
+                          ),
+                          config.separator,
+                        ],
+                      ),
+                    );
+                  }),
                   config.spacer,
                 ],
 
