@@ -9,19 +9,18 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-// TODO: Move to widgets and make different versions (analog shout-out)
-// TODO: should I make widgets widgets a DIR?
+// TODO: analog shout-out for different versions
 
-class Clock extends StatefulWidget {
+class ClockWidget extends StatefulWidget {
   final EzCP config;
 
-  const Clock(this.config, {super.key});
+  const ClockWidget(this.config, {super.key});
 
   @override
-  State<Clock> createState() => _ClockState();
+  State<ClockWidget> createState() => _ClockState();
 }
 
-class _ClockState extends State<Clock> {
+class _ClockState extends State<ClockWidget> {
   DateTime now = DateTime.now();
   late Timer ticker;
 

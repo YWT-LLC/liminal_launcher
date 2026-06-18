@@ -10,13 +10,12 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 // TODO: short and long press for everything
 // TODO: have a tool tipper on the add screen that describes what it does ahead of time
+// TODO: at least two, preferably three sizes for everything
 
-// TODO: toggle media, create calendar event, open stopwatch, open timer(s), search (use URL launcher)
-
-class NowPlayingWidget extends StatelessWidget {
+class ToggleMediaWidget extends StatelessWidget {
   final EzCP config;
 
-  const NowPlayingWidget(this.config, {super.key});
+  const ToggleMediaWidget(this.config, {super.key});
 
   @override
   Widget build(BuildContext context) => EzIconButton(
