@@ -20,8 +20,6 @@ dependencies:
 
   # Community
   after_layout: ^1.2.0
-  app_settings: ^7.0.0
-  flutter_localized_locales: ^2.0.5
   flutter_secure_storage: ^10.3.1
   font_awesome_flutter: ^11.0.0
   line_icons: ^2.0.3
