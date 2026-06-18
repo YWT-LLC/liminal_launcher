@@ -10,7 +10,6 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 const MethodChannel platform = MethodChannel('$androidPackage/query');
 
-/// Get all installed apps
 Future<List<AppInfo>> getApps() async {
   try {
     final List<dynamic>? appData = await platform.invokeMethod('getApps');
@@ -54,5 +53,13 @@ Future<void> openDelete(AppInfo app) async {
     });
   } catch (e) {
     ezLog('Failed to delete ${app.package}: $e');
+  }
+}
+
+Future<void> toggleMedia() async {
+  try {
+    await platform.invokeMethod('toggleMedia');
+  } catch (e) {
+    ezLog('Failed to toggle media: $e');
   }
 }
