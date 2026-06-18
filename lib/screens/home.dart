@@ -74,13 +74,13 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     final List<Widget> lanes = <Widget>[];
     final int numLanes = appInfo.numLanes(config);
 
+    final double minWidth = appIconSize(config) + config.spacing;
+    final double maxWidth = max(minWidth, widthOf(context) / numLanes);
+
     for (int lane = 0; lane < numLanes; lane++) {
       lanes.add(ConstrainedBox(
-        constraints: BoxConstraints(
-          minHeight: double.infinity,
-          minWidth: appIconSize(config) + config.spacing,
-          maxWidth: widthOf(context) / numLanes,
-        ),
+        constraints:
+            BoxConstraints(minHeight: double.infinity, minWidth: minWidth, maxWidth: maxWidth),
         child: editing
             ? Builder(builder: (_) {
                 final List<Widget> tiles = _buildTiles(config, appInfo, lane);
@@ -194,6 +194,39 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     }
 
     _janitor[lane] = errors;
+
+    if (editing) {
+      toReturn.insert(
+        0,
+        EzRow(config, children: <Widget>[
+          Padding(
+            key: ValueKey<String>('lane-$lane-controls'),
+            padding: tilePadding,
+            child: MenuAnchor(
+              builder: (_, MenuController controller, __) => EzIconButton(
+                config,
+                onPressed: () => controller.isOpen ? controller.close() : controller.open(),
+                icon: EzIcon(config, Icons.edit),
+              ),
+              menuChildren: <Widget>[
+                MenuItemButton(
+                  onPressed: doNothing,
+                  child: EzIcon(config, Icons.keyboard_arrow_left),
+                ),
+                MenuItemButton(
+                  onPressed: () => appInfo.deleteLane(config, lane),
+                  child: EzIcon(config, Icons.delete),
+                ),
+                MenuItemButton(
+                  onPressed: doNothing,
+                  child: EzIcon(config, Icons.keyboard_arrow_right),
+                ),
+              ],
+            ),
+          ),
+        ]),
+      );
+    }
     return toReturn;
   }
 
@@ -480,13 +513,36 @@ If you want to support Liminal's development, or the development of more Empathe
                       builder: (BuildContext mCon) => ezModalScroll(
                         config,
                         children: <Widget>[
-                          // Single
+                          // Single-ish
                           EzWrap(children: <Widget>[
                             Padding(
                               padding: EzInsets.wrap(config.spacing),
                               child: EzElevatedIconButton(
                                 config,
-                                onPressed: doNothing,
+                                onPressed: () => context.goNamed(
+                                  appListPath,
+                                  extra: ListConfig(
+                                    listContent: <ListContent>{
+                                      ListContent.home,
+                                      ListContent.hidden,
+                                      ListContent.banished,
+                                    },
+                                    include: false,
+                                    onSelected: (AppInfo app) => appInfo.addHomeApp(
+                                      config,
+                                      lane: 0,
+                                      id: app.id,
+                                    ),
+                                    title: EzTextIconButton(
+                                      config,
+                                      onPressed: doNothing,
+                                      label: 'Home',
+                                      icon:
+                                          EzIcon(config, Icons.add, color: config.colors.onSurface),
+                                      textStyle: config.labelStyle,
+                                    ),
+                                  ),
+                                ),
                                 label: 'Apps',
                                 icon: EzIcon(config, Icons.apps),
                               ),
@@ -511,7 +567,7 @@ If you want to support Liminal's development, or the development of more Empathe
                             ),
                           ]),
 
-                          // (Optionally) batch)
+                          // Batch-ish
                           EzTitledDivider(
                             EzRow(
                               config,
@@ -544,7 +600,8 @@ With the minimum values, you could fit up to ${(widthOf(context) / (minIconSize 
                                   padding: EzInsets.wrap(config.spacing),
                                   child: EzElevatedIconButton(
                                     config,
-                                    onPressed: doNothing,
+                                    onPressed: () =>
+                                        appInfo.addHomeLane(config, int.tryParse(numCon.text) ?? 1),
                                     label: 'Lanes',
                                     icon: EzIcon(config, Icons.view_column_outlined),
                                   ),
@@ -553,7 +610,11 @@ With the minimum values, you could fit up to ${(widthOf(context) / (minIconSize 
                                   padding: EzInsets.wrap(config.spacing),
                                   child: EzElevatedIconButton(
                                     config,
-                                    onPressed: doNothing,
+                                    onPressed: () => appInfo.addHomeFolder(
+                                      config,
+                                      lane: 0, // TODO: limimts (here and field)
+                                      count: int.tryParse(numCon.text) ?? 1,
+                                    ),
                                     label: 'Folders',
                                     icon: EzIcon(config, Icons.folder_open),
                                   ),
