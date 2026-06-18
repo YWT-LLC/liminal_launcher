@@ -11,13 +11,16 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.media.AudioManager
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
+import android.view.KeyEvent
 
 import androidx.annotation.NonNull
 
+import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.android.FlutterActivityLaunchConfigs
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -95,6 +98,12 @@ class MainActivity : FlutterFragmentActivity() {
           } catch (e: Exception) {
             result.error("DELETE_ERROR", "Could not uninstall app", e.message)
           }
+        }
+        "toggleMedia" -> {
+          val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+          val event = KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE)
+          audioManager.dispatchMediaKeyEvent(event)      
+          result.success(null)
         }
         else -> result.notImplemented() 
       }
