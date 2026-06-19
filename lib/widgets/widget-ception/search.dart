@@ -6,6 +6,7 @@
 import '../../utils/export.dart';
 
 import 'package:flutter/material.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
@@ -15,54 +16,132 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 // TODO: can I use voice to text? if yes, let the user override long press on the icon button for insta voice...
 // ...they will still be able to edit the widget in editing mode
 
-class SearchWidget extends StatelessWidget {
+class SearchWidget extends StatefulWidget {
   final EzCP config;
-  late final WidgetSize _size;
+  final AppInfoProvider appInfo;
+  final int lane;
+  final int index;
   final AppState state;
+
+  late final WidgetSize _size;
+  late final String _storedEngine;
   late final TextEditingController _queryCon;
 
-  SearchWidget(this.config, WidgetSize size, this.state, {super.key}) {
+  SearchWidget(this.config, this.appInfo, this.lane, this.index, this.state, {super.key}) {
+    final List<String> data = appInfo.homeList(config, lane)[index].split(widgetSplit);
+
+    final WidgetSize size = WSConfig.lookup(data[1]);
     _size = (size == WidgetSize.system) ? bt2WS(config) : size;
+
+    _storedEngine = data[2];
     _queryCon = TextEditingController();
   }
 
   @override
-  Widget build(BuildContext context) => switch (_size) {
+  State<SearchWidget> createState() => _SearchWidgetState();
+}
+
+class _SearchWidgetState extends State<SearchWidget> {
+  // Define the build data //
+
+  late Engine engine = Ignition.lookup(widget._storedEngine);
+
+  Widget icon(EzCP config) => switch (engine) {
+        Engine.ask => EzIcon(config, Icons.question_mark),
+        Engine.archive => EzIcon(config, Icons.archive),
+        Engine.baidu => EzIcon(config, LineIcons.paw),
+        Engine.bing => EzIcon(config, Icons.search),
+        Engine.ducks => EzIcon(config, Icons.bathtub),
+        Engine.ecosia => EzIcon(config, LineIcons.tree),
+        Engine.google => EzIcon(config, LineIcons.googleLogo),
+        Engine.naver => Text(
+            'N',
+            textAlign: TextAlign.center,
+            style: config.labelStyle?.copyWith(fontSize: config.iconSize),
+          ),
+        Engine.qwant => Text(
+            'Q',
+            textAlign: TextAlign.center,
+            style: config.labelStyle?.copyWith(fontSize: config.iconSize),
+          ), // TODO: how do these look?
+        Engine.wikipedia => EzIcon(config, LineIcons.wikipediaW),
+        Engine.wolframAlpha => EzIcon(config, LineIcons.equals),
+        Engine.yahoo => EzIcon(config, LineIcons.yahooLogo),
+        Engine.yandex => EzIcon(config, LineIcons.yandex),
+        Engine.youTube => EzIcon(config, LineIcons.youtube),
+      };
+
+  // Define custom functions //
+
+  void toggleChoices(MenuController c) => c.isOpen ? c.close() : c.open();
+
+  // Return the build //
+
+  @override
+  Widget build(BuildContext context) {
+    return MenuAnchor(
+      builder: (_, MenuController controller, __) => switch (widget._size) {
         WidgetSize.system => const SizedBox.shrink(), // override above
         WidgetSize.button => EzIconButton(
-            config,
-            icon: EzIcon(config, Icons.search),
-            onPressed: () => launchUrl(Uri.parse('https://duckduckgo.com/')),
+            widget.config,
+            icon: icon(widget.config),
+            onPressed: () => launchUrl(Uri.https(engine.base, '/')),
+            onLongPress: () => toggleChoices(controller),
           ),
-        WidgetSize.tile => elevatedLists(config)
+        WidgetSize.tile => elevatedLists(widget.config)
             ? EzIconButton(
-                config,
+                widget.config,
                 icon: EzRow(
-                  config,
+                  widget.config,
                   children: <Widget>[
                     ConstrainedBox(
                       constraints: ezTextFieldConstraints(context),
-                      child: TextFormField(controller: _queryCon),
+                      child: TextFormField(controller: widget._queryCon),
                     ),
-                    config.rowMargin,
+                    widget.config.rowMargin,
                     EzIconButton(
-                      config,
-                      icon: EzIcon(config, Icons.search),
-                      onPressed: () => launchUrl(_queryCon.text.trim().isEmpty
-                          ? Uri.parse('https://duckduckgo.com/')
-                          : Uri.https(
-                              'duckduckgo.com',
-                              '/',
-                              <String, dynamic>{'q': _queryCon.text.trim()},
-                            )),
+                      widget.config,
+                      icon: icon(widget.config),
+                      onPressed: () => launchUrl(Uri.https(
+                        engine.base,
+                        engine.path,
+                        widget._queryCon.text.trim().isEmpty
+                            ? null
+                            : <String, dynamic>{
+                                engine.query: widget._queryCon.text.trim(),
+                              },
+                      )),
+                      onLongPress: () => toggleChoices(controller),
                     ),
                   ],
                 ),
+                onLongPress: () => toggleChoices(controller),
               )
             : EzRow(
-                config,
+                widget.config,
                 children: <Widget>[],
               ),
         WidgetSize.unbound => const SizedBox.shrink(), // TODO
-      };
+      },
+      menuChildren: Engine.values
+          .map((Engine e) => EzMenuButton(
+                widget.config,
+                label: ezCamelToTitle(e.value),
+                icon: icon(widget.config),
+                onPressed: () async {
+                  setState(() => engine = e);
+                  await widget.appInfo.updateWidget(
+                    widget.config,
+                    WidWidGetGet.search,
+                    widget._size,
+                    extra: <String>[e.value],
+                    lane: widget.lane,
+                    index: widget.index,
+                    notify: false,
+                  );
+                },
+              ))
+          .toList(),
+    );
+  }
 }
