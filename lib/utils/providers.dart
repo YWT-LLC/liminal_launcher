@@ -290,7 +290,7 @@ class AppInfoProvider extends ChangeNotifier {
     EzCP config,
     WidWidGetGet type,
     WidgetSize size, {
-    List<String>? extra,
+    required List<String>? extra,
     required int lane,
     required int index,
     required bool notify,
