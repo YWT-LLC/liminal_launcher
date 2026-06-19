@@ -10,11 +10,18 @@ import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 // TODO: analog shout-out for different versions
+// TODO: short and long press for everything
+// TODO: have a tool tipper on the add screen that describes what it does ahead of time
+// TODO: at least two, preferably three sizes for everything
 
 class ClockWidget extends StatefulWidget {
   final EzCP config;
+  late final WidgetSize _size;
+  final AppState state;
 
-  const ClockWidget(this.config, {super.key});
+  ClockWidget(this.config, WidgetSize size, this.state, {super.key}) {
+    _size = (size == WidgetSize.system) ? bt2WS(config) : size;
+  }
 
   @override
   State<ClockWidget> createState() => _ClockState();
@@ -38,28 +45,31 @@ class _ClockState extends State<ClockWidget> {
   }
 
   @override
-  Widget build(BuildContext context) => EzTextBackground(
-        widget.config,
-        padding: EdgeInsets.all(widget.config.padding),
-        text: EzCol(
-          mainAxisAlignment: vAlign(widget.config).mainAxis,
-          crossAxisAlignment: hAlign(widget.config).crossAxis,
-          children: <Widget>[
-            if (homeTime(widget.config))
-              Text(
-                TimeOfDay.fromDateTime(now).format(context),
-                style: widget.config.headlineStyle,
-                textAlign: hAlign(widget.config).textAlign,
-              ),
-            if (homeDate(widget.config) != DateType.none)
-              Text(
-                DTConfig.buildDate(context, now, homeDate(widget.config)),
-                style: widget.config.labelStyle,
-                textAlign: hAlign(widget.config).textAlign,
-              ),
-          ],
-        ),
-      );
+  Widget build(BuildContext context) => switch (widget._size) {
+        WidgetSize.system => const SizedBox.shrink(), // override above
+        WidgetSize.unbound || _ => EzTextBackground(
+            widget.config,
+            padding: EdgeInsets.all(widget.config.padding),
+            text: EzCol(
+              mainAxisAlignment: vAlign(widget.config).mainAxis,
+              crossAxisAlignment: hAlign(widget.config).crossAxis,
+              children: <Widget>[
+                if (homeTime(widget.config))
+                  Text(
+                    TimeOfDay.fromDateTime(now).format(context),
+                    style: widget.config.headlineStyle,
+                    textAlign: hAlign(widget.config).textAlign,
+                  ),
+                if (homeDate(widget.config) != DateType.none)
+                  Text(
+                    DTConfig.buildDate(context, now, homeDate(widget.config)),
+                    style: widget.config.labelStyle,
+                    textAlign: hAlign(widget.config).textAlign,
+                  ),
+              ],
+            ),
+          ),
+      };
 
   @override
   void dispose() {

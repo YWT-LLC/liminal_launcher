@@ -8,15 +8,26 @@ import '../../utils/export.dart';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
+// TODO: short and long press for everything
+// TODO: have a tool tipper on the add screen that describes what it does ahead of time
+// TODO: at least two, preferably three sizes for everything
+
 class CalendarWidget extends StatelessWidget {
   final EzCP config;
+  late final WidgetSize _size;
+  final AppState state;
 
-  const CalendarWidget(this.config, {super.key});
+  CalendarWidget(this.config, WidgetSize size, this.state, {super.key}) {
+    _size = (size == WidgetSize.system) ? bt2WS(config) : size;
+  }
 
   @override
-  Widget build(BuildContext context) => EzIconButton(
-        config,
-        icon: EzIcon(config, Icons.edit_calendar),
-        onPressed: createCalendarEvent,
-      );
+  Widget build(BuildContext context) => switch (_size) {
+        WidgetSize.system => const SizedBox.shrink(), // override above
+        WidgetSize.button || _ => EzIconButton(
+            config,
+            icon: EzIcon(config, Icons.edit_calendar),
+            onPressed: createCalendarEvent,
+          ),
+      };
 }
