@@ -10,6 +10,12 @@ import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
+WidgetSize bt2WS(EzCP config) => switch (listBT(config)) {
+      ButtonType.icon || ButtonType.eIcon => WidgetSize.button,
+      ButtonType.text || ButtonType.eText => WidgetSize.tile,
+      ButtonType.textIcon || ButtonType.eTextIcon => WidgetSize.unbound,
+    };
+
 Future<void> canEdit(EzCP config, Future<void> Function() onSuccess) async {
   if (!authToEdit(config)) {
     await onSuccess.call();
@@ -50,18 +56,18 @@ Future<bool> liminalAuth(EzCP config, String reason) async {
       : Future<bool>.value(true);
 }
 
-Widget renderWidget(EzCP config, String entry) {
+Widget renderWidget(EzCP config, String entry, AppState state) {
   final List<String> data = entry.split(widgetSplit);
   final String type = data[0];
-  // final String size = data[1];
+  final String size = data[1];
 
   return switch (type) {
-    esCalendar => CalendarWidget(config),
-    esClock => ClockWidget(config),
-    esSearch => SearchWidget(config),
-    esStopwatch => StopwatchWidget(config),
-    esTimer => TimerWidget(config),
-    esToggleMedia => ToggleMediaWidget(config),
+    esCalendar => CalendarWidget(config, WSConfig.lookup(size), state),
+    esClock => ClockWidget(config, WSConfig.lookup(size), state),
+    esSearch => SearchWidget(config, WSConfig.lookup(size), state),
+    esStopwatch => StopwatchWidget(config, WSConfig.lookup(size), state),
+    esTimer => TimerWidget(config, WSConfig.lookup(size), state),
+    esToggleMedia => ToggleMediaWidget(config, WSConfig.lookup(size), state),
     _ => const SizedBox.shrink(),
   };
 }
