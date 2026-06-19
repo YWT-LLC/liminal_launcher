@@ -575,91 +575,111 @@ If you want to support Liminal's development, or the development of more Empathe
                               padding: EzInsets.wrap(config.spacing),
                               child: EzElevatedIconButton(
                                 config,
-                                onPressed: () => ezModal(
-                                  config,
-                                  context: context,
-                                  builder: (BuildContext wCon) =>
-                                      ezModalScroll(config, children: <Widget>[
-                                    // Calendar
-                                    EzIconButton(
-                                      config,
-                                      onPressed: () => appInfo.addHomeWidget(
-                                        config,
-                                        0,
-                                        WidWidGetGet.calendar,
-                                        WidgetSize.button,
-                                      ),
-                                      icon: EzIcon(config, Icons.edit_calendar),
-                                    ),
-                                    config.spacer,
+                                onPressed: () => ezModal(config, context: context, builder: (_) {
+                                  WidgetSize size = WidgetSize.system;
 
-                                    // Clock
-                                    EzIconButton(
-                                      config,
-                                      onPressed: () => appInfo.addHomeWidget(
+                                  return StatefulBuilder(
+                                    builder: (BuildContext wCon, StateSetter setModal) =>
+                                        ezModalScroll(config, children: <Widget>[
+                                      EzDropdownMenu<WidgetSize>(
                                         config,
-                                        0,
-                                        WidWidGetGet.clock,
-                                        WidgetSize.button,
+                                        enableSearch: false,
+                                        initialSelection: size,
+                                        widthEntry: WidgetSize.unbound.value,
+                                        dropdownMenuEntries: WidgetSize.values
+                                            .map((WidgetSize ws) => DropdownMenuEntry<WidgetSize>(
+                                                  value: ws,
+                                                  label: ezCamelToTitle(ws.value),
+                                                ))
+                                            .toList(),
+                                        onSelected: (WidgetSize? choice) {
+                                          if (choice == null) return;
+                                          setModal(() => size = choice);
+                                        },
                                       ),
-                                      icon: EzIcon(config, Icons.watch),
-                                    ), // TODO differentiate these two
-                                    config.spacer,
+                                      config.separator,
 
-                                    // Search
-                                    EzIconButton(
-                                      config,
-                                      onPressed: () => appInfo.addHomeWidget(
+                                      // Calendar
+                                      EzIconButton(
                                         config,
-                                        0,
-                                        WidWidGetGet.search,
-                                        WidgetSize.button,
-                                        extra: <String>[Engine.ducks.value],
+                                        onPressed: () => appInfo.addHomeWidget(
+                                          config,
+                                          0,
+                                          WidWidGetGet.calendar,
+                                          size,
+                                        ),
+                                        icon: EzIcon(config, Icons.edit_calendar),
                                       ),
-                                      icon: EzIcon(config, Icons.search),
-                                    ),
-                                    config.spacer,
+                                      config.spacer,
 
-                                    // Stopwatch
-                                    EzIconButton(
-                                      config,
-                                      onPressed: () => appInfo.addHomeWidget(
+                                      // Clock
+                                      EzIconButton(
                                         config,
-                                        0,
-                                        WidWidGetGet.stopwatch,
-                                        WidgetSize.button,
-                                      ),
-                                      icon: EzIcon(config, Icons.watch),
-                                    ), // THISN
-                                    config.spacer,
+                                        onPressed: () => appInfo.addHomeWidget(
+                                          config,
+                                          0,
+                                          WidWidGetGet.clock,
+                                          size,
+                                        ),
+                                        icon: EzIcon(config, Icons.watch),
+                                      ), // TODO: differentiate these two
+                                      config.spacer,
 
-                                    // Timer
-                                    EzIconButton(
-                                      config,
-                                      onPressed: () => appInfo.addHomeWidget(
+                                      // Search
+                                      EzIconButton(
                                         config,
-                                        0,
-                                        WidWidGetGet.timer,
-                                        WidgetSize.button,
+                                        onPressed: () => appInfo.addHomeWidget(
+                                          config,
+                                          0,
+                                          WidWidGetGet.search,
+                                          size,
+                                          extra: <String>[Engine.ducks.value],
+                                        ),
+                                        icon: EzIcon(config, Icons.search),
                                       ),
-                                      icon: EzIcon(config, Icons.timer),
-                                    ),
-                                    config.spacer,
+                                      config.spacer,
 
-                                    // Toggle media
-                                    EzIconButton(
-                                      config,
-                                      onPressed: () => appInfo.addHomeWidget(
+                                      // Stopwatch
+                                      EzIconButton(
                                         config,
-                                        0,
-                                        WidWidGetGet.toggleMedia,
-                                        WidgetSize.button,
+                                        onPressed: () => appInfo.addHomeWidget(
+                                          config,
+                                          0,
+                                          WidWidGetGet.stopwatch,
+                                          size,
+                                        ),
+                                        icon: EzIcon(config, Icons.watch),
+                                      ), // TODO: THIS'UN
+                                      config.spacer,
+
+                                      // Timer
+                                      EzIconButton(
+                                        config,
+                                        onPressed: () => appInfo.addHomeWidget(
+                                          config,
+                                          0,
+                                          WidWidGetGet.timer,
+                                          size,
+                                        ),
+                                        icon: EzIcon(config, Icons.timer),
                                       ),
-                                      icon: EzIcon(config, Icons.headphones),
-                                    ),
-                                    config.separator,
-                                  ]),
-                                ),
+                                      config.spacer,
+
+                                      // Toggle media
+                                      EzIconButton(
+                                        config,
+                                        onPressed: () => appInfo.addHomeWidget(
+                                          config,
+                                          0,
+                                          WidWidGetGet.toggleMedia,
+                                          size,
+                                        ),
+                                        icon: EzIcon(config, Icons.headphones),
+                                      ),
+                                      config.separator,
+                                    ]),
+                                  );
+                                }),
                                 label: 'Widgets',
                                 icon: EzIcon(config, Icons.widgets),
                               ),
