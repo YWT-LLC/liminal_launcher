@@ -56,18 +56,20 @@ Future<bool> liminalAuth(EzCP config, String reason) async {
       : Future<bool>.value(true);
 }
 
-Widget renderWidget(EzCP config, String entry, AppState state) {
-  final List<String> data = entry.split(widgetSplit);
-  final String type = data[0];
-  final String size = data[1];
-
-  return switch (type) {
-    esCalendar => CalendarWidget(config, WSConfig.lookup(size), state),
-    esClock => ClockWidget(config, WSConfig.lookup(size), state),
-    esSearch => SearchWidget(config, WSConfig.lookup(size), state),
-    esStopwatch => StopwatchWidget(config, WSConfig.lookup(size), state),
-    esTimer => TimerWidget(config, WSConfig.lookup(size), state),
-    esToggleMedia => ToggleMediaWidget(config, WSConfig.lookup(size), state),
-    _ => const SizedBox.shrink(),
-  };
-}
+Widget renderWidget(
+  EzCP config, {
+  required AppInfoProvider appInfo,
+  required int lane, // TODO: -1 for top, -2 for bottom
+  required int index,
+  required AppState state,
+  ValueNotifier<double>? rippleProgress, // TODO: something
+}) =>
+    switch (appInfo.homeList(config, lane)[index].split(widgetSplit)[0]) {
+      esCalendar => CalendarWidget(config, appInfo, lane, index, state),
+      esClock => ClockWidget(config, appInfo, lane, index, state),
+      esSearch => SearchWidget(config, appInfo, lane, index, state),
+      esStopwatch => StopwatchWidget(config, appInfo, lane, index, state),
+      esTimer => TimerWidget(config, appInfo, lane, index, state),
+      esToggleMedia => ToggleMediaWidget(config, appInfo, lane, index, state),
+      _ => const SizedBox.shrink(),
+    };
