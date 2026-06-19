@@ -95,6 +95,13 @@ extension WSConfig on WidgetSize {
         WidgetSize.tile => esTile,
         WidgetSize.unbound => esUnbound,
       };
+
+  static WidgetSize lookup(String? value) => switch (value) {
+        esButton => WidgetSize.button,
+        esTile => WidgetSize.tile,
+        esUnbound => WidgetSize.unbound,
+        esSystem || _ => WidgetSize.system,
+      };
 }
 
 //* Design settings (button) *//
