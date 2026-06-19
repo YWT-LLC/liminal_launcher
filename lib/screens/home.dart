@@ -414,10 +414,7 @@ If you want to support Liminal's development, or the development of more Empathe
   @override
   Widget build(BuildContext context) {
     return Consumer2<EzCP, AppInfoProvider>(builder: (_, EzCP config, AppInfoProvider appInfo, __) {
-      final bool topClock = topAlign.contains(vAlign(config));
-      final double clockSpacing = (config.spacing * 2) - (config.padding + (config.spacing / 2));
-      final Widget clockSpacer =
-          (clockSpacing > 0 ? EzSpacer(clockSpacing) : const SizedBox.shrink());
+      // Widget layer setup stuffs
 
       return LiminalScaffold(
         config,
@@ -447,8 +444,7 @@ If you want to support Liminal's development, or the development of more Empathe
             mainAxisAlignment: vAlign(config).mainAxis,
             crossAxisAlignment: hAlign(config).crossAxis,
             children: <Widget>[
-              // Clock I
-              if (topClock) ...<Widget>[ClockWidget(config), clockSpacer],
+              // TODO: implement top widgets
 
               // App list
               Expanded(
@@ -502,8 +498,7 @@ If you want to support Liminal's development, or the development of more Empathe
                 ),
               ),
 
-              // Clock II
-              if (!topClock) ...<Widget>[clockSpacer, ClockWidget(config)],
+              // TODO: implement bottom widgets
             ],
           ),
         ),
