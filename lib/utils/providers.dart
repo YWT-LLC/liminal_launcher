@@ -187,16 +187,24 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addHomeWidget(EzCP config, int lane, WidWidGetGet type, WidgetSize size) async {
-    if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane].add('${type.value}$widgetSplit${size.value}');
+  Future<void> addHomeWidget(
+    EzCP config,
+    int lane,
+    WidWidGetGet type,
+    WidgetSize size, {
+    List<String>? extra,
+  }) async {
+    final List<String> parts = (extra == null)
+        ? <String>[type.value, size.value]
+        : <String>[type.value, size.value, ...extra];
 
+    if (interlinked || config.isDark) {
+      _darkHomeMatrix[lane].add(parts.join(widgetSplit));
       unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane].add('${type.value}$widgetSplit${size.value}');
-
+      _lightHomeMatrix[lane].add(parts.join(widgetSplit));
       unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
     }
 
@@ -206,13 +214,11 @@ class AppInfoProvider extends ChangeNotifier {
   Future<void> addHomeLane(EzCP config) async {
     if (interlinked || config.isDark) {
       _darkHomeMatrix.add(<String>[]);
-
       unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
     }
 
     if (interlinked || !config.isDark) {
       _lightHomeMatrix.add(<String>[]);
-
       unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
     }
 
@@ -278,6 +284,32 @@ class AppInfoProvider extends ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  Future<void> updateWidget(
+    EzCP config,
+    WidWidGetGet type,
+    WidgetSize size, {
+    List<String>? extra,
+    required int lane,
+    required int index,
+    required bool notify,
+  }) async {
+    final List<String> parts = (extra == null)
+        ? <String>[type.value, size.value]
+        : <String>[type.value, size.value, ...extra];
+
+    if (interlinked || config.isDark) {
+      _darkHomeMatrix[lane][index] = parts.join(widgetSplit);
+      unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
+    }
+
+    if (interlinked || !config.isDark) {
+      _lightHomeMatrix[lane][index] = parts.join(widgetSplit);
+      unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
+    }
+
+    if (notify) notifyListeners();
   }
 
   void reorderHomeList(
