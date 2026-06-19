@@ -178,7 +178,14 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           toReturn.add(Padding(
             key: ValueKey<String>('$index-${entry.split(widgetSplit)[0]}'),
             padding: tilePadding,
-            child: renderWidget(config, entry, editing ? AppState.groupEdit : AppState.standard),
+            child: renderWidget(
+              config,
+              appInfo: appInfo,
+              lane: lane,
+              index: index,
+              state: editing ? AppState.groupEdit : AppState.standard,
+              rippleProgress: rippleProgress,
+            ),
           ));
           break;
 
@@ -607,6 +614,7 @@ If you want to support Liminal's development, or the development of more Empathe
                                         0,
                                         WidWidGetGet.search,
                                         WidgetSize.button,
+                                        extra: <String>[Engine.ducks.value],
                                       ),
                                       icon: EzIcon(config, Icons.search),
                                     ),
