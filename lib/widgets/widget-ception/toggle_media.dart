@@ -14,11 +14,24 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class ToggleMediaWidget extends StatelessWidget {
   final EzCP config;
-  late final WidgetSize _size;
+  final AppInfoProvider appInfo;
+  final int lane;
+  final int index;
   final AppState state;
 
-  ToggleMediaWidget(this.config, WidgetSize size, this.state, {super.key}) {
+  late final WidgetSize _size;
+  late final List<String>? _extra;
+  late final Future<void> Function(String, bool) _save;
+
+  ToggleMediaWidget(this.config, this.appInfo, this.lane, this.index, this.state, {super.key}) {
+    final List<String> data = appInfo.homeList(config, lane)[index].split(widgetSplit);
+
+    final WidgetSize size = WSConfig.lookup(data[1]);
     _size = (size == WidgetSize.system) ? bt2WS(config) : size;
+
+    _extra = data.length > 2 ? data.sublist(2) : null;
+
+    _save = (_, __) async {};
   }
 
   @override
