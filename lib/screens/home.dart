@@ -178,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           toReturn.add(Padding(
             key: ValueKey<String>('$index-${entry.split(widgetSplit)[0]}'),
             padding: tilePadding,
-            child: renderWidget(config, entry),
+            child: renderWidget(config, entry, editing ? AppState.groupEdit : AppState.standard),
           ));
           break;
 
