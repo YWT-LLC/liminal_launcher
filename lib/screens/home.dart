@@ -517,6 +517,11 @@ If you want to support Liminal's development, or the development of more Empathe
                 if (appInfo.numLanes(config) == 1) ...<Widget>[
                   AddFAB(config, () async {
                     final double screenWidth = widthOf(context);
+                    final Size searchBar = ezTextSize(
+                      'Search bar',
+                      context: context,
+                      style: config.bodyStyle,
+                    );
 
                     await ezModal(
                       config,
@@ -606,230 +611,288 @@ If you want to support Liminal's development, or the development of more Empathe
                                       config.separator,
 
                                       // Calendar
-                                      switch (preview) {
-                                        WidgetSize.button => EzIconButton(
-                                            config,
-                                            onPressed: () => appInfo.addHomeWidget(
+                                      EzRow(config, children: <Widget>[
+                                        Text(
+                                          'Calendar',
+                                          textAlign: TextAlign.center,
+                                          style: config.bodyStyle,
+                                        ),
+                                        config.rowSpacer,
+                                        switch (preview) {
+                                          WidgetSize.button => EzIconButton(
                                               config,
-                                              0,
-                                              WidWidGetGet.calendar,
-                                              size,
+                                              onPressed: () => appInfo.addHomeWidget(
+                                                config,
+                                                0,
+                                                WidWidGetGet.calendar,
+                                                size,
+                                              ),
+                                              icon: EzIcon(config, Icons.edit_calendar),
                                             ),
-                                            icon: EzIcon(config, Icons.edit_calendar),
-                                          ),
-                                        WidgetSize.tile => EzIconButton(
-                                            config,
-                                            onPressed: () => appInfo.addHomeWidget(
+                                          WidgetSize.tile => EzIconButton(
                                               config,
-                                              0,
-                                              WidWidGetGet.calendar,
-                                              size,
+                                              onPressed: () => appInfo.addHomeWidget(
+                                                config,
+                                                0,
+                                                WidWidGetGet.calendar,
+                                                size,
+                                              ),
+                                              icon: EzIcon(config, Icons.edit_calendar),
                                             ),
-                                            icon: EzIcon(config, Icons.edit_calendar),
-                                          ),
-                                        _ => EzIconButton(
-                                            config,
-                                            onPressed: () => appInfo.addHomeWidget(
+                                          _ => EzIconButton(
                                               config,
-                                              0,
-                                              WidWidGetGet.calendar,
-                                              size,
+                                              onPressed: () => appInfo.addHomeWidget(
+                                                config,
+                                                0,
+                                                WidWidGetGet.calendar,
+                                                size,
+                                              ),
+                                              icon: EzIcon(config, Icons.edit_calendar),
                                             ),
-                                            icon: EzIcon(config, Icons.edit_calendar),
-                                          ),
-                                      },
+                                        },
+                                      ]),
                                       config.spacer,
 
                                       // Clock
-                                      switch (preview) {
-                                        WidgetSize.button => EzIconButton(
-                                            config,
-                                            onPressed: () => appInfo.addHomeWidget(
+                                      EzRow(config, children: <Widget>[
+                                        Text(
+                                          'Clock',
+                                          textAlign: TextAlign.center,
+                                          style: config.bodyStyle,
+                                        ),
+                                        config.rowSpacer,
+                                        switch (preview) {
+                                          WidgetSize.button => EzIconButton(
                                               config,
-                                              0,
-                                              WidWidGetGet.clock,
-                                              size,
+                                              onPressed: () => appInfo.addHomeWidget(
+                                                config,
+                                                0,
+                                                WidWidGetGet.clock,
+                                                size,
+                                              ),
+                                              icon: EzIcon(config, Icons.watch),
                                             ),
-                                            icon: EzIcon(config, Icons.watch),
-                                          ),
-                                        WidgetSize.tile => EzIconButton(
-                                            config,
-                                            onPressed: () => appInfo.addHomeWidget(
+                                          WidgetSize.tile => EzIconButton(
                                               config,
-                                              0,
-                                              WidWidGetGet.clock,
-                                              size,
+                                              onPressed: () => appInfo.addHomeWidget(
+                                                config,
+                                                0,
+                                                WidWidGetGet.clock,
+                                                size,
+                                              ),
+                                              icon: EzIcon(config, Icons.watch),
                                             ),
-                                            icon: EzIcon(config, Icons.watch),
-                                          ),
-                                        _ => EzIconButton(
-                                            config,
-                                            onPressed: () => appInfo.addHomeWidget(
+                                          _ => EzIconButton(
                                               config,
-                                              0,
-                                              WidWidGetGet.clock,
-                                              size,
+                                              onPressed: () => appInfo.addHomeWidget(
+                                                config,
+                                                0,
+                                                WidWidGetGet.clock,
+                                                size,
+                                              ),
+                                              icon: EzIcon(config, Icons.watch),
                                             ),
-                                            icon: EzIcon(config, Icons.watch),
-                                          ),
-                                      },
+                                        },
+                                      ]),
                                       // TODO: differentiate these two
                                       config.spacer,
 
                                       // Search
-                                      switch (preview) {
-                                        WidgetSize.button => EzIconButton(
-                                            config,
-                                            onPressed: () => appInfo.addHomeWidget(
+                                      EzRow(config, children: <Widget>[
+                                        Text(
+                                          'Web',
+                                          textAlign: TextAlign.center,
+                                          style: config.bodyStyle,
+                                        ),
+                                        config.rowSpacer,
+                                        switch (preview) {
+                                          WidgetSize.button => EzIconButton(
                                               config,
-                                              0,
-                                              WidWidGetGet.search,
-                                              size,
-                                              extra: <String>[Engine.ducks.value],
+                                              onPressed: () => appInfo.addHomeWidget(
+                                                config,
+                                                0,
+                                                WidWidGetGet.search,
+                                                size,
+                                                extra: <String>[Engine.ducks.value],
+                                              ),
+                                              icon: EzIcon(config, Icons.search),
                                             ),
-                                            icon: EzIcon(config, Icons.search),
-                                          ),
-                                        _ => EzIconButton(
-                                            config,
-                                            onPressed: () => appInfo.addHomeWidget(
-                                              config,
-                                              0,
-                                              WidWidGetGet.search,
-                                              size,
-                                              extra: <String>[Engine.ducks.value],
-                                            ),
-                                            icon: EzRow(
-                                              config,
-                                              children: <Widget>[
-                                                ConstrainedBox(
-                                                  constraints: ezTextFieldConstraints(context),
-                                                  child: TextFormField(
-                                                    readOnly: true,
-                                                    decoration:
-                                                        const InputDecoration(hintText: 'Search'),
+                                          _ => GestureDetector(
+                                              onTap: () => appInfo.addHomeWidget(
+                                                config,
+                                                0,
+                                                WidWidGetGet.search,
+                                                size,
+                                                extra: <String>[Engine.ducks.value],
+                                              ),
+                                              child: EzRow(
+                                                config,
+                                                children: <Widget>[
+                                                  ConstrainedBox(
+                                                    constraints: BoxConstraints(
+                                                      maxWidth: searchBar.width + config.marginVal,
+                                                      maxHeight:
+                                                          searchBar.height + config.marginVal,
+                                                    ),
+                                                    child: TextFormField(
+                                                      onTap: () => appInfo.addHomeWidget(
+                                                        config,
+                                                        0,
+                                                        WidWidGetGet.search,
+                                                        size,
+                                                        extra: <String>[Engine.ducks.value],
+                                                      ),
+                                                      readOnly: true,
+                                                      decoration:
+                                                          const InputDecoration(hintText: 'Search'),
+                                                    ),
                                                   ),
-                                                ),
-                                                config.rowMargin,
-                                                EzIconButton(
-                                                  config,
-                                                  icon: EzIcon(config, Icons.search),
-                                                  onPressed: () => appInfo.addHomeWidget(
+                                                  config.rowMargin,
+                                                  EzIconButton(
                                                     config,
-                                                    0,
-                                                    WidWidGetGet.search,
-                                                    size,
-                                                    extra: <String>[Engine.ducks.value],
+                                                    icon: EzIcon(config, Icons.search),
+                                                    onPressed: () => appInfo.addHomeWidget(
+                                                      config,
+                                                      0,
+                                                      WidWidGetGet.search,
+                                                      size,
+                                                      extra: <String>[Engine.ducks.value],
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                      },
+                                        },
+                                      ]),
                                       config.spacer,
 
                                       // Stopwatch
-                                      switch (preview) {
-                                        WidgetSize.button => EzIconButton(
-                                            config,
-                                            onPressed: () => appInfo.addHomeWidget(
+                                      EzRow(config, children: <Widget>[
+                                        Text(
+                                          'Stopwatch',
+                                          textAlign: TextAlign.center,
+                                          style: config.bodyStyle,
+                                        ),
+                                        config.rowSpacer,
+                                        switch (preview) {
+                                          WidgetSize.button => EzIconButton(
                                               config,
-                                              0,
-                                              WidWidGetGet.stopwatch,
-                                              size,
+                                              onPressed: () => appInfo.addHomeWidget(
+                                                config,
+                                                0,
+                                                WidWidGetGet.stopwatch,
+                                                size,
+                                              ),
+                                              icon: EzIcon(config, Icons.watch),
                                             ),
-                                            icon: EzIcon(config, Icons.watch),
-                                          ),
-                                        WidgetSize.tile => EzIconButton(
-                                            config,
-                                            onPressed: () => appInfo.addHomeWidget(
+                                          WidgetSize.tile => EzIconButton(
                                               config,
-                                              0,
-                                              WidWidGetGet.stopwatch,
-                                              size,
+                                              onPressed: () => appInfo.addHomeWidget(
+                                                config,
+                                                0,
+                                                WidWidGetGet.stopwatch,
+                                                size,
+                                              ),
+                                              icon: EzIcon(config, Icons.watch),
                                             ),
-                                            icon: EzIcon(config, Icons.watch),
-                                          ),
-                                        _ => EzIconButton(
-                                            config,
-                                            onPressed: () => appInfo.addHomeWidget(
+                                          _ => EzIconButton(
                                               config,
-                                              0,
-                                              WidWidGetGet.stopwatch,
-                                              size,
+                                              onPressed: () => appInfo.addHomeWidget(
+                                                config,
+                                                0,
+                                                WidWidGetGet.stopwatch,
+                                                size,
+                                              ),
+                                              icon: EzIcon(config, Icons.watch),
                                             ),
-                                            icon: EzIcon(config, Icons.watch),
-                                          ),
-                                      }, // TODO: THIS'UN
+                                        },
+                                      ]), // TODO: THIS'UN
                                       config.spacer,
 
                                       // Timer
-                                      switch (preview) {
-                                        WidgetSize.button => EzIconButton(
-                                            config,
-                                            onPressed: () => appInfo.addHomeWidget(
+                                      EzRow(config, children: <Widget>[
+                                        Text(
+                                          'Timer',
+                                          textAlign: TextAlign.center,
+                                          style: config.bodyStyle,
+                                        ),
+                                        config.rowSpacer,
+                                        switch (preview) {
+                                          WidgetSize.button => EzIconButton(
                                               config,
-                                              0,
-                                              WidWidGetGet.timer,
-                                              size,
+                                              onPressed: () => appInfo.addHomeWidget(
+                                                config,
+                                                0,
+                                                WidWidGetGet.timer,
+                                                size,
+                                              ),
+                                              icon: EzIcon(config, Icons.timer),
                                             ),
-                                            icon: EzIcon(config, Icons.timer),
-                                          ),
-                                        WidgetSize.tile => EzIconButton(
-                                            config,
-                                            onPressed: () => appInfo.addHomeWidget(
+                                          WidgetSize.tile => EzIconButton(
                                               config,
-                                              0,
-                                              WidWidGetGet.timer,
-                                              size,
+                                              onPressed: () => appInfo.addHomeWidget(
+                                                config,
+                                                0,
+                                                WidWidGetGet.timer,
+                                                size,
+                                              ),
+                                              icon: EzIcon(config, Icons.timer),
                                             ),
-                                            icon: EzIcon(config, Icons.timer),
-                                          ),
-                                        _ => EzIconButton(
-                                            config,
-                                            onPressed: () => appInfo.addHomeWidget(
+                                          _ => EzIconButton(
                                               config,
-                                              0,
-                                              WidWidGetGet.timer,
-                                              size,
+                                              onPressed: () => appInfo.addHomeWidget(
+                                                config,
+                                                0,
+                                                WidWidGetGet.timer,
+                                                size,
+                                              ),
+                                              icon: EzIcon(config, Icons.timer),
                                             ),
-                                            icon: EzIcon(config, Icons.timer),
-                                          ),
-                                      },
+                                        },
+                                      ]),
                                       config.spacer,
 
                                       // Toggle media
-                                      switch (preview) {
-                                        WidgetSize.button => EzIconButton(
-                                            config,
-                                            onPressed: () => appInfo.addHomeWidget(
+                                      EzRow(config, children: <Widget>[
+                                        Text(
+                                          'Toggle media',
+                                          textAlign: TextAlign.center,
+                                          style: config.bodyStyle,
+                                        ),
+                                        config.rowSpacer,
+                                        switch (preview) {
+                                          WidgetSize.button => EzIconButton(
                                               config,
-                                              0,
-                                              WidWidGetGet.toggleMedia,
-                                              size,
+                                              onPressed: () => appInfo.addHomeWidget(
+                                                config,
+                                                0,
+                                                WidWidGetGet.toggleMedia,
+                                                size,
+                                              ),
+                                              icon: EzIcon(config, Icons.headphones),
                                             ),
-                                            icon: EzIcon(config, Icons.headphones),
-                                          ),
-                                        WidgetSize.tile => EzIconButton(
-                                            config,
-                                            onPressed: () => appInfo.addHomeWidget(
+                                          WidgetSize.tile => EzIconButton(
                                               config,
-                                              0,
-                                              WidWidGetGet.toggleMedia,
-                                              size,
+                                              onPressed: () => appInfo.addHomeWidget(
+                                                config,
+                                                0,
+                                                WidWidGetGet.toggleMedia,
+                                                size,
+                                              ),
+                                              icon: EzIcon(config, Icons.headphones),
                                             ),
-                                            icon: EzIcon(config, Icons.headphones),
-                                          ),
-                                        _ => EzIconButton(
-                                            config,
-                                            onPressed: () => appInfo.addHomeWidget(
+                                          _ => EzIconButton(
                                               config,
-                                              0,
-                                              WidWidGetGet.toggleMedia,
-                                              size,
+                                              onPressed: () => appInfo.addHomeWidget(
+                                                config,
+                                                0,
+                                                WidWidGetGet.toggleMedia,
+                                                size,
+                                              ),
+                                              icon: EzIcon(config, Icons.headphones),
                                             ),
-                                            icon: EzIcon(config, Icons.headphones),
-                                          ),
-                                      },
+                                        },
+                                      ]),
                                       config.separator,
                                     ]),
                                   );
