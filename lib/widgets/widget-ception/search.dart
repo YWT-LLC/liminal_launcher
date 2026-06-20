@@ -47,7 +47,6 @@ class _SearchWidgetState extends State<SearchWidget> {
   late Engine engine = Ignition.lookup(widget._storedEngine);
 
   Widget icon(EzCP config) => switch (engine) {
-        Engine.ask => EzIcon(config, Icons.question_mark),
         Engine.archive => EzIcon(config, Icons.archive),
         Engine.baidu => EzIcon(config, LineIcons.paw),
         Engine.bing => EzIcon(config, Icons.search),
@@ -96,7 +95,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                       ).width +
                       widget.config.padding,
                   maxHeight: appIconSize(widget.config),
-                ),
+                ), // TODO: block scroll events
                 child: TextFormField(
                   controller: widget._queryCon,
                   decoration: InputDecoration(hintText: engine.value),
