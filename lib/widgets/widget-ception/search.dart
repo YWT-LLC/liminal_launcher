@@ -10,9 +10,6 @@ import 'package:line_icons/line_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-// TODO: can I use voice to text? if yes, let the user override long press on the icon button for insta voice...
-// ...they will still be able to edit the widget in editing mode
-
 class SearchWidget extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
@@ -22,7 +19,6 @@ class SearchWidget extends StatefulWidget {
 
   late final WidgetSize _size;
   late final String _storedEngine;
-  late final TextEditingController _queryCon;
 
   SearchWidget(this.config, this.appInfo, this.lane, this.index, this.state, {super.key}) {
     final List<String> data = appInfo.homeList(config, lane)[index].split(widgetSplit);
@@ -31,7 +27,6 @@ class SearchWidget extends StatefulWidget {
     _size = (size == WidgetSize.system) ? bt2WS(config) : size;
 
     _storedEngine = data[2];
-    _queryCon = TextEditingController();
   }
 
   @override
@@ -42,6 +37,10 @@ class _SearchWidgetState extends State<SearchWidget> {
   // Define the build data //
 
   late Engine engine = Ignition.lookup(widget._storedEngine);
+  late final TextEditingController queryCon;
+  OverlayEntry? overlayEntry;
+
+  // Define custom functions //
 
   Widget icon(EzCP config) => switch (engine) {
         Engine.archive => EzIcon(config, Icons.archive),
@@ -59,16 +58,74 @@ class _SearchWidgetState extends State<SearchWidget> {
         Engine.youTube => EzIcon(config, LineIcons.youtube),
       };
 
-  // Define custom functions //
-
   void toggleChoices(MenuController c) => c.isOpen ? c.close() : c.open();
 
-  // Return the build //
+  void onChanged() {
+    final String text = queryCon.text.trim();
 
-  // TODO: hint text
-  // TODO: text in center of screen idea
-  // TODO: fix field size and alignment
-  // TODO: cleanup and tackle all of these, 40 is too many!!!!!
+    (text.isNotEmpty)
+        ? ((overlayEntry == null) ? showOverlay() : overlayEntry?.markNeedsBuild())
+        : removeOverlay();
+  }
+
+  void showOverlay() {
+    overlayEntry = OverlayEntry(
+      builder: (BuildContext context) => Positioned(
+        top: safeTop(context),
+        left: widget.config.marginVal,
+        right: widget.config.marginVal,
+        child: Material(
+          type: MaterialType.transparency,
+          child: IgnorePointer(
+            child: Container(
+              padding: EdgeInsets.all(widget.config.marginVal),
+              decoration: BoxDecoration(
+                color: widget.config.colors.surfaceContainer,
+                border: Border.all(
+                  color: widget.config.colors.secondaryContainer,
+                  width: widget.config.borderWidth,
+                ),
+                borderRadius: widget.config.textRadius,
+              ),
+              child: Text(
+                queryCon.text,
+                style: widget.config.bodyStyle,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    ezRootNav.currentState?.overlay?.insert(overlayEntry!);
+  }
+
+  Future<void> search(String text) async {
+    await launchUrl(Uri.https(
+      engine.base,
+      engine.path,
+      text.trim().isEmpty ? null : <String, dynamic>{engine.query: text.trim()},
+    ));
+
+    queryCon.clear();
+  }
+
+  void removeOverlay() {
+    overlayEntry?.remove();
+    overlayEntry = null;
+  }
+
+  // Init //
+
+  @override
+  void initState() {
+    super.initState();
+    queryCon = TextEditingController();
+    queryCon.addListener(onChanged);
+  }
+
+  // Return the build //
 
   @override
   Widget build(BuildContext context) {
@@ -92,17 +149,17 @@ class _SearchWidgetState extends State<SearchWidget> {
                       ).width +
                       widget.config.padding,
                   maxHeight: appIconSize(widget.config),
-                ), // TODO: block scroll events
-                child: TextFormField(
-                  controller: widget._queryCon,
-                  decoration: InputDecoration(hintText: engine.value),
-                  textAlign: TextAlign.center,
-                  textAlignVertical: TextAlignVertical.center,
-                  onFieldSubmitted: (String text) => launchUrl(Uri.https(
-                    engine.base,
-                    engine.path,
-                    text.trim().isEmpty ? null : <String, dynamic>{engine.query: text.trim()},
-                  )),
+                ),
+                child: NotificationListener<ScrollNotification>(
+                  // Block scroll notifications
+                  onNotification: (ScrollNotification notification) => true,
+                  child: TextFormField(
+                    controller: queryCon,
+                    decoration: InputDecoration(hintText: engine.value),
+                    textAlign: TextAlign.center,
+                    textAlignVertical: TextAlignVertical.center,
+                    onFieldSubmitted: search,
+                  ),
                 ),
               ),
               widget.config.rowMargin,
@@ -110,13 +167,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                 widget.config,
                 icon: icon(widget.config),
                 iconSize: appIconSize(widget.config),
-                onPressed: () => launchUrl(Uri.https(
-                  engine.base,
-                  engine.path,
-                  widget._queryCon.text.trim().isEmpty
-                      ? null
-                      : <String, dynamic>{engine.query: widget._queryCon.text.trim()},
-                )),
+                onPressed: () => search(queryCon.text),
                 onLongPress: () => toggleChoices(controller),
               ),
             ],
@@ -141,5 +192,13 @@ class _SearchWidgetState extends State<SearchWidget> {
               ))
           .toList(),
     );
+  }
+
+  @override
+  void dispose() {
+    queryCon.removeListener(onChanged);
+    queryCon.dispose();
+    removeOverlay();
+    super.dispose();
   }
 }
