@@ -34,10 +34,54 @@ class CalendarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => switch (_size) {
-        WidgetSize.system => const SizedBox.shrink(), // override above
-        WidgetSize.button || _ => EzIconButton(
+        WidgetSize.button => EzIconButton(
             config,
-            icon: EzIcon(config, Icons.edit_calendar),
+            iconSize: appIconSize(config),
+            icon: const Icon(Icons.edit_calendar),
+            onPressed: () async {
+              final bool success = await createCalendarEvent();
+
+              if (!success && context.mounted) {
+                await showDialog(
+                  context: context,
+                  builder: (_) => EzAlertDialog(
+                    config,
+                    title: const Text('Failed', textAlign: TextAlign.center),
+                    content: const Text(
+                      "There likely isn't a default calendar app.\nShall I self-destruct?",
+                      textAlign: TextAlign.center,
+                    ),
+                    actions: <Widget>[
+                      EzMaterialAction(
+                        config,
+                        text: 'Yes',
+                        onPressed: () async {
+                          Navigator.of(context).pop();
+                          await ezNoTouch(() async => await appInfo.deleteWidget(
+                                config,
+                                lane: lane,
+                                index: index,
+                              ));
+                        },
+                        isDestructiveAction: true,
+                        isDefaultAction: true,
+                      ),
+                      EzMaterialAction(
+                        config,
+                        text: 'No',
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                    ],
+                    needsClose: false,
+                  ),
+                );
+              }
+            },
+          ),
+        _ => EzIconButton(
+            config,
+            iconSize: appIconSize(config),
+            icon: const Icon(Icons.edit_calendar),
             onPressed: createCalendarEvent,
           ),
       };
