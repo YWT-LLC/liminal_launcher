@@ -79,6 +79,12 @@ class _SearchWidgetState extends State<SearchWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final Size searchBar = ezTextSize(
+      'Search bar',
+      context: context,
+      style: widget.config.bodyStyle,
+    );
+
     return MenuAnchor(
       builder: (_, MenuController controller, __) => switch (widget._size) {
         WidgetSize.button => EzIconButton(
@@ -87,33 +93,32 @@ class _SearchWidgetState extends State<SearchWidget> {
             onPressed: () => launchUrl(Uri.https(engine.base, '/')),
             onLongPress: () => toggleChoices(controller),
           ),
-        _ => EzIconButton(
+        _ => EzRow(
             widget.config,
-            icon: EzRow(
-              widget.config,
-              children: <Widget>[
-                ConstrainedBox(
-                  constraints: ezTextFieldConstraints(context),
-                  child: TextFormField(controller: widget._queryCon),
+            children: <Widget>[
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: searchBar.width + widget.config.marginVal,
+                  maxHeight: searchBar.height + widget.config.marginVal,
                 ),
-                widget.config.rowMargin,
-                EzIconButton(
-                  widget.config,
-                  icon: icon(widget.config),
-                  onPressed: () => launchUrl(Uri.https(
-                    engine.base,
-                    engine.path,
-                    widget._queryCon.text.trim().isEmpty
-                        ? null
-                        : <String, dynamic>{
-                            engine.query: widget._queryCon.text.trim(),
-                          },
-                  )),
-                  onLongPress: () => toggleChoices(controller),
-                ),
-              ],
-            ),
-            onLongPress: () => toggleChoices(controller),
+                child: TextFormField(controller: widget._queryCon),
+              ),
+              widget.config.rowMargin,
+              EzIconButton(
+                widget.config,
+                icon: icon(widget.config),
+                onPressed: () => launchUrl(Uri.https(
+                  engine.base,
+                  engine.path,
+                  widget._queryCon.text.trim().isEmpty
+                      ? null
+                      : <String, dynamic>{
+                          engine.query: widget._queryCon.text.trim(),
+                        },
+                )),
+                onLongPress: () => toggleChoices(controller),
+              ),
+            ],
           ),
       },
       menuChildren: Engine.values
