@@ -517,11 +517,6 @@ If you want to support Liminal's development, or the development of more Empathe
                 if (appInfo.numLanes(config) == 1) ...<Widget>[
                   AddFAB(config, () async {
                     final double screenWidth = widthOf(context);
-                    final Size searchBar = ezTextSize(
-                      'Search bar',
-                      context: context,
-                      style: config.bodyStyle,
-                    );
 
                     await ezModal(
                       config,
@@ -591,7 +586,7 @@ If you want to support Liminal's development, or the development of more Empathe
                                         config,
                                         enableSearch: false,
                                         initialSelection: size,
-                                        widthEntry: WidgetSize.unbound.value,
+                                        widthEntry: WidgetSize.system.value,
                                         dropdownMenuEntries: WidgetSize.values
                                             .map((WidgetSize ws) => DropdownMenuEntry<WidgetSize>(
                                                   value: ws,
@@ -608,6 +603,14 @@ If you want to support Liminal's development, or the development of more Empathe
                                           setModal(() {});
                                         },
                                       ),
+                                      if (size == WidgetSize.system) ...<Widget>[
+                                        config.margin,
+                                        Text(
+                                          'Currently: ${preview.value}',
+                                          textAlign: TextAlign.center,
+                                          style: config.labelStyle,
+                                        ),
+                                      ],
                                       config.separator,
 
                                       // Calendar
@@ -730,9 +733,13 @@ If you want to support Liminal's development, or the development of more Empathe
                                                 children: <Widget>[
                                                   ConstrainedBox(
                                                     constraints: BoxConstraints(
-                                                      maxWidth: searchBar.width + config.marginVal,
-                                                      maxHeight:
-                                                          searchBar.height + config.marginVal,
+                                                      maxWidth: ezTextSize(
+                                                            'Search bar',
+                                                            context: context,
+                                                            style: config.bodyStyle,
+                                                          ).width +
+                                                          config.padding,
+                                                      maxHeight: appIconSize(config),
                                                     ),
                                                     child: TextFormField(
                                                       onTap: () => appInfo.addHomeWidget(
@@ -745,6 +752,8 @@ If you want to support Liminal's development, or the development of more Empathe
                                                       readOnly: true,
                                                       decoration:
                                                           const InputDecoration(hintText: 'Search'),
+                                                      textAlign: TextAlign.center,
+                                                      textAlignVertical: TextAlignVertical.center,
                                                     ),
                                                   ),
                                                   config.rowMargin,
