@@ -21,15 +21,11 @@ class ClockWidget extends StatefulWidget {
   final int index;
   final AppState state;
 
-  late final WidgetSize _size;
   late final List<String>? _extra;
   late final Future<void> Function(String, bool) _save;
 
   ClockWidget(this.config, this.appInfo, this.lane, this.index, this.state, {super.key}) {
     final List<String> data = appInfo.homeList(config, lane)[index].split(widgetSplit);
-
-    final WidgetSize size = WSConfig.lookup(data[1]);
-    _size = (size == WidgetSize.system) ? bt2WS(config) : size;
 
     _extra = data.length > 2 ? data.sublist(2) : null;
 
@@ -58,31 +54,28 @@ class _ClockState extends State<ClockWidget> {
   }
 
   @override
-  Widget build(BuildContext context) => switch (widget._size) {
-        WidgetSize.system => const SizedBox.shrink(), // override above
-        WidgetSize.unbound || _ => EzTextBackground(
-            widget.config,
-            padding: EdgeInsets.all(widget.config.padding),
-            text: EzCol(
-              mainAxisAlignment: vAlign(widget.config).mainAxis,
-              crossAxisAlignment: hAlign(widget.config).crossAxis,
-              children: <Widget>[
-                if (homeTime(widget.config))
-                  Text(
-                    TimeOfDay.fromDateTime(now).format(context),
-                    style: widget.config.headlineStyle,
-                    textAlign: hAlign(widget.config).textAlign,
-                  ),
-                if (homeDate(widget.config) != DateType.none)
-                  Text(
-                    DTConfig.buildDate(context, now, homeDate(widget.config)),
-                    style: widget.config.labelStyle,
-                    textAlign: hAlign(widget.config).textAlign,
-                  ),
-              ],
-            ),
-          ),
-      };
+  Widget build(BuildContext context) => EzTextBackground(
+        widget.config,
+        padding: EdgeInsets.all(widget.config.padding),
+        text: EzCol(
+          mainAxisAlignment: vAlign(widget.config).mainAxis,
+          crossAxisAlignment: hAlign(widget.config).crossAxis,
+          children: <Widget>[
+            if (homeTime(widget.config))
+              Text(
+                TimeOfDay.fromDateTime(now).format(context),
+                style: widget.config.headlineStyle,
+                textAlign: hAlign(widget.config).textAlign,
+              ),
+            if (homeDate(widget.config) != DateType.none)
+              Text(
+                DTConfig.buildDate(context, now, homeDate(widget.config)),
+                style: widget.config.labelStyle,
+                textAlign: hAlign(widget.config).textAlign,
+              ),
+          ],
+        ),
+      );
 
   @override
   void dispose() {
