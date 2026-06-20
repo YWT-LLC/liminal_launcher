@@ -382,7 +382,8 @@ class _AppTileState extends State<AppTile> {
 
                     if (mounted) setState(() => state = AppState.standard);
                   },
-                  icon: Icon(
+                  icon: EzIcon(
+                    widget.config,
                     widget.appInfo.hiddenSet.contains(widget.app.id)
                         ? Icons.visibility
                         : Icons.visibility_off,
@@ -462,7 +463,7 @@ class AppButton extends StatelessWidget {
           Icon(
             Icons.question_mark,
             semanticLabel: app.name,
-            size: config.iconSize,
+            size: appIconSize(config),
           )
       : Image.memory(
           app.icon!,

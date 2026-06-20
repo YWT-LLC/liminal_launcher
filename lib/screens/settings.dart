@@ -29,7 +29,8 @@ class SettingsScreen extends StatelessWidget {
             EzSettingsSection(
               position: 0,
               title: config.ezL10n.gGlobal,
-              icon: Icon(
+              icon: EzIcon(
+                config,
                 EzCM.onMobile
                     ? EzCM.platform == TargetPlatform.iOS
                         ? Icons.phone_iphone
@@ -186,7 +187,8 @@ class SettingsScreen extends StatelessWidget {
             EzSettingsSection(
               position: 1,
               title: config.ezL10n.gColor,
-              icon: Icon(
+              icon: EzIcon(
+                config,
                 Icons.palette,
                 semanticLabel: config.ezL10n.gColor,
               ),
@@ -205,7 +207,8 @@ class SettingsScreen extends StatelessWidget {
             EzSettingsSection(
               position: 2,
               title: config.ezL10n.gDesign,
-              icon: Icon(
+              icon: EzIcon(
+                config,
                 Icons.design_services,
                 semanticLabel: config.ezL10n.gDesign,
               ),
@@ -287,7 +290,8 @@ class SettingsScreen extends StatelessWidget {
             EzSettingsSection(
               position: 3,
               title: config.ezL10n.gText,
-              icon: Icon(
+              icon: EzIcon(
+                config,
                 Icons.text_format,
                 semanticLabel: config.ezL10n.gText,
               ),

@@ -145,7 +145,7 @@ class _AppListScreenState extends State<AppListScreen> {
                   // Order
                   EzIconButton(
                     config,
-                    icon: Icon(ascList ? Icons.arrow_upward : Icons.arrow_downward),
+                    icon: EzIcon(config, ascList ? Icons.arrow_upward : Icons.arrow_downward),
                     onPressed: () async {
                       await EzCM.setBool(ascListKey, ascList);
 
