@@ -149,6 +149,32 @@ class MainActivity : FlutterFragmentActivity() {
           }
         }
 
+        "skipNext" -> {
+          try {
+            val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+              
+            audioManager.dispatchMediaKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_NEXT))
+            audioManager.dispatchMediaKeyEvent(KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_NEXT))
+              
+            result.success(true)
+          } catch (e: Exception) {
+            result.error("MEDIA_ERROR", "Could not skip to next", e.message)
+          }
+        }
+
+        "skipPrev" -> {
+          try {
+            val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+              
+            audioManager.dispatchMediaKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PREVIOUS))
+            audioManager.dispatchMediaKeyEvent(KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PREVIOUS))
+              
+            result.success(true)
+          } catch (e: Exception) {
+            result.error("MEDIA_ERROR", "Could not skip to previous", e.message)
+          }
+        }
+
         "toggleMedia" -> {
           try {
             val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
