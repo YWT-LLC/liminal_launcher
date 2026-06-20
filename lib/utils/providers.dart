@@ -592,6 +592,25 @@ For example: if an app has always on location permissions, banishing it will not
     if (!batch) notifyListeners();
   }
 
+  Future<void> deleteWidget(
+    EzCP config, {
+    required int lane,
+    required int index,
+    bool batch = false,
+  }) async {
+    if (interlinked || config.isDark) {
+      _darkHomeMatrix[lane].removeAt(index);
+      unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
+    }
+
+    if (interlinked || !config.isDark) {
+      _lightHomeMatrix[lane].removeAt(index);
+      unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
+    }
+
+    if (!batch) notifyListeners();
+  }
+
   Future<void> deleteLane(EzCP config, int lane) async {
     if (interlinked || config.isDark) {
       final List<String> entries = _darkHomeMatrix[lane];
@@ -602,7 +621,7 @@ For example: if an app has always on location permissions, banishing it will not
           entry.contains(folderSplit)
               ? await deleteFolder(config, lane: lane, index: index, batch: true)
               : await removeHomeApp(config, lane: lane, id: entry, batch: true);
-        }
+        } // TODO: account for widgets (below too)... that's it right?
       }
       _darkHomeMatrix.removeAt(lane);
 
