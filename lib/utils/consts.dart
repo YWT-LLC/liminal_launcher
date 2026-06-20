@@ -26,7 +26,7 @@ final AppInfo self = AppInfo(
 );
 
 /// Delay for home screen navigation when reaching the edge of a list
-const Duration scrollDelay = Duration(milliseconds: 100);
+const Duration scrollDelay = Duration(milliseconds: 200);
 
 //* App assets *//
 
