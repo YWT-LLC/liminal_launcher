@@ -42,23 +42,23 @@ class _SearchWidgetState extends State<SearchWidget> {
   late final TextEditingController queryCon;
   OverlayEntry? overlayEntry;
 
-  // Define custom functions //
-
-  Widget icon(EzCP config) => switch (engine) {
-        Engine.archive => EzIcon(config, Icons.archive),
-        Engine.baidu => EzIcon(config, LineIcons.paw),
-        Engine.bing => EzIcon(config, Icons.search),
-        Engine.ducks => EzIcon(config, Icons.bathtub),
-        Engine.ecosia => EzIcon(config, LineIcons.tree),
-        Engine.google => EzIcon(config, LineIcons.googleLogo),
-        Engine.naver => EzIcon(config, LineIcons.neos), // close enough
-        Engine.qwant => EzIcon(config, LineIcons.quora), // ditto
-        Engine.wikipedia => EzIcon(config, LineIcons.wikipediaW),
-        Engine.wolframAlpha => EzIcon(config, LineIcons.equals),
-        Engine.yahoo => EzIcon(config, LineIcons.yahooLogo),
-        Engine.yandex => EzIcon(config, LineIcons.yandex),
-        Engine.youTube => EzIcon(config, LineIcons.youtube),
+  Widget get icon => switch (engine) {
+        Engine.archive => const Icon(Icons.archive),
+        Engine.baidu => const Icon(LineIcons.paw),
+        Engine.bing => const Icon(Icons.search),
+        Engine.ducks => const Icon(Icons.bathtub),
+        Engine.ecosia => const Icon(LineIcons.tree),
+        Engine.google => const Icon(LineIcons.googleLogo),
+        Engine.naver => const Icon(LineIcons.neos), // close enough
+        Engine.qwant => const Icon(LineIcons.quora), // ditto
+        Engine.wikipedia => const Icon(LineIcons.wikipediaW),
+        Engine.wolframAlpha => const Icon(LineIcons.equals),
+        Engine.yahoo => const Icon(LineIcons.yahooLogo),
+        Engine.yandex => const Icon(LineIcons.yandex),
+        Engine.youTube => const Icon(LineIcons.youtube),
       };
+
+  // Define custom functions //
 
   void toggleChoices(MenuController c) => c.isOpen ? c.close() : c.open();
 
@@ -135,7 +135,8 @@ class _SearchWidgetState extends State<SearchWidget> {
       builder: (_, MenuController controller, __) => switch (widget._size) {
         WidgetSize.button => EzIconButton(
             widget.config,
-            icon: icon(widget.config),
+            icon: icon,
+            iconSize: appIconSize(widget.config),
             onPressed: () => launchUrl(Uri.https(engine.base, '/')),
             onLongPress: () => toggleChoices(controller),
           ),
@@ -167,7 +168,7 @@ class _SearchWidgetState extends State<SearchWidget> {
               widget.config.rowMargin,
               EzIconButton(
                 widget.config,
-                icon: icon(widget.config),
+                icon: icon,
                 iconSize: appIconSize(widget.config),
                 onPressed: () => search(queryCon.text),
                 onLongPress: () => toggleChoices(controller),
