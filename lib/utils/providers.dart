@@ -151,7 +151,7 @@ class AppInfoProvider extends ChangeNotifier {
         if (listConfig.listContent.contains(ListContent.banished)) ..._banishedSet,
       };
 
-  // Put //
+  // Put // TODO: add a positioned check mark when things are successfully added (modals often block view)
 
   Future<void> addHomeApp(EzCP config, {required int lane, required String id}) async {
     if ((interlinked || config.isDark) && !_darkHomeSet.contains(id)) {
