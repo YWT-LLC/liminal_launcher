@@ -87,6 +87,22 @@ Future<void> setTimer({int? seconds, bool auto = true}) async {
   }
 }
 
+Future<void> skipNext() async {
+  try {
+    await platform.invokeMethod('skipNext');
+  } catch (e) {
+    ezLog('Failed to skip to next media: $e');
+  }
+}
+
+Future<void> skipPrev() async {
+  try {
+    await platform.invokeMethod('skipPrev');
+  } catch (e) {
+    ezLog('Failed to skip to previous media: $e');
+  }
+}
+
 Future<void> toggleMedia() async {
   try {
     await platform.invokeMethod('toggleMedia');
