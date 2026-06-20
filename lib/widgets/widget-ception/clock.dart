@@ -10,9 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 // TODO: analog shout-out for different versions
-// TODO: short and long press for everything
-// TODO: have a tool tipper on the add screen that describes what it does ahead of time
-// TODO: at least two, preferably three sizes for everything
 
 class ClockWidget extends StatefulWidget {
   final EzCP config;

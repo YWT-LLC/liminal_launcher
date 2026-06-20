@@ -10,9 +10,6 @@ import 'package:line_icons/line_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-// TODO: short and long press for everything
-// TODO: have a tool tipper on the add screen that describes what it does ahead of time
-// TODO: at least two, preferably three sizes for everything
 // TODO: can I use voice to text? if yes, let the user override long press on the icon button for insta voice...
 // ...they will still be able to edit the widget in editing mode
 
