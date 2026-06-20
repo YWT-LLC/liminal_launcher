@@ -60,30 +60,36 @@ Future<void> openDelete(AppInfo app) async {
 
 // Widgets //
 
-Future<void> createCalendarEvent() async {
+Future<bool> createCalendarEvent() async {
   try {
     await platform.invokeMethod('createCalendarEvent');
+    return true;
   } catch (e) {
     ezLog('Failed to create calendar event: $e');
+    return false;
   }
 }
 
-Future<void> openStopwatch() async {
+Future<bool> openStopwatch() async {
   try {
     await platform.invokeMethod('openStopwatch');
+    return true;
   } catch (e) {
     ezLog('Failed to open stopwatch: $e');
+    return false;
   }
 }
 
-Future<void> setTimer({int? seconds, bool auto = true}) async {
+Future<bool> setTimer({int? seconds, bool auto = true}) async {
   try {
     await platform.invokeMethod('setTimer', <String, dynamic>{
       if (seconds != null) 'length': seconds,
       'skipUi': auto,
     });
+    return true;
   } catch (e) {
     ezLog('Failed to set timer: $e');
+    return false;
   }
 }
 
