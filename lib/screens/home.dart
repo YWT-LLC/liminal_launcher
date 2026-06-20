@@ -577,7 +577,7 @@ If you want to support Liminal's development, or the development of more Empathe
                                 config,
                                 onPressed: () => ezModal(config, context: context, builder: (_) {
                                   WidgetSize size = WidgetSize.system;
-                                  WidgetSize prevSize = bt2WS(config);
+                                  WidgetSize preview = bt2WS(config);
 
                                   return StatefulBuilder(
                                     builder: (BuildContext wCon, StateSetter setModal) =>
@@ -596,7 +596,7 @@ If you want to support Liminal's development, or the development of more Empathe
                                         onSelected: (WidgetSize? choice) {
                                           if (choice == null) return;
                                           size = choice;
-                                          prevSize = (choice == WidgetSize.system)
+                                          preview = (choice == WidgetSize.system)
                                               ? bt2WS(config)
                                               : choice;
 
@@ -606,7 +606,27 @@ If you want to support Liminal's development, or the development of more Empathe
                                       config.separator,
 
                                       // Calendar
-                                      switch (prevSize) {
+                                      switch (preview) {
+                                        WidgetSize.button => EzIconButton(
+                                            config,
+                                            onPressed: () => appInfo.addHomeWidget(
+                                              config,
+                                              0,
+                                              WidWidGetGet.calendar,
+                                              size,
+                                            ),
+                                            icon: EzIcon(config, Icons.edit_calendar),
+                                          ),
+                                        WidgetSize.tile => EzIconButton(
+                                            config,
+                                            onPressed: () => appInfo.addHomeWidget(
+                                              config,
+                                              0,
+                                              WidWidGetGet.calendar,
+                                              size,
+                                            ),
+                                            icon: EzIcon(config, Icons.edit_calendar),
+                                          ),
                                         _ => EzIconButton(
                                             config,
                                             onPressed: () => appInfo.addHomeWidget(
@@ -621,7 +641,27 @@ If you want to support Liminal's development, or the development of more Empathe
                                       config.spacer,
 
                                       // Clock
-                                      switch (prevSize) {
+                                      switch (preview) {
+                                        WidgetSize.button => EzIconButton(
+                                            config,
+                                            onPressed: () => appInfo.addHomeWidget(
+                                              config,
+                                              0,
+                                              WidWidGetGet.clock,
+                                              size,
+                                            ),
+                                            icon: EzIcon(config, Icons.watch),
+                                          ),
+                                        WidgetSize.tile => EzIconButton(
+                                            config,
+                                            onPressed: () => appInfo.addHomeWidget(
+                                              config,
+                                              0,
+                                              WidWidGetGet.clock,
+                                              size,
+                                            ),
+                                            icon: EzIcon(config, Icons.watch),
+                                          ),
                                         _ => EzIconButton(
                                             config,
                                             onPressed: () => appInfo.addHomeWidget(
@@ -637,8 +677,8 @@ If you want to support Liminal's development, or the development of more Empathe
                                       config.spacer,
 
                                       // Search
-                                      switch (prevSize) {
-                                        _ => EzIconButton(
+                                      switch (preview) {
+                                        WidgetSize.button => EzIconButton(
                                             config,
                                             onPressed: () => appInfo.addHomeWidget(
                                               config,
@@ -649,11 +689,66 @@ If you want to support Liminal's development, or the development of more Empathe
                                             ),
                                             icon: EzIcon(config, Icons.search),
                                           ),
+                                        _ => EzIconButton(
+                                            config,
+                                            onPressed: () => appInfo.addHomeWidget(
+                                              config,
+                                              0,
+                                              WidWidGetGet.search,
+                                              size,
+                                              extra: <String>[Engine.ducks.value],
+                                            ),
+                                            icon: EzRow(
+                                              config,
+                                              children: <Widget>[
+                                                ConstrainedBox(
+                                                  constraints: ezTextFieldConstraints(context),
+                                                  child: TextFormField(
+                                                    readOnly: true,
+                                                    decoration:
+                                                        const InputDecoration(hintText: 'Search'),
+                                                  ),
+                                                ),
+                                                config.rowMargin,
+                                                EzIconButton(
+                                                  config,
+                                                  icon: EzIcon(config, Icons.search),
+                                                  onPressed: () => appInfo.addHomeWidget(
+                                                    config,
+                                                    0,
+                                                    WidWidGetGet.search,
+                                                    size,
+                                                    extra: <String>[Engine.ducks.value],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
                                       },
                                       config.spacer,
 
                                       // Stopwatch
-                                      switch (prevSize) {
+                                      switch (preview) {
+                                        WidgetSize.button => EzIconButton(
+                                            config,
+                                            onPressed: () => appInfo.addHomeWidget(
+                                              config,
+                                              0,
+                                              WidWidGetGet.stopwatch,
+                                              size,
+                                            ),
+                                            icon: EzIcon(config, Icons.watch),
+                                          ),
+                                        WidgetSize.tile => EzIconButton(
+                                            config,
+                                            onPressed: () => appInfo.addHomeWidget(
+                                              config,
+                                              0,
+                                              WidWidGetGet.stopwatch,
+                                              size,
+                                            ),
+                                            icon: EzIcon(config, Icons.watch),
+                                          ),
                                         _ => EzIconButton(
                                             config,
                                             onPressed: () => appInfo.addHomeWidget(
@@ -668,7 +763,27 @@ If you want to support Liminal's development, or the development of more Empathe
                                       config.spacer,
 
                                       // Timer
-                                      switch (prevSize) {
+                                      switch (preview) {
+                                        WidgetSize.button => EzIconButton(
+                                            config,
+                                            onPressed: () => appInfo.addHomeWidget(
+                                              config,
+                                              0,
+                                              WidWidGetGet.timer,
+                                              size,
+                                            ),
+                                            icon: EzIcon(config, Icons.timer),
+                                          ),
+                                        WidgetSize.tile => EzIconButton(
+                                            config,
+                                            onPressed: () => appInfo.addHomeWidget(
+                                              config,
+                                              0,
+                                              WidWidGetGet.timer,
+                                              size,
+                                            ),
+                                            icon: EzIcon(config, Icons.timer),
+                                          ),
                                         _ => EzIconButton(
                                             config,
                                             onPressed: () => appInfo.addHomeWidget(
@@ -683,7 +798,27 @@ If you want to support Liminal's development, or the development of more Empathe
                                       config.spacer,
 
                                       // Toggle media
-                                      switch (prevSize) {
+                                      switch (preview) {
+                                        WidgetSize.button => EzIconButton(
+                                            config,
+                                            onPressed: () => appInfo.addHomeWidget(
+                                              config,
+                                              0,
+                                              WidWidGetGet.toggleMedia,
+                                              size,
+                                            ),
+                                            icon: EzIcon(config, Icons.headphones),
+                                          ),
+                                        WidgetSize.tile => EzIconButton(
+                                            config,
+                                            onPressed: () => appInfo.addHomeWidget(
+                                              config,
+                                              0,
+                                              WidWidGetGet.toggleMedia,
+                                              size,
+                                            ),
+                                            icon: EzIcon(config, Icons.headphones),
+                                          ),
                                         _ => EzIconButton(
                                             config,
                                             onPressed: () => appInfo.addHomeWidget(
