@@ -10,6 +10,8 @@ import 'package:line_icons/line_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
+// TODO: states, ripples, and edits
+
 class SearchWidget extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
