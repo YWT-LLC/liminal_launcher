@@ -42,7 +42,7 @@ class ToggleMediaWidget extends StatelessWidget {
             icon: EzIcon(config, Icons.headphones),
             onPressed: toggleMedia,
           ),
-        WidgetSize.tile || WidgetSize.unbound => elevatedLists(config)
+        WidgetSize.tile => elevatedLists(config)
             ? EzIconButton(
                 config,
                 icon: EzRow(config, children: <Widget>[

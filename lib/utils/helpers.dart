@@ -12,8 +12,7 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 WidgetSize bt2WS(EzCP config) => switch (listBT(config)) {
       ButtonType.icon || ButtonType.eIcon => WidgetSize.button,
-      ButtonType.text || ButtonType.eText => WidgetSize.tile,
-      ButtonType.textIcon || ButtonType.eTextIcon => WidgetSize.unbound,
+      _ => WidgetSize.tile,
     };
 
 Future<void> canEdit(EzCP config, Future<void> Function() onSuccess) async {
