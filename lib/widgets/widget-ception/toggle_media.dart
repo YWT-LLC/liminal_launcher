@@ -8,6 +8,8 @@ import '../../utils/export.dart';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
+// TODO: states, ripples, and edits
+
 class ToggleMediaWidget extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
@@ -16,69 +18,48 @@ class ToggleMediaWidget extends StatelessWidget {
   final AppState state;
 
   late final WidgetSize _size;
-  late final List<String>? _extra;
-  late final Future<void> Function(String, bool) _save;
 
   ToggleMediaWidget(this.config, this.appInfo, this.lane, this.index, this.state, {super.key}) {
     final List<String> data = appInfo.homeList(config, lane)[index].split(widgetSplit);
 
     final WidgetSize size = WSConfig.lookup(data[1]);
     _size = (size == WidgetSize.system) ? bt2WS(config) : size;
-
-    _extra = data.length > 2 ? data.sublist(2) : null;
-
-    _save = (_, __) async {};
   }
 
   @override
   Widget build(BuildContext context) => switch (_size) {
-        WidgetSize.system => const SizedBox.shrink(), // override above
         WidgetSize.button => EzIconButton(
             config,
             icon: EzIcon(config, Icons.headphones),
             onPressed: toggleMedia,
           ),
-        WidgetSize.tile => elevatedLists(config)
-            ? EzIconButton(
-                config,
-                icon: EzRow(config, children: <Widget>[
-                  // Previous
-                  GestureDetector(
-                    onTap: doNothing,
-                    child: EzIcon(config, Icons.skip_previous),
-                  ),
+        _ => EzIconButton(
+            config,
+            icon: EzRow(config, children: <Widget>[
+              // Previous
+              config.rowMargin,
+              GestureDetector(
+                onTap: skipPrev,
+                child: Icon(Icons.skip_previous, size: appIconSize(config)),
+              ),
+              config.rowSpacer,
 
-                  // Play/pause
-                  GestureDetector(
-                    onTap: toggleMedia,
-                    child: EzIcon(config, Icons.headphones),
-                  ),
+              // Play/pause
+              GestureDetector(
+                onTap: toggleMedia,
+                child: Icon(Icons.headphones, size: appIconSize(config)),
+              ),
+              config.rowSpacer,
 
-                  // Next
-                  GestureDetector(
-                    onTap: doNothing,
-                    child: EzIcon(config, Icons.skip_next),
-                  ),
-                ]),
-              )
-            : EzRow(config, children: <Widget>[
-                // Previous
-                GestureDetector(
-                  onTap: doNothing,
-                  child: EzIcon(config, Icons.skip_previous),
-                ),
-
-                // Play/pause
-                GestureDetector(
-                  onTap: toggleMedia,
-                  child: EzIcon(config, Icons.headphones),
-                ),
-
-                // Next
-                GestureDetector(
-                  onTap: doNothing,
-                  child: EzIcon(config, Icons.skip_next),
-                ),
-              ]),
+              // Next
+              GestureDetector(
+                onTap: skipNext,
+                child: Icon(Icons.skip_next, size: appIconSize(config)),
+              ),
+              config.rowMargin,
+            ]),
+            onPressed: doNothing,
+            onLongPress: doNothing,
+          ),
       };
 }
