@@ -284,7 +284,6 @@ const Set<ListAlignment> topAlign = <ListAlignment>{
 //* Widgets *//
 
 enum Engine {
-  ask,
   archive,
   baidu,
   bing,
@@ -300,7 +299,6 @@ enum Engine {
   youTube,
 }
 
-const String _ask = 'ask';
 const String _archive = 'archive';
 const String _baidu = 'baidu';
 const String _bing = 'bing';
@@ -317,7 +315,6 @@ const String _youTube = 'youTube';
 
 extension Ignition on Engine {
   String get value => switch (this) {
-        Engine.ask => _ask,
         Engine.archive => _archive,
         Engine.baidu => _baidu,
         Engine.bing => _bing,
@@ -334,7 +331,6 @@ extension Ignition on Engine {
       };
 
   String get base => switch (this) {
-        Engine.ask => 'ask.com',
         Engine.archive => 'archive.org',
         Engine.baidu => 'baidu.com',
         Engine.bing => 'bing.com',
@@ -351,7 +347,6 @@ extension Ignition on Engine {
       };
 
   String get path => switch (this) {
-        Engine.ask => '/web',
         Engine.archive => '/search',
         Engine.baidu => '/s',
         Engine.bing => '/search',
@@ -368,7 +363,6 @@ extension Ignition on Engine {
       };
 
   String get query => switch (this) {
-        Engine.ask => 'q',
         Engine.archive => 'query',
         Engine.baidu => 'wd',
         Engine.bing => 'q',
@@ -385,7 +379,6 @@ extension Ignition on Engine {
       };
 
   static Engine lookup(String value) => switch (value) {
-        _ask => Engine.ask,
         _archive => Engine.archive,
         _baidu => Engine.baidu,
         _bing => Engine.bing,
