@@ -229,7 +229,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                 ),
                 menuChildren: <Widget>[
                   // Left
-                  if (lane > 0) // TODO: wurks in end mode? centa?
+                  if (lane > 0) // TODO: works in end mode? center?
                     MenuItemButton(
                       onPressed: doNothing,
                       child: EzIcon(config, Icons.keyboard_arrow_left),
