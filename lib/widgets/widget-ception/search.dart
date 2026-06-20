@@ -77,6 +77,11 @@ class _SearchWidgetState extends State<SearchWidget> {
 
   // Return the build //
 
+  // TODO: hint text
+  // TODO: text in center of screen idea
+  // TODO: fix field size and alignment
+  // TODO: cleanup and tackle all of these, 40 is too many!!!!!
+
   @override
   Widget build(BuildContext context) {
     final Size searchBar = ezTextSize(
