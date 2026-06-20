@@ -77,7 +77,7 @@ extension WWGGConfig on WidWidGetGet {
       };
 }
 
-enum WidgetSize { system, button, tile, unbound }
+enum WidgetSize { system, button, tile }
 
 /// enum [String] 'button'
 const String esButton = 'button';
@@ -85,21 +85,16 @@ const String esButton = 'button';
 /// enum [String] 'tile'
 const String esTile = 'tile';
 
-/// enum [String] 'unbound'
-const String esUnbound = 'unbound';
-
 extension WSConfig on WidgetSize {
   String get value => switch (this) {
         WidgetSize.system => esSystem,
         WidgetSize.button => esButton,
         WidgetSize.tile => esTile,
-        WidgetSize.unbound => esUnbound,
       };
 
   static WidgetSize lookup(String? value) => switch (value) {
         esButton => WidgetSize.button,
         esTile => WidgetSize.tile,
-        esUnbound => WidgetSize.unbound,
         esSystem || _ => WidgetSize.system,
       };
 }
