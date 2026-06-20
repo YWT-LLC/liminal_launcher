@@ -30,7 +30,8 @@ class ToggleMediaWidget extends StatelessWidget {
   Widget build(BuildContext context) => switch (_size) {
         WidgetSize.button => EzIconButton(
             config,
-            icon: EzIcon(config, Icons.headphones),
+            iconSize: appIconSize(config),
+            icon: const Icon(Icons.headphones),
             onPressed: toggleMedia,
           ),
         _ => EzIconButton(
