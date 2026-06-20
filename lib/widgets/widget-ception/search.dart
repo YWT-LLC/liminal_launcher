@@ -81,47 +81,40 @@ class _SearchWidgetState extends State<SearchWidget> {
   Widget build(BuildContext context) {
     return MenuAnchor(
       builder: (_, MenuController controller, __) => switch (widget._size) {
-        WidgetSize.system => const SizedBox.shrink(), // override above
         WidgetSize.button => EzIconButton(
             widget.config,
             icon: icon(widget.config),
             onPressed: () => launchUrl(Uri.https(engine.base, '/')),
             onLongPress: () => toggleChoices(controller),
           ),
-        WidgetSize.tile => elevatedLists(widget.config)
-            ? EzIconButton(
-                widget.config,
-                icon: EzRow(
-                  widget.config,
-                  children: <Widget>[
-                    ConstrainedBox(
-                      constraints: ezTextFieldConstraints(context),
-                      child: TextFormField(controller: widget._queryCon),
-                    ),
-                    widget.config.rowMargin,
-                    EzIconButton(
-                      widget.config,
-                      icon: icon(widget.config),
-                      onPressed: () => launchUrl(Uri.https(
-                        engine.base,
-                        engine.path,
-                        widget._queryCon.text.trim().isEmpty
-                            ? null
-                            : <String, dynamic>{
-                                engine.query: widget._queryCon.text.trim(),
-                              },
-                      )),
-                      onLongPress: () => toggleChoices(controller),
-                    ),
-                  ],
+        _ => EzIconButton(
+            widget.config,
+            icon: EzRow(
+              widget.config,
+              children: <Widget>[
+                ConstrainedBox(
+                  constraints: ezTextFieldConstraints(context),
+                  child: TextFormField(controller: widget._queryCon),
                 ),
-                onLongPress: () => toggleChoices(controller),
-              )
-            : EzRow(
-                widget.config,
-                children: <Widget>[],
-              ),
-        WidgetSize.unbound => const SizedBox.shrink(), // TODO
+                widget.config.rowMargin,
+                EzIconButton(
+                  widget.config,
+                  icon: icon(widget.config),
+                  onPressed: () => launchUrl(Uri.https(
+                    engine.base,
+                    engine.path,
+                    widget._queryCon.text.trim().isEmpty
+                        ? null
+                        : <String, dynamic>{
+                            engine.query: widget._queryCon.text.trim(),
+                          },
+                  )),
+                  onLongPress: () => toggleChoices(controller),
+                ),
+              ],
+            ),
+            onLongPress: () => toggleChoices(controller),
+          ),
       },
       menuChildren: Engine.values
           .map((Engine e) => EzMenuButton(
