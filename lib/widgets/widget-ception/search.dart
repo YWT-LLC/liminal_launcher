@@ -54,16 +54,8 @@ class _SearchWidgetState extends State<SearchWidget> {
         Engine.ducks => EzIcon(config, Icons.bathtub),
         Engine.ecosia => EzIcon(config, LineIcons.tree),
         Engine.google => EzIcon(config, LineIcons.googleLogo),
-        Engine.naver => Text(
-            'N',
-            textAlign: TextAlign.center,
-            style: config.labelStyle?.copyWith(fontSize: config.iconSize),
-          ),
-        Engine.qwant => Text(
-            'Q',
-            textAlign: TextAlign.center,
-            style: config.labelStyle?.copyWith(fontSize: config.iconSize),
-          ), // TODO: how do these look?
+        Engine.naver => EzIcon(config, LineIcons.neos), // close enough
+        Engine.qwant => EzIcon(config, LineIcons.quora), // ditto
         Engine.wikipedia => EzIcon(config, LineIcons.wikipediaW),
         Engine.wolframAlpha => EzIcon(config, LineIcons.equals),
         Engine.yahoo => EzIcon(config, LineIcons.yahooLogo),
@@ -84,12 +76,6 @@ class _SearchWidgetState extends State<SearchWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final Size searchBar = ezTextSize(
-      'Search bar',
-      context: context,
-      style: widget.config.bodyStyle,
-    );
-
     return MenuAnchor(
       builder: (_, MenuController controller, __) => switch (widget._size) {
         WidgetSize.button => EzIconButton(
@@ -103,23 +89,37 @@ class _SearchWidgetState extends State<SearchWidget> {
             children: <Widget>[
               ConstrainedBox(
                 constraints: BoxConstraints(
-                  maxWidth: searchBar.width + widget.config.marginVal,
-                  maxHeight: searchBar.height + widget.config.marginVal,
+                  maxWidth: ezTextSize(
+                        'Search bar',
+                        context: context,
+                        style: widget.config.bodyStyle,
+                      ).width +
+                      widget.config.padding,
+                  maxHeight: appIconSize(widget.config),
                 ),
-                child: TextFormField(controller: widget._queryCon),
+                child: TextFormField(
+                  controller: widget._queryCon,
+                  decoration: InputDecoration(hintText: engine.value),
+                  textAlign: TextAlign.center,
+                  textAlignVertical: TextAlignVertical.center,
+                  onFieldSubmitted: (String text) => launchUrl(Uri.https(
+                    engine.base,
+                    engine.path,
+                    text.trim().isEmpty ? null : <String, dynamic>{engine.query: text.trim()},
+                  )),
+                ),
               ),
               widget.config.rowMargin,
               EzIconButton(
                 widget.config,
                 icon: icon(widget.config),
+                iconSize: appIconSize(widget.config),
                 onPressed: () => launchUrl(Uri.https(
                   engine.base,
                   engine.path,
                   widget._queryCon.text.trim().isEmpty
                       ? null
-                      : <String, dynamic>{
-                          engine.query: widget._queryCon.text.trim(),
-                        },
+                      : <String, dynamic>{engine.query: widget._queryCon.text.trim()},
                 )),
                 onLongPress: () => toggleChoices(controller),
               ),
@@ -130,7 +130,6 @@ class _SearchWidgetState extends State<SearchWidget> {
           .map((Engine e) => EzMenuButton(
                 widget.config,
                 label: ezCamelToTitle(e.value),
-                icon: icon(widget.config),
                 onPressed: () async {
                   setState(() => engine = e);
                   await widget.appInfo.updateWidget(
