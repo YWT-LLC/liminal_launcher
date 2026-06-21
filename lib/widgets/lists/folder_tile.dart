@@ -13,6 +13,8 @@ import 'package:go_router/go_router.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 // TODO: custom icons, new edit container
+// TODO: re-use the size calc for should edit scroll for should folders scroll
+// TODO: when no, open a modal... potentially need to change others to modals as well, depending on how the anchor menus play with the constrained boxes
 
 class FolderTile extends StatefulWidget {
   final EzCP config;
