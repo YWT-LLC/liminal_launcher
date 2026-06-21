@@ -4,6 +4,7 @@
  */
 
 import '../../utils/export.dart';
+import '../export.dart';
 
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ import 'package:line_icons/line_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-// TODO: states && edits
+// TODO: states, edits, && anim switches
 
 class SearchWidget extends StatefulWidget {
   final EzCP config;
@@ -50,6 +51,8 @@ class _SearchWidgetState extends State<SearchWidget> {
 
   late AppState state = widget.state;
   Timer? rippleThrottle;
+
+  final MenuController menuControl = MenuController();
 
   late Engine engine = Ignition.lookup(widget._storedEngine);
   late final TextEditingController queryCon;
@@ -127,6 +130,25 @@ class _SearchWidgetState extends State<SearchWidget> {
     overlayEntry = null;
   }
 
+  List<Widget> get engineMB => Engine.values
+      .map((Engine e) => EzMenuButton(
+            widget.config,
+            label: ezCamelToTitle(e.value),
+            onPressed: () async {
+              setState(() => engine = e);
+              await widget.appInfo.updateWidget(
+                widget.config,
+                WidWidGetGet.search,
+                widget._size,
+                extra: <String>[e.value],
+                lane: widget.lane,
+                index: widget.index,
+                notify: false,
+              );
+            },
+          ))
+      .toList();
+
   // Init //
 
   @override
@@ -142,70 +164,68 @@ class _SearchWidgetState extends State<SearchWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return MenuAnchor(
-      builder: (_, MenuController controller, __) => switch (widget._size) {
-        WidgetSize.button => EzIconButton(
-            widget.config,
-            icon: icon,
-            iconSize: appIconSize(widget.config),
-            onPressed: () => launchUrl(Uri.https(engine.base, '/')),
-            onLongPress: () => toggleChoices(controller),
-          ),
-        _ => EzRow(
-            widget.config,
-            children: <Widget>[
-              ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: ezTextSize(
-                        'Search bar',
-                        context: context,
-                        style: widget.config.bodyStyle,
-                      ).width +
-                      widget.config.padding,
-                  maxHeight: appIconSize(widget.config),
-                ),
-                child: NotificationListener<ScrollNotification>(
-                  // Block scroll notifications
-                  onNotification: (ScrollNotification notification) => true,
-                  child: TextFormField(
-                    controller: queryCon,
-                    decoration: InputDecoration(hintText: engine.value),
-                    textAlign: TextAlign.center,
-                    textAlignVertical: TextAlignVertical.center,
-                    onFieldSubmitted: search,
-                  ),
-                ),
-              ),
-              widget.config.rowMargin,
-              EzIconButton(
+    return switch (widget.state) {
+      AppState.standard || AppState.singleEdit => MenuAnchor(
+          builder: (_, MenuController controller, __) => switch (widget._size) {
+            WidgetSize.button => EzIconButton(
                 widget.config,
                 icon: icon,
-                iconSize: appIconSize(widget.config),
-                onPressed: () => search(queryCon.text),
+                onPressed: () => launchUrl(Uri.https(engine.base, '/')),
                 onLongPress: () => toggleChoices(controller),
               ),
-            ],
-          ),
-      },
-      menuChildren: Engine.values
-          .map((Engine e) => EzMenuButton(
+            _ => EzRow(
                 widget.config,
-                label: ezCamelToTitle(e.value),
-                onPressed: () async {
-                  setState(() => engine = e);
-                  await widget.appInfo.updateWidget(
+                children: <Widget>[
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: ezTextSize(
+                            'Search bar',
+                            context: context,
+                            style: widget.config.bodyStyle,
+                          ).width +
+                          widget.config.padding,
+                      maxHeight: appIconSize(widget.config),
+                    ),
+                    child: NotificationListener<ScrollNotification>(
+                      // Block scroll notifications
+                      onNotification: (ScrollNotification notification) => true,
+                      child: TextFormField(
+                        controller: queryCon,
+                        decoration: InputDecoration(hintText: engine.value),
+                        textAlign: TextAlign.center,
+                        textAlignVertical: TextAlignVertical.center,
+                        onFieldSubmitted: search,
+                      ),
+                    ),
+                  ),
+                  widget.config.rowMargin,
+                  EzIconButton(
                     widget.config,
-                    WidWidGetGet.search,
-                    widget._size,
-                    extra: <String>[e.value],
-                    lane: widget.lane,
-                    index: widget.index,
-                    notify: false,
-                  );
-                },
-              ))
-          .toList(),
-    );
+                    icon: icon,
+                    onPressed: () => search(queryCon.text),
+                    onLongPress: () => toggleChoices(controller),
+                  ),
+                ],
+              ),
+          },
+          menuChildren: engineMB, // TODO: Add remove and resize
+        ),
+      _ => EditContainer(
+          widget.config,
+          menuControl: menuControl,
+          menuChildren: <Widget>[], // TODO: Ditto + move lane when relevant
+          child: EzRow(widget.config, children: <Widget>[
+            icon,
+            widget.config.rowSpacer,
+            EzIconButton(
+              widget.config,
+              icon: EzIcon(widget.config, Icons.delete),
+              onPressed: () => widget.appInfo
+                  .deleteWidget(widget.config, lane: widget.lane, index: widget.index),
+            ),
+          ]),
+        ),
+    };
   }
 
   @override
