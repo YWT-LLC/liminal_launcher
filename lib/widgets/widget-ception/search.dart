@@ -71,35 +71,7 @@ class _SearchWidgetState extends State<SearchWidget> {
   }
 
   void showOverlay() {
-    overlayEntry = OverlayEntry(
-      builder: (BuildContext context) => Positioned(
-        top: safeTop(context),
-        left: widget.config.marginVal,
-        right: widget.config.marginVal,
-        child: Material(
-          type: MaterialType.transparency,
-          child: IgnorePointer(
-            child: Container(
-              padding: EdgeInsets.all(widget.config.marginVal),
-              decoration: BoxDecoration(
-                color: widget.config.colors.surfaceContainer,
-                border: Border.all(
-                  color: widget.config.colors.secondaryContainer,
-                  width: widget.config.borderWidth,
-                ),
-                borderRadius: widget.config.textRadius,
-              ),
-              child: Text(
-                queryCon.text,
-                style: widget.config.bodyStyle,
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-
+    overlayEntry = textFormOverlay(widget.config, queryCon.text);
     ezRootNav.currentState?.overlay?.insert(overlayEntry!);
   }
 
