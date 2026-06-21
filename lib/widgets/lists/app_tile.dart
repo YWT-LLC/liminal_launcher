@@ -5,6 +5,7 @@
 
 // TODO: add custom icons, same strat as folder
 // (not as rename, I don't want it to be global)
+// TODO: edit container
 
 import '../../utils/export.dart';
 

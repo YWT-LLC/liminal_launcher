@@ -9,7 +9,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-// TODO: states, ripples, and edits
+// TODO: states && edits
 // TODO: analog shout-out for different versions
 
 class ClockWidget extends StatefulWidget {

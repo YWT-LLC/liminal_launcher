@@ -10,6 +10,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
+// TODO: creation, deletion, editing
+
 class LimSpacer extends StatefulWidget {
   final EzCP config;
   final double height;
@@ -90,7 +92,7 @@ class _LimSpacerState extends State<LimSpacer> {
             menuChildren: <Widget>[
               EzMenuButton(
                 widget.config,
-                onPressed: doNothing, // TODO
+                onPressed: doNothing,
                 label: 'Resize',
                 icon: EzIcon(widget.config, Icons.edit),
               ),
@@ -122,7 +124,7 @@ class _LimSpacerState extends State<LimSpacer> {
               ),
               EzMenuButton(
                 widget.config,
-                onPressed: doNothing, // TODO
+                onPressed: doNothing,
                 label: 'Resize',
                 icon: EzIcon(widget.config, Icons.edit),
               ),

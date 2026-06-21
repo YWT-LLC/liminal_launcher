@@ -9,7 +9,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-// TODO: states, ripples, and edits
+// TODO: states && edits
 
 class ToggleMediaWidget extends StatefulWidget {
   final EzCP config;

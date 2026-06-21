@@ -11,7 +11,7 @@ import 'package:line_icons/line_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-// TODO: states, ripples, and edits
+// TODO: states && edits
 
 class SearchWidget extends StatefulWidget {
   final EzCP config;
@@ -73,8 +73,6 @@ class _SearchWidgetState extends State<SearchWidget> {
 
   // Define custom functions //
 
-  // TODO: transfer to other widwidgetgets
-  // TODO: add x to previous ripples
   void rippling() {
     if (rippleThrottle != null ||
         widget.rippleProgress == null ||

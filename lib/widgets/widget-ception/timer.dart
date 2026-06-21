@@ -9,7 +9,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-// TODO: states, ripples, and edits
+// TODO: states && edits... && implementation
 
 class TimerWidget extends StatefulWidget {
   final EzCP config;
@@ -86,7 +86,6 @@ class _TimerWidgetState extends State<TimerWidget> {
 
   @override
   Widget build(BuildContext context) => switch (widget._size) {
-        // TODO: most everything
         WidgetSize.button => EzIconButton(
             widget.config,
             icon: EzIcon(widget.config, Icons.timer_outlined),

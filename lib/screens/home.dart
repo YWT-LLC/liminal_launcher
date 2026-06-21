@@ -79,8 +79,12 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
     for (int lane = 0; lane < numLanes; lane++) {
       lanes.add(ConstrainedBox(
-        constraints: // TODO: this needs more tweaking now that all kinds can coexist
+        constraints:
             BoxConstraints(minHeight: double.infinity, minWidth: minWidth, maxWidth: maxWidth),
+        // TODO: this needs more tweaking now that all kinds can coexist
+        // TODO: also, add the condition for the scroll of options to the cache...
+        // prolly like yes if >= 700 per lane... should I change lane to column?
+        // also the 700 value is whatever I have saved for small screen size
         child: editing
             ? Builder(builder: (_) {
                 final List<Widget> tiles = _buildTiles(config, appInfo, lane);
