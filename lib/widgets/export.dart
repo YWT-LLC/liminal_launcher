@@ -4,6 +4,7 @@
  */
 
 export 'lists/app_tile.dart';
+export 'lists/edit_container.dart';
 export 'lists/fabulous.dart';
 export 'lists/folder_tile.dart';
 export 'lists/spacer.dart';
