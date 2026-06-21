@@ -19,18 +19,14 @@ class LimSpacer extends StatefulWidget {
   final AppState state;
   final ValueNotifier<double>? rippleProgress;
 
-  late final MenuController _menuControl;
-
-  LimSpacer(
+  const LimSpacer(
     this.config, {
     super.key,
     required this.height,
     required this.width,
     required this.state,
     required this.rippleProgress,
-  }) {
-    _menuControl = MenuController();
-  }
+  });
 
   @override
   State<LimSpacer> createState() => _LimSpacerState();
@@ -41,6 +37,8 @@ class _LimSpacerState extends State<LimSpacer> {
 
   late AppState state = widget.state;
   Timer? rippleThrottle;
+
+  final MenuController menuControl = MenuController();
 
   // Define custom functions //
 
@@ -68,8 +66,7 @@ class _LimSpacerState extends State<LimSpacer> {
     }
   }
 
-  void toggleMenu() =>
-      widget._menuControl.isOpen ? widget._menuControl.close() : widget._menuControl.open();
+  void toggleMenu() => menuControl.isOpen ? menuControl.close() : menuControl.open();
 
   // Init //
 
@@ -86,7 +83,7 @@ class _LimSpacerState extends State<LimSpacer> {
         AppState.standard => SizedBox(height: widget.height, width: widget.width),
         AppState.singleEdit => EditContainer(
             widget.config,
-            menuControl: widget._menuControl,
+            menuControl: menuControl,
             menuChildren: <Widget>[
               EzMenuButton(
                 widget.config,
@@ -112,7 +109,7 @@ class _LimSpacerState extends State<LimSpacer> {
           ),
         _ => EditContainer(
             widget.config,
-            menuControl: widget._menuControl,
+            menuControl: menuControl,
             menuChildren: <Widget>[
               EzMenuButton(
                 widget.config,
