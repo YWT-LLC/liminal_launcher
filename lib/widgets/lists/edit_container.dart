@@ -32,9 +32,9 @@ class _EditContainerState extends State<EditContainer> with SingleTickerProvider
   void initState() {
     super.initState();
 
-    _animControl = AnimationController(vsync: this, duration: ezDuration(widget.config.animDur));
+    _animControl = AnimationController(vsync: this, duration: const Duration(seconds: 2));
 
-    _animation = Tween<double>(begin: 0.25, end: 1.0)
+    _animation = Tween<double>(begin: 0.0, end: 1.0)
         .animate(CurvedAnimation(parent: _animControl, curve: Curves.linear));
 
     _animControl.repeat(reverse: true);
