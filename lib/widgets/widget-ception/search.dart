@@ -5,6 +5,7 @@
 
 import '../../utils/export.dart';
 
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -18,11 +19,20 @@ class SearchWidget extends StatefulWidget {
   final int lane;
   final int index;
   final AppState state;
+  final ValueNotifier<double>? rippleProgress;
 
   late final WidgetSize _size;
   late final String _storedEngine;
 
-  SearchWidget(this.config, this.appInfo, this.lane, this.index, this.state, {super.key}) {
+  SearchWidget(
+    this.config,
+    this.appInfo,
+    this.lane,
+    this.index,
+    this.state,
+    this.rippleProgress, {
+    super.key,
+  }) {
     final List<String> data = appInfo.homeList(config, lane)[index].split(widgetSplit);
 
     final WidgetSize size = WSConfig.lookup(data[1]);
@@ -37,6 +47,9 @@ class SearchWidget extends StatefulWidget {
 
 class _SearchWidgetState extends State<SearchWidget> {
   // Define the build data //
+
+  late AppState state = widget.state;
+  Timer? rippleThrottle;
 
   late Engine engine = Ignition.lookup(widget._storedEngine);
   late final TextEditingController queryCon;
@@ -59,6 +72,34 @@ class _SearchWidgetState extends State<SearchWidget> {
       };
 
   // Define custom functions //
+
+  // TODO: transfer to other widwidgetgets
+  // TODO: add x to previous ripples
+  void rippling() {
+    if (rippleThrottle != null ||
+        widget.rippleProgress == null ||
+        widget.rippleProgress!.value <= 0) {
+      return;
+    }
+
+    final Offset wya = ezWya(context);
+    final double dx = (wya.dx - lastRipple.dx).abs();
+    final double dy = (wya.dy - lastRipple.dy).abs();
+
+    if (dx <= (widget.rippleProgress!.value * widthOf(context)) &&
+        dy <= (widget.rippleProgress!.value * heightOf(context))) {
+      setState(() => state = switch (state) {
+            AppState.standard || AppState.singleEdit => AppState.groupEdit,
+            _ => AppState.standard,
+          });
+
+      final Duration animDur = ezDuration(widget.config.animDur, mod: rippleMod);
+      rippleThrottle = Timer(
+        (animDur + const Duration(milliseconds: 50)) - (animDur * widget.rippleProgress!.value),
+        () => rippleThrottle = null,
+      );
+    }
+  }
 
   void toggleChoices(MenuController c) => c.isOpen ? c.close() : c.open();
 
@@ -95,6 +136,8 @@ class _SearchWidgetState extends State<SearchWidget> {
   @override
   void initState() {
     super.initState();
+    widget.rippleProgress?.addListener(rippling);
+
     queryCon = TextEditingController();
     queryCon.addListener(onChanged);
   }
@@ -171,6 +214,7 @@ class _SearchWidgetState extends State<SearchWidget> {
 
   @override
   void dispose() {
+    widget.rippleProgress?.removeListener(rippling);
     queryCon.removeListener(onChanged);
     queryCon.dispose();
     removeOverlay();

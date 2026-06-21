@@ -61,15 +61,15 @@ Widget renderWidget(
   required int lane, // TODO: -1 for top, -2 for bottom
   required int index,
   required AppState state,
-  ValueNotifier<double>? rippleProgress, // TODO: something
+  ValueNotifier<double>? rippleProgress,
 }) =>
     switch (appInfo.homeList(config, lane)[index].split(widgetSplit)[0]) {
-      esCalendar => CalendarWidget(config, appInfo, lane, index, state),
-      esClock => ClockWidget(config, appInfo, lane, index, state),
-      esSearch => SearchWidget(config, appInfo, lane, index, state),
-      esStopwatch => StopwatchWidget(config, appInfo, lane, index, state),
-      esTimer => TimerWidget(config, appInfo, lane, index, state),
-      esToggleMedia => ToggleMediaWidget(config, appInfo, lane, index, state),
+      esCalendar => CalendarWidget(config, appInfo, lane, index, state, rippleProgress),
+      esClock => ClockWidget(config, appInfo, lane, index, state, rippleProgress),
+      esSearch => SearchWidget(config, appInfo, lane, index, state, rippleProgress),
+      esStopwatch => StopwatchWidget(config, appInfo, lane, index, state, rippleProgress),
+      esTimer => TimerWidget(config, appInfo, lane, index, state, rippleProgress),
+      esToggleMedia => ToggleMediaWidget(config, appInfo, lane, index, state, rippleProgress),
       _ => const SizedBox.shrink(),
     };
 

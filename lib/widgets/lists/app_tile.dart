@@ -3,6 +3,9 @@
  * See LICENSE for distribution and usage details.
  */
 
+// TODO: add custom icons, same strat as folder
+// (not as rename, I don't want it to be global)
+
 import '../../utils/export.dart';
 
 import 'dart:async';
@@ -38,13 +41,41 @@ class AppTile extends StatefulWidget {
 class _AppTileState extends State<AppTile> {
   // Define the build data //
 
-  late final bool inList = widget.location == AppLocation.list;
-  late final bool inFolder = widget.location == AppLocation.folder;
-
   late AppState state = widget.state;
   Timer? rippleThrottle;
 
+  late final bool inList = widget.location == AppLocation.list;
+  late final bool inFolder = widget.location == AppLocation.folder;
+
   // Define custom functions //
+
+  void rippling() {
+    if (rippleThrottle != null ||
+        widget.rippleProgress == null ||
+        widget.rippleProgress!.value <= 0) {
+      return;
+    }
+
+    final Offset wya = ezWya(context);
+    final double dx = (wya.dx - lastRipple.dx).abs();
+    final double dy = (wya.dy - lastRipple.dy).abs();
+
+    if (dx <= widget.rippleProgress!.value * widthOf(context) &&
+        dy <= widget.rippleProgress!.value * heightOf(context)) {
+      setState(() => state = switch (state) {
+            AppState.standard ||
+            AppState.singleEdit =>
+              inList ? AppState.verbose : AppState.groupEdit,
+            AppState.verbose || AppState.groupEdit => AppState.standard,
+          });
+
+      final Duration animDur = ezDuration(widget.config.animDur, mod: rippleMod);
+      rippleThrottle = Timer(
+        (animDur + const Duration(milliseconds: 50)) - (animDur * widget.rippleProgress!.value),
+        () => rippleThrottle = null,
+      );
+    }
+  }
 
   Widget rowSpacer() => switch (state) {
         AppState.standard ||
@@ -86,33 +117,6 @@ class _AppTileState extends State<AppTile> {
             rowSpacer(),
           ]
         : <Widget>[];
-  }
-
-  /// Handle rippling effect
-  /// Transition to editing on home screen long press
-  void rippling() {
-    if (rippleThrottle != null ||
-        widget.rippleProgress == null ||
-        widget.rippleProgress!.value <= 0) {
-      return;
-    }
-    final Offset wya = ezWya(context);
-    final double dy = (wya.dy - lastRipple.dy).abs();
-
-    if (dy <= widget.rippleProgress!.value * heightOf(context)) {
-      setState(() => state = switch (state) {
-            AppState.standard ||
-            AppState.singleEdit =>
-              inList ? AppState.verbose : AppState.groupEdit,
-            AppState.verbose || AppState.groupEdit => AppState.standard,
-          });
-
-      final Duration animDur = ezDuration(widget.config.animDur, mod: rippleMod);
-      rippleThrottle = Timer(
-        (animDur + const Duration(milliseconds: 50)) - (animDur * widget.rippleProgress!.value),
-        () => rippleThrottle = null,
-      );
-    }
   }
 
   // Init //

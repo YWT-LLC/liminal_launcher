@@ -4,60 +4,149 @@
  */
 
 import '../../utils/export.dart';
+import '../export.dart';
 
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-class LimSpacer extends StatelessWidget {
+class LimSpacer extends StatefulWidget {
   final EzCP config;
   final double height;
   final double width;
   final AppState state;
+  final ValueNotifier<double>? rippleProgress;
 
-  const LimSpacer(
+  late final MenuController _menuControl;
+
+  LimSpacer(
     this.config, {
     super.key,
     required this.height,
     required this.width,
     required this.state,
-  });
+    required this.rippleProgress,
+  }) {
+    _menuControl = MenuController();
+  }
 
   @override
-  Widget build(BuildContext context) => switch (state) {
-        AppState.standard => SizedBox(height: height, width: width),
-        AppState.singleEdit => Container(
-            height: height,
-            width: width,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: config.colors.secondary,
-                width: config.borderWidth,
+  State<LimSpacer> createState() => _LimSpacerState();
+}
+
+class _LimSpacerState extends State<LimSpacer> {
+  // Define the build data //
+
+  late AppState state = widget.state;
+  Timer? rippleThrottle;
+
+  // Define custom functions //
+
+  void rippling() {
+    if (rippleThrottle != null ||
+        widget.rippleProgress == null ||
+        widget.rippleProgress!.value <= 0) {
+      return;
+    }
+
+    final Offset wya = ezWya(context);
+    final double dx = (wya.dx - lastRipple.dx).abs();
+    final double dy = (wya.dy - lastRipple.dy).abs();
+
+    if (dx <= (widget.rippleProgress!.value * widthOf(context)) &&
+        dy <= (widget.rippleProgress!.value * heightOf(context))) {
+      setState(() => state = switch (state) {
+            AppState.standard || AppState.singleEdit => AppState.groupEdit,
+            _ => AppState.standard,
+          });
+
+      final Duration animDur = ezDuration(widget.config.animDur, mod: rippleMod);
+      rippleThrottle = Timer(
+        (animDur + const Duration(milliseconds: 50)) - (animDur * widget.rippleProgress!.value),
+        () => rippleThrottle = null,
+      );
+    }
+  }
+
+  void toggleMenu() =>
+      widget._menuControl.isOpen ? widget._menuControl.close() : widget._menuControl.open();
+
+  // Init //
+
+  @override
+  void initState() {
+    super.initState();
+    widget.rippleProgress?.addListener(rippling);
+  }
+
+  // Return the build //
+
+  @override
+  Widget build(BuildContext context) => switch (widget.state) {
+        AppState.standard => SizedBox(height: widget.height, width: widget.width),
+        AppState.singleEdit => EditContainer(
+            widget.config,
+            menuControl: widget._menuControl,
+            menuChildren: <Widget>[
+              EzMenuButton(
+                widget.config,
+                onPressed: doNothing, // TODO
+                label: 'Resize',
+                icon: EzIcon(widget.config, Icons.edit),
               ),
-              borderRadius: EzButtonShape.roundRect.radius,
-            ),
-            child: Center(
-              child: GestureDetector(
-                onTap: doNothing, // todo
-                child: EzIcon(config, Icons.delete),
+              EzMenuButton(
+                widget.config,
+                onPressed: doNothing,
+                label: 'Remove',
+                icon: EzIcon(widget.config, Icons.delete),
+              ),
+            ],
+            child: GestureDetector(
+              onTap: toggleMenu,
+              child: SizedBox(
+                height: widget.height,
+                width: widget.width,
+                child: Center(child: EzIcon(widget.config, Icons.edit)),
               ),
             ),
           ),
-        AppState.groupEdit || AppState.verbose => Container(
-            height: height,
-            width: width,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: config.colors.primary,
-                width: config.borderWidth,
+        _ => EditContainer(
+            widget.config,
+            menuControl: widget._menuControl,
+            menuChildren: <Widget>[
+              EzMenuButton(
+                widget.config,
+                onPressed: doNothing,
+                label: 'Move',
+                icon: EzIcon(widget.config, Icons.control_camera),
               ),
-              borderRadius: EzButtonShape.roundRect.radius,
-            ),
-            child: Center(
-              child: GestureDetector(
-                onTap: doNothing, // todo
-                child: EzIcon(config, Icons.delete),
+              EzMenuButton(
+                widget.config,
+                onPressed: doNothing, // TODO
+                label: 'Resize',
+                icon: EzIcon(widget.config, Icons.edit),
+              ),
+              EzMenuButton(
+                widget.config,
+                onPressed: doNothing,
+                label: 'Remove',
+                icon: EzIcon(widget.config, Icons.delete),
+              ),
+            ],
+            child: GestureDetector(
+              onTap: toggleMenu,
+              child: SizedBox(
+                height: widget.height,
+                width: widget.width,
+                child: Center(child: EzIcon(widget.config, Icons.edit)),
               ),
             ),
           ),
       };
+
+  @override
+  void dispose() {
+    widget.rippleProgress?.removeListener(rippling);
+    super.dispose();
+  }
 }

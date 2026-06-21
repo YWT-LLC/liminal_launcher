@@ -200,6 +200,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
             height: height,
             width: width,
             state: editing ? AppState.groupEdit : AppState.standard,
+            rippleProgress: rippleProgress,
           ));
           break;
 
