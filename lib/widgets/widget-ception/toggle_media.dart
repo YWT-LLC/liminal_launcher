@@ -56,11 +56,9 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
     }
 
     final Offset wya = ezWya(context);
-    final double dx = (wya.dx - lastRipple.dx).abs();
     final double dy = (wya.dy - lastRipple.dy).abs();
 
-    if (dx <= (widget.rippleProgress!.value * widthOf(context)) &&
-        dy <= (widget.rippleProgress!.value * heightOf(context))) {
+    if (dy <= (widget.rippleProgress!.value * heightOf(context))) {
       setState(() => state = switch (state) {
             AppState.standard || AppState.singleEdit => AppState.groupEdit,
             _ => AppState.standard,

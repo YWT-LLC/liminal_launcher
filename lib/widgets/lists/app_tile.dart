@@ -6,6 +6,7 @@
 // TODO: add custom icons, same strat as folder
 // (not as rename, I don't want it to be global)
 // TODO: edit container
+// TODO: make the design page the "system" button, and allow for people to set per-tile shapes
 
 import '../../utils/export.dart';
 
@@ -58,11 +59,9 @@ class _AppTileState extends State<AppTile> {
     }
 
     final Offset wya = ezWya(context);
-    final double dx = (wya.dx - lastRipple.dx).abs();
     final double dy = (wya.dy - lastRipple.dy).abs();
 
-    if (dx <= widget.rippleProgress!.value * widthOf(context) &&
-        dy <= widget.rippleProgress!.value * heightOf(context)) {
+    if (dy <= widget.rippleProgress!.value * heightOf(context)) {
       setState(() => state = switch (state) {
             AppState.standard ||
             AppState.singleEdit =>
