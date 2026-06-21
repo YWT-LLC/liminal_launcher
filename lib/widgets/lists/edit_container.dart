@@ -1,0 +1,67 @@
+/* liminal_launcher
+ * Copyright (c) 2026 Empathetech LLC. All rights reserved.
+ * See LICENSE for distribution and usage details.
+ */
+
+import 'package:flutter/material.dart';
+import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
+
+class EditContainer extends StatefulWidget {
+  final EzCP config;
+  final Widget child;
+  final MenuController menuControl;
+  final List<Widget> menuChildren;
+
+  const EditContainer(
+    this.config, {
+    super.key,
+    required this.child,
+    required this.menuControl,
+    required this.menuChildren,
+  });
+
+  @override
+  State<EditContainer> createState() => _EditContainerState();
+}
+
+class _EditContainerState extends State<EditContainer> with SingleTickerProviderStateMixin {
+  late final AnimationController _animControl;
+  late final Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _animControl = AnimationController(vsync: this, duration: ezDuration(widget.config.animDur));
+
+    _animation = Tween<double>(begin: 0.25, end: 1.0)
+        .animate(CurvedAnimation(parent: _animControl, curve: Curves.linear));
+
+    _animControl.repeat(reverse: true);
+  }
+
+  @override
+  Widget build(BuildContext context) => MenuAnchor(
+        controller: widget.menuControl,
+        builder: (_, __, ___) => AnimatedBuilder(
+          animation: _animation,
+          builder: (_, __) => Container(
+            decoration: BoxDecoration(
+              borderRadius: widget.config.buttonShape.radius,
+              border: Border.all(
+                color: widget.config.colors.secondaryContainer.withValues(alpha: _animation.value),
+                width: widget.config.borderWidth,
+              ),
+            ),
+            child: widget.child,
+          ),
+        ),
+        menuChildren: widget.menuChildren,
+      );
+
+  @override
+  void dispose() {
+    _animControl.dispose();
+    super.dispose();
+  }
+}
