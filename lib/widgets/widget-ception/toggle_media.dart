@@ -88,48 +88,74 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
+    late final EzMenuButton resize = EzMenuButton(
+      widget.config,
+      label: 'Resize',
+      icon: EzIcon(widget.config, Icons.edit),
+      onPressed: () async {
+        final String? choice = await resizeWidgetDialog(
+          widget.config,
+          context,
+          size,
+        );
+        if (choice == null) return;
+
+        final WidgetSize trueChoice = WSConfig.lookup(choice);
+        await widget.appInfo.updateWidget(
+          widget.config,
+          WidWidGetGet.toggleMedia,
+          trueChoice,
+          extra: null,
+          lane: widget.lane,
+          index: widget.index,
+          notify: false,
+        );
+        setState(() => size = trueChoice);
+      },
+    );
+
+    late final EzMenuButton remove = EzMenuButton(
+      widget.config,
+      label: 'Remove',
+      icon: EzIcon(widget.config, Icons.delete),
+      onPressed: () => widget.appInfo.deleteWidget(
+        widget.config,
+        lane: widget.lane,
+        index: widget.index,
+      ),
+    );
+
     return EzAnimSwitch(
       widget.config,
       mod: 0.667,
       forceType: EzTransitionType.none,
       forceFade: true,
       child: switch (state) {
-        AppState.standard || AppState.singleEdit => switch (size) {
-            WidgetSize.button => EzIconButton(
-                widget.config,
-                iconSize: appIconSize(widget.config),
-                icon: const Icon(Icons.headphones),
-                onPressed: toggleMedia,
-              ),
-            _ => EzIconButton(
-                widget.config,
-                icon: EzRow(widget.config, children: <Widget>[
-                  // Previous
-                  widget.config.rowMargin,
-                  GestureDetector(
-                    onTap: skipPrev,
-                    child: Icon(Icons.skip_previous, size: appIconSize(widget.config)),
-                  ),
-                  widget.config.rowSpacer,
+        AppState.standard || AppState.singleEdit => MenuAnchor(
+            builder: (_, MenuController controller, __) => EzIconButton(
+              widget.config,
+              iconSize: appIconSize(widget.config),
+              icon: (size == WidgetSize.button)
+                  ? const Icon(Icons.headphones)
+                  : EzRow(widget.config, children: <Widget>[
+                      // Previous
+                      widget.config.rowMargin,
+                      GestureDetector(onTap: skipPrev, child: const Icon(Icons.skip_previous)),
+                      widget.config.rowSpacer,
 
-                  // Play/pause
-                  GestureDetector(
-                    onTap: toggleMedia,
-                    child: Icon(Icons.headphones, size: appIconSize(widget.config)),
-                  ),
-                  widget.config.rowSpacer,
+                      // Play/pause
+                      GestureDetector(onTap: toggleMedia, child: const Icon(Icons.headphones)),
+                      widget.config.rowSpacer,
 
-                  // Next
-                  GestureDetector(
-                    onTap: skipNext,
-                    child: Icon(Icons.skip_next, size: appIconSize(widget.config)),
-                  ),
-                  widget.config.rowMargin,
-                ]),
-                onPressed: doNothing,
-                onLongPress: doNothing, // TODO: menu anchor for delete, resize
-              ),
-          },
+                      // Next
+                      GestureDetector(onTap: skipNext, child: const Icon(Icons.skip_next)),
+                      widget.config.rowMargin,
+                    ]),
+              onPressed: (size == WidgetSize.button) ? toggleMedia : doNothing,
+              onLongPress: () => controller.isOpen ? controller.close() : controller.open(),
+            ),
+            menuChildren: <Widget>[resize, remove],
+          ),
         _ => EditContainer(
             widget.config,
             menuControl: menuControl,
@@ -156,41 +182,8 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
                     index: widget.index,
                   ),
                 ),
-              EzMenuButton(
-                widget.config,
-                label: 'Resize',
-                icon: EzIcon(widget.config, Icons.edit),
-                onPressed: () async {
-                  final String? choice = await resizeWidgetDialog(
-                    widget.config,
-                    context,
-                    size,
-                  );
-                  if (choice == null) return;
-
-                  final WidgetSize trueChoice = WSConfig.lookup(choice);
-                  await widget.appInfo.updateWidget(
-                    widget.config,
-                    WidWidGetGet.toggleMedia,
-                    trueChoice,
-                    extra: null,
-                    lane: widget.lane,
-                    index: widget.index,
-                    notify: false,
-                  );
-                  setState(() => size = trueChoice);
-                },
-              ),
-              EzMenuButton(
-                widget.config,
-                label: 'Remove',
-                icon: EzIcon(widget.config, Icons.delete),
-                onPressed: () => widget.appInfo.deleteWidget(
-                  widget.config,
-                  lane: widget.lane,
-                  index: widget.index,
-                ),
-              ),
+              resize,
+              remove,
             ],
             child: EzIconButton(
               widget.config,
