@@ -73,6 +73,34 @@ Widget renderWidget(
       _ => const SizedBox.shrink(),
     };
 
+Future<String?> resizeWidgetDialog(EzCP config, BuildContext context, WidgetSize curr) =>
+    showDialog(
+      context: context,
+      builder: (BuildContext dCon) => EzAlertDialog(
+        config,
+        title: Text('Currently: ${curr.value}', textAlign: TextAlign.center),
+        contents: <Widget>[
+          EzTextButton(
+            config,
+            text: 'System (${bt2WS(config).value})',
+            onPressed: () => Navigator.of(context).pop(WidgetSize.system.value),
+          ),
+          config.spacer,
+          EzTextButton(
+            config,
+            text: 'Button',
+            onPressed: () => Navigator.of(context).pop(WidgetSize.button.value),
+          ),
+          config.spacer,
+          EzTextButton(
+            config,
+            text: 'Tile',
+            onPressed: () => Navigator.of(context).pop(WidgetSize.tile.value),
+          ),
+        ],
+      ),
+    );
+
 OverlayEntry textFormOverlay(EzCP config, String text) => OverlayEntry(
       builder: (BuildContext context) => Positioned(
         top: safeTop(context),
