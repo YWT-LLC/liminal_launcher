@@ -109,9 +109,15 @@ class MainActivity : FlutterFragmentActivity() {
         // Widgets
         "createCalendarEvent" -> {
           try {
+            val eventTitle = call.argument<String>("title")
+
             val intent = Intent(Intent.ACTION_INSERT).apply {
               data = CalendarContract.Events.CONTENT_URI
               addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+              if (!eventTitle.isNullOrEmpty()) {
+                putExtra(CalendarContract.Events.TITLE, eventTitle)
+              }
             }
             startActivity(intent)
             result.success(true)
