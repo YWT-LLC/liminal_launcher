@@ -99,8 +99,6 @@ class _SearchWidgetState extends State<SearchWidget> {
     }
   }
 
-  void toggleMenu(MenuController c) => c.isOpen ? c.close() : c.open();
-
   void onChanged() {
     final String text = queryCon.text.trim();
 
@@ -180,7 +178,7 @@ class _SearchWidgetState extends State<SearchWidget> {
 
         await widget.appInfo.updateWidget(
           widget.config,
-          WidWidGetGet.toggleMedia,
+          WidWidGetGet.search,
           trueChoice,
           extra: <String>[engine.value],
           lane: widget.lane,
@@ -209,16 +207,14 @@ class _SearchWidgetState extends State<SearchWidget> {
       forceFade: true,
       child: switch (state) {
         AppState.standard || AppState.singleEdit => MenuAnchor(
-            builder: (_, MenuController controller, __) => switch (size) {
-              WidgetSize.button => EzIconButton(
-                  widget.config,
-                  icon: icon,
-                  onPressed: () => launchUrl(Uri.https(engine.base, '/')),
-                  onLongPress: () => toggleMenu(controller),
-                ),
-              _ => EzRow(
-                  widget.config,
-                  children: <Widget>[
+            builder: (_, MenuController controller, __) => (size == WidgetSize.button)
+                ? EzIconButton(
+                    widget.config,
+                    icon: icon,
+                    onPressed: () => launchUrl(Uri.https(engine.base, '/')),
+                    onLongPress: () => toggleMenu(controller),
+                  )
+                : EzRow(widget.config, children: <Widget>[
                     ConstrainedBox(
                       constraints: BoxConstraints(
                         maxWidth: ezTextSize(
@@ -248,9 +244,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                       onPressed: () => search(queryCon.text),
                       onLongPress: () => toggleMenu(controller),
                     ),
-                  ],
-                ),
-            },
+                  ]),
             menuChildren: <Widget>[...engineMC, resize, remove],
           ),
         _ => EditContainer(
@@ -285,7 +279,7 @@ class _SearchWidgetState extends State<SearchWidget> {
             child: EzIconButton(
               widget.config,
               iconSize: appIconSize(widget.config),
-              icon: const Icon(Icons.delete),
+              icon: const Icon(Icons.search),
               onPressed: () => toggleMenu(menuControl),
             ),
           ),
