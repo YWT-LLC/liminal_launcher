@@ -60,9 +60,12 @@ Future<void> openDelete(AppInfo app) async {
 
 // Widgets //
 
-Future<bool> createCalendarEvent() async {
+Future<bool> createCalendarEvent(String? title) async {
   try {
-    await platform.invokeMethod('createCalendarEvent');
+    await platform.invokeMethod(
+      'createCalendarEvent',
+      <String, dynamic>{'title': title},
+    );
     return true;
   } catch (e) {
     ezLog('Failed to create calendar event: $e');
