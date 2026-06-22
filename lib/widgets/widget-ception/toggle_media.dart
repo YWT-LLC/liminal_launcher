@@ -137,7 +137,7 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
               if (numLanes > 1 && widget.lane != 0)
                 EzMenuButton(
                   widget.config,
-                  label: 'Move left',
+                  label: widget.config.isLTR ? 'Move left' : 'Move right',
                   icon: EzIcon(widget.config, Icons.control_camera),
                   onPressed: () => widget.appInfo.moveItemDown(
                     widget.config,
@@ -148,7 +148,7 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
               if (numLanes > 1 && widget.lane < (numLanes - 1))
                 EzMenuButton(
                   widget.config,
-                  label: 'Move right',
+                  label: widget.config.isLTR ? 'Move right' : 'Move left',
                   icon: EzIcon(widget.config, Icons.control_camera),
                   onPressed: () => widget.appInfo.moveItemUp(
                     widget.config,
