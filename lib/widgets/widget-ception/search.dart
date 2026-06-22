@@ -53,9 +53,10 @@ class _SearchWidgetState extends State<SearchWidget> {
   final MenuController menuControl = MenuController();
   late WidgetSize size = widget._size;
 
-  late Engine engine = Ignition.lookup(widget._storedEngine);
-  late final TextEditingController queryCon;
+  final TextEditingController queryCon = TextEditingController();
   OverlayEntry? overlayEntry;
+
+  late Engine engine = Ignition.lookup(widget._storedEngine);
 
   Widget get icon => switch (engine) {
         Engine.archive => const Icon(Icons.archive),
@@ -99,16 +100,39 @@ class _SearchWidgetState extends State<SearchWidget> {
     }
   }
 
-  void onChanged() {
-    final String text = queryCon.text.trim();
-
-    (text.isNotEmpty)
-        ? ((overlayEntry == null) ? showOverlay() : overlayEntry?.markNeedsBuild())
-        : removeOverlay();
-  }
+  void onChanged(String text) => (text.isEmpty)
+      ? removeOverlay()
+      : ((overlayEntry == null) ? showOverlay() : overlayEntry!.markNeedsBuild());
 
   void showOverlay() {
-    overlayEntry = textFormOverlay(widget.config, queryCon.text);
+    overlayEntry = OverlayEntry(
+      builder: (BuildContext context) => Positioned(
+        top: safeTop(context),
+        left: widget.config.marginVal,
+        right: widget.config.marginVal,
+        child: Material(
+          type: MaterialType.transparency,
+          child: IgnorePointer(
+            child: Container(
+              padding: EdgeInsets.all(widget.config.marginVal),
+              decoration: BoxDecoration(
+                color: widget.config.colors.surfaceContainer,
+                border: Border.all(
+                  color: widget.config.colors.secondaryContainer,
+                  width: widget.config.borderWidth,
+                ),
+                borderRadius: widget.config.textRadius,
+              ),
+              child: Text(
+                queryCon.text,
+                style: widget.config.bodyStyle,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
     ezRootNav.currentState?.overlay?.insert(overlayEntry!);
   }
 
@@ -120,6 +144,7 @@ class _SearchWidgetState extends State<SearchWidget> {
     ));
 
     queryCon.clear();
+    removeOverlay();
   }
 
   void removeOverlay() {
@@ -152,9 +177,6 @@ class _SearchWidgetState extends State<SearchWidget> {
   void initState() {
     super.initState();
     widget.rippleProgress?.addListener(rippling);
-
-    queryCon = TextEditingController();
-    queryCon.addListener(onChanged);
   }
 
   // Return the build //
@@ -233,6 +255,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                           decoration: InputDecoration(hintText: engine.value),
                           textAlign: TextAlign.center,
                           textAlignVertical: TextAlignVertical.center,
+                          onChanged: onChanged,
                           onFieldSubmitted: search,
                         ),
                       ),
@@ -290,8 +313,6 @@ class _SearchWidgetState extends State<SearchWidget> {
   @override
   void dispose() {
     widget.rippleProgress?.removeListener(rippling);
-    queryCon.removeListener(onChanged);
-    queryCon.dispose();
     removeOverlay();
     super.dispose();
   }

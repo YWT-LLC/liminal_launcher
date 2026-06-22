@@ -48,7 +48,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
   final MenuController menuControl = MenuController();
   late WidgetSize size = widget._size;
 
-  late final TextEditingController eventCon;
+  final TextEditingController eventCon = TextEditingController();
   OverlayEntry? overlayEntry;
 
   // Define custom functions //
@@ -77,16 +77,39 @@ class _CalendarWidgetState extends State<CalendarWidget> {
     }
   }
 
-  void onChanged() {
-    final String text = eventCon.text.trim();
-
-    (text.isNotEmpty)
-        ? ((overlayEntry == null) ? showOverlay() : overlayEntry?.markNeedsBuild())
-        : removeOverlay();
-  }
+  void onChanged(String text) => text.isEmpty
+      ? removeOverlay()
+      : ((overlayEntry == null) ? showOverlay() : overlayEntry!.markNeedsBuild());
 
   void showOverlay() {
-    overlayEntry = textFormOverlay(widget.config, eventCon.text);
+    overlayEntry = OverlayEntry(
+      builder: (BuildContext context) => Positioned(
+        top: safeTop(context),
+        left: widget.config.marginVal,
+        right: widget.config.marginVal,
+        child: Material(
+          type: MaterialType.transparency,
+          child: IgnorePointer(
+            child: Container(
+              padding: EdgeInsets.all(widget.config.marginVal),
+              decoration: BoxDecoration(
+                color: widget.config.colors.surfaceContainer,
+                border: Border.all(
+                  color: widget.config.colors.secondaryContainer,
+                  width: widget.config.borderWidth,
+                ),
+                borderRadius: widget.config.textRadius,
+              ),
+              child: Text(
+                eventCon.text,
+                style: widget.config.bodyStyle,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
     ezRootNav.currentState?.overlay?.insert(overlayEntry!);
   }
 
@@ -135,9 +158,6 @@ class _CalendarWidgetState extends State<CalendarWidget> {
   void initState() {
     super.initState();
     widget.rippleProgress?.addListener(rippling);
-
-    eventCon = TextEditingController();
-    eventCon.addListener(onChanged);
   }
 
   // Return the build //
@@ -204,7 +224,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                     ConstrainedBox(
                       constraints: BoxConstraints(
                         maxWidth: ezTextSize(
-                              'Create new event',
+                              'Create event',
                               context: context,
                               style: widget.config.bodyStyle,
                             ).width +
@@ -216,12 +236,14 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                         onNotification: (ScrollNotification notification) => true,
                         child: TextFormField(
                           controller: eventCon,
-                          decoration: const InputDecoration(hintText: 'Create event'),
+                          decoration: const InputDecoration(hintText: 'New event'),
                           textAlign: TextAlign.center,
                           textAlignVertical: TextAlignVertical.center,
+                          onChanged: onChanged,
                           onFieldSubmitted: (String entry) async {
                             final bool success = await createCalendarEvent(entry.trim());
-                            // TODO: does cancel trigger selfDestruct?
+                            eventCon.clear();
+                            removeOverlay();
                             if (!success && context.mounted) await selfDestruct();
                           },
                         ),
@@ -233,6 +255,8 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                       icon: const Icon(Icons.edit_calendar),
                       onPressed: () async {
                         final bool success = await createCalendarEvent(eventCon.text.trim());
+                        eventCon.clear();
+                        removeOverlay();
                         if (!success && context.mounted) await selfDestruct();
                       },
                       onLongPress: () => toggleMenu(controller),
@@ -283,8 +307,6 @@ class _CalendarWidgetState extends State<CalendarWidget> {
   @override
   void dispose() {
     widget.rippleProgress?.removeListener(rippling);
-    eventCon.removeListener(onChanged);
-    eventCon.dispose();
     removeOverlay();
     super.dispose();
   }

@@ -100,32 +100,3 @@ Future<String?> resizeWidgetDialog(EzCP config, BuildContext context, WidgetSize
         ],
       ),
     );
-
-OverlayEntry textFormOverlay(EzCP config, String text) => OverlayEntry(
-      builder: (BuildContext context) => Positioned(
-        top: safeTop(context),
-        left: config.marginVal,
-        right: config.marginVal,
-        child: Material(
-          type: MaterialType.transparency,
-          child: IgnorePointer(
-            child: Container(
-              padding: EdgeInsets.all(config.marginVal),
-              decoration: BoxDecoration(
-                color: config.colors.surfaceContainer,
-                border: Border.all(
-                  color: config.colors.secondaryContainer,
-                  width: config.borderWidth,
-                ),
-                borderRadius: config.textRadius,
-              ),
-              child: Text(
-                text,
-                style: config.bodyStyle,
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
