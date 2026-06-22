@@ -158,14 +158,14 @@ class AppInfoProvider extends ChangeNotifier {
       _darkHomeMatrix[lane].add(id);
       _darkHomeSet.add(id);
 
-      unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
+      unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if ((interlinked || !config.isDark) && !_lightHomeSet.contains(id)) {
       _lightHomeMatrix[lane].add(id);
       _lightHomeSet.add(id);
 
-      unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
+      unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
     notifyListeners();
@@ -175,13 +175,13 @@ class AppInfoProvider extends ChangeNotifier {
     if (interlinked || config.isDark) {
       _darkHomeMatrix[lane].add('Folder$folderSplit${Icons.folder_open.codePoint}');
 
-      unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
+      unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
       _lightHomeMatrix[lane].add('Folder$folderSplit${Icons.folder_open.codePoint}');
 
-      unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
+      unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
     notifyListeners();
@@ -200,12 +200,12 @@ class AppInfoProvider extends ChangeNotifier {
 
     if (interlinked || config.isDark) {
       _darkHomeMatrix[lane].add(parts.join(widgetSplit));
-      unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
+      unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
       _lightHomeMatrix[lane].add(parts.join(widgetSplit));
-      unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
+      unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
     notifyListeners();
@@ -214,12 +214,12 @@ class AppInfoProvider extends ChangeNotifier {
   Future<void> addHomeLane(EzCP config) async {
     if (interlinked || config.isDark) {
       _darkHomeMatrix.add(<String>[]);
-      unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
+      unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
       _lightHomeMatrix.add(<String>[]);
-      unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
+      unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
     notifyListeners();
@@ -270,7 +270,7 @@ class AppInfoProvider extends ChangeNotifier {
       parts[1] = icon.codePoint.toString();
       _darkHomeMatrix[lane][index] = parts.join(folderSplit);
 
-      unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
+      unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
@@ -280,7 +280,7 @@ class AppInfoProvider extends ChangeNotifier {
       parts[1] = icon.codePoint.toString();
       _lightHomeMatrix[lane][index] = parts.join(folderSplit);
 
-      unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
+      unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
     notifyListeners();
@@ -301,12 +301,12 @@ class AppInfoProvider extends ChangeNotifier {
 
     if (interlinked || config.isDark) {
       _darkHomeMatrix[lane][index] = parts.join(widgetSplit);
-      unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
+      unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
       _lightHomeMatrix[lane][index] = parts.join(widgetSplit);
-      unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
+      unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
     if (notify) notifyListeners();
@@ -322,14 +322,14 @@ class AppInfoProvider extends ChangeNotifier {
       final String element = _darkHomeMatrix[lane].removeAt(oldIndex);
       _darkHomeMatrix[lane].insert(newIndex, element);
 
-      unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
+      unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
       final String element = _lightHomeMatrix[lane].removeAt(oldIndex);
       _lightHomeMatrix[lane].insert(newIndex, element);
 
-      unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
+      unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
     // don't notifyListeners(); twill happen when the user exits edit mode
@@ -366,7 +366,7 @@ class AppInfoProvider extends ChangeNotifier {
       }
 
       // Save results
-      unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
+      unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
@@ -392,7 +392,45 @@ class AppInfoProvider extends ChangeNotifier {
       }
 
       // Save results
-      unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
+      unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
+    }
+
+    notifyListeners();
+  }
+
+  /// Assumes index checks have already been done
+  Future<void> moveItemUp(EzCP config, {required int lane, required int index}) async {
+    if (interlinked || config.isDark) {
+      final String item = _darkHomeMatrix[lane].removeAt(index);
+      _darkHomeMatrix[lane + 1].add(item);
+
+      unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
+    }
+
+    if (interlinked || !config.isDark) {
+      final String item = _lightHomeMatrix[lane].removeAt(index);
+      _lightHomeMatrix[lane + 1].add(item);
+
+      unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
+    }
+
+    notifyListeners();
+  }
+
+  /// Assumes index checks have already been done
+  Future<void> moveItemDown(EzCP config, {required int lane, required int index}) async {
+    if (interlinked || config.isDark) {
+      final String item = _darkHomeMatrix[lane].removeAt(index);
+      _darkHomeMatrix[lane - 1].add(item);
+
+      unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
+    }
+
+    if (interlinked || !config.isDark) {
+      final String item = _lightHomeMatrix[lane].removeAt(index);
+      _lightHomeMatrix[lane - 1].add(item);
+
+      unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
     notifyListeners();
@@ -500,12 +538,12 @@ For example: if an app has always on location permissions, banishing it will not
       _lightHomeMatrix = List<List<String>>.from(_darkHomeMatrix);
       _lightHomeSet = Set<String>.from(_darkHomeSet);
 
-      unawaited(_saveHomeMatrix(_darkHomeMatrix, false));
+      unawaited(_saveLightMatrix(_lightHomeMatrix));
     } else {
       _darkHomeMatrix = List<List<String>>.from(_lightHomeMatrix);
       _darkHomeSet = Set<String>.from(_lightHomeSet);
 
-      unawaited(_saveHomeMatrix(_lightHomeMatrix, true));
+      unawaited(_saveDarkMatrix(_darkHomeMatrix));
     }
 
     notifyListeners();
@@ -534,7 +572,7 @@ For example: if an app has always on location permissions, banishing it will not
         }
       }
 
-      unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
+      unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
@@ -550,7 +588,7 @@ For example: if an app has always on location permissions, banishing it will not
         }
       }
 
-      unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
+      unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
     if (!batch) notifyListeners();
@@ -573,7 +611,7 @@ For example: if an app has always on location permissions, banishing it will not
       }
       _darkHomeMatrix[lane].removeAt(index);
 
-      unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
+      unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
@@ -586,7 +624,7 @@ For example: if an app has always on location permissions, banishing it will not
       }
       _lightHomeMatrix[lane].removeAt(index);
 
-      unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
+      unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
     if (!batch) notifyListeners();
@@ -600,12 +638,12 @@ For example: if an app has always on location permissions, banishing it will not
   }) async {
     if (interlinked || config.isDark) {
       _darkHomeMatrix[lane].removeAt(index);
-      unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
+      unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
       _lightHomeMatrix[lane].removeAt(index);
-      unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), false));
+      unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
     if (!batch) notifyListeners();
@@ -625,7 +663,7 @@ For example: if an app has always on location permissions, banishing it will not
       }
       _darkHomeMatrix.removeAt(lane);
 
-      unawaited(_saveHomeMatrix(List<List<String>>.from(_darkHomeMatrix), true));
+      unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
@@ -641,7 +679,7 @@ For example: if an app has always on location permissions, banishing it will not
       }
       _lightHomeMatrix.removeAt(lane);
 
-      unawaited(_saveHomeMatrix(List<List<String>>.from(_lightHomeMatrix), true));
+      unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
     notifyListeners();
@@ -700,7 +738,12 @@ For example: if an app has always on location permissions, banishing it will not
 List<List<String>> _buildHomeMatrix(List<String> data) =>
     data.map((String outtie) => outtie.split(listSplit)).toList();
 
-Future<bool> _saveHomeMatrix(List<List<String>> matrix, bool isDark) => EzCM.setStringList(
-      isDark ? darkHomeDataKey : lightHomeDataKey,
+Future<bool> _saveDarkMatrix(List<List<String>> matrix) => EzCM.setStringList(
+      darkHomeDataKey,
+      matrix.map((List<String> innie) => innie.join(listSplit)).toList(),
+    );
+
+Future<bool> _saveLightMatrix(List<List<String>> matrix) => EzCM.setStringList(
+      lightHomeDataKey,
       matrix.map((List<String> innie) => innie.join(listSplit)).toList(),
     );
