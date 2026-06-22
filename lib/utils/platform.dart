@@ -76,13 +76,15 @@ Future<bool> createCalendarEvent(String? title) async {
   }
 }
 
-Future<bool> setTimer(int? seconds, bool auto) async {
+Future<bool> setTimer(List<int> values, bool auto) async {
   try {
     await platform.invokeMethod(
       'setTimer',
       <String, dynamic>{
-        if (seconds != null) 'length': seconds,
-        'skipUi': auto,
+        'seconds': values[0],
+        'minutes': values[1],
+        'hours': values[2],
+        'skipUI': auto,
       },
     );
     return true;
