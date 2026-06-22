@@ -123,7 +123,7 @@ class _AppListScreenState extends State<AppListScreen> {
                   MenuAnchor(
                     builder: (_, MenuController controller, __) => EzIconButton(
                       config,
-                      onPressed: () => controller.isOpen ? controller.close() : controller.open(),
+                      onPressed: () => toggleMenu(controller),
                       icon: EzIcon(config, Icons.sort),
                     ),
                     menuChildren: AppSort.values

@@ -66,8 +66,6 @@ class _LimSpacerState extends State<LimSpacer> {
     }
   }
 
-  void toggleMenu() => menuControl.isOpen ? menuControl.close() : menuControl.open();
-
   // Init //
 
   @override
@@ -99,7 +97,7 @@ class _LimSpacerState extends State<LimSpacer> {
               ),
             ],
             child: GestureDetector(
-              onTap: toggleMenu,
+              onTap: () => toggleMenu(menuControl),
               child: SizedBox(
                 height: widget.height,
                 width: widget.width,
@@ -131,7 +129,7 @@ class _LimSpacerState extends State<LimSpacer> {
               ),
             ],
             child: GestureDetector(
-              onTap: toggleMenu,
+              onTap: () => toggleMenu(menuControl),
               child: SizedBox(
                 height: widget.height,
                 width: widget.width,
