@@ -66,7 +66,7 @@ class _AppTileState extends State<AppTile> {
             AppState.standard ||
             AppState.singleEdit =>
               inList ? AppState.verbose : AppState.groupEdit,
-            AppState.verbose || AppState.groupEdit => AppState.standard,
+            _ => AppState.standard,
           });
 
       final Duration animDur = ezDuration(widget.config.animDur, mod: rippleMod);

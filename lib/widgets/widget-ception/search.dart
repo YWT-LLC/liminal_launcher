@@ -164,7 +164,7 @@ class _SearchWidgetState extends State<SearchWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return switch (widget.state) {
+    return switch (state) {
       AppState.standard || AppState.singleEdit => MenuAnchor(
           builder: (_, MenuController controller, __) => switch (widget._size) {
             WidgetSize.button => EzIconButton(
