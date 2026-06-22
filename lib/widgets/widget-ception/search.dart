@@ -12,8 +12,6 @@ import 'package:line_icons/line_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-// TODO: states, edits, && anim switches
-
 class SearchWidget extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
@@ -53,6 +51,7 @@ class _SearchWidgetState extends State<SearchWidget> {
   Timer? rippleThrottle;
 
   final MenuController menuControl = MenuController();
+  late WidgetSize size = widget._size;
 
   late Engine engine = Ignition.lookup(widget._storedEngine);
   late final TextEditingController queryCon;
@@ -100,7 +99,7 @@ class _SearchWidgetState extends State<SearchWidget> {
     }
   }
 
-  void toggleChoices(MenuController c) => c.isOpen ? c.close() : c.open();
+  void toggleMenu(MenuController c) => c.isOpen ? c.close() : c.open();
 
   void onChanged() {
     final String text = queryCon.text.trim();
@@ -130,21 +129,21 @@ class _SearchWidgetState extends State<SearchWidget> {
     overlayEntry = null;
   }
 
-  List<Widget> get engineMB => Engine.values
+  List<Widget> get engineMC => Engine.values
       .map((Engine e) => EzMenuButton(
             widget.config,
             label: ezCamelToTitle(e.value),
             onPressed: () async {
-              setState(() => engine = e);
               await widget.appInfo.updateWidget(
                 widget.config,
                 WidWidGetGet.search,
-                widget._size,
+                size,
                 extra: <String>[e.value],
                 lane: widget.lane,
                 index: widget.index,
                 notify: false,
               );
+              setState(() => engine = e);
             },
           ))
       .toList();
@@ -164,68 +163,134 @@ class _SearchWidgetState extends State<SearchWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return switch (state) {
-      AppState.standard || AppState.singleEdit => MenuAnchor(
-          builder: (_, MenuController controller, __) => switch (widget._size) {
-            WidgetSize.button => EzIconButton(
-                widget.config,
-                icon: icon,
-                onPressed: () => launchUrl(Uri.https(engine.base, '/')),
-                onLongPress: () => toggleChoices(controller),
-              ),
-            _ => EzRow(
-                widget.config,
-                children: <Widget>[
-                  ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: ezTextSize(
-                            'Search bar',
-                            context: context,
-                            style: widget.config.bodyStyle,
-                          ).width +
-                          widget.config.padding,
-                      maxHeight: appIconSize(widget.config),
-                    ),
-                    child: NotificationListener<ScrollNotification>(
-                      // Block scroll notifications
-                      onNotification: (ScrollNotification notification) => true,
-                      child: TextFormField(
-                        controller: queryCon,
-                        decoration: InputDecoration(hintText: engine.value),
-                        textAlign: TextAlign.center,
-                        textAlignVertical: TextAlignVertical.center,
-                        onFieldSubmitted: search,
+    final int numLanes = widget.appInfo.numLanes(widget.config);
+
+    late final EzMenuButton resize = EzMenuButton(
+      widget.config,
+      label: 'Resize',
+      icon: EzIcon(widget.config, Icons.edit),
+      onPressed: () async {
+        final String? choice = await resizeWidgetDialog(
+          widget.config,
+          context,
+          size,
+        );
+        if (choice == null) return;
+        final WidgetSize trueChoice = WSConfig.lookup(choice);
+
+        await widget.appInfo.updateWidget(
+          widget.config,
+          WidWidGetGet.toggleMedia,
+          trueChoice,
+          extra: <String>[engine.value],
+          lane: widget.lane,
+          index: widget.index,
+          notify: false,
+        );
+        setState(() => size = trueChoice);
+      },
+    );
+
+    late final EzMenuButton remove = EzMenuButton(
+      widget.config,
+      label: 'Remove',
+      icon: EzIcon(widget.config, Icons.delete),
+      onPressed: () => widget.appInfo.deleteWidget(
+        widget.config,
+        lane: widget.lane,
+        index: widget.index,
+      ),
+    );
+
+    return EzAnimSwitch(
+      widget.config,
+      mod: 0.667,
+      forceType: EzTransitionType.none,
+      forceFade: true,
+      child: switch (state) {
+        AppState.standard || AppState.singleEdit => MenuAnchor(
+            builder: (_, MenuController controller, __) => switch (size) {
+              WidgetSize.button => EzIconButton(
+                  widget.config,
+                  icon: icon,
+                  onPressed: () => launchUrl(Uri.https(engine.base, '/')),
+                  onLongPress: () => toggleMenu(controller),
+                ),
+              _ => EzRow(
+                  widget.config,
+                  children: <Widget>[
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: ezTextSize(
+                              'Search bar',
+                              context: context,
+                              style: widget.config.bodyStyle,
+                            ).width +
+                            widget.config.padding,
+                        maxHeight: appIconSize(widget.config),
+                      ),
+                      child: NotificationListener<ScrollNotification>(
+                        // Block scroll notifications
+                        onNotification: (ScrollNotification notification) => true,
+                        child: TextFormField(
+                          controller: queryCon,
+                          decoration: InputDecoration(hintText: engine.value),
+                          textAlign: TextAlign.center,
+                          textAlignVertical: TextAlignVertical.center,
+                          onFieldSubmitted: search,
+                        ),
                       ),
                     ),
-                  ),
-                  widget.config.rowMargin,
-                  EzIconButton(
+                    widget.config.rowMargin,
+                    EzIconButton(
+                      widget.config,
+                      icon: icon,
+                      onPressed: () => search(queryCon.text),
+                      onLongPress: () => toggleMenu(controller),
+                    ),
+                  ],
+                ),
+            },
+            menuChildren: <Widget>[...engineMC, resize, remove],
+          ),
+        _ => EditContainer(
+            widget.config,
+            menuControl: menuControl,
+            menuChildren: <Widget>[
+              if (numLanes > 1 && widget.lane != 0)
+                EzMenuButton(
+                  widget.config,
+                  label: widget.config.isLTR ? 'Move left' : 'Move right',
+                  icon: EzIcon(widget.config, Icons.control_camera),
+                  onPressed: () => widget.appInfo.moveItemDown(
                     widget.config,
-                    icon: icon,
-                    onPressed: () => search(queryCon.text),
-                    onLongPress: () => toggleChoices(controller),
+                    lane: widget.lane,
+                    index: widget.index,
                   ),
-                ],
-              ),
-          },
-          menuChildren: engineMB, // TODO: Add remove and resize
-        ),
-      _ => EditContainer(
-          widget.config,
-          menuControl: menuControl,
-          menuChildren: <Widget>[], // TODO: Ditto + move lane when relevant
-          child: EzRow(widget.config, children: <Widget>[
-            icon,
-            widget.config.rowSpacer,
-            EzIconButton(
+                ),
+              if (numLanes > 1 && widget.lane < (numLanes - 1))
+                EzMenuButton(
+                  widget.config,
+                  label: widget.config.isLTR ? 'Move right' : 'Move left',
+                  icon: EzIcon(widget.config, Icons.control_camera),
+                  onPressed: () => widget.appInfo.moveItemUp(
+                    widget.config,
+                    lane: widget.lane,
+                    index: widget.index,
+                  ),
+                ),
+              resize,
+              remove,
+            ],
+            child: EzIconButton(
               widget.config,
-              icon: EzIcon(widget.config, Icons.delete),
-              onPressed: () => widget.appInfo
-                  .deleteWidget(widget.config, lane: widget.lane, index: widget.index),
+              iconSize: appIconSize(widget.config),
+              icon: const Icon(Icons.delete),
+              onPressed: () => toggleMenu(menuControl),
             ),
-          ]),
-        ),
-    };
+          ),
+      },
+    );
   }
 
   @override
