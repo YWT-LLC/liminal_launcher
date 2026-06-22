@@ -30,9 +30,10 @@ Future<List<AppInfo>> getApps() async {
 
 Future<void> launchApp(AppInfo app) async {
   try {
-    await platform.invokeMethod('launchApp', <String, dynamic>{
-      'packageName': app.package,
-    });
+    await platform.invokeMethod(
+      'launchApp',
+      <String, dynamic>{'packageName': app.package},
+    );
   } catch (e) {
     ezLog('Failed to launch ${app.package}: $e');
   }
@@ -40,9 +41,10 @@ Future<void> launchApp(AppInfo app) async {
 
 Future<void> openSettings(AppInfo app) async {
   try {
-    await platform.invokeMethod('openSettings', <String, dynamic>{
-      'packageName': app.package,
-    });
+    await platform.invokeMethod(
+      'openSettings',
+      <String, dynamic>{'packageName': app.package},
+    );
   } catch (e) {
     ezLog('Failed to open ${app.package} settings: $e');
   }
@@ -50,9 +52,10 @@ Future<void> openSettings(AppInfo app) async {
 
 Future<void> openDelete(AppInfo app) async {
   try {
-    await platform.invokeMethod('deleteApp', <String, dynamic>{
-      'packageName': app.package,
-    });
+    await platform.invokeMethod(
+      'deleteApp',
+      <String, dynamic>{'packageName': app.package},
+    );
   } catch (e) {
     ezLog('Failed to delete ${app.package}: $e');
   }
@@ -73,22 +76,15 @@ Future<bool> createCalendarEvent(String? title) async {
   }
 }
 
-Future<bool> openStopwatch() async {
+Future<bool> setTimer(int? seconds, bool auto) async {
   try {
-    await platform.invokeMethod('openStopwatch');
-    return true;
-  } catch (e) {
-    ezLog('Failed to open stopwatch: $e');
-    return false;
-  }
-}
-
-Future<bool> setTimer({int? seconds, bool auto = true}) async {
-  try {
-    await platform.invokeMethod('setTimer', <String, dynamic>{
-      if (seconds != null) 'length': seconds,
-      'skipUi': auto,
-    });
+    await platform.invokeMethod(
+      'setTimer',
+      <String, dynamic>{
+        if (seconds != null) 'length': seconds,
+        'skipUi': auto,
+      },
+    );
     return true;
   } catch (e) {
     ezLog('Failed to set timer: $e');

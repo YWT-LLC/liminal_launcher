@@ -582,7 +582,8 @@ If you want to support Liminal's development, or the development of more Empathe
                                 config,
                                 onPressed: () => ezModal(config, context: context, builder: (_) {
                                   WidgetSize size = WidgetSize.system;
-                                  WidgetSize preview = bt2WS(config);
+                                  WidgetSize preview = bt2WS(
+                                      config); // TODO: full audit of previews when done actuals
 
                                   return StatefulBuilder(
                                     builder: (BuildContext wCon, StateSetter setModal) =>
@@ -702,7 +703,6 @@ If you want to support Liminal's development, or the development of more Empathe
                                             ),
                                         },
                                       ]),
-                                      // TODO: differentiate these two
                                       config.spacer,
 
                                       // Search
@@ -778,49 +778,6 @@ If you want to support Liminal's development, or the development of more Empathe
                                             ),
                                         },
                                       ]),
-                                      config.spacer,
-
-                                      // Stopwatch
-                                      EzRow(config, children: <Widget>[
-                                        Text(
-                                          'Stopwatch',
-                                          textAlign: TextAlign.center,
-                                          style: config.bodyStyle,
-                                        ),
-                                        config.rowSpacer,
-                                        switch (preview) {
-                                          WidgetSize.button => EzIconButton(
-                                              config,
-                                              onPressed: () => appInfo.addHomeWidget(
-                                                config,
-                                                0,
-                                                WidWidGetGet.stopwatch,
-                                                size,
-                                              ),
-                                              icon: EzIcon(config, Icons.watch),
-                                            ),
-                                          WidgetSize.tile => EzIconButton(
-                                              config,
-                                              onPressed: () => appInfo.addHomeWidget(
-                                                config,
-                                                0,
-                                                WidWidGetGet.stopwatch,
-                                                size,
-                                              ),
-                                              icon: EzIcon(config, Icons.watch),
-                                            ),
-                                          _ => EzIconButton(
-                                              config,
-                                              onPressed: () => appInfo.addHomeWidget(
-                                                config,
-                                                0,
-                                                WidWidGetGet.stopwatch,
-                                                size,
-                                              ),
-                                              icon: EzIcon(config, Icons.watch),
-                                            ),
-                                        },
-                                      ]), // TODO: THIS'UN
                                       config.spacer,
 
                                       // Timer

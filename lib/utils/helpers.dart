@@ -67,7 +67,6 @@ Widget renderWidget(
       esCalendar => CalendarWidget(config, appInfo, lane, index, state, rippleProgress),
       esClock => ClockWidget(config, appInfo, lane, index, state, rippleProgress),
       esSearch => SearchWidget(config, appInfo, lane, index, state, rippleProgress),
-      esStopwatch => StopwatchWidget(config, appInfo, lane, index, state, rippleProgress),
       esTimer => TimerWidget(config, appInfo, lane, index, state, rippleProgress),
       esToggleMedia => ToggleMediaWidget(config, appInfo, lane, index, state, rippleProgress),
       _ => const SizedBox.shrink(),

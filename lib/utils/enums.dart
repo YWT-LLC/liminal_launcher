@@ -46,7 +46,7 @@ enum AppState { standard, singleEdit, groupEdit, verbose }
 
 enum ListContent { home, hidden, banished }
 
-enum WidWidGetGet { calendar, clock, search, stopwatch, timer, toggleMedia }
+enum WidWidGetGet { calendar, clock, search, timer, toggleMedia }
 
 /// enum [String] 'calendar'
 const String esCalendar = 'calendar';
@@ -56,9 +56,6 @@ const String esClock = 'clock';
 
 /// enum [String] 'search'
 const String esSearch = 'search';
-
-/// enum [String] 'stopwatch'
-const String esStopwatch = 'stopwatch';
 
 /// enum [String] 'timer'
 const String esTimer = 'timer';
@@ -71,7 +68,6 @@ extension WWGGConfig on WidWidGetGet {
         WidWidGetGet.calendar => esCalendar,
         WidWidGetGet.clock => esClock,
         WidWidGetGet.search => esSearch,
-        WidWidGetGet.stopwatch => esStopwatch,
         WidWidGetGet.timer => esTimer,
         WidWidGetGet.toggleMedia => esToggleMedia,
       };

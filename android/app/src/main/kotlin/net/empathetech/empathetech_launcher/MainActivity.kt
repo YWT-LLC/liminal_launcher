@@ -126,17 +126,6 @@ class MainActivity : FlutterFragmentActivity() {
           }
         }
 
-        "openStopwatch" -> {
-          try {
-            val intent = Intent(AlarmClock.ACTION_SHOW_ALARMS)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-            result.success(true)
-          } catch (e: Exception) {
-            result.error("STOPWATCH_ERROR", "Could not open clock app", e.message)
-          }
-        }
-
         "setTimer" -> {
           try { 
             val length = call.argument<Int>("length") ?: 300 
