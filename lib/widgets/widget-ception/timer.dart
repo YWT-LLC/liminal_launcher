@@ -314,7 +314,7 @@ class _TimerWidgetState extends State<TimerWidget> {
       widget.config,
       label: 'Remove',
       icon: EzIcon(widget.config, Icons.delete),
-      onPressed: () => widget.appInfo.deleteWidget(
+      onPressed: () => widget.appInfo.deleteWS(
         widget.config,
         lane: widget.lane,
         index: widget.index,

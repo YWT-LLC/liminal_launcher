@@ -672,7 +672,8 @@ For example: if an app has always on location permissions, banishing it will not
     if (!batch) notifyListeners();
   }
 
-  Future<void> deleteWidget(
+  /// Widget or Spacer: the things that don't need any extra tracking
+  Future<void> deleteWS(
     EzCP config, {
     required int lane,
     required int index,

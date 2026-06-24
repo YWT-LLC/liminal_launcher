@@ -117,7 +117,7 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
       widget.config,
       label: 'Remove',
       icon: EzIcon(widget.config, Icons.delete),
-      onPressed: () => widget.appInfo.deleteWidget(
+      onPressed: () => widget.appInfo.deleteWS(
         widget.config,
         lane: widget.lane,
         index: widget.index,

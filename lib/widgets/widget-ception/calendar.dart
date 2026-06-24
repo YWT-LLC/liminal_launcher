@@ -138,7 +138,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
               text: 'Yes',
               onPressed: () async {
                 Navigator.of(context).pop();
-                await ezNoTouch(() async => await widget.appInfo.deleteWidget(
+                await ezNoTouch(() async => await widget.appInfo.deleteWS(
                       widget.config,
                       lane: widget.lane,
                       index: widget.index,
@@ -195,7 +195,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
       widget.config,
       label: 'Remove',
       icon: EzIcon(widget.config, Icons.delete),
-      onPressed: () => widget.appInfo.deleteWidget(
+      onPressed: () => widget.appInfo.deleteWS(
         widget.config,
         lane: widget.lane,
         index: widget.index,
