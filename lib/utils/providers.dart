@@ -212,8 +212,13 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   Future<void> addClock(EzCP config, int lane) async {
-    final String entry =
-        <String>[WidWidGetGet.clock.value, 'true', DateType.compact.value].join(widgetSplit);
+    final String entry = <String>[
+      WidWidGetGet.clock.value,
+      'true',
+      DateType.compact.value,
+      TxtStile.headline.value,
+      TxtStile.label.value
+    ].join(widgetSplit);
 
     if (interlinked || config.isDark) {
       _darkHomeMatrix[lane].add(entry);
