@@ -20,7 +20,7 @@ class TimerWidget extends StatefulWidget {
   final ValueNotifier<double>? rippleProgress;
 
   late final WidgetSize _size;
-  late final bool _autoStart;
+  late final bool _hasAuto;
   late final List<String> _storedTimes;
 
   TimerWidget(
@@ -40,10 +40,10 @@ class TimerWidget extends StatefulWidget {
     final List<String> storage = data[2].split(':');
 
     if (storage.length == 3) {
-      _autoStart = false;
+      _hasAuto = false;
       _storedTimes = <String>['00', '00', '00'];
     } else {
-      _autoStart = (data[2] != '00:00:00');
+      _hasAuto = (data[2] != '00:00:00');
       _storedTimes = storage;
     }
   }
@@ -69,11 +69,13 @@ class _TimerWidgetState extends State<TimerWidget> {
   late final FocusNode minNode = FocusNode();
   late final FocusNode secNode = FocusNode();
 
+  OverlayEntry? overlayEntry;
+
   Widget timeField(
     BoxConstraints constraints,
     TextEditingController controller,
     FocusNode curr,
-    void Function()? onSubmit, {
+    void Function() onSubmit, {
     bool last = false,
   }) =>
       ConstrainedBox(
@@ -85,7 +87,6 @@ class _TimerWidgetState extends State<TimerWidget> {
           textAlignVertical: TextAlignVertical.center,
           keyboardType: TextInputType.number,
           textInputAction: last ? TextInputAction.done : TextInputAction.next,
-          onTap: controller.clear,
           validator: (String? value) {
             const String failure = '0-99';
 
@@ -94,15 +95,19 @@ class _TimerWidgetState extends State<TimerWidget> {
 
             return (parsed > 99 || parsed < 0) ? failure : null;
           },
-          onEditingComplete: () {
+          onTap: controller.clear,
+          onTapOutside: (_) {
             if (controller.text.isEmpty) controller.text = '00';
           },
-          onTapOutside: (_) {
+          onChanged: (String value) => (value.isEmpty)
+              ? removeOverlay()
+              : ((overlayEntry == null) ? showOverlay(controller) : overlayEntry!.markNeedsBuild()),
+          onEditingComplete: () {
             if (controller.text.isEmpty) controller.text = '00';
           },
           onFieldSubmitted: (String value) {
             if (value.isEmpty) controller.text = '00';
-            onSubmit?.call();
+            onSubmit.call();
           },
         ),
       );
@@ -132,6 +137,86 @@ class _TimerWidgetState extends State<TimerWidget> {
       );
     }
   }
+
+  void showOverlay(TextEditingController controller) {
+    overlayEntry = OverlayEntry(
+      builder: (BuildContext context) => Positioned(
+        top: safeTop(context),
+        left: widget.config.marginVal,
+        right: widget.config.marginVal,
+        child: Material(
+          type: MaterialType.transparency,
+          child: IgnorePointer(
+            child: Container(
+              padding: EdgeInsets.all(widget.config.marginVal),
+              decoration: BoxDecoration(
+                color: widget.config.colors.surfaceContainer,
+                border: Border.all(
+                  color: widget.config.colors.secondaryContainer,
+                  width: widget.config.borderWidth,
+                ),
+                borderRadius: widget.config.textRadius,
+              ),
+              child: Text(
+                controller.text,
+                style: widget.config.bodyStyle,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    ezRootNav.currentState?.overlay?.insert(overlayEntry!);
+  }
+
+  void removeOverlay() {
+    overlayEntry?.remove();
+    overlayEntry = null;
+  }
+
+  Future<dynamic> setAutoDialog(BoxConstraints constraints) => showDialog(
+        context: context,
+        builder: (BuildContext mCon) => EzAlertDialog(
+          widget.config,
+          content: Padding(
+            padding: EdgeInsets.only(top: widget.config.marginVal),
+            child: EzRow(
+              widget.config,
+              reverseHands: false,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                // Hours
+                timeField(constraints, ourCon, ourNode, () {
+                  removeOverlay();
+                  minNode.requestFocus();
+                  minCon.selection = TextSelection(baseOffset: 0, extentOffset: minCon.text.length);
+                }),
+                widget.config.rowMargin,
+
+                // Minutes
+                timeField(constraints, minCon, minNode, () {
+                  removeOverlay();
+                  secNode.requestFocus();
+                  secCon.selection = TextSelection(baseOffset: 0, extentOffset: secCon.text.length);
+                }),
+                widget.config.rowMargin,
+
+                // Seconds
+                timeField(constraints, secCon, secNode, removeOverlay, last: true),
+              ],
+            ),
+          ),
+          actions: ezActionPair(
+            widget.config,
+            onConfirm: () => Navigator.of(mCon).pop(true),
+            confirmMsg: widget.config.ezL10n.gApply,
+            onDeny: () => Navigator.of(mCon).pop(false),
+            denyMsg: widget.config.ezL10n.gCancel,
+          ),
+          needsClose: false,
+        ),
+      );
 
   // Init //
 
@@ -163,41 +248,7 @@ class _TimerWidgetState extends State<TimerWidget> {
         final String minBackup = ourCon.text;
         final String secBackup = ourCon.text;
 
-        final bool save = await showDialog(
-          context: context,
-          builder: (BuildContext mCon) => EzAlertDialog(
-            widget.config,
-            content: EzRow(
-              widget.config,
-              reverseHands: false,
-              children: <Widget>[
-                // Hours
-                timeField(numConstraints, ourCon, ourNode, () {
-                  minNode.requestFocus();
-                  minCon.selection = TextSelection(baseOffset: 0, extentOffset: minCon.text.length);
-                }),
-                widget.config.rowMargin,
-
-                // Minutes
-                timeField(numConstraints, minCon, minNode, () {
-                  secNode.requestFocus();
-                  secCon.selection = TextSelection(baseOffset: 0, extentOffset: secCon.text.length);
-                }),
-                widget.config.rowMargin,
-
-                // Seconds
-                timeField(numConstraints, secCon, secNode, null, last: true),
-              ],
-            ),
-            actions: ezActionPair(
-              widget.config,
-              onConfirm: () => Navigator.of(mCon).pop(true),
-              onDeny: () => Navigator.of(mCon).pop(false),
-              denyMsg: widget.config.ezL10n.gCancel,
-            ),
-            needsClose: false,
-          ),
-        );
+        final bool save = await setAutoDialog(numConstraints);
 
         if (save) {
           await widget.appInfo.updateWidget(
@@ -209,7 +260,7 @@ class _TimerWidgetState extends State<TimerWidget> {
             ],
             lane: widget.lane,
             index: widget.index,
-            notify: false,
+            notify: true,
           );
         } else {
           ourCon.text = ourBackup;
@@ -241,7 +292,7 @@ class _TimerWidgetState extends State<TimerWidget> {
           ],
           lane: widget.lane,
           index: widget.index,
-          notify: false,
+          notify: true,
         );
         setState(() => size = trueChoice);
       },
@@ -268,20 +319,21 @@ class _TimerWidgetState extends State<TimerWidget> {
             builder: (_, MenuController controller, __) => (size == WidgetSize.button)
                 ? EzIconButton(
                     widget.config,
-                    icon: EzIcon(widget.config, Icons.timer_outlined),
-                    onPressed: () => setTimer(
-                      <int>[
-                        int.tryParse(ourCon.text) ?? 0,
-                        int.tryParse(minCon.text) ?? 0,
-                        int.tryParse(secCon.text) ?? 0,
-                      ],
-                      widget._autoStart,
-                    ),
+                    iconSize: appIconSize(widget.config),
+                    icon: const Icon(Icons.timer_outlined),
+                    onPressed: () async => widget._hasAuto
+                        ? await setTimer(<int>[
+                            int.tryParse(ourCon.text) ?? 0,
+                            int.tryParse(minCon.text) ?? 0,
+                            int.tryParse(secCon.text) ?? 0,
+                          ])
+                        : await setAutoDialog(numConstraints),
                     onLongPress: () => toggleMenu(controller),
-                  )
+                  ) // TODO: handle lil -> big -> set -> lil again
                 : EzRow(widget.config, children: <Widget>[
                     // Hours
                     timeField(numConstraints, ourCon, ourNode, () {
+                      removeOverlay();
                       minNode.requestFocus();
                       minCon.selection =
                           TextSelection(baseOffset: 0, extentOffset: minCon.text.length);
@@ -290,6 +342,7 @@ class _TimerWidgetState extends State<TimerWidget> {
 
                     // Minutes
                     timeField(numConstraints, minCon, minNode, () {
+                      removeOverlay();
                       secNode.requestFocus();
                       secCon.selection =
                           TextSelection(baseOffset: 0, extentOffset: secCon.text.length);
@@ -301,14 +354,14 @@ class _TimerWidgetState extends State<TimerWidget> {
                       numConstraints,
                       secCon,
                       secNode,
-                      () => setTimer(
-                        <int>[
+                      () async {
+                        removeOverlay();
+                        await setTimer(<int>[
                           int.tryParse(ourCon.text) ?? 0,
                           int.tryParse(minCon.text) ?? 0,
                           int.tryParse(secCon.text) ?? 0,
-                        ],
-                        true,
-                      ),
+                        ]);
+                      },
                       last: true,
                     ),
                     widget.config.rowMargin,
@@ -316,14 +369,14 @@ class _TimerWidgetState extends State<TimerWidget> {
                     EzIconButton(
                       widget.config,
                       icon: EzIcon(widget.config, Icons.timer_outlined),
-                      onPressed: () => setTimer(
-                        <int>[
+                      onPressed: () async {
+                        removeOverlay();
+                        await setTimer(<int>[
                           int.tryParse(ourCon.text) ?? 0,
                           int.tryParse(minCon.text) ?? 0,
                           int.tryParse(secCon.text) ?? 0,
-                        ],
-                        true,
-                      ),
+                        ]);
+                      },
                       onLongPress: () => toggleMenu(controller),
                     ),
                   ]),
@@ -375,6 +428,7 @@ class _TimerWidgetState extends State<TimerWidget> {
     minNode.dispose();
     secNode.dispose();
 
+    removeOverlay();
     widget.rippleProgress?.removeListener(rippling);
     super.dispose();
   }
