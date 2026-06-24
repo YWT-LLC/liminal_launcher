@@ -74,16 +74,6 @@ class AppListSettings extends StatelessWidget {
                 ),
                 config.spacer,
 
-                // Home scroll hints
-                EzSwitchPair(
-                  config,
-                  text: 'Home scroll hints',
-                  tipper:
-                      'If you have a lot of home lanes,\nthis will add scroll arrows when there is content off-screen.',
-                  valueKey: homeHintsKey,
-                ),
-                config.spacer,
-
                 // Auto search
                 EzSwitchPair(
                   config,
