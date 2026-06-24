@@ -24,13 +24,13 @@ class LimSpacer extends StatefulWidget {
   late final double _width;
 
   LimSpacer(
-    this.config,
-    this.appInfo,
-    this.lane,
-    this.index,
-    this.state,
-    this.rippleProgress, {
+    this.config, {
     super.key,
+    required this.appInfo,
+    required this.lane,
+    required this.index,
+    required this.state,
+    required this.rippleProgress,
   }) {
     final List<String> data = appInfo.homeList(config, lane)[index].split(widgetSplit);
 
