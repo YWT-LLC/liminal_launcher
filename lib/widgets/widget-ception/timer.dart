@@ -77,6 +77,7 @@ class _TimerWidgetState extends State<TimerWidget> {
     FocusNode curr,
     void Function() onSubmit, {
     bool last = false,
+    bool useOverlay = true,
   }) =>
       ConstrainedBox(
         constraints: constraints,
@@ -101,7 +102,9 @@ class _TimerWidgetState extends State<TimerWidget> {
           },
           onChanged: (String value) => (value.isEmpty)
               ? removeOverlay()
-              : ((overlayEntry == null) ? showOverlay(controller) : overlayEntry!.markNeedsBuild()),
+              : ((overlayEntry == null && useOverlay)
+                  ? showOverlay(controller)
+                  : overlayEntry!.markNeedsBuild()),
           onEditingComplete: () {
             if (controller.text.isEmpty) controller.text = '00';
           },
@@ -187,23 +190,35 @@ class _TimerWidgetState extends State<TimerWidget> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 // Hours
-                timeField(constraints, ourCon, ourNode, () {
-                  removeOverlay();
-                  minNode.requestFocus();
-                  minCon.selection = TextSelection(baseOffset: 0, extentOffset: minCon.text.length);
-                }),
+                timeField(
+                  constraints,
+                  ourCon,
+                  ourNode,
+                  () {
+                    minNode.requestFocus();
+                    minCon.selection =
+                        TextSelection(baseOffset: 0, extentOffset: minCon.text.length);
+                  },
+                  useOverlay: false,
+                ),
                 widget.config.rowMargin,
 
                 // Minutes
-                timeField(constraints, minCon, minNode, () {
-                  removeOverlay();
-                  secNode.requestFocus();
-                  secCon.selection = TextSelection(baseOffset: 0, extentOffset: secCon.text.length);
-                }),
+                timeField(
+                  constraints,
+                  minCon,
+                  minNode,
+                  () {
+                    secNode.requestFocus();
+                    secCon.selection =
+                        TextSelection(baseOffset: 0, extentOffset: secCon.text.length);
+                  },
+                  useOverlay: false,
+                ),
                 widget.config.rowMargin,
 
                 // Seconds
-                timeField(constraints, secCon, secNode, removeOverlay, last: true),
+                timeField(constraints, secCon, secNode, doNothing, last: true, useOverlay: false),
               ],
             ),
           ),
@@ -226,7 +241,7 @@ class _TimerWidgetState extends State<TimerWidget> {
     widget.rippleProgress?.addListener(rippling);
   }
 
-  // Return the build //
+  // Return the build // TODO: figure out the switcheroo vibes
 
   @override
   Widget build(BuildContext context) {
