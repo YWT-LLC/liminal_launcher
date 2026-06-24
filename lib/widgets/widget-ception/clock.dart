@@ -101,7 +101,8 @@ class _ClockWidgetState extends State<ClockWidget> {
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
-    // TODO: edits I
+    // TODO: edits I: time on/off, date type, clock font, date font
+    // TODO: add font options to storage
 
     late final EzMenuButton remove = EzMenuButton(
       widget.config,
@@ -178,7 +179,7 @@ class _ClockWidgetState extends State<ClockWidget> {
             child: EzIconButton(
               widget.config,
               iconSize: appIconSize(widget.config),
-              icon: const Icon(Icons.alarm),
+              icon: const Icon(Icons.watch),
               onPressed: () => toggleMenu(menuControl),
             ),
           ),
