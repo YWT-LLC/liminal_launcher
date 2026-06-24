@@ -171,7 +171,6 @@ LiminalCache _cache(EzCP config) => config.appCache! as LiminalCache;
 Lang l10n(EzCP config) => _cache(config)._l10n;
 
 bool get interlinked => EzCM.get(interlinkedKey);
-bool get homeHints => EzCM.get(homeHintsKey);
 
 String get leftSwipeID => EzCM.get(leftSwipeIDKey);
 String get rightSwipeID => EzCM.get(rightSwipeIDKey);

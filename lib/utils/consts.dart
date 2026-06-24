@@ -77,7 +77,6 @@ const Map<String, Type> limBTSKeys = <String, Type>{
 // List //
 
 const String interlinkedKey = 'interlinked';
-const String homeHintsKey = 'homeHints';
 
 const String leftSwipeIDKey = 'leftSwipeID';
 const String rightSwipeIDKey = 'rightSwipeID';
@@ -88,7 +87,6 @@ const String autoSearchKey = 'autoSearch';
 const Map<String, Type> limListKeys = <String, Type>{
   // Home list
   interlinkedKey: bool,
-  homeHintsKey: bool,
 
   // Quick launch
   leftSwipeIDKey: String,
@@ -208,7 +206,6 @@ final Map<String, Object> liminalDefault = <String, Object>{
   // List //
   // Home
   interlinkedKey: true,
-  homeHintsKey: true,
 
   // Quick launch
   leftSwipeIDKey: '',

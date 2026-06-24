@@ -500,7 +500,6 @@ If you want to support Liminal's development, or the development of more Empathe
                   },
                   child: EzScrollView(
                     config,
-                    showScrollHint: homeHints,
                     mainAxisSize: MainAxisSize.max,
                     scrollDirection: Axis.horizontal,
                     mainAxisAlignment: hAlign(config).mainAxis,
@@ -844,7 +843,7 @@ class _AddTimer extends StatelessWidget {
     late final Widget fauxTimerField = ConstrainedBox(
       constraints: BoxConstraints(
         maxWidth:
-            ezTextSize('00', context: context, style: config.titleStyle).width + config.padding,
+            ezTextSize('00', context: context, style: config.bodyStyle).width + config.padding,
         maxHeight: appIconSize(config),
       ),
       child: TextFormField(
