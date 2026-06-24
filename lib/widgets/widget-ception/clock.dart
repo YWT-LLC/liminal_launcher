@@ -19,7 +19,9 @@ class ClockWidget extends StatefulWidget {
   final ValueNotifier<double>? rippleProgress;
 
   late final String _showTime;
-  late final String _dateSize;
+  late final String _dateType;
+  late final String _timeStyle;
+  late final String _dateStyle;
 
   ClockWidget(
     this.config,
@@ -33,7 +35,9 @@ class ClockWidget extends StatefulWidget {
     final List<String> data = appInfo.homeList(config, lane)[index].split(widgetSplit);
 
     _showTime = data[1];
-    _dateSize = data[2];
+    _dateType = data[2];
+    _timeStyle = data[3];
+    _timeStyle = data[4];
   }
 
   @override
@@ -47,8 +51,11 @@ class _ClockWidgetState extends State<ClockWidget> {
   Timer? rippleThrottle;
 
   final MenuController menuControl = MenuController();
+
   late bool showTime = bool.tryParse(widget._showTime) ?? true;
-  late DateType dateSize = DTConfig.lookup(widget._dateSize);
+  late DateType dateType = DTConfig.lookup(widget._dateType);
+  late TxtStile timeStyle = TSConfig.lookup(widget._timeStyle) ?? TxtStile.headline;
+  late TxtStile dateStyle = TSConfig.lookup(widget._dateStyle) ?? TxtStile.label;
 
   DateTime now = DateTime.now();
   late Timer ticker;
@@ -79,6 +86,99 @@ class _ClockWidgetState extends State<ClockWidget> {
     }
   }
 
+  // TODO: saving!
+
+  Future<dynamic> openEdits() => ezModal(
+        widget.config,
+        context: context,
+        builder: (_) {
+          return StatefulBuilder(
+            builder: (_, StateSetter setModal) => ezModalScroll(
+              widget.config,
+              children: <Widget>[
+                // Time on/off
+                EzSwitchPair(
+                  key: ValueKey<bool>(showTime),
+                  widget.config,
+                  value: showTime,
+                  text: 'Show time',
+                  onChanged: (bool? choice) {
+                    if (choice == null) return;
+                    setModal(() => showTime = choice);
+                    setState(() {});
+                  },
+                ),
+                widget.config.spacer,
+
+                // Date type
+                EzDropdownMenu<DateType>(
+                  widget.config,
+                  enableSearch: false,
+                  initialSelection: dateType,
+                  widthEntry: DateType.compact.value,
+                  dropdownMenuEntries: DateType.values
+                      .map((DateType dt) => DropdownMenuEntry<DateType>(
+                            value: dt,
+                            label: ezCamelToTitle(dt.value),
+                          ))
+                      .toList(),
+                  onSelected: (DateType? choice) {
+                    if (choice == null) return;
+                    setModal(() => dateType = choice);
+                    setState(() {});
+                  },
+                ),
+                widget.config.spacer,
+
+                // Time style
+                EzDropdownMenu<TxtStile>(
+                  widget.config,
+                  enabled: showTime,
+                  enableSearch: false,
+                  initialSelection: timeStyle,
+                  widthEntry: TxtStile.display.value,
+                  dropdownMenuEntries: TxtStile.values
+                      .map((TxtStile ts) => DropdownMenuEntry<TxtStile>(
+                            value: ts,
+                            label: ezCamelToTitle(ts.value),
+                          ))
+                      .toList(),
+                  textStyle: timeStyle.style(widget.config),
+                  onSelected: (TxtStile? choice) {
+                    if (choice == null) return;
+                    setModal(() => timeStyle = choice);
+                    setState(() {});
+                  },
+                ),
+                widget.config.spacer,
+
+                // Date style
+                EzDropdownMenu<TxtStile>(
+                  widget.config,
+                  enabled: dateType != DateType.none,
+                  enableSearch: false,
+                  initialSelection: dateStyle,
+                  widthEntry: TxtStile.display.value,
+                  dropdownMenuEntries: TxtStile.values
+                      .map((TxtStile ts) => DropdownMenuEntry<TxtStile>(
+                            value: ts,
+                            label: ezCamelToTitle(ts.value),
+                          ))
+                      .toList(),
+                  textStyle: dateStyle.style(widget.config),
+                  onSelected: (TxtStile? choice) {
+                    if (choice == null) return;
+                    setModal(() => dateStyle = choice);
+                    setState(() {});
+                  },
+                ),
+                widget.config.separator,
+              ],
+            ),
+          );
+        },
+      );
+
   // Init //
 
   @override
@@ -101,8 +201,12 @@ class _ClockWidgetState extends State<ClockWidget> {
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
-    // TODO: edits I: time on/off, date type, clock font, date font
-    // TODO: add font options to storage
+    late final EzMenuButton edit = EzMenuButton(
+      widget.config,
+      label: 'Edit',
+      icon: EzIcon(widget.config, Icons.edit),
+      onPressed: openEdits,
+    );
 
     late final EzMenuButton remove = EzMenuButton(
       widget.config,
@@ -132,20 +236,19 @@ class _ClockWidgetState extends State<ClockWidget> {
                   if (showTime)
                     Text(
                       TimeOfDay.fromDateTime(now).format(context),
-                      style: widget.config.headlineStyle,
+                      style: timeStyle.style(widget.config),
                       textAlign: hAlign(widget.config).textAlign,
                     ),
-                  if (dateSize != DateType.none)
+                  if (dateType != DateType.none)
                     Text(
-                      DTConfig.buildDate(context, now, dateSize),
-                      style: widget.config.labelStyle,
+                      DTConfig.buildDate(context, now, dateType),
+                      style: dateStyle.style(widget.config),
                       textAlign: hAlign(widget.config).textAlign,
                     ),
                 ],
               ),
             ),
-            menuChildren: <Widget>[remove],
-            // TODO: edits II
+            menuChildren: <Widget>[edit, remove],
           ),
         _ => EditContainer(
             widget.config,
@@ -173,7 +276,7 @@ class _ClockWidgetState extends State<ClockWidget> {
                     index: widget.index,
                   ),
                 ),
-              // TODO: edits III
+              edit,
               remove,
             ],
             child: EzIconButton(
