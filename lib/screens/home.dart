@@ -525,7 +525,7 @@ If you want to support Liminal's development, or the development of more Empathe
                     await ezModal(
                       config,
                       context: context,
-                      builder: (BuildContext mCon) => ezModalScroll(
+                      builder: (_) => ezModalScroll(
                         config,
                         children: <Widget>[
                           EzWrap(children: <Widget>[
@@ -584,41 +584,36 @@ If you want to support Liminal's development, or the development of more Empathe
                                   WidgetSize preview = bt2WS(config);
 
                                   return StatefulBuilder(
-                                    builder: (BuildContext wCon, StateSetter setModal) =>
+                                    builder: (BuildContext wmCon, StateSetter setModal) =>
                                         ezModalScroll(config, children: <Widget>[
-                                      EzDropdownMenu<WidgetSize>(
-                                        config,
-                                        enableSearch: false,
-                                        initialSelection: size,
-                                        widthEntry: WidgetSize.system.value,
-                                        dropdownMenuEntries: WidgetSize.values
-                                            .map((WidgetSize ws) => DropdownMenuEntry<WidgetSize>(
-                                                  value: ws,
-                                                  label: ezCamelToTitle(ws.value),
-                                                ))
-                                            .toList(),
-                                        onSelected: (WidgetSize? choice) {
-                                          if (choice == null) return;
-                                          size = choice;
-                                          preview = (choice == WidgetSize.system)
-                                              ? bt2WS(config)
-                                              : choice;
-
-                                          setModal(() {});
-                                        },
-                                      ),
-                                      if (size == WidgetSize.system) ...<Widget>[
-                                        config.margin,
-                                        Text(
-                                          'Currently: ${preview.value}',
-                                          textAlign: TextAlign.center,
-                                          style: config.labelStyle,
-                                        ),
-                                      ],
-                                      config.separator,
-
                                       // Clock
                                       _AddClock(config, appInfo),
+                                      EzTitledDivider(
+                                        constraints: BoxConstraints(maxWidth: widthOf(wmCon) / 2),
+                                        EzDropdownMenu<WidgetSize>(
+                                          config,
+                                          enableSearch: false,
+                                          initialSelection: size,
+                                          widthEntry: WidgetSize.system.value,
+                                          dropdownMenuEntries: WidgetSize.values
+                                              .map((WidgetSize ws) => DropdownMenuEntry<WidgetSize>(
+                                                    value: ws,
+                                                    label: ezCamelToTitle(ws.value),
+                                                  ))
+                                              .toList(),
+                                          onSelected: (WidgetSize? choice) {
+                                            if (choice == null) return;
+                                            size = choice;
+                                            preview = (choice == WidgetSize.system)
+                                                ? bt2WS(config)
+                                                : choice;
+
+                                            setModal(() {});
+                                          },
+                                        ),
+                                        height: config.spacing * 2,
+                                        margin: config.padding,
+                                      ),
                                       config.spacer,
 
                                       // Calendar
@@ -719,41 +714,6 @@ If you want to support Liminal's development, or the development of more Empathe
   }
 }
 
-class _AddClock extends StatelessWidget {
-  final EzCP config;
-  final AppInfoProvider appInfo;
-
-  const _AddClock(this.config, this.appInfo);
-
-  void onTap() => appInfo.addClock(config, 0);
-
-  @override
-  Widget build(BuildContext context) {
-    final DateTime now = DateTime.now();
-
-    return EzTextBackground(
-      config,
-      padding: EdgeInsets.all(config.padding),
-      text: EzCol(
-        mainAxisAlignment: vAlign(config).mainAxis,
-        crossAxisAlignment: hAlign(config).crossAxis,
-        children: <Widget>[
-          Text(
-            TimeOfDay.fromDateTime(now).format(context),
-            style: config.headlineStyle,
-            textAlign: hAlign(config).textAlign,
-          ),
-          Text(
-            DTConfig.buildDate(context, now, DateType.compact),
-            style: config.labelStyle,
-            textAlign: hAlign(config).textAlign,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class _AddCalendar extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
@@ -803,6 +763,44 @@ class _AddCalendar extends StatelessWidget {
             ),
           ]),
         );
+}
+
+class _AddClock extends StatelessWidget {
+  final EzCP config;
+  final AppInfoProvider appInfo;
+
+  const _AddClock(this.config, this.appInfo);
+
+  void onTap() => appInfo.addClock(config, 0);
+
+  @override
+  Widget build(BuildContext context) {
+    final DateTime now = DateTime.now();
+
+    return GestureDetector(
+      onTap: onTap,
+      child: EzTextBackground(
+        config,
+        padding: EdgeInsets.all(config.padding),
+        text: EzCol(
+          mainAxisAlignment: vAlign(config).mainAxis,
+          crossAxisAlignment: hAlign(config).crossAxis,
+          children: <Widget>[
+            Text(
+              TimeOfDay.fromDateTime(now).format(context),
+              style: config.headlineStyle,
+              textAlign: hAlign(config).textAlign,
+            ),
+            Text(
+              DTConfig.buildDate(context, now, DateType.compact),
+              style: config.labelStyle,
+              textAlign: hAlign(config).textAlign,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class _AddSearch extends StatelessWidget {
