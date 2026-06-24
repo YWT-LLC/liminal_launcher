@@ -262,13 +262,18 @@ const String widgetSplit = ':01010111:';
 /// r'(:(I|W|F|S):)'... but the binaries
 final RegExp tileRegex = RegExp(r':(01001001|01010111|01000110|01010011):');
 
+/// -1
+const int headerLane = -1;
+
+/// -2
+const int footerLane = -2;
+
 /// ---
 const String nullAppLabel = '---';
 
 /// empty [String]
 const String nullAppPackage = '';
 
-/// 00W
 const Map<String, String> wingdingMap = <String, String>{
   // Lowercase
   'a': '\u{264B}',
