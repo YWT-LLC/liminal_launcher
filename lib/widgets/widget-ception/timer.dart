@@ -72,10 +72,10 @@ class _TimerWidgetState extends State<TimerWidget> {
   Widget timeField(
     BoxConstraints constraints,
     TextEditingController controller,
-    FocusNode? curr,
-    FocusNode? next,
-    void Function()? onSubmit,
-  ) =>
+    FocusNode curr,
+    void Function()? onSubmit, {
+    bool last = false,
+  }) =>
       ConstrainedBox(
         constraints: constraints,
         child: TextFormField(
@@ -84,7 +84,7 @@ class _TimerWidgetState extends State<TimerWidget> {
           textAlign: TextAlign.center,
           textAlignVertical: TextAlignVertical.center,
           keyboardType: TextInputType.number,
-          textInputAction: next != null ? TextInputAction.next : TextInputAction.done,
+          textInputAction: last ? TextInputAction.done : TextInputAction.next,
           onTap: controller.clear,
           validator: (String? value) {
             const String failure = '0-99';
@@ -102,7 +102,7 @@ class _TimerWidgetState extends State<TimerWidget> {
           },
           onFieldSubmitted: (String value) {
             if (value.isEmpty) controller.text = '00';
-            (next != null) ? next.requestFocus() : onSubmit?.call();
+            onSubmit?.call();
           },
         ),
       );
@@ -171,11 +171,22 @@ class _TimerWidgetState extends State<TimerWidget> {
               widget.config,
               reverseHands: false,
               children: <Widget>[
-                timeField(numConstraints, ourCon, ourNode, minNode, null),
+                // Hours
+                timeField(numConstraints, ourCon, ourNode, () {
+                  minNode.requestFocus();
+                  minCon.selection = TextSelection(baseOffset: 0, extentOffset: minCon.text.length);
+                }),
                 widget.config.rowMargin,
-                timeField(numConstraints, minCon, minNode, secNode, null),
+
+                // Minutes
+                timeField(numConstraints, minCon, minNode, () {
+                  secNode.requestFocus();
+                  secCon.selection = TextSelection(baseOffset: 0, extentOffset: secCon.text.length);
+                }),
                 widget.config.rowMargin,
-                timeField(numConstraints, secCon, secNode, null, null),
+
+                // Seconds
+                timeField(numConstraints, secCon, secNode, null, last: true),
               ],
             ),
             actions: ezActionPair(
@@ -270,11 +281,19 @@ class _TimerWidgetState extends State<TimerWidget> {
                   )
                 : EzRow(widget.config, children: <Widget>[
                     // Hours
-                    timeField(numConstraints, ourCon, ourNode, minNode, null),
+                    timeField(numConstraints, ourCon, ourNode, () {
+                      minNode.requestFocus();
+                      minCon.selection =
+                          TextSelection(baseOffset: 0, extentOffset: minCon.text.length);
+                    }),
                     widget.config.rowMargin,
 
                     // Minutes
-                    timeField(numConstraints, minCon, minNode, secNode, null),
+                    timeField(numConstraints, minCon, minNode, () {
+                      secNode.requestFocus();
+                      secCon.selection =
+                          TextSelection(baseOffset: 0, extentOffset: secCon.text.length);
+                    }),
                     widget.config.rowMargin,
 
                     // Seconds
@@ -282,7 +301,6 @@ class _TimerWidgetState extends State<TimerWidget> {
                       numConstraints,
                       secCon,
                       secNode,
-                      null,
                       () => setTimer(
                         <int>[
                           int.tryParse(ourCon.text) ?? 0,
@@ -291,6 +309,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                         ],
                         true,
                       ),
+                      last: true,
                     ),
                     widget.config.rowMargin,
 
