@@ -194,15 +194,12 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           break;
 
         case spacerSplit:
-          final List<String> data = entry.split(spacerSplit);
-          final double height = double.tryParse(data[0]) ?? config.spacing;
-          final double width = double.tryParse(data[1]) ?? appIconSize(config);
-
           toReturn.add(LimSpacer(
             config,
-            key: ValueKey<String>('$index-$height-$width-$editing'),
-            height: height,
-            width: width,
+            key: ValueKey<String>('$index-spacer-$editing'),
+            appInfo: appInfo,
+            lane: lane,
+            index: index,
             state: editing ? AppState.groupEdit : AppState.standard,
             rippleProgress: rippleProgress,
           ));
