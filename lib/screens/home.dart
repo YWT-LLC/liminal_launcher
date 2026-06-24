@@ -731,71 +731,45 @@ class _AddCalendar extends StatelessWidget {
     required this.preview,
   });
 
+  void onTap() => appInfo.addHomeWidget(config, 0, WidWidGetGet.calendar, save);
+
   @override
-  Widget build(BuildContext context) => EzRow(config, children: <Widget>[
-        Text(
-          'Calendar',
-          textAlign: TextAlign.center,
-          style: config.bodyStyle,
-        ),
-        config.rowSpacer,
-        (preview == WidgetSize.button)
-            ? EzIconButton(
-                config,
-                onPressed: () => appInfo.addHomeWidget(
-                  config,
-                  0,
-                  WidWidGetGet.calendar,
-                  save,
-                ),
-                iconSize: appIconSize(config),
-                icon: const Icon(Icons.edit_calendar),
-              )
-            : GestureDetector(
-                onTap: () => appInfo.addHomeWidget(
-                  config,
-                  0,
-                  WidWidGetGet.calendar,
-                  save,
-                ),
-                child: EzRow(config, children: <Widget>[
-                  ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: ezTextSize(
-                            'Create event',
-                            context: context,
-                            style: config.bodyStyle,
-                          ).width +
-                          config.padding,
-                      maxHeight: appIconSize(config),
-                    ),
-                    child: TextFormField(
-                      onTap: () => appInfo.addHomeWidget(
-                        config,
-                        0,
-                        WidWidGetGet.calendar,
-                        save,
-                      ),
-                      readOnly: true,
-                      decoration: const InputDecoration(hintText: 'New event'),
-                      textAlign: TextAlign.center,
-                      textAlignVertical: TextAlignVertical.center,
-                    ),
-                  ),
-                  config.rowMargin,
-                  EzIconButton(
-                    config,
-                    icon: const Icon(Icons.search),
-                    onPressed: () => appInfo.addHomeWidget(
-                      config,
-                      0,
-                      WidWidGetGet.calendar,
-                      save,
-                    ),
-                  ),
-                ]),
+  Widget build(BuildContext context) => (preview == WidgetSize.button)
+      ? EzIconButton(
+          config,
+          onPressed: onTap,
+          iconSize: appIconSize(config),
+          icon: const Icon(Icons.edit_calendar),
+        )
+      : GestureDetector(
+          onTap: onTap,
+          child: EzRow(config, children: <Widget>[
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: ezTextSize(
+                      'Create event',
+                      context: context,
+                      style: config.bodyStyle,
+                    ).width +
+                    config.padding,
+                maxHeight: appIconSize(config),
               ),
-      ]);
+              child: TextFormField(
+                onTap: onTap,
+                readOnly: true,
+                decoration: const InputDecoration(hintText: 'New event'),
+                textAlign: TextAlign.center,
+                textAlignVertical: TextAlignVertical.center,
+              ),
+            ),
+            config.rowMargin,
+            EzIconButton(
+              config,
+              icon: const Icon(Icons.edit_calendar),
+              onPressed: onTap,
+            ),
+          ]),
+        );
 }
 
 // class _AddClock extends StatelessWidget {}
@@ -813,75 +787,46 @@ class _AddSearch extends StatelessWidget {
     required this.preview,
   });
 
+  void onTap() => appInfo
+      .addHomeWidget(config, 0, WidWidGetGet.search, save, extra: <String>[Engine.ducks.value]);
+
   @override
-  Widget build(BuildContext context) => EzRow(config, children: <Widget>[
-        Text(
-          'Web',
-          textAlign: TextAlign.center,
-          style: config.bodyStyle,
-        ),
-        config.rowSpacer,
-        (preview == WidgetSize.button)
-            ? EzIconButton(
-                config,
-                onPressed: () => appInfo.addHomeWidget(
-                  config,
-                  0,
-                  WidWidGetGet.search,
-                  save,
-                  extra: <String>[Engine.ducks.value],
-                ),
-                iconSize: appIconSize(config),
-                icon: const Icon(Icons.search),
-              )
-            : GestureDetector(
-                onTap: () => appInfo.addHomeWidget(
-                  config,
-                  0,
-                  WidWidGetGet.search,
-                  save,
-                  extra: <String>[Engine.ducks.value],
-                ),
-                child: EzRow(config, children: <Widget>[
-                  ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: ezTextSize(
-                            'Search bar',
-                            context: context,
-                            style: config.bodyStyle,
-                          ).width +
-                          config.padding,
-                      maxHeight: appIconSize(config),
-                    ),
-                    child: TextFormField(
-                      onTap: () => appInfo.addHomeWidget(
-                        config,
-                        0,
-                        WidWidGetGet.search,
-                        save,
-                        extra: <String>[Engine.ducks.value],
-                      ),
-                      readOnly: true,
-                      decoration: const InputDecoration(hintText: 'Search'),
-                      textAlign: TextAlign.center,
-                      textAlignVertical: TextAlignVertical.center,
-                    ),
-                  ),
-                  config.rowMargin,
-                  EzIconButton(
-                    config,
-                    icon: const Icon(Icons.search),
-                    onPressed: () => appInfo.addHomeWidget(
-                      config,
-                      0,
-                      WidWidGetGet.search,
-                      save,
-                      extra: <String>[Engine.ducks.value],
-                    ),
-                  ),
-                ]),
+  Widget build(BuildContext context) => (preview == WidgetSize.button)
+      ? EzIconButton(
+          config,
+          onPressed: onTap,
+          iconSize: appIconSize(config),
+          icon: const Icon(Icons.search),
+        )
+      : GestureDetector(
+          onTap: onTap,
+          child: EzRow(config, children: <Widget>[
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: ezTextSize(
+                      'Search bar',
+                      context: context,
+                      style: config.bodyStyle,
+                    ).width +
+                    config.padding,
+                maxHeight: appIconSize(config),
               ),
-      ]);
+              child: TextFormField(
+                onTap: onTap,
+                readOnly: true,
+                decoration: const InputDecoration(hintText: 'Search'),
+                textAlign: TextAlign.center,
+                textAlignVertical: TextAlignVertical.center,
+              ),
+            ),
+            config.rowMargin,
+            EzIconButton(
+              config,
+              icon: const Icon(Icons.search),
+              onPressed: onTap,
+            ),
+          ]),
+        );
 }
 
 class _AddTimer extends StatelessWidget {
@@ -897,77 +842,54 @@ class _AddTimer extends StatelessWidget {
     required this.preview,
   });
 
+  void onTap() =>
+      appInfo.addHomeWidget(config, 0, WidWidGetGet.timer, save, extra: <String>['00:00:00']);
+
   @override
   Widget build(BuildContext context) {
     final Size doubleO = ezTextSize('00', context: context, style: config.titleStyle);
-    late final Widget fauxTimerField = Container(
+
+    late final Widget fauxTimerField = ConstrainedBox(
       constraints: BoxConstraints(
         maxWidth: doubleO.width + config.padding,
         maxHeight: doubleO.height + config.marginVal,
       ),
-      decoration: BoxDecoration(borderRadius: config.buttonShape.radius),
       child: TextFormField(
+        onTap: onTap,
         readOnly: true,
         decoration: const InputDecoration(hintText: '00'),
-        style: config.titleStyle,
         textAlign: TextAlign.center,
         textAlignVertical: TextAlignVertical.center,
       ),
     );
 
-    return EzRow(config, children: <Widget>[
-      Text(
-        'Timer',
-        textAlign: TextAlign.center,
-        style: config.bodyStyle,
-      ),
-      config.rowSpacer,
-      (preview == WidgetSize.button)
-          ? EzIconButton(
+    return (preview == WidgetSize.button)
+        ? EzIconButton(
+            config,
+            onPressed: onTap,
+            iconSize: appIconSize(config),
+            icon: const Icon(Icons.timer),
+          )
+        : GestureDetector(
+            onTap: onTap,
+            child: EzRow(
               config,
-              onPressed: () => appInfo.addHomeWidget(
-                config,
-                0,
-                WidWidGetGet.timer,
-                save,
-                extra: <String>['00:00:00'],
-              ),
-              iconSize: appIconSize(config),
-              icon: const Icon(Icons.timer),
-            )
-          : GestureDetector(
-              onTap: () => appInfo.addHomeWidget(
-                config,
-                0,
-                WidWidGetGet.timer,
-                save,
-                extra: <String>['00:00:00'],
-              ),
-              child: EzRow(
-                config,
-                reverseHands: false,
-                children: <Widget>[
-                  fauxTimerField,
-                  config.rowMargin,
-                  fauxTimerField,
-                  config.rowMargin,
-                  fauxTimerField,
-                  config.rowMargin,
-                  EzIconButton(
-                    config,
-                    onPressed: () => appInfo.addHomeWidget(
-                      config,
-                      0,
-                      WidWidGetGet.timer,
-                      save,
-                      extra: <String>['00:00:00'],
-                    ),
-                    icon: const Icon(Icons.timer),
-                  ),
-                ],
-              ),
-            )
-    ]);
+              reverseHands: false,
+              children: <Widget>[
+                fauxTimerField,
+                config.rowMargin,
+                fauxTimerField,
+                config.rowMargin,
+                fauxTimerField,
+                config.rowMargin,
+                EzIconButton(
+                  config,
+                  onPressed: onTap,
+                  icon: const Icon(Icons.timer),
+                ),
+              ],
+            ),
+          );
   }
 }
 
@@ -984,34 +906,23 @@ class _AddMedia extends StatelessWidget {
     required this.preview,
   });
 
+  void onTap() => appInfo.addHomeWidget(config, 0, WidWidGetGet.toggleMedia, save);
+
   @override
-  Widget build(BuildContext context) => EzRow(config, children: <Widget>[
-        Text(
-          'Toggle media',
-          textAlign: TextAlign.center,
-          style: config.bodyStyle,
-        ),
-        config.rowSpacer,
-        EzIconButton(
-          config,
-          onPressed: () => appInfo.addHomeWidget(
-            config,
-            0,
-            WidWidGetGet.toggleMedia,
-            save,
-          ),
-          iconSize: appIconSize(config),
-          icon: (preview == WidgetSize.button)
-              ? const Icon(Icons.headphones)
-              : EzRow(config, children: <Widget>[
-                  config.rowMargin,
-                  const Icon(Icons.skip_previous),
-                  config.rowSpacer,
-                  const Icon(Icons.headphones),
-                  config.rowSpacer,
-                  const Icon(Icons.skip_next),
-                  config.rowMargin,
-                ]),
-        )
-      ]);
+  Widget build(BuildContext context) => EzIconButton(
+        config,
+        onPressed: onTap,
+        iconSize: appIconSize(config),
+        icon: (preview == WidgetSize.button)
+            ? const Icon(Icons.headphones)
+            : EzRow(config, children: <Widget>[
+                config.rowMargin,
+                const Icon(Icons.skip_previous),
+                config.rowSpacer,
+                const Icon(Icons.headphones),
+                config.rowSpacer,
+                const Icon(Icons.skip_next),
+                config.rowMargin,
+              ]),
+      );
 }
