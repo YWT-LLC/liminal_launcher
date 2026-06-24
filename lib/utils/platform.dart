@@ -81,9 +81,9 @@ Future<bool> setTimer(List<int> values, bool auto) async {
     await platform.invokeMethod(
       'setTimer',
       <String, dynamic>{
-        'seconds': values[0],
-        'minutes': values[1],
-        'hours': values[2],
+        'ours': values[0],
+        'mins': values[1],
+        'secs': values[2],
         'skipUI': auto,
       },
     );
