@@ -313,8 +313,8 @@ class _SearchWidgetState extends State<SearchWidget> {
 
   @override
   void dispose() {
-    widget.rippleProgress?.removeListener(rippling);
     removeOverlay();
+    widget.rippleProgress?.removeListener(rippling);
     super.dispose();
   }
 }

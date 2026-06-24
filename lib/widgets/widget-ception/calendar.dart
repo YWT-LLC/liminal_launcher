@@ -306,8 +306,8 @@ class _CalendarWidgetState extends State<CalendarWidget> {
 
   @override
   void dispose() {
-    widget.rippleProgress?.removeListener(rippling);
     removeOverlay();
+    widget.rippleProgress?.removeListener(rippling);
     super.dispose();
   }
 }
