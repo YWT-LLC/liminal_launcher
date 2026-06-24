@@ -153,7 +153,7 @@ class AppInfoProvider extends ChangeNotifier {
 
   // Put // TODO: add a positioned check mark when things are successfully added (modals often block view)
 
-  Future<void> addHomeApp(EzCP config, {required int lane, required String id}) async {
+  Future<void> addApp(EzCP config, {required int lane, required String id}) async {
     if ((interlinked || config.isDark) && !_darkHomeSet.contains(id)) {
       _darkHomeMatrix[lane].add(id);
       _darkHomeSet.add(id);
@@ -171,7 +171,7 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addHomeFolder(EzCP config, int lane) async {
+  Future<void> addFolder(EzCP config, int lane) async {
     if (interlinked || config.isDark) {
       _darkHomeMatrix[lane].add('Folder$folderSplit${Icons.folder_open.codePoint}');
 
@@ -187,7 +187,7 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addHomeWidget(
+  Future<void> addWidget(
     EzCP config,
     int lane,
     WidWidGetGet type,
@@ -205,6 +205,23 @@ class AppInfoProvider extends ChangeNotifier {
 
     if (interlinked || !config.isDark) {
       _lightHomeMatrix[lane].add(parts.join(widgetSplit));
+      unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
+    }
+
+    notifyListeners();
+  }
+
+  Future<void> addClock(EzCP config, int lane) async {
+    final String entry =
+        <String>[WidWidGetGet.clock.value, 'true', DateType.compact.value].join(widgetSplit);
+
+    if (interlinked || config.isDark) {
+      _darkHomeMatrix[lane].add(entry);
+      unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
+    }
+
+    if (interlinked || !config.isDark) {
+      _lightHomeMatrix[lane].add(entry);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 

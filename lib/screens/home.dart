@@ -543,7 +543,7 @@ If you want to support Liminal's development, or the development of more Empathe
                                       ListContent.banished,
                                     },
                                     include: false,
-                                    onSelected: (AppInfo app) => appInfo.addHomeApp(
+                                    onSelected: (AppInfo app) => appInfo.addApp(
                                       config,
                                       lane: 0,
                                       id: app.id,
@@ -568,7 +568,7 @@ If you want to support Liminal's development, or the development of more Empathe
                               padding: EzInsets.wrap(config.spacing),
                               child: EzElevatedIconButton(
                                 config,
-                                onPressed: () => appInfo.addHomeFolder(config, 0),
+                                onPressed: () => appInfo.addFolder(config, 0),
                                 label: 'Folder',
                                 icon: EzIcon(config, Icons.folder_open),
                               ),
@@ -617,11 +617,13 @@ If you want to support Liminal's development, or the development of more Empathe
                                       ],
                                       config.separator,
 
+                                      // Clock
+                                      _AddClock(config, appInfo),
+                                      config.spacer,
+
                                       // Calendar
                                       _AddCalendar(config, appInfo, save: size, preview: preview),
                                       config.spacer,
-
-                                      // TODO: clock
 
                                       // Search
                                       _AddSearch(config, appInfo, save: size, preview: preview),
@@ -717,6 +719,41 @@ If you want to support Liminal's development, or the development of more Empathe
   }
 }
 
+class _AddClock extends StatelessWidget {
+  final EzCP config;
+  final AppInfoProvider appInfo;
+
+  const _AddClock(this.config, this.appInfo);
+
+  void onTap() => appInfo.addClock(config, 0);
+
+  @override
+  Widget build(BuildContext context) {
+    final DateTime now = DateTime.now();
+
+    return EzTextBackground(
+      config,
+      padding: EdgeInsets.all(config.padding),
+      text: EzCol(
+        mainAxisAlignment: vAlign(config).mainAxis,
+        crossAxisAlignment: hAlign(config).crossAxis,
+        children: <Widget>[
+          Text(
+            TimeOfDay.fromDateTime(now).format(context),
+            style: config.headlineStyle,
+            textAlign: hAlign(config).textAlign,
+          ),
+          Text(
+            DTConfig.buildDate(context, now, DateType.compact),
+            style: config.labelStyle,
+            textAlign: hAlign(config).textAlign,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _AddCalendar extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
@@ -730,7 +767,7 @@ class _AddCalendar extends StatelessWidget {
     required this.preview,
   });
 
-  void onTap() => appInfo.addHomeWidget(config, 0, WidWidGetGet.calendar, save);
+  void onTap() => appInfo.addWidget(config, 0, WidWidGetGet.calendar, save);
 
   @override
   Widget build(BuildContext context) => (preview == WidgetSize.button)
@@ -768,8 +805,6 @@ class _AddCalendar extends StatelessWidget {
         );
 }
 
-// class _AddClock extends StatelessWidget {}
-
 class _AddSearch extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
@@ -783,8 +818,8 @@ class _AddSearch extends StatelessWidget {
     required this.preview,
   });
 
-  void onTap() => appInfo
-      .addHomeWidget(config, 0, WidWidGetGet.search, save, extra: <String>[Engine.ducks.value]);
+  void onTap() =>
+      appInfo.addWidget(config, 0, WidWidGetGet.search, save, extra: <String>[Engine.ducks.value]);
 
   @override
   Widget build(BuildContext context) => (preview == WidgetSize.button)
@@ -836,7 +871,7 @@ class _AddTimer extends StatelessWidget {
   });
 
   void onTap() =>
-      appInfo.addHomeWidget(config, 0, WidWidGetGet.timer, save, extra: <String>['00:00:00']);
+      appInfo.addWidget(config, 0, WidWidGetGet.timer, save, extra: <String>['00:00:00']);
 
   @override
   Widget build(BuildContext context) {
@@ -898,7 +933,7 @@ class _AddMedia extends StatelessWidget {
     required this.preview,
   });
 
-  void onTap() => appInfo.addHomeWidget(config, 0, WidWidGetGet.toggleMedia, save);
+  void onTap() => appInfo.addWidget(config, 0, WidWidGetGet.toggleMedia, save);
 
   @override
   Widget build(BuildContext context) => EzIconButton(

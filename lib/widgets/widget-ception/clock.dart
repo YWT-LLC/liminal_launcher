@@ -4,13 +4,11 @@
  */
 
 import '../../utils/export.dart';
+import '../export.dart';
 
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
-
-// TODO: states, edits, && anim switches
-// TODO: analog shout-out for different versions
 
 class ClockWidget extends StatefulWidget {
   final EzCP config;
@@ -20,8 +18,8 @@ class ClockWidget extends StatefulWidget {
   final AppState state;
   final ValueNotifier<double>? rippleProgress;
 
-  late final List<String>? _extra;
-  late final Future<void> Function(String, bool) _save;
+  late final String _showTime;
+  late final String _dateSize;
 
   ClockWidget(
     this.config,
@@ -34,9 +32,8 @@ class ClockWidget extends StatefulWidget {
   }) {
     final List<String> data = appInfo.homeList(config, lane)[index].split(widgetSplit);
 
-    _extra = data.length > 2 ? data.sublist(2) : null;
-
-    _save = (_, __) async {};
+    _showTime = data[1];
+    _dateSize = data[2];
   }
 
   @override
@@ -48,6 +45,10 @@ class _ClockWidgetState extends State<ClockWidget> {
 
   late AppState state = widget.state;
   Timer? rippleThrottle;
+
+  final MenuController menuControl = MenuController();
+  late bool showTime = bool.tryParse(widget._showTime) ?? true;
+  late DateType dateSize = DTConfig.lookup(widget._dateSize);
 
   DateTime now = DateTime.now();
   late Timer ticker;
@@ -85,7 +86,7 @@ class _ClockWidgetState extends State<ClockWidget> {
     super.initState();
     widget.rippleProgress?.addListener(rippling);
 
-    ticker = homeTime(widget.config)
+    ticker = showTime
         ? Timer.periodic(const Duration(seconds: 1), (_) {
             if (mounted) setState(() => now = DateTime.now());
           })
@@ -97,33 +98,98 @@ class _ClockWidgetState extends State<ClockWidget> {
   // Return the build //
 
   @override
-  Widget build(BuildContext context) => EzTextBackground(
+  Widget build(BuildContext context) {
+    final int numLanes = widget.appInfo.numLanes(widget.config);
+
+    // TODO: edits I
+
+    late final EzMenuButton remove = EzMenuButton(
+      widget.config,
+      label: 'Remove',
+      icon: EzIcon(widget.config, Icons.delete),
+      onPressed: () => widget.appInfo.deleteWidget(
         widget.config,
-        padding: EdgeInsets.all(widget.config.padding),
-        text: EzCol(
-          mainAxisAlignment: vAlign(widget.config).mainAxis,
-          crossAxisAlignment: hAlign(widget.config).crossAxis,
-          children: <Widget>[
-            if (homeTime(widget.config))
-              Text(
-                TimeOfDay.fromDateTime(now).format(context),
-                style: widget.config.headlineStyle,
-                textAlign: hAlign(widget.config).textAlign,
+        lane: widget.lane,
+        index: widget.index,
+      ),
+    );
+
+    return EzAnimSwitch(
+      widget.config,
+      mod: 0.667,
+      forceType: EzTransitionType.none,
+      forceFade: true,
+      child: switch (state) {
+        AppState.standard || AppState.singleEdit => MenuAnchor(
+            builder: (_, MenuController controller, __) => EzTextBackground(
+              widget.config,
+              padding: EdgeInsets.all(widget.config.padding),
+              text: EzCol(
+                mainAxisAlignment: vAlign(widget.config).mainAxis,
+                crossAxisAlignment: hAlign(widget.config).crossAxis,
+                children: <Widget>[
+                  if (showTime)
+                    Text(
+                      TimeOfDay.fromDateTime(now).format(context),
+                      style: widget.config.headlineStyle,
+                      textAlign: hAlign(widget.config).textAlign,
+                    ),
+                  if (dateSize != DateType.none)
+                    Text(
+                      DTConfig.buildDate(context, now, dateSize),
+                      style: widget.config.labelStyle,
+                      textAlign: hAlign(widget.config).textAlign,
+                    ),
+                ],
               ),
-            if (homeDate(widget.config) != DateType.none)
-              Text(
-                DTConfig.buildDate(context, now, homeDate(widget.config)),
-                style: widget.config.labelStyle,
-                textAlign: hAlign(widget.config).textAlign,
-              ),
-          ],
-        ),
-      );
+            ),
+            menuChildren: <Widget>[remove],
+            // TODO: edits II
+          ),
+        _ => EditContainer(
+            widget.config,
+            menuControl: menuControl,
+            menuChildren: <Widget>[
+              if (numLanes > 1 && widget.lane != 0)
+                EzMenuButton(
+                  widget.config,
+                  label: widget.config.isLTR ? 'Move left' : 'Move right',
+                  icon: EzIcon(widget.config, Icons.control_camera),
+                  onPressed: () => widget.appInfo.moveItemDown(
+                    widget.config,
+                    lane: widget.lane,
+                    index: widget.index,
+                  ),
+                ),
+              if (numLanes > 1 && widget.lane < (numLanes - 1))
+                EzMenuButton(
+                  widget.config,
+                  label: widget.config.isLTR ? 'Move right' : 'Move left',
+                  icon: EzIcon(widget.config, Icons.control_camera),
+                  onPressed: () => widget.appInfo.moveItemUp(
+                    widget.config,
+                    lane: widget.lane,
+                    index: widget.index,
+                  ),
+                ),
+              // TODO: edits III
+              remove,
+            ],
+            child: EzIconButton(
+              widget.config,
+              iconSize: appIconSize(widget.config),
+              icon: const Icon(Icons.alarm),
+              onPressed: () => toggleMenu(menuControl),
+            ),
+          ),
+      },
+    );
+  }
 
   @override
   void dispose() {
-    widget.rippleProgress?.removeListener(rippling);
     ticker.cancel();
+    widget.rippleProgress?.removeListener(rippling);
     super.dispose();
   }
 }

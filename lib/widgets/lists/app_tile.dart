@@ -342,7 +342,7 @@ class _AppTileState extends State<AppTile> {
                   EzIconButton(
                     widget.config,
                     onPressed: () async {
-                      await widget.appInfo.addHomeApp(
+                      await widget.appInfo.addApp(
                         widget.config,
                         lane: 0,
                         id: widget.app.id,
