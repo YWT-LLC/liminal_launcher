@@ -390,3 +390,38 @@ extension Ignition on Engine {
         _ducks || _ => Engine.ducks,
       };
 }
+
+enum TxtStile { display, headline, title, body, label }
+
+const String _display = 'display';
+const String _headline = 'headline';
+const String _title = 'title';
+const String _body = 'body';
+const String _label = 'label';
+
+extension TSConfig on TxtStile {
+  String get value => switch (this) {
+        TxtStile.display => _display,
+        TxtStile.headline => _headline,
+        TxtStile.title => _title,
+        TxtStile.body => _body,
+        TxtStile.label => _label,
+      };
+
+  TextStyle? style(EzCP config) => switch (this) {
+        TxtStile.display => config.displayStyle,
+        TxtStile.headline => config.headlineStyle,
+        TxtStile.title => config.titleStyle,
+        TxtStile.body => config.bodyStyle,
+        TxtStile.label => config.labelStyle,
+      };
+
+  static TxtStile? lookup(String value) => switch (value) {
+        _display => TxtStile.display,
+        _headline => TxtStile.headline,
+        _title => TxtStile.title,
+        _body => TxtStile.body,
+        _label => TxtStile.label,
+        _ => null,
+      };
+}
