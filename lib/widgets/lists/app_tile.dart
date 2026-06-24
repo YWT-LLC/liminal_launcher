@@ -476,6 +476,8 @@ class AppButton extends StatelessWidget {
           height: appIconSize(config),
         );
 
+  // TODO: fix padding on text button when no background opacity
+
   @override
   Widget build(BuildContext context) => switch (buttonType) {
         ButtonType.icon => Tooltip(
