@@ -186,7 +186,6 @@ class _CalendarWidgetState extends State<CalendarWidget> {
           extra: null,
           lane: widget.lane,
           index: widget.index,
-          notify: false,
         );
         setState(() => size = trueChoice);
       },

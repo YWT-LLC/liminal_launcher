@@ -293,7 +293,6 @@ class AppInfoProvider extends ChangeNotifier {
     required List<String>? extra,
     required int lane,
     required int index,
-    required bool notify,
   }) async {
     final List<String> parts = (extra == null)
         ? <String>[type.value, size.value]
@@ -309,7 +308,7 @@ class AppInfoProvider extends ChangeNotifier {
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
-    if (notify) notifyListeners();
+    // Don't notifyListeners();
   }
 
   void reorderHomeList(

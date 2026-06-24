@@ -108,7 +108,6 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
           extra: null,
           lane: widget.lane,
           index: widget.index,
-          notify: false,
         );
         setState(() => size = trueChoice);
       },

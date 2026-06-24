@@ -164,7 +164,6 @@ class _SearchWidgetState extends State<SearchWidget> {
                 extra: <String>[e.value],
                 lane: widget.lane,
                 index: widget.index,
-                notify: false,
               );
               setState(() => engine = e);
             },
@@ -205,7 +204,6 @@ class _SearchWidgetState extends State<SearchWidget> {
           extra: <String>[engine.value],
           lane: widget.lane,
           index: widget.index,
-          notify: false,
         );
         setState(() => size = trueChoice);
       },
