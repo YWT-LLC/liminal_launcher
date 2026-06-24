@@ -14,19 +14,29 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class LimSpacer extends StatefulWidget {
   final EzCP config;
-  final double height;
-  final double width;
+  final AppInfoProvider appInfo;
+  final int lane;
+  final int index;
   final AppState state;
   final ValueNotifier<double>? rippleProgress;
 
-  const LimSpacer(
-    this.config, {
+  late final double _height;
+  late final double _width;
+
+  LimSpacer(
+    this.config,
+    this.appInfo,
+    this.lane,
+    this.index,
+    this.state,
+    this.rippleProgress, {
     super.key,
-    required this.height,
-    required this.width,
-    required this.state,
-    required this.rippleProgress,
-  });
+  }) {
+    final List<String> data = appInfo.homeList(config, lane)[index].split(widgetSplit);
+
+    _height = double.tryParse(data[1]) ?? config.spacing;
+    _width = double.tryParse(data[2]) ?? appIconSize(config);
+  }
 
   @override
   State<LimSpacer> createState() => _LimSpacerState();
@@ -39,6 +49,9 @@ class _LimSpacerState extends State<LimSpacer> {
   Timer? rippleThrottle;
 
   final MenuController menuControl = MenuController();
+
+  late double height = widget._height;
+  late double width = widget._width;
 
   // Define custom functions //
 
@@ -77,67 +90,80 @@ class _LimSpacerState extends State<LimSpacer> {
   // Return the build //
 
   @override
-  Widget build(BuildContext context) => switch (widget.state) {
-        AppState.standard => SizedBox(height: widget.height, width: widget.width),
-        AppState.singleEdit => EditContainer(
-            widget.config,
-            menuControl: menuControl,
-            menuChildren: <Widget>[
-              EzMenuButton(
-                widget.config,
-                onPressed: doNothing,
-                label: 'Resize',
-                icon: EzIcon(widget.config, Icons.edit),
+  Widget build(BuildContext context) {
+    final int numLanes = widget.appInfo.numLanes(widget.config);
+
+    late final EzMenuButton resize = EzMenuButton(
+      widget.config,
+      onPressed: doNothing,
+      label: 'Resize',
+      icon: EzIcon(widget.config, Icons.edit),
+    );
+
+    late final EzMenuButton remove = EzMenuButton(
+      widget.config,
+      onPressed: () => widget.appInfo.deleteWS(
+        widget.config,
+        lane: widget.lane,
+        index: widget.index,
+      ),
+      label: 'Remove',
+      icon: EzIcon(widget.config, Icons.delete),
+    );
+
+    return EzAnimSwitch(
+      widget.config,
+      mod: 0.667,
+      forceType: EzTransitionType.none,
+      forceFade: true,
+      child: widget.state == AppState.standard
+          ? MenuAnchor(
+              builder: (_, MenuController controller, __) => GestureDetector(
+                onLongPress: () => toggleMenu(controller),
+                child: SizedBox(height: height, width: width),
               ),
-              EzMenuButton(
-                widget.config,
-                onPressed: doNothing,
-                label: 'Remove',
-                icon: EzIcon(widget.config, Icons.delete),
-              ),
-            ],
-            child: GestureDetector(
-              onTap: () => toggleMenu(menuControl),
-              child: SizedBox(
-                height: widget.height,
-                width: widget.width,
-                child: Center(child: EzIcon(widget.config, Icons.edit)),
+              menuChildren: <Widget>[resize, remove],
+            )
+          : EditContainer(
+              widget.config,
+              menuControl: menuControl,
+              menuChildren: <Widget>[
+                if (widget.state == AppState.groupEdit && widget.lane != 0)
+                  EzMenuButton(
+                    widget.config,
+                    label: widget.config.isLTR ? 'Move left' : 'Move right',
+                    icon: EzIcon(widget.config, Icons.control_camera),
+                    onPressed: () => widget.appInfo.moveItemDown(
+                      widget.config,
+                      lane: widget.lane,
+                      index: widget.index,
+                    ),
+                  ),
+                if (widget.state == AppState.groupEdit && widget.lane < (numLanes - 1))
+                  EzMenuButton(
+                    widget.config,
+                    label: widget.config.isLTR ? 'Move right' : 'Move left',
+                    icon: EzIcon(widget.config, Icons.control_camera),
+                    onPressed: () => widget.appInfo.moveItemUp(
+                      widget.config,
+                      lane: widget.lane,
+                      index: widget.index,
+                    ),
+                  ),
+                resize,
+                remove
+              ],
+              child: GestureDetector(
+                onTap: () => toggleMenu(menuControl),
+                child: SizedBox(
+                  height: height,
+                  width: width,
+                  child: Center(child: EzIcon(widget.config, Icons.edit)),
+                ),
               ),
             ),
-          ),
-        _ => EditContainer(
-            widget.config,
-            menuControl: menuControl,
-            menuChildren: <Widget>[
-              EzMenuButton(
-                widget.config,
-                onPressed: doNothing,
-                label: 'Move',
-                icon: EzIcon(widget.config, Icons.control_camera),
-              ),
-              EzMenuButton(
-                widget.config,
-                onPressed: doNothing,
-                label: 'Resize',
-                icon: EzIcon(widget.config, Icons.edit),
-              ),
-              EzMenuButton(
-                widget.config,
-                onPressed: doNothing,
-                label: 'Remove',
-                icon: EzIcon(widget.config, Icons.delete),
-              ),
-            ],
-            child: GestureDetector(
-              onTap: () => toggleMenu(menuControl),
-              child: SizedBox(
-                height: widget.height,
-                width: widget.width,
-                child: Center(child: EzIcon(widget.config, Icons.edit)),
-              ),
-            ),
-          ),
-      };
+    );
+  }
 
   @override
   void dispose() {
