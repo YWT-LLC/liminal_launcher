@@ -131,11 +131,10 @@ class MainActivity : FlutterFragmentActivity() {
             val ours = call.argument<Int>("ours") ?: 0 
             val mins = call.argument<Int>("mins") ?: 0 
             val secs = call.argument<Int>("secs") ?: 0 
-            val skipUI = call.argument<Boolean>("skipUI") ?: false 
 
             val intent = Intent(AlarmClock.ACTION_SET_TIMER).apply {
               putExtra(AlarmClock.EXTRA_LENGTH, (secs + (mins * 60) + (ours * 3600)))
-              putExtra(AlarmClock.EXTRA_SKIP_UI, skipUI)
+              putExtra(AlarmClock.EXTRA_SKIP_UI, true)
               addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
             
