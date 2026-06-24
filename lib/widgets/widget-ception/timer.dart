@@ -121,10 +121,10 @@ class _TimerWidgetState extends State<TimerWidget> {
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
-    final Size doubleO = ezTextSize('00', context: context, style: widget.config.titleStyle);
     final BoxConstraints numConstraints = BoxConstraints(
-      maxWidth: doubleO.width + widget.config.padding,
-      maxHeight: doubleO.height + widget.config.marginVal,
+      maxWidth: ezTextSize('00', context: context, style: widget.config.titleStyle).width +
+          widget.config.padding,
+      maxHeight: appIconSize(widget.config),
     );
 
     late final EzMenuButton setAuto = EzMenuButton(

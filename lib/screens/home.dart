@@ -746,12 +746,9 @@ class _AddCalendar extends StatelessWidget {
           child: EzRow(config, children: <Widget>[
             ConstrainedBox(
               constraints: BoxConstraints(
-                maxWidth: ezTextSize(
-                      'Create event',
-                      context: context,
-                      style: config.bodyStyle,
-                    ).width +
-                    config.padding,
+                maxWidth:
+                    ezTextSize('Create event', context: context, style: config.bodyStyle).width +
+                        config.padding,
                 maxHeight: appIconSize(config),
               ),
               child: TextFormField(
@@ -803,12 +800,9 @@ class _AddSearch extends StatelessWidget {
           child: EzRow(config, children: <Widget>[
             ConstrainedBox(
               constraints: BoxConstraints(
-                maxWidth: ezTextSize(
-                      'Search bar',
-                      context: context,
-                      style: config.bodyStyle,
-                    ).width +
-                    config.padding,
+                maxWidth:
+                    ezTextSize('Search bar', context: context, style: config.bodyStyle).width +
+                        config.padding,
                 maxHeight: appIconSize(config),
               ),
               child: TextFormField(
@@ -847,12 +841,11 @@ class _AddTimer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Size doubleO = ezTextSize('00', context: context, style: config.titleStyle);
-
     late final Widget fauxTimerField = ConstrainedBox(
       constraints: BoxConstraints(
-        maxWidth: doubleO.width + config.padding,
-        maxHeight: doubleO.height + config.marginVal,
+        maxWidth:
+            ezTextSize('00', context: context, style: config.titleStyle).width + config.padding,
+        maxHeight: appIconSize(config),
       ),
       child: TextFormField(
         onTap: onTap,
