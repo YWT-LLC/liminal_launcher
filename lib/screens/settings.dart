@@ -7,6 +7,7 @@ import '../utils/export.dart';
 import '../widgets/export.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
@@ -63,8 +64,6 @@ class SettingsScreen extends StatelessWidget {
 
                     // Page design
                     await EzCM.setBool(darkHideStatusKey, false);
-                    await EzCM.setBool(darkHomeTimeKey, true);
-                    await EzCM.setString(darkHomeDateKey, DateType.long.value);
                     await EzCM.setString(darkHorizontalAlignKey,
                         config.isLefty ? ListAlignment.end.value : ListAlignment.start.value);
                     await EzCM.setString(darkVerticalAlignKey, ListAlignment.start.value);
@@ -82,8 +81,6 @@ class SettingsScreen extends StatelessWidget {
 
                     // Page design
                     await EzCM.setBool(lightHideStatusKey, false);
-                    await EzCM.setBool(lightHomeTimeKey, true);
-                    await EzCM.setString(lightHomeDateKey, DateType.long.value);
                     await EzCM.setString(lightHorizontalAlignKey,
                         config.isLefty ? ListAlignment.end.value : ListAlignment.start.value);
                     await EzCM.setString(lightVerticalAlignKey, ListAlignment.start.value);
@@ -102,8 +99,6 @@ class SettingsScreen extends StatelessWidget {
 
                     // Page design
                     await EzCM.setBool(darkHideStatusKey, true);
-                    await EzCM.setBool(darkHomeTimeKey, true);
-                    await EzCM.setString(darkHomeDateKey, DateType.medium.value);
                     await EzCM.setString(darkHorizontalAlignKey, ListAlignment.center.value);
                     await EzCM.setString(darkVerticalAlignKey, ListAlignment.start.value);
                   }
@@ -120,8 +115,6 @@ class SettingsScreen extends StatelessWidget {
 
                     // Page design
                     await EzCM.setBool(lightHideStatusKey, true);
-                    await EzCM.setBool(lightHomeTimeKey, true);
-                    await EzCM.setString(lightHomeDateKey, DateType.medium.value);
                     await EzCM.setString(lightHorizontalAlignKey, ListAlignment.center.value);
                     await EzCM.setString(lightVerticalAlignKey, ListAlignment.start.value);
                   }
@@ -138,8 +131,6 @@ class SettingsScreen extends StatelessWidget {
 
                   // Page design
                   await EzCM.setBool(darkHideStatusKey, false);
-                  await EzCM.setBool(darkHomeTimeKey, false);
-                  await EzCM.setString(darkHomeDateKey, DateType.medium.value);
                   await EzCM.setString(darkHorizontalAlignKey, ListAlignment.center.value);
                   await EzCM.setString(darkVerticalAlignKey, ListAlignment.start.value);
                 },
@@ -155,8 +146,6 @@ class SettingsScreen extends StatelessWidget {
 
                   // Page design
                   await EzCM.setBool(darkHideStatusKey, true);
-                  await EzCM.setBool(darkHomeTimeKey, true);
-                  await EzCM.setString(darkHomeDateKey, DateType.compact.value);
                   await EzCM.setString(darkHorizontalAlignKey,
                       config.isLefty ? ListAlignment.end.value : ListAlignment.start.value);
                   await EzCM.setString(darkVerticalAlignKey, ListAlignment.end.value);
@@ -173,8 +162,6 @@ class SettingsScreen extends StatelessWidget {
 
                   // Page design
                   await EzCM.setBool(lightHideStatusKey, false);
-                  await EzCM.setBool(lightHomeTimeKey, true);
-                  await EzCM.setString(lightHomeDateKey, DateType.long.value);
                   await EzCM.setString(lightHorizontalAlignKey,
                       config.isLefty ? ListAlignment.end.value : ListAlignment.start.value);
                   await EzCM.setString(lightVerticalAlignKey, ListAlignment.start.value);
@@ -232,9 +219,6 @@ class SettingsScreen extends StatelessWidget {
                 includeBackgroundImage: false,
                 prependPage: <Widget>[
                   // Wallpaper
-                  HeaderSettings(config),
-                  config.spacer,
-
                   config.isDark
                       ? EzImageSetting(
                           config,
@@ -279,6 +263,35 @@ class SettingsScreen extends StatelessWidget {
                     },
                     label: 'List alignment',
                     icon: EzIcon(config, Icons.grid_3x3),
+                  ),
+                  config.spacer,
+
+                  // Hide status bar
+                  EzSwitchPair(
+                    config,
+                    text: 'Hide status bar',
+                    valueKey: config.isDark ? darkHideStatusKey : lightHideStatusKey,
+                    afterChanged: (bool? choice) async {
+                      if (choice == null) return;
+                      if (EzCM.updateBoth) {
+                        await EzCM.setBool(
+                          config.isDark ? lightHideStatusKey : darkHideStatusKey,
+                          choice,
+                        );
+                      }
+
+                      if (choice == true) {
+                        await SystemChrome.setEnabledSystemUIMode(
+                          SystemUiMode.manual,
+                          overlays: <SystemUiOverlay>[SystemUiOverlay.bottom],
+                        );
+                      } else {
+                        await SystemChrome.setEnabledSystemUIMode(
+                          SystemUiMode.manual,
+                          overlays: SystemUiOverlay.values,
+                        );
+                      }
+                    },
                   ),
                   config.separator,
                 ],
