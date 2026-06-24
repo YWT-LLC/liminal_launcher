@@ -6,7 +6,6 @@
 import '../../utils/export.dart';
 import '../export.dart';
 
-import 'dart:math';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
@@ -20,8 +19,7 @@ class TimerWidget extends StatefulWidget {
   final ValueNotifier<double>? rippleProgress;
 
   late final WidgetSize _size;
-  late final bool _hasAuto;
-  late final List<String> _storedTimes;
+  late final List<String> _times;
 
   TimerWidget(
     this.config,
@@ -38,14 +36,7 @@ class TimerWidget extends StatefulWidget {
     _size = (size == WidgetSize.system) ? bt2WS(config) : size;
 
     final List<String> storage = data[2].split(':');
-
-    if (storage.length == 3) {
-      _hasAuto = false;
-      _storedTimes = <String>['00', '00', '00'];
-    } else {
-      _hasAuto = (data[2] != '00:00:00');
-      _storedTimes = storage;
-    }
+    _times = (storage.length == 3) ? storage : <String>['00', '00', '00'];
   }
 
   @override
@@ -61,9 +52,9 @@ class _TimerWidgetState extends State<TimerWidget> {
   final MenuController menuControl = MenuController();
   late WidgetSize size = widget._size;
 
-  late final TextEditingController ourCon = TextEditingController(text: widget._storedTimes[0]);
-  late final TextEditingController minCon = TextEditingController(text: widget._storedTimes[1]);
-  late final TextEditingController secCon = TextEditingController(text: widget._storedTimes[2]);
+  late final TextEditingController ourCon = TextEditingController(text: widget._times[0]);
+  late final TextEditingController minCon = TextEditingController(text: widget._times[1]);
+  late final TextEditingController secCon = TextEditingController(text: widget._times[2]);
 
   late final FocusNode ourNode = FocusNode();
   late final FocusNode minNode = FocusNode();
@@ -100,11 +91,13 @@ class _TimerWidgetState extends State<TimerWidget> {
           onTapOutside: (_) {
             if (controller.text.isEmpty) controller.text = '00';
           },
-          onChanged: (String value) => (value.isEmpty)
-              ? removeOverlay()
-              : ((overlayEntry == null && useOverlay)
-                  ? showOverlay(controller)
-                  : overlayEntry!.markNeedsBuild()),
+          onChanged: (String value) => useOverlay
+              ? ((value.isEmpty)
+                  ? removeOverlay()
+                  : ((overlayEntry == null)
+                      ? showOverlay(controller)
+                      : overlayEntry!.markNeedsBuild()))
+              : doNothing(),
           onEditingComplete: () {
             if (controller.text.isEmpty) controller.text = '00';
           },
@@ -218,7 +211,14 @@ class _TimerWidgetState extends State<TimerWidget> {
                 widget.config.rowMargin,
 
                 // Seconds
-                timeField(constraints, secCon, secNode, doNothing, last: true, useOverlay: false),
+                timeField(
+                  constraints,
+                  secCon,
+                  secNode,
+                  () => secNode.unfocus(),
+                  last: true,
+                  useOverlay: false,
+                ),
               ],
             ),
           ),
@@ -241,17 +241,16 @@ class _TimerWidgetState extends State<TimerWidget> {
     widget.rippleProgress?.addListener(rippling);
   }
 
-  // Return the build // TODO: figure out the switcheroo vibes
+  // Return the build //
 
   @override
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
-    final BoxConstraints numConstraints = BoxConstraints(
-      maxWidth: max(ezTextSize('00', context: context, style: widget.config.bodyStyle).width,
-              appIconSize(widget.config)) +
-          widget.config.padding,
-      maxHeight: appIconSize(widget.config),
+    final BoxConstraints numConstraints = BoxConstraints.tightFor(
+      width: ezTextSize('000', context: context, style: widget.config.bodyStyle).width +
+          (2 * widget.config.padding),
+      height: appIconSize(widget.config),
     );
 
     late final EzMenuButton setAuto = EzMenuButton(
@@ -275,7 +274,6 @@ class _TimerWidgetState extends State<TimerWidget> {
             ],
             lane: widget.lane,
             index: widget.index,
-            notify: true,
           );
         } else {
           ourCon.text = ourBackup;
@@ -307,7 +305,6 @@ class _TimerWidgetState extends State<TimerWidget> {
           ],
           lane: widget.lane,
           index: widget.index,
-          notify: true,
         );
         setState(() => size = trueChoice);
       },
@@ -336,15 +333,17 @@ class _TimerWidgetState extends State<TimerWidget> {
                     widget.config,
                     iconSize: appIconSize(widget.config),
                     icon: const Icon(Icons.timer_outlined),
-                    onPressed: () async => widget._hasAuto
-                        ? await setTimer(<int>[
-                            int.tryParse(ourCon.text) ?? 0,
-                            int.tryParse(minCon.text) ?? 0,
-                            int.tryParse(secCon.text) ?? 0,
-                          ])
-                        : await setAutoDialog(numConstraints),
+                    onPressed: () async {
+                      final int ours = int.tryParse(ourCon.text) ?? 0;
+                      final int mins = int.tryParse(minCon.text) ?? 0;
+                      final int secs = int.tryParse(secCon.text) ?? 0;
+
+                      ((ours + mins + secs) > 0)
+                          ? await setTimer(<int>[ours, mins, secs])
+                          : await setAutoDialog(numConstraints);
+                    },
                     onLongPress: () => toggleMenu(controller),
-                  ) // TODO: handle lil -> big -> set -> lil again
+                  )
                 : EzRow(widget.config, children: <Widget>[
                     // Hours
                     timeField(numConstraints, ourCon, ourNode, () {
