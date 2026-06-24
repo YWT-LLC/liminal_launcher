@@ -215,8 +215,8 @@ class AppInfoProvider extends ChangeNotifier {
     final String entry = <String>[
       WidWidGetGet.clock.value,
       'true',
-      DateType.compact.value,
       TxtStile.headline.value,
+      DateType.compact.value,
       TxtStile.label.value
     ].join(widgetSplit);
 

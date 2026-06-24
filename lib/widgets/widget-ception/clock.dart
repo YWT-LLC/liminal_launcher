@@ -37,8 +37,8 @@ class ClockWidget extends StatefulWidget {
     final List<String> data = appInfo.homeList(config, lane)[index].split(widgetSplit);
 
     _showTime = data[1];
-    _dateType = data[2];
-    _timeStyle = data[3];
+    _timeStyle = data[2];
+    _dateType = data[3];
     _dateStyle = data[4];
   }
 
