@@ -124,14 +124,10 @@ const String lightWideTilesKey = 'lightWideTiles';
 // Design (page) //
 
 const String darkHideStatusKey = 'darkHideStatus';
-const String darkHomeTimeKey = 'darkHomeTime';
-const String darkHomeDateKey = 'darkHomeDate';
 const String darkHorizontalAlignKey = 'darkHorizontalAlign';
 const String darkVerticalAlignKey = 'darkVerticalAlign';
 
 const String lightHideStatusKey = 'lightHideStatus';
-const String lightHomeTimeKey = 'lightHomeTime';
-const String lightHomeDateKey = 'lightHomeDate';
 const String lightHorizontalAlignKey = 'lightHorizontalAlign';
 const String lightVerticalAlignKey = 'lightVerticalAlign';
 
@@ -156,14 +152,10 @@ const Map<String, Type> limDesignKeys = <String, Type>{
 
   // Page
   darkHideStatusKey: bool,
-  darkHomeTimeKey: bool,
-  darkHomeDateKey: String,
   darkHorizontalAlignKey: String,
   darkVerticalAlignKey: String,
 
   lightHideStatusKey: bool,
-  lightHomeTimeKey: bool,
-  lightHomeDateKey: String,
   lightHorizontalAlignKey: String,
   lightVerticalAlignKey: String,
 };
@@ -234,14 +226,10 @@ final Map<String, Object> liminalDefault = <String, Object>{
 
   // Page
   darkHideStatusKey: false,
-  darkHomeTimeKey: true,
-  darkHomeDateKey: DateType.medium.value,
   darkHorizontalAlignKey: ListAlignment.center.value,
   darkVerticalAlignKey: ListAlignment.start.value,
 
   lightHideStatusKey: false,
-  lightHomeTimeKey: true,
-  lightHomeDateKey: DateType.compact.value,
   lightHorizontalAlignKey: ListAlignment.center.value,
   lightVerticalAlignKey: ListAlignment.start.value,
 };

@@ -45,8 +45,6 @@ class LiminalCache extends EzAppCache {
       final bool elevatedFolders = EzCM.get(darkElevatedFolderKey);
 
       _design = DesignCache(
-        homeDate: DTConfig.lookup(EzCM.get(darkHomeDateKey)),
-        homeTime: EzCM.get(darkHomeTimeKey),
         horizontalAlign: LAConfig.lookup(EzCM.get(darkHorizontalAlignKey)),
         verticalAlign: LAConfig.lookup(EzCM.get(darkVerticalAlignKey)),
         listIcons: listIcons,
@@ -69,8 +67,6 @@ class LiminalCache extends EzAppCache {
       final bool elevatedFolders = EzCM.get(lightElevatedFolderKey);
 
       _design = DesignCache(
-        homeDate: DTConfig.lookup(EzCM.get(lightHomeDateKey)),
-        homeTime: EzCM.get(lightHomeTimeKey),
         horizontalAlign: LAConfig.lookup(EzCM.get(lightHorizontalAlignKey)),
         verticalAlign: LAConfig.lookup(EzCM.get(lightVerticalAlignKey)),
         listIcons: listIcons,
@@ -111,9 +107,6 @@ class LiminalCache extends EzAppCache {
 }
 
 class DesignCache {
-  final DateType homeDate;
-  final bool homeTime;
-
   final ListAlignment horizontalAlign;
   final ListAlignment verticalAlign;
 
@@ -130,8 +123,6 @@ class DesignCache {
   final bool wideTiles;
 
   DesignCache({
-    required this.homeDate,
-    required this.homeTime,
     required this.horizontalAlign,
     required this.verticalAlign,
     required this.listIcons,
@@ -189,9 +180,6 @@ ButtonType folderBT(EzCP config) => _cache(config)._design.folderBT;
 
 bool wideTiles(EzCP config) => _cache(config)._design.wideTiles;
 double appIconSize(EzCP config) => config.iconSize + config.padding;
-
-DateType homeDate(EzCP config) => _cache(config)._design.homeDate;
-bool homeTime(EzCP config) => _cache(config)._design.homeTime;
 
 ListAlignment hAlign(EzCP config) => _cache(config)._design.horizontalAlign;
 ListAlignment vAlign(EzCP config) => _cache(config)._design.verticalAlign;
