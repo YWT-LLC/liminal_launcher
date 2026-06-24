@@ -6,6 +6,7 @@
 import '../../utils/export.dart';
 import '../export.dart';
 
+import 'dart:math';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
@@ -19,8 +20,8 @@ class TimerWidget extends StatefulWidget {
   final ValueNotifier<double>? rippleProgress;
 
   late final WidgetSize _size;
-  late final bool _storedBool;
-  late final List<String> _storedList;
+  late final bool _autoStart;
+  late final List<String> _storedTimes;
 
   TimerWidget(
     this.config,
@@ -39,11 +40,11 @@ class TimerWidget extends StatefulWidget {
     final List<String> storage = data[2].split(':');
 
     if (storage.length == 3) {
-      _storedBool = false;
-      _storedList = <String>['00', '00', '00'];
+      _autoStart = false;
+      _storedTimes = <String>['00', '00', '00'];
     } else {
-      _storedBool = (data[2] != '00:00:00');
-      _storedList = storage;
+      _autoStart = (data[2] != '00:00:00');
+      _storedTimes = storage;
     }
   }
 
@@ -60,16 +61,50 @@ class _TimerWidgetState extends State<TimerWidget> {
   final MenuController menuControl = MenuController();
   late WidgetSize size = widget._size;
 
-  late bool autoStart = widget._storedBool;
+  late final TextEditingController ourCon = TextEditingController(text: widget._storedTimes[0]);
+  late final TextEditingController minCon = TextEditingController(text: widget._storedTimes[1]);
+  late final TextEditingController secCon = TextEditingController(text: widget._storedTimes[2]);
 
-  late final TextEditingController ourCon = TextEditingController(text: widget._storedList[0]);
-  late final TextEditingController minCon = TextEditingController(text: widget._storedList[1]);
-  late final TextEditingController secCon = TextEditingController(text: widget._storedList[2]);
+  late final FocusNode ourNode = FocusNode();
+  late final FocusNode minNode = FocusNode();
+  late final FocusNode secNode = FocusNode();
 
-  Widget fauxButton(BoxConstraints constraints, TextFormField child) => Container(
+  Widget timeField(
+    BoxConstraints constraints,
+    TextEditingController controller,
+    FocusNode? curr,
+    FocusNode? next,
+    void Function()? onSubmit,
+  ) =>
+      ConstrainedBox(
         constraints: constraints,
-        decoration: BoxDecoration(borderRadius: widget.config.buttonShape.radius),
-        child: child,
+        child: TextFormField(
+          controller: controller,
+          focusNode: curr,
+          textAlign: TextAlign.center,
+          textAlignVertical: TextAlignVertical.center,
+          keyboardType: TextInputType.number,
+          textInputAction: next != null ? TextInputAction.next : TextInputAction.done,
+          onTap: controller.clear,
+          validator: (String? value) {
+            const String failure = '0-99';
+
+            if (value == null) return failure;
+            final int parsed = int.tryParse(value) ?? -1;
+
+            return (parsed > 99 || parsed < 0) ? failure : null;
+          },
+          onEditingComplete: () {
+            if (controller.text.isEmpty) controller.text = '00';
+          },
+          onTapOutside: (_) {
+            if (controller.text.isEmpty) controller.text = '00';
+          },
+          onFieldSubmitted: (String value) {
+            if (value.isEmpty) controller.text = '00';
+            (next != null) ? next.requestFocus() : onSubmit?.call();
+          },
+        ),
       );
 
   // Define custom functions //
@@ -98,15 +133,6 @@ class _TimerWidgetState extends State<TimerWidget> {
     }
   }
 
-  String? validTime(String? value) {
-    const String failure = '0-99';
-
-    if (value == null) return failure;
-    final int parsed = int.tryParse(value) ?? -1;
-
-    return (parsed > 99 || parsed < 0) ? failure : null;
-  }
-
   // Init //
 
   @override
@@ -122,7 +148,8 @@ class _TimerWidgetState extends State<TimerWidget> {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
     final BoxConstraints numConstraints = BoxConstraints(
-      maxWidth: ezTextSize('00', context: context, style: widget.config.titleStyle).width +
+      maxWidth: max(ezTextSize('00', context: context, style: widget.config.bodyStyle).width,
+              appIconSize(widget.config)) +
           widget.config.padding,
       maxHeight: appIconSize(widget.config),
     );
@@ -144,38 +171,11 @@ class _TimerWidgetState extends State<TimerWidget> {
               widget.config,
               reverseHands: false,
               children: <Widget>[
-                ConstrainedBox(
-                  constraints: numConstraints,
-                  child: TextFormField(
-                    controller: ourCon,
-                    textAlign: TextAlign.center,
-                    textAlignVertical: TextAlignVertical.center,
-                    keyboardType: TextInputType.number,
-                    validator: validTime,
-                  ),
-                ),
+                timeField(numConstraints, ourCon, ourNode, minNode, null),
                 widget.config.rowMargin,
-                ConstrainedBox(
-                  constraints: numConstraints,
-                  child: TextFormField(
-                    controller: minCon,
-                    textAlign: TextAlign.center,
-                    textAlignVertical: TextAlignVertical.center,
-                    keyboardType: TextInputType.number,
-                    validator: validTime,
-                  ),
-                ),
+                timeField(numConstraints, minCon, minNode, secNode, null),
                 widget.config.rowMargin,
-                ConstrainedBox(
-                  constraints: numConstraints,
-                  child: TextFormField(
-                    controller: secCon,
-                    textAlign: TextAlign.center,
-                    textAlignVertical: TextAlignVertical.center,
-                    keyboardType: TextInputType.number,
-                    validator: validTime,
-                  ),
-                ),
+                timeField(numConstraints, secCon, secNode, null, null),
               ],
             ),
             actions: ezActionPair(
@@ -264,47 +264,32 @@ class _TimerWidgetState extends State<TimerWidget> {
                         int.tryParse(minCon.text) ?? 0,
                         int.tryParse(secCon.text) ?? 0,
                       ],
-                      autoStart,
+                      widget._autoStart,
                     ),
                     onLongPress: () => toggleMenu(controller),
                   )
                 : EzRow(widget.config, children: <Widget>[
                     // Hours
-                    fauxButton(
-                      numConstraints,
-                      TextFormField(
-                        // TODO: add overlay (only for these, not dialog)
-                        controller: ourCon,
-                        textAlign: TextAlign.center,
-                        textAlignVertical: TextAlignVertical.center,
-                        keyboardType: TextInputType.number,
-                        validator: validTime,
-                      ),
-                    ),
+                    timeField(numConstraints, ourCon, ourNode, minNode, null),
                     widget.config.rowMargin,
 
                     // Minutes
-                    fauxButton(
-                      numConstraints,
-                      TextFormField(
-                        controller: minCon,
-                        textAlign: TextAlign.center,
-                        textAlignVertical: TextAlignVertical.center,
-                        keyboardType: TextInputType.number,
-                        validator: validTime,
-                      ),
-                    ),
+                    timeField(numConstraints, minCon, minNode, secNode, null),
                     widget.config.rowMargin,
 
                     // Seconds
-                    fauxButton(
+                    timeField(
                       numConstraints,
-                      TextFormField(
-                        controller: secCon,
-                        textAlign: TextAlign.center,
-                        textAlignVertical: TextAlignVertical.center,
-                        keyboardType: TextInputType.number,
-                        validator: validTime,
+                      secCon,
+                      secNode,
+                      null,
+                      () => setTimer(
+                        <int>[
+                          int.tryParse(ourCon.text) ?? 0,
+                          int.tryParse(minCon.text) ?? 0,
+                          int.tryParse(secCon.text) ?? 0,
+                        ],
+                        true,
                       ),
                     ),
                     widget.config.rowMargin,
@@ -318,7 +303,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                           int.tryParse(minCon.text) ?? 0,
                           int.tryParse(secCon.text) ?? 0,
                         ],
-                        autoStart,
+                        true,
                       ),
                       onLongPress: () => toggleMenu(controller),
                     ),
@@ -367,6 +352,10 @@ class _TimerWidgetState extends State<TimerWidget> {
 
   @override
   void dispose() {
+    ourNode.dispose();
+    minNode.dispose();
+    secNode.dispose();
+
     widget.rippleProgress?.removeListener(rippling);
     super.dispose();
   }
