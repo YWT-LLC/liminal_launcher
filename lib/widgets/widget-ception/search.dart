@@ -255,6 +255,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                           decoration: InputDecoration(hintText: engine.value),
                           textAlign: TextAlign.center,
                           textAlignVertical: TextAlignVertical.center,
+                          keyboardType: TextInputType.webSearch,
                           onChanged: onChanged,
                           onFieldSubmitted: search,
                         ),
