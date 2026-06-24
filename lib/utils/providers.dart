@@ -333,6 +333,27 @@ class AppInfoProvider extends ChangeNotifier {
     // Don't notifyListeners();
   }
 
+  Future<void> updateClock(
+    EzCP config,
+    List<String> extra, {
+    required int lane,
+    required int index,
+  }) async {
+    final String entry = <String>[WidWidGetGet.clock.value, ...extra].join(widgetSplit);
+
+    if (interlinked || config.isDark) {
+      _darkHomeMatrix[lane][index] = entry;
+      unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
+    }
+
+    if (interlinked || !config.isDark) {
+      _lightHomeMatrix[lane][index] = entry;
+      unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
+    }
+
+    // Don't notifyListeners();
+  }
+
   void reorderHomeList(
     EzCP config, {
     required int lane,
