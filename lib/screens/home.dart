@@ -434,6 +434,8 @@ If you want to support Liminal's development, or the development of more Empathe
   @override
   Widget build(BuildContext context) {
     return Consumer2<EzCP, AppInfoProvider>(builder: (_, EzCP config, AppInfoProvider appInfo, __) {
+      final int numLanes = appInfo.numLanes(config);
+
       return LiminalScaffold(
         config,
         body: GestureDetector(
@@ -502,15 +504,17 @@ If you want to support Liminal's development, or the development of more Empathe
                     }
                     return false;
                   },
-                  child: EzScrollView(
-                    config,
-                    mainAxisSize: MainAxisSize.max,
-                    scrollDirection: Axis.horizontal,
-                    mainAxisAlignment: hAlign(config).mainAxis,
-                    crossAxisAlignment: vAlign(config).crossAxis,
-                    children: buildGrid(config, appInfo),
-                  ),
-                ),
+                  child: numLanes == 1
+                      ? buildGrid(config, appInfo)[0]
+                      : EzScrollView(
+                          config,
+                          mainAxisSize: MainAxisSize.max,
+                          scrollDirection: Axis.horizontal,
+                          mainAxisAlignment: hAlign(config).mainAxis,
+                          crossAxisAlignment: vAlign(config).crossAxis,
+                          children: buildGrid(config, appInfo),
+                        ),
+                ), // TODO: how does swipe left/right work on scrollable?
               ),
             ],
           ),
