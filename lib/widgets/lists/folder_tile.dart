@@ -59,7 +59,6 @@ class _AppFolderState extends State<FolderTile> {
 
   final MenuController menuControl = MenuController();
 
-  late IconData icon = widget._icon;
   bool open = false;
 
   // Define custom functions //
@@ -106,6 +105,7 @@ class _AppFolderState extends State<FolderTile> {
         ),
         GestureDetector(
           behavior: HitTestBehavior.opaque,
+          onTap: () => setState(() => open = false),
           onLongPress: toggleMenu,
           child: SizedBox(height: widget.config.iconSize, width: widget.config.spacing),
         ),
@@ -325,7 +325,7 @@ class _AppFolderState extends State<FolderTile> {
               lane: widget.lane,
               index: widget.index,
               name: renameCon.text,
-              icon: icon,
+              icon: widget._icon,
               ids: appsNotif.value,
             ));
       },
@@ -361,7 +361,7 @@ class _AppFolderState extends State<FolderTile> {
                         mainAxisAlignment: hAlign(widget.config).mainAxis,
                         scrollDirection: Axis.horizontal,
                         children: <Widget>[
-                          ...showApps(() => toggleMenu(controller)),
+                          ...showApps(() => canToggleMenu(widget.config, controller)),
 
                           // Close folder
                           EzIconButton(
@@ -375,35 +375,29 @@ class _AppFolderState extends State<FolderTile> {
                   : wideTiles(widget.config)
                       ? InkWell(
                           onTap: () => setState(() => open = true),
-                          onLongPress: () => toggleMenu(controller),
+                          onLongPress: () => canToggleMenu(widget.config, controller),
                           child: Container(
                             width: double.infinity,
                             alignment: subAlign,
                             child: FolderButton(
                               widget.config,
                               name: widget._name,
-                              icon: icon,
+                              icon: widget._icon,
                               buttonType: folderBT(widget.config),
                               labelType: folderLabels(widget.config),
-                              onPressed: () => setState(() => open = !open),
-                              onLongPress: () => canEdit(
-                                widget.config,
-                                () async => setState(() => state = AppState.singleEdit),
-                              ),
+                              onPressed: () => setState(() => open = true),
+                              onLongPress: () => canToggleMenu(widget.config, controller),
                             ),
                           ),
                         )
                       : FolderButton(
                           widget.config,
                           name: widget._name,
-                          icon: icon,
+                          icon: widget._icon,
                           buttonType: folderBT(widget.config),
                           labelType: folderLabels(widget.config),
-                          onPressed: () => setState(() => open = !open),
-                          onLongPress: () => canEdit(
-                            widget.config,
-                            () async => setState(() => state = AppState.singleEdit),
-                          ),
+                          onPressed: () => setState(() => open = true),
+                          onLongPress: () => canToggleMenu(widget.config, controller),
                         ),
               menuChildren: <Widget>[edit, remove],
             )
@@ -440,8 +434,8 @@ class _AppFolderState extends State<FolderTile> {
               child: EzIconButton(
                 widget.config,
                 iconSize: appIconSize(widget.config),
-                icon: Icon(icon),
-                onPressed: () => toggleMenu(menuControl),
+                icon: Icon(widget._icon),
+                onPressed: () => canToggleMenu(widget.config, menuControl),
               ),
             ),
     );
