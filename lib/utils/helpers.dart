@@ -63,7 +63,7 @@ Future<IconData?> chooseIcon(EzCP config, BuildContext context) => ezModal(
               ),
               config.spacer,
 
-              // Icons
+              // Icons TODO: swipes
               EzWrap(
                 children: (outlined ? outlinedIconChoices : solidIconChoices)
                     .map((IconData icon) => Padding(
@@ -76,6 +76,7 @@ Future<IconData?> chooseIcon(EzCP config, BuildContext context) => ezModal(
                         ))
                     .toList(),
               ),
+              config.spacer,
             ],
           ),
         );
