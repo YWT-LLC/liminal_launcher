@@ -284,6 +284,65 @@ const String nullAppLabel = '---';
 /// empty [String]
 const String nullAppPackage = '';
 
+const List<IconData> solidIconChoices = <IconData>[
+  Icons.book,
+  Icons.chat,
+  Icons.cloud,
+  Icons.code,
+  Icons.draw,
+  Icons.favorite,
+  Icons.folder,
+  Icons.health_and_safety,
+  Icons.home,
+  Icons.lock,
+  Icons.mail,
+  Icons.movie,
+  Icons.music_note,
+  Icons.navigation,
+  Icons.restaurant,
+  Icons.school,
+  Icons.share,
+  Icons.shopping_cart,
+  Icons.sports_bar,
+  Icons.sports_esports,
+  Icons.sports_gymnastics,
+  Icons.star,
+  Icons.tv,
+  Icons.wine_bar,
+  Icons.work,
+];
+
+const List<IconData> outlinedIconChoices = <IconData>[
+  Icons.book,
+  Icons.chat_outlined,
+  Icons.cloud_outlined,
+  Icons.code_outlined,
+  Icons.draw_outlined,
+  Icons.favorite_outlined,
+  Icons.folder_outlined,
+  Icons.health_and_safety_outlined,
+  Icons.home_outlined,
+  Icons.lock_outlined,
+  Icons.mail_outlined,
+  Icons.movie_outlined,
+  Icons.music_note_outlined,
+  Icons.navigation_outlined,
+  Icons.restaurant_outlined,
+  Icons.school_outlined,
+  Icons.share_outlined,
+  Icons.shopping_cart_outlined,
+  Icons.sports_bar_outlined,
+  Icons.sports_esports_outlined,
+  Icons.sports_gymnastics_outlined,
+  Icons.star_outlined,
+  Icons.tv_outlined,
+  Icons.wine_bar_outlined,
+  Icons.work_outlined,
+];
+
+// TODO: default text opacity on, peeps will prolly have background pictures!!!
+// TODO: add a default search widget while you're at it
+
 const Map<String, String> wingdingMap = <String, String>{
   // Lowercase
   'a': '\u{264B}',
