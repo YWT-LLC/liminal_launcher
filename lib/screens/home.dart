@@ -484,7 +484,6 @@ If you want to support Liminal's development, or the development of more Empathe
                           }
                         } else {
                           // Horizontal overscroll
-                          // TODO: add more overscroll blockers to kids
                           AppInfo? toLaunch;
 
                           if ((notification as OverscrollNotification).overscroll < 0) {
@@ -729,8 +728,8 @@ If you want to support Liminal's development, or the development of more Empathe
                                 message:
                                     '''With your current...\n\nicon size (${config.iconSize.toStringAsFixed(1)}),\npadding (${config.padding.toStringAsFixed(0)}),\n& spacing (${config.spacing.toStringAsFixed(1)})
 
-...settings, you can fit up to ${(screenWidth / (config.iconSize + config.padding + config.spacing)).toStringAsFixed(2)} lanes on your screen. With the minimum values, you could fit up to ${(screenWidth / (minIconSize + minPadding + minSpacing)).toStringAsFixed(2)} lanes.''',
-                              ), // TODO: second part doesn't appear iff already at min
+...values, you can fit up to ${(screenWidth / (config.iconSize + config.padding + config.spacing)).toStringAsFixed(2)} lanes on your screen.${(config.iconSize != minIconSize && config.padding != minPadding && config.spacing != minSpacing) ? ' With the minimum values, you can fit up to ${(screenWidth / (minIconSize + minPadding + minSpacing)).toStringAsFixed(2)} lanes.' : ''}''',
+                              ),
                             ],
                           ),
                           config.separator,
