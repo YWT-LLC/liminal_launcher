@@ -448,8 +448,8 @@ class AppInfoProvider extends ChangeNotifier {
 
     if (interlinked || !config.isDark) {
       // Get the old && new ID sets
-      final Set<String> oldSet =
-          _lightHomeMatrix[lane][index].split(folderSplit).sublist(1).toSet();
+      final List<String> oldIDs = _lightHomeMatrix[lane][index].split(folderSplit);
+      final Set<String> oldSet = oldIDs.length > 2 ? oldIDs.sublist(2).toSet() : <String>{};
       final Set<String> newSet = ids.toSet();
 
       // Update the matrix entry
@@ -804,10 +804,24 @@ For example: if an app has always on location permissions, banishing it will not
 
       for (int index = 0; index < entries.length; index++) {
         if (entries[index].isEmpty) continue;
+
         for (final String entry in entries) {
-          entry.contains(folderSplit)
-              ? await deleteFolder(config, lane: lane, index: index, batch: true)
-              : await removeHomeApp(config, lane: lane, index: index, id: entry, batch: true);
+          final RegExpMatch? splitMatch = tileRegex.firstMatch(entry);
+          final String? delim = splitMatch?.group(0);
+
+          switch (delim) {
+            case idSplit:
+              await removeHomeApp(config, lane: lane, index: index, id: entry, batch: true);
+              break;
+
+            case folderSplit:
+              await deleteFolder(config, lane: lane, index: index, batch: true);
+              break;
+
+            default:
+              // Widgets and Spacers don't need extra cleanup
+              break;
+          }
         }
       }
       _lightHomeMatrix.removeAt(lane);
@@ -816,7 +830,7 @@ For example: if an app has always on location permissions, banishing it will not
     }
 
     notifyListeners();
-  } // TODO: fix mod && iterate
+  }
 
   Future<void> _removeDeletedApp(String id) async {
     if (_banishedSet.contains(id)) {
