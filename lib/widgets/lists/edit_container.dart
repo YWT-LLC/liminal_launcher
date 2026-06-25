@@ -11,6 +11,7 @@ class EditContainer extends StatefulWidget {
   final Widget child;
   final MenuController menuControl;
   final List<Widget> menuChildren;
+  final bool dragHandles;
 
   const EditContainer(
     this.config, {
@@ -18,6 +19,7 @@ class EditContainer extends StatefulWidget {
     required this.child,
     required this.menuControl,
     required this.menuChildren,
+    this.dragHandles = false,
   });
 
   @override
@@ -41,23 +43,43 @@ class _EditContainerState extends State<EditContainer> with SingleTickerProvider
   }
 
   @override
-  Widget build(BuildContext context) => MenuAnchor(
-        controller: widget.menuControl,
-        builder: (_, __, ___) => AnimatedBuilder(
-          animation: _animation,
-          builder: (_, __) => Container(
-            decoration: BoxDecoration(
-              borderRadius: widget.config.buttonShape.radius,
-              border: Border.all(
-                color: widget.config.colors.secondaryContainer.withValues(alpha: _animation.value),
-                width: widget.config.borderWidth,
-              ),
+  Widget build(BuildContext context) {
+    final Widget core = MenuAnchor(
+      controller: widget.menuControl,
+      builder: (_, __, ___) => AnimatedBuilder(
+        animation: _animation,
+        builder: (_, __) => Container(
+          decoration: BoxDecoration(
+            borderRadius: widget.config.buttonShape.radius,
+            border: Border.all(
+              color: widget.config.colors.secondaryContainer.withValues(alpha: _animation.value),
+              width: widget.config.borderWidth,
             ),
-            child: widget.child,
           ),
+          child: widget.child,
         ),
-        menuChildren: widget.menuChildren,
-      );
+      ),
+      menuChildren: widget.menuChildren,
+    );
+
+    return widget.dragHandles
+        ? EzRow(widget.config, children: <Widget>[
+            EzIcon(
+              widget.config,
+              Icons.drag_handle,
+              color: widget.config.colors.outline,
+            ),
+            widget.config.rowMargin,
+            core,
+            widget.config.rowMargin,
+            EzIcon(
+              widget.config,
+              Icons.drag_handle,
+              color: widget.config.colors.outline,
+            ),
+          ])
+        : core;
+  }
 
   @override
   void dispose() {
