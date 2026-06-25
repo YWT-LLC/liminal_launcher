@@ -226,24 +226,28 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                   icon: const Icon(Icons.edit),
                 ),
                 menuChildren: <Widget>[
-                  // Left
-                  if (lane > 0) // TODO: works in end mode? center?
-                    MenuItemButton(
-                      onPressed: doNothing,
-                      child: EzIcon(config, Icons.keyboard_arrow_left),
+                  // Down
+                  if (lane > 0)
+                    EzMenuButton(
+                      config,
+                      onPressed: doNothing, // TODO
+                      label: 'Move -',
+                      icon: EzIcon(config, Icons.keyboard_arrow_down),
                     ),
 
-                  // Begone
+                  // Delete
                   MenuItemButton(
                     onPressed: () => appInfo.deleteLane(config, lane),
                     child: EzIcon(config, Icons.delete),
                   ),
 
-                  // Right
+                  // Up
                   if (lane < appInfo.numLanes(config) - 1)
-                    MenuItemButton(
-                      onPressed: doNothing,
-                      child: EzIcon(config, Icons.keyboard_arrow_right),
+                    EzMenuButton(
+                      config,
+                      onPressed: doNothing, // TODO
+                      label: 'Move +',
+                      icon: EzIcon(config, Icons.keyboard_arrow_up),
                     ),
                 ],
               ),

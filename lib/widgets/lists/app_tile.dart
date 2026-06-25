@@ -3,7 +3,7 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: add custom icons, same strat as folder
+// TODO: add custom icons, same strategy as folder
 // (not as rename, I don't want it to be global)
 // TODO: edit container
 // TODO: make the design page the "system" button, and allow for people to set per-tile shapes
