@@ -8,7 +8,6 @@ import '../utils/export.dart';
 import '../widgets/export.dart';
 import 'package:efui_bios/efui_bios.dart';
 
-import 'dart:math';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -74,17 +73,14 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     final List<Widget> lanes = <Widget>[];
     final int numLanes = appInfo.numLanes(config);
 
-    final double minWidth = appIconSize(config) + config.spacing;
-    final double maxWidth = max(minWidth, widthOf(context) / numLanes);
-
     for (int lane = 0; lane < numLanes; lane++) {
       lanes.add(ConstrainedBox(
-        constraints:
-            BoxConstraints(minHeight: double.infinity, minWidth: minWidth, maxWidth: maxWidth),
-        // TODO: this needs more tweaking now that all kinds can coexist
-        // TODO: also, add the condition for the scroll of options to the cache...
-        // prolly like yes if >= 700 per lane... should I change lane to column?
-        // also the 700 value is whatever I have saved for small screen size
+        constraints: BoxConstraints(
+          minHeight: double.infinity,
+          minWidth: appIconSize(config) + config.spacing,
+          maxWidth: widthOf(context),
+        ),
+        // TODO: use numLanes per (saved) small screen value to decide whether to show scrolls or just the edit container
         child: editing
             ? Builder(builder: (_) {
                 final List<Widget> tiles = _buildTiles(config, appInfo, lane);
