@@ -217,7 +217,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                       final bool success = await createCalendarEvent(null);
                       if (!success && context.mounted) await selfDestruct();
                     },
-                    onLongPress: () => toggleMenu(controller),
+                    onLongPress: () => canToggleMenu(widget.config, controller),
                   )
                 : EzRow(widget.config, children: <Widget>[
                     ConstrainedBox(
@@ -258,7 +258,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                         removeOverlay();
                         if (!success && context.mounted) await selfDestruct();
                       },
-                      onLongPress: () => toggleMenu(controller),
+                      onLongPress: () => canToggleMenu(widget.config, controller),
                     ),
                   ]),
             menuChildren: <Widget>[resize, remove],
@@ -296,7 +296,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
               widget.config,
               iconSize: appIconSize(widget.config),
               icon: const Icon(Icons.edit_calendar),
-              onPressed: () => toggleMenu(menuControl),
+              onPressed: () => canToggleMenu(widget.config, menuControl),
             ),
           ),
       },

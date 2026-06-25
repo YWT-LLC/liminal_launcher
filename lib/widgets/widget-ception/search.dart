@@ -232,7 +232,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                     widget.config,
                     icon: icon,
                     onPressed: () => launchUrl(Uri.https(engine.base, '/')),
-                    onLongPress: () => toggleMenu(controller),
+                    onLongPress: () => canToggleMenu(widget.config, controller),
                   )
                 : EzRow(widget.config, children: <Widget>[
                     ConstrainedBox(
@@ -264,7 +264,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                       widget.config,
                       icon: icon,
                       onPressed: () => search(queryCon.text),
-                      onLongPress: () => toggleMenu(controller),
+                      onLongPress: () => canToggleMenu(widget.config, controller),
                     ),
                   ]),
             menuChildren: <Widget>[...engineMC, resize, remove],
@@ -302,7 +302,7 @@ class _SearchWidgetState extends State<SearchWidget> {
               widget.config,
               iconSize: appIconSize(widget.config),
               icon: const Icon(Icons.search),
-              onPressed: () => toggleMenu(menuControl),
+              onPressed: () => canToggleMenu(widget.config, menuControl),
             ),
           ),
       },

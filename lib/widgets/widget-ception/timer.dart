@@ -342,7 +342,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                           ? await setTimer(<int>[ours, mins, secs])
                           : await setAutoDialog(numConstraints);
                     },
-                    onLongPress: () => toggleMenu(controller),
+                    onLongPress: () => canToggleMenu(widget.config, controller),
                   )
                 : EzRow(widget.config, children: <Widget>[
                     // Hours
@@ -391,7 +391,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                           int.tryParse(secCon.text) ?? 0,
                         ]);
                       },
-                      onLongPress: () => toggleMenu(controller),
+                      onLongPress: () => canToggleMenu(widget.config, controller),
                     ),
                   ]),
             menuChildren: <Widget>[setAuto, resize, remove],
@@ -429,7 +429,7 @@ class _TimerWidgetState extends State<TimerWidget> {
               widget.config,
               iconSize: appIconSize(widget.config),
               icon: const Icon(Icons.timer_outlined),
-              onPressed: () => toggleMenu(menuControl),
+              onPressed: () => canToggleMenu(widget.config, menuControl),
             ),
           ),
       },

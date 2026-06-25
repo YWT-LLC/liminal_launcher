@@ -223,7 +223,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
               child: MenuAnchor(
                 builder: (_, MenuController controller, __) => EzIconButton(
                   config,
-                  onPressed: () => toggleMenu(controller),
+                  onPressed: () => canToggleMenu(config, controller),
                   icon: const Icon(Icons.edit),
                 ),
                 menuChildren: <Widget>[

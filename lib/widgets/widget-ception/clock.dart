@@ -264,7 +264,7 @@ class _ClockWidgetState extends State<ClockWidget> {
       child: switch (state) {
         AppState.standard || AppState.singleEdit => MenuAnchor(
             builder: (_, MenuController controller, __) => GestureDetector(
-              onLongPress: () => toggleMenu(controller),
+              onLongPress: () => canToggleMenu(widget.config, controller),
               child: EzTextBackground(
                 widget.config,
                 padding: EdgeInsets.all(widget.config.padding),
@@ -323,7 +323,7 @@ class _ClockWidgetState extends State<ClockWidget> {
               widget.config,
               iconSize: appIconSize(widget.config),
               icon: const Icon(Icons.watch),
-              onPressed: () => toggleMenu(menuControl),
+              onPressed: () => canToggleMenu(widget.config, menuControl),
             ),
           ),
       },

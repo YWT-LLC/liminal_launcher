@@ -119,7 +119,7 @@ class _LimSpacerState extends State<LimSpacer> {
       child: widget.state == AppState.standard
           ? MenuAnchor(
               builder: (_, MenuController controller, __) => GestureDetector(
-                onLongPress: () => toggleMenu(controller),
+                onLongPress: () => canToggleMenu(widget.config, controller),
                 child: SizedBox(height: height, width: width),
               ),
               menuChildren: <Widget>[resize, remove],
@@ -154,7 +154,7 @@ class _LimSpacerState extends State<LimSpacer> {
                 remove
               ],
               child: GestureDetector(
-                onTap: () => toggleMenu(menuControl),
+                onTap: () => canToggleMenu(widget.config, menuControl),
                 child: SizedBox(
                   height: height,
                   width: width,

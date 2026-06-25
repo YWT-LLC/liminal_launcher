@@ -31,6 +31,9 @@ Future<void> canEdit(EzCP config, Future<void> Function() onSuccess) async {
   if (authed) await onSuccess.call();
 }
 
+Future<void> canToggleMenu(EzCP config, MenuController c) =>
+    canEdit(config, () async => toggleMenu(c));
+
 Future<bool> _externalAuth(String reason) async {
   final bool authed = await LocalAuthentication().authenticate(
     localizedReason: reason,
