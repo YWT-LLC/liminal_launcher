@@ -47,6 +47,7 @@ class AppInfoProvider extends ChangeNotifier {
     // Iterate through the sub-lists to properly populate the home sets
     for (final List<String> lane in _darkHomeMatrix) {
       for (final String entry in lane) {
+        // TODO: svvitch (with more (&& below))
         if (entry.contains(folderSplit)) {
           final List<String> items = entry.split(folderSplit);
           if (items.length > 2) _darkHomeSet.addAll(items.sublist(2));
@@ -265,6 +266,33 @@ class AppInfoProvider extends ChangeNotifier {
 
     notifyListeners();
     unawaited(_added(config));
+  }
+
+  Future<int> addSpacer(EzCP config, int lane) async {
+    int pos = 0;
+
+    if (interlinked || config.isDark) {
+      pos = _darkHomeMatrix[lane].length;
+      _darkHomeMatrix[lane].add(<String>[
+        config.spacing.toString(),
+        appIconSize(config).toString(),
+      ].join(spacerSplit));
+
+      unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
+    }
+
+    if (interlinked || !config.isDark) {
+      pos = _lightHomeMatrix[lane].length;
+      _lightHomeMatrix[lane].add(<String>[
+        config.spacing.toString(),
+        appIconSize(config).toString(),
+      ].join(spacerSplit));
+
+      unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
+    }
+
+    notifyListeners();
+    return pos;
   }
 
   Future<void> addHomeLane(EzCP config) async {
