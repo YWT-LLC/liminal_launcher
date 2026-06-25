@@ -245,19 +245,15 @@ class _SearchWidgetState extends State<SearchWidget> {
                             widget.config.padding,
                         maxHeight: appIconSize(widget.config),
                       ),
-                      child: NotificationListener<ScrollNotification>(
-                        // Block scroll notifications
-                        onNotification: (ScrollNotification notification) => true,
-                        child: TextFormField(
-                          controller: queryCon,
-                          decoration: InputDecoration(hintText: engine.value),
-                          textAlign: TextAlign.center,
-                          textAlignVertical: TextAlignVertical.center,
-                          keyboardType: TextInputType.webSearch,
-                          onChanged: onChanged,
-                          onFieldSubmitted: search,
-                        ),
-                      ),
+                      child: EzScrollBlocker(TextFormField(
+                        controller: queryCon,
+                        decoration: InputDecoration(hintText: engine.value),
+                        textAlign: TextAlign.center,
+                        textAlignVertical: TextAlignVertical.center,
+                        keyboardType: TextInputType.webSearch,
+                        onChanged: onChanged,
+                        onFieldSubmitted: search,
+                      )),
                     ),
                     widget.config.rowMargin,
                     EzIconButton(

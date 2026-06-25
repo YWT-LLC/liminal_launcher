@@ -230,23 +230,19 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                             widget.config.padding,
                         maxHeight: appIconSize(widget.config),
                       ),
-                      child: NotificationListener<ScrollNotification>(
-                        // Block scroll notifications
-                        onNotification: (ScrollNotification notification) => true,
-                        child: TextFormField(
-                          controller: eventCon,
-                          decoration: const InputDecoration(hintText: 'New event'),
-                          textAlign: TextAlign.center,
-                          textAlignVertical: TextAlignVertical.center,
-                          onChanged: onChanged,
-                          onFieldSubmitted: (String entry) async {
-                            final bool success = await createCalendarEvent(entry.trim());
-                            eventCon.clear();
-                            removeOverlay();
-                            if (!success && context.mounted) await selfDestruct();
-                          },
-                        ),
-                      ),
+                      child: EzScrollBlocker(TextFormField(
+                        controller: eventCon,
+                        decoration: const InputDecoration(hintText: 'New event'),
+                        textAlign: TextAlign.center,
+                        textAlignVertical: TextAlignVertical.center,
+                        onChanged: onChanged,
+                        onFieldSubmitted: (String entry) async {
+                          final bool success = await createCalendarEvent(entry.trim());
+                          eventCon.clear();
+                          removeOverlay();
+                          if (!success && context.mounted) await selfDestruct();
+                        },
+                      )),
                     ),
                     widget.config.rowMargin,
                     EzIconButton(

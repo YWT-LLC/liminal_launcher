@@ -331,22 +331,24 @@ class _AppFolderState extends State<FolderTile> {
               builder: (_, MenuController controller, __) => open
                   ? TapRegion(
                       onTapOutside: (_) => setState(() => open = false),
-                      child: EzScrollView(
-                        widget.config,
-                        reverseHands: true,
-                        thumbVisibility: false,
-                        mainAxisAlignment: hAlign(widget.config).mainAxis,
-                        scrollDirection: Axis.horizontal,
-                        children: <Widget>[
-                          ...showApps(() => canToggleMenu(widget.config, controller)),
+                      child: EzScrollBlocker(
+                        EzScrollView(
+                          widget.config,
+                          reverseHands: true,
+                          thumbVisibility: false,
+                          mainAxisAlignment: hAlign(widget.config).mainAxis,
+                          scrollDirection: Axis.horizontal,
+                          children: <Widget>[
+                            ...showApps(() => canToggleMenu(widget.config, controller)),
 
-                          // Close folder
-                          EzIconButton(
-                            widget.config,
-                            icon: EzIcon(widget.config, Icons.close),
-                            onPressed: () => setState(() => open = false),
-                          ),
-                        ],
+                            // Close folder
+                            EzIconButton(
+                              widget.config,
+                              icon: EzIcon(widget.config, Icons.close),
+                              onPressed: () => setState(() => open = false),
+                            ),
+                          ],
+                        ),
                       ),
                     )
                   : wideTiles(widget.config)

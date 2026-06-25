@@ -72,39 +72,41 @@ class _TimerWidgetState extends State<TimerWidget> {
   }) =>
       ConstrainedBox(
         constraints: constraints,
-        child: TextFormField(
-          controller: controller,
-          focusNode: curr,
-          textAlign: TextAlign.center,
-          textAlignVertical: TextAlignVertical.center,
-          keyboardType: TextInputType.number,
-          textInputAction: last ? TextInputAction.done : TextInputAction.next,
-          validator: (String? value) {
-            const String failure = '0-99';
+        child: EzScrollBlocker(
+          TextFormField(
+            controller: controller,
+            focusNode: curr,
+            textAlign: TextAlign.center,
+            textAlignVertical: TextAlignVertical.center,
+            keyboardType: TextInputType.number,
+            textInputAction: last ? TextInputAction.done : TextInputAction.next,
+            validator: (String? value) {
+              const String failure = '0-99';
 
-            if (value == null) return failure;
-            final int parsed = int.tryParse(value) ?? -1;
+              if (value == null) return failure;
+              final int parsed = int.tryParse(value) ?? -1;
 
-            return (parsed > 99 || parsed < 0) ? failure : null;
-          },
-          onTap: controller.clear,
-          onTapOutside: (_) {
-            if (controller.text.isEmpty) controller.text = '00';
-          },
-          onChanged: (String value) => useOverlay
-              ? ((value.isEmpty)
-                  ? removeOverlay()
-                  : ((overlayEntry == null)
-                      ? showOverlay(controller)
-                      : overlayEntry!.markNeedsBuild()))
-              : doNothing(),
-          onEditingComplete: () {
-            if (controller.text.isEmpty) controller.text = '00';
-          },
-          onFieldSubmitted: (String value) {
-            if (value.isEmpty) controller.text = '00';
-            onSubmit.call();
-          },
+              return (parsed > 99 || parsed < 0) ? failure : null;
+            },
+            onTap: controller.clear,
+            onTapOutside: (_) {
+              if (controller.text.isEmpty) controller.text = '00';
+            },
+            onChanged: (String value) => useOverlay
+                ? ((value.isEmpty)
+                    ? removeOverlay()
+                    : ((overlayEntry == null)
+                        ? showOverlay(controller)
+                        : overlayEntry!.markNeedsBuild()))
+                : doNothing(),
+            onEditingComplete: () {
+              if (controller.text.isEmpty) controller.text = '00';
+            },
+            onFieldSubmitted: (String value) {
+              if (value.isEmpty) controller.text = '00';
+              onSubmit.call();
+            },
+          ),
         ),
       );
 
