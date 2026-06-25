@@ -58,7 +58,7 @@ Future<bool> liminalAuth(EzCP config, String reason) async {
 Widget renderWidget(
   EzCP config, {
   required AppInfoProvider appInfo,
-  required int lane, // TODO: -1 for top, -2 for bottom
+  required int lane,
   required int index,
   required AppState state,
   ValueNotifier<double>? rippleProgress,
