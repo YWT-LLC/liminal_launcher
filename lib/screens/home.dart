@@ -868,7 +868,7 @@ class _AddSearch extends StatelessWidget {
   });
 
   void onTap() =>
-      appInfo.addWidget(config, 0, WidWidGetGet.search, save, extra: <String>[Engine.ducks.value]);
+      appInfo.addWidget(config, 0, WidWidGetGet.search, save, extra: <String>[Engine.ecosia.value]);
 
   @override
   Widget build(BuildContext context) => (preview == WidgetSize.button)

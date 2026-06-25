@@ -197,7 +197,7 @@ final Map<String, Object> liminalDefault = <String, Object>{
       <String>[
         WidWidGetGet.search.value,
         WidgetSize.tile.value,
-        Engine.ducks.value,
+        Engine.ecosia.value,
       ].join(widgetSplit),
     ].join(listSplit),
   ],
@@ -213,7 +213,7 @@ final Map<String, Object> liminalDefault = <String, Object>{
       <String>[
         WidWidGetGet.search.value,
         WidgetSize.tile.value,
-        Engine.ducks.value,
+        Engine.ecosia.value,
       ].join(widgetSplit),
     ].join(listSplit),
   ],
