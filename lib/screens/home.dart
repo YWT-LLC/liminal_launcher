@@ -267,7 +267,12 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           extra: ListConfig(
             listContent: <ListContent>{ListContent.hidden, ListContent.banished},
             include: false,
-            onSelected: (AppInfo app) => launchApp(app),
+            onSelected: (AppInfo app) async {
+              if (ezRootNav.currentContext!.mounted) {
+                Navigator.of(ezRootNav.currentContext!).pop();
+              }
+              await launchApp(app);
+            },
             title: null,
           ),
         );
@@ -290,7 +295,12 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
         extra: ListConfig(
           listContent: <ListContent>{ListContent.hidden},
           include: true,
-          onSelected: (AppInfo app) => launchApp(app),
+          onSelected: (AppInfo app) async {
+            if (ezRootNav.currentContext!.mounted) {
+              Navigator.of(ezRootNav.currentContext!).pop();
+            }
+            await launchApp(app);
+          },
           title: EzTextIconButton(
             config,
             onPressed: doNothing,
@@ -562,7 +572,7 @@ If you want to support Liminal's development, or the development of more Empathe
                                 config,
                                 onPressed: () => appInfo.addFolder(config, 0),
                                 label: 'Folder',
-                                icon: EzIcon(config, Icons.folder_open),
+                                icon: EzIcon(config, Icons.folder_outlined),
                               ),
                             ),
 
