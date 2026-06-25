@@ -423,8 +423,6 @@ If you want to support Liminal's development, or the development of more Empathe
   @override
   Widget build(BuildContext context) {
     return Consumer2<EzCP, AppInfoProvider>(builder: (_, EzCP config, AppInfoProvider appInfo, __) {
-      // Widget layer setup stuffs
-
       return LiminalScaffold(
         config,
         body: GestureDetector(
@@ -453,8 +451,6 @@ If you want to support Liminal's development, or the development of more Empathe
             mainAxisAlignment: vAlign(config).mainAxis,
             crossAxisAlignment: hAlign(config).crossAxis,
             children: <Widget>[
-              // TODO: implement top widgets
-
               // App list
               Expanded(
                 child: NotificationListener<ScrollNotification>(
@@ -505,8 +501,6 @@ If you want to support Liminal's development, or the development of more Empathe
                   ),
                 ),
               ),
-
-              // TODO: implement bottom widgets
             ],
           ),
         ),
