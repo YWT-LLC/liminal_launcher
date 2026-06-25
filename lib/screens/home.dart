@@ -231,7 +231,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                   if (lane > 0)
                     EzMenuButton(
                       config,
-                      onPressed: doNothing, // TODO
+                      onPressed: () => appInfo.moveLaneDown(config, lane),
                       label: 'Move -',
                       icon: EzIcon(config, Icons.keyboard_arrow_down),
                     ),
@@ -246,7 +246,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                   if (lane < appInfo.numLanes(config) - 1)
                     EzMenuButton(
                       config,
-                      onPressed: doNothing, // TODO
+                      onPressed: () => appInfo.moveLaneUp(config, lane),
                       label: 'Move +',
                       icon: EzIcon(config, Icons.keyboard_arrow_up),
                     ),
