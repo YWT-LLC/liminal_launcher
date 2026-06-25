@@ -10,7 +10,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-// TODO: creation, deletion, editing
+// TODO: creation, editing
 
 class LimSpacer extends StatefulWidget {
   final EzCP config;
