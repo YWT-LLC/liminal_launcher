@@ -100,6 +100,24 @@ Future<IconData?> chooseIcon(EzCP config, BuildContext context) => ezModal(
       },
     );
 
+Future<void> editSpacer(
+  EzCP config, {
+  required AppInfoProvider appInfo,
+  required BuildContext context,
+  required int lane,
+  required int index,
+}) =>
+    ezModal(
+      config,
+      context: context,
+      builder: (_) {
+        return StatefulBuilder(
+          builder: (BuildContext mCon, StateSetter setModal) =>
+              ezModalScroll(config, children: <Widget>[]),
+        );
+      },
+    );
+
 Future<bool> _externalAuth(String reason) async {
   final bool authed = await LocalAuthentication().authenticate(
     localizedReason: reason,
