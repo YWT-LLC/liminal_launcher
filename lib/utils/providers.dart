@@ -816,7 +816,7 @@ For example: if an app has always on location permissions, banishing it will not
     }
 
     notifyListeners();
-  }
+  } // TODO: fix mod && iterate
 
   Future<void> _removeDeletedApp(String id) async {
     if (_banishedSet.contains(id)) {
