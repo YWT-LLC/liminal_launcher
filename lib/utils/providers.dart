@@ -151,7 +151,37 @@ class AppInfoProvider extends ChangeNotifier {
         if (listConfig.listContent.contains(ListContent.banished)) ..._banishedSet,
       };
 
-  // Put // TODO: add a positioned check mark when things are successfully added (modals often block view)
+  // Put //
+
+  bool _addThrottle = false;
+
+  Future<void> _added(EzCP config) async {
+    if (_addThrottle) return;
+
+    final OverlayEntry entry = OverlayEntry(
+      builder: (BuildContext context) => Positioned(
+        top: safeTop(context),
+        left: 0,
+        right: 0,
+        child: Material(
+          type: MaterialType.transparency,
+          child: IgnorePointer(
+            child: Center(
+              child: EzIconButton(config, icon: const Icon(Icons.check), onPressed: doNothing),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    _addThrottle = true;
+    ezRootNav.currentState?.overlay?.insert(entry);
+
+    await wait(1);
+
+    entry.remove();
+    _addThrottle = false;
+  }
 
   Future<void> addApp(EzCP config, {required int lane, required String id}) async {
     if ((interlinked || config.isDark) && !_darkHomeSet.contains(id)) {
@@ -169,6 +199,7 @@ class AppInfoProvider extends ChangeNotifier {
     }
 
     notifyListeners();
+    unawaited(_added(config));
   }
 
   Future<void> addFolder(EzCP config, int lane) async {
@@ -185,6 +216,7 @@ class AppInfoProvider extends ChangeNotifier {
     }
 
     notifyListeners();
+    unawaited(_added(config));
   }
 
   Future<void> addWidget(
@@ -209,6 +241,7 @@ class AppInfoProvider extends ChangeNotifier {
     }
 
     notifyListeners();
+    unawaited(_added(config));
   }
 
   Future<void> addClock(EzCP config, int lane) async {
@@ -231,6 +264,7 @@ class AppInfoProvider extends ChangeNotifier {
     }
 
     notifyListeners();
+    unawaited(_added(config));
   }
 
   Future<void> addHomeLane(EzCP config) async {
@@ -245,6 +279,7 @@ class AppInfoProvider extends ChangeNotifier {
     }
 
     notifyListeners();
+    unawaited(_added(config));
   }
 
   // Patch //
