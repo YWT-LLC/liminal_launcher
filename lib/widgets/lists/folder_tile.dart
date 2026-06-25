@@ -151,57 +151,18 @@ class _AppFolderState extends State<FolderTile> {
 
               EzRow(widget.config, children: <Widget>[
                 // (Re)name
-                EzIconLink(
-                  widget.config,
-                  label: renameCon.text,
-                  icon: EzIcon(widget.config, Icons.edit),
-                  style: widget.config.titleStyle,
-                  textColor: widget.config.colors.onSurface,
-                  textAlign: TextAlign.center,
-                  hint: 'Activate to rename.',
-                  onTap: () => showDialog(
-                    context: mCon,
-                    builder: (BuildContext dCon) {
-                      void onConfirm() {
-                        closeKeyboard(dCon);
-
-                        final String newName = renameCon.text.trim();
-                        if (validateRename(newName) != null) return;
-
-                        Navigator.of(dCon).pop(newName);
-                      }
-
-                      void onDeny() {
-                        closeKeyboard(dCon);
-                        Navigator.of(dCon).pop();
-                      }
-
-                      return EzAlertDialog(
-                        widget.config,
-                        title: Text(
-                          "Rename '${renameCon.text}'?",
-                          textAlign: TextAlign.center,
-                        ),
-                        content: Form(
-                          child: TextFormField(
-                            controller: renameCon,
-                            textAlign: TextAlign.center,
-                            autofillHints: const <String>[AutofillHints.name],
-                            autovalidateMode: AutovalidateMode.onUnfocus,
-                            validator: validateRename,
-                          ),
-                        ),
-                        actions: ezActionPair(
-                          widget.config,
-                          confirmMsg: widget.config.ezL10n.gApply,
-                          onConfirm: onConfirm,
-                          confirmIsDestructive: true,
-                          denyMsg: widget.config.ezL10n.gCancel,
-                          onDeny: onDeny,
-                        ),
-                        needsClose: false,
-                      );
-                    },
+                ConstrainedBox(
+                  constraints: BoxConstraints.tightFor(
+                    height: appIconSize(widget.config),
+                    width: widthOf(mCon) / 3,
+                  ),
+                  child: TextFormField(
+                    controller: renameCon,
+                    textAlign: TextAlign.center,
+                    textAlignVertical: TextAlignVertical.center,
+                    autofillHints: const <String>[AutofillHints.name],
+                    autovalidateMode: AutovalidateMode.onUnfocus,
+                    validator: validateRename,
                   ),
                 ),
                 widget.config.rowSpacer,
@@ -212,7 +173,7 @@ class _AppFolderState extends State<FolderTile> {
                   icon: Icon(icon),
                   onPressed: () async {
                     final IconData? choice = await chooseIcon(widget.config, context);
-                    if (choice != null) setState(() => icon = choice);
+                    if (choice != null) setModal(() => icon = choice);
                   },
                 ),
               ]),
