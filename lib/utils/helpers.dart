@@ -34,6 +34,54 @@ Future<void> canEdit(EzCP config, Future<void> Function() onSuccess) async {
 Future<void> canToggleMenu(EzCP config, MenuController c) =>
     canEdit(config, () async => toggleMenu(c));
 
+Future<IconData?> chooseIcon(EzCP config, BuildContext context) => ezModal(
+      config,
+      context: context,
+      builder: (_) {
+        bool outlined = false;
+
+        return StatefulBuilder(
+          builder: (BuildContext mCon, StateSetter setModal) => ezModalScroll(
+            config,
+            children: <Widget>[
+              // Switcher
+              SegmentedButton<bool>(
+                segments: <ButtonSegment<bool>>[
+                  const ButtonSegment<bool>(
+                    value: false,
+                    label: Text('Solid', textAlign: TextAlign.center),
+                  ),
+                  const ButtonSegment<bool>(
+                    value: true,
+                    label: Text('Outlined', textAlign: TextAlign.center),
+                  ),
+                ],
+                selected: <bool>{outlined},
+                showSelectedIcon: false,
+                onSelectionChanged: (Set<bool> selected) =>
+                    setModal(() => outlined = selected.first),
+              ),
+              config.spacer,
+
+              // Icons
+              EzWrap(
+                children: (outlined ? outlinedIconChoices : solidIconChoices)
+                    .map((IconData icon) => Padding(
+                          padding: EzInsets.wrap(config.spacing),
+                          child: EzIconButton(
+                            config,
+                            icon: Icon(icon),
+                            onPressed: () => Navigator.of(mCon).pop(icon),
+                          ),
+                        ))
+                    .toList(),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
 Future<bool> _externalAuth(String reason) async {
   final bool authed = await LocalAuthentication().authenticate(
     localizedReason: reason,
