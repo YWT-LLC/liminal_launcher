@@ -42,7 +42,7 @@ class FolderTile extends StatefulWidget {
     final int? iconCode = int.tryParse(items[1]);
     _icon =
         // ignore: non_const_argument_for_const_parameter
-        iconCode != null ? IconData(iconCode, fontFamily: 'MaterialIcons') : Icons.folder_open;
+        iconCode != null ? IconData(iconCode, fontFamily: 'MaterialIcons') : Icons.folder_outlined;
 
     _appList = items.length > 2 ? items.sublist(2) : <String>[];
   }
@@ -101,7 +101,10 @@ class _AppFolderState extends State<FolderTile> {
           app: app,
           location: AppLocation.folder,
           state: state,
-          onSelected: (AppInfo app) => launchApp(app),
+          onSelected: (AppInfo app) async {
+            setState(() => open = false);
+            await launchApp(app);
+          },
         ),
         GestureDetector(
           behavior: HitTestBehavior.opaque,
@@ -136,188 +139,204 @@ class _AppFolderState extends State<FolderTile> {
       onPressed: () async {
         final TextEditingController renameCon = TextEditingController(text: widget._name);
         final ValueNotifier<List<String>> appsNotif = ValueNotifier<List<String>>(widget._appList);
+        IconData icon = widget._icon;
 
         await ezModal(
           widget.config,
           context: context,
           showDragHandle: false,
-          builder: (BuildContext mCon) => EzCol(children: <Widget>[
-            EzHeader(widget.config),
+          builder: (_) => StatefulBuilder(
+            builder: (BuildContext mCon, StateSetter setModal) => EzCol(children: <Widget>[
+              EzHeader(widget.config),
 
-            // (Re)name
-            EzIconLink(
-              widget.config,
-              label: renameCon.text,
-              icon: EzIcon(widget.config, Icons.edit),
-              style: widget.config.titleStyle,
-              textColor: widget.config.colors.onSurface,
-              textAlign: TextAlign.center,
-              hint: 'Activate to rename.',
-              onTap: () => showDialog(
-                context: mCon,
-                builder: (BuildContext dCon) {
-                  void onConfirm() {
-                    closeKeyboard(dCon);
+              EzRow(widget.config, children: <Widget>[
+                // (Re)name
+                EzIconLink(
+                  widget.config,
+                  label: renameCon.text,
+                  icon: EzIcon(widget.config, Icons.edit),
+                  style: widget.config.titleStyle,
+                  textColor: widget.config.colors.onSurface,
+                  textAlign: TextAlign.center,
+                  hint: 'Activate to rename.',
+                  onTap: () => showDialog(
+                    context: mCon,
+                    builder: (BuildContext dCon) {
+                      void onConfirm() {
+                        closeKeyboard(dCon);
 
-                    final String newName = renameCon.text.trim();
-                    if (validateRename(newName) != null) return;
+                        final String newName = renameCon.text.trim();
+                        if (validateRename(newName) != null) return;
 
-                    Navigator.of(dCon).pop(newName);
-                  }
+                        Navigator.of(dCon).pop(newName);
+                      }
 
-                  void onDeny() {
-                    closeKeyboard(dCon);
-                    Navigator.of(dCon).pop();
-                  }
+                      void onDeny() {
+                        closeKeyboard(dCon);
+                        Navigator.of(dCon).pop();
+                      }
 
-                  return EzAlertDialog(
-                    widget.config,
-                    title: Text(
-                      "Rename '${renameCon.text}'?",
-                      textAlign: TextAlign.center,
+                      return EzAlertDialog(
+                        widget.config,
+                        title: Text(
+                          "Rename '${renameCon.text}'?",
+                          textAlign: TextAlign.center,
+                        ),
+                        content: Form(
+                          child: TextFormField(
+                            controller: renameCon,
+                            textAlign: TextAlign.center,
+                            autofillHints: const <String>[AutofillHints.name],
+                            autovalidateMode: AutovalidateMode.onUnfocus,
+                            validator: validateRename,
+                          ),
+                        ),
+                        actions: ezActionPair(
+                          widget.config,
+                          confirmMsg: widget.config.ezL10n.gApply,
+                          onConfirm: onConfirm,
+                          confirmIsDestructive: true,
+                          denyMsg: widget.config.ezL10n.gCancel,
+                          onDeny: onDeny,
+                        ),
+                        needsClose: false,
+                      );
+                    },
+                  ),
+                ),
+                widget.config.rowSpacer,
+
+                // (Re)icon
+                EzIconButton(
+                  widget.config,
+                  icon: Icon(icon),
+                  onPressed: () async {
+                    final IconData? choice = await chooseIcon(widget.config, context);
+                    if (choice != null) setState(() => icon = choice);
+                  },
+                ),
+              ]),
+              widget.config.spacer,
+
+              // Apps
+              Expanded(
+                child: ValueListenableBuilder<List<String>>(
+                  valueListenable: appsNotif,
+                  builder: (_, List<String> apps, __) => Stack(children: <Widget>[
+                    ReorderableListView(
+                      onReorderItem: (int oldIndex, int newIndex) {
+                        if (oldIndex == newIndex) return;
+
+                        final List<String> update = List<String>.from(apps);
+                        final String element = update.removeAt(oldIndex);
+                        update.insert(newIndex, element);
+
+                        appsNotif.value = update;
+                      },
+                      children: apps
+                          .map((String id) {
+                            final AppInfo? app = widget.appInfo.appMap[id];
+                            if (app == null) return null;
+
+                            return InkWell(
+                              key: ValueKey<String>(id),
+                              child: Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.symmetric(vertical: widget.config.spacing / 2),
+                                child: EzRow(
+                                  widget.config,
+                                  reverseHands: false,
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    // Drag handle
+                                    EzIcon(
+                                      widget.config,
+                                      Icons.drag_handle,
+                                      color: widget.config.colors.outline,
+                                    ),
+
+                                    // App icon && remove button
+                                    EzRow(
+                                      widget.config,
+                                      reverseHands: false,
+                                      children: <Widget>[
+                                        Image.memory(
+                                          app.icon!,
+                                          semanticLabel: app.name,
+                                          width: appIconSize(widget.config),
+                                          height: appIconSize(widget.config),
+                                        ),
+                                        widget.config.rowSpacer,
+                                        EzIconButton(
+                                          widget.config,
+                                          icon: EzIcon(widget.config, Icons.remove),
+                                          onPressed: () =>
+                                              appsNotif.value = List<String>.from(apps)..remove(id),
+                                        ),
+                                      ],
+                                    ),
+
+                                    // Drag handle
+                                    EzIcon(
+                                      widget.config,
+                                      Icons.drag_handle,
+                                      color: widget.config.colors.outline,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          })
+                          .whereType<Widget>()
+                          .toList(),
                     ),
-                    content: Form(
-                      child: TextFormField(
-                        controller: renameCon,
-                        textAlign: TextAlign.center,
-                        autofillHints: const <String>[AutofillHints.name],
-                        autovalidateMode: AutovalidateMode.onUnfocus,
-                        validator: validateRename,
+                    Positioned(
+                      bottom: widget.config.spargin,
+                      left: widget.config.onLeft ? widget.config.spargin : null,
+                      right: widget.config.onLeft ? null : widget.config.spargin,
+                      child: EzCol(
+                        children: <Widget>[
+                          /// Add apps
+                          FloatingActionButton(
+                            heroTag: 'add_to_folder_FAB',
+                            onPressed: () => mCon.goNamed(
+                              appListPath,
+                              extra: ListConfig(
+                                localContent: appsNotif,
+                                listContent: <ListContent>{
+                                  ListContent.hidden,
+                                  ListContent.banished,
+                                },
+                                include: false,
+                                onSelected: (AppInfo app) async => appsNotif.value =
+                                    List<String>.from(appsNotif.value)..add(app.id),
+                                title: EzTextButton(
+                                  widget.config,
+                                  onPressed: doNothing,
+                                  text: "Add to '${renameCon.text}'",
+                                  textStyle: widget.config.labelStyle,
+                                ),
+                              ),
+                            ),
+                            child: EzIcon(widget.config, Icons.add),
+                          ),
+                          widget.config.spacer,
+
+                          /// Done
+                          FloatingActionButton(
+                            heroTag: 'done_folder_edits_FAB',
+                            onPressed: () => Navigator.of(mCon).pop(),
+                            child: EzIcon(widget.config, Icons.done),
+                          ),
+                        ],
                       ),
                     ),
-                    actions: ezActionPair(
-                      widget.config,
-                      confirmMsg: widget.config.ezL10n.gApply,
-                      onConfirm: onConfirm,
-                      confirmIsDestructive: true,
-                      denyMsg: widget.config.ezL10n.gCancel,
-                      onDeny: onDeny,
-                    ),
-                    needsClose: false,
-                  );
-                },
+                  ]),
+                ),
               ),
-            ),
-            widget.config.spacer,
-
-            // Apps
-            Expanded(
-              child: ValueListenableBuilder<List<String>>(
-                valueListenable: appsNotif,
-                builder: (_, List<String> apps, __) => Stack(children: <Widget>[
-                  ReorderableListView(
-                    onReorderItem: (int oldIndex, int newIndex) {
-                      if (oldIndex == newIndex) return;
-
-                      final List<String> update = List<String>.from(apps);
-                      final String element = update.removeAt(oldIndex);
-                      update.insert(newIndex, element);
-
-                      appsNotif.value = update;
-                    },
-                    children: apps
-                        .map((String id) {
-                          final AppInfo? app = widget.appInfo.appMap[id];
-                          if (app == null) return null;
-
-                          return InkWell(
-                            key: ValueKey<String>(id),
-                            child: Container(
-                              width: double.infinity,
-                              padding: EdgeInsets.symmetric(vertical: widget.config.spacing / 2),
-                              child: EzRow(
-                                widget.config,
-                                reverseHands: false,
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
-                                  // Drag handle
-                                  EzIcon(
-                                    widget.config,
-                                    Icons.drag_handle,
-                                    color: widget.config.colors.outline,
-                                  ),
-
-                                  // App icon && remove button
-                                  EzRow(
-                                    widget.config,
-                                    reverseHands: false,
-                                    children: <Widget>[
-                                      Image.memory(
-                                        app.icon!,
-                                        semanticLabel: app.name,
-                                        width: appIconSize(widget.config),
-                                        height: appIconSize(widget.config),
-                                      ),
-                                      widget.config.rowSpacer,
-                                      EzIconButton(
-                                        widget.config,
-                                        icon: EzIcon(widget.config, Icons.remove),
-                                        onPressed: () =>
-                                            appsNotif.value = List<String>.from(apps)..remove(id),
-                                      ),
-                                    ],
-                                  ),
-
-                                  // Drag handle
-                                  EzIcon(
-                                    widget.config,
-                                    Icons.drag_handle,
-                                    color: widget.config.colors.outline,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        })
-                        .whereType<Widget>()
-                        .toList(),
-                  ),
-                  Positioned(
-                    bottom: widget.config.spargin,
-                    left: widget.config.onLeft ? widget.config.spargin : null,
-                    right: widget.config.onLeft ? null : widget.config.spargin,
-                    child: EzCol(
-                      children: <Widget>[
-                        /// Add apps
-                        FloatingActionButton(
-                          heroTag: 'add_to_folder_FAB',
-                          onPressed: () => mCon.goNamed(
-                            appListPath,
-                            extra: ListConfig(
-                              localContent: appsNotif,
-                              listContent: <ListContent>{
-                                ListContent.hidden,
-                                ListContent.banished,
-                              },
-                              include: false,
-                              onSelected: (AppInfo app) async =>
-                                  appsNotif.value = List<String>.from(appsNotif.value)..add(app.id),
-                              title: EzTextButton(
-                                widget.config,
-                                onPressed: doNothing,
-                                text: "Add to '${renameCon.text}'",
-                                textStyle: widget.config.labelStyle,
-                              ),
-                            ),
-                          ),
-                          child: EzIcon(widget.config, Icons.add),
-                        ),
-                        widget.config.spacer,
-
-                        /// Done
-                        FloatingActionButton(
-                          heroTag: 'done_folder_edits_FAB',
-                          onPressed: () => Navigator.of(mCon).pop(),
-                          child: EzIcon(widget.config, Icons.done),
-                        ),
-                      ],
-                    ),
-                  ),
-                ]),
-              ),
-            ),
-          ]),
+            ]),
+          ),
         );
 
         await ezNoTouch(() async => await widget.appInfo.updateFolder(
@@ -325,7 +344,7 @@ class _AppFolderState extends State<FolderTile> {
               lane: widget.lane,
               index: widget.index,
               name: renameCon.text,
-              icon: widget._icon,
+              icon: icon,
               ids: appsNotif.value,
             ));
       },
