@@ -10,8 +10,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-// TODO: when the top/bottom layers are ready, add a clock to the top layer by default
-
 class ClockWidget extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
