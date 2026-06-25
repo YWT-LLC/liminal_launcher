@@ -149,12 +149,13 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
             child: AppTile(
               config,
               appInfo: appInfo,
+              lane: lane,
+              index: index,
+              state: editing ? AppState.groupEdit : AppState.standard,
+              rippleProgress: rippleProgress,
               app: app,
               location: AppLocation.home,
-              lane: lane,
-              state: editing ? AppState.groupEdit : AppState.standard,
               onSelected: (AppInfo app) => launchApp(app),
-              rippleProgress: rippleProgress,
             ),
           ));
           break;

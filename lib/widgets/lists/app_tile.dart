@@ -18,22 +18,25 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 class AppTile extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
+  final int? lane;
+  final int? index;
+  final AppState state;
+  final ValueNotifier<double>? rippleProgress;
+
   final AppInfo app;
   final AppLocation location;
-  final int? lane;
-  final AppState state;
   final Future<void> Function(AppInfo app) onSelected;
-  final ValueNotifier<double>? rippleProgress;
 
   AppTile(
     this.config, {
     required this.appInfo,
+    this.lane,
+    this.index,
+    required this.state,
+    this.rippleProgress,
     required this.app,
     required this.location,
-    this.lane,
-    required this.state,
     required this.onSelected,
-    this.rippleProgress,
   }) : super(key: ValueKey<AppState>(state));
 
   @override
@@ -362,6 +365,7 @@ class _AppTileState extends State<AppTile> {
                       final bool success = await widget.appInfo.removeHomeApp(
                         widget.config,
                         lane: widget.lane,
+                        index: widget.index,
                         id: widget.app.id,
                       );
 
@@ -382,6 +386,8 @@ class _AppTileState extends State<AppTile> {
                             widget.config,
                             context: context,
                             id: widget.app.id,
+                            lane: widget.lane,
+                            index: widget.index,
                           );
 
                     if (mounted) setState(() => state = AppState.standard);
@@ -403,6 +409,8 @@ class _AppTileState extends State<AppTile> {
                       widget.config,
                       context: context,
                       id: widget.app.id,
+                      lane: widget.lane,
+                      index: widget.index,
                     );
                     if (banished && mounted) setState(() => state = AppState.standard);
                   },
