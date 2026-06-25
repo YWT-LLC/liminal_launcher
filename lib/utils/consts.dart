@@ -193,6 +193,11 @@ final Map<String, Object> liminalDefault = <String, Object>{
       DateType.compact.value,
       TxtStile.label.value,
     ].join(widgetSplit),
+    <String>[
+      WidWidGetGet.search.value,
+      WidgetSize.tile.value,
+      Engine.ducks.value,
+    ].join(widgetSplit),
   ],
   lightHomeDataKey: <String>[
     <String>[
@@ -201,6 +206,11 @@ final Map<String, Object> liminalDefault = <String, Object>{
       TxtStile.headline.value,
       DateType.compact.value,
       TxtStile.label.value,
+    ].join(widgetSplit),
+    <String>[
+      WidWidGetGet.search.value,
+      WidgetSize.tile.value,
+      Engine.ducks.value,
     ].join(widgetSplit),
   ],
 
@@ -248,6 +258,12 @@ final Map<String, Object> liminalDefault = <String, Object>{
   lightHideStatusKey: false,
   lightHorizontalAlignKey: ListAlignment.center.value,
   lightVerticalAlignKey: ListAlignment.start.value,
+
+  // Text //
+
+  darkTextBackgroundOpacityKey: 0.75,
+
+  lightTextBackgroundOpacityKey: 0.75,
 };
 
 /// Secure key defaults for Liminal
@@ -389,9 +405,6 @@ const List<IconData> outlinedIconChoices = <IconData>[
   Icons.wine_bar_outlined,
   Icons.work_outline_outlined,
 ];
-
-// TODO: default text opacity on, peeps will prolly have background pictures!!!
-// TODO: add a default search widget while you're at it
 
 const Map<String, String> wingdingMap = <String, String>{
   // Lowercase
