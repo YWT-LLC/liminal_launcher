@@ -32,10 +32,10 @@ class LimSpacer extends StatefulWidget {
     required this.state,
     required this.rippleProgress,
   }) {
-    final List<String> data = appInfo.homeList(config, lane)[index].split(widgetSplit);
+    final List<String> data = appInfo.homeList(config, lane)[index].split(spacerSplit);
 
-    _height = double.tryParse(data[1]) ?? config.spacing;
-    _width = double.tryParse(data[2]) ?? appIconSize(config);
+    _height = double.tryParse(data[0]) ?? config.spacing;
+    _width = double.tryParse(data[1]) ?? appIconSize(config);
   }
 
   @override
