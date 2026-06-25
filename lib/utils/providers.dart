@@ -204,13 +204,13 @@ class AppInfoProvider extends ChangeNotifier {
 
   Future<void> addFolder(EzCP config, int lane) async {
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane].add('Folder$folderSplit${Icons.folder_open.codePoint}');
+      _darkHomeMatrix[lane].add('Folder$folderSplit${Icons.folder_outlined.codePoint}');
 
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane].add('Folder$folderSplit${Icons.folder_open.codePoint}');
+      _lightHomeMatrix[lane].add('Folder$folderSplit${Icons.folder_outlined.codePoint}');
 
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }

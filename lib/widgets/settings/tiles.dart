@@ -36,7 +36,7 @@ class AppTileSetting extends StatelessWidget {
         onPressed: () async {
           final String label = folder ? 'Liminal Folder' : 'Liminal Launcher';
           final Widget icon = folder
-              ? Icon(Icons.folder_open, size: appIconSize(config))
+              ? Icon(Icons.folder_outlined, size: appIconSize(config))
               : ClipOval(
                   child: Image.asset(
                     appIconPath,
