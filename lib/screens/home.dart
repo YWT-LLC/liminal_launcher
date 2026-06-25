@@ -576,7 +576,7 @@ If you want to support Liminal's development, or the development of more Empathe
                     await ezModal(
                       config,
                       context: context,
-                      builder: (_) => ezModalScroll(
+                      builder: (BuildContext mCon) => ezModalScroll(
                         config,
                         children: <Widget>[
                           EzWrap(children: <Widget>[
@@ -695,7 +695,21 @@ If you want to support Liminal's development, or the development of more Empathe
                               padding: EzInsets.wrap(config.spacing),
                               child: EzElevatedIconButton(
                                 config,
-                                onPressed: doNothing,
+                                onPressed: () async {
+                                  final int index = await appInfo.addSpacer(config, 0);
+                                  if (mCon.mounted) Navigator.of(mCon).pop();
+                                  setState(() => editing = false);
+
+                                  if (context.mounted) {
+                                    await editSpacer(
+                                      config,
+                                      appInfo: appInfo,
+                                      context: context,
+                                      lane: 0,
+                                      index: index,
+                                    );
+                                  }
+                                },
                                 label: 'Spacer',
                                 icon: EzIcon(config, Icons.space_bar),
                               ),
