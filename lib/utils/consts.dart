@@ -187,31 +187,35 @@ final Map<String, Object> liminalDefault = <String, Object>{
   banishedIDsKey: <String>[],
   darkHomeDataKey: <String>[
     <String>[
-      WidWidGetGet.clock.value,
-      'true',
-      TxtStile.headline.value,
-      DateType.compact.value,
-      TxtStile.label.value,
-    ].join(widgetSplit),
-    <String>[
-      WidWidGetGet.search.value,
-      WidgetSize.tile.value,
-      Engine.ducks.value,
-    ].join(widgetSplit),
+      <String>[
+        WidWidGetGet.clock.value,
+        'true',
+        TxtStile.headline.value,
+        DateType.compact.value,
+        TxtStile.label.value,
+      ].join(widgetSplit),
+      <String>[
+        WidWidGetGet.search.value,
+        WidgetSize.tile.value,
+        Engine.ducks.value,
+      ].join(widgetSplit),
+    ].join(listSplit),
   ],
   lightHomeDataKey: <String>[
     <String>[
-      WidWidGetGet.clock.value,
-      'true',
-      TxtStile.headline.value,
-      DateType.compact.value,
-      TxtStile.label.value,
-    ].join(widgetSplit),
-    <String>[
-      WidWidGetGet.search.value,
-      WidgetSize.tile.value,
-      Engine.ducks.value,
-    ].join(widgetSplit),
+      <String>[
+        WidWidGetGet.clock.value,
+        'true',
+        TxtStile.headline.value,
+        DateType.compact.value,
+        TxtStile.label.value,
+      ].join(widgetSplit),
+      <String>[
+        WidWidGetGet.search.value,
+        WidgetSize.tile.value,
+        Engine.ducks.value,
+      ].join(widgetSplit),
+    ].join(listSplit),
   ],
 
   // Intro
