@@ -44,6 +44,15 @@ extension ASConfig on AppSort {
 
 enum AppState { standard, singleEdit, groupEdit, verbose }
 
+extension StateName on AppState {
+  String get name => switch (this) {
+        AppState.standard => 'standard',
+        AppState.singleEdit => 'singleEdit',
+        AppState.groupEdit => 'groupEdit',
+        AppState.verbose => 'verbose',
+      };
+}
+
 enum ListContent { home, hidden, banished }
 
 enum WidWidGetGet { calendar, clock, search, timer, toggleMedia }
