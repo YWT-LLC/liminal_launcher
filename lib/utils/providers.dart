@@ -554,6 +554,7 @@ class AppInfoProvider extends ChangeNotifier {
     required BuildContext context,
     required String id,
     int? lane,
+    int? index,
   }) async {
     if (_hiddenSet.contains(id)) return;
     if (_hiddenSet.isEmpty) {
@@ -573,7 +574,7 @@ class AppInfoProvider extends ChangeNotifier {
     _hiddenSet.add(id);
     unawaited(EzCM.setStringList(hiddenIDsKey, _hiddenSet.toList()));
 
-    final bool notified = await removeHomeApp(config, id: id, lane: lane);
+    final bool notified = await removeHomeApp(config, id: id, lane: lane, index: index);
     if (!notified) notifyListeners();
   }
 
@@ -592,6 +593,7 @@ class AppInfoProvider extends ChangeNotifier {
     required BuildContext context,
     required String id,
     int? lane,
+    int? index,
   }) async {
     if (_banishedSet.contains(id)) return false;
 
@@ -640,7 +642,7 @@ For example: if an app has always on location permissions, banishing it will not
     _banishedSet.add(id);
     unawaited(EzCM.setStringList(banishedIDsKey, _banishedSet.toList()));
 
-    final bool notified = await removeHomeApp(config, id: id, lane: lane);
+    final bool notified = await removeHomeApp(config, id: id, lane: lane, index: index);
     if (!notified) notifyListeners();
 
     return true;
@@ -667,17 +669,18 @@ For example: if an app has always on location permissions, banishing it will not
   Future<bool> removeHomeApp(
     EzCP config, {
     int? lane,
+    int? index,
     required String id,
     bool batch = false,
   }) async {
     bool found = false;
 
     if (interlinked || config.isDark) {
-      found = found || _darkHomeSet.contains(id);
-
+      found = _darkHomeSet.contains(id);
       _darkHomeSet.remove(id);
+
       if (lane != null) {
-        _darkHomeMatrix[lane].remove(id);
+        (index == null) ? _darkHomeMatrix[lane].remove(id) : _darkHomeMatrix[lane].removeAt(index);
       } else {
         for (final List<String> subList in _darkHomeMatrix) {
           final bool removed = subList.remove(id);
@@ -689,11 +692,13 @@ For example: if an app has always on location permissions, banishing it will not
     }
 
     if (interlinked || !config.isDark) {
-      found = found || _lightHomeSet.contains(id);
-
+      found = _lightHomeSet.contains(id);
       _lightHomeSet.remove(id);
+
       if (lane != null) {
-        _lightHomeMatrix[lane].remove(id);
+        (index == null)
+            ? _lightHomeMatrix[lane].remove(id)
+            : _lightHomeMatrix[lane].removeAt(index);
       } else {
         for (final List<String> subList in _lightHomeMatrix) {
           final bool removed = subList.remove(id);
@@ -769,11 +774,25 @@ For example: if an app has always on location permissions, banishing it will not
 
       for (int index = 0; index < entries.length; index++) {
         if (entries[index].isEmpty) continue;
+
         for (final String entry in entries) {
-          entry.contains(folderSplit)
-              ? await deleteFolder(config, lane: lane, index: index, batch: true)
-              : await removeHomeApp(config, lane: lane, id: entry, batch: true);
-        } // TODO: account for widgets (below too)... that's it right?
+          final RegExpMatch? splitMatch = tileRegex.firstMatch(entry);
+          final String? delim = splitMatch?.group(0);
+
+          switch (delim) {
+            case idSplit:
+              await removeHomeApp(config, lane: lane, index: index, id: entry, batch: true);
+              break;
+
+            case folderSplit:
+              await deleteFolder(config, lane: lane, index: index, batch: true);
+              break;
+
+            default:
+              // Widgets and Spacers don't need extra cleanup
+              break;
+          }
+        }
       }
       _darkHomeMatrix.removeAt(lane);
 
@@ -788,7 +807,7 @@ For example: if an app has always on location permissions, banishing it will not
         for (final String entry in entries) {
           entry.contains(folderSplit)
               ? await deleteFolder(config, lane: lane, index: index, batch: true)
-              : await removeHomeApp(config, lane: lane, id: entry, batch: true);
+              : await removeHomeApp(config, lane: lane, index: index, id: entry, batch: true);
         }
       }
       _lightHomeMatrix.removeAt(lane);
