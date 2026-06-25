@@ -543,7 +543,6 @@ If you want to support Liminal's development, or the development of more Empathe
                           } else {
                             atRight = false;
                             overscrollPause = Timer(scrollDelay, () => atLeft = true);
-                            // TODO: test these
                           }
                         }
                         break;
