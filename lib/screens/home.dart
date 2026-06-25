@@ -27,6 +27,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
   // Define build data //
 
   bool atBottom = false;
+  bool atLeft = false;
+  bool atRight = false;
   Timer? overscrollPause;
 
   bool editing = false;
@@ -469,35 +471,80 @@ If you want to support Liminal's development, or the development of more Empathe
                   onNotification: (ScrollNotification notification) {
                     switch (notification.runtimeType) {
                       case const (OverscrollNotification):
-                        if (notification.metrics.axis == Axis.vertical &&
-                            (notification as OverscrollNotification).overscroll > 0) {
-                          if (atBottom) {
-                            swipeUp(config, appInfo);
-                            return true;
-                          } else {
-                            overscrollPause = Timer(
-                              scrollDelay,
-                              () => setState(() => atBottom = true),
-                            );
-                            return true;
+                        if (notification.metrics.axis == Axis.vertical) {
+                          // Vertical overscroll
+                          if ((notification as OverscrollNotification).overscroll > 0) {
+                            if (atBottom) {
+                              swipeUp(config, appInfo);
+                              return true;
+                            } else {
+                              overscrollPause = Timer(scrollDelay, () => atBottom = true);
+                              return true;
+                            }
                           }
+                        } else {
+                          // Horizontal overscroll
+                          // TODO: add more overscroll blockers to kids
+                          AppInfo? toLaunch;
+
+                          if ((notification as OverscrollNotification).overscroll < 0) {
+                            if (atLeft) {
+                              toLaunch = appInfo.appMap[rightSwipeID];
+                            } else {
+                              overscrollPause = Timer(scrollDelay, () => atLeft = true);
+                              return true;
+                            }
+                          }
+
+                          if (notification.overscroll > 0) {
+                            if (atRight) {
+                              toLaunch = appInfo.appMap[leftSwipeID];
+                            } else {
+                              overscrollPause = Timer(scrollDelay, () => atRight = true);
+                              return true;
+                            }
+                          }
+
+                          if (toLaunch != null) launchApp(toLaunch);
+                          return true;
                         }
                         break;
 
                       case const (ScrollUpdateNotification):
-                        if (atBottom && notification.metrics.pixels < 0) {
-                          setState(() => atBottom = false);
+                        if (notification.metrics.axis == Axis.vertical) {
+                          // Vertical scroll
+                          if (atBottom && notification.metrics.pixels < 0) {
+                            atBottom = false;
+                          }
+                        } else {
+                          // Horizontal scroll
+                          if (atLeft && notification.metrics.pixels > 0) {
+                            atLeft = false;
+                          }
+                          if (atRight && notification.metrics.pixels < 0) {
+                            atRight = false;
+                          }
                         }
                         break;
 
                       case const (ScrollEndNotification):
-                        if (notification.metrics.pixels == notification.metrics.maxScrollExtent) {
-                          overscrollPause = Timer(
-                            scrollDelay,
-                            () => setState(() => atBottom = true),
-                          );
+                        if (notification.metrics.axis == Axis.vertical) {
+                          // Vertical end
+                          if (notification.metrics.pixels == notification.metrics.maxScrollExtent) {
+                            overscrollPause = Timer(scrollDelay, () => atBottom = true);
+                          } else {
+                            atBottom = false;
+                          }
                         } else {
-                          setState(() => atBottom = false);
+                          // Horizontal end
+                          if (notification.metrics.pixels == notification.metrics.maxScrollExtent) {
+                            atLeft = false;
+                            overscrollPause = Timer(scrollDelay, () => atRight = true);
+                          } else {
+                            atRight = false;
+                            overscrollPause = Timer(scrollDelay, () => atLeft = true);
+                            // TODO: test these
+                          }
                         }
                         break;
                     }
@@ -509,11 +556,12 @@ If you want to support Liminal's development, or the development of more Empathe
                           config,
                           mainAxisSize: MainAxisSize.max,
                           scrollDirection: Axis.horizontal,
+                          physics: const ClampingScrollPhysics(),
                           mainAxisAlignment: hAlign(config).mainAxis,
                           crossAxisAlignment: vAlign(config).crossAxis,
                           children: buildGrid(config, appInfo),
                         ),
-                ), // TODO: how does swipe left/right work on scrollable?
+                ),
               ),
             ],
           ),
