@@ -80,7 +80,6 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           minWidth: appIconSize(config) + config.spacing,
           maxWidth: widthOf(context),
         ),
-        // TODO: use numLanes per (saved) small screen value to decide whether to show scrolls or just the edit container
         child: editing
             ? Builder(builder: (_) {
                 final List<Widget> tiles = _buildTiles(config, appInfo, lane);
