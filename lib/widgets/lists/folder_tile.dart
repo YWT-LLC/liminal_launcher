@@ -12,9 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-// TODO: custom icons
-// TODO: what happens to the menu anchors at max lane-age?
-
 class FolderTile extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
