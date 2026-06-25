@@ -37,7 +37,7 @@ class AppTile extends StatefulWidget {
     required this.app,
     required this.location,
     required this.onSelected,
-  }) : super(key: ValueKey<AppState>(state));
+  }) : super(key: ValueKey<String>('${app.id}-${state.name}'));
 
   @override
   State<AppTile> createState() => _AppTileState();
