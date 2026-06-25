@@ -185,8 +185,24 @@ final Map<String, Object> liminalDefault = <String, Object>{
   renamedIDsKey: <String>[],
   hiddenIDsKey: <String>[],
   banishedIDsKey: <String>[],
-  darkHomeDataKey: <String>['[]'],
-  lightHomeDataKey: <String>['[]'],
+  darkHomeDataKey: <String>[
+    <String>[
+      WidWidGetGet.clock.value,
+      'true',
+      TxtStile.headline.value,
+      DateType.compact.value,
+      TxtStile.label.value,
+    ].join(widgetSplit),
+  ],
+  lightHomeDataKey: <String>[
+    <String>[
+      WidWidGetGet.clock.value,
+      'true',
+      TxtStile.headline.value,
+      DateType.compact.value,
+      TxtStile.label.value,
+    ].join(widgetSplit),
+  ],
 
   // Intro
   shownIntroKey: false,
@@ -261,12 +277,6 @@ const String widgetSplit = ':01010111:';
 
 /// r'(:(I|W|F|S):)'... but the binaries
 final RegExp tileRegex = RegExp(r':(01001001|01010111|01000110|01010011):');
-
-/// -1
-const int headerLane = -1;
-
-/// -2
-const int footerLane = -2;
 
 /// ---
 const String nullAppLabel = '---';
