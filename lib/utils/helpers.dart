@@ -111,16 +111,19 @@ Future<void> editSpacer(
   int currIndex = index;
 
   final List<String> data = appInfo.homeList(config, lane)[index].split(spacerSplit);
-  double height = double.tryParse(data[0]) ?? config.spacing;
-  double width = double.tryParse(data[1]) ?? appIconSize(config);
+  final double hBack = double.tryParse(data[0]) ?? config.spacing;
+  final double wBack = double.tryParse(data[1]) ?? appIconSize(config);
+  double height = hBack;
+  double width = wBack;
 
   editSpacerHeight.value = height;
   editSpacerWidth.value = width;
+  marked.value = (lane, index);
 
   Axis axis = Axis.vertical;
 
-  await ezRootNav.currentState!.push(
-    PageRouteBuilder<Widget>(
+  final bool? keep = await ezRootNav.currentState!.push(
+    PageRouteBuilder<bool>(
       opaque: false,
       transitionsBuilder: (_, __, ___, Widget child) => child,
       transitionDuration: Duration.zero,
@@ -128,8 +131,6 @@ Future<void> editSpacer(
       pageBuilder: (_, __, ___) => StatefulBuilder(builder: (_, StateSetter setOverlay) {
         final double maxHeight = heightOf(ezRootNav.currentContext!) / 2;
         final double maxWidth = widthOf(ezRootNav.currentContext!) / 2;
-
-        marked.value = (lane, index);
 
         // Define custom functions //
 
@@ -152,7 +153,7 @@ Future<void> editSpacer(
             config,
             safeArea: true,
             child: Stack(children: <Widget>[
-              // Top
+              // Top TODO: centered!!! (test with small settings)
               Positioned(
                 top: 0,
                 left: 0,
@@ -164,24 +165,28 @@ Future<void> editSpacer(
                   scrollDirection: Axis.horizontal,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    // Slider select
-                    MenuAnchor(
-                      builder: (_, MenuController c, __) => EzIconButton(
-                        config,
-                        icon: Icon((axis == Axis.vertical) ? Icons.height : Icons.horizontal_rule),
-                        onPressed: () => toggleMenu(c),
-                      ),
-                      menuChildren: Axis.values
-                          .map((Axis a) => EzMenuButton(
-                                config,
-                                label: a.name,
-                                icon: EzIcon(
-                                  config,
-                                  (a == Axis.vertical) ? Icons.height : Icons.horizontal_rule,
-                                ),
-                                onPressed: () => setOverlay(() => axis = a),
-                              ))
-                          .toList(),
+                    // Delete
+                    EzIconButton(
+                      config,
+                      icon: const Icon(Icons.delete),
+                      onPressed: () => Navigator.of(ezRootNav.currentContext!).pop(false),
+                    ),
+                    config.rowSpacer,
+
+                    // Reset
+                    EzIconButton(
+                      config,
+                      enabled: height != hBack || width != hBack,
+                      icon: const Icon(Icons.refresh),
+                      onPressed: () {
+                        height = hBack;
+                        editSpacerHeight.value = hBack;
+
+                        width = wBack;
+                        editSpacerWidth.value = wBack;
+
+                        setOverlay(() {});
+                      },
                     ),
                     config.rowSpacer,
 
@@ -247,11 +252,32 @@ Future<void> editSpacer(
                     ),
                     config.rowSpacer,
 
+                    // Slider select
+                    MenuAnchor(
+                      builder: (_, MenuController c, __) => EzIconButton(
+                        config,
+                        icon: Icon((axis == Axis.vertical) ? Icons.height : Icons.horizontal_rule),
+                        onPressed: () => toggleMenu(c),
+                      ),
+                      menuChildren: Axis.values
+                          .map((Axis a) => EzMenuButton(
+                                config,
+                                label: a.name,
+                                icon: EzIcon(
+                                  config,
+                                  (a == Axis.vertical) ? Icons.height : Icons.horizontal_rule,
+                                ),
+                                onPressed: () => setOverlay(() => axis = a),
+                              ))
+                          .toList(),
+                    ),
+                    config.rowSpacer,
+
                     // Done
                     EzIconButton(
                       config,
                       icon: const Icon(Icons.done),
-                      onPressed: () => Navigator.of(ezRootNav.currentContext!).pop(),
+                      onPressed: () => Navigator.of(ezRootNav.currentContext!).pop(true),
                     ),
                   ],
                 ),
@@ -293,13 +319,16 @@ Future<void> editSpacer(
 
   await ezNoTouch(() async {
     marked.value = (null, null);
-    await appInfo.updateSpacer(
-      config,
-      height: height,
-      width: width,
-      lane: lane,
-      index: currIndex,
-    );
+
+    (keep == false)
+        ? await appInfo.deleteWS(config, lane: lane, index: currIndex)
+        : await appInfo.updateSpacer(
+            config,
+            height: height,
+            width: width,
+            lane: lane,
+            index: currIndex,
+          );
   });
 }
 
