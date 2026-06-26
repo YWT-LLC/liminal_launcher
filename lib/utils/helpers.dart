@@ -106,14 +106,21 @@ Future<void> editSpacer(
   required int lane,
   required int index,
 }) async {
+  // Setup //
+
   final List<String> data = appInfo.homeList(config, lane)[index].split(spacerSplit);
   double height = double.tryParse(data[0]) ?? config.spacing;
   double width = double.tryParse(data[1]) ?? appIconSize(config);
+
+  editSpacerHeight.value = height;
+  editSpacerWidth.value = width;
 
   final int currLane = lane;
   int currIndex = index;
 
   _EditType type = _EditType.height;
+
+  // Make it so //
 
   await ezRootNav.currentState!.push(
     PageRouteBuilder<Widget>(
@@ -243,11 +250,13 @@ Future<void> editSpacer(
                     },
                     max: maxSpacing,
                     onChanged: (double value) {
-                      setOverlay(() => switch (type) {
-                            _EditType.height => height = value,
-                            _EditType.width => width = value,
-                          });
-                      // TODO: actual vis/UI
+                      if (type == _EditType.height) {
+                        editSpacerHeight.value = value;
+                        setOverlay(() => height = value);
+                      } else {
+                        editSpacerWidth.value = value;
+                        setOverlay(() => width = value);
+                      }
                     },
                   ),
                   backgroundColor: config.colors.surface,

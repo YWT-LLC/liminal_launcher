@@ -3,6 +3,8 @@
  * See LICENSE for distribution and usage details.
  */
 
+import '../../utils/export.dart';
+
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
@@ -86,4 +88,26 @@ class _EditContainerState extends State<EditContainer> with SingleTickerProvider
     _animControl.dispose();
     super.dispose();
   }
+}
+
+class EditSpacer extends StatelessWidget {
+  final EzCP config;
+
+  const EditSpacer(this.config, {super.key});
+
+  @override
+  Widget build(BuildContext context) => ValueListenableBuilder<double>(
+        valueListenable: editSpacerHeight,
+        builder: (_, double height, __) => ValueListenableBuilder<double>(
+          valueListenable: editSpacerWidth,
+          builder: (_, double width, __) => Container(
+            decoration: BoxDecoration(
+              borderRadius: EzButtonShape.roundRect.radius,
+              border: Border.all(color: config.colors.secondary, width: config.borderWidth),
+            ),
+            height: height,
+            width: width,
+          ),
+        ),
+      );
 }

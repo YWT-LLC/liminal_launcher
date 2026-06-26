@@ -475,5 +475,5 @@ const double rippleMod = 1.5;
 
 Offset lastRipple = Offset.zero;
 
-final ValueNotifier<double> editSpacerHite = ValueNotifier<double>(defaultMobileSpacing);
-final ValueNotifier<double> editSpacerWith = ValueNotifier<double>(defaultMobileSpacing);
+final ValueNotifier<double> editSpacerHeight = ValueNotifier<double>(defaultMobileSpacing);
+final ValueNotifier<double> editSpacerWidth = ValueNotifier<double>(defaultMobileSpacing);
