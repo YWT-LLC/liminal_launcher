@@ -106,7 +106,7 @@ Future<void> editSpacer(
   required int lane,
   required int index,
 }) async {
-  // Setup //
+  // Define build data //
 
   int currIndex = index;
 
@@ -117,9 +117,7 @@ Future<void> editSpacer(
   editSpacerHeight.value = height;
   editSpacerWidth.value = width;
 
-  _EditType type = _EditType.height;
-
-  // Make it so //
+  Axis axis = Axis.vertical;
 
   await ezRootNav.currentState!.push(
     PageRouteBuilder<Widget>(
@@ -128,12 +126,25 @@ Future<void> editSpacer(
       transitionDuration: Duration.zero,
       reverseTransitionDuration: Duration.zero,
       pageBuilder: (_, __, ___) => StatefulBuilder(builder: (_, StateSetter setOverlay) {
+        final double maxHeight = heightOf(ezRootNav.currentContext!) / 2;
+        final double maxWidth = widthOf(ezRootNav.currentContext!) / 2;
+
         marked = (lane, index);
 
-        void quickValue(double value) => setOverlay(() => switch (type) {
-              _EditType.height => height = value,
-              _EditType.width => width = value,
-            });
+        // Define custom functions //
+
+        void quickValue(double value) {
+          if (axis == Axis.vertical) {
+            height = value;
+            editSpacerHeight.value = value;
+          } else {
+            width = value;
+            editSpacerWidth.value = value;
+          }
+          setOverlay(() {});
+        }
+
+        // Return the build //
 
         return Material(
           type: MaterialType.transparency,
@@ -157,15 +168,18 @@ Future<void> editSpacer(
                     MenuAnchor(
                       builder: (_, MenuController c, __) => EzIconButton(
                         config,
-                        icon: Icon(type.icon),
+                        icon: Icon((axis == Axis.vertical) ? Icons.height : Icons.horizontal_rule),
                         onPressed: () => toggleMenu(c),
                       ),
-                      menuChildren: _EditType.values
-                          .map((_EditType t) => EzMenuButton(
+                      menuChildren: Axis.values
+                          .map((Axis a) => EzMenuButton(
                                 config,
-                                label: t.name,
-                                icon: EzIcon(config, t.icon),
-                                onPressed: () => setOverlay(() => type = t),
+                                label: a.name,
+                                icon: EzIcon(
+                                  config,
+                                  (a == Axis.vertical) ? Icons.height : Icons.horizontal_rule,
+                                ),
+                                onPressed: () => setOverlay(() => axis = a),
                               ))
                           .toList(),
                     ),
@@ -177,11 +191,11 @@ Future<void> editSpacer(
                       icon: const Icon(Icons.keyboard_arrow_up),
                       enabled: currIndex < (appInfo.homeList(config, lane).length - 1),
                       onPressed: () async {
-                        await appInfo.moveItemUp(config, lane: lane, index: currIndex);
+                        final int nextIndex = currIndex + 1;
+                        marked = (lane, nextIndex);
 
-                        currIndex += 1;
-                        marked = (lane, currIndex);
-                        setOverlay(() {});
+                        await appInfo.moveItemUp(config, lane: lane, index: currIndex);
+                        setOverlay(() => currIndex = nextIndex);
                       },
                     ),
                     config.rowSpacer,
@@ -224,11 +238,11 @@ Future<void> editSpacer(
                       icon: const Icon(Icons.keyboard_arrow_down),
                       enabled: currIndex > 0,
                       onPressed: () async {
-                        await appInfo.moveItemDown(config, lane: lane, index: currIndex);
+                        final int nextIndex = currIndex - 1;
+                        marked = (lane, nextIndex);
 
-                        currIndex -= 1;
-                        marked = (lane, currIndex);
-                        setOverlay(() {});
+                        await appInfo.moveItemDown(config, lane: lane, index: currIndex);
+                        setOverlay(() => currIndex = nextIndex);
                       },
                     ),
                     config.rowSpacer,
@@ -250,22 +264,23 @@ Future<void> editSpacer(
                 right: 0,
                 child: EzTextBackground(
                   config,
-                  text: Slider(
-                    value: switch (type) {
-                      _EditType.height => height,
-                      _EditType.width => width,
-                    },
-                    max: maxSpacing,
-                    onChanged: (double value) {
-                      if (type == _EditType.height) {
-                        editSpacerHeight.value = value;
-                        setOverlay(() => height = value);
-                      } else {
-                        editSpacerWidth.value = value;
-                        setOverlay(() => width = value);
-                      }
-                    },
-                  ),
+                  text: (axis == Axis.vertical)
+                      ? Slider(
+                          value: height,
+                          max: maxHeight,
+                          onChanged: (double value) {
+                            editSpacerHeight.value = value;
+                            setOverlay(() => height = value);
+                          },
+                        )
+                      : Slider(
+                          value: width,
+                          max: maxWidth,
+                          onChanged: (double value) {
+                            editSpacerWidth.value = value;
+                            setOverlay(() => width = value);
+                          },
+                        ),
                   backgroundColor: config.colors.surface,
                 ),
               ),
@@ -286,20 +301,6 @@ Future<void> editSpacer(
       index: currIndex,
     );
   });
-}
-
-enum _EditType { height, width }
-
-extension _ETConfig on _EditType {
-  IconData get icon => switch (this) {
-        _EditType.height => Icons.height,
-        _EditType.width => Icons.horizontal_rule,
-      };
-
-  String get name => switch (this) {
-        _EditType.height => 'Height',
-        _EditType.width => 'Width',
-      };
 }
 
 Future<bool> _externalAuth(String reason) async {
