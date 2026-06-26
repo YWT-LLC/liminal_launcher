@@ -105,106 +105,170 @@ Future<void> editSpacer(
   required AppInfoProvider appInfo,
   required int lane,
   required int index,
-}) =>
-    ezRootNav.currentState!.push(
-      PageRouteBuilder<Widget>(
-        opaque: false,
-        transitionsBuilder: (_, __, ___, Widget child) => child,
-        transitionDuration: Duration.zero,
-        reverseTransitionDuration: Duration.zero,
-        pageBuilder: (_, __, ___) {
-          final List<String> data = appInfo.homeList(config, lane)[index].split(spacerSplit);
-          double height = double.tryParse(data[0]) ?? config.spacing;
-          double width = double.tryParse(data[1]) ?? appIconSize(config);
+}) async {
+  final List<String> data = appInfo.homeList(config, lane)[index].split(spacerSplit);
+  double height = double.tryParse(data[0]) ?? config.spacing;
+  double width = double.tryParse(data[1]) ?? appIconSize(config);
 
-          double opacity = 0.5;
+  _EditType type = _EditType.height;
 
-          _EditType type = _EditType.height;
+  await ezRootNav.currentState!.push(
+    PageRouteBuilder<Widget>(
+      opaque: false,
+      transitionsBuilder: (_, __, ___, Widget child) => child,
+      transitionDuration: Duration.zero,
+      reverseTransitionDuration: Duration.zero,
+      pageBuilder: (_, __, ___) => StatefulBuilder(builder: (_, StateSetter setOverlay) {
+        void quickValue(double value) => setOverlay(() => switch (type) {
+              _EditType.height => height = value,
+              _EditType.width => width = value,
+            });
 
-          return StatefulBuilder(
-            builder: (_, StateSetter setOverlay) => EzScreen(
-              config,
-              safeArea: true,
-              child: Stack(children: <Widget>[
-                // Top
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  child: EzRow(
-                    config,
-                    mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[
-                      // Slider select
-                      MenuAnchor(
-                        builder: (_, MenuController c, __) => EzIconButton(
-                          config,
-                          icon: const Icon(Icons.done),
-                          onPressed: () => toggleMenu(c),
-                        ),
-                        menuChildren: _EditType.values
-                            .map((_EditType t) => EzMenuButton(
-                                  config,
-                                  label: t.name,
-                                  icon: EzIcon(config, t.icon),
-                                  onPressed: () => setOverlay(() => type = t),
-                                ))
-                            .toList(),
-                      ),
-                      config.rowSpacer,
-
-                      // Done
-                      EzIconButton(
+        return Material(
+          type: MaterialType.transparency,
+          child: EzScreen(
+            config,
+            safeArea: true,
+            child: Stack(children: <Widget>[
+              // Top
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: EzScrollView(
+                  config,
+                  startCentered: true,
+                  mainAxisSize: MainAxisSize.max,
+                  scrollDirection: Axis.horizontal,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    // Slider select
+                    MenuAnchor(
+                      builder: (_, MenuController c, __) => EzIconButton(
                         config,
-                        icon: const Icon(Icons.done),
-                        onPressed: () => Navigator.of(ezRootNav.currentContext!).pop(),
-                      )
-                    ],
-                  ),
-                ),
+                        icon: Icon(type.icon),
+                        onPressed: () => toggleMenu(c),
+                      ),
+                      menuChildren: _EditType.values
+                          .map((_EditType t) => EzMenuButton(
+                                config,
+                                label: t.name,
+                                icon: EzIcon(config, t.icon),
+                                onPressed: () => setOverlay(() => type = t),
+                              ))
+                          .toList(),
+                    ),
+                    config.rowSpacer,
 
-                // Bottom
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Slider(
+                    // Move up
+                    EzIconButton(
+                      config,
+                      icon: const Icon(Icons.keyboard_arrow_up),
+                      onPressed: () => appInfo.moveItemUp(config, lane: lane, index: index),
+                    ),
+                    config.rowSpacer,
+
+                    // Key/quick values
+                    MenuAnchor(
+                      builder: (_, MenuController c, __) => EzIconButton(
+                        config,
+                        icon: const Icon(Icons.key),
+                        onPressed: () => toggleMenu(c),
+                      ),
+                      menuChildren: <Widget>[
+                        MenuItemButton(
+                          onPressed: () => quickValue(config.marginVal),
+                          child: Text('Margin: ${config.marginVal}'),
+                        ),
+                        MenuItemButton(
+                          onPressed: () => quickValue(config.padding),
+                          child: Text('Padding: ${config.padding}'),
+                        ),
+                        MenuItemButton(
+                          onPressed: () => quickValue(config.spacing),
+                          child: Text('Spacing: ${config.spacing}'),
+                        ),
+                        MenuItemButton(
+                          onPressed: () => quickValue(config.iconSize),
+                          child: Text('Icon size: ${config.iconSize}'),
+                        ),
+                        MenuItemButton(
+                          onPressed: () => quickValue(appIconSize(config)),
+                          child: Text('App icon size: ${appIconSize(config)}'),
+                        ),
+                      ],
+                    ),
+                    config.rowSpacer,
+
+                    // Moved down
+                    EzIconButton(
+                      config,
+                      icon: const Icon(Icons.keyboard_arrow_down),
+                      onPressed: () => appInfo.moveItemDown(config, lane: lane, index: index),
+                    ),
+                    config.rowSpacer,
+
+                    // Done
+                    EzIconButton(
+                      config,
+                      icon: const Icon(Icons.done),
+                      onPressed: () => Navigator.of(ezRootNav.currentContext!).pop(),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Bottom
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: EzTextBackground(
+                  config,
+                  text: Slider(
                     value: switch (type) {
                       _EditType.height => height,
                       _EditType.width => width,
-                      _EditType.opacity => opacity,
                     },
-                    max: switch (type) { _EditType.opacity => 1.0, _ => maxSpacing },
+                    max: maxSpacing,
                     onChanged: (double value) {
                       setOverlay(() => switch (type) {
                             _EditType.height => height = value,
                             _EditType.width => width = value,
-                            _EditType.opacity => opacity = value,
                           });
-                      // TODO: passthrough
+                      // TODO: actual vis/UI
                     },
                   ),
+                  backgroundColor: config.colors.surface,
                 ),
-              ]),
-            ),
-          );
-        },
-      ),
-    );
+              ),
+            ]),
+          ),
+        );
+      }),
+    ),
+  );
 
-enum _EditType { height, width, opacity }
+  await ezNoTouch(() => appInfo.updateSpacer(
+        config,
+        height: height,
+        width: width,
+        lane: lane,
+        index: index,
+      ));
+}
+
+enum _EditType { height, width }
 
 extension _ETConfig on _EditType {
   IconData get icon => switch (this) {
         _EditType.height => Icons.height,
         _EditType.width => Icons.horizontal_rule,
-        _EditType.opacity => Icons.opacity,
       };
 
   String get name => switch (this) {
         _EditType.height => 'Height',
         _EditType.width => 'Width',
-        _EditType.opacity => 'Opacity',
       };
 }
 
