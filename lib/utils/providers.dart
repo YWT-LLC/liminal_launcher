@@ -47,23 +47,42 @@ class AppInfoProvider extends ChangeNotifier {
     // Iterate through the sub-lists to properly populate the home sets
     for (final List<String> lane in _darkHomeMatrix) {
       for (final String entry in lane) {
-        // TODO: svvitch (with more (&& below))
-        if (entry.contains(folderSplit)) {
-          final List<String> items = entry.split(folderSplit);
-          if (items.length > 2) _darkHomeSet.addAll(items.sublist(2));
-        } else {
-          _darkHomeSet.add(entry);
+        final RegExpMatch? splitMatch = tileRegex.firstMatch(entry);
+        final String? delim = splitMatch?.group(0);
+
+        switch (delim) {
+          case idSplit:
+            _darkHomeSet.add(entry);
+            break;
+
+          case folderSplit:
+            final List<String> items = entry.split(folderSplit);
+            if (items.length > 2) _darkHomeSet.addAll(items.sublist(2));
+            break;
+
+          default:
+            continue;
         }
       }
     }
 
     for (final List<String> lane in _lightHomeMatrix) {
       for (final String entry in lane) {
-        if (entry.contains(folderSplit)) {
-          final List<String> items = entry.split(folderSplit);
-          if (items.length > 2) _lightHomeSet.addAll(items.sublist(2));
-        } else {
-          _lightHomeSet.add(entry);
+        final RegExpMatch? splitMatch = tileRegex.firstMatch(entry);
+        final String? delim = splitMatch?.group(0);
+
+        switch (delim) {
+          case idSplit:
+            _lightHomeSet.add(entry);
+            break;
+
+          case folderSplit:
+            final List<String> items = entry.split(folderSplit);
+            if (items.length > 2) _lightHomeSet.addAll(items.sublist(2));
+            break;
+
+          default:
+            continue;
         }
       }
     }
