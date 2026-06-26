@@ -129,7 +129,7 @@ Future<void> editSpacer(
         final double maxHeight = heightOf(ezRootNav.currentContext!) / 2;
         final double maxWidth = widthOf(ezRootNav.currentContext!) / 2;
 
-        marked = (lane, index);
+        marked.value = (lane, index);
 
         // Define custom functions //
 
@@ -192,7 +192,7 @@ Future<void> editSpacer(
                       enabled: currIndex < (appInfo.homeList(config, lane).length - 1),
                       onPressed: () async {
                         final int nextIndex = currIndex + 1;
-                        marked = (lane, nextIndex);
+                        marked.value = (lane, nextIndex);
 
                         await appInfo.moveItemUp(config, lane: lane, index: currIndex);
                         setOverlay(() => currIndex = nextIndex);
@@ -239,7 +239,7 @@ Future<void> editSpacer(
                       enabled: currIndex > 0,
                       onPressed: () async {
                         final int nextIndex = currIndex - 1;
-                        marked = (lane, nextIndex);
+                        marked.value = (lane, nextIndex);
 
                         await appInfo.moveItemDown(config, lane: lane, index: currIndex);
                         setOverlay(() => currIndex = nextIndex);
@@ -292,7 +292,7 @@ Future<void> editSpacer(
   );
 
   await ezNoTouch(() async {
-    marked = (null, null);
+    marked.value = (null, null);
     await appInfo.updateSpacer(
       config,
       height: height,
