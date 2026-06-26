@@ -699,7 +699,7 @@ If you want to support Liminal's development, or the development of more Empathe
                               child: EzElevatedIconButton(
                                 config,
                                 onPressed: () async {
-                                  final int index = await appInfo.addSpacer(config, 0);
+                                  final int index = await appInfo.addSpacer(config, lane: 0);
                                   if (mCon.mounted) Navigator.of(mCon).pop();
                                   setState(() => editing = false);
 
