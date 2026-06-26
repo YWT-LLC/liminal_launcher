@@ -274,7 +274,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                   widget.config,
                   label: 'Move -',
                   icon: EzIcon(widget.config, Icons.keyboard_arrow_down),
-                  onPressed: () => widget.appInfo.moveItemDown(
+                  onPressed: () => widget.appInfo.moveDownLane(
                     widget.config,
                     lane: widget.lane,
                     index: widget.index,
@@ -285,7 +285,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                   widget.config,
                   label: 'Move +',
                   icon: EzIcon(widget.config, Icons.keyboard_arrow_up),
-                  onPressed: () => widget.appInfo.moveItemUp(
+                  onPressed: () => widget.appInfo.moveUpLane(
                     widget.config,
                     lane: widget.lane,
                     index: widget.index,
