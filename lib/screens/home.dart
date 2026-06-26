@@ -80,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
         constraints: BoxConstraints(
           minHeight: double.infinity,
           minWidth: appIconSize(config) + config.spacing,
-          maxWidth: widthOf(context) / (editing ? 3 : 1),
+          maxWidth: widthOf(context), // TODO: figure out
         ),
         child: editing
             ? Builder(builder: (_) {
@@ -192,14 +192,17 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           break;
 
         case spacerSplit:
-          toReturn.add(LimSpacer(
-            config,
+          toReturn.add(Padding(
             key: ValueKey<String>('$index-spacer-$editing'),
-            appInfo: appInfo,
-            lane: lane,
-            index: index,
-            state: editing ? AppState.groupEdit : AppState.standard,
-            rippleProgress: rippleProgress,
+            padding: editing ? tilePadding : EdgeInsets.zero,
+            child: LimSpacer(
+              config,
+              appInfo: appInfo,
+              lane: lane,
+              index: index,
+              state: editing ? AppState.groupEdit : AppState.standard,
+              rippleProgress: rippleProgress,
+            ),
           ));
           break;
 
