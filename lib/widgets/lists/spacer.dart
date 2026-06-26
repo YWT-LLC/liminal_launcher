@@ -156,13 +156,11 @@ class _LimSpacerState extends State<LimSpacer> {
                   ),
                 remove
               ],
-              child: GestureDetector(
-                onTap: () => canToggleMenu(widget.config, menuControl),
-                child: SizedBox(
-                  height: height,
-                  width: width,
-                  child: Center(child: EzIcon(widget.config, Icons.edit)),
-                ),
+              child: EzIconButton(
+                widget.config,
+                iconSize: appIconSize(widget.config),
+                icon: const Icon(Icons.space_bar),
+                onPressed: () => canToggleMenu(widget.config, menuControl),
               ),
             ),
     );
