@@ -153,7 +153,7 @@ Future<void> editSpacer(
             config,
             safeArea: true,
             child: Stack(children: <Widget>[
-              // Top TODO: centered!!! (test with small settings)
+              // Top
               Positioned(
                 top: 0,
                 left: 0,
@@ -161,6 +161,7 @@ Future<void> editSpacer(
                 child: EzScrollView(
                   config,
                   startCentered: true,
+                  showScrollHint: true,
                   mainAxisSize: MainAxisSize.max,
                   scrollDirection: Axis.horizontal,
                   mainAxisAlignment: MainAxisAlignment.center,
