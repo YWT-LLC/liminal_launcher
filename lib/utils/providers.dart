@@ -417,6 +417,28 @@ class AppInfoProvider extends ChangeNotifier {
     // Don't notifyListeners();
   }
 
+  Future<void> updateSpacer(
+    EzCP config, {
+    required double height,
+    required double width,
+    required int lane,
+    required int index,
+  }) async {
+    final String entry = <String>[height.toString(), width.toString()].join(spacerSplit);
+
+    if (interlinked || config.isDark) {
+      _darkHomeMatrix[lane][index] = entry;
+      unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
+    }
+
+    if (interlinked || !config.isDark) {
+      _lightHomeMatrix[lane][index] = entry;
+      unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
+    }
+
+    notifyListeners();
+  }
+
   void reorderHomeList(
     EzCP config, {
     required int lane,
