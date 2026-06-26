@@ -108,15 +108,14 @@ Future<void> editSpacer(
 }) async {
   // Setup //
 
+  int currIndex = index;
+
   final List<String> data = appInfo.homeList(config, lane)[index].split(spacerSplit);
   double height = double.tryParse(data[0]) ?? config.spacing;
   double width = double.tryParse(data[1]) ?? appIconSize(config);
 
   editSpacerHeight.value = height;
   editSpacerWidth.value = width;
-
-  final int currLane = lane;
-  int currIndex = index;
 
   _EditType type = _EditType.height;
 
@@ -129,6 +128,8 @@ Future<void> editSpacer(
       transitionDuration: Duration.zero,
       reverseTransitionDuration: Duration.zero,
       pageBuilder: (_, __, ___) => StatefulBuilder(builder: (_, StateSetter setOverlay) {
+        marked = (lane, index);
+
         void quickValue(double value) => setOverlay(() => switch (type) {
               _EditType.height => height = value,
               _EditType.width => width = value,
@@ -174,10 +175,13 @@ Future<void> editSpacer(
                     EzIconButton(
                       config,
                       icon: const Icon(Icons.keyboard_arrow_up),
-                      enabled: currIndex < (appInfo.homeList(config, currLane).length - 1),
+                      enabled: currIndex < (appInfo.homeList(config, lane).length - 1),
                       onPressed: () async {
-                        await appInfo.moveItemUp(config, lane: currLane, index: currIndex);
-                        setOverlay(() => currIndex += 1);
+                        await appInfo.moveItemUp(config, lane: lane, index: currIndex);
+
+                        currIndex += 1;
+                        marked = (lane, currIndex);
+                        setOverlay(() {});
                       },
                     ),
                     config.rowSpacer,
@@ -220,8 +224,11 @@ Future<void> editSpacer(
                       icon: const Icon(Icons.keyboard_arrow_down),
                       enabled: currIndex > 0,
                       onPressed: () async {
-                        await appInfo.moveItemDown(config, lane: currLane, index: currIndex);
-                        setOverlay(() => currIndex -= 1);
+                        await appInfo.moveItemDown(config, lane: lane, index: currIndex);
+
+                        currIndex -= 1;
+                        marked = (lane, currIndex);
+                        setOverlay(() {});
                       },
                     ),
                     config.rowSpacer,
@@ -269,13 +276,16 @@ Future<void> editSpacer(
     ),
   );
 
-  await ezNoTouch(() => appInfo.updateSpacer(
-        config,
-        height: height,
-        width: width,
-        lane: currLane,
-        index: currIndex,
-      ));
+  await ezNoTouch(() async {
+    marked = (null, null);
+    await appInfo.updateSpacer(
+      config,
+      height: height,
+      width: width,
+      lane: lane,
+      index: currIndex,
+    );
+  });
 }
 
 enum _EditType { height, width }

@@ -112,83 +112,73 @@ class _LimSpacerState extends State<LimSpacer> {
       icon: EzIcon(widget.config, Icons.delete),
     );
 
-    return EzAnimSwitch(
-      widget.config,
-      mod: 0.667,
-      forceType: EzTransitionType.none,
-      forceFade: true,
-      child: switch (state) {
-        AppState.standard => MenuAnchor(
-            builder: (_, MenuController controller, __) => GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onLongPress: () => canToggleMenu(widget.config, controller),
-              child: SizedBox(height: widget._height, width: widget._width),
-            ),
-            menuChildren: <Widget>[
-              dupe,
-              EzMenuButton(
-                widget.config,
-                onPressed: () => editSpacer(
-                  widget.config,
-                  appInfo: widget.appInfo,
-                  lane: widget.lane,
-                  index: widget.index,
-                ),
-                label: 'Resize',
-                icon: EzIcon(widget.config, Icons.edit),
-              ),
-              remove,
-            ],
-          ),
-        AppState.singleEdit => Container(
-            height: widget._height,
-            width: widget._width,
-            decoration: BoxDecoration(
-              borderRadius: widget.config.buttonShape.radius,
-              border: Border.all(
-                color: widget.config.colors.secondary,
-                width: widget.config.borderWidth,
-              ),
-            ),
-          ),
-        _ => EditContainer(
+    return (marked.$1 == widget.lane && marked.$2 == widget.index)
+        ? EditSpacer(widget.config)
+        : EzAnimSwitch(
             widget.config,
-            menuControl: menuControl,
-            menuChildren: <Widget>[
-              dupe,
-              if (state == AppState.groupEdit && widget.lane != 0)
-                EzMenuButton(
-                  widget.config,
-                  label: 'Move -',
-                  icon: EzIcon(widget.config, Icons.keyboard_arrow_down),
-                  onPressed: () => widget.appInfo.moveDownLane(
+            mod: 0.667,
+            forceType: EzTransitionType.none,
+            forceFade: true,
+            child: (state == AppState.standard)
+                ? MenuAnchor(
+                    builder: (_, MenuController controller, __) => GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onLongPress: () => canToggleMenu(widget.config, controller),
+                      child: SizedBox(height: widget._height, width: widget._width),
+                    ),
+                    menuChildren: <Widget>[
+                      dupe,
+                      EzMenuButton(
+                        widget.config,
+                        onPressed: () => editSpacer(
+                          widget.config,
+                          appInfo: widget.appInfo,
+                          lane: widget.lane,
+                          index: widget.index,
+                        ),
+                        label: 'Resize',
+                        icon: EzIcon(widget.config, Icons.edit),
+                      ),
+                      remove,
+                    ],
+                  )
+                : EditContainer(
                     widget.config,
-                    lane: widget.lane,
-                    index: widget.index,
+                    menuControl: menuControl,
+                    menuChildren: <Widget>[
+                      dupe,
+                      if (state == AppState.groupEdit && widget.lane != 0)
+                        EzMenuButton(
+                          widget.config,
+                          label: 'Move -',
+                          icon: EzIcon(widget.config, Icons.keyboard_arrow_down),
+                          onPressed: () => widget.appInfo.moveDownLane(
+                            widget.config,
+                            lane: widget.lane,
+                            index: widget.index,
+                          ),
+                        ),
+                      if (state == AppState.groupEdit && widget.lane < (numLanes - 1))
+                        EzMenuButton(
+                          widget.config,
+                          label: 'Move +',
+                          icon: EzIcon(widget.config, Icons.keyboard_arrow_up),
+                          onPressed: () => widget.appInfo.moveUpLane(
+                            widget.config,
+                            lane: widget.lane,
+                            index: widget.index,
+                          ),
+                        ),
+                      remove,
+                    ],
+                    child: EzIconButton(
+                      widget.config,
+                      iconSize: appIconSize(widget.config),
+                      icon: const Icon(Icons.space_bar),
+                      onPressed: () => canToggleMenu(widget.config, menuControl),
+                    ),
                   ),
-                ),
-              if (state == AppState.groupEdit && widget.lane < (numLanes - 1))
-                EzMenuButton(
-                  widget.config,
-                  label: 'Move +',
-                  icon: EzIcon(widget.config, Icons.keyboard_arrow_up),
-                  onPressed: () => widget.appInfo.moveUpLane(
-                    widget.config,
-                    lane: widget.lane,
-                    index: widget.index,
-                  ),
-                ),
-              remove,
-            ],
-            child: EzIconButton(
-              widget.config,
-              iconSize: appIconSize(widget.config),
-              icon: const Icon(Icons.space_bar),
-              onPressed: () => canToggleMenu(widget.config, menuControl),
-            ),
-          ),
-      },
-    );
+          );
   }
 
   @override
