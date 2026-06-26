@@ -468,9 +468,12 @@ const Map<String, String> wingdingMap = <String, String>{
   'Z': '\u{262A}',
 };
 
+/// 1.5
+const double rippleMod = 1.5;
+
 // Not const //
 
 Offset lastRipple = Offset.zero;
 
-/// 1.5
-double rippleMod = 1.5;
+final ValueNotifier<double> editSpacerHite = ValueNotifier<double>(defaultMobileSpacing);
+final ValueNotifier<double> editSpacerWith = ValueNotifier<double>(defaultMobileSpacing);
