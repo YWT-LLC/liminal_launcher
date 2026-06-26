@@ -110,6 +110,9 @@ Future<void> editSpacer(
   double height = double.tryParse(data[0]) ?? config.spacing;
   double width = double.tryParse(data[1]) ?? appIconSize(config);
 
+  final int currLane = lane;
+  int currIndex = index;
+
   _EditType type = _EditType.height;
 
   await ezRootNav.currentState!.push(
@@ -164,7 +167,11 @@ Future<void> editSpacer(
                     EzIconButton(
                       config,
                       icon: const Icon(Icons.keyboard_arrow_up),
-                      onPressed: () => appInfo.moveItemUp(config, lane: lane, index: index),
+                      enabled: currIndex < (appInfo.homeList(config, currLane).length - 1),
+                      onPressed: () async {
+                        await appInfo.moveItemUp(config, lane: currLane, index: currIndex);
+                        setOverlay(() => currIndex += 1);
+                      },
                     ),
                     config.rowSpacer,
 
@@ -204,7 +211,11 @@ Future<void> editSpacer(
                     EzIconButton(
                       config,
                       icon: const Icon(Icons.keyboard_arrow_down),
-                      onPressed: () => appInfo.moveItemDown(config, lane: lane, index: index),
+                      enabled: currIndex > 0,
+                      onPressed: () async {
+                        await appInfo.moveItemDown(config, lane: currLane, index: currIndex);
+                        setOverlay(() => currIndex -= 1);
+                      },
                     ),
                     config.rowSpacer,
 
@@ -253,8 +264,8 @@ Future<void> editSpacer(
         config,
         height: height,
         width: width,
-        lane: lane,
-        index: index,
+        lane: currLane,
+        index: currIndex,
       ));
 }
 
