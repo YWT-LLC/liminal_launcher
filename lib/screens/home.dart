@@ -80,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
         constraints: BoxConstraints(
           minHeight: double.infinity,
           minWidth: appIconSize(config) + config.spacing,
-          maxWidth: widthOf(context), // TODO: figure out
+          maxWidth: widthOf(context),
         ),
         child: editing
             ? Builder(builder: (_) {
