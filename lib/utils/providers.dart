@@ -268,25 +268,33 @@ class AppInfoProvider extends ChangeNotifier {
     unawaited(_added(config));
   }
 
-  Future<int> addSpacer(EzCP config, int lane) async {
+  Future<int> addSpacer(
+    EzCP config, {
+    double? height,
+    double? width,
+    required int lane,
+    int? index,
+  }) async {
     int pos = 0;
+    final String entry = <String>[
+      (height ?? config.spacing).toString(),
+      (width ?? appIconSize(config)).toString(),
+    ].join(spacerSplit);
 
     if (interlinked || config.isDark) {
-      pos = _darkHomeMatrix[lane].length;
-      _darkHomeMatrix[lane].add(<String>[
-        config.spacing.toString(),
-        appIconSize(config).toString(),
-      ].join(spacerSplit));
+      pos = index ?? _darkHomeMatrix[lane].length;
+
+      index == null ? _darkHomeMatrix[lane].add(entry) : _darkHomeMatrix[lane].insert(index, entry);
 
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      pos = _lightHomeMatrix[lane].length;
-      _lightHomeMatrix[lane].add(<String>[
-        config.spacing.toString(),
-        appIconSize(config).toString(),
-      ].join(spacerSplit));
+      pos = index ?? _lightHomeMatrix[lane].length;
+
+      index == null
+          ? _lightHomeMatrix[lane].add(entry)
+          : _lightHomeMatrix[lane].insert(index, entry);
 
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
@@ -439,12 +447,12 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void reorderHomeList(
+  Future<void> reorderHomeList(
     EzCP config, {
     required int lane,
     required int oldIndex,
     required int newIndex,
-  }) {
+  }) async {
     if (interlinked || config.isDark) {
       final String element = _darkHomeMatrix[lane].removeAt(oldIndex);
       _darkHomeMatrix[lane].insert(newIndex, element);
@@ -460,6 +468,50 @@ class AppInfoProvider extends ChangeNotifier {
     }
 
     // don't notifyListeners(); twill happen when the user exits edit mode
+  }
+
+  Future<void> moveItemUp(
+    EzCP config, {
+    required int lane,
+    required int index,
+  }) async {
+    if (interlinked || config.isDark) {
+      final String element = _darkHomeMatrix[lane].removeAt(index);
+      _darkHomeMatrix[lane].insert(index + 1, element);
+
+      unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
+    }
+
+    if (interlinked || !config.isDark) {
+      final String element = _lightHomeMatrix[lane].removeAt(index);
+      _lightHomeMatrix[lane].insert(index + 1, element);
+
+      unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
+    }
+
+    notifyListeners();
+  }
+
+  Future<void> moveItemDown(
+    EzCP config, {
+    required int lane,
+    required int index,
+  }) async {
+    if (interlinked || config.isDark) {
+      final String element = _darkHomeMatrix[lane].removeAt(index);
+      _darkHomeMatrix[lane].insert(index - 1, element);
+
+      unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
+    }
+
+    if (interlinked || !config.isDark) {
+      final String element = _lightHomeMatrix[lane].removeAt(index);
+      _lightHomeMatrix[lane].insert(index - 1, element);
+
+      unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
+    }
+
+    notifyListeners();
   }
 
   Future<void> updateFolder(
@@ -526,7 +578,7 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   /// Assumes index checks have already been done
-  Future<void> moveItemUp(EzCP config, {required int lane, required int index}) async {
+  Future<void> moveUpLane(EzCP config, {required int lane, required int index}) async {
     if (interlinked || config.isDark) {
       final String item = _darkHomeMatrix[lane].removeAt(index);
       _darkHomeMatrix[lane + 1].add(item);
@@ -545,7 +597,7 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   /// Assumes index checks have already been done
-  Future<void> moveItemDown(EzCP config, {required int lane, required int index}) async {
+  Future<void> moveDownLane(EzCP config, {required int lane, required int index}) async {
     if (interlinked || config.isDark) {
       final String item = _darkHomeMatrix[lane].removeAt(index);
       _darkHomeMatrix[lane - 1].add(item);
