@@ -48,9 +48,6 @@ class _LimSpacerState extends State<LimSpacer> {
 
   final MenuController menuControl = MenuController();
 
-  late double height = widget._height;
-  late double width = widget._width;
-
   // Define custom functions //
 
   void rippling() {
@@ -91,6 +88,19 @@ class _LimSpacerState extends State<LimSpacer> {
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
+    late final EzMenuButton dupe = EzMenuButton(
+      widget.config,
+      onPressed: () => widget.appInfo.addSpacer(
+        widget.config,
+        height: widget._height,
+        width: widget._width,
+        lane: widget.lane,
+        index: widget.index,
+      ),
+      label: 'Duplicate',
+      icon: EzIcon(widget.config, Icons.copy),
+    );
+
     late final EzMenuButton remove = EzMenuButton(
       widget.config,
       onPressed: () => widget.appInfo.deleteWS(
@@ -110,10 +120,12 @@ class _LimSpacerState extends State<LimSpacer> {
       child: widget.state == AppState.standard
           ? MenuAnchor(
               builder: (_, MenuController controller, __) => GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onLongPress: () => canToggleMenu(widget.config, controller),
-                child: SizedBox(height: height, width: width),
+                child: SizedBox(height: widget._height, width: widget._width),
               ),
               menuChildren: <Widget>[
+                dupe,
                 EzMenuButton(
                   widget.config,
                   onPressed: () => editSpacer(
@@ -132,12 +144,13 @@ class _LimSpacerState extends State<LimSpacer> {
               widget.config,
               menuControl: menuControl,
               menuChildren: <Widget>[
+                dupe,
                 if (widget.state == AppState.groupEdit && widget.lane != 0)
                   EzMenuButton(
                     widget.config,
                     label: 'Move -',
                     icon: EzIcon(widget.config, Icons.keyboard_arrow_down),
-                    onPressed: () => widget.appInfo.moveItemDown(
+                    onPressed: () => widget.appInfo.moveDownLane(
                       widget.config,
                       lane: widget.lane,
                       index: widget.index,
@@ -148,7 +161,7 @@ class _LimSpacerState extends State<LimSpacer> {
                     widget.config,
                     label: 'Move +',
                     icon: EzIcon(widget.config, Icons.keyboard_arrow_up),
-                    onPressed: () => widget.appInfo.moveItemUp(
+                    onPressed: () => widget.appInfo.moveUpLane(
                       widget.config,
                       lane: widget.lane,
                       index: widget.index,
