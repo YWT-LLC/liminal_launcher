@@ -704,7 +704,6 @@ If you want to support Liminal's development, or the development of more Empathe
                                     await editSpacer(
                                       config,
                                       appInfo: appInfo,
-                                      context: context,
                                       lane: 0,
                                       index: index,
                                     );

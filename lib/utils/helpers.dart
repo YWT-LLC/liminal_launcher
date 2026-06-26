@@ -103,20 +103,110 @@ Future<IconData?> chooseIcon(EzCP config, BuildContext context) => ezModal(
 Future<void> editSpacer(
   EzCP config, {
   required AppInfoProvider appInfo,
-  required BuildContext context,
   required int lane,
   required int index,
 }) =>
-    ezModal(
-      config,
-      context: context,
-      builder: (_) {
-        return StatefulBuilder(
-          builder: (BuildContext mCon, StateSetter setModal) =>
-              ezModalScroll(config, children: <Widget>[]),
-        );
-      },
+    ezRootNav.currentState!.push(
+      PageRouteBuilder<Widget>(
+        opaque: false,
+        transitionsBuilder: (_, __, ___, Widget child) => child,
+        transitionDuration: Duration.zero,
+        reverseTransitionDuration: Duration.zero,
+        pageBuilder: (_, __, ___) {
+          final List<String> data = appInfo.homeList(config, lane)[index].split(spacerSplit);
+          double height = double.tryParse(data[0]) ?? config.spacing;
+          double width = double.tryParse(data[1]) ?? appIconSize(config);
+
+          double opacity = 0.5;
+
+          _EditType type = _EditType.height;
+
+          return StatefulBuilder(
+            builder: (_, StateSetter setOverlay) => EzScreen(
+              config,
+              safeArea: true,
+              child: Stack(children: <Widget>[
+                // Top
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: EzRow(
+                    config,
+                    mainAxisSize: MainAxisSize.max,
+                    children: <Widget>[
+                      // Slider select
+                      MenuAnchor(
+                        builder: (_, MenuController c, __) => EzIconButton(
+                          config,
+                          icon: const Icon(Icons.done),
+                          onPressed: () => toggleMenu(c),
+                        ),
+                        menuChildren: _EditType.values
+                            .map((_EditType t) => EzMenuButton(
+                                  config,
+                                  label: t.name,
+                                  icon: EzIcon(config, t.icon),
+                                  onPressed: () => setOverlay(() => type = t),
+                                ))
+                            .toList(),
+                      ),
+                      config.rowSpacer,
+
+                      // Done
+                      EzIconButton(
+                        config,
+                        icon: const Icon(Icons.done),
+                        onPressed: () => Navigator.of(ezRootNav.currentContext!).pop(),
+                      )
+                    ],
+                  ),
+                ),
+
+                // Bottom
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Slider(
+                    value: switch (type) {
+                      _EditType.height => height,
+                      _EditType.width => width,
+                      _EditType.opacity => opacity,
+                    },
+                    max: switch (type) { _EditType.opacity => 1.0, _ => maxSpacing },
+                    onChanged: (double value) {
+                      setOverlay(() => switch (type) {
+                            _EditType.height => height = value,
+                            _EditType.width => width = value,
+                            _EditType.opacity => opacity = value,
+                          });
+                      // TODO: passthrough
+                    },
+                  ),
+                ),
+              ]),
+            ),
+          );
+        },
+      ),
     );
+
+enum _EditType { height, width, opacity }
+
+extension _ETConfig on _EditType {
+  IconData get icon => switch (this) {
+        _EditType.height => Icons.height,
+        _EditType.width => Icons.horizontal_rule,
+        _EditType.opacity => Icons.opacity,
+      };
+
+  String get name => switch (this) {
+        _EditType.height => 'Height',
+        _EditType.width => 'Width',
+        _EditType.opacity => 'Opacity',
+      };
+}
 
 Future<bool> _externalAuth(String reason) async {
   final bool authed = await LocalAuthentication().authenticate(
