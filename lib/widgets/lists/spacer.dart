@@ -10,8 +10,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-// TODO: creation, editing
-
 class LimSpacer extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
@@ -93,13 +91,6 @@ class _LimSpacerState extends State<LimSpacer> {
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
-    late final EzMenuButton resize = EzMenuButton(
-      widget.config,
-      onPressed: doNothing,
-      label: 'Resize',
-      icon: EzIcon(widget.config, Icons.edit),
-    );
-
     late final EzMenuButton remove = EzMenuButton(
       widget.config,
       onPressed: () => widget.appInfo.deleteWS(
@@ -122,7 +113,20 @@ class _LimSpacerState extends State<LimSpacer> {
                 onLongPress: () => canToggleMenu(widget.config, controller),
                 child: SizedBox(height: height, width: width),
               ),
-              menuChildren: <Widget>[resize, remove],
+              menuChildren: <Widget>[
+                EzMenuButton(
+                  widget.config,
+                  onPressed: () => editSpacer(
+                    widget.config,
+                    appInfo: widget.appInfo,
+                    lane: widget.lane,
+                    index: widget.index,
+                  ),
+                  label: 'Resize',
+                  icon: EzIcon(widget.config, Icons.edit),
+                ),
+                remove,
+              ],
             )
           : EditContainer(
               widget.config,
@@ -150,7 +154,6 @@ class _LimSpacerState extends State<LimSpacer> {
                       index: widget.index,
                     ),
                   ),
-                resize,
                 remove
               ],
               child: GestureDetector(
