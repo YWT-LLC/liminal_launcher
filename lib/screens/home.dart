@@ -75,12 +75,15 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     final List<Widget> lanes = <Widget>[];
     final int numLanes = appInfo.numLanes(config);
 
+    final double spaceCon = appIconSize(config) + config.spacing;
+
     for (int lane = 0; lane < numLanes; lane++) {
       lanes.add(ConstrainedBox(
         constraints: BoxConstraints(
           minHeight: double.infinity,
-          minWidth: appIconSize(config) + config.spacing,
-          maxWidth: widthOf(context),
+          minWidth: spaceCon,
+          maxWidth:
+              editing ? spaceCon + ((config.iconSize + config.marginVal) * 2) : widthOf(context),
         ),
         child: editing
             ? Builder(builder: (_) {
