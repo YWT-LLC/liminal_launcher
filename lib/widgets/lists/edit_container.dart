@@ -13,7 +13,6 @@ class EditContainer extends StatefulWidget {
   final Widget child;
   final MenuController menuControl;
   final List<Widget> menuChildren;
-  final bool dragHandles;
 
   const EditContainer(
     this.config, {
@@ -21,7 +20,6 @@ class EditContainer extends StatefulWidget {
     required this.child,
     required this.menuControl,
     required this.menuChildren,
-    this.dragHandles = false,
   });
 
   @override
@@ -45,43 +43,38 @@ class _EditContainerState extends State<EditContainer> with SingleTickerProvider
   }
 
   @override
-  Widget build(BuildContext context) {
-    final Widget core = MenuAnchor(
-      controller: widget.menuControl,
-      builder: (_, __, ___) => AnimatedBuilder(
-        animation: _animation,
-        builder: (_, __) => Container(
-          decoration: BoxDecoration(
-            borderRadius: widget.config.buttonShape.radius,
-            border: Border.all(
-              color: widget.config.colors.secondaryContainer.withValues(alpha: _animation.value),
-              width: widget.config.borderWidth,
+  Widget build(BuildContext context) => EzRow(widget.config, children: <Widget>[
+        EzIcon(
+          widget.config,
+          Icons.drag_handle,
+          color: widget.config.colors.outline,
+        ),
+        widget.config.rowMargin,
+        MenuAnchor(
+          controller: widget.menuControl,
+          builder: (_, __, ___) => AnimatedBuilder(
+            animation: _animation,
+            builder: (_, __) => Container(
+              decoration: BoxDecoration(
+                borderRadius: widget.config.buttonShape.radius,
+                border: Border.all(
+                  color:
+                      widget.config.colors.secondaryContainer.withValues(alpha: _animation.value),
+                  width: widget.config.borderWidth,
+                ),
+              ),
+              child: widget.child,
             ),
           ),
-          child: widget.child,
+          menuChildren: widget.menuChildren,
         ),
-      ),
-      menuChildren: widget.menuChildren,
-    );
-
-    return widget.dragHandles
-        ? EzRow(widget.config, children: <Widget>[
-            EzIcon(
-              widget.config,
-              Icons.drag_handle,
-              color: widget.config.colors.outline,
-            ),
-            widget.config.rowMargin,
-            core,
-            widget.config.rowMargin,
-            EzIcon(
-              widget.config,
-              Icons.drag_handle,
-              color: widget.config.colors.outline,
-            ),
-          ])
-        : core;
-  }
+        widget.config.rowMargin,
+        EzIcon(
+          widget.config,
+          Icons.drag_handle,
+          color: widget.config.colors.outline,
+        ),
+      ]);
 
   @override
   void dispose() {
@@ -92,21 +85,28 @@ class _EditContainerState extends State<EditContainer> with SingleTickerProvider
 
 class EditSpacer extends StatelessWidget {
   final EzCP config;
+  final void Function()? onTap;
 
-  const EditSpacer(this.config, {super.key});
+  const EditSpacer(this.config, {super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) => ValueListenableBuilder<double>(
         valueListenable: editSpacerHeight,
         builder: (_, double height, __) => ValueListenableBuilder<double>(
           valueListenable: editSpacerWidth,
-          builder: (_, double width, __) => Container(
-            decoration: BoxDecoration(
-              borderRadius: EzButtonShape.roundRect.radius,
-              border: Border.all(color: config.colors.secondary, width: config.borderWidth),
+          builder: (_, double width, __) => GestureDetector(
+            onTap: onTap,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: EzButtonShape.roundRect.radius,
+                border: Border.all(
+                  color: (onTap == null) ? config.colors.secondary : config.colors.tertiary,
+                  width: config.borderWidth,
+                ),
+              ),
+              height: height,
+              width: width,
             ),
-            height: height,
-            width: width,
           ),
         ),
       );
