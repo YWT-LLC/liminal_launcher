@@ -404,8 +404,8 @@ class _TimerWidgetState extends State<TimerWidget> {
               if (numLanes > 1 && widget.lane != 0)
                 EzMenuButton(
                   widget.config,
-                  label: 'Move -',
-                  icon: EzIcon(widget.config, Icons.keyboard_arrow_down),
+                  label: 'Move',
+                  icon: EzIcon(widget.config, Icons.remove),
                   onPressed: () => widget.appInfo.moveDownLane(
                     widget.config,
                     lane: widget.lane,
@@ -415,8 +415,8 @@ class _TimerWidgetState extends State<TimerWidget> {
               if (numLanes > 1 && widget.lane < (numLanes - 1))
                 EzMenuButton(
                   widget.config,
-                  label: 'Move +',
-                  icon: EzIcon(widget.config, Icons.keyboard_arrow_up),
+                  label: 'Move',
+                  icon: EzIcon(widget.config, Icons.add),
                   onPressed: () => widget.appInfo.moveUpLane(
                     widget.config,
                     lane: widget.lane,
