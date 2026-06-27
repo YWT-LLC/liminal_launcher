@@ -32,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
   Timer? overscrollPause;
 
   bool editing = false;
+  bool rippling = false;
   ValueNotifier<double> rippleProgress = ValueNotifier<double>(0.0);
 
   final Map<int, List<int>> _janitor = <int, List<int>>{};
@@ -62,9 +63,13 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     );
     Overlay.of(context).insert(ripple);
     lastRipple = details.globalPosition;
+    setState(() => rippling = true);
 
     await rippleController.forward().whenComplete(() {
-      setState(() => editing = !editing);
+      setState(() {
+        editing = !editing;
+        rippling = false;
+      });
       ripple.remove();
       rippleController.dispose();
     });
@@ -82,9 +87,10 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
         constraints: BoxConstraints(
           minHeight: double.infinity,
           minWidth: spaceCon,
-          maxWidth:
-              editing ? spaceCon + ((config.iconSize + config.marginVal) * 2) : widthOf(context),
-        ), // TODO: listen to ripple as cheaply as possible
+          maxWidth: (editing && !rippling)
+              ? spaceCon + ((config.iconSize + config.marginVal) * 2)
+              : widthOf(context),
+        ),
         child: editing
             ? Builder(builder: (_) {
                 final List<Widget> tiles = _buildTiles(config, appInfo, lane);
@@ -94,10 +100,20 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                   builder: (_, StateSetter setList) => ReorderableListView(
                     shrinkWrap: true,
                     header: MenuAnchor(
-                      builder: (_, MenuController controller, __) => EzIconButton(
+                      builder: (_, MenuController controller, __) => EzRow(
                         config,
-                        onPressed: () => canToggleMenu(config, controller),
-                        icon: const Icon(Icons.edit),
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(bottom: config.spacing / 2),
+                            child: EzIconButton(
+                              config,
+                              onPressed: () => canToggleMenu(config, controller),
+                              icon: const Icon(Icons.edit),
+                            ),
+                          ),
+                        ],
                       ),
                       menuChildren: <Widget>[
                         // Down
