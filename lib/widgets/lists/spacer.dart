@@ -114,24 +114,8 @@ class _LimSpacerState extends State<LimSpacer> {
 
     return ValueListenableBuilder<(int?, int?)>(
       valueListenable: marked,
-      builder: (_, (int?, int?) pos, __) => (pos.$1 != null && pos.$2 != null)
-          ? EditSpacer(
-              widget.config,
-              onTap: (pos.$1 == widget.lane && pos.$2 == widget.index)
-                  ? null
-                  : () async {
-                      await widget.appInfo.updateSpacer(
-                        widget.config,
-                        height: editSpacerHeight.value,
-                        width: editSpacerWidth.value,
-                        lane: pos.$1!,
-                        index: pos.$2!,
-                      );
-
-                      marked.value = (widget.lane, widget.index);
-                      setState(() {});
-                    },
-            )
+      builder: (_, (int?, int?) pos, __) => (pos.$1 == widget.lane && pos.$2 == widget.index)
+          ? EditSpacer(widget.config)
           : EzAnimSwitch(
               widget.config,
               mod: 0.667,
