@@ -98,6 +98,8 @@ class EditSpacer extends StatelessWidget {
             onTap: onTap,
             child: Container(
               decoration: BoxDecoration(
+                color: ((onTap == null) ? config.colors.secondary : config.colors.tertiary)
+                    .withValues(alpha: focusOpacity),
                 borderRadius: EzButtonShape.roundRect.radius,
                 border: Border.all(
                   color: (onTap == null) ? config.colors.secondary : config.colors.tertiary,
