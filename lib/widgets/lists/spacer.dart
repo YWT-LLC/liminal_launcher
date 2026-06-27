@@ -17,6 +17,7 @@ class LimSpacer extends StatefulWidget {
   final int index;
   final AppState state;
   final ValueNotifier<double>? rippleProgress;
+  final void Function() resizeCallback;
 
   late final double _height;
   late final double _width;
@@ -29,6 +30,7 @@ class LimSpacer extends StatefulWidget {
     required this.index,
     required this.state,
     required this.rippleProgress,
+    required this.resizeCallback,
   }) {
     final List<String> data = appInfo.homeList(config, lane)[index].split(spacerSplit);
 
@@ -101,6 +103,22 @@ class _LimSpacerState extends State<LimSpacer> {
       icon: EzIcon(widget.config, Icons.copy),
     );
 
+    late final EzMenuButton resize = EzMenuButton(
+      widget.config,
+      onPressed: () async {
+        if (state == AppState.groupEdit) widget.resizeCallback.call();
+
+        await editSpacer(
+          widget.config,
+          appInfo: widget.appInfo,
+          lane: widget.lane,
+          index: widget.index,
+        );
+      },
+      label: 'Resize',
+      icon: EzIcon(widget.config, Icons.edit),
+    );
+
     late final EzMenuButton remove = EzMenuButton(
       widget.config,
       onPressed: () => widget.appInfo.deleteWS(
@@ -130,17 +148,7 @@ class _LimSpacerState extends State<LimSpacer> {
                       ),
                       menuChildren: <Widget>[
                         dupe,
-                        EzMenuButton(
-                          widget.config,
-                          onPressed: () => editSpacer(
-                            widget.config,
-                            appInfo: widget.appInfo,
-                            lane: widget.lane,
-                            index: widget.index,
-                          ),
-                          label: 'Resize',
-                          icon: EzIcon(widget.config, Icons.edit),
-                        ),
+                        resize,
                         remove,
                       ],
                     )
@@ -171,6 +179,7 @@ class _LimSpacerState extends State<LimSpacer> {
                               index: widget.index,
                             ),
                           ),
+                        resize,
                         remove,
                       ],
                       child: EzIconButton(
