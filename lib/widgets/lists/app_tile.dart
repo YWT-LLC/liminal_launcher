@@ -4,7 +4,7 @@
  */
 
 // TODO: add custom icons, same strategy as folder (not as rename, I don't want it to be global)
-// TODO: edit container
+// TODO: edit container - only show the list on single edit with enough space. group edit, everthing should be edit container icon
 // TODO: make the design page the "system" button, and allow for people to set per-tile shapes
 // TODO: use numLanes per (saved) small screen value to decide whether to show scrolls or just the edit container
 // TODO: fix padding on text button when no background opacity
@@ -473,13 +473,9 @@ class AppButton extends StatelessWidget {
     this.onLongPress,
   });
 
+  // TODO: this'll change when the icons are updated n shit
   Widget appIcon() => (app.icon == null)
-      ? icon ??
-          Icon(
-            Icons.question_mark,
-            semanticLabel: app.name,
-            size: appIconSize(config),
-          )
+      ? icon ?? Icon(Icons.question_mark, semanticLabel: app.name)
       : Image.memory(
           app.icon!,
           semanticLabel: app.name,
