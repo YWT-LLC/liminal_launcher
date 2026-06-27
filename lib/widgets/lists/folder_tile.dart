@@ -409,10 +409,8 @@ class _AppFolderState extends State<FolderTile> {
                 edit,
                 remove
               ],
-              dragHandles: true,
               child: EzIconButton(
                 widget.config,
-                iconSize: appIconSize(widget.config),
                 icon: Icon(widget._icon),
                 onPressed: () => canToggleMenu(widget.config, menuControl),
               ),
@@ -454,14 +452,14 @@ class FolderButton extends StatelessWidget {
             child: GestureDetector(
               onTap: onPressed,
               onLongPress: onLongPress,
-              child: Icon(icon, size: appIconSize(config)),
+              child: Icon(icon),
             )),
         ButtonType.eIcon => EzIconButton(
             config,
             tooltip: name,
             onPressed: onPressed,
             onLongPress: onLongPress,
-            icon: Icon(icon, size: appIconSize(config)),
+            icon: Icon(icon),
           ),
         ButtonType.text => EzTextButton(
             config,
@@ -480,7 +478,7 @@ class FolderButton extends StatelessWidget {
         ButtonType.textIcon => EzTextIconButton(
             config,
             label: buildLabel(name, labelType),
-            icon: Icon(icon, size: appIconSize(config)),
+            icon: Icon(icon),
             style: TextButton.styleFrom(padding: EdgeInsets.all(config.padding)),
             onPressed: onPressed,
             onLongPress: onLongPress,
@@ -488,7 +486,7 @@ class FolderButton extends StatelessWidget {
         ButtonType.eTextIcon => EzElevatedIconButton(
             config,
             label: buildLabel(name, labelType),
-            icon: Icon(icon, size: appIconSize(config)),
+            icon: Icon(icon),
             style: TextButton.styleFrom(padding: EdgeInsets.all(config.padding)),
             onPressed: onPressed,
             onLongPress: onLongPress,

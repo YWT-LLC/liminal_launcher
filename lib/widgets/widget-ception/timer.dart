@@ -333,7 +333,6 @@ class _TimerWidgetState extends State<TimerWidget> {
             builder: (_, MenuController controller, __) => (size == WidgetSize.button)
                 ? EzIconButton(
                     widget.config,
-                    iconSize: appIconSize(widget.config),
                     icon: const Icon(Icons.timer_outlined),
                     onPressed: () async {
                       final int ours = int.tryParse(ourCon.text) ?? 0;
@@ -429,7 +428,6 @@ class _TimerWidgetState extends State<TimerWidget> {
             ],
             child: EzIconButton(
               widget.config,
-              iconSize: appIconSize(widget.config),
               icon: const Icon(Icons.timer_outlined),
               onPressed: () => canToggleMenu(widget.config, menuControl),
             ),

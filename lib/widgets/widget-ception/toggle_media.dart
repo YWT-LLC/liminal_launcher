@@ -133,7 +133,6 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
         AppState.standard || AppState.singleEdit => MenuAnchor(
             builder: (_, MenuController controller, __) => EzIconButton(
               widget.config,
-              iconSize: appIconSize(widget.config),
               icon: (size == WidgetSize.button)
                   ? const Icon(Icons.headphones)
                   : EzRow(widget.config, children: <Widget>[
@@ -186,7 +185,6 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
             ],
             child: EzIconButton(
               widget.config,
-              iconSize: appIconSize(widget.config),
               icon: const Icon(Icons.headphones),
               onPressed: () => canToggleMenu(widget.config, menuControl),
             ),

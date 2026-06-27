@@ -321,7 +321,6 @@ class _ClockWidgetState extends State<ClockWidget> {
             ],
             child: EzIconButton(
               widget.config,
-              iconSize: appIconSize(widget.config),
               icon: const Icon(Icons.watch),
               onPressed: () => canToggleMenu(widget.config, menuControl),
             ),

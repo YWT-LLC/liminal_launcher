@@ -801,7 +801,6 @@ class _AddCalendar extends StatelessWidget {
       ? EzIconButton(
           config,
           onPressed: onTap,
-          iconSize: appIconSize(config),
           icon: const Icon(Icons.edit_calendar),
         )
       : GestureDetector(
@@ -888,12 +887,7 @@ class _AddSearch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => (preview == WidgetSize.button)
-      ? EzIconButton(
-          config,
-          onPressed: onTap,
-          iconSize: appIconSize(config),
-          icon: const Icon(Icons.search),
-        )
+      ? EzIconButton(config, onPressed: onTap, icon: const Icon(Icons.search))
       : GestureDetector(
           onTap: onTap,
           child: EzRow(config, children: <Widget>[
@@ -956,12 +950,7 @@ class _AddTimer extends StatelessWidget {
     );
 
     return (preview == WidgetSize.button)
-        ? EzIconButton(
-            config,
-            onPressed: onTap,
-            iconSize: appIconSize(config),
-            icon: const Icon(Icons.timer),
-          )
+        ? EzIconButton(config, onPressed: onTap, icon: const Icon(Icons.timer))
         : GestureDetector(
             onTap: onTap,
             child: EzRow(
@@ -1004,7 +993,6 @@ class _AddMedia extends StatelessWidget {
   Widget build(BuildContext context) => EzIconButton(
         config,
         onPressed: onTap,
-        iconSize: appIconSize(config),
         icon: (preview == WidgetSize.button)
             ? const Icon(Icons.headphones)
             : EzRow(config, children: <Widget>[
