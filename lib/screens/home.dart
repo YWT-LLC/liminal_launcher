@@ -93,18 +93,20 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                   key: ValueKey<String>('lane-$lane'),
                   builder: (_, StateSetter setList) => ReorderableListView(
                     shrinkWrap: true,
-                    onReorderItem: (int oldIndex, int newIndex) {
+                    onReorderItem: (int oldIndex, int newIndex) async {
                       if (oldIndex == newIndex) return;
 
                       final Widget element = tiles.removeAt(oldIndex);
                       tiles.insert(newIndex, element);
 
-                      appInfo.reorderHomeList(
+                      final int mod = (editing && numLanes > 1) ? 1 : 0;
+                      await appInfo.reorderHomeList(
                         config,
                         lane: lane,
-                        oldIndex: oldIndex,
-                        newIndex: newIndex,
+                        oldIndex: oldIndex - mod,
+                        newIndex: newIndex - mod,
                       );
+
                       setList(() {});
                     },
                     children: tiles,
@@ -726,7 +728,7 @@ If you want to support Liminal's development, or the development of more Empathe
                               padding: EzInsets.wrap(config.spacing),
                               child: EzElevatedIconButton(
                                 config,
-                                onPressed: () => appInfo.addHomeLane(config),
+                                onPressed: () => appInfo.addLane(config),
                                 label: 'Lane',
                                 icon: EzIcon(config, Icons.view_column_outlined),
                               ),
