@@ -240,8 +240,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                     EzMenuButton(
                       config,
                       onPressed: () => appInfo.moveLaneDown(config, lane),
-                      label: 'Move -',
-                      icon: EzIcon(config, Icons.keyboard_arrow_down),
+                      label: 'Move',
+                      icon: EzIcon(config, Icons.remove),
                     ),
 
                   // Delete
@@ -255,8 +255,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                     EzMenuButton(
                       config,
                       onPressed: () => appInfo.moveLaneUp(config, lane),
-                      label: 'Move +',
-                      icon: EzIcon(config, Icons.keyboard_arrow_up),
+                      label: 'Move',
+                      icon: EzIcon(config, Icons.add),
                     ),
                 ],
               ),
