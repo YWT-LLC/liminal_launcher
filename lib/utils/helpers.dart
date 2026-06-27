@@ -149,170 +149,170 @@ Future<void> editSpacer(
 
         return Material(
           type: MaterialType.transparency,
-          child: EzScreen(
-            config,
-            safeArea: true,
-            child: Stack(children: <Widget>[
-              // Top
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: EzScrollView(
-                  config,
-                  startCentered: true,
-                  showScrollHint: true,
-                  mainAxisSize: MainAxisSize.max,
-                  scrollDirection: Axis.horizontal,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    // Delete
-                    EzIconButton(
+          child: Stack(children: <Widget>[
+            // Top
+            Positioned(
+              top: safeTop(ezRootNav.currentContext!),
+              left: 0,
+              right: 0,
+              child: EzScrollView(
+                config,
+                startCentered: true,
+                showScrollHint: true,
+                mainAxisSize: MainAxisSize.max,
+                scrollDirection: Axis.horizontal,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  // Delete
+                  EzIconButton(
+                    config,
+                    icon: const Icon(Icons.delete),
+                    onPressed: () => Navigator.of(ezRootNav.currentContext!).pop(false),
+                  ),
+                  config.rowSpacer,
+
+                  // Reset
+                  EzIconButton(
+                    config,
+                    enabled: height != hBack || width != hBack,
+                    icon: const Icon(Icons.refresh),
+                    onPressed: () {
+                      height = hBack;
+                      editSpacerHeight.value = hBack;
+
+                      width = wBack;
+                      editSpacerWidth.value = wBack;
+
+                      setOverlay(() {});
+                    },
+                  ),
+                  config.rowSpacer,
+
+                  // Move up
+                  EzIconButton(
+                    config,
+                    icon: Icon((vAlign(config) == ListAlignment.end)
+                        ? Icons.keyboard_arrow_up
+                        : Icons.keyboard_arrow_down),
+                    enabled: currIndex < (appInfo.homeList(config, lane).length - 1),
+                    onPressed: () async {
+                      final int nextIndex = currIndex + 1;
+                      marked.value = (lane, nextIndex);
+
+                      await appInfo.moveItemUp(config, lane: lane, index: currIndex);
+                      setOverlay(() => currIndex = nextIndex);
+                    },
+                  ),
+                  config.rowSpacer,
+
+                  // Key/quick values
+                  MenuAnchor(
+                    builder: (_, MenuController c, __) => EzIconButton(
                       config,
-                      icon: const Icon(Icons.delete),
-                      onPressed: () => Navigator.of(ezRootNav.currentContext!).pop(false),
+                      icon: const Icon(Icons.key),
+                      onPressed: () => toggleMenu(c),
                     ),
-                    config.rowSpacer,
-
-                    // Reset
-                    EzIconButton(
-                      config,
-                      enabled: height != hBack || width != hBack,
-                      icon: const Icon(Icons.refresh),
-                      onPressed: () {
-                        height = hBack;
-                        editSpacerHeight.value = hBack;
-
-                        width = wBack;
-                        editSpacerWidth.value = wBack;
-
-                        setOverlay(() {});
-                      },
-                    ),
-                    config.rowSpacer,
-
-                    // Move up
-                    EzIconButton(
-                      config,
-                      icon: const Icon(Icons.keyboard_arrow_up),
-                      enabled: currIndex < (appInfo.homeList(config, lane).length - 1),
-                      onPressed: () async {
-                        final int nextIndex = currIndex + 1;
-                        marked.value = (lane, nextIndex);
-
-                        await appInfo.moveItemUp(config, lane: lane, index: currIndex);
-                        setOverlay(() => currIndex = nextIndex);
-                      },
-                    ),
-                    config.rowSpacer,
-
-                    // Key/quick values
-                    MenuAnchor(
-                      builder: (_, MenuController c, __) => EzIconButton(
-                        config,
-                        icon: const Icon(Icons.key),
-                        onPressed: () => toggleMenu(c),
+                    menuChildren: <Widget>[
+                      MenuItemButton(
+                        onPressed: () => quickValue(config.marginVal),
+                        child: Text('Margin: ${config.marginVal}'),
                       ),
-                      menuChildren: <Widget>[
-                        MenuItemButton(
-                          onPressed: () => quickValue(config.marginVal),
-                          child: Text('Margin: ${config.marginVal}'),
-                        ),
-                        MenuItemButton(
-                          onPressed: () => quickValue(config.padding),
-                          child: Text('Padding: ${config.padding}'),
-                        ),
-                        MenuItemButton(
-                          onPressed: () => quickValue(config.spacing),
-                          child: Text('Spacing: ${config.spacing}'),
-                        ),
-                        MenuItemButton(
-                          onPressed: () => quickValue(config.iconSize),
-                          child: Text('Icon size: ${config.iconSize}'),
-                        ),
-                        MenuItemButton(
-                          onPressed: () => quickValue(appIconSize(config)),
-                          child: Text('App icon size: ${appIconSize(config)}'),
-                        ),
-                      ],
-                    ),
-                    config.rowSpacer,
-
-                    // Moved down
-                    EzIconButton(
-                      config,
-                      icon: const Icon(Icons.keyboard_arrow_down),
-                      enabled: currIndex > 0,
-                      onPressed: () async {
-                        final int nextIndex = currIndex - 1;
-                        marked.value = (lane, nextIndex);
-
-                        await appInfo.moveItemDown(config, lane: lane, index: currIndex);
-                        setOverlay(() => currIndex = nextIndex);
-                      },
-                    ),
-                    config.rowSpacer,
-
-                    // Slider select
-                    MenuAnchor(
-                      builder: (_, MenuController c, __) => EzIconButton(
-                        config,
-                        icon: Icon((axis == Axis.vertical) ? Icons.height : Icons.horizontal_rule),
-                        onPressed: () => toggleMenu(c),
+                      MenuItemButton(
+                        onPressed: () => quickValue(config.padding),
+                        child: Text('Padding: ${config.padding}'),
                       ),
-                      menuChildren: Axis.values
-                          .map((Axis a) => EzMenuButton(
+                      MenuItemButton(
+                        onPressed: () => quickValue(config.spacing),
+                        child: Text('Spacing: ${config.spacing}'),
+                      ),
+                      MenuItemButton(
+                        onPressed: () => quickValue(config.iconSize),
+                        child: Text('Icon size: ${config.iconSize}'),
+                      ),
+                      MenuItemButton(
+                        onPressed: () => quickValue(appIconSize(config)),
+                        child: Text('App icon size: ${appIconSize(config)}'),
+                      ),
+                    ],
+                  ),
+                  config.rowSpacer,
+
+                  // Moved down
+                  EzIconButton(
+                    config,
+                    icon: Icon((vAlign(config) == ListAlignment.end)
+                        ? Icons.keyboard_arrow_down
+                        : Icons.keyboard_arrow_up),
+                    enabled: currIndex > 0,
+                    onPressed: () async {
+                      final int nextIndex = currIndex - 1;
+                      marked.value = (lane, nextIndex);
+
+                      await appInfo.moveItemDown(config, lane: lane, index: currIndex);
+                      setOverlay(() => currIndex = nextIndex);
+                    },
+                  ),
+                  config.rowSpacer,
+
+                  // Slider select
+                  MenuAnchor(
+                    builder: (_, MenuController c, __) => EzIconButton(
+                      config,
+                      icon: Icon((axis == Axis.vertical) ? Icons.height : Icons.horizontal_rule),
+                      onPressed: () => toggleMenu(c),
+                    ),
+                    menuChildren: Axis.values
+                        .map((Axis a) => EzMenuButton(
+                              config,
+                              label: a.name,
+                              icon: EzIcon(
                                 config,
-                                label: a.name,
-                                icon: EzIcon(
-                                  config,
-                                  (a == Axis.vertical) ? Icons.height : Icons.horizontal_rule,
-                                ),
-                                onPressed: () => setOverlay(() => axis = a),
-                              ))
-                          .toList(),
-                    ),
-                    config.rowSpacer,
+                                (a == Axis.vertical) ? Icons.height : Icons.horizontal_rule,
+                              ),
+                              onPressed: () => setOverlay(() => axis = a),
+                            ))
+                        .toList(),
+                  ),
+                  config.rowSpacer,
 
-                    // Done
-                    EzIconButton(
-                      config,
-                      icon: const Icon(Icons.done),
-                      onPressed: () => Navigator.of(ezRootNav.currentContext!).pop(true),
-                    ),
-                  ],
-                ),
+                  // Done
+                  EzIconButton(
+                    config,
+                    icon: const Icon(Icons.done),
+                    onPressed: () => Navigator.of(ezRootNav.currentContext!).pop(true),
+                  ),
+                ],
               ),
+            ),
 
-              // Bottom
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: EzTextBackground(
-                  config,
-                  text: (axis == Axis.vertical)
-                      ? Slider(
-                          value: height,
-                          max: maxHeight,
-                          onChanged: (double value) {
-                            editSpacerHeight.value = value;
-                            setOverlay(() => height = value);
-                          },
-                        )
-                      : Slider(
-                          value: width,
-                          max: maxWidth,
-                          onChanged: (double value) {
-                            editSpacerWidth.value = value;
-                            setOverlay(() => width = value);
-                          },
-                        ),
-                  backgroundColor: config.colors.surface,
-                ),
+            // Bottom
+            Positioned(
+              bottom: safeBottom(ezRootNav.currentContext!),
+              left: 0,
+              right: 0,
+              child: EzTextBackground(
+                config,
+                text: (axis == Axis.vertical)
+                    ? Slider(
+                        value: height,
+                        max: maxHeight,
+                        onChanged: (double value) {
+                          editSpacerHeight.value = value;
+                          setOverlay(() => height = value);
+                        },
+                      )
+                    : Slider(
+                        value: width,
+                        max: maxWidth,
+                        onChanged: (double value) {
+                          editSpacerWidth.value = value;
+                          setOverlay(() => width = value);
+                        },
+                      ),
+                backgroundColor: config.colors.surface,
               ),
-            ]),
-          ),
+            ),
+          ]),
         );
       }),
     ),
