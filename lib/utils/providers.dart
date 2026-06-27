@@ -322,7 +322,7 @@ class AppInfoProvider extends ChangeNotifier {
     return pos;
   }
 
-  Future<void> addHomeLane(EzCP config) async {
+  Future<void> addLane(EzCP config) async {
     if (interlinked || config.isDark) {
       _darkHomeMatrix.add(<String>[]);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
