@@ -326,6 +326,30 @@ Future<void> editSpacer(
                       ),
                       EzMenuButton(
                         config,
+                        label: 'Duplicate',
+                        icon: EzIcon(config, Icons.copy),
+                        onPressed: () async {
+                          await appInfo.updateSpacer(
+                            config,
+                            height: height,
+                            width: width,
+                            lane: currLane,
+                            index: currIndex,
+                          );
+                          await appInfo.addSpacer(
+                            config,
+                            height: height,
+                            width: width,
+                            lane: currLane,
+                            index: currIndex,
+                          );
+
+                          marked.value = (currLane, currIndex + 1);
+                          setOverlay(() => currIndex += 1);
+                        },
+                      ),
+                      EzMenuButton(
+                        config,
                         label: 'Done',
                         icon: EzIcon(config, Icons.done),
                         onPressed: () => Navigator.of(ezRootNav.currentContext!).pop(true),
@@ -383,6 +407,8 @@ Future<void> editSpacer(
           );
   });
 }
+
+// TODO: stress test TF out of spacers
 
 Future<bool> _externalAuth(String reason) async {
   final bool authed = await LocalAuthentication().authenticate(
