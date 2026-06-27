@@ -85,30 +85,25 @@ class _EditContainerState extends State<EditContainer> with SingleTickerProvider
 
 class EditSpacer extends StatelessWidget {
   final EzCP config;
-  final void Function()? onTap;
 
-  const EditSpacer(this.config, {super.key, required this.onTap});
+  const EditSpacer(this.config, {super.key});
 
   @override
   Widget build(BuildContext context) => ValueListenableBuilder<double>(
         valueListenable: editSpacerHeight,
         builder: (_, double height, __) => ValueListenableBuilder<double>(
           valueListenable: editSpacerWidth,
-          builder: (_, double width, __) => GestureDetector(
-            onTap: onTap,
-            child: Container(
-              decoration: BoxDecoration(
-                color: ((onTap == null) ? config.colors.secondary : config.colors.tertiary)
-                    .withValues(alpha: focusOpacity),
-                borderRadius: EzButtonShape.roundRect.radius,
-                border: Border.all(
-                  color: (onTap == null) ? config.colors.secondary : config.colors.tertiary,
-                  width: config.borderWidth,
-                ),
+          builder: (_, double width, __) => Container(
+            decoration: BoxDecoration(
+              color: config.colors.secondary.withValues(alpha: focusOpacity),
+              borderRadius: EzButtonShape.roundRect.radius,
+              border: Border.all(
+                color: config.colors.secondary,
+                width: config.borderWidth,
               ),
-              height: height,
-              width: width,
             ),
+            height: height,
+            width: width,
           ),
         ),
       );
