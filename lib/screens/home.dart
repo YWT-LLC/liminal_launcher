@@ -202,6 +202,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
               index: index,
               state: editing ? AppState.groupEdit : AppState.standard,
               rippleProgress: rippleProgress,
+              resizeCallback: () => setState(() => editing = false),
             ),
           ));
           break;
