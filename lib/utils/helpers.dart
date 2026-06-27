@@ -410,9 +410,6 @@ Future<void> editSpacer(
   });
 }
 
-// TODO: stress test TF out of spacers
-// ... add lane is adding a ghost item? something like that
-
 Future<bool> _externalAuth(String reason) async {
   final bool authed = await LocalAuthentication().authenticate(
     localizedReason: reason,
