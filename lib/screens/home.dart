@@ -84,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           minWidth: spaceCon,
           maxWidth:
               editing ? spaceCon + ((config.iconSize + config.marginVal) * 2) : widthOf(context),
-        ),
+        ), // TODO: listen to ripple as cheaply as possible
         child: editing
             ? Builder(builder: (_) {
                 final List<Widget> tiles = _buildTiles(config, appInfo, lane);
@@ -93,18 +93,49 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                   key: ValueKey<String>('lane-$lane'),
                   builder: (_, StateSetter setList) => ReorderableListView(
                     shrinkWrap: true,
+                    header: MenuAnchor(
+                      builder: (_, MenuController controller, __) => EzIconButton(
+                        config,
+                        onPressed: () => canToggleMenu(config, controller),
+                        icon: const Icon(Icons.edit),
+                      ),
+                      menuChildren: <Widget>[
+                        // Down
+                        if (lane > 0)
+                          EzMenuButton(
+                            config,
+                            onPressed: () => appInfo.moveLaneDown(config, lane),
+                            label: 'Move',
+                            icon: EzIcon(config, Icons.remove),
+                          ),
+
+                        // Delete
+                        MenuItemButton(
+                          onPressed: () => appInfo.deleteLane(config, lane),
+                          child: EzIcon(config, Icons.delete),
+                        ),
+
+                        // Up
+                        if (lane < appInfo.numLanes(config) - 1)
+                          EzMenuButton(
+                            config,
+                            onPressed: () => appInfo.moveLaneUp(config, lane),
+                            label: 'Move',
+                            icon: EzIcon(config, Icons.add),
+                          ),
+                      ],
+                    ),
                     onReorderItem: (int oldIndex, int newIndex) async {
                       if (oldIndex == newIndex) return;
 
                       final Widget element = tiles.removeAt(oldIndex);
                       tiles.insert(newIndex, element);
 
-                      final int mod = (editing && numLanes > 1) ? 1 : 0;
                       await appInfo.reorderHomeList(
                         config,
                         lane: lane,
-                        oldIndex: oldIndex - mod,
-                        newIndex: newIndex - mod,
+                        oldIndex: oldIndex,
+                        newIndex: newIndex,
                       );
 
                       setList(() {});
@@ -218,55 +249,6 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     }
 
     _janitor[lane] = errors;
-
-    if (editing && appInfo.numLanes(config) > 1) {
-      toReturn.insert(
-        0,
-        EzRow(
-          config,
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          key: ValueKey<String>('lane-$lane-controls'),
-          children: <Widget>[
-            Padding(
-              padding: tilePadding,
-              child: MenuAnchor(
-                builder: (_, MenuController controller, __) => EzIconButton(
-                  config,
-                  onPressed: () => canToggleMenu(config, controller),
-                  icon: const Icon(Icons.edit),
-                ),
-                menuChildren: <Widget>[
-                  // Down
-                  if (lane > 0)
-                    EzMenuButton(
-                      config,
-                      onPressed: () => appInfo.moveLaneDown(config, lane),
-                      label: 'Move',
-                      icon: EzIcon(config, Icons.remove),
-                    ),
-
-                  // Delete
-                  MenuItemButton(
-                    onPressed: () => appInfo.deleteLane(config, lane),
-                    child: EzIcon(config, Icons.delete),
-                  ),
-
-                  // Up
-                  if (lane < appInfo.numLanes(config) - 1)
-                    EzMenuButton(
-                      config,
-                      onPressed: () => appInfo.moveLaneUp(config, lane),
-                      label: 'Move',
-                      icon: EzIcon(config, Icons.add),
-                    ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-    }
     return toReturn;
   }
 
