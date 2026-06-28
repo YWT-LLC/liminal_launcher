@@ -112,7 +112,7 @@ Future<void> editSpacer(
   int currLane = lane;
   int currIndex = index;
 
-  final List<String> data = appInfo.homeList(config, lane)[index].split(spacerSplit);
+  final List<String> data = appInfo.homeItem(config, lane: lane, index: index).split(spacerSplit);
   final double hBack = double.tryParse(data[0]) ?? config.spacing;
   final double wBack = double.tryParse(data[1]) ?? appIconSize(config);
   double height = hBack;
@@ -195,7 +195,7 @@ Future<void> editSpacer(
                         enabled: currLane < (numLanes - 1),
                         onPressed: () async {
                           final int nextLane = currLane + 1;
-                          final int nextIndex = appInfo.homeList(config, nextLane).length;
+                          final int nextIndex = appInfo.homeLane(config, nextLane).length;
 
                           marked.value = (nextLane, nextIndex);
                           await appInfo.moveItemUpLane(config, lane: currLane, index: currIndex);
@@ -214,7 +214,7 @@ Future<void> editSpacer(
                       icon: Icon((vAlign(config) == ListAlignment.end)
                           ? Icons.keyboard_arrow_up
                           : Icons.keyboard_arrow_down),
-                      enabled: currIndex < (appInfo.homeList(config, currLane).length - 1),
+                      enabled: currIndex < (appInfo.homeLane(config, currLane).length - 1),
                       onPressed: () async {
                         final int nextIndex = currIndex + 1;
 
@@ -296,7 +296,7 @@ Future<void> editSpacer(
                         enabled: currLane > 0,
                         onPressed: () async {
                           final int nextLane = currLane - 1;
-                          final int nextIndex = appInfo.homeList(config, nextLane).length;
+                          final int nextIndex = appInfo.homeLane(config, nextLane).length;
 
                           marked.value = (nextLane, nextIndex);
                           await appInfo.moveItemDownLane(config, lane: currLane, index: currIndex);
@@ -411,7 +411,7 @@ Future<void> editSpacer(
     marked.value = (null, null);
 
     (keep == false)
-        ? await appInfo.deleteWS(config, lane: currLane, index: currIndex)
+        ? await appInfo.removeItem(config, lane: currLane, index: currIndex)
         : await appInfo.updateSpacer(
             config,
             height: height,
@@ -454,7 +454,7 @@ Widget renderWidget(
   required AppState state,
   ValueNotifier<double>? rippleProgress,
 }) =>
-    switch (appInfo.homeList(config, lane)[index].split(widgetSplit)[0]) {
+    switch (appInfo.homeItem(config, lane: lane, index: index).split(widgetSplit)[0]) {
       esCalendar => CalendarWidget(config, appInfo, lane, index, state, rippleProgress),
       esClock => ClockWidget(config, appInfo, lane, index, state, rippleProgress),
       esSearch => SearchWidget(config, appInfo, lane, index, state, rippleProgress),

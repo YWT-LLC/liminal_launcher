@@ -32,7 +32,7 @@ class LimSpacer extends StatefulWidget {
     required this.rippleProgress,
     required this.resizeCallback,
   }) {
-    final List<String> data = appInfo.homeList(config, lane)[index].split(spacerSplit);
+    final List<String> data = appInfo.homeItem(config, lane: lane, index: index).split(spacerSplit);
 
     _height = double.tryParse(data[0]) ?? config.spacing;
     _width = double.tryParse(data[1]) ?? appIconSize(config);
@@ -90,18 +90,8 @@ class _LimSpacerState extends State<LimSpacer> {
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
-    late final EzMenuButton dupe = EzMenuButton(
-      widget.config,
-      onPressed: () => widget.appInfo.addSpacer(
-        widget.config,
-        height: widget._height,
-        width: widget._width,
-        lane: widget.lane,
-        index: widget.index,
-      ),
-      label: 'Duplicate',
-      icon: EzIcon(widget.config, Icons.copy),
-    );
+    late final EzMenuButton remove =
+        removeItem(widget.config, widget.appInfo, lane: widget.lane, index: widget.index);
 
     late final EzMenuButton resize = EzMenuButton(
       widget.config,
@@ -119,8 +109,18 @@ class _LimSpacerState extends State<LimSpacer> {
       icon: EzIcon(widget.config, Icons.edit),
     );
 
-    late final EzMenuButton remove =
-        removeWS(widget.config, widget.appInfo, lane: widget.lane, index: widget.index);
+    late final EzMenuButton dupe = EzMenuButton(
+      widget.config,
+      onPressed: () => widget.appInfo.addSpacer(
+        widget.config,
+        height: widget._height,
+        width: widget._width,
+        lane: widget.lane,
+        index: widget.index,
+      ),
+      label: 'Duplicate',
+      icon: EzIcon(widget.config, Icons.copy),
+    );
 
     return ValueListenableBuilder<(int?, int?)>(
       valueListenable: marked,

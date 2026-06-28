@@ -127,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
                         // Delete
                         MenuItemButton(
-                          onPressed: () => appInfo.deleteLane(config, lane),
+                          onPressed: () => appInfo.removeLane(config, lane),
                           child: EzIcon(config, Icons.delete),
                         ),
 
@@ -176,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
   /// appProvider.homeList -> AppTile/FolderTile
   List<Widget> _buildTiles(EzCP config, AppInfoProvider appInfo, int lane) {
-    final List<String> entries = appInfo.homeList(config, lane);
+    final List<String> entries = appInfo.homeLane(config, lane);
     final EdgeInsets tilePadding = EdgeInsets.symmetric(vertical: config.spacing / 2);
 
     final List<Widget> toReturn = <Widget>[];
