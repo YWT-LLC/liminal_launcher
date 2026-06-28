@@ -8,6 +8,7 @@
 // TODO: make the design page the "system" button, and allow for people to set per-tile shapes
 // TODO: use numLanes per (saved) small screen value to decide whether to show scrolls or just the edit container
 // TODO: fix padding on text button when no background opacity
+// TODO: how does it work inside folders?
 
 import '../../utils/export.dart';
 
@@ -28,6 +29,10 @@ class AppTile extends StatefulWidget {
   final AppLocation location;
   final Future<void> Function(AppInfo app) onSelected;
 
+  late final String? _name;
+  late final String? _icon;
+  late final String? _type;
+
   AppTile(
     this.config, {
     required this.appInfo,
@@ -38,7 +43,20 @@ class AppTile extends StatefulWidget {
     required this.app,
     required this.location,
     required this.onSelected,
-  }) : super(key: ValueKey<String>('${app.id}-${state.name}'));
+  }) : super(key: ValueKey<String>('${app.id}-${state.index}')) {
+    if (lane != null && index != null) {
+      final List<String> data =
+          appInfo.homeList(config, lane!)[index!].split(idSplit)[2].split(configSplit);
+
+      _name = data[0];
+      _icon = data[1];
+      _type = data[2];
+    } else {
+      _name = null;
+      _icon = null;
+      _type == null;
+    }
+  }
 
   @override
   State<AppTile> createState() => _AppTileState();
@@ -50,8 +68,20 @@ class _AppTileState extends State<AppTile> {
   late AppState state = widget.state;
   Timer? rippleThrottle;
 
+  final MenuController menuControl = MenuController();
+
   late final bool inList = widget.location == AppLocation.list;
   late final bool inFolder = widget.location == AppLocation.folder;
+
+  late String? name = widget._name;
+  late IconData? icon = (widget._icon == null || widget._icon == esSystem)
+      ? Icons.folder_outlined
+      : IconData(
+          // ignore: non_const_argument_for_const_parameter
+          int.tryParse(widget._icon!) ?? Icons.folder_outlined.codePoint,
+          fontFamily: 'MaterialIcons',
+        );
+  late ButtonType? type = BTConfig.lookup(widget._type);
 
   // Define custom functions //
 
@@ -67,9 +97,7 @@ class _AppTileState extends State<AppTile> {
 
     if (dy <= widget.rippleProgress!.value * heightOf(context)) {
       setState(() => state = switch (state) {
-            AppState.standard ||
-            AppState.singleEdit =>
-              inList ? AppState.verbose : AppState.groupEdit,
+            AppState.standard => inList ? AppState.verbose : AppState.groupEdit,
             _ => AppState.standard,
           });
 
@@ -82,19 +110,12 @@ class _AppTileState extends State<AppTile> {
   }
 
   Widget rowSpacer() => switch (state) {
-        AppState.standard ||
-        AppState.groupEdit =>
-          SizedBox(height: widget.config.iconSize, width: widget.config.spacing),
         AppState.verbose => SizedBox(
             height: widget.config.iconSize,
             child: VerticalDivider(
                 width: widget.config.spacing, color: widget.config.colors.secondary),
           ),
-        AppState.singleEdit => GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onLongPress: () => setState(() => state = AppState.standard),
-            child: SizedBox(height: widget.config.iconSize, width: widget.config.spacing),
-          ),
+        _ => SizedBox(height: widget.config.iconSize, width: widget.config.spacing),
       };
 
   List<Widget> publisherLink() {
@@ -144,27 +165,24 @@ class _AppTileState extends State<AppTile> {
       forceFade: true,
       child: switch (state) {
         AppState.standard => !inFolder && wideTiles(widget.config)
-            ? InkWell(
-                onTap: () => widget.onSelected(widget.app),
-                onLongPress: () => canEdit(
-                  widget.config,
-                  () async => setState(() => state = AppState.singleEdit),
-                ),
-                child: Container(
-                  width: double.infinity,
-                  alignment: LAConfig.merge(h: hA, v: ListAlignment.center),
-                  child: AppButton(
-                    widget.config,
-                    app: widget.app,
-                    labelType: listLabels(widget.config),
-                    buttonType: listBT(widget.config),
-                    onPressed: () => widget.onSelected(widget.app),
-                    onLongPress: () => canEdit(
+            ? MenuAnchor(
+                builder: (_, MenuController controller, __) => InkWell(
+                  onTap: () => widget.onSelected(widget.app),
+                  onLongPress: () => canToggleMenu(widget.config, controller),
+                  child: Container(
+                    width: double.infinity,
+                    alignment: LAConfig.merge(h: hA, v: ListAlignment.center),
+                    child: AppButton(
                       widget.config,
-                      () async => setState(() => state = AppState.singleEdit),
+                      app: widget.app,
+                      labelType: listLabels(widget.config),
+                      buttonType: listBT(widget.config),
+                      onPressed: () => widget.onSelected(widget.app),
+                      onLongPress: () => canToggleMenu(widget.config, controller),
                     ),
                   ),
                 ),
+                menuChildren: <Widget>[], // TODO
               )
             : inFolder
                 ? AppButton(
@@ -175,16 +193,16 @@ class _AppTileState extends State<AppTile> {
                     onPressed: () => widget.onSelected(widget.app),
                     onLongPress: doNothing,
                   )
-                : AppButton(
-                    widget.config,
-                    app: widget.app,
-                    labelType: listLabels(widget.config),
-                    buttonType: listBT(widget.config),
-                    onPressed: () => widget.onSelected(widget.app),
-                    onLongPress: () => canEdit(
+                : MenuAnchor(
+                    builder: (_, MenuController controller, __) => AppButton(
                       widget.config,
-                      () async => setState(() => state = AppState.singleEdit),
+                      app: widget.app,
+                      labelType: listLabels(widget.config),
+                      buttonType: listBT(widget.config),
+                      onPressed: () => widget.onSelected(widget.app),
+                      onLongPress: () => canToggleMenu(widget.config, controller),
                     ),
+                    menuChildren: <Widget>[], // TODO
                   ),
         AppState.verbose => EzScrollBlocker(
             EzScrollView(
@@ -237,7 +255,8 @@ class _AppTileState extends State<AppTile> {
               ],
             ),
           ),
-        AppState.singleEdit || AppState.groupEdit => Container(
+        // TODO: reminder, this is all gonne be edit container. no more olauncher copy, it's out of place now
+        AppState.groupEdit => Container(
             width: double.infinity,
             alignment: LAConfig.merge(h: hA, v: ListAlignment.center),
             child: EzScrollBlocker(
@@ -250,7 +269,7 @@ class _AppTileState extends State<AppTile> {
                 mainAxisSize: MainAxisSize.max,
                 scrollDirection: Axis.horizontal,
                 children: <Widget>[
-                  if (!inList && state != AppState.singleEdit) ...<Widget>[
+                  if (!inList) ...<Widget>[
                     // Drag handle
                     EzIcon(
                       widget.config,
@@ -298,7 +317,7 @@ class _AppTileState extends State<AppTile> {
                           closeKeyboard(dCon);
 
                           final String name = renameController.text.trim();
-                          if (validateRename(name) != null) return;
+                          if (validateName(name) != null) return;
 
                           final bool success =
                               await widget.appInfo.renameApp(newName: name, appID: widget.app.id);
@@ -321,7 +340,7 @@ class _AppTileState extends State<AppTile> {
                             textAlign: TextAlign.center,
                             autofillHints: const <String>[AutofillHints.name],
                             autovalidateMode: AutovalidateMode.onUnfocus,
-                            validator: validateRename,
+                            validator: validateName,
                           ),
                           actions: ezActionPair(
                             widget.config,
@@ -429,7 +448,7 @@ class _AppTileState extends State<AppTile> {
                     ),
                   ],
 
-                  if (!inList && state != AppState.singleEdit) ...<Widget>[
+                  if (!inList) ...<Widget>[
                     // Drag handle
                     EzIcon(
                       widget.config,
