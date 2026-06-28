@@ -187,7 +187,7 @@ Future<void> editSpacer(
                     ),
                     config.rowSpacer,
 
-                    // Move (lane) up
+                    // Move (lane) up TODO: update this and below
                     if (numLanes > 1) ...<Widget>[
                       EzIconButton(
                         config,
@@ -198,7 +198,7 @@ Future<void> editSpacer(
                           final int nextIndex = appInfo.homeList(config, nextLane).length;
 
                           marked.value = (nextLane, nextIndex);
-                          await appInfo.moveUpLane(config, lane: currLane, index: currIndex);
+                          await appInfo.moveItemUpLane(config, lane: currLane, index: currIndex);
 
                           currLane = nextLane;
                           currIndex = nextIndex;
@@ -219,7 +219,13 @@ Future<void> editSpacer(
                         final int nextIndex = currIndex + 1;
 
                         marked.value = (currLane, nextIndex);
-                        await appInfo.moveItemUp(config, lane: currLane, index: currIndex);
+                        await appInfo.reorderLane(
+                          config,
+                          lane: currLane,
+                          oldIndex: currIndex,
+                          newIndex: nextIndex,
+                          notify: true,
+                        );
 
                         setOverlay(() => currIndex = nextIndex);
                       },
@@ -269,7 +275,13 @@ Future<void> editSpacer(
                         final int nextIndex = currIndex - 1;
 
                         marked.value = (currLane, nextIndex);
-                        await appInfo.moveItemDown(config, lane: currLane, index: currIndex);
+                        await appInfo.reorderLane(
+                          config,
+                          lane: currLane,
+                          oldIndex: currIndex,
+                          newIndex: nextIndex,
+                          notify: true,
+                        );
 
                         setOverlay(() => currIndex = nextIndex);
                       },
@@ -287,7 +299,7 @@ Future<void> editSpacer(
                           final int nextIndex = appInfo.homeList(config, nextLane).length;
 
                           marked.value = (nextLane, nextIndex);
-                          await appInfo.moveDownLane(config, lane: currLane, index: currIndex);
+                          await appInfo.moveItemDownLane(config, lane: currLane, index: currIndex);
 
                           currLane = nextLane;
                           currIndex = nextIndex;
