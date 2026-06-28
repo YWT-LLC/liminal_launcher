@@ -90,13 +90,6 @@ class AppInfoProvider extends ChangeNotifier {
   List<AppInfo> get apps => _apps;
   Map<String, AppInfo> get appMap => _appMap;
 
-  Set<String> hidden(EzCP config) => config.isDark ? _darkHidden : _lightHidden;
-  Set<String> banished(EzCP config) => config.isDark ? _darkBanished : _lightBanished;
-
-  Set<String> noShows(EzCP config) => config.isDark
-      ? <String>{..._darkHidden, ..._darkBanished}
-      : <String>{..._lightHidden, ..._lightBanished};
-
   int numLanes(EzCP config) => config.isDark ? _darkHomeMatrix.length : _lightHomeMatrix.length;
 
   List<String> homeLane(EzCP config, int lane) =>
@@ -104,6 +97,21 @@ class AppInfoProvider extends ChangeNotifier {
 
   String homeItem(EzCP config, {required int lane, required int index}) =>
       config.isDark ? _darkHomeMatrix[lane][index] : _lightHomeMatrix[lane][index];
+
+  Set<String> hidden(EzCP config) => config.isDark ? _darkHidden : _lightHidden;
+  Set<String> banished(EzCP config) => config.isDark ? _darkBanished : _lightBanished;
+
+  Set<String> hybridIDs(EzCP config, ListConfig listConfig) => config.isDark
+      ? <String>{
+          if (listConfig.localContent != null) ...listConfig.localContent!.value,
+          if (listConfig.listContent.contains(ListContent.hidden)) ..._darkHidden,
+          if (listConfig.listContent.contains(ListContent.banished)) ..._darkBanished,
+        }
+      : <String>{
+          if (listConfig.localContent != null) ...listConfig.localContent!.value,
+          if (listConfig.listContent.contains(ListContent.hidden)) ..._lightHidden,
+          if (listConfig.listContent.contains(ListContent.banished)) ..._lightBanished,
+        };
 
   // Put //
 
