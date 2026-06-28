@@ -64,7 +64,7 @@ class _LimSpacerState extends State<LimSpacer> {
 
     if (dy <= (widget.rippleProgress!.value * heightOf(context))) {
       setState(() => state = switch (state) {
-            AppState.standard || AppState.singleEdit => AppState.groupEdit,
+            AppState.standard => AppState.groupEdit,
             _ => AppState.standard,
           });
 
@@ -156,31 +156,15 @@ class _LimSpacerState extends State<LimSpacer> {
                       widget.config,
                       menuControl: menuControl,
                       menuChildren: <Widget>[
-                        dupe,
-                        if (state == AppState.groupEdit && widget.lane != 0)
-                          EzMenuButton(
-                            widget.config,
-                            label: 'Move',
-                            icon: EzIcon(widget.config, Icons.remove),
-                            onPressed: () => widget.appInfo.moveDownLane(
-                              widget.config,
-                              lane: widget.lane,
-                              index: widget.index,
-                            ),
-                          ),
-                        if (state == AppState.groupEdit && widget.lane < (numLanes - 1))
-                          EzMenuButton(
-                            widget.config,
-                            label: 'Move',
-                            icon: EzIcon(widget.config, Icons.add),
-                            onPressed: () => widget.appInfo.moveUpLane(
-                              widget.config,
-                              lane: widget.lane,
-                              index: widget.index,
-                            ),
-                          ),
+                        if (numLanes > 1)
+                          moveDownLane(widget.config, widget.appInfo,
+                              numLanes: numLanes, lane: widget.lane, index: widget.index),
                         resize,
                         remove,
+                        dupe,
+                        if (numLanes > 1)
+                          moveUpLane(widget.config, widget.appInfo,
+                              numLanes: numLanes, lane: widget.lane, index: widget.index),
                       ],
                       child: EzIconButton(
                         widget.config,
