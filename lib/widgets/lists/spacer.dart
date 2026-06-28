@@ -119,16 +119,8 @@ class _LimSpacerState extends State<LimSpacer> {
       icon: EzIcon(widget.config, Icons.edit),
     );
 
-    late final EzMenuButton remove = EzMenuButton(
-      widget.config,
-      onPressed: () => widget.appInfo.deleteWS(
-        widget.config,
-        lane: widget.lane,
-        index: widget.index,
-      ),
-      label: 'Remove',
-      icon: EzIcon(widget.config, Icons.delete),
-    );
+    late final EzMenuButton remove =
+        removeWS(widget.config, widget.appInfo, lane: widget.lane, index: widget.index);
 
     return ValueListenableBuilder<(int?, int?)>(
       valueListenable: marked,

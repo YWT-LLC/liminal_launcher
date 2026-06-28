@@ -18,7 +18,7 @@ class CalendarWidget extends StatefulWidget {
   final AppState state;
   final ValueNotifier<double>? rippleProgress;
 
-  late final WidgetSize _size;
+  late final String _size;
 
   CalendarWidget(
     this.config,
@@ -29,10 +29,10 @@ class CalendarWidget extends StatefulWidget {
     this.rippleProgress, {
     super.key,
   }) {
-    final List<String> data = appInfo.homeList(config, lane)[index].split(widgetSplit);
+    final List<String> data =
+        appInfo.homeList(config, lane)[index].split(widgetSplit)[1].split(configSplit);
 
-    final WidgetSize size = WSConfig.lookup(data[1]);
-    _size = (size == WidgetSize.system) ? bt2WS(config) : size;
+    _size = data[0];
   }
 
   @override
@@ -46,7 +46,9 @@ class _CalendarWidgetState extends State<CalendarWidget> {
   Timer? rippleThrottle;
 
   final MenuController menuControl = MenuController();
-  late WidgetSize size = widget._size;
+
+  late final WidgetSize _storedWS = WSConfig.lookup(widget._size);
+  late WidgetSize size = (_storedWS == WidgetSize.system) ? bt2WS(widget.config) : _storedWS;
 
   final TextEditingController eventCon = TextEditingController();
   OverlayEntry? overlayEntry;
@@ -65,7 +67,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
 
     if (dy <= (widget.rippleProgress!.value * heightOf(context))) {
       setState(() => state = switch (state) {
-            AppState.standard || AppState.singleEdit => AppState.groupEdit,
+            AppState.standard => AppState.groupEdit,
             _ => AppState.standard,
           });
 
@@ -182,8 +184,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
         await widget.appInfo.updateWidget(
           widget.config,
           WidWidGetGet.calendar,
-          trueChoice,
-          extra: null,
+          TCC.calendarEntry(size),
           lane: widget.lane,
           index: widget.index,
         );
@@ -191,16 +192,8 @@ class _CalendarWidgetState extends State<CalendarWidget> {
       },
     );
 
-    late final EzMenuButton remove = EzMenuButton(
-      widget.config,
-      label: 'Remove',
-      icon: EzIcon(widget.config, Icons.delete),
-      onPressed: () => widget.appInfo.deleteWS(
-        widget.config,
-        lane: widget.lane,
-        index: widget.index,
-      ),
-    );
+    late final EzMenuButton remove =
+        removeWS(widget.config, widget.appInfo, lane: widget.lane, index: widget.index);
 
     return EzAnimSwitch(
       widget.config,
@@ -208,7 +201,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
       forceType: EzTransitionType.none,
       forceFade: true,
       child: switch (state) {
-        AppState.standard || AppState.singleEdit => MenuAnchor(
+        AppState.standard => MenuAnchor(
             builder: (_, MenuController controller, __) => (size == WidgetSize.button)
                 ? EzIconButton(
                     widget.config,
@@ -263,30 +256,14 @@ class _CalendarWidgetState extends State<CalendarWidget> {
             widget.config,
             menuControl: menuControl,
             menuChildren: <Widget>[
-              if (numLanes > 1 && widget.lane != 0)
-                EzMenuButton(
-                  widget.config,
-                  label: 'Move',
-                  icon: EzIcon(widget.config, Icons.remove),
-                  onPressed: () => widget.appInfo.moveDownLane(
-                    widget.config,
-                    lane: widget.lane,
-                    index: widget.index,
-                  ),
-                ),
-              if (numLanes > 1 && widget.lane < (numLanes - 1))
-                EzMenuButton(
-                  widget.config,
-                  label: 'Move',
-                  icon: EzIcon(widget.config, Icons.add),
-                  onPressed: () => widget.appInfo.moveUpLane(
-                    widget.config,
-                    lane: widget.lane,
-                    index: widget.index,
-                  ),
-                ),
+              if (numLanes > 1)
+                moveDownLane(widget.config, widget.appInfo,
+                    numLanes: numLanes, lane: widget.lane, index: widget.index),
               resize,
               remove,
+              if (numLanes > 1)
+                moveUpLane(widget.config, widget.appInfo,
+                    numLanes: numLanes, lane: widget.lane, index: widget.index),
             ],
             child: EzIconButton(
               widget.config,
