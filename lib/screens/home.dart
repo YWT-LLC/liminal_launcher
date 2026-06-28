@@ -147,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       final Widget element = tiles.removeAt(oldIndex);
                       tiles.insert(newIndex, element);
 
-                      await appInfo.reorderHomeList(
+                      await appInfo.reorderLane(
                         config,
                         lane: lane,
                         oldIndex: oldIndex,
@@ -798,7 +798,7 @@ class _AddCalendar extends StatelessWidget {
     required this.preview,
   });
 
-  void onTap() => appInfo.addWidget(config, 0, WidWidGetGet.calendar, save);
+  void onTap() => appInfo.addCalendar(config, 0);
 
   @override
   Widget build(BuildContext context) => (preview == WidgetSize.button)
@@ -886,8 +886,7 @@ class _AddSearch extends StatelessWidget {
     required this.preview,
   });
 
-  void onTap() =>
-      appInfo.addWidget(config, 0, WidWidGetGet.search, save, extra: <String>[Engine.ecosia.value]);
+  void onTap() => appInfo.addSearch(config, 0);
 
   @override
   Widget build(BuildContext context) => (preview == WidgetSize.button)
@@ -933,8 +932,7 @@ class _AddTimer extends StatelessWidget {
     required this.preview,
   });
 
-  void onTap() =>
-      appInfo.addWidget(config, 0, WidWidGetGet.timer, save, extra: <String>['00:00:00']);
+  void onTap() => appInfo.addTimer(config, 0);
 
   @override
   Widget build(BuildContext context) {
@@ -991,7 +989,7 @@ class _AddMedia extends StatelessWidget {
     required this.preview,
   });
 
-  void onTap() => appInfo.addWidget(config, 0, WidWidGetGet.toggleMedia, save);
+  void onTap() => appInfo.addMedia(config, 0);
 
   @override
   Widget build(BuildContext context) => EzIconButton(
