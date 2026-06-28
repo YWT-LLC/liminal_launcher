@@ -35,7 +35,8 @@ class FolderTile extends StatefulWidget {
     required this.state,
     this.rippleProgress,
   }) : super(key: ValueKey<String>('$lane-$index-${state.index}')) {
-    final List<String> items = appInfo.homeList(config, lane)[index].split(folderSplit);
+    final List<String> items =
+        appInfo.homeItem(config, lane: lane, index: index).split(folderSplit);
 
     _name = items[0];
 
@@ -140,6 +141,9 @@ class _AppFolderState extends State<FolderTile> {
     final int numLanes = widget.appInfo.numLanes(widget.config);
     final AlignmentGeometry subAlign =
         LAConfig.merge(h: hAlign(widget.config), v: ListAlignment.center);
+
+    late final EzMenuButton remove =
+        removeItem(widget.config, widget.appInfo, lane: widget.lane, index: widget.index);
 
     late final EzMenuButton edit = EzMenuButton(
       widget.config,
@@ -317,17 +321,6 @@ class _AppFolderState extends State<FolderTile> {
       },
       label: 'Edit',
       icon: EzIcon(widget.config, Icons.edit),
-    );
-
-    late final EzMenuButton remove = EzMenuButton(
-      widget.config,
-      onPressed: () => widget.appInfo.deleteFolder(
-        widget.config,
-        lane: widget.lane,
-        index: widget.index,
-      ),
-      label: 'Remove',
-      icon: EzIcon(widget.config, Icons.delete),
     );
 
     return EzAnimSwitch(
