@@ -17,6 +17,7 @@ export 'settings/tiles.dart';
 
 export 'widget-ception/calendar.dart';
 export 'widget-ception/clock.dart';
+export 'widget-ception/menu.dart';
 export 'widget-ception/search.dart';
 export 'widget-ception/timer.dart';
 export 'widget-ception/toggle_media.dart';
