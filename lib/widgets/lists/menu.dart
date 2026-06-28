@@ -48,7 +48,7 @@ EzMenuButton moveUpLane(
       onPressed: () => appInfo.moveItemUpLane(config, lane: lane, index: index),
     );
 
-EzMenuButton removeWS(
+EzMenuButton removeItem(
   EzCP config,
   AppInfoProvider appInfo, {
   required int lane,
@@ -58,5 +58,5 @@ EzMenuButton removeWS(
       config,
       label: 'Remove',
       icon: EzIcon(config, Icons.delete),
-      onPressed: () => appInfo.deleteWS(config, lane: lane, index: index),
+      onPressed: () => appInfo.removeItem(config, lane: lane, index: index),
     );
