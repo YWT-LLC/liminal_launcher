@@ -37,11 +37,11 @@ class LiminalCache extends EzAppCache {
     // Design cache
     if (isDark) {
       final bool listIcons = EzCM.get(darkListIconKey);
-      final LabelType listLabels = LTConfig.lookup(EzCM.get(darkListLabelKey));
+      final LabelType listLabels = LTConfig.safeLookup(EzCM.get(darkListLabelKey));
       final bool elevatedLists = EzCM.get(darkElevatedListKey);
 
       final bool folderIcons = EzCM.get(darkFolderIconKey);
-      final LabelType folderLabels = LTConfig.lookup(EzCM.get(darkFolderLabelKey));
+      final LabelType folderLabels = LTConfig.safeLookup(EzCM.get(darkFolderLabelKey));
       final bool elevatedFolders = EzCM.get(darkElevatedFolderKey);
 
       _design = DesignCache(
@@ -59,11 +59,11 @@ class LiminalCache extends EzAppCache {
       );
     } else {
       final bool listIcons = EzCM.get(lightListIconKey);
-      final LabelType listLabels = LTConfig.lookup(EzCM.get(lightListLabelKey));
+      final LabelType listLabels = LTConfig.safeLookup(EzCM.get(lightListLabelKey));
       final bool elevatedLists = EzCM.get(lightElevatedListKey);
 
       final bool folderIcons = EzCM.get(lightFolderIconKey);
-      final LabelType folderLabels = LTConfig.lookup(EzCM.get(lightFolderLabelKey));
+      final LabelType folderLabels = LTConfig.safeLookup(EzCM.get(lightFolderLabelKey));
       final bool elevatedFolders = EzCM.get(lightElevatedFolderKey);
 
       _design = DesignCache(
