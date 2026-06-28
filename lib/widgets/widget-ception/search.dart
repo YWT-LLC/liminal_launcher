@@ -51,7 +51,9 @@ class _SearchWidgetState extends State<SearchWidget> {
 
   final MenuController menuControl = MenuController();
 
-  late WidgetSize size = WSConfig.lookup(widget._size);
+  late final WidgetSize _storedWS = WSConfig.lookup(widget._size);
+  late WidgetSize size = (_storedWS == WidgetSize.system) ? bt2WS(widget.config) : _storedWS;
+
   late Engine engine = Ignition.lookup(widget._engine);
 
   final TextEditingController queryCon = TextEditingController();
@@ -206,16 +208,8 @@ class _SearchWidgetState extends State<SearchWidget> {
       },
     );
 
-    late final EzMenuButton remove = EzMenuButton(
-      widget.config,
-      label: 'Remove',
-      icon: EzIcon(widget.config, Icons.delete),
-      onPressed: () => widget.appInfo.deleteWS(
-        widget.config,
-        lane: widget.lane,
-        index: widget.index,
-      ),
-    );
+    late final EzMenuButton remove =
+        removeWS(widget.config, widget.appInfo, lane: widget.lane, index: widget.index);
 
     return EzAnimSwitch(
       widget.config,

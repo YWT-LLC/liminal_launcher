@@ -18,8 +18,8 @@ class TimerWidget extends StatefulWidget {
   final AppState state;
   final ValueNotifier<double>? rippleProgress;
 
-  late final WidgetSize _size;
-  late final List<String> _times;
+  late final String _size;
+  late final String _time;
 
   TimerWidget(
     this.config,
@@ -30,13 +30,11 @@ class TimerWidget extends StatefulWidget {
     this.rippleProgress, {
     super.key,
   }) {
-    final List<String> data = appInfo.homeList(config, lane)[index].split(widgetSplit);
+    final List<String> data =
+        appInfo.homeList(config, lane)[index].split(widgetSplit)[1].split(configSplit);
 
-    final WidgetSize size = WSConfig.lookup(data[1]);
-    _size = (size == WidgetSize.system) ? bt2WS(config) : size;
-
-    final List<String> storage = data[2].split(':');
-    _times = (storage.length == 3) ? storage : <String>['00', '00', '00'];
+    _size = data[0];
+    _time = data[1];
   }
 
   @override
@@ -50,11 +48,14 @@ class _TimerWidgetState extends State<TimerWidget> {
   Timer? rippleThrottle;
 
   final MenuController menuControl = MenuController();
-  late WidgetSize size = widget._size;
 
-  late final TextEditingController ourCon = TextEditingController(text: widget._times[0]);
-  late final TextEditingController minCon = TextEditingController(text: widget._times[1]);
-  late final TextEditingController secCon = TextEditingController(text: widget._times[2]);
+  late final WidgetSize _storedWS = WSConfig.lookup(widget._size);
+  late WidgetSize size = (_storedWS == WidgetSize.system) ? bt2WS(widget.config) : _storedWS;
+
+  late final List<String> _storedT = widget._time.split(':');
+  late final TextEditingController ourCon = TextEditingController(text: _storedT[0]);
+  late final TextEditingController minCon = TextEditingController(text: _storedT[1]);
+  late final TextEditingController secCon = TextEditingController(text: _storedT[2]);
 
   late final FocusNode ourNode = FocusNode();
   late final FocusNode minNode = FocusNode();
@@ -124,7 +125,7 @@ class _TimerWidgetState extends State<TimerWidget> {
 
     if (dy <= (widget.rippleProgress!.value * heightOf(context))) {
       setState(() => state = switch (state) {
-            AppState.standard || AppState.singleEdit => AppState.groupEdit,
+            AppState.standard => AppState.groupEdit,
             _ => AppState.standard,
           });
 
@@ -270,10 +271,7 @@ class _TimerWidgetState extends State<TimerWidget> {
           await widget.appInfo.updateWidget(
             widget.config,
             WidWidGetGet.timer,
-            size,
-            extra: <String>[
-              <String>[ourCon.text, minCon.text, secCon.text].join(':')
-            ],
+            TCC.timerEntry(size, <String>[ourCon.text, minCon.text, secCon.text].join(':')),
             lane: widget.lane,
             index: widget.index,
           );
@@ -301,10 +299,7 @@ class _TimerWidgetState extends State<TimerWidget> {
         await widget.appInfo.updateWidget(
           widget.config,
           WidWidGetGet.timer,
-          trueChoice,
-          extra: <String>[
-            <String>[ourCon.text, minCon.text, secCon.text].join(':')
-          ],
+          TCC.timerEntry(size, <String>[ourCon.text, minCon.text, secCon.text].join(':')),
           lane: widget.lane,
           index: widget.index,
         );
@@ -312,16 +307,8 @@ class _TimerWidgetState extends State<TimerWidget> {
       },
     );
 
-    late final EzMenuButton remove = EzMenuButton(
-      widget.config,
-      label: 'Remove',
-      icon: EzIcon(widget.config, Icons.delete),
-      onPressed: () => widget.appInfo.deleteWS(
-        widget.config,
-        lane: widget.lane,
-        index: widget.index,
-      ),
-    );
+    late final EzMenuButton remove =
+        removeWS(widget.config, widget.appInfo, lane: widget.lane, index: widget.index);
 
     return EzAnimSwitch(
       widget.config,
@@ -329,7 +316,7 @@ class _TimerWidgetState extends State<TimerWidget> {
       forceType: EzTransitionType.none,
       forceFade: true,
       child: switch (state) {
-        AppState.standard || AppState.singleEdit => MenuAnchor(
+        AppState.standard => MenuAnchor(
             builder: (_, MenuController controller, __) => (size == WidgetSize.button)
                 ? EzIconButton(
                     widget.config,
@@ -401,30 +388,14 @@ class _TimerWidgetState extends State<TimerWidget> {
             widget.config,
             menuControl: menuControl,
             menuChildren: <Widget>[
-              if (numLanes > 1 && widget.lane != 0)
-                EzMenuButton(
-                  widget.config,
-                  label: 'Move',
-                  icon: EzIcon(widget.config, Icons.remove),
-                  onPressed: () => widget.appInfo.moveDownLane(
-                    widget.config,
-                    lane: widget.lane,
-                    index: widget.index,
-                  ),
-                ),
-              if (numLanes > 1 && widget.lane < (numLanes - 1))
-                EzMenuButton(
-                  widget.config,
-                  label: 'Move',
-                  icon: EzIcon(widget.config, Icons.add),
-                  onPressed: () => widget.appInfo.moveUpLane(
-                    widget.config,
-                    lane: widget.lane,
-                    index: widget.index,
-                  ),
-                ),
+              if (numLanes > 1)
+                moveDownLane(widget.config, widget.appInfo,
+                    numLanes: numLanes, lane: widget.lane, index: widget.index),
               resize,
               remove,
+              if (numLanes > 1)
+                moveUpLane(widget.config, widget.appInfo,
+                    numLanes: numLanes, lane: widget.lane, index: widget.index),
             ],
             child: EzIconButton(
               widget.config,
