@@ -263,7 +263,7 @@ class _AppListScreenState extends State<AppListScreen> {
                             (appInfo.hybridIDs(config, widget.listConfig).contains(app.id) ==
                                 widget.listConfig.include) &&
                             (searching
-                                ? app.name.toLowerCase().contains(searchControl.text.toLowerCase())
+                                ? app.label.toLowerCase().contains(searchControl.text.toLowerCase())
                                 : true))
                         .map((AppInfo app) => Padding(
                               key: ValueKey<String>(app.id),
