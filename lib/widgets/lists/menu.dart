@@ -21,7 +21,7 @@ EzMenuButton moveDownLane(
       label: 'Move',
       icon: EzIcon(
         config,
-        hAlign(config) == ListAlignment.end
+        config.isLTR && hAlign(config) != ListAlignment.end
             ? Icons.keyboard_arrow_left
             : Icons.keyboard_arrow_right,
       ),
@@ -41,9 +41,22 @@ EzMenuButton moveUpLane(
       label: 'Move',
       icon: EzIcon(
         config,
-        hAlign(config) == ListAlignment.end
+        config.isLTR && hAlign(config) != ListAlignment.end
             ? Icons.keyboard_arrow_right
             : Icons.keyboard_arrow_left,
       ),
       onPressed: () => appInfo.moveItemUpLane(config, lane: lane, index: index),
+    );
+
+EzMenuButton removeWS(
+  EzCP config,
+  AppInfoProvider appInfo, {
+  required int lane,
+  required int index,
+}) =>
+    EzMenuButton(
+      config,
+      label: 'Remove',
+      icon: EzIcon(config, Icons.delete),
+      onPressed: () => appInfo.deleteWS(config, lane: lane, index: index),
     );
