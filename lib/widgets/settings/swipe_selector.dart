@@ -63,7 +63,9 @@ class _SwipeSelectorState extends State<SwipeSelector> {
         widget.config.rowMargin,
         AppButton(
           widget.config,
-          app: app,
+          name: app.label,
+          image: app.icon,
+          icon: null,
           labelType: listLabels(widget.config),
           buttonType: listBT(widget.config),
           onPressed: () => context.pushNamed(

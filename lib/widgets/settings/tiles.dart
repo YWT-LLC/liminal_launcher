@@ -67,13 +67,8 @@ class AppTileSetting extends StatelessWidget {
                           alignment: LAConfig.merge(h: hAlign(config), v: ListAlignment.center),
                           child: AppButton(
                             config,
-                            app: AppInfo(
-                              package: nullAppPackage,
-                              label: label,
-                              removable: false,
-                              installDate: 0,
-                              packageSize: 0,
-                            ),
+                            name: label,
+                            image: null,
                             icon: icon,
                             buttonType:
                                 BTConfig.build(labelType, icons: showIcon, elevated: elevated),
@@ -85,13 +80,8 @@ class AppTileSetting extends StatelessWidget {
                       )
                     : AppButton(
                         config,
-                        app: AppInfo(
-                          package: nullAppPackage,
-                          label: label,
-                          removable: false,
-                          installDate: 0,
-                          packageSize: 0,
-                        ),
+                        name: label,
+                        image: null,
                         icon: icon,
                         buttonType: BTConfig.build(labelType, icons: showIcon, elevated: elevated),
                         labelType: labelType,
