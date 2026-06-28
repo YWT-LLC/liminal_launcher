@@ -84,6 +84,16 @@ extension BTConfig on ButtonType {
         esETextIcon => ButtonType.eTextIcon,
         _ => null,
       };
+
+  static ButtonType safeLookup(String? value) => switch (value) {
+        esIcon => ButtonType.icon,
+        esEIcon => ButtonType.eIcon,
+        esText => ButtonType.text,
+        esEText => ButtonType.eText,
+        esTextIcon => ButtonType.textIcon,
+        esETextIcon => ButtonType.eTextIcon,
+        _ => ButtonType.textIcon,
+      };
 }
 
 // Date Type //
@@ -258,6 +268,14 @@ extension LTConfig on LabelType {
         esFull => LabelType.full,
         esWingding => LabelType.wingding,
         _ => null,
+      };
+
+  static LabelType safeLookup(String value) => switch (value) {
+        esNone => LabelType.none,
+        esInitials => LabelType.initials,
+        esFull => LabelType.full,
+        esWingding => LabelType.wingding,
+        _ => LabelType.full,
       };
 }
 
