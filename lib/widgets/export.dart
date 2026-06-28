@@ -7,6 +7,7 @@ export 'lists/app_tile.dart';
 export 'lists/edit_container.dart';
 export 'lists/fabulous.dart';
 export 'lists/folder_tile.dart';
+export 'lists/menu.dart';
 export 'lists/spacer.dart';
 
 export 'settings/alignment.dart';
@@ -17,7 +18,6 @@ export 'settings/tiles.dart';
 
 export 'widget-ception/calendar.dart';
 export 'widget-ception/clock.dart';
-export 'widget-ception/menu.dart';
 export 'widget-ception/search.dart';
 export 'widget-ception/timer.dart';
 export 'widget-ception/toggle_media.dart';
