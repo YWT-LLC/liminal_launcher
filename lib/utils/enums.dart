@@ -52,7 +52,7 @@ extension StateName on AppState {
       };
 }
 
-enum ListContent { home, hidden, banished }
+enum ListContent { hidden, banished }
 
 enum TileConfig {
   app,
