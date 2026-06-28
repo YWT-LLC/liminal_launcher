@@ -262,7 +262,7 @@ extension LTConfig on LabelType {
         LabelType.wingding => esWingding,
       };
 
-  static LabelType? lookup(String value) => switch (value) {
+  static LabelType? lookup(String? value) => switch (value) {
         esNone => LabelType.none,
         esInitials => LabelType.initials,
         esFull => LabelType.full,
@@ -270,7 +270,7 @@ extension LTConfig on LabelType {
         _ => null,
       };
 
-  static LabelType safeLookup(String value) => switch (value) {
+  static LabelType safeLookup(String? value) => switch (value) {
         esNone => LabelType.none,
         esInitials => LabelType.initials,
         esFull => LabelType.full,
