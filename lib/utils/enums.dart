@@ -55,6 +55,54 @@ extension StateName on AppState {
 
 enum ListContent { home, hidden, banished }
 
+enum TileConfig {
+  app,
+  folder,
+  spacer,
+  calendar,
+  clock,
+  search,
+  timer,
+  toggleMedia,
+}
+
+/// Tile Config Config
+extension TCC on TileConfig {
+  static String appEntry(String name, IconData? icon, ButtonType? type) => <String>[
+        name,
+        (icon == null ? esSystem : icon.codePoint.toString()),
+        (type == null ? esSystem : type.value),
+      ].join(configSplit);
+
+  static String folderEntry(IconData icon, ButtonType? type) => <String>[
+        icon.codePoint.toString(),
+        (type == null ? esSystem : type.value),
+      ].join(configSplit);
+
+  static String calendarEntry(WidgetSize size) => <String>[size.value].join(configSplit);
+
+  static String clockEntry(WidgetSize size, Color? background, bool time, TxtStile timeStyle,
+          Color? timeColor, DateType date, TxtStile dateStyle, Color? dateColor) =>
+      <String>[
+        size.value,
+        background == null ? esSystem : background.toARGB32().toString(),
+        time.toString(),
+        timeStyle.value,
+        timeColor == null ? esSystem : timeColor.toARGB32().toString(),
+        date.value,
+        dateStyle.value,
+        dateColor == null ? esSystem : dateColor.toARGB32().toString(),
+      ].join(configSplit);
+
+  static String searchEntry(WidgetSize size, Engine engine) =>
+      <String>[size.value, engine.value].join(configSplit);
+
+  static String timerEntry(WidgetSize size, String autoTime) =>
+      <String>[size.value, autoTime].join(configSplit);
+
+  static String mediaEntry(WidgetSize size) => <String>[size.value].join(configSplit);
+}
+
 enum WidWidGetGet { calendar, clock, search, timer, toggleMedia }
 
 /// enum [String] 'calendar'
@@ -155,7 +203,23 @@ String buildLabel(String base, LabelType type) => switch (type) {
 
 enum ButtonType { icon, eIcon, text, eText, textIcon, eTextIcon }
 
+const String esIcon = 'iconButton';
+const String esEIcon = 'elevatedIconButton';
+const String esText = 'textButton';
+const String esEText = 'elevatedTextButton';
+const String esTextIcon = 'textIconButton';
+const String esETextIcon = 'elevatedTextIconButton';
+
 extension BTConfig on ButtonType {
+  String get value => switch (this) {
+        ButtonType.icon => esIcon,
+        ButtonType.eIcon => esEIcon,
+        ButtonType.text => esText,
+        ButtonType.eText => esEText,
+        ButtonType.textIcon => esTextIcon,
+        ButtonType.eTextIcon => esETextIcon,
+      };
+
   static ButtonType build(
     LabelType label, {
     required bool icons,
