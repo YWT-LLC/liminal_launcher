@@ -3,6 +3,8 @@
  * See LICENSE for distribution and usage details.
  */
 
+// TODO: double check how I'm saving/notify-ing
+
 import '../../screens/export.dart';
 import '../../utils/export.dart';
 import '../export.dart';
@@ -21,7 +23,8 @@ class FolderTile extends StatefulWidget {
   final ValueNotifier<double>? rippleProgress;
 
   late final String _name;
-  late final IconData _icon;
+  late final String _icon;
+  late final String _type;
   late final List<String> _appList;
 
   FolderTile(
@@ -31,15 +34,14 @@ class FolderTile extends StatefulWidget {
     required this.index,
     required this.state,
     this.rippleProgress,
-  }) : super(key: ValueKey<AppState>(state)) {
+  }) : super(key: ValueKey<String>('$lane-$index-${state.index}')) {
     final List<String> items = appInfo.homeList(config, lane)[index].split(folderSplit);
 
     _name = items[0];
 
-    final int? iconCode = int.tryParse(items[1]);
-    _icon =
-        // ignore: non_const_argument_for_const_parameter
-        iconCode != null ? IconData(iconCode, fontFamily: 'MaterialIcons') : Icons.folder_outlined;
+    final List<String> data = items[1].split(configSplit);
+    _icon = data[0];
+    _type = data[1];
 
     _appList = items.length > 2 ? items.sublist(2) : <String>[];
   }
@@ -56,6 +58,14 @@ class _AppFolderState extends State<FolderTile> {
 
   final MenuController menuControl = MenuController();
 
+  late IconData icon = (widget._icon == esSystem)
+      ? Icons.folder_outlined
+      : IconData(
+          // ignore: non_const_argument_for_const_parameter
+          int.tryParse(widget._icon) ?? Icons.folder_outlined.codePoint,
+          fontFamily: 'MaterialIcons',
+        );
+  late ButtonType? type = BTConfig.lookup(widget._type);
   bool open = false;
 
   // Define custom functions //
@@ -72,7 +82,7 @@ class _AppFolderState extends State<FolderTile> {
 
     if (dy <= widget.rippleProgress!.value * heightOf(context)) {
       setState(() => state = switch (state) {
-            AppState.standard || AppState.singleEdit => AppState.groupEdit,
+            AppState.standard => AppState.groupEdit,
             _ => AppState.standard,
           });
 
@@ -136,7 +146,6 @@ class _AppFolderState extends State<FolderTile> {
       onPressed: () async {
         final TextEditingController renameCon = TextEditingController(text: widget._name);
         final ValueNotifier<List<String>> appsNotif = ValueNotifier<List<String>>(widget._appList);
-        IconData icon = widget._icon;
 
         await ezModal(
           widget.config,
@@ -159,7 +168,7 @@ class _AppFolderState extends State<FolderTile> {
                     textAlignVertical: TextAlignVertical.center,
                     autofillHints: const <String>[AutofillHints.name],
                     autovalidateMode: AutovalidateMode.onUnfocus,
-                    validator: validateRename,
+                    validator: validateName,
                   ),
                 ),
                 widget.config.rowSpacer,
@@ -221,7 +230,7 @@ class _AppFolderState extends State<FolderTile> {
                                       children: <Widget>[
                                         Image.memory(
                                           app.icon!,
-                                          semanticLabel: app.name,
+                                          semanticLabel: app.label,
                                           width: appIconSize(widget.config),
                                           height: appIconSize(widget.config),
                                         ),
@@ -302,7 +311,7 @@ class _AppFolderState extends State<FolderTile> {
               lane: widget.lane,
               index: widget.index,
               name: renameCon.text,
-              icon: icon,
+              extra: TCC.folderEntry(icon, type),
               ids: appsNotif.value,
             ));
       },
@@ -361,7 +370,7 @@ class _AppFolderState extends State<FolderTile> {
                             child: FolderButton(
                               widget.config,
                               name: widget._name,
-                              icon: widget._icon,
+                              icon: icon,
                               buttonType: folderBT(widget.config),
                               labelType: folderLabels(widget.config),
                               onPressed: () => setState(() => open = true),
@@ -372,7 +381,7 @@ class _AppFolderState extends State<FolderTile> {
                       : FolderButton(
                           widget.config,
                           name: widget._name,
-                          icon: widget._icon,
+                          icon: icon,
                           buttonType: folderBT(widget.config),
                           labelType: folderLabels(widget.config),
                           onPressed: () => setState(() => open = true),
@@ -384,34 +393,18 @@ class _AppFolderState extends State<FolderTile> {
               widget.config,
               menuControl: menuControl,
               menuChildren: <Widget>[
-                if (widget.state == AppState.groupEdit && widget.lane != 0)
-                  EzMenuButton(
-                    widget.config,
-                    label: 'Move',
-                    icon: EzIcon(widget.config, Icons.remove),
-                    onPressed: () => widget.appInfo.moveDownLane(
-                      widget.config,
-                      lane: widget.lane,
-                      index: widget.index,
-                    ),
-                  ),
-                if (widget.state == AppState.groupEdit && widget.lane < (numLanes - 1))
-                  EzMenuButton(
-                    widget.config,
-                    label: 'Move',
-                    icon: EzIcon(widget.config, Icons.add),
-                    onPressed: () => widget.appInfo.moveUpLane(
-                      widget.config,
-                      lane: widget.lane,
-                      index: widget.index,
-                    ),
-                  ),
+                if (numLanes > 1)
+                  moveDownLane(widget.config, widget.appInfo,
+                      numLanes: numLanes, lane: widget.lane, index: widget.index),
+                if (numLanes > 1)
+                  moveUpLane(widget.config, widget.appInfo,
+                      numLanes: numLanes, lane: widget.lane, index: widget.index),
                 edit,
                 remove
               ],
               child: EzIconButton(
                 widget.config,
-                icon: Icon(widget._icon),
+                icon: Icon(icon),
                 onPressed: () => canToggleMenu(widget.config, menuControl),
               ),
             ),
