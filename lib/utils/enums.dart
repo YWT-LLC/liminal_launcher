@@ -8,22 +8,17 @@ import './export.dart';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-//* BTS *//
+// App Location //
 
 enum AppLocation { home, folder, list }
 
+// App Sort //
+
 enum AppSort { name, publisher, date, size }
 
-/// enum [String] 'name'
 const String esName = 'name';
-
-/// enum [String] 'publisher'
 const String esPublisher = 'publisher';
-
-/// enum [String] 'date'
 const String esDate = 'date';
-
-/// enum [String] 'size'
 const String esSize = 'size';
 
 extension ASConfig on AppSort {
@@ -42,162 +37,11 @@ extension ASConfig on AppSort {
       };
 }
 
+// App State //
+
 enum AppState { standard, groupEdit, verbose }
 
-extension StateName on AppState {
-  String get name => switch (this) {
-        AppState.standard => 'standard',
-        AppState.groupEdit => 'groupEdit',
-        AppState.verbose => 'verbose',
-      };
-}
-
-enum ListContent { hidden, banished }
-
-enum TileConfig {
-  app,
-  folder,
-  spacer,
-  calendar,
-  clock,
-  search,
-  timer,
-  toggleMedia,
-}
-
-/// Tile Config Config
-extension TCC on TileConfig {
-  static String appEntry(String name, IconData? icon, ButtonType? type) => <String>[
-        name,
-        (icon == null ? esSystem : icon.codePoint.toString()),
-        (type == null ? esSystem : type.value),
-      ].join(configSplit);
-
-  static String folderEntry(IconData icon, ButtonType? type) => <String>[
-        icon.codePoint.toString(),
-        (type == null ? esSystem : type.value),
-      ].join(configSplit);
-
-  static String calendarEntry(WidgetSize size) => <String>[size.value].join(configSplit);
-
-  static String clockEntry(Color? background, bool time, TxtStile timeStyle, Color? timeColor,
-          DateType date, TxtStile dateStyle, Color? dateColor) =>
-      <String>[
-        background == null ? esSystem : background.toARGB32().toString(),
-        time.toString(),
-        timeStyle.value,
-        timeColor == null ? esSystem : timeColor.toARGB32().toString(),
-        date.value,
-        dateStyle.value,
-        dateColor == null ? esSystem : dateColor.toARGB32().toString(),
-      ].join(configSplit);
-
-  static String searchEntry(WidgetSize size, Engine engine) =>
-      <String>[size.value, engine.value].join(configSplit);
-
-  static String timerEntry(WidgetSize size, String autoTime) =>
-      <String>[size.value, autoTime].join(configSplit);
-
-  static String mediaEntry(WidgetSize size) => <String>[size.value].join(configSplit);
-}
-
-enum WidWidGetGet { calendar, clock, search, timer, toggleMedia }
-
-/// enum [String] 'calendar'
-const String esCalendar = 'calendar';
-
-/// enum [String] 'clock'
-const String esClock = 'clock';
-
-/// enum [String] 'search'
-const String esSearch = 'search';
-
-/// enum [String] 'timer'
-const String esTimer = 'timer';
-
-/// enum [String] 'toggleMedia'
-const String esToggleMedia = 'toggleMedia';
-
-extension WWGGConfig on WidWidGetGet {
-  String get value => switch (this) {
-        WidWidGetGet.calendar => esCalendar,
-        WidWidGetGet.clock => esClock,
-        WidWidGetGet.search => esSearch,
-        WidWidGetGet.timer => esTimer,
-        WidWidGetGet.toggleMedia => esToggleMedia,
-      };
-}
-
-enum WidgetSize { system, button, tile }
-
-/// enum [String] 'button'
-const String esButton = 'button';
-
-/// enum [String] 'tile'
-const String esTile = 'tile';
-
-extension WSConfig on WidgetSize {
-  String get value => switch (this) {
-        WidgetSize.system => esSystem,
-        WidgetSize.button => esButton,
-        WidgetSize.tile => esTile,
-      };
-
-  static WidgetSize lookup(String? value) => switch (value) {
-        esButton => WidgetSize.button,
-        esTile => WidgetSize.tile,
-        esSystem || _ => WidgetSize.system,
-      };
-}
-
-//* Design settings (button) *//
-
-// Label //
-
-enum LabelType { none, initials, full, wingding }
-
-/// enum [String] 'initials'
-const String esInitials = 'initials';
-
-/// enum [String] 'full'
-const String esFull = 'full';
-
-/// enum [String] wingding
-const String esWingding = 'wingding';
-
-extension LTConfig on LabelType {
-  String get value => switch (this) {
-        LabelType.none => esNone,
-        LabelType.initials => esInitials,
-        LabelType.full => esFull,
-        LabelType.wingding => esWingding,
-      };
-
-  static LabelType lookup(String value) => switch (value) {
-        esNone => LabelType.none,
-        esInitials => LabelType.initials,
-        esWingding => LabelType.wingding,
-        esFull || _ => LabelType.full,
-      };
-}
-
-const List<DropdownMenuEntry<LabelType>> labelEntries = <DropdownMenuEntry<LabelType>>[
-  DropdownMenuEntry<LabelType>(value: LabelType.none, label: 'None'),
-  DropdownMenuEntry<LabelType>(value: LabelType.initials, label: 'Initials'),
-  DropdownMenuEntry<LabelType>(value: LabelType.full, label: 'Full name'),
-  DropdownMenuEntry<LabelType>(value: LabelType.wingding, label: 'Wingding'),
-];
-
-/// Get the result of [base] parsed with [type]
-String buildLabel(String base, LabelType type) => switch (type) {
-      LabelType.none => '',
-      LabelType.initials =>
-        base.split(' ').map((String word) => word.isNotEmpty ? word[0] : '').join().toUpperCase(),
-      LabelType.full => base,
-      LabelType.wingding => base.split('').map((String char) => wingdingMap[char] ?? char).join(),
-    };
-
-// Type //
+// Button Type //
 
 enum ButtonType { icon, eIcon, text, eText, textIcon, eTextIcon }
 
@@ -218,11 +62,7 @@ extension BTConfig on ButtonType {
         ButtonType.eTextIcon => esETextIcon,
       };
 
-  static ButtonType build(
-    LabelType label, {
-    required bool icons,
-    required bool elevated,
-  }) =>
+  static ButtonType build(LabelType label, {required bool icons, required bool elevated}) =>
       label == LabelType.none
           ? elevated
               ? ButtonType.eIcon
@@ -246,22 +86,13 @@ extension BTConfig on ButtonType {
       };
 }
 
-//* Design (page) *//
-
-// Date //
+// Date Type //
 
 enum DateType { none, compact, short, medium, long }
 
-/// enum [String] 'compact'
 const String esCompact = 'compact';
-
-/// enum [String] 'short'
 const String esShort = 'short';
-
-/// enum [String] 'medium'
 const String esMedium = 'medium';
-
-/// enum [String] 'long'
 const String esLong = 'long';
 
 extension DTConfig on DateType {
@@ -290,75 +121,7 @@ extension DTConfig on DateType {
       };
 }
 
-// Alignment //
-
-enum ListAlignment { center, start, end }
-
-/// enum [String] 'center'
-const String esCenter = 'center';
-
-/// enum [String] 'start'
-const String esStart = 'start';
-
-/// enum [String] 'end'
-const String esEnd = 'end';
-
-extension LAConfig on ListAlignment {
-  String get value => switch (this) {
-        ListAlignment.center => esCenter,
-        ListAlignment.start => esStart,
-        ListAlignment.end => esEnd,
-      };
-
-  MainAxisAlignment get mainAxis => switch (this) {
-        ListAlignment.center => MainAxisAlignment.center,
-        ListAlignment.start => MainAxisAlignment.start,
-        ListAlignment.end => MainAxisAlignment.end,
-      };
-
-  CrossAxisAlignment get crossAxis => switch (this) {
-        ListAlignment.center => CrossAxisAlignment.center,
-        ListAlignment.start => CrossAxisAlignment.start,
-        ListAlignment.end => CrossAxisAlignment.end,
-      };
-
-  TextAlign get textAlign => switch (this) {
-        ListAlignment.center => TextAlign.center,
-        ListAlignment.start => TextAlign.start,
-        ListAlignment.end => TextAlign.end,
-      };
-
-  static ListAlignment lookup(String value) => switch (value) {
-        esStart => ListAlignment.start,
-        esEnd => ListAlignment.end,
-        esCenter || _ => ListAlignment.center,
-      };
-
-  static Alignment merge({required ListAlignment h, required ListAlignment v}) => switch (h) {
-        ListAlignment.start => switch (v) {
-            ListAlignment.start => Alignment.topLeft,
-            ListAlignment.center => Alignment.centerLeft,
-            ListAlignment.end => Alignment.bottomLeft,
-          },
-        ListAlignment.center => switch (v) {
-            ListAlignment.start => Alignment.topCenter,
-            ListAlignment.center => Alignment.center,
-            ListAlignment.end => Alignment.bottomCenter,
-          },
-        ListAlignment.end => switch (v) {
-            ListAlignment.start => Alignment.topRight,
-            ListAlignment.center => Alignment.centerRight,
-            ListAlignment.end => Alignment.bottomRight,
-          },
-      };
-}
-
-const Set<ListAlignment> topAlign = <ListAlignment>{
-  ListAlignment.start,
-  ListAlignment.center,
-};
-
-//* Widgets *//
+// Engine //
 
 enum Engine {
   archive,
@@ -459,6 +222,7 @@ extension Ignition on Engine {
         _archive => Engine.archive,
         _baidu => Engine.baidu,
         _bing => Engine.bing,
+        _ducks => Engine.ducks,
         _ecosia => Engine.ecosia,
         _google => Engine.google,
         _naver => Engine.naver,
@@ -468,9 +232,173 @@ extension Ignition on Engine {
         _yahoo => Engine.yahoo,
         _yandex => Engine.yandex,
         _youTube => Engine.youTube,
-        _ducks || _ => Engine.ducks,
+        _ => Engine.ecosia,
       };
 }
+
+// Label Type //
+
+enum LabelType { none, initials, full, wingding }
+
+const String esInitials = 'initials';
+const String esFull = 'full';
+const String esWingding = 'wingding';
+
+extension LTConfig on LabelType {
+  String get value => switch (this) {
+        LabelType.none => esNone,
+        LabelType.initials => esInitials,
+        LabelType.full => esFull,
+        LabelType.wingding => esWingding,
+      };
+
+  static LabelType? lookup(String value) => switch (value) {
+        esNone => LabelType.none,
+        esInitials => LabelType.initials,
+        esFull => LabelType.full,
+        esWingding => LabelType.wingding,
+        _ => null,
+      };
+}
+
+const List<DropdownMenuEntry<LabelType>> labelEntries = <DropdownMenuEntry<LabelType>>[
+  DropdownMenuEntry<LabelType>(value: LabelType.none, label: 'None'),
+  DropdownMenuEntry<LabelType>(value: LabelType.initials, label: 'Initials'),
+  DropdownMenuEntry<LabelType>(value: LabelType.full, label: 'Full name'),
+  DropdownMenuEntry<LabelType>(value: LabelType.wingding, label: 'Wingding'),
+];
+
+/// Get the result of [base] parsed with [type]
+String buildLabel(String base, LabelType type) => switch (type) {
+      LabelType.none => '',
+      LabelType.initials =>
+        base.split(' ').map((String word) => word.isNotEmpty ? word[0] : '').join().toUpperCase(),
+      LabelType.full => base,
+      LabelType.wingding => base.split('').map((String char) => wingdingMap[char] ?? char).join(),
+    };
+
+// List Alignment //
+
+enum ListAlignment { center, start, end }
+
+const String esCenter = 'center';
+const String esStart = 'start';
+const String esEnd = 'end';
+
+extension LAConfig on ListAlignment {
+  String get value => switch (this) {
+        ListAlignment.center => esCenter,
+        ListAlignment.start => esStart,
+        ListAlignment.end => esEnd,
+      };
+
+  MainAxisAlignment get mainAxis => switch (this) {
+        ListAlignment.center => MainAxisAlignment.center,
+        ListAlignment.start => MainAxisAlignment.start,
+        ListAlignment.end => MainAxisAlignment.end,
+      };
+
+  CrossAxisAlignment get crossAxis => switch (this) {
+        ListAlignment.center => CrossAxisAlignment.center,
+        ListAlignment.start => CrossAxisAlignment.start,
+        ListAlignment.end => CrossAxisAlignment.end,
+      };
+
+  TextAlign get textAlign => switch (this) {
+        ListAlignment.center => TextAlign.center,
+        ListAlignment.start => TextAlign.start,
+        ListAlignment.end => TextAlign.end,
+      };
+
+  static ListAlignment lookup(String value) => switch (value) {
+        esStart => ListAlignment.start,
+        esEnd => ListAlignment.end,
+        esCenter || _ => ListAlignment.center,
+      };
+
+  static Alignment merge({required ListAlignment h, required ListAlignment v}) => switch (h) {
+        ListAlignment.start => switch (v) {
+            ListAlignment.start => Alignment.topLeft,
+            ListAlignment.center => Alignment.centerLeft,
+            ListAlignment.end => Alignment.bottomLeft,
+          },
+        ListAlignment.center => switch (v) {
+            ListAlignment.start => Alignment.topCenter,
+            ListAlignment.center => Alignment.center,
+            ListAlignment.end => Alignment.bottomCenter,
+          },
+        ListAlignment.end => switch (v) {
+            ListAlignment.start => Alignment.topRight,
+            ListAlignment.center => Alignment.centerRight,
+            ListAlignment.end => Alignment.bottomRight,
+          },
+      };
+}
+
+// List Content //
+
+enum ListContent { hidden, banished }
+
+// Tile Config //
+
+enum TileConfig {
+  app,
+  folder,
+  spacer,
+
+  // Widgets
+  calendar,
+  clock,
+  search,
+  timer,
+  toggleMedia,
+}
+
+/// Tile Config Config
+extension TCC on TileConfig {
+  static String appEntry(String name, IconData? icon, ButtonType? type) => <String>[
+        name,
+        (icon == null ? esSystem : icon.codePoint.toString()),
+        (type == null ? esSystem : type.value),
+      ].join(configSplit);
+
+  static String folderEntry(IconData icon, ButtonType? type) => <String>[
+        icon.codePoint.toString(),
+        (type == null ? esSystem : type.value),
+      ].join(configSplit);
+
+  static String calendarEntry(WidgetSize size) => <String>[
+        size.value,
+      ].join(configSplit);
+
+  static String clockEntry(Color? background, bool time, TxtStile timeStyle, Color? timeColor,
+          DateType date, TxtStile dateStyle, Color? dateColor) =>
+      <String>[
+        background == null ? esSystem : background.toARGB32().toString(),
+        time.toString(),
+        timeStyle.value,
+        timeColor == null ? esSystem : timeColor.toARGB32().toString(),
+        date.value,
+        dateStyle.value,
+        dateColor == null ? esSystem : dateColor.toARGB32().toString(),
+      ].join(configSplit);
+
+  static String searchEntry(WidgetSize size, Engine engine) => <String>[
+        size.value,
+        engine.value,
+      ].join(configSplit);
+
+  static String timerEntry(WidgetSize size, String autoTime) => <String>[
+        size.value,
+        autoTime,
+      ].join(configSplit);
+
+  static String mediaEntry(WidgetSize size) => <String>[
+        size.value,
+      ].join(configSplit);
+}
+
+// Text Style //
 
 enum TxtStile { display, headline, title, body, label }
 
@@ -504,5 +432,44 @@ extension TSConfig on TxtStile {
         _body => TxtStile.body,
         _label => TxtStile.label,
         _ => null,
+      };
+}
+
+// Widget-ception //
+
+enum WidWidGetGet { calendar, clock, search, timer, toggleMedia }
+
+const String esCalendar = 'calendar';
+const String esClock = 'clock';
+const String esSearch = 'search';
+const String esTimer = 'timer';
+const String esToggleMedia = 'toggleMedia';
+
+extension WWGGConfig on WidWidGetGet {
+  String get value => switch (this) {
+        WidWidGetGet.calendar => esCalendar,
+        WidWidGetGet.clock => esClock,
+        WidWidGetGet.search => esSearch,
+        WidWidGetGet.timer => esTimer,
+        WidWidGetGet.toggleMedia => esToggleMedia,
+      };
+}
+
+enum WidgetSize { system, button, tile }
+
+const String esButton = 'button';
+const String esTile = 'tile';
+
+extension WSConfig on WidgetSize {
+  String get value => switch (this) {
+        WidgetSize.system => esSystem,
+        WidgetSize.button => esButton,
+        WidgetSize.tile => esTile,
+      };
+
+  static WidgetSize lookup(String? value) => switch (value) {
+        esButton => WidgetSize.button,
+        esTile => WidgetSize.tile,
+        esSystem || _ => WidgetSize.system,
       };
 }
