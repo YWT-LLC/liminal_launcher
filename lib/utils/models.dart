@@ -13,7 +13,6 @@ import 'package:flutter/services.dart';
 class AppInfo {
   final String _package;
   final String _label;
-  String name;
   String id;
   final Uint8List? icon;
   final bool removable;
@@ -31,7 +30,6 @@ class AppInfo {
     required this.installDate,
     required this.packageSize,
   })  : _label = label,
-        name = label,
         _package = package,
         id = package + idSplit + label;
 
@@ -46,7 +44,7 @@ class AppInfo {
 
   String get package => _package;
 
-  set rename(String newName) => name = newName;
+  String get label => _label;
 
   @override
   int get hashCode => id.hashCode;
@@ -58,7 +56,6 @@ class AppInfo {
   String toString() => '''<AppInfo> {
   package: $_package
   label: $_label,
-  name: $name,
   id: $id,
   icon: ${icon == null ? 'null' : 'present'},
   removable: $removable,
@@ -69,11 +66,11 @@ class AppInfo {
 
 const String _pattern = r"^[\w\s\-\.\&\(\)']+$";
 
-String? validateRename(String? newName) {
-  if (newName == null || newName.trim().isEmpty) return 'Cannot be empty';
+String? validateName(String? name) {
+  if (name == null || name.trim().isEmpty) return 'Cannot be empty';
 
   final RegExp validNameRegExp = RegExp(_pattern);
-  if (!validNameRegExp.hasMatch(newName)) return 'Invalid; $_pattern';
+  if (!validNameRegExp.hasMatch(name)) return 'Invalid; $_pattern';
 
   return null;
 }
