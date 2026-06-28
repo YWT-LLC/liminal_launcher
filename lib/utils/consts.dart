@@ -298,6 +298,9 @@ const String widgetSplit = ':01010111:';
 /// r'(:(I|W|F|S):)'... but the binaries
 final RegExp tileRegex = RegExp(r':(01001001|01010111|01000110|01010011):');
 
+/// :01000011: == :C:
+const String configSplit = ':01000011:';
+
 /// ---
 const String nullAppLabel = '---';
 
