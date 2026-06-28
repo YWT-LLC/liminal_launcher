@@ -161,6 +161,11 @@ class AppInfoProvider extends ChangeNotifier {
 
   bool _addThrottle = false;
 
+  // TODO: use key(s) to remove and re-add
+  // TODO: remove the concept of homeSet entirely and remove the limit on what can be on the home screen
+  // TODO: actually, might wanna keep homeSet cuz it'll prolly speed up checks still... definite reconfigure
+  // TODO: also, make sure you check you removes/deletes to remove/delete all instances (when relevant)... be VERY wary of removeFirst type stuff
+  // TODO: once implemented, you can likely disregard the "don't always show" todo and the intro addition note
   Future<void> _added(EzCP config) async {
     if (_addThrottle) return;
 
