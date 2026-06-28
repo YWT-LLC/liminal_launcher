@@ -42,12 +42,11 @@ extension ASConfig on AppSort {
       };
 }
 
-enum AppState { standard, singleEdit, groupEdit, verbose }
+enum AppState { standard, groupEdit, verbose }
 
 extension StateName on AppState {
   String get name => switch (this) {
         AppState.standard => 'standard',
-        AppState.singleEdit => 'singleEdit',
         AppState.groupEdit => 'groupEdit',
         AppState.verbose => 'verbose',
       };
@@ -81,10 +80,9 @@ extension TCC on TileConfig {
 
   static String calendarEntry(WidgetSize size) => <String>[size.value].join(configSplit);
 
-  static String clockEntry(WidgetSize size, Color? background, bool time, TxtStile timeStyle,
-          Color? timeColor, DateType date, TxtStile dateStyle, Color? dateColor) =>
+  static String clockEntry(Color? background, bool time, TxtStile timeStyle, Color? timeColor,
+          DateType date, TxtStile dateStyle, Color? dateColor) =>
       <String>[
-        size.value,
         background == null ? esSystem : background.toARGB32().toString(),
         time.toString(),
         timeStyle.value,
@@ -236,6 +234,16 @@ extension BTConfig on ButtonType {
               : elevated
                   ? ButtonType.eText
                   : ButtonType.text;
+
+  static ButtonType? lookup(String? value) => switch (value) {
+        esIcon => ButtonType.icon,
+        esEIcon => ButtonType.eIcon,
+        esText => ButtonType.text,
+        esEText => ButtonType.eText,
+        esTextIcon => ButtonType.textIcon,
+        esETextIcon => ButtonType.eTextIcon,
+        _ => null,
+      };
 }
 
 //* Design (page) *//
