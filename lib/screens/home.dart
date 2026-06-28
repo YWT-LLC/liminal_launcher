@@ -596,7 +596,6 @@ If you want to support Liminal's development, or the development of more Empathe
                                   appListPath,
                                   extra: ListConfig(
                                     listContent: <ListContent>{
-                                      ListContent.home,
                                       ListContent.hidden,
                                       ListContent.banished,
                                     },
