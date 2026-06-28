@@ -250,6 +250,9 @@ class _TimerWidgetState extends State<TimerWidget> {
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
+    late final EzMenuButton remove =
+        removeItem(widget.config, widget.appInfo, lane: widget.lane, index: widget.index);
+
     final BoxConstraints numConstraints = BoxConstraints.tightFor(
       width: ezTextSize('000', context: context, style: widget.config.bodyStyle).width +
           (2 * widget.config.padding),
@@ -306,9 +309,6 @@ class _TimerWidgetState extends State<TimerWidget> {
         setState(() => size = trueChoice);
       },
     );
-
-    late final EzMenuButton remove =
-        removeWS(widget.config, widget.appInfo, lane: widget.lane, index: widget.index);
 
     return EzAnimSwitch(
       widget.config,

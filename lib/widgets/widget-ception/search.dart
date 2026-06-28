@@ -184,6 +184,9 @@ class _SearchWidgetState extends State<SearchWidget> {
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
+    late final EzMenuButton remove =
+        removeItem(widget.config, widget.appInfo, lane: widget.lane, index: widget.index);
+
     late final EzMenuButton resize = EzMenuButton(
       widget.config,
       label: 'Resize',
@@ -207,9 +210,6 @@ class _SearchWidgetState extends State<SearchWidget> {
         setState(() => size = trueChoice);
       },
     );
-
-    late final EzMenuButton remove =
-        removeWS(widget.config, widget.appInfo, lane: widget.lane, index: widget.index);
 
     return EzAnimSwitch(
       widget.config,

@@ -410,15 +410,15 @@ class _ClockWidgetState extends State<ClockWidget> {
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
+    late final EzMenuButton remove =
+        removeItem(widget.config, widget.appInfo, lane: widget.lane, index: widget.index);
+
     late final EzMenuButton edit = EzMenuButton(
       widget.config,
       label: 'Edit',
       icon: EzIcon(widget.config, Icons.edit),
       onPressed: openEdits,
     );
-
-    late final EzMenuButton remove =
-        removeWS(widget.config, widget.appInfo, lane: widget.lane, index: widget.index);
 
     return EzAnimSwitch(
       widget.config,
