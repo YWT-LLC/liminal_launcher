@@ -46,11 +46,13 @@ const Map<String, String> credits = <String, String>{
 
 // BTS //
 
-const String renamedIDsKey = 'renamedIDs';
-const String hiddenIDsKey = 'hiddenIDs';
-const String banishedIDsKey = 'banishedIDs';
-const String darkHomeDataKey = 'darkHomeIDs';
-const String lightHomeDataKey = 'lightHomeIDs';
+const String darkHomeDataKey = 'darkHomeData';
+const String darkHiddenIDsKey = 'darkHiddenIDs';
+const String darkBanishIDsKey = 'darkBanishIDs';
+
+const String lightHomeDataKey = 'lightHomeData';
+const String lightHiddenIDsKey = 'lightHiddenIDs';
+const String lightBanishIDsKey = 'lightBanishIDs';
 
 const String shownIntroKey = 'shownIntro';
 
@@ -60,11 +62,13 @@ const String listSortKey = 'listSort';
 /// Intro, ID lists, and sorting keys
 const Map<String, Type> limBTSKeys = <String, Type>{
   // ID lists
-  renamedIDsKey: List<String>,
-  hiddenIDsKey: List<String>,
-  banishedIDsKey: List<String>,
   darkHomeDataKey: List<String>,
+  darkHiddenIDsKey: List<String>,
+  darkBanishIDsKey: List<String>,
+
   lightHomeDataKey: List<String>,
+  lightHiddenIDsKey: List<String>,
+  lightBanishIDsKey: List<String>,
 
   // Intro
   shownIntroKey: bool,
@@ -182,9 +186,6 @@ final Map<String, Object> liminalDefault = <String, Object>{
 
   // BTS //
   // ID lists
-  renamedIDsKey: <String>[],
-  hiddenIDsKey: <String>[],
-  banishedIDsKey: <String>[],
   darkHomeDataKey: <String>[
     <String>[
       <String>[
@@ -201,6 +202,9 @@ final Map<String, Object> liminalDefault = <String, Object>{
       ].join(widgetSplit),
     ].join(listSplit),
   ],
+  darkHiddenIDsKey: <String>[],
+  darkBanishIDsKey: <String>[],
+
   lightHomeDataKey: <String>[
     <String>[
       <String>[
@@ -217,6 +221,8 @@ final Map<String, Object> liminalDefault = <String, Object>{
       ].join(widgetSplit),
     ].join(listSplit),
   ],
+  lightHiddenIDsKey: <String>[],
+  lightBanishIDsKey: <String>[],
 
   // Intro
   shownIntroKey: false,
