@@ -30,7 +30,7 @@ class CalendarWidget extends StatefulWidget {
     super.key,
   }) {
     final List<String> data =
-        appInfo.homeList(config, lane)[index].split(widgetSplit)[1].split(configSplit);
+        appInfo.homeItem(config, lane: lane, index: index).split(widgetSplit)[1].split(configSplit);
 
     _size = data[0];
   }
@@ -140,7 +140,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
               text: 'Yes',
               onPressed: () async {
                 Navigator.of(context).pop();
-                await ezNoTouch(() async => await widget.appInfo.deleteWS(
+                await ezNoTouch(() async => await widget.appInfo.removeItem(
                       widget.config,
                       lane: widget.lane,
                       index: widget.index,

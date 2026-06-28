@@ -25,7 +25,6 @@ class ClockWidget extends StatefulWidget {
   late final String _dateType;
   late final String _dateStyle;
   late final String _dateColor;
-  // TODO: implement us!
 
   ClockWidget(
     this.config,
@@ -37,7 +36,7 @@ class ClockWidget extends StatefulWidget {
     super.key,
   }) {
     final List<String> data =
-        appInfo.homeList(config, lane)[index].split(widgetSplit)[1].split(configSplit);
+        appInfo.homeItem(config, lane: lane, index: index).split(widgetSplit)[1].split(configSplit);
 
     _background = data[0];
     _showTime = data[1];

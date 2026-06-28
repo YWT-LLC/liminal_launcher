@@ -31,7 +31,7 @@ class TimerWidget extends StatefulWidget {
     super.key,
   }) {
     final List<String> data =
-        appInfo.homeList(config, lane)[index].split(widgetSplit)[1].split(configSplit);
+        appInfo.homeItem(config, lane: lane, index: index).split(widgetSplit)[1].split(configSplit);
 
     _size = data[0];
     _time = data[1];
