@@ -24,8 +24,10 @@ class FolderTile extends StatefulWidget {
 
   late final String _name;
   late final String _icon;
-  late final String _type;
+  late final String _buttonType;
+  late final String _labelType;
   late final List<String> _appList;
+  // TODO: update folder entry && friends(?)
 
   FolderTile(
     this.config, {
@@ -42,7 +44,8 @@ class FolderTile extends StatefulWidget {
 
     final List<String> data = items[1].split(configSplit);
     _icon = data[0];
-    _type = data[1];
+    _buttonType = data[1];
+    _labelType = data[2];
 
     _appList = items.length > 2 ? items.sublist(2) : <String>[];
   }
@@ -66,7 +69,9 @@ class _AppFolderState extends State<FolderTile> {
           int.tryParse(widget._icon) ?? Icons.folder_outlined.codePoint,
           fontFamily: 'MaterialIcons',
         );
-  late ButtonType? type = BTConfig.lookup(widget._type);
+  late ButtonType? buttonType = BTConfig.lookup(widget._buttonType);
+  late LabelType? labelType = LTConfig.lookup(widget._labelType);
+
   bool open = false;
 
   // Define custom functions //
@@ -315,7 +320,7 @@ class _AppFolderState extends State<FolderTile> {
               lane: widget.lane,
               index: widget.index,
               name: renameCon.text,
-              extra: TCC.folderEntry(icon, type),
+              extra: TCC.folderEntry(icon, buttonType),
               ids: appsNotif.value,
             ));
       },
@@ -364,8 +369,8 @@ class _AppFolderState extends State<FolderTile> {
                               widget.config,
                               name: widget._name,
                               icon: icon,
-                              buttonType: folderBT(widget.config),
-                              labelType: folderLabels(widget.config),
+                              buttonType: buttonType ?? folderBT(widget.config),
+                              labelType: labelType ?? folderLabels(widget.config),
                               onPressed: () => setState(() => open = true),
                               onLongPress: () => canToggleMenu(widget.config, controller),
                             ),
@@ -375,8 +380,8 @@ class _AppFolderState extends State<FolderTile> {
                           widget.config,
                           name: widget._name,
                           icon: icon,
-                          buttonType: folderBT(widget.config),
-                          labelType: folderLabels(widget.config),
+                          buttonType: buttonType ?? folderBT(widget.config),
+                          labelType: labelType ?? folderLabels(widget.config),
                           onPressed: () => setState(() => open = true),
                           onLongPress: () => canToggleMenu(widget.config, controller),
                         ),
