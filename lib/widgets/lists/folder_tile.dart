@@ -396,11 +396,11 @@ class _AppFolderState extends State<FolderTile> {
                 if (numLanes > 1)
                   moveDownLane(widget.config, widget.appInfo,
                       numLanes: numLanes, lane: widget.lane, index: widget.index),
+                edit,
+                remove,
                 if (numLanes > 1)
                   moveUpLane(widget.config, widget.appInfo,
                       numLanes: numLanes, lane: widget.lane, index: widget.index),
-                edit,
-                remove
               ],
               child: EzIconButton(
                 widget.config,

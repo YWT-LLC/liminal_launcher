@@ -269,11 +269,11 @@ class _SearchWidgetState extends State<SearchWidget> {
               if (numLanes > 1)
                 moveDownLane(widget.config, widget.appInfo,
                     numLanes: numLanes, lane: widget.lane, index: widget.index),
+              resize,
+              remove,
               if (numLanes > 1)
                 moveUpLane(widget.config, widget.appInfo,
                     numLanes: numLanes, lane: widget.lane, index: widget.index),
-              resize,
-              remove,
             ],
             child: EzIconButton(
               widget.config,
