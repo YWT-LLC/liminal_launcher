@@ -19,11 +19,11 @@ class AppInfoProvider extends ChangeNotifier {
   static const EventChannel _appEventChannel = EventChannel('$androidPackage/app_events');
   StreamSubscription<dynamic>? _appEventSubscription;
 
-  final Set<String> _darkHidden = Set<String>.from(EzCM.get(darkHiddenIDsKey));
-  final Set<String> _lightHidden = Set<String>.from(EzCM.get(lightHiddenIDsKey));
+  Set<String> _darkHidden = Set<String>.from(EzCM.get(darkHiddenIDsKey));
+  Set<String> _lightHidden = Set<String>.from(EzCM.get(lightHiddenIDsKey));
 
-  final Set<String> _darkBanished = Set<String>.from(EzCM.get(darkBanishIDsKey));
-  final Set<String> _lightBanished = Set<String>.from(EzCM.get(lightBanishIDsKey));
+  Set<String> _darkBanished = Set<String>.from(EzCM.get(darkBanishIDsKey));
+  Set<String> _lightBanished = Set<String>.from(EzCM.get(lightBanishIDsKey));
 
   late List<List<String>> _darkHomeMatrix;
   late List<List<String>> _lightHomeMatrix;
@@ -189,7 +189,7 @@ class AppInfoProvider extends ChangeNotifier {
   Future<void> addApp(EzCP config, {required int lane, required String id}) async {
     final String entry = <String>[
       id,
-      TCC.appEntry(id.split(idSplit)[0], null, null),
+      TCC.appEntry(id.split(idSplit)[0], null, null, null),
     ].join(idSplit);
 
     if (interlinked || config.isDark) {
@@ -209,7 +209,7 @@ class AppInfoProvider extends ChangeNotifier {
   Future<void> addFolder(EzCP config, int lane) async {
     final String entry = <String>[
       'Folder',
-      TCC.folderEntry(Icons.folder_outlined, null),
+      TCC.folderEntry(Icons.folder_outlined, null, null),
     ].join(folderSplit);
 
     if (interlinked || config.isDark) {
@@ -583,13 +583,12 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // TODO: take a brain break, then get back to your audits. resume at the top of remove/delete/hide/etc
-  // TODO: include hidden in clone && ask to double hide/banish when split
   Future<void> hideApp(EzCP config, BuildContext context, String id) async {
     if (interlinked || config.isDark) {
       if (_darkHidden.contains(id)) return;
+      final bool worthAsk = !interlinked && !_lightHidden.contains(id);
 
-      if (_darkHidden.isEmpty || !interlinked) {
+      if (_darkHidden.isEmpty || worthAsk) {
         await showDialog(
           context: context,
           builder: (BuildContext dCon) => EzAlertDialog(
@@ -599,14 +598,13 @@ class AppInfoProvider extends ChangeNotifier {
             content: Text(
               <String>[
                 _darkHidden.isEmpty ? 'Swipe up while editing to open the hidden apps list.' : '',
-                (_darkHidden.isEmpty && !interlinked) ? '\n\n' : '',
-                interlinked ? '' : 'Hide for light mode too?',
+                (_darkHidden.isEmpty && worthAsk) ? '\n\n' : '',
+                worthAsk ? 'Hide for light mode too?' : '',
               ].join(),
               textAlign: TextAlign.center,
             ),
-            actions: interlinked
-                ? null
-                : <Widget>[
+            actions: worthAsk
+                ? <Widget>[
                     EzAction(
                       config,
                       text: config.ezL10n.gYes,
@@ -620,8 +618,9 @@ class AppInfoProvider extends ChangeNotifier {
                       text: config.ezL10n.gNo,
                       onPressed: () => Navigator.of(dCon).pop(),
                     ),
-                  ],
-            needsClose: interlinked,
+                  ]
+                : null,
+            needsClose: !worthAsk,
           ),
         );
       }
@@ -632,8 +631,9 @@ class AppInfoProvider extends ChangeNotifier {
 
     if (interlinked || !config.isDark) {
       if (_lightHidden.contains(id)) return;
+      final bool worthAsk = !interlinked && !_darkHidden.contains(id);
 
-      if (!interlinked && context.mounted) {
+      if (worthAsk && context.mounted) {
         await showDialog(
           context: context,
           builder: (BuildContext dCon) => EzAlertDialog(
@@ -645,28 +645,26 @@ class AppInfoProvider extends ChangeNotifier {
                 _lightHidden.isEmpty
                     ? 'Swipe up while editing to open the hidden apps list.\n\n'
                     : '',
-                'Hide for light mode too?',
+                'Hide for dark mode too?',
               ].join(),
               textAlign: TextAlign.center,
             ),
-            actions: interlinked
-                ? null
-                : <Widget>[
-                    EzAction(
-                      config,
-                      text: config.ezL10n.gYes,
-                      onPressed: () {
-                        _lightHidden.add(id);
-                        unawaited(EzCM.setStringList(lightHiddenIDsKey, _lightHidden.toList()));
-                      },
-                    ),
-                    EzAction(
-                      config,
-                      text: config.ezL10n.gNo,
-                      onPressed: () => Navigator.of(dCon).pop(),
-                    ),
-                  ],
-            needsClose: interlinked,
+            actions: <Widget>[
+              EzAction(
+                config,
+                text: config.ezL10n.gYes,
+                onPressed: () {
+                  _darkHidden.add(id);
+                  unawaited(EzCM.setStringList(darkHiddenIDsKey, _darkHidden.toList()));
+                },
+              ),
+              EzAction(
+                config,
+                text: config.ezL10n.gNo,
+                onPressed: () => Navigator.of(dCon).pop(),
+              ),
+            ],
+            needsClose: false,
           ),
         );
       }
@@ -681,11 +679,9 @@ class AppInfoProvider extends ChangeNotifier {
   Future<bool> showApp(EzCP config, String id, {bool batch = false}) async {
     if (interlinked || config.isDark) {
       if (!_darkHidden.contains(id)) return false;
+      final bool worthAsk = !batch && !interlinked && _lightHidden.contains(id);
 
-      if (!batch &&
-          !interlinked &&
-          ezRootNav.currentContext != null &&
-          ezRootNav.currentContext!.mounted) {
+      if (worthAsk && ezRootNav.currentContext != null && ezRootNav.currentContext!.mounted) {
         await showDialog(
           context: ezRootNav.currentContext!,
           builder: (BuildContext dCon) => EzAlertDialog(
@@ -718,11 +714,9 @@ class AppInfoProvider extends ChangeNotifier {
 
     if (interlinked || !config.isDark) {
       if (!_lightHidden.contains(id)) return false;
+      final bool worthAsk = !batch && !interlinked && _darkHidden.contains(id);
 
-      if (!batch &&
-          !interlinked &&
-          ezRootNav.currentContext != null &&
-          ezRootNav.currentContext!.mounted) {
+      if (worthAsk && ezRootNav.currentContext != null && ezRootNav.currentContext!.mounted) {
         await showDialog(
           context: ezRootNav.currentContext!,
           builder: (BuildContext dCon) => EzAlertDialog(
@@ -925,11 +919,29 @@ For example: if an app has always on location permissions, banishing it will not
 
   Future<void> cloneMatrix(bool keepDark) async {
     if (keepDark) {
-      _lightHomeMatrix = List<List<String>>.from(_darkHomeMatrix);
-      unawaited(_saveLightMatrix(_darkHomeMatrix));
+      final List<List<String>> homeCopy = List<List<String>>.from(_darkHomeMatrix);
+      final Set<String> hiddenCopy = Set<String>.from(_darkHidden);
+      final Set<String> banishedCopy = Set<String>.from(_darkBanished);
+
+      _lightHomeMatrix = homeCopy;
+      _lightHidden = hiddenCopy;
+      _lightBanished = banishedCopy;
+
+      unawaited(_saveLightMatrix(homeCopy));
+      unawaited(EzCM.setStringList(lightHiddenIDsKey, hiddenCopy.toList()));
+      unawaited(EzCM.setStringList(lightBanishIDsKey, banishedCopy.toList()));
     } else {
-      _darkHomeMatrix = List<List<String>>.from(_lightHomeMatrix);
-      unawaited(_saveDarkMatrix(_lightHomeMatrix));
+      final List<List<String>> homeCopy = List<List<String>>.from(_lightHomeMatrix);
+      final Set<String> hiddenCopy = Set<String>.from(_lightHidden);
+      final Set<String> banishedCopy = Set<String>.from(_lightBanished);
+
+      _darkHomeMatrix = homeCopy;
+      _darkHidden = hiddenCopy;
+      _darkBanished = banishedCopy;
+
+      unawaited(_saveDarkMatrix(homeCopy));
+      unawaited(EzCM.setStringList(darkHiddenIDsKey, hiddenCopy.toList()));
+      unawaited(EzCM.setStringList(darkBanishIDsKey, banishedCopy.toList()));
     }
 
     notifyListeners();
@@ -992,8 +1004,10 @@ For example: if an app has always on location permissions, banishing it will not
                   final List<String> keeping = List<String>.from(parts.sublist(2));
                   keeping.removeWhere((String entry) => entry.startsWith(id));
 
-                  _darkHomeMatrix[lane][index] =
-                      <String>[parts[0], parts[1], ...keeping].join(folderSplit);
+                  if (keeping.length != (parts.length - 2)) {
+                    _darkHomeMatrix[lane][index] =
+                        <String>[parts[0], parts[1], ...keeping].join(folderSplit);
+                  }
                 }
                 break;
 
@@ -1004,7 +1018,7 @@ For example: if an app has always on location permissions, banishing it will not
           }
         }
 
-        if (!interlinked) {
+        if (config != null && !interlinked) {
           _apps.remove(_appMap[id]);
           _appMap.remove(id);
         }
@@ -1043,8 +1057,10 @@ For example: if an app has always on location permissions, banishing it will not
                   final List<String> keeping = List<String>.from(parts.sublist(2));
                   keeping.removeWhere((String entry) => entry.startsWith(id));
 
-                  _lightHomeMatrix[lane][index] =
-                      <String>[parts[0], parts[1], ...keeping].join(folderSplit);
+                  if (keeping.length != (parts.length - 2)) {
+                    _lightHomeMatrix[lane][index] =
+                        <String>[parts[0], parts[1], ...keeping].join(folderSplit);
+                  }
                 }
                 break;
 
