@@ -187,12 +187,14 @@ Future<void> editSpacer(
                     ),
                     config.rowSpacer,
 
-                    // Move (lane) up TODO: update this and below
+                    // Move (lane) up
                     if (numLanes > 1) ...<Widget>[
                       EzIconButton(
                         config,
-                        icon: const Icon(Icons.add),
                         enabled: currLane < (numLanes - 1),
+                        icon: Icon(config.isLTR && hAlign(config) != ListAlignment.end
+                            ? Icons.keyboard_arrow_right
+                            : Icons.keyboard_arrow_left),
                         onPressed: () async {
                           final int nextLane = currLane + 1;
                           final int nextIndex = appInfo.homeLane(config, nextLane).length;
@@ -292,8 +294,10 @@ Future<void> editSpacer(
                     if (numLanes > 1) ...<Widget>[
                       EzIconButton(
                         config,
-                        icon: const Icon(Icons.remove),
                         enabled: currLane > 0,
+                        icon: Icon(config.isLTR && hAlign(config) != ListAlignment.end
+                            ? Icons.keyboard_arrow_left
+                            : Icons.keyboard_arrow_right),
                         onPressed: () async {
                           final int nextLane = currLane - 1;
                           final int nextIndex = appInfo.homeLane(config, nextLane).length;
