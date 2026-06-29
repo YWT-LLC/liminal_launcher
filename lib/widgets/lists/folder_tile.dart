@@ -320,7 +320,7 @@ class _AppFolderState extends State<FolderTile> {
               lane: widget.lane,
               index: widget.index,
               name: renameCon.text,
-              extra: TCC.folderEntry(icon, buttonType),
+              extra: TCC.folderEntry(icon, buttonType, labelType),
               ids: appsNotif.value,
             ));
       },

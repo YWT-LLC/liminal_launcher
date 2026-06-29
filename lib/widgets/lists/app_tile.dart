@@ -245,7 +245,7 @@ class _AppTileState extends State<AppTile> {
           lane: widget.lane!,
           index: widget.index!,
           id: widget.app.id,
-          extra: TCC.appEntry(nameCon.text.trim(), iconData, buttonType),
+          extra: TCC.appEntry(nameCon.text.trim(), iconData, buttonType, labelType),
         );
       },
     );
