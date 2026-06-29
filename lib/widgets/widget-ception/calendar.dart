@@ -130,12 +130,12 @@ class _CalendarWidgetState extends State<CalendarWidget> {
             textAlign: TextAlign.center,
           ),
           actions: <Widget>[
-            EzMaterialAction(
+            EzAction(
               widget.config,
               text: 'No',
               onPressed: () => Navigator.of(context).pop(),
             ),
-            EzMaterialAction(
+            EzAction(
               widget.config,
               text: 'Yes',
               onPressed: () async {

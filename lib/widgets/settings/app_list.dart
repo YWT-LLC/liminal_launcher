@@ -44,17 +44,17 @@ class AppListSettings extends StatelessWidget {
                         config,
                         title: const Text('Keep which layout?', textAlign: TextAlign.center),
                         actions: <Widget>[
-                          EzMaterialAction(
+                          EzAction(
                             config,
                             text: 'Dark',
                             onPressed: () => Navigator.of(dCon).pop(true),
                           ),
-                          EzMaterialAction(
+                          EzAction(
                             config,
                             text: 'Light',
                             onPressed: () => Navigator.of(dCon).pop(false),
                           ),
-                          EzMaterialAction(
+                          EzAction(
                             config,
                             text: 'Cancel',
                             onPressed: () => Navigator.of(dCon).pop(),
