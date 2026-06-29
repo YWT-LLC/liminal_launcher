@@ -394,9 +394,10 @@ extension TCC on TileConfig {
         size.value,
       ].join(configSplit);
 
-  static String clockEntry(Color? background, bool time, TxtStile timeStyle, Color? timeColor,
-          DateType date, TxtStile dateStyle, Color? dateColor) =>
+  static String clockEntry(EzButtonShape? shape, Color? background, bool time, TxtStile timeStyle,
+          Color? timeColor, DateType date, TxtStile dateStyle, Color? dateColor) =>
       <String>[
+        shape == null ? esSystem : shape.value,
         background == null ? esSystem : background.toARGB32().toString(),
         time.toString(),
         timeStyle.value,
