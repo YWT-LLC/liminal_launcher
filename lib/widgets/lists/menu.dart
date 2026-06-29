@@ -53,10 +53,11 @@ EzMenuButton removeItem(
   AppInfoProvider appInfo, {
   required int lane,
   required int index,
+  bool delete = true,
 }) =>
     EzMenuButton(
       config,
       label: 'Remove',
-      icon: EzIcon(config, Icons.delete),
+      icon: EzIcon(config, delete ? Icons.delete : Icons.remove),
       onPressed: () => appInfo.removeItem(config, lane: lane, index: index),
     );
