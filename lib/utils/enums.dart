@@ -374,15 +374,20 @@ enum TileConfig {
 
 /// Tile Config Config
 extension TCC on TileConfig {
-  static String appEntry(String name, IconData? icon, ButtonType? type) => <String>[
+  static String appEntry(
+          String name, IconData? icon, ButtonType? buttonType, LabelType? labelType) =>
+      <String>[
         name,
         (icon == null ? esSystem : icon.codePoint.toString()),
-        (type == null ? esSystem : type.value),
+        (buttonType == null ? esSystem : buttonType.value),
+        (labelType == null ? esSystem : labelType.value),
       ].join(configSplit);
 
-  static String folderEntry(IconData icon, ButtonType? type) => <String>[
+  static String folderEntry(IconData icon, ButtonType? buttonType, LabelType? labelType) =>
+      <String>[
         icon.codePoint.toString(),
-        (type == null ? esSystem : type.value),
+        (buttonType == null ? esSystem : buttonType.value),
+        (labelType == null ? esSystem : labelType.value),
       ].join(configSplit);
 
   static String calendarEntry(WidgetSize size) => <String>[
