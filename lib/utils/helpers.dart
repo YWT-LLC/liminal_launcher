@@ -131,8 +131,10 @@ Future<void> editSpacer(
       transitionDuration: Duration.zero,
       reverseTransitionDuration: Duration.zero,
       pageBuilder: (_, __, ___) => StatefulBuilder(builder: (_, StateSetter setOverlay) {
-        final double maxHeight = heightOf(ezRootNav.currentContext!) / 2;
-        final double maxWidth = widthOf(ezRootNav.currentContext!) / 2;
+        final double maxHeight = heightOf(ezRootNav.currentContext!) * 0.75;
+        final double maxWidth = widthOf(ezRootNav.currentContext!) * 0.75;
+        // TODO: add stepper buttons to either side (with step value config on long press)
+        // TODO: readout too
 
         // Define custom functions //
 
