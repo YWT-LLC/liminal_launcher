@@ -3,9 +3,6 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: add custom icons, same strategy as folder (not as rename, I don't want it to be global)
-// TODO: edit container - only show the list on single edit with enough space. group edit, everthing should be edit container icon
-// TODO: make the design page the "system" button, and allow for people to set per-tile shapes
 // TODO: use numLanes per (saved) small screen value to decide whether to show scrolls or just the edit container
 // TODO: everything here, then live-erer updates for the clock (mostly color, use backups)... bigger spacer limits? 80%? why/why not?
 
@@ -230,7 +227,7 @@ class _AppTileState extends State<AppTile> {
             builder: (BuildContext mCon, StateSetter setModal) => ezModalScroll(
               widget.config,
               children: <Widget>[
-                // TODO
+                // TODO: icon, name, button, label
               ],
             ),
           ),
