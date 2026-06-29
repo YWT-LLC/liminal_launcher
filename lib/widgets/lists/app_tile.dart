@@ -9,11 +9,14 @@
 // TODO: use numLanes per (saved) small screen value to decide whether to show scrolls or just the edit container
 // TODO: fix padding on text button when no background opacity
 // TODO: how does it work inside folders?
+// TODO: don't wanna do config in folders. do I want to change my code at all with this knowledge? cleanup?
 
 import '../../utils/export.dart';
+import '../export.dart';
 
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
@@ -31,7 +34,9 @@ class AppTile extends StatefulWidget {
 
   late final String? _name;
   late final String? _icon;
-  late final String? _type;
+  late final String? _buttonType;
+  late final String? _labelType;
+  // TODO: update app entry && friends(?)
 
   AppTile(
     this.config, {
@@ -46,15 +51,17 @@ class AppTile extends StatefulWidget {
   }) : super(key: ValueKey<String>('${app.id}-${state.index}')) {
     if (lane != null && index != null) {
       final List<String> data =
-          appInfo.homeList(config, lane!)[index!].split(idSplit)[2].split(configSplit);
+          appInfo.homeItem(config, lane: lane!, index: index!).split(idSplit)[2].split(configSplit);
 
       _name = data[0];
       _icon = data[1];
-      _type = data[2];
+      _buttonType = data[2];
+      _labelType = data[3];
     } else {
       _name = null;
       _icon = null;
-      _type == null;
+      _buttonType == null;
+      _labelType == null;
     }
   }
 
@@ -74,14 +81,15 @@ class _AppTileState extends State<AppTile> {
   late final bool inFolder = widget.location == AppLocation.folder;
 
   late String? name = widget._name;
-  late IconData? icon = (widget._icon == null || widget._icon == esSystem)
-      ? Icons.folder_outlined
-      : IconData(
+  late IconData? iconData = (widget._icon == null || widget._icon == esSystem)
+      ? null
+      : (int.tryParse(widget._icon!) == null)
+          ? null
           // ignore: non_const_argument_for_const_parameter
-          int.tryParse(widget._icon!) ?? Icons.folder_outlined.codePoint,
-          fontFamily: 'MaterialIcons',
-        );
-  late ButtonType? type = BTConfig.lookup(widget._type);
+          : IconData(int.tryParse(widget._icon!)!);
+  late Widget? icon = iconData == null ? null : Icon(iconData);
+  late ButtonType? buttonType = BTConfig.lookup(widget._buttonType);
+  late LabelType? labelType = LTConfig.lookup(widget._labelType);
 
   // Define custom functions //
 
@@ -113,7 +121,9 @@ class _AppTileState extends State<AppTile> {
         AppState.verbose => SizedBox(
             height: widget.config.iconSize,
             child: VerticalDivider(
-                width: widget.config.spacing, color: widget.config.colors.secondary),
+              width: widget.config.spacing,
+              color: widget.config.colors.secondary,
+            ),
           ),
         _ => SizedBox(height: widget.config.iconSize, width: widget.config.spacing),
       };
@@ -156,7 +166,89 @@ class _AppTileState extends State<AppTile> {
 
   @override
   Widget build(BuildContext context) {
+    final int numLanes = widget.appInfo.numLanes(widget.config);
+
     final ListAlignment hA = hAlign(widget.config);
+    final AlignmentGeometry subAlign = LAConfig.merge(h: hA, v: ListAlignment.center);
+
+    late final EzMenuButton remove = removeItem(widget.config, widget.appInfo,
+        lane: widget.lane!, index: widget.index!, delete: false);
+
+    late final EzMenuButton uninstall = EzMenuButton(
+      widget.config,
+      label: 'Uninstall',
+      icon: EzIcon(widget.config, Icons.delete),
+      onPressed: () async => await openDelete(widget.app),
+    );
+
+    late final EzMenuButton banish = EzMenuButton(
+      widget.config,
+      label: 'Banish',
+      icon: EzIcon(widget.config, LineIcons.ghost),
+      onPressed: () async => await widget.appInfo.banishApp(widget.config, context, widget.app.id),
+    );
+
+    late final EzMenuButton hide = EzMenuButton(
+      widget.config,
+      label: 'Hide',
+      icon: EzIcon(widget.config, Icons.visibility_off),
+      onPressed: () async => await widget.appInfo.hideApp(widget.config, context, widget.app.id),
+    );
+
+    late final EzMenuButton show = EzMenuButton(
+      widget.config,
+      label: 'Show',
+      icon: EzIcon(widget.config, Icons.visibility),
+      onPressed: () async => await widget.appInfo.showApp(widget.config, widget.app.id),
+    );
+
+    late final EzMenuButton info = EzMenuButton(
+      widget.config,
+      label: 'Info',
+      icon: EzIcon(widget.config, Icons.info),
+      onPressed: () async {
+        if (inList && context.mounted) Navigator.of(context).pop();
+        await openSettings(widget.app);
+      },
+    );
+
+    late final EzMenuButton add = EzMenuButton(
+      widget.config,
+      label: 'Add',
+      icon: EzIcon(widget.config, Icons.add_home),
+      onPressed: () async => await widget.appInfo.addApp(widget.config, lane: 0, id: widget.app.id),
+    );
+
+    late final EzMenuButton edit = EzMenuButton(
+      widget.config,
+      label: 'Edit',
+      icon: EzIcon(widget.config, Icons.edit),
+      onPressed: () async {
+        final TextEditingController nameCon = TextEditingController(text: name ?? widget.app.label);
+
+        await ezModal(
+          widget.config,
+          context: context,
+          builder: (_) => StatefulBuilder(
+            builder: (BuildContext mCon, StateSetter setModal) => ezModalScroll(
+              widget.config,
+              children: <Widget>[
+                // TODO
+              ],
+            ),
+          ),
+        );
+
+        // TODO: validate here (and all others)
+        await widget.appInfo.updateApp(
+          widget.config,
+          lane: widget.lane!,
+          index: widget.index!,
+          id: widget.app.id,
+          extra: TCC.appEntry(nameCon.text.trim(), iconData, buttonType),
+        );
+      },
+    );
 
     return EzAnimSwitch(
       widget.config,
@@ -164,50 +256,51 @@ class _AppTileState extends State<AppTile> {
       forceType: EzTransitionType.none,
       forceFade: true,
       child: switch (state) {
-        AppState.standard => !inFolder && wideTiles(widget.config)
-            ? MenuAnchor(
-                builder: (_, MenuController controller, __) => InkWell(
-                  onTap: () => widget.onSelected(widget.app),
-                  onLongPress: () => canToggleMenu(widget.config, controller),
-                  child: Container(
-                    width: double.infinity,
-                    alignment: LAConfig.merge(h: hA, v: ListAlignment.center),
-                    child: AppButton(
-                      widget.config,
-                      app: widget.app,
-                      labelType: listLabels(widget.config),
-                      buttonType: listBT(widget.config),
-                      onPressed: () => widget.onSelected(widget.app),
-                      onLongPress: () => canToggleMenu(widget.config, controller),
-                    ),
-                  ),
-                ),
-                menuChildren: <Widget>[], // TODO
+        AppState.standard => inFolder
+            ? AppButton(
+                widget.config,
+                name: widget.app.label,
+                image: widget.app.icon,
+                icon: icon,
+                buttonType: folderBT(widget.config),
+                labelType: folderLabels(widget.config),
+                onPressed: () => widget.onSelected(widget.app),
               )
-            : inFolder
-                ? AppButton(
-                    widget.config,
-                    app: widget.app,
-                    labelType: folderLabels(widget.config),
-                    buttonType: folderBT(widget.config),
-                    onPressed: () => widget.onSelected(widget.app),
-                    onLongPress: doNothing,
-                  )
-                : MenuAnchor(
-                    builder: (_, MenuController controller, __) => AppButton(
-                      widget.config,
-                      app: widget.app,
-                      labelType: listLabels(widget.config),
-                      buttonType: listBT(widget.config),
-                      onPressed: () => widget.onSelected(widget.app),
-                      onLongPress: () => canToggleMenu(widget.config, controller),
-                    ),
-                    menuChildren: <Widget>[], // TODO
-                  ),
+            : MenuAnchor(
+                builder: (_, MenuController controller, __) => wideTiles(widget.config)
+                    ? InkWell(
+                        onTap: () => widget.onSelected(widget.app),
+                        onLongPress: () => canToggleMenu(widget.config, controller),
+                        child: Container(
+                          width: double.infinity,
+                          alignment: subAlign,
+                          child: AppButton(
+                            widget.config,
+                            name: name ?? widget.app.label,
+                            image: widget.app.icon,
+                            icon: icon,
+                            buttonType: buttonType ?? listBT(widget.config),
+                            labelType: labelType ?? listLabels(widget.config),
+                            onPressed: () => widget.onSelected(widget.app),
+                            onLongPress: () => canToggleMenu(widget.config, controller),
+                          ),
+                        ),
+                      )
+                    : AppButton(
+                        widget.config,
+                        name: name ?? widget.app.label,
+                        image: widget.app.icon,
+                        icon: icon,
+                        buttonType: buttonType ?? listBT(widget.config),
+                        labelType: labelType ?? listLabels(widget.config),
+                        onPressed: () => widget.onSelected(widget.app),
+                        onLongPress: () => canToggleMenu(widget.config, controller),
+                      ),
+                menuChildren: <Widget>[], // TODO
+              ),
         AppState.verbose => EzScrollBlocker(
             EzScrollView(
               widget.config,
-              reverseHands: true,
               showScrollHint: true,
               thumbVisibility: false,
               mainAxisAlignment: hA.mainAxis,
@@ -216,9 +309,11 @@ class _AppTileState extends State<AppTile> {
                 // Name && icon
                 AppButton(
                   widget.config,
-                  app: widget.app,
-                  labelType: inFolder ? folderLabels(widget.config) : listLabels(widget.config),
-                  buttonType: inFolder ? folderBT(widget.config) : listBT(widget.config),
+                  name: widget.app.label,
+                  image: widget.app.icon,
+                  icon: null,
+                  buttonType: listBT(widget.config),
+                  labelType: listLabels(widget.config),
                   onPressed: () => widget.onSelected(widget.app),
                 ),
                 rowSpacer(),
@@ -255,211 +350,29 @@ class _AppTileState extends State<AppTile> {
               ],
             ),
           ),
-        // TODO: reminder, this is all gonne be edit container. no more olauncher copy, it's out of place now
-        AppState.groupEdit => Container(
-            width: double.infinity,
-            alignment: LAConfig.merge(h: hA, v: ListAlignment.center),
-            child: EzScrollBlocker(
-              EzScrollView(
-                widget.config,
-                reverseHands: true,
-                showScrollHint: true,
-                thumbVisibility: false,
-                mainAxisAlignment: hA.mainAxis,
-                mainAxisSize: MainAxisSize.max,
-                scrollDirection: Axis.horizontal,
-                children: <Widget>[
-                  if (!inList) ...<Widget>[
-                    // Drag handle
-                    EzIcon(
-                      widget.config,
-                      Icons.drag_handle,
-                      color: widget.config.colors.outline,
-                    ),
-                    widget.config.rowMargin,
-                  ],
-
-                  // App icon
-                  if (widget.app.icon != null) ...<Widget>[
-                    GestureDetector(
-                      onTap: () => widget.onSelected(widget.app),
-                      child: Image.memory(
-                        widget.app.icon!,
-                        semanticLabel: widget.app.name,
-                        width: appIconSize(widget.config),
-                        height: appIconSize(widget.config),
-                        alignment: LAConfig.merge(h: hA, v: ListAlignment.center),
-                      ),
-                    ),
-                    rowSpacer(),
-                  ],
-
-                  // Info
-                  EzIconButton(
-                    widget.config,
-                    onPressed: () async {
-                      if (inList && context.mounted) Navigator.of(context).pop();
-                      await openSettings(widget.app);
-                    },
-                    icon: EzIcon(widget.config, Icons.info),
-                  ),
-                  rowSpacer(),
-
-                  // Rename
-                  EzIconButton(
-                    widget.config,
-                    onPressed: () => showDialog(
-                      context: context,
-                      builder: (BuildContext dCon) {
-                        final TextEditingController renameController = TextEditingController();
-
-                        Future<void> onConfirm() async {
-                          closeKeyboard(dCon);
-
-                          final String name = renameController.text.trim();
-                          if (validateName(name) != null) return;
-
-                          final bool success =
-                              await widget.appInfo.renameApp(newName: name, appID: widget.app.id);
-                          if (success && dCon.mounted) Navigator.of(dCon).pop(name);
-                        }
-
-                        void onDeny() {
-                          closeKeyboard(dCon);
-                          Navigator.of(dCon).pop();
-                        }
-
-                        return EzAlertDialog(
-                          widget.config,
-                          title: Text(
-                            'Rename ${widget.app.name}?',
-                            textAlign: TextAlign.center,
-                          ),
-                          content: TextFormField(
-                            controller: renameController,
-                            textAlign: TextAlign.center,
-                            autofillHints: const <String>[AutofillHints.name],
-                            autovalidateMode: AutovalidateMode.onUnfocus,
-                            validator: validateName,
-                          ),
-                          actions: ezActionPair(
-                            widget.config,
-                            confirmMsg: widget.config.ezL10n.gApply,
-                            onConfirm: onConfirm,
-                            confirmIsDestructive: true,
-                            denyMsg: widget.config.ezL10n.gCancel,
-                            onDeny: onDeny,
-                          ),
-                          needsClose: false,
-                        );
-                      },
-                    ),
-                    icon: EzIcon(widget.config, Icons.edit),
-                  ),
-                  rowSpacer(),
-
-                  // Add to home
-                  if (inList &&
-                      widget.appInfo.numLanes(widget.config) == 1 &&
-                      !widget.appInfo.homeSet(widget.config).contains(widget.app.id) &&
-                      !widget.appInfo.hiddenSet.contains(widget.app.id)) ...<Widget>[
-                    EzIconButton(
-                      widget.config,
-                      onPressed: () async {
-                        await widget.appInfo.addApp(
-                          widget.config,
-                          lane: 0,
-                          id: widget.app.id,
-                        );
-                        setState(() => state = AppState.standard);
-                      },
-                      icon: EzIcon(widget.config, Icons.add_to_home_screen),
-                    ),
-                    rowSpacer(),
-                  ],
-
-                  // Remove from home
-                  if (!inList) ...<Widget>[
-                    EzIconButton(
-                      widget.config,
-                      onPressed: () async {
-                        final bool success = await widget.appInfo.removeHomeApp(
-                          widget.config,
-                          lane: widget.lane,
-                          index: widget.index,
-                          id: widget.app.id,
-                        );
-
-                        if (success && mounted) setState(() => state = AppState.standard);
-                      },
-                      icon: EzIcon(widget.config, Icons.remove),
-                    ),
-                    rowSpacer(),
-                  ],
-
-                  // Show/hide
-                  EzIconButton(
-                    widget.config,
-                    onPressed: () async {
-                      widget.appInfo.hiddenSet.contains(widget.app.id)
-                          ? await widget.appInfo.showApp(widget.app.id)
-                          : await widget.appInfo.hideApp(
-                              widget.config,
-                              context: context,
-                              id: widget.app.id,
-                              lane: widget.lane,
-                              index: widget.index,
-                            );
-
-                      if (mounted) setState(() => state = AppState.standard);
-                    },
-                    icon: EzIcon(
-                      widget.config,
-                      widget.appInfo.hiddenSet.contains(widget.app.id)
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                    ),
-                  ),
-                  rowSpacer(),
-
-                  // Banish
-                  EzIconButton(
-                    widget.config,
-                    onPressed: () async {
-                      final bool banished = await widget.appInfo.banishApp(
-                        widget.config,
-                        context: context,
-                        id: widget.app.id,
-                        lane: widget.lane,
-                        index: widget.index,
-                      );
-                      if (banished && mounted) setState(() => state = AppState.standard);
-                    },
-                    icon: EzIcon(widget.config, LineIcons.ghost),
-                  ),
-
-                  // Delete
-                  if (widget.app.removable) ...<Widget>[
-                    rowSpacer(),
-                    EzIconButton(
-                      widget.config,
-                      onPressed: () async => await openDelete(widget.app),
-                      icon: EzIcon(widget.config, Icons.delete),
-                    ),
-                  ],
-
-                  if (!inList) ...<Widget>[
-                    // Drag handle
-                    EzIcon(
-                      widget.config,
-                      Icons.drag_handle,
-                      color: widget.config.colors.outline,
-                    ),
-                    widget.config.rowMargin,
-                  ],
-                ],
-              ),
-            ),
+        AppState.groupEdit => EditContainer(
+            widget.config,
+            menuControl: menuControl,
+            menuChildren: <Widget>[
+              info,
+              if (!inList) edit,
+              if (inList &&
+                  numLanes == 1 &&
+                  !widget.appInfo.hidden(widget.config).contains(widget.app.id))
+                add,
+              if (!inList) remove,
+              widget.appInfo.hidden(widget.config).contains(widget.app.id) ? show : hide,
+              banish,
+              if (widget.app.removable) uninstall
+            ],
+            child: icon ??
+                Image.memory(
+                  widget.app.icon!,
+                  semanticLabel: name,
+                  width: appIconSize(widget.config),
+                  height: appIconSize(widget.config),
+                  alignment: subAlign,
+                ),
           ),
       },
     );
@@ -474,7 +387,8 @@ class _AppTileState extends State<AppTile> {
 
 class AppButton extends StatelessWidget {
   final EzCP config;
-  final AppInfo app;
+  final String name;
+  final Uint8List? image;
   final Widget? icon;
   final ButtonType buttonType;
   final LabelType labelType;
@@ -484,28 +398,30 @@ class AppButton extends StatelessWidget {
   const AppButton(
     this.config, {
     super.key,
-    required this.app,
-    this.icon,
+    required this.name,
+    required this.image,
+    required this.icon,
     required this.buttonType,
     required this.labelType,
     this.onPressed,
     this.onLongPress,
   });
 
-  // TODO: this'll change when the icons are updated n shit
-  Widget appIcon() => (app.icon == null)
-      ? icon ?? Icon(Icons.question_mark, semanticLabel: app.name)
-      : Image.memory(
-          app.icon!,
-          semanticLabel: app.name,
-          width: appIconSize(config),
-          height: appIconSize(config),
-        );
+  Widget appIcon() => (icon == null)
+      ? (image == null)
+          ? Icon(Icons.question_mark, semanticLabel: name)
+          : Image.memory(
+              image!,
+              semanticLabel: name,
+              width: appIconSize(config),
+              height: appIconSize(config),
+            )
+      : icon!;
 
   @override
   Widget build(BuildContext context) => switch (buttonType) {
         ButtonType.icon => Tooltip(
-            message: app.name,
+            message: name,
             child: GestureDetector(
               onTap: onPressed,
               onLongPress: onLongPress,
@@ -513,28 +429,28 @@ class AppButton extends StatelessWidget {
             )),
         ButtonType.eIcon => EzIconButton(
             config,
-            tooltip: app.name,
+            tooltip: name,
             onPressed: onPressed,
             onLongPress: onLongPress,
             icon: appIcon(),
           ),
         ButtonType.text => EzTextButton(
             config,
-            text: buildLabel(app.name, labelType),
+            text: buildLabel(name, labelType),
             style: TextButton.styleFrom(padding: EdgeInsets.all(config.padding)),
             onPressed: onPressed,
             onLongPress: onLongPress,
           ),
         ButtonType.eText => EzElevatedButton(
             config,
-            text: buildLabel(app.name, labelType),
+            text: buildLabel(name, labelType),
             style: TextButton.styleFrom(padding: EdgeInsets.all(config.padding)),
             onPressed: onPressed,
             onLongPress: onLongPress,
           ),
         ButtonType.textIcon => EzTextIconButton(
             config,
-            label: buildLabel(app.name, labelType),
+            label: buildLabel(name, labelType),
             icon: appIcon(),
             style: TextButton.styleFrom(padding: EdgeInsets.all(config.padding)),
             onPressed: onPressed,
@@ -542,7 +458,7 @@ class AppButton extends StatelessWidget {
           ),
         ButtonType.eTextIcon => EzElevatedIconButton(
             config,
-            label: buildLabel(app.name, labelType),
+            label: buildLabel(name, labelType),
             icon: appIcon(),
             style: TextButton.styleFrom(padding: EdgeInsets.all(config.padding)),
             onPressed: onPressed,
