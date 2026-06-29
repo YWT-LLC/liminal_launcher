@@ -3,9 +3,6 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: use numLanes per (saved) small screen value to decide whether to show scrolls or just the edit container
-// TODO: everything here, then live-erer updates for the clock (mostly color, use backups)... bigger spacer limits? 80%? why/why not?
-
 import '../../utils/export.dart';
 import '../export.dart';
 
