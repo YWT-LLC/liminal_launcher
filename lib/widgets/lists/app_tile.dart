@@ -60,8 +60,8 @@ class AppTile extends StatefulWidget {
     } else {
       _name = null;
       _icon = null;
-      _buttonType == null;
-      _labelType == null;
+      _buttonType = null;
+      _labelType = null;
     }
   }
 
