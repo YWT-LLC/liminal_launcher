@@ -164,7 +164,7 @@ class _ClockWidgetState extends State<ClockWidget> {
                 label: 'Background',
                 textAlign: TextAlign.center,
               ),
-              widget.config.spacer,
+              widget.config.separator,
 
               // Time on/off
               EzSwitchPair(
@@ -260,7 +260,7 @@ class _ClockWidgetState extends State<ClockWidget> {
                 label: 'Time color',
                 textAlign: TextAlign.center,
               ),
-              widget.config.spacer,
+              widget.config.separator,
 
               // Date type
               EzRow(widget.config, children: <Widget>[
