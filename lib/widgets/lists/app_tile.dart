@@ -7,9 +7,6 @@
 // TODO: edit container - only show the list on single edit with enough space. group edit, everthing should be edit container icon
 // TODO: make the design page the "system" button, and allow for people to set per-tile shapes
 // TODO: use numLanes per (saved) small screen value to decide whether to show scrolls or just the edit container
-// TODO: fix padding on text button when no background opacity
-// TODO: how does it work inside folders?
-// TODO: don't wanna do config in folders. do I want to change my code at all with this knowledge? cleanup?
 // TODO: everything here, then live-erer updates for the clock (mostly color, use backups)... bigger spacer limits? 80%? why/why not?
 
 import '../../utils/export.dart';
@@ -450,7 +447,11 @@ class AppButton extends StatelessWidget {
         ButtonType.text => EzTextButton(
             config,
             text: buildLabel(name, labelType),
-            style: TextButton.styleFrom(padding: EdgeInsets.all(config.padding)),
+            style: TextButton.styleFrom(
+              padding: config.textBackgroundOpacity < 0.01
+                  ? EdgeInsets.zero
+                  : EdgeInsets.all(config.padding),
+            ),
             onPressed: onPressed,
             onLongPress: onLongPress,
           ),
@@ -465,7 +466,11 @@ class AppButton extends StatelessWidget {
             config,
             label: buildLabel(name, labelType),
             icon: appIcon(),
-            style: TextButton.styleFrom(padding: EdgeInsets.all(config.padding)),
+            style: TextButton.styleFrom(
+              padding: config.textBackgroundOpacity < 0.01
+                  ? EdgeInsets.zero
+                  : EdgeInsets.all(config.padding),
+            ),
             onPressed: onPressed,
             onLongPress: onLongPress,
           ),

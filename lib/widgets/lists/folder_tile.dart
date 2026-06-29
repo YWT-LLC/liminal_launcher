@@ -27,7 +27,6 @@ class FolderTile extends StatefulWidget {
   late final String _buttonType;
   late final String _labelType;
   late final List<String> _appList;
-  // TODO: update folder entry && friends(?)
 
   FolderTile(
     this.config, {
@@ -455,7 +454,11 @@ class FolderButton extends StatelessWidget {
         ButtonType.text => EzTextButton(
             config,
             text: buildLabel(name, labelType),
-            style: TextButton.styleFrom(padding: EdgeInsets.all(config.padding)),
+            style: TextButton.styleFrom(
+              padding: config.textBackgroundOpacity < 0.01
+                  ? EdgeInsets.zero
+                  : EdgeInsets.all(config.padding),
+            ),
             onPressed: onPressed,
             onLongPress: onLongPress,
           ),
@@ -470,7 +473,11 @@ class FolderButton extends StatelessWidget {
             config,
             label: buildLabel(name, labelType),
             icon: Icon(icon),
-            style: TextButton.styleFrom(padding: EdgeInsets.all(config.padding)),
+            style: TextButton.styleFrom(
+              padding: config.textBackgroundOpacity < 0.01
+                  ? EdgeInsets.zero
+                  : EdgeInsets.all(config.padding),
+            ),
             onPressed: onPressed,
             onLongPress: onLongPress,
           ),
