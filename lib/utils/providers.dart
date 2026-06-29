@@ -11,7 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class AppInfoProvider extends ChangeNotifier {
-  // Construct //
+  //* Construct *//
 
   final List<AppInfo> _apps;
   final Map<String, AppInfo> _appMap;
@@ -19,7 +19,6 @@ class AppInfoProvider extends ChangeNotifier {
   static const EventChannel _appEventChannel = EventChannel('$androidPackage/app_events');
   StreamSubscription<dynamic>? _appEventSubscription;
 
-  // TODO: include in clone && ask to double hide/banish when split
   final Set<String> _darkHidden = Set<String>.from(EzCM.get(darkHiddenIDsKey));
   final Set<String> _lightHidden = Set<String>.from(EzCM.get(lightHiddenIDsKey));
 
@@ -85,7 +84,7 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Get //
+  //* Get *//
 
   List<AppInfo> get apps => _apps;
   Map<String, AppInfo> get appMap => _appMap;
@@ -113,46 +112,79 @@ class AppInfoProvider extends ChangeNotifier {
           if (listConfig.listContent.contains(ListContent.banished)) ..._lightBanished,
         };
 
-  // Put //
+  //* Put *//
 
-  bool _addThrottle = false;
+  // Helpers //
 
-  // TODO: use key(s) to remove and re-add
-  // TODO: remove the concept of homeSet entirely and remove the limit on what can be on the home screen
-  // TODO: actually, might wanna keep homeSet cuz it'll prolly speed up checks still... definite reconfigure
-  // TODO: also, make sure you check you removes/deletes to remove/delete all instances (when relevant)... be VERY wary of removeFirst type stuff
-  // TODO: once implemented, you can likely disregard the "don't always show" todo and the intro addition note
+  final ValueNotifier<bool> _invert = ValueNotifier<bool>(false);
+
+  Timer? _showTimer;
+  OverlayEntry? _activeEntry;
+
   Future<void> _added(EzCP config) async {
-    if (_addThrottle) return;
+    if (_showTimer?.isActive ?? false) {
+      _invert.value = !_invert.value;
 
-    final OverlayEntry entry = OverlayEntry(
+      _showTimer!.cancel();
+      _showTimer = Timer(_showTime, _clearOverlay);
+
+      return;
+    }
+
+    final double size = appIconSize(config) + config.marginVal;
+    _activeEntry = OverlayEntry(
       builder: (BuildContext context) => Positioned(
         top: safeTop(context),
         left: 0,
         right: 0,
         child: Material(
           type: MaterialType.transparency,
-          child: IgnorePointer(
-            child: Center(
-              child: EzIconButton(
-                config,
-                icon: const Icon(Icons.check),
-                onPressed: doNothing,
-              ),
+          child: Center(
+            child: ValueListenableBuilder<bool>(
+              valueListenable: _invert,
+              builder: (_, bool flipped, __) =>
+                  Stack(alignment: Alignment.center, children: <Widget>[
+                TweenAnimationBuilder<double>(
+                  key: ValueKey<bool>(flipped),
+                  tween: Tween<double>(begin: 1.0, end: 0.0),
+                  duration: _showTime,
+                  builder: (_, double progress, __) => CustomPaint(
+                    size: Size(size, size),
+                    painter: EzCountdownPainter(progress, config.colors.secondary),
+                  ),
+                ),
+                EzIconButton(
+                  config,
+                  icon: const Icon(Icons.check),
+                  style: IconButton.styleFrom(
+                    backgroundColor: flipped ? config.colors.primary : config.colors.surface,
+                    foregroundColor: flipped ? config.colors.surface : config.colors.primary,
+                  ),
+                  onPressed: _clearOverlay,
+                ),
+              ]),
             ),
           ),
         ),
       ),
     );
 
-    _addThrottle = true;
-    ezRootNav.currentState?.overlay?.insert(entry);
-
-    await wait(1);
-
-    entry.remove();
-    _addThrottle = false;
+    ezRootNav.currentState?.overlay?.insert(_activeEntry!);
+    _showTimer = Timer(_showTime, _clearOverlay);
   }
+
+  void _clearOverlay() {
+    _showTimer?.cancel();
+
+    if (_activeEntry?.mounted ?? false) {
+      _activeEntry?.remove();
+      _activeEntry = null;
+    }
+
+    _invert.value = false;
+  }
+
+  // Core //
 
   Future<void> addApp(EzCP config, {required int lane, required String id}) async {
     final String entry = <String>[
@@ -551,20 +583,45 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // TODO: take a brain break, then get back to your audits. resume at the top of remove/delete/hide/etc
+  // TODO: include hidden in clone && ask to double hide/banish when split
   Future<void> hideApp(EzCP config, BuildContext context, String id) async {
     if (interlinked || config.isDark) {
       if (_darkHidden.contains(id)) return;
 
-      if (_darkHidden.isEmpty) {
+      if (_darkHidden.isEmpty || !interlinked) {
         await showDialog(
           context: context,
-          builder: (_) => EzAlertDialog(
+          builder: (BuildContext dCon) => EzAlertDialog(
             config,
-            title: const Text('Reminder', textAlign: TextAlign.center),
-            content: const Text(
-              'Swipe up while editing to open the hidden apps list.',
+            title:
+                Text(_darkHidden.isEmpty ? 'Reminder' : 'Want to...', textAlign: TextAlign.center),
+            content: Text(
+              <String>[
+                _darkHidden.isEmpty ? 'Swipe up while editing to open the hidden apps list.' : '',
+                (_darkHidden.isEmpty && !interlinked) ? '\n\n' : '',
+                interlinked ? '' : 'Hide for light mode too?',
+              ].join(),
               textAlign: TextAlign.center,
             ),
+            actions: interlinked
+                ? null
+                : <Widget>[
+                    EzAction(
+                      config,
+                      text: config.ezL10n.gYes,
+                      onPressed: () {
+                        _lightHidden.add(id);
+                        unawaited(EzCM.setStringList(lightHiddenIDsKey, _lightHidden.toList()));
+                      },
+                    ),
+                    EzAction(
+                      config,
+                      text: config.ezL10n.gNo,
+                      onPressed: () => Navigator.of(dCon).pop(),
+                    ),
+                  ],
+            needsClose: interlinked,
           ),
         );
       }
@@ -576,16 +633,40 @@ class AppInfoProvider extends ChangeNotifier {
     if (interlinked || !config.isDark) {
       if (_lightHidden.contains(id)) return;
 
-      if (!interlinked && _lightHidden.isEmpty && context.mounted) {
+      if (!interlinked && context.mounted) {
         await showDialog(
           context: context,
-          builder: (_) => EzAlertDialog(
+          builder: (BuildContext dCon) => EzAlertDialog(
             config,
-            title: const Text('Reminder', textAlign: TextAlign.center),
-            content: const Text(
-              'Swipe up while editing to open the hidden apps list.',
+            title:
+                Text(_lightHidden.isEmpty ? 'Reminder' : 'Want to...', textAlign: TextAlign.center),
+            content: Text(
+              <String>[
+                _lightHidden.isEmpty
+                    ? 'Swipe up while editing to open the hidden apps list.\n\n'
+                    : '',
+                'Hide for light mode too?',
+              ].join(),
               textAlign: TextAlign.center,
             ),
+            actions: interlinked
+                ? null
+                : <Widget>[
+                    EzAction(
+                      config,
+                      text: config.ezL10n.gYes,
+                      onPressed: () {
+                        _lightHidden.add(id);
+                        unawaited(EzCM.setStringList(lightHiddenIDsKey, _lightHidden.toList()));
+                      },
+                    ),
+                    EzAction(
+                      config,
+                      text: config.ezL10n.gNo,
+                      onPressed: () => Navigator.of(dCon).pop(),
+                    ),
+                  ],
+            needsClose: interlinked,
           ),
         );
       }
@@ -601,12 +682,72 @@ class AppInfoProvider extends ChangeNotifier {
     if (interlinked || config.isDark) {
       if (!_darkHidden.contains(id)) return false;
 
+      if (!batch &&
+          !interlinked &&
+          ezRootNav.currentContext != null &&
+          ezRootNav.currentContext!.mounted) {
+        await showDialog(
+          context: ezRootNav.currentContext!,
+          builder: (BuildContext dCon) => EzAlertDialog(
+            config,
+            title: const Text('Want to...', textAlign: TextAlign.center),
+            content: const Text('show for light mode too?', textAlign: TextAlign.center),
+            actions: <Widget>[
+              EzAction(
+                config,
+                text: config.ezL10n.gYes,
+                onPressed: () {
+                  _lightHidden.remove(id);
+                  unawaited(EzCM.setStringList(lightHiddenIDsKey, _lightHidden.toList()));
+                },
+              ),
+              EzAction(
+                config,
+                text: config.ezL10n.gNo,
+                onPressed: () => Navigator.of(dCon).pop(),
+              ),
+            ],
+            needsClose: false,
+          ),
+        );
+      }
+
       _darkHidden.remove(id);
       unawaited(EzCM.setStringList(darkHiddenIDsKey, _darkHidden.toList()));
     }
 
     if (interlinked || !config.isDark) {
       if (!_lightHidden.contains(id)) return false;
+
+      if (!batch &&
+          !interlinked &&
+          ezRootNav.currentContext != null &&
+          ezRootNav.currentContext!.mounted) {
+        await showDialog(
+          context: ezRootNav.currentContext!,
+          builder: (BuildContext dCon) => EzAlertDialog(
+            config,
+            title: const Text('Want to...', textAlign: TextAlign.center),
+            content: const Text('show for dark mode too?', textAlign: TextAlign.center),
+            actions: <Widget>[
+              EzAction(
+                config,
+                text: config.ezL10n.gYes,
+                onPressed: () {
+                  _darkHidden.remove(id);
+                  unawaited(EzCM.setStringList(darkHiddenIDsKey, _darkHidden.toList()));
+                },
+              ),
+              EzAction(
+                config,
+                text: config.ezL10n.gNo,
+                onPressed: () => Navigator.of(dCon).pop(),
+              ),
+            ],
+            needsClose: false,
+          ),
+        );
+      }
 
       _lightHidden.remove(id);
       unawaited(EzCM.setStringList(lightHiddenIDsKey, _lightHidden.toList()));
@@ -623,7 +764,7 @@ class AppInfoProvider extends ChangeNotifier {
       final AppInfo? currApp = _appMap[id];
       if (currApp == null) return false;
 
-      final bool confirmed = await showDialog(
+      final String? choice = await showDialog(
         context: context,
         builder: (BuildContext dCon) => EzAlertDialog(
           config,
@@ -636,7 +777,7 @@ class AppInfoProvider extends ChangeNotifier {
                   '''When you banish an app, it will still be installed but not appear in Liminal at all.
 Banished apps can only be opened from the system settings, or via app link.
 
-To restore ${currApp.label}, you will have to uninstall it from the system settings, then reinstall.
+The simplest way to restore/un-banish ${currApp.label} is to uninstall it from the system settings, then reinstall.
 
 Banishing is useful for utility apps that also waste time. For example, you may want to banish your web browser(s).
 That way, you can use online menus when you go out, and reduce doom scrolling when you stay in.
@@ -646,23 +787,57 @@ For example: if an app has always on location permissions, banishing it will not
                   textAlign: TextAlign.center,
                 )
               : Text(
-                  'To restore ${currApp.label}, you will have to uninstall it from the system settings, then reinstall.',
+                  'The simplest way to restore/un-banish ${currApp.label} is to uninstall it from the system settings, then reinstall.',
                   textAlign: TextAlign.center,
                 ),
-          actions: ezActionPair(
-            config,
-            onConfirm: () => Navigator.of(dCon).pop(true),
-            confirmMsg: config.ezL10n.gContinue,
-            confirmIsDestructive: true,
-            onDeny: () => Navigator.of(dCon).pop(false),
-          ),
+          actions: interlinked
+              ? ezActionPair(
+                  config,
+                  onConfirm: () => Navigator.of(dCon).pop('both'),
+                  confirmMsg: config.ezL10n.gContinue,
+                  confirmIsDestructive: true,
+                  onDeny: () => Navigator.of(dCon).pop(),
+                )
+              : <Widget>[
+                  EzAction(
+                    config,
+                    text: config.ezL10n.gBothThemes,
+                    onPressed: () => Navigator.of(dCon).pop('both'),
+                  ),
+                  EzAction(
+                    config,
+                    text: config.ezL10n.gDarkTheme,
+                    onPressed: () => Navigator.of(dCon).pop('dark'),
+                  ),
+                  EzAction(
+                    config,
+                    text: config.ezL10n.gCancel,
+                    onPressed: () => Navigator.of(dCon).pop(),
+                  ),
+                ],
           needsClose: false,
         ),
       );
-      if (!confirmed) return false;
 
-      _darkBanished.add(id);
-      unawaited(EzCM.setStringList(darkBanishIDsKey, _darkBanished.toList()));
+      switch (choice) {
+        case 'dark':
+          _darkBanished.add(id);
+          unawaited(EzCM.setStringList(darkBanishIDsKey, _darkBanished.toList()));
+          break;
+
+        case 'both':
+          _darkBanished.add(id);
+          _lightBanished.add(id);
+          unawaited(EzCM.setStringList(darkBanishIDsKey, _darkBanished.toList()));
+          unawaited(EzCM.setStringList(lightBanishIDsKey, _lightBanished.toList()));
+          break;
+
+        default:
+          // doNothing
+          break;
+      }
+
+      if (choice == null) return false;
     }
 
     if (interlinked || !config.isDark) {
@@ -672,7 +847,7 @@ For example: if an app has always on location permissions, banishing it will not
         final AppInfo? currApp = _appMap[id];
         if (currApp == null) return false;
 
-        final bool confirmed = await showDialog(
+        final String? choice = await showDialog(
           context: context,
           builder: (BuildContext dCon) => EzAlertDialog(
             config,
@@ -685,7 +860,7 @@ For example: if an app has always on location permissions, banishing it will not
                     '''When you banish an app, it will still be installed but not appear in Liminal at all.
 Banished apps can only be opened from the system settings, or via app link.
 
-To restore ${currApp.label}, you will have to uninstall it from the system settings, then reinstall.
+The simplest way to restore/un-banish ${currApp.label} is to uninstall it from the system settings, then reinstall.
 
 Banishing is useful for utility apps that also waste time. For example, you may want to banish your web browser(s).
 That way, you can use online menus when you go out, and reduce doom scrolling when you stay in.
@@ -695,20 +870,49 @@ For example: if an app has always on location permissions, banishing it will not
                     textAlign: TextAlign.center,
                   )
                 : Text(
-                    'To restore ${currApp.label}, you will have to uninstall it from the system settings, then reinstall.',
+                    'The simplest way to restore/un-banish ${currApp.label} is to uninstall it from the system settings, then reinstall.',
                     textAlign: TextAlign.center,
                   ),
-            actions: ezActionPair(
-              config,
-              onConfirm: () => Navigator.of(dCon).pop(true),
-              confirmMsg: config.ezL10n.gContinue,
-              confirmIsDestructive: true,
-              onDeny: () => Navigator.of(dCon).pop(false),
-            ),
+            actions: <Widget>[
+              EzAction(
+                config,
+                text: config.ezL10n.gBothThemes,
+                onPressed: () => Navigator.of(dCon).pop('both'),
+              ),
+              EzAction(
+                config,
+                text: config.ezL10n.gDarkTheme,
+                onPressed: () => Navigator.of(dCon).pop('light'),
+              ),
+              EzAction(
+                config,
+                text: config.ezL10n.gCancel,
+                onPressed: () => Navigator.of(dCon).pop(),
+              ),
+            ],
             needsClose: false,
           ),
         );
-        if (!confirmed) return false;
+
+        switch (choice) {
+          case 'light':
+            _lightBanished.add(id);
+            unawaited(EzCM.setStringList(lightBanishIDsKey, _lightBanished.toList()));
+            break;
+
+          case 'both':
+            _darkBanished.add(id);
+            _lightBanished.add(id);
+            unawaited(EzCM.setStringList(darkBanishIDsKey, _darkBanished.toList()));
+            unawaited(EzCM.setStringList(lightBanishIDsKey, _lightBanished.toList()));
+            break;
+
+          default:
+            // doNothing
+            break;
+        }
+
+        if (choice == null) return false;
       }
 
       _lightBanished.add(id);
@@ -901,7 +1105,7 @@ For example: if an app has always on location permissions, banishing it will not
   }
 }
 
-// Local helpers  //
+//* Shared helpers  *//
 
 List<List<String>> _buildHomeMatrix(List<String> data) =>
     data.map((String outtie) => outtie.split(listSplit)).toList();
@@ -915,3 +1119,5 @@ Future<bool> _saveLightMatrix(List<List<String>> matrix) => EzCM.setStringList(
       lightHomeDataKey,
       matrix.map((List<String> innie) => innie.join(listSplit)).toList(),
     );
+
+const Duration _showTime = Duration(seconds: 2);
