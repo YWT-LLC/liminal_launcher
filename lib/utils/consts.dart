@@ -190,15 +190,11 @@ final Map<String, Object> liminalDefault = <String, Object>{
     <String>[
       <String>[
         WidWidGetGet.clock.value,
-        'true',
-        TxtStile.headline.value,
-        DateType.compact.value,
-        TxtStile.label.value,
+        TCC.clockEntry(null, true, TxtStile.headline, null, DateType.compact, TxtStile.label, null),
       ].join(widgetSplit),
       <String>[
         WidWidGetGet.search.value,
-        WidgetSize.tile.value,
-        Engine.ecosia.value,
+        TCC.searchEntry(WidgetSize.tile, Engine.ecosia),
       ].join(widgetSplit),
     ].join(listSplit),
   ],
@@ -209,15 +205,11 @@ final Map<String, Object> liminalDefault = <String, Object>{
     <String>[
       <String>[
         WidWidGetGet.clock.value,
-        'true',
-        TxtStile.headline.value,
-        DateType.compact.value,
-        TxtStile.label.value,
+        TCC.clockEntry(null, true, TxtStile.headline, null, DateType.compact, TxtStile.label, null),
       ].join(widgetSplit),
       <String>[
         WidWidGetGet.search.value,
-        WidgetSize.tile.value,
-        Engine.ecosia.value,
+        TCC.searchEntry(WidgetSize.tile, Engine.ecosia),
       ].join(widgetSplit),
     ].join(listSplit),
   ],
