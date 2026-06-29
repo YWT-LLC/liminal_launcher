@@ -189,7 +189,7 @@ class AppInfoProvider extends ChangeNotifier {
   Future<void> addApp(EzCP config, {required int lane, required String id}) async {
     final String entry = <String>[
       id,
-      TCC.appEntry(id.split(idSplit)[0], null, null, null),
+      TCC.appEntry(id.split(idSplit)[1], null, null, null),
     ].join(idSplit);
 
     if (interlinked || config.isDark) {
