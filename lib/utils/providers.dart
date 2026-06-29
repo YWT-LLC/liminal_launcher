@@ -597,18 +597,18 @@ class AppInfoProvider extends ChangeNotifier {
     await _clearHomeOf(config, id, false);
   }
 
-  Future<bool> showApp(EzCP config, String appID, {bool batch = false}) async {
+  Future<bool> showApp(EzCP config, String id, {bool batch = false}) async {
     if (interlinked || config.isDark) {
-      if (!_darkHidden.contains(appID)) return false;
+      if (!_darkHidden.contains(id)) return false;
 
-      _darkHidden.remove(appID);
+      _darkHidden.remove(id);
       unawaited(EzCM.setStringList(darkHiddenIDsKey, _darkHidden.toList()));
     }
 
     if (interlinked || !config.isDark) {
-      if (!_lightHidden.contains(appID)) return false;
+      if (!_lightHidden.contains(id)) return false;
 
-      _lightHidden.remove(appID);
+      _lightHidden.remove(id);
       unawaited(EzCM.setStringList(lightHiddenIDsKey, _lightHidden.toList()));
     }
 
