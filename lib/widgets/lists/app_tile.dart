@@ -296,7 +296,24 @@ class _AppTileState extends State<AppTile> {
                         onPressed: () => widget.onSelected(widget.app),
                         onLongPress: () => canToggleMenu(widget.config, controller),
                       ),
-                menuChildren: <Widget>[], // TODO
+                menuChildren: inList
+                    ? <Widget>[
+                        info,
+                        if (numLanes == 1 &&
+                            !widget.appInfo.hidden(widget.config).contains(widget.app.id))
+                          add,
+                        widget.appInfo.hidden(widget.config).contains(widget.app.id) ? show : hide,
+                        banish,
+                        if (widget.app.removable) uninstall,
+                      ]
+                    : <Widget>[
+                        edit,
+                        info,
+                        remove,
+                        hide,
+                        banish,
+                        if (widget.app.removable) uninstall,
+                      ],
               ),
         AppState.verbose => EzScrollBlocker(
             EzScrollView(
@@ -354,16 +371,12 @@ class _AppTileState extends State<AppTile> {
             widget.config,
             menuControl: menuControl,
             menuChildren: <Widget>[
+              edit,
               info,
-              if (!inList) edit,
-              if (inList &&
-                  numLanes == 1 &&
-                  !widget.appInfo.hidden(widget.config).contains(widget.app.id))
-                add,
-              if (!inList) remove,
-              widget.appInfo.hidden(widget.config).contains(widget.app.id) ? show : hide,
+              remove,
+              hide,
               banish,
-              if (widget.app.removable) uninstall
+              if (widget.app.removable) uninstall,
             ],
             child: icon ??
                 Image.memory(
