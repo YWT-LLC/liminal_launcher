@@ -10,6 +10,7 @@
 // TODO: fix padding on text button when no background opacity
 // TODO: how does it work inside folders?
 // TODO: don't wanna do config in folders. do I want to change my code at all with this knowledge? cleanup?
+// TODO: everything here, then live-erer updates for the clock (mostly color, use backups)... bigger spacer limits? 80%? why/why not?
 
 import '../../utils/export.dart';
 import '../export.dart';
@@ -36,7 +37,6 @@ class AppTile extends StatefulWidget {
   late final String? _icon;
   late final String? _buttonType;
   late final String? _labelType;
-  // TODO: update app entry && friends(?)
 
   AppTile(
     this.config, {
