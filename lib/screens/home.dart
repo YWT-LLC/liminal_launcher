@@ -190,14 +190,16 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
       switch (delim) {
         case idSplit:
-          final AppInfo? app = appInfo.appMap[entry];
+          final List<String> parts = entry.split(idSplit);
+          final AppInfo? app = appInfo.appMap[<String>[parts[0], parts[1]].join(idSplit)];
+
           if (app == null) {
             errors.add(index);
             continue;
           }
 
           toReturn.add(Padding(
-            key: ValueKey<String>(app.id),
+            key: ValueKey<String>('$lane-$index-${app.id}'),
             padding: tilePadding,
             child: AppTile(
               config,
