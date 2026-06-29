@@ -177,7 +177,7 @@ class AppInfoProvider extends ChangeNotifier {
     _showTimer?.cancel();
 
     if (_activeEntry?.mounted ?? false) {
-      _activeEntry?.remove();
+      _activeEntry!.remove();
       _activeEntry = null;
     }
 
