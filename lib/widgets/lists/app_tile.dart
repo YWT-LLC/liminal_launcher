@@ -442,7 +442,7 @@ class AppButton extends StatelessWidget {
             config,
             text: buildLabel(name, labelType),
             style: TextButton.styleFrom(
-              padding: config.textBackgroundOpacity < 0.01
+              padding: config.textBackgroundOpacity < oneP
                   ? EdgeInsets.zero
                   : EdgeInsets.all(config.padding),
             ),
@@ -461,7 +461,7 @@ class AppButton extends StatelessWidget {
             label: buildLabel(name, labelType),
             icon: appIcon(),
             style: TextButton.styleFrom(
-              padding: config.textBackgroundOpacity < 0.01
+              padding: config.textBackgroundOpacity < oneP
                   ? EdgeInsets.zero
                   : EdgeInsets.all(config.padding),
             ),

@@ -455,7 +455,7 @@ class FolderButton extends StatelessWidget {
             config,
             text: buildLabel(name, labelType),
             style: TextButton.styleFrom(
-              padding: config.textBackgroundOpacity < 0.01
+              padding: config.textBackgroundOpacity < oneP
                   ? EdgeInsets.zero
                   : EdgeInsets.all(config.padding),
             ),
@@ -474,7 +474,7 @@ class FolderButton extends StatelessWidget {
             label: buildLabel(name, labelType),
             icon: Icon(icon),
             style: TextButton.styleFrom(
-              padding: config.textBackgroundOpacity < 0.01
+              padding: config.textBackgroundOpacity < oneP
                   ? EdgeInsets.zero
                   : EdgeInsets.all(config.padding),
             ),
