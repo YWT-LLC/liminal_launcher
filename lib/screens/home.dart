@@ -123,6 +123,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                             onPressed: () => appInfo.moveLaneDown(config, lane),
                             label: 'Move',
                             icon: EzIcon(config, Icons.remove),
+                            // TODO: left/right... didn't I make a shared button for this? if not, should I?
                           ),
 
                         // Delete
