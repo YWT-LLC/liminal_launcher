@@ -147,6 +147,7 @@ class _AppFolderState extends State<FolderTile> {
     late final EzMenuButton remove =
         removeItem(widget.config, widget.appInfo, lane: widget.lane, index: widget.index);
 
+    // TODO: two part segmented button: appearance and contents... then make the appearance better (like app tile)
     late final EzMenuButton edit = EzMenuButton(
       widget.config,
       onPressed: () async {

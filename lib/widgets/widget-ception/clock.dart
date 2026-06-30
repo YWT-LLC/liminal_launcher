@@ -481,7 +481,7 @@ class _ClockWidgetState extends State<ClockWidget> {
       onPressed: () async => await openEdits(<_Edits>{_Edits.date}),
     );
 
-    // TODO: combine into double anchor
+    // TODO: one modal, 3 part segmented button
     late final EzMenuButton editAll = EzMenuButton(
       widget.config,
       label: 'All',
