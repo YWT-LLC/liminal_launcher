@@ -3,7 +3,9 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: what happens when I remove everything?
+// TODO: testing reminders...
+// what happens when I remove everything?
+// am I using my cleanup properly?
 
 import './export.dart';
 
@@ -976,7 +978,6 @@ For example: if an app has always on location permissions, banishing it will not
     if (!batch) notifyListeners();
   }
 
-  // TODO: Check all calls to make sure you're not doing two
   Future<void> _clearHomeOf(EzCP? config, String id, bool deleting) async {
     await ezNoTouch(() async {
       if (config == null || interlinked || config.isDark) {
@@ -1101,7 +1102,6 @@ For example: if an app has always on location permissions, banishing it will not
     notifyListeners();
   }
 
-  // TODO: double check the use of this
   void cleanup(EzCP config, {required int lane, required List<int> entries}) {
     entries.sort((int a, int b) => b.compareTo(a));
 
