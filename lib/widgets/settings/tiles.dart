@@ -100,7 +100,12 @@ class AppTileSetting extends StatelessWidget {
                     EzDropdownMenu<LabelType>(
                       config,
                       widthEntry: 'Full name',
-                      dropdownMenuEntries: labelEntries,
+                      dropdownMenuEntries: LabelType.values
+                          .map((LabelType lt) => DropdownMenuEntry<LabelType>(
+                                value: lt,
+                                label: ezCamelToTitle(lt.value),
+                              ))
+                          .toList(),
                       enableSearch: false,
                       initialSelection: labelType,
                       onSelected: (LabelType? choice) async {
