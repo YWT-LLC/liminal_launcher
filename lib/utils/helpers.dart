@@ -44,6 +44,7 @@ Future<IconData?> chooseIcon(EzCP config, BuildContext context) => ezModal(
         return StatefulBuilder(
           builder: (BuildContext mCon, StateSetter setModal) => ezModalScroll(
             config,
+            physics: const ClampingScrollPhysics(),
             children: <Widget>[
               // Switcher
               SegmentedButton<bool>(
