@@ -162,8 +162,8 @@ class _AppTileState extends State<AppTile> {
     final ListAlignment hA = hAlign(widget.config);
     final AlignmentGeometry subAlign = LAConfig.merge(h: hA, v: ListAlignment.center);
 
-    late final EzMenuButton remove = removeItem(widget.config, widget.appInfo,
-        lane: widget.lane!, index: widget.index!, delete: false);
+    late final EzMenuButton remove =
+        removeItem(widget.config, widget.appInfo, lane: widget.lane!, index: widget.index!);
 
     late final EzMenuButton uninstall = EzMenuButton(
       widget.config,
