@@ -279,13 +279,6 @@ extension LTConfig on LabelType {
       };
 }
 
-const List<DropdownMenuEntry<LabelType>> labelEntries = <DropdownMenuEntry<LabelType>>[
-  DropdownMenuEntry<LabelType>(value: LabelType.none, label: 'None'),
-  DropdownMenuEntry<LabelType>(value: LabelType.initials, label: 'Initials'),
-  DropdownMenuEntry<LabelType>(value: LabelType.full, label: 'Full name'),
-  DropdownMenuEntry<LabelType>(value: LabelType.wingding, label: 'Wingding'),
-];
-
 /// Get the result of [base] parsed with [type]
 String buildLabel(String base, LabelType type) => switch (type) {
       LabelType.none => '',
