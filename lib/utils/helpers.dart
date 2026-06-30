@@ -6,6 +6,7 @@
 import './export.dart';
 import '../widgets/export.dart';
 
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
@@ -100,6 +101,7 @@ Future<IconData?> chooseIcon(EzCP config, BuildContext context) => ezModal(
       },
     );
 
+// TODO: test with a bunch of items lanes and handle (both) scrolling
 Future<void> editSpacer(
   EzCP config, {
   required AppInfoProvider appInfo,
@@ -220,7 +222,7 @@ Future<void> editSpacer(
         return Material(
           type: MaterialType.transparency,
           child: Stack(children: <Widget>[
-            // Top
+            // Top: controls
             Positioned(
               top: safeTop(ezRootNav.currentContext!),
               left: 0,
@@ -446,7 +448,20 @@ Future<void> editSpacer(
               ),
             ),
 
-            // Bottom TODO: readout
+            // Center: readout
+            Align(
+              alignment: config.isLefty ? Alignment.centerRight : Alignment.centerLeft,
+              child: EzText(
+                config,
+                shape: EzButtonShape.roundRect.shape,
+                backgroundColor: config.colors.surfaceContainer
+                    .withValues(alpha: max(0.75, config.textBackgroundOpacity)),
+                text: (axis == Axis.vertical ? height : width).toStringAsFixed(2),
+                textAlign: TextAlign.center,
+              ),
+            ),
+
+            // Bottom: steps && sliders
             Positioned(
               bottom: safeBottom(ezRootNav.currentContext!),
               left: 0,
