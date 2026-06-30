@@ -224,7 +224,44 @@ class _AppTileState extends State<AppTile> {
             builder: (BuildContext mCon, StateSetter setModal) => ezModalScroll(
               widget.config,
               children: <Widget>[
-                // TODO: icon, name, button, label
+                // TODO: icon
+                widget.config.spacer,
+
+                // TODO: name
+                widget.config.spacer,
+
+                // TODO: button
+                widget.config.spacer,
+
+                // Label type
+                EzRow(
+                  widget.config,
+                  children: <Widget>[
+                    EzText(widget.config, text: 'Label type'),
+                    widget.config.rowSpacer,
+                    EzDropdownMenu<LabelType?>(
+                      widget.config,
+                      widthEntry: 'Full name',
+                      dropdownMenuEntries: <LabelType?>[null, ...LabelType.values]
+                          .map((LabelType? lt) => DropdownMenuEntry<LabelType?>(
+                                value: lt,
+                                label: lt == null ? 'System' : ezCamelToTitle(lt.value),
+                              ))
+                          .toList(),
+                      enableSearch: false,
+                      initialSelection: labelType,
+                      onSelected: (LabelType? choice) {
+                        setModal(() => labelType = choice);
+
+                        if (choice == LabelType.none ||
+                            (choice == null && listLabels(widget.config) == LabelType.none)) {
+                          // TODO: add no icon and handle it here
+                        }
+                      },
+                    ),
+                  ],
+                ),
+                widget.config.separator,
               ],
             ),
           ),
