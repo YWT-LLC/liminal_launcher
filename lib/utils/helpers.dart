@@ -182,7 +182,7 @@ Future<void> editSpacer(
               textAlign: TextAlign.center,
               style: config.bodyStyle,
             ),
-            onPressed: () => setOverlay(() => config.spacing),
+            onPressed: () => setOverlay(() => step = config.spacing),
           ),
           MenuItemButton(
             child: Text(
@@ -190,7 +190,7 @@ Future<void> editSpacer(
               textAlign: TextAlign.center,
               style: config.bodyStyle,
             ),
-            onPressed: () => setOverlay(() => config.iconSize),
+            onPressed: () => setOverlay(() => step = config.iconSize),
           ),
           MenuItemButton(
             child: Text(
@@ -198,7 +198,7 @@ Future<void> editSpacer(
               textAlign: TextAlign.center,
               style: config.bodyStyle,
             ),
-            onPressed: () => setOverlay(() => appIconSize(config)),
+            onPressed: () => setOverlay(() => step = appIconSize(config)),
           ),
         ];
 
