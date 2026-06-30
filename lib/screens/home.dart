@@ -122,8 +122,12 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                             config,
                             onPressed: () => appInfo.moveLaneDown(config, lane),
                             label: 'Move',
-                            icon: EzIcon(config, Icons.remove),
-                            // TODO: left/right... didn't I make a shared button for this? if not, should I?
+                            icon: EzIcon(
+                              config,
+                              config.isLTR && hAlign(config) != ListAlignment.end
+                                  ? Icons.keyboard_arrow_left
+                                  : Icons.keyboard_arrow_right,
+                            ),
                           ),
 
                         // Delete
@@ -138,7 +142,12 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                             config,
                             onPressed: () => appInfo.moveLaneUp(config, lane),
                             label: 'Move',
-                            icon: EzIcon(config, Icons.add),
+                            icon: EzIcon(
+                              config,
+                              config.isLTR && hAlign(config) != ListAlignment.end
+                                  ? Icons.keyboard_arrow_left
+                                  : Icons.keyboard_arrow_right,
+                            ),
                           ),
                       ],
                     ),
