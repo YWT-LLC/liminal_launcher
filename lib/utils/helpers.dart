@@ -123,6 +123,7 @@ Future<void> editSpacer(
   marked.value = (lane, index);
 
   Axis axis = Axis.vertical;
+  double step = 5.0;
 
   final bool? keep = await ezRootNav.currentState!.push(
     PageRouteBuilder<bool>(
@@ -133,8 +134,73 @@ Future<void> editSpacer(
       pageBuilder: (_, __, ___) => StatefulBuilder(builder: (_, StateSetter setOverlay) {
         final double maxHeight = heightOf(ezRootNav.currentContext!) * 0.75;
         final double maxWidth = widthOf(ezRootNav.currentContext!) * 0.75;
-        // TODO: add stepper buttons to either side (with step value config on long press)
-        // TODO: readout too
+
+        final List<Widget> stepOptions = <Widget>[
+          MenuItemButton(
+            child: Text(
+              '1',
+              textAlign: TextAlign.center,
+              style: config.bodyStyle?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            onPressed: () => setOverlay(() => step = 1.0),
+          ),
+          MenuItemButton(
+            child: Text(
+              '5',
+              textAlign: TextAlign.center,
+              style: config.bodyStyle?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            onPressed: () => setOverlay(() => step = 5.0),
+          ),
+          MenuItemButton(
+            child: Text(
+              '10',
+              textAlign: TextAlign.center,
+              style: config.bodyStyle?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            onPressed: () => setOverlay(() => step = 10.0),
+          ),
+          MenuItemButton(
+            child: Text(
+              config.marginVal.toString(),
+              textAlign: TextAlign.center,
+              style: config.bodyStyle,
+            ),
+            onPressed: () => setOverlay(() => step = config.marginVal),
+          ),
+          MenuItemButton(
+            child: Text(
+              config.padding.toString(),
+              textAlign: TextAlign.center,
+              style: config.bodyStyle,
+            ),
+            onPressed: () => setOverlay(() => step = config.padding),
+          ),
+          MenuItemButton(
+            child: Text(
+              config.spacing.toString(),
+              textAlign: TextAlign.center,
+              style: config.bodyStyle,
+            ),
+            onPressed: () => setOverlay(() => config.spacing),
+          ),
+          MenuItemButton(
+            child: Text(
+              config.iconSize.toString(),
+              textAlign: TextAlign.center,
+              style: config.bodyStyle,
+            ),
+            onPressed: () => setOverlay(() => config.iconSize),
+          ),
+          MenuItemButton(
+            child: Text(
+              appIconSize(config).toString(),
+              textAlign: TextAlign.center,
+              style: config.bodyStyle,
+            ),
+            onPressed: () => setOverlay(() => appIconSize(config)),
+          ),
+        ];
 
         // Define custom functions //
 
@@ -380,31 +446,96 @@ Future<void> editSpacer(
               ),
             ),
 
-            // Bottom
+            // Bottom TODO: readout
             Positioned(
               bottom: safeBottom(ezRootNav.currentContext!),
               left: 0,
               right: 0,
-              child: EzTextBackground(
+              child: EzRow(
                 config,
-                text: (axis == Axis.vertical)
-                    ? Slider(
-                        value: height,
-                        max: maxHeight,
-                        onChanged: (double value) {
-                          editSpacerHeight.value = value;
-                          setOverlay(() => height = value);
-                        },
-                      )
-                    : Slider(
-                        value: width,
-                        max: maxWidth,
-                        onChanged: (double value) {
-                          editSpacerWidth.value = value;
-                          setOverlay(() => width = value);
-                        },
-                      ),
-                backgroundColor: config.colors.surface,
+                reverseHands: false,
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  // Step down
+                  MenuAnchor(
+                    builder: (_, MenuController c, __) => EzIconButton(
+                      config,
+                      enabled: (axis == Axis.vertical ? height : width) != 0,
+                      icon: const Icon(Icons.keyboard_arrow_left),
+                      onPressed: (axis == Axis.vertical)
+                          ? () {
+                              height -= step;
+                              if (height < 0) height = 0;
+
+                              editSpacerHeight.value = height;
+                              setOverlay(() {});
+                            }
+                          : () {
+                              width -= step;
+                              if (width < 0) width = 0;
+
+                              editSpacerWidth.value = width;
+                              setOverlay(() {});
+                            },
+                      onLongPress: () => toggleMenu(c),
+                    ),
+                    menuChildren: stepOptions,
+                  ),
+                  config.rowMargin,
+
+                  // Slide
+                  Expanded(
+                    child: EzTextBackground(
+                      config,
+                      text: (axis == Axis.vertical)
+                          ? Slider(
+                              value: height,
+                              max: maxHeight,
+                              onChanged: (double value) {
+                                editSpacerHeight.value = value;
+                                setOverlay(() => height = value);
+                              },
+                            )
+                          : Slider(
+                              value: width,
+                              max: maxWidth,
+                              onChanged: (double value) {
+                                editSpacerWidth.value = value;
+                                setOverlay(() => width = value);
+                              },
+                            ),
+                      backgroundColor: config.colors.surface,
+                    ),
+                  ),
+                  config.rowMargin,
+
+                  // Step up
+                  MenuAnchor(
+                    builder: (_, MenuController c, __) => EzIconButton(
+                      config,
+                      enabled:
+                          (axis == Axis.vertical) ? (height != maxHeight) : (width != maxWidth),
+                      icon: const Icon(Icons.keyboard_arrow_right),
+                      onPressed: (axis == Axis.vertical)
+                          ? () {
+                              height += step;
+                              if (height > maxHeight) height = maxHeight;
+
+                              editSpacerHeight.value = height;
+                              setOverlay(() {});
+                            }
+                          : () {
+                              width += step;
+                              if (width > maxWidth) width = maxWidth;
+
+                              editSpacerWidth.value = width;
+                              setOverlay(() {});
+                            },
+                      onLongPress: () => toggleMenu(c),
+                    ),
+                    menuChildren: stepOptions,
+                  ),
+                ],
               ),
             ),
           ]),
