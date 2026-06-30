@@ -78,6 +78,7 @@ class AppInfoProvider extends ChangeNotifier {
     );
   }
 
+  /// Does notify
   Future<void> _handleAppInstalled(Map<String, dynamic> appInfoMap) async {
     final AppInfo installed = AppInfo.fromMap(appInfoMap);
 
@@ -188,6 +189,7 @@ class AppInfoProvider extends ChangeNotifier {
     _invert.value = false;
   }
 
+  /// Doesn't notify
   void _add(bool dark, int lane, String entry) {
     if (dark) {
       _darkHomeMatrix[lane].add(entry);
@@ -200,6 +202,8 @@ class AppInfoProvider extends ChangeNotifier {
 
   // Core //
 
+  /// Does notify
+  /// Shows added overlay
   Future<void> addApp(EzCP config, {required int lane, required String id}) async {
     final String entry = <String>[
       id,
@@ -220,6 +224,8 @@ class AppInfoProvider extends ChangeNotifier {
     unawaited(_added(config));
   }
 
+  /// Does notify
+  /// Shows added overlay
   Future<void> addFolder(EzCP config, int lane) async {
     final String entry = <String>[
       'Folder',
@@ -240,6 +246,8 @@ class AppInfoProvider extends ChangeNotifier {
     unawaited(_added(config));
   }
 
+  /// Does notify
+  /// Shows added overlay
   Future<void> addCalendar(EzCP config, int lane) async {
     final String entry = <String>[
       WidWidGetGet.calendar.value,
@@ -260,6 +268,8 @@ class AppInfoProvider extends ChangeNotifier {
     unawaited(_added(config));
   }
 
+  /// Does notify
+  /// Shows added overlay
   Future<void> addClock(EzCP config, int lane) async {
     final String entry = <String>[
       WidWidGetGet.clock.value,
@@ -281,6 +291,8 @@ class AppInfoProvider extends ChangeNotifier {
     unawaited(_added(config));
   }
 
+  /// Does notify
+  /// Shows added overlay
   Future<void> addSearch(EzCP config, int lane) async {
     final String entry = <String>[
       WidWidGetGet.search.value,
@@ -301,6 +313,8 @@ class AppInfoProvider extends ChangeNotifier {
     unawaited(_added(config));
   }
 
+  /// Does notify
+  /// Shows added overlay
   Future<void> addTimer(EzCP config, int lane) async {
     final String entry = <String>[
       WidWidGetGet.timer.value,
@@ -321,6 +335,8 @@ class AppInfoProvider extends ChangeNotifier {
     unawaited(_added(config));
   }
 
+  /// Does notify
+  /// Shows added overlay
   Future<void> addMedia(EzCP config, int lane) async {
     final String entry = <String>[
       WidWidGetGet.toggleMedia.value,
@@ -341,6 +357,8 @@ class AppInfoProvider extends ChangeNotifier {
     unawaited(_added(config));
   }
 
+  /// Does notify
+  /// Doesn't show added overlay (assumes the helper overlay will be or is already opened)
   Future<int> addSpacer(
     EzCP config, {
     double? height,
@@ -372,6 +390,8 @@ class AppInfoProvider extends ChangeNotifier {
     return pos;
   }
 
+  /// Does notify
+  /// Shows added overlay
   Future<void> addLane(EzCP config) async {
     if (interlinked || config.isDark) {
       _darkHomeMatrix.add(<String>[]);
@@ -404,6 +424,7 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Does notify
   Future<void> updateApp(
     EzCP config, {
     required int lane,
@@ -426,6 +447,7 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Does notify
   Future<void> updateFolder(
     EzCP config, {
     required int lane,
@@ -453,6 +475,7 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Doesn't notify
   Future<void> updateWidget(
     EzCP config,
     WidWidGetGet type,
@@ -475,6 +498,7 @@ class AppInfoProvider extends ChangeNotifier {
     // Don't notifyListeners();
   }
 
+  /// Does notify
   Future<void> updateSpacer(
     EzCP config, {
     required double height,
@@ -497,6 +521,7 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Optionally [notify]s (default false)
   Future<void> reorderLane(
     EzCP config, {
     required int lane,
@@ -521,6 +546,7 @@ class AppInfoProvider extends ChangeNotifier {
     if (notify) notifyListeners();
   }
 
+  /// Does notify
   Future<void> moveItemUpLane(EzCP config, {required int lane, required int index}) async {
     if (interlinked || config.isDark) {
       final String item = _darkHomeMatrix[lane].removeAt(index);
@@ -539,6 +565,7 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Does notify
   Future<void> moveItemDownLane(EzCP config, {required int lane, required int index}) async {
     if (interlinked || config.isDark) {
       final String item = _darkHomeMatrix[lane].removeAt(index);
@@ -557,6 +584,7 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Does notify
   Future<void> moveLaneUp(EzCP config, int lane) async {
     if (interlinked || config.isDark) {
       final List<String> col = _darkHomeMatrix.removeAt(lane);
@@ -575,6 +603,7 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Does notify
   Future<void> moveLaneDown(EzCP config, int lane) async {
     if (interlinked || config.isDark) {
       final List<String> col = _darkHomeMatrix.removeAt(lane);
@@ -593,6 +622,8 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Does notify
+  /// Calls [ezNoTouch] when saving changes
   Future<void> hideApp(EzCP config, BuildContext context, String id) async {
     if (interlinked || config.isDark) {
       if (_darkHidden.contains(id)) return;
@@ -686,6 +717,7 @@ class AppInfoProvider extends ChangeNotifier {
     await _clearHomeOf(config, id, false);
   }
 
+  /// Does notify, as long as not [batch]
   Future<bool> showApp(EzCP config, String id, {bool batch = false}) async {
     if (interlinked || config.isDark) {
       if (!_darkHidden.contains(id)) return false;
@@ -761,6 +793,8 @@ class AppInfoProvider extends ChangeNotifier {
     return true;
   }
 
+  /// Does notify
+  /// Calls [ezNoTouch] when saving changes
   Future<bool> banishApp(EzCP config, BuildContext context, String id) async {
     if (interlinked || config.isDark) {
       if (_darkBanished.contains(id)) return false;
@@ -927,6 +961,7 @@ For example: if an app has always on location permissions, banishing it will not
     return true;
   }
 
+  /// Does notify
   Future<void> cloneMatrix(bool keepDark) async {
     if (keepDark) {
       final List<List<String>> homeCopy = List<List<String>>.from(_darkHomeMatrix);
@@ -959,6 +994,7 @@ For example: if an app has always on location permissions, banishing it will not
 
   // Delete //
 
+  /// Does notify, as long as not [batch]
   Future<void> removeItem(
     EzCP config, {
     required int lane,
@@ -978,6 +1014,7 @@ For example: if an app has always on location permissions, banishing it will not
     if (!batch) notifyListeners();
   }
 
+  /// Full [ezNoTouch], then notifies
   Future<void> _clearHomeOf(EzCP? config, String id, bool deleting) async {
     await ezNoTouch(() async {
       if (config == null || interlinked || config.isDark) {
@@ -1088,6 +1125,7 @@ For example: if an app has always on location permissions, banishing it will not
     notifyListeners();
   }
 
+  /// Does notify
   Future<void> removeLane(EzCP config, int lane) async {
     if (interlinked || config.isDark) {
       _darkHomeMatrix.removeAt(lane);
@@ -1102,6 +1140,7 @@ For example: if an app has always on location permissions, banishing it will not
     notifyListeners();
   }
 
+  /// Does notify
   void cleanup(EzCP config, {required int lane, required List<int> entries}) {
     entries.sort((int a, int b) => b.compareTo(a));
 
