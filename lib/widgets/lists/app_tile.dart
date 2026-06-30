@@ -369,14 +369,17 @@ class _AppTileState extends State<AppTile> {
               banish,
               if (widget.app.removable) uninstall,
             ],
-            child: icon ??
-                Image.memory(
-                  widget.app.icon!,
-                  semanticLabel: name,
-                  width: appIconSize(widget.config),
-                  height: appIconSize(widget.config),
-                  alignment: subAlign,
-                ),
+            child: GestureDetector(
+              onTap: () => toggleMenu(menuControl),
+              child: icon ??
+                  Image.memory(
+                    widget.app.icon!,
+                    semanticLabel: name,
+                    width: appIconSize(widget.config),
+                    height: appIconSize(widget.config),
+                    alignment: subAlign,
+                  ),
+            ),
           ),
       },
     );
