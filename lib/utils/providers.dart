@@ -555,38 +555,36 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // TODO: test
   Future<void> moveLaneUp(EzCP config, int lane) async {
     if (interlinked || config.isDark) {
       final List<String> col = _darkHomeMatrix.removeAt(lane);
-      _darkHomeMatrix.insert(lane, col);
 
+      _darkHomeMatrix.insert(lane, col);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
       final List<String> col = _lightHomeMatrix.removeAt(lane);
-      _lightHomeMatrix.insert(lane, col);
 
+      _lightHomeMatrix.insert(lane, col);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
     notifyListeners();
   }
 
-  // TODO: test
   Future<void> moveLaneDown(EzCP config, int lane) async {
     if (interlinked || config.isDark) {
       final List<String> col = _darkHomeMatrix.removeAt(lane);
-      _darkHomeMatrix.insert(lane - 1, col);
 
+      _darkHomeMatrix.insert(lane - 1, col);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
       final List<String> col = _lightHomeMatrix.removeAt(lane);
-      _lightHomeMatrix.insert(lane - 1, col);
 
+      _lightHomeMatrix.insert(lane - 1, col);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
