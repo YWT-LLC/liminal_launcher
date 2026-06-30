@@ -3,6 +3,8 @@
  * See LICENSE for distribution and usage details.
  */
 
+// TODO: what happens when I remove everything?
+
 import './export.dart';
 
 import 'dart:async';
@@ -184,6 +186,16 @@ class AppInfoProvider extends ChangeNotifier {
     _invert.value = false;
   }
 
+  void _add(bool dark, int lane, String entry) {
+    if (dark) {
+      _darkHomeMatrix[lane].add(entry);
+      if (_darkHomeMatrix[lane][0] == '[]') _darkHomeMatrix[lane].removeAt(0);
+    } else {
+      _lightHomeMatrix[lane].add(entry);
+      if (_lightHomeMatrix[lane][0] == '[]') _lightHomeMatrix[lane].removeAt(0);
+    }
+  }
+
   // Core //
 
   Future<void> addApp(EzCP config, {required int lane, required String id}) async {
@@ -193,12 +205,12 @@ class AppInfoProvider extends ChangeNotifier {
     ].join(idSplit);
 
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane].add(entry);
+      _add(true, lane, entry);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane].add(entry);
+      _add(false, lane, entry);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -213,12 +225,12 @@ class AppInfoProvider extends ChangeNotifier {
     ].join(folderSplit);
 
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane].add(entry);
+      _add(true, lane, entry);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane].add(entry);
+      _add(false, lane, entry);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -233,12 +245,12 @@ class AppInfoProvider extends ChangeNotifier {
     ].join(widgetSplit);
 
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane].add(entry);
+      _add(true, lane, entry);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane].add(entry);
+      _add(false, lane, entry);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -254,12 +266,12 @@ class AppInfoProvider extends ChangeNotifier {
     ].join(widgetSplit);
 
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane].add(entry);
+      _add(true, lane, entry);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane].add(entry);
+      _add(false, lane, entry);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -274,12 +286,12 @@ class AppInfoProvider extends ChangeNotifier {
     ].join(widgetSplit);
 
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane].add(entry);
+      _add(true, lane, entry);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane].add(entry);
+      _add(false, lane, entry);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -294,12 +306,12 @@ class AppInfoProvider extends ChangeNotifier {
     ].join(widgetSplit);
 
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane].add(entry);
+      _add(true, lane, entry);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane].add(entry);
+      _add(false, lane, entry);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -314,12 +326,12 @@ class AppInfoProvider extends ChangeNotifier {
     ].join(widgetSplit);
 
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane].add(entry);
+      _add(true, lane, entry);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane].add(entry);
+      _add(false, lane, entry);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -343,16 +355,14 @@ class AppInfoProvider extends ChangeNotifier {
     if (interlinked || config.isDark) {
       pos = index ?? _darkHomeMatrix[lane].length;
 
-      index == null ? _darkHomeMatrix[lane].add(entry) : _darkHomeMatrix[lane].insert(index, entry);
+      index == null ? _add(true, lane, entry) : _darkHomeMatrix[lane].insert(index, entry);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
       pos = index ?? _lightHomeMatrix[lane].length;
 
-      index == null
-          ? _lightHomeMatrix[lane].add(entry)
-          : _lightHomeMatrix[lane].insert(index, entry);
+      index == null ? _add(false, lane, entry) : _lightHomeMatrix[lane].insert(index, entry);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -360,7 +370,6 @@ class AppInfoProvider extends ChangeNotifier {
     return pos;
   }
 
-  // TODO: I prolly need to replace []s right? print and check and shit
   Future<void> addLane(EzCP config) async {
     if (interlinked || config.isDark) {
       _darkHomeMatrix.add(<String>[]);
