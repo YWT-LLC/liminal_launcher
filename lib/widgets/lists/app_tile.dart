@@ -273,39 +273,36 @@ class _AppTileState extends State<AppTile> {
                       .map((LabelType lt) => Padding(
                             padding: EdgeInsets.symmetric(horizontal: widget.config.spacing / 2),
                             child: EzCol(children: <Widget>[
-                              labelType == lt
-                                  ? AppButton(
-                                      widget.config,
-                                      name: renameCon.text,
-                                      image: widget.app.icon,
-                                      icon: icon,
-                                      buttonType: buttonType ?? listBT(widget.config),
-                                      labelType: lt,
-                                      onPressed: () => setModal(() => labelType = lt),
-                                      onLongPress: () => setModal(() => labelType = null),
-                                    ) // TODO: something visual
-                                  : AppButton(
-                                      widget.config,
-                                      name: renameCon.text,
-                                      image: widget.app.icon,
-                                      icon: icon,
-                                      buttonType: buttonType ?? listBT(widget.config),
-                                      labelType: lt,
-                                      onPressed: () => setModal(() => labelType = lt),
-                                      onLongPress: () => setModal(() => labelType = null),
-                                    ),
+                              AppButton(
+                                widget.config,
+                                name: renameCon.text,
+                                image: widget.app.icon,
+                                icon: icon,
+                                buttonType: buttonType ?? listBT(widget.config),
+                                labelType: lt,
+                                onPressed: () => setModal(() => labelType = lt),
+                                onLongPress: () => setModal(() => labelType = null),
+                              ),
                               ExcludeSemantics(
                                 child: EzTextButton(
                                   widget.config,
                                   text: ezCamelToTitle(lt.value),
                                   textAlign: TextAlign.center,
-                                  style: TextButton.styleFrom(
-                                    padding: EdgeInsets.zero,
-                                    foregroundColor: labelType == lt
-                                        ? widget.config.colors.primary
-                                        : widget.config.colors.onSurface,
-                                    backgroundColor: widget.config.colors.surfaceContainer,
-                                  ),
+                                  style: labelType == null
+                                      ? (lt == listLabels(widget.config)
+                                          ? TextButton.styleFrom(
+                                              padding: EdgeInsets.zero,
+                                              foregroundColor: widget.config.colors.onTertiary,
+                                              backgroundColor: widget.config.colors.tertiary,
+                                            )
+                                          : TextButton.styleFrom(padding: EdgeInsets.zero))
+                                      : (lt == labelType
+                                          ? TextButton.styleFrom(
+                                              padding: EdgeInsets.zero,
+                                              foregroundColor: widget.config.colors.onSecondary,
+                                              backgroundColor: widget.config.colors.secondary,
+                                            )
+                                          : TextButton.styleFrom(padding: EdgeInsets.zero)),
                                   onPressed: () => setModal(() => labelType = lt),
                                   onLongPress: () => setModal(() => labelType = null),
                                 ),
@@ -332,39 +329,36 @@ class _AppTileState extends State<AppTile> {
                       .map((ButtonType bt) => Padding(
                             padding: EdgeInsets.symmetric(horizontal: widget.config.spacing / 2),
                             child: EzCol(children: <Widget>[
-                              buttonType == bt
-                                  ? AppButton(
-                                      widget.config,
-                                      name: renameCon.text,
-                                      image: widget.app.icon,
-                                      icon: icon,
-                                      buttonType: bt,
-                                      labelType: labelType ?? listLabels(widget.config),
-                                      onPressed: () => setModal(() => buttonType = bt),
-                                      onLongPress: () => setModal(() => buttonType = null),
-                                    ) // TODO: something visual
-                                  : AppButton(
-                                      widget.config,
-                                      name: renameCon.text,
-                                      image: widget.app.icon,
-                                      icon: icon,
-                                      buttonType: bt,
-                                      labelType: labelType ?? listLabels(widget.config),
-                                      onPressed: () => setModal(() => buttonType = bt),
-                                      onLongPress: () => setModal(() => buttonType = null),
-                                    ),
+                              AppButton(
+                                widget.config,
+                                name: renameCon.text,
+                                image: widget.app.icon,
+                                icon: icon,
+                                buttonType: bt,
+                                labelType: labelType ?? listLabels(widget.config),
+                                onPressed: () => setModal(() => buttonType = bt),
+                                onLongPress: () => setModal(() => buttonType = null),
+                              ),
                               ExcludeSemantics(
                                 child: EzTextButton(
                                   widget.config,
                                   text: ezCamelToTitle(bt.value),
                                   textAlign: TextAlign.center,
-                                  style: TextButton.styleFrom(
-                                    padding: EdgeInsets.zero,
-                                    foregroundColor: buttonType == bt
-                                        ? widget.config.colors.primary
-                                        : widget.config.colors.onSurface,
-                                    backgroundColor: widget.config.colors.surfaceContainer,
-                                  ),
+                                  style: buttonType == null
+                                      ? (bt == listBT(widget.config)
+                                          ? TextButton.styleFrom(
+                                              padding: EdgeInsets.zero,
+                                              foregroundColor: widget.config.colors.onTertiary,
+                                              backgroundColor: widget.config.colors.tertiary,
+                                            )
+                                          : TextButton.styleFrom(padding: EdgeInsets.zero))
+                                      : (bt == buttonType
+                                          ? TextButton.styleFrom(
+                                              padding: EdgeInsets.zero,
+                                              foregroundColor: widget.config.colors.onSecondary,
+                                              backgroundColor: widget.config.colors.secondary,
+                                            )
+                                          : TextButton.styleFrom(padding: EdgeInsets.zero)),
                                   onPressed: () => setModal(() => buttonType = bt),
                                   onLongPress: () => setModal(() => buttonType = null),
                                 ),
@@ -410,7 +404,7 @@ class _AppTileState extends State<AppTile> {
                 name: widget.app.label,
                 image: widget.app.icon,
                 icon: icon,
-                buttonType: folderBT(widget.config),
+                buttonType: folderBT(widget.config), // TODO: third one?
                 labelType: folderLabels(widget.config),
                 onPressed: () => widget.onSelected(widget.app),
               )
