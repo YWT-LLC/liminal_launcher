@@ -156,7 +156,8 @@ class _AppFolderState extends State<FolderTile> {
         final TextEditingController renameCon = TextEditingController(text: widget._name);
         bool showIcon = iconBTs.contains(buttonType ?? folderBT(widget.config));
         bool elevated = elevatedBTs.contains(buttonType ?? folderBT(widget.config));
-        // TODO: re-add colors when this is done
+        // TODO: re-add colors when the over-overhaul is done
+        // TODO: get app tiles to parity
 
         final ValueNotifier<List<String>> appsNotif = ValueNotifier<List<String>>(widget._appList);
 
