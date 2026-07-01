@@ -21,9 +21,9 @@ class FolderTile extends StatefulWidget {
   final ValueNotifier<double>? rippleProgress;
 
   late final String _name;
-  late final String _icon;
-  late final String _buttonType;
-  late final String _labelType;
+  late final IconData _icon;
+  late final ButtonType? _buttonType;
+  late final LabelType? _labelType;
   late final List<String> _appList;
 
   FolderTile(
@@ -40,9 +40,18 @@ class FolderTile extends StatefulWidget {
     _name = items[0];
 
     final List<String> data = items[1].split(configSplit);
-    _icon = data[0];
-    _buttonType = data[1];
-    _labelType = data[2];
+
+    final String storedIcon = data[0];
+    _icon = (storedIcon == esSystem)
+        ? Icons.folder_outlined
+        : IconData(
+            // ignore: non_const_argument_for_const_parameter
+            int.tryParse(storedIcon) ?? Icons.folder_outlined.codePoint,
+            fontFamily: 'MaterialIcons',
+          );
+
+    _buttonType = BTConfig.lookup(data[1]);
+    _labelType = LTConfig.lookup(data[2]);
 
     _appList = items.length > 2 ? items.sublist(2) : <String>[];
   }
@@ -58,16 +67,6 @@ class _AppFolderState extends State<FolderTile> {
   Timer? rippleThrottle;
 
   final MenuController menuControl = MenuController();
-
-  late IconData icon = (widget._icon == esSystem)
-      ? Icons.folder_outlined
-      : IconData(
-          // ignore: non_const_argument_for_const_parameter
-          int.tryParse(widget._icon) ?? Icons.folder_outlined.codePoint,
-          fontFamily: 'MaterialIcons',
-        );
-  late ButtonType? buttonType = BTConfig.lookup(widget._buttonType);
-  late LabelType? labelType = LTConfig.lookup(widget._labelType);
 
   bool open = false;
 
@@ -154,8 +153,11 @@ class _AppFolderState extends State<FolderTile> {
         int delta = 0;
 
         final TextEditingController renameCon = TextEditingController(text: widget._name);
-        bool showIcon = iconBTs.contains(buttonType ?? folderBT(widget.config));
-        bool elevated = elevatedBTs.contains(buttonType ?? folderBT(widget.config));
+        IconData icon = widget._icon;
+
+        LabelType? labelType = widget._labelType;
+        bool showIcon = iconBTs.contains(widget._buttonType ?? folderBT(widget.config));
+        bool elevated = elevatedBTs.contains(widget._buttonType ?? folderBT(widget.config));
         // TODO: re-add colors when the over-overhaul is done
         // TODO: get app tiles to parity
 
@@ -175,12 +177,11 @@ class _AppFolderState extends State<FolderTile> {
 
             void resetPreview() {
               labelType = null;
-              buttonType = null;
 
               showIcon = iconBTs.contains(folderBT(widget.config));
               elevated = elevatedBTs.contains(folderBT(widget.config));
 
-              setState(() {});
+              setModal(() {});
             }
 
             Widget appearanceSettings() => EzScrollView(widget.config, children: <Widget>[
@@ -226,7 +227,7 @@ class _AppFolderState extends State<FolderTile> {
                         dropdownMenuEntries: <DropdownMenuEntry<LabelType?>>[
                           const DropdownMenuEntry<LabelType?>(
                             value: null,
-                            label: 'System',
+                            label: 'Default',
                           ),
                           ...LabelType.values.map((LabelType lt) => DropdownMenuEntry<LabelType?>(
                                 value: lt,
@@ -250,39 +251,45 @@ class _AppFolderState extends State<FolderTile> {
                   widget.config.spacer,
 
                   // Show icon
-                  EzSwitchPair(
-                    widget.config,
-                    key: ValueKey<String>('icon-$showIcon'),
-                    text: 'Show icon',
-                    value: showIcon,
-                    onChanged: (bool? choice) {
-                      if (choice == null) {
-                        resetPreview();
-                        return;
-                      }
+                  GestureDetector(
+                    onLongPress: resetPreview,
+                    child: EzSwitchPair(
+                      widget.config,
+                      key: ValueKey<String>('icon-$showIcon'),
+                      text: 'Show icon',
+                      value: showIcon,
+                      onChanged: (bool? choice) {
+                        if (choice == null) {
+                          resetPreview();
+                          return;
+                        }
 
-                      if (choice == false && labelType == LabelType.none) {
-                        labelType = LabelType.full;
-                      }
-                      setModal(() => showIcon = choice);
-                    },
+                        if (choice == false && labelType == LabelType.none) {
+                          labelType = LabelType.full;
+                        }
+                        setModal(() => showIcon = choice);
+                      },
+                    ),
                   ),
                   widget.config.spacer,
 
                   // Elevated
-                  EzSwitchPair(
-                    widget.config,
-                    key: ValueKey<String>('elevated-$showIcon'),
-                    text: 'Elevated button',
-                    value: elevated,
-                    afterChanged: (bool? choice) {
-                      if (choice == null) {
-                        resetPreview();
-                        return;
-                      }
+                  GestureDetector(
+                    onLongPress: resetPreview,
+                    child: EzSwitchPair(
+                      widget.config,
+                      key: ValueKey<String>('elevated-$elevated'),
+                      text: 'Elevated button',
+                      value: elevated,
+                      onChanged: (bool? choice) {
+                        if (choice == null) {
+                          resetPreview();
+                          return;
+                        }
 
-                      setModal(() => elevated = choice);
-                    },
+                        setModal(() => elevated = choice);
+                      },
+                    ),
                   ),
                   widget.config.divider,
 
@@ -300,9 +307,14 @@ class _AppFolderState extends State<FolderTile> {
                     onPressed: doNothing,
                     onLongPress: doNothing,
                   ),
-                  widget.config.spacer,
+                  widget.config.separator,
 
-                  // Done
+                  // Default reminder && done
+                  Text(
+                    'Long pressing the switches also resets to default',
+                    textAlign: TextAlign.center,
+                    style: widget.config.labelStyle,
+                  ),
                   EzTextIconButton(
                     widget.config,
                     label: 'Done',
@@ -496,7 +508,11 @@ class _AppFolderState extends State<FolderTile> {
               lane: widget.lane,
               index: widget.index,
               name: renameCon.text,
-              extra: TCC.folderEntry(icon, buttonType, labelType),
+              extra: TCC.folderEntry(
+                  icon,
+                  BTConfig.build(labelType ?? folderLabels(widget.config),
+                      icons: showIcon, elevated: elevated),
+                  labelType),
               ids: appsNotif.value,
             ));
       },
@@ -544,9 +560,9 @@ class _AppFolderState extends State<FolderTile> {
                             child: FolderButton(
                               widget.config,
                               name: widget._name,
-                              icon: icon,
-                              buttonType: buttonType ?? folderBT(widget.config),
-                              labelType: labelType ?? folderLabels(widget.config),
+                              icon: widget._icon,
+                              buttonType: widget._buttonType ?? folderBT(widget.config),
+                              labelType: widget._labelType ?? folderLabels(widget.config),
                               onPressed: () => setState(() => open = true),
                               onLongPress: () => canToggleMenu(widget.config, controller),
                             ),
@@ -555,9 +571,9 @@ class _AppFolderState extends State<FolderTile> {
                       : FolderButton(
                           widget.config,
                           name: widget._name,
-                          icon: icon,
-                          buttonType: buttonType ?? folderBT(widget.config),
-                          labelType: labelType ?? folderLabels(widget.config),
+                          icon: widget._icon,
+                          buttonType: widget._buttonType ?? folderBT(widget.config),
+                          labelType: widget._labelType ?? folderLabels(widget.config),
                           onPressed: () => setState(() => open = true),
                           onLongPress: () => canToggleMenu(widget.config, controller),
                         ),
@@ -578,7 +594,7 @@ class _AppFolderState extends State<FolderTile> {
               ],
               child: EzIconButton(
                 widget.config,
-                icon: Icon(icon),
+                icon: Icon(widget._icon),
                 onPressed: () => canToggleMenu(widget.config, menuControl),
               ),
             ),
