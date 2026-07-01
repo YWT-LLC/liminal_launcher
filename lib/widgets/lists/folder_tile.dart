@@ -158,7 +158,6 @@ class _AppFolderState extends State<FolderTile> {
         LabelType? labelType = widget._labelType;
         bool showIcon = iconBTs.contains(widget._buttonType ?? folderBT(widget.config));
         bool elevated = elevatedBTs.contains(widget._buttonType ?? folderBT(widget.config));
-        // TODO: re-add colors when the over-overhaul is done
         // TODO: get app tiles to parity
 
         final ValueNotifier<List<String>> appsNotif = ValueNotifier<List<String>>(widget._appList);
