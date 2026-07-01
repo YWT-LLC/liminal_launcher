@@ -25,14 +25,14 @@ class ClockWidget extends StatefulWidget {
   final AppState state;
   final ValueNotifier<double>? rippleProgress;
 
-  late final String _shape;
-  late final String _background;
-  late final String _showTime;
-  late final String _timeStyle;
-  late final String _timeColor;
-  late final String _dateType;
-  late final String _dateStyle;
-  late final String _dateColor;
+  late final EzButtonShape? _shape;
+  late final Color? _background;
+  late final bool _showTime;
+  late final TxtStile _timeStyle;
+  late final Color? _timeColor;
+  late final DateType _dateType;
+  late final TxtStile _dateStyle;
+  late final Color? _dateColor;
 
   ClockWidget(
     this.config,
@@ -46,14 +46,22 @@ class ClockWidget extends StatefulWidget {
     final List<String> data =
         appInfo.homeItem(config, lane: lane, index: index).split(widgetSplit)[1].split(configSplit);
 
-    _shape = data[0];
-    _background = data[1];
-    _showTime = data[2];
-    _timeStyle = data[3];
-    _timeColor = data[4];
-    _dateType = data[5];
-    _dateStyle = data[6];
-    _dateColor = data[7];
+    _shape = EBSConfig.lookup(data[0]);
+
+    late final int? bCV = int.tryParse(data[1]);
+    _background = bCV == null ? null : Color(bCV);
+
+    _showTime = bool.tryParse(data[2]) ?? true;
+    _timeStyle = TSConfig.lookup(data[3]) ?? TxtStile.headline;
+
+    late final int? tCV = int.tryParse(data[4]);
+    _timeColor = tCV == null ? null : Color(tCV);
+
+    _dateType = DTConfig.lookup(data[5]);
+    _dateStyle = TSConfig.lookup(data[6]) ?? TxtStile.label;
+
+    late final int? dCV = int.tryParse(data[7]);
+    _dateColor = dCV == null ? null : Color(dCV);
   }
 
   @override
@@ -67,20 +75,6 @@ class _ClockWidgetState extends State<ClockWidget> {
   Timer? rippleThrottle;
 
   final MenuController menuControl = MenuController();
-
-  late EzButtonShape? shape = EBSConfig.lookup(widget._shape);
-  late final int? _bCV = _getCV(widget._background);
-  late Color? background = _bCV == null ? null : Color(_bCV);
-
-  late bool showTime = bool.tryParse(widget._showTime) ?? true;
-  late TxtStile timeStyle = TSConfig.lookup(widget._timeStyle) ?? TxtStile.headline;
-  late final int? _tCV = _getCV(widget._timeColor);
-  late Color? timeColor = _tCV == null ? null : Color(_tCV);
-
-  late DateType dateType = DTConfig.lookup(widget._dateType);
-  late TxtStile dateStyle = TSConfig.lookup(widget._dateStyle) ?? TxtStile.label;
-  late final int? _dCV = _getCV(widget._dateColor);
-  late Color? dateColor = _dCV == null ? null : Color(_dCV);
 
   DateTime now = DateTime.now();
   late Timer ticker;
@@ -111,13 +105,22 @@ class _ClockWidgetState extends State<ClockWidget> {
     }
   }
 
-  int? _getCV(String storage) => (storage == esSystem) ? null : int.tryParse(storage);
-
   Future<void> openEdits() async {
     final double iconRadius = widget.config.iconSize / 2;
 
     _Edits curr = _Edits.background;
     int delta = 0;
+
+    EzButtonShape? shape = widget._shape;
+    Color? background = widget._background;
+
+    TxtStile timeStyle = widget._timeStyle;
+    Color? timeColor = widget._timeColor;
+    bool showTime = widget._showTime;
+
+    DateType dateType = widget._dateType;
+    TxtStile dateStyle = widget._dateStyle;
+    Color? dateColor = widget._dateColor;
 
     await ezModal(
       widget.config,
@@ -179,17 +182,11 @@ class _ClockWidgetState extends State<ClockWidget> {
                     context: context,
                     startColor: curr,
                     onColorChange: (Color choice) => curr = choice,
-                    onConfirm: () {
-                      setModal(() => background = curr);
-                      setState(() {});
-                    },
+                    onConfirm: () => setModal(() => background = curr),
                     onDeny: doNothing,
                   );
                 },
-                onLongPress: () {
-                  setModal(() => background = null);
-                  setState(() {});
-                },
+                onLongPress: () => setModal(() => background = null),
                 icon: Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
@@ -220,20 +217,6 @@ class _ClockWidgetState extends State<ClockWidget> {
             ]);
 
         Widget timeSettings() => EzScrollView(widget.config, children: <Widget>[
-              // Time on/off
-              EzSwitchPair(
-                key: ValueKey<bool>(showTime),
-                widget.config,
-                value: showTime,
-                text: 'Show time',
-                onChanged: (bool? choice) {
-                  if (choice == null) return;
-                  setModal(() => showTime = choice);
-                  setState(() {});
-                },
-              ),
-              widget.config.spacer,
-
               // Time style
               EzRow(widget.config, children: <Widget>[
                 Flexible(
@@ -260,7 +243,6 @@ class _ClockWidgetState extends State<ClockWidget> {
                   onSelected: (TxtStile? choice) {
                     if (choice == null) return;
                     setModal(() => timeStyle = choice);
-                    setState(() {});
                   },
                 ),
               ]),
@@ -277,17 +259,11 @@ class _ClockWidgetState extends State<ClockWidget> {
                     context: context,
                     startColor: curr,
                     onColorChange: (Color choice) => curr = choice,
-                    onConfirm: () {
-                      setModal(() => timeColor = curr);
-                      setState(() {});
-                    },
+                    onConfirm: () => setModal(() => timeColor = curr),
                     onDeny: doNothing,
                   );
                 },
-                onLongPress: () {
-                  setModal(() => timeColor = null);
-                  setState(() {});
-                },
+                onLongPress: () => setModal(() => timeColor = null),
                 icon: Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
@@ -313,6 +289,19 @@ class _ClockWidgetState extends State<ClockWidget> {
                 ),
                 label: 'Time color',
                 textAlign: TextAlign.center,
+              ),
+              widget.config.spacer,
+
+              // Time on/off
+              EzSwitchPair(
+                key: ValueKey<bool>(showTime),
+                widget.config,
+                value: showTime,
+                text: 'Show time',
+                onChanged: (bool? choice) {
+                  if (choice == null) return;
+                  setModal(() => showTime = choice);
+                },
               ),
               widget.config.separator,
             ]);
@@ -342,7 +331,6 @@ class _ClockWidgetState extends State<ClockWidget> {
                   onSelected: (DateType? choice) {
                     if (choice == null) return;
                     setModal(() => dateType = choice);
-                    setState(() {});
                   },
                 ),
               ]),
@@ -374,7 +362,6 @@ class _ClockWidgetState extends State<ClockWidget> {
                   onSelected: (TxtStile? choice) {
                     if (choice == null) return;
                     setModal(() => dateStyle = choice);
-                    setState(() {});
                   },
                 ),
               ]),
@@ -391,17 +378,11 @@ class _ClockWidgetState extends State<ClockWidget> {
                     context: context,
                     startColor: curr,
                     onColorChange: (Color choice) => curr = choice,
-                    onConfirm: () {
-                      setModal(() => dateColor = curr);
-                      setState(() {});
-                    },
+                    onConfirm: () => setModal(() => dateColor = curr),
                     onDeny: doNothing,
                   );
                 },
-                onLongPress: () {
-                  setModal(() => dateColor = null);
-                  setState(() {});
-                },
+                onLongPress: () => setModal(() => dateColor = null),
                 icon: Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
@@ -486,7 +467,7 @@ class _ClockWidgetState extends State<ClockWidget> {
     super.initState();
     widget.rippleProgress?.addListener(rippling);
 
-    ticker = showTime
+    ticker = widget._showTime
         ? Timer.periodic(const Duration(seconds: 1), (_) {
             if (mounted) setState(() => now = DateTime.now());
           })
@@ -523,22 +504,26 @@ class _ClockWidgetState extends State<ClockWidget> {
               child: EzTextBackground(
                 widget.config,
                 padding: EdgeInsets.all(widget.config.padding),
-                shape: shape?.shape,
-                backgroundColor: background,
+                shape: widget._shape?.shape,
+                backgroundColor: widget._background,
                 text: EzCol(
                   mainAxisAlignment: vAlign(widget.config).mainAxis,
                   crossAxisAlignment: hAlign(widget.config).crossAxis,
                   children: <Widget>[
-                    if (showTime)
+                    if (widget._showTime)
                       Text(
                         TimeOfDay.fromDateTime(now).format(context),
-                        style: timeStyle.style(widget.config)?.copyWith(color: timeColor),
+                        style: widget._timeStyle
+                            .style(widget.config)
+                            ?.copyWith(color: widget._timeColor),
                         textAlign: hAlign(widget.config).textAlign,
                       ),
-                    if (dateType != DateType.none)
+                    if (widget._dateType != DateType.none)
                       Text(
-                        DTConfig.buildDate(context, now, dateType),
-                        style: dateStyle.style(widget.config)?.copyWith(color: dateColor),
+                        DTConfig.buildDate(context, now, widget._dateType),
+                        style: widget._dateStyle
+                            .style(widget.config)
+                            ?.copyWith(color: widget._dateColor),
                         textAlign: hAlign(widget.config).textAlign,
                       ),
                   ],
