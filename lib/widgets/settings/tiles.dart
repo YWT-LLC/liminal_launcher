@@ -9,6 +9,8 @@ import '../export.dart';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
+// TODO: HFSJFC how many copy/paste mistakes are you gonna have? I guess re-read everything
+
 class AppTileSetting extends StatelessWidget {
   final EzCP config;
   final bool folder;
@@ -113,7 +115,7 @@ class AppTileSetting extends StatelessWidget {
 
                         if (EzCM.updateBoth || config.isDark) {
                           await EzCM.setString(darkLabelKey, choice.value);
-                          if (labelType == LabelType.none) {
+                          if (choice == LabelType.none) {
                             showIcon = true;
                             await EzCM.setBool(darkIconKey, true);
                           }
@@ -121,7 +123,7 @@ class AppTileSetting extends StatelessWidget {
 
                         if (EzCM.updateBoth || !config.isDark) {
                           await EzCM.setString(lightLabelKey, choice.value);
-                          if (labelType == LabelType.none) {
+                          if (choice == LabelType.none) {
                             showIcon = true;
                             await EzCM.setBool(lightIconKey, true);
                           }
@@ -154,10 +156,7 @@ class AppTileSetting extends StatelessWidget {
                     }
 
                     if (EzCM.updateBoth) {
-                      await EzCM.setBool(
-                        config.isDark ? lightIconKey : darkIconKey,
-                        elevated,
-                      );
+                      await EzCM.setBool(config.isDark ? lightIconKey : darkIconKey, value);
                     }
                     setModal(() => showIcon = value);
                   },
@@ -175,7 +174,7 @@ class AppTileSetting extends StatelessWidget {
                     if (EzCM.updateBoth) {
                       await EzCM.setBool(
                         config.isDark ? lightElevatedKey : darkElevatedKey,
-                        elevated,
+                        choice,
                       );
                     }
                     setModal(() => elevated = choice);
