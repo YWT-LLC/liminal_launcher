@@ -475,7 +475,7 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Doesn't notify
+  /// Does notify
   Future<void> updateWidget(
     EzCP config,
     WidWidGetGet type,
@@ -495,7 +495,7 @@ class AppInfoProvider extends ChangeNotifier {
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
-    // Don't notifyListeners();
+    notifyListeners();
   }
 
   /// Does notify
