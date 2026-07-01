@@ -224,13 +224,12 @@ class _AppTileState extends State<AppTile> {
             builder: (BuildContext mCon, StateSetter setModal) => ezModalScroll(
               widget.config,
               children: <Widget>[
-                // (Re)name && icon
                 EzRow(widget.config, children: <Widget>[
+                  // (Re)name
                   ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: appIconSize(widget.config),
-                      maxHeight: appIconSize(widget.config),
-                      maxWidth: widthOf(mCon) / 3,
+                    constraints: BoxConstraints.tightFor(
+                      height: appIconSize(widget.config),
+                      width: widthOf(mCon) / 3,
                     ),
                     child: TextFormField(
                       controller: renameCon,
@@ -242,6 +241,8 @@ class _AppTileState extends State<AppTile> {
                     ),
                   ),
                   widget.config.rowSpacer,
+
+                  // (Re)icon
                   EzIconButton(
                     widget.config,
                     icon: Icon(iconData ?? Icons.settings),
@@ -259,7 +260,7 @@ class _AppTileState extends State<AppTile> {
                 // Label type TODO: handle the ones that aren't allowed to co-exist (disable and potentially re-set)
                 Text(
                   'Label type',
-                  style: widget.config.bodyStyle,
+                  style: widget.config.titleStyle,
                   textAlign: TextAlign.center,
                 ),
                 widget.config.margin,
@@ -318,7 +319,7 @@ class _AppTileState extends State<AppTile> {
                 // Button type
                 Text(
                   'Button type',
-                  style: widget.config.bodyStyle,
+                  style: widget.config.titleStyle,
                   textAlign: TextAlign.center,
                 ),
                 widget.config.margin,
