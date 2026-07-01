@@ -18,7 +18,7 @@ class ToggleMediaWidget extends StatefulWidget {
   final AppState state;
   final ValueNotifier<double>? rippleProgress;
 
-  late final String _size;
+  late final WidgetSize _size;
 
   ToggleMediaWidget(
     this.config,
@@ -32,7 +32,8 @@ class ToggleMediaWidget extends StatefulWidget {
     final List<String> data =
         appInfo.homeItem(config, lane: lane, index: index).split(widgetSplit)[1].split(configSplit);
 
-    _size = data[0];
+    late final WidgetSize storedWS = WSConfig.lookup(data[0]);
+    _size = (storedWS == WidgetSize.system) ? bt2WS(config) : storedWS;
   }
 
   @override
@@ -46,9 +47,6 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
   Timer? rippleThrottle;
 
   final MenuController menuControl = MenuController();
-
-  late final WidgetSize _storedWS = WSConfig.lookup(widget._size);
-  late WidgetSize size = (_storedWS == WidgetSize.system) ? bt2WS(widget.config) : _storedWS;
 
   // Define custom functions //
 
@@ -101,19 +99,17 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
         final String? choice = await resizeWidgetDialog(
           widget.config,
           context,
-          size,
+          widget._size,
         );
         if (choice == null) return;
 
-        final WidgetSize trueChoice = WSConfig.lookup(choice);
         await widget.appInfo.updateWidget(
           widget.config,
           WidWidGetGet.toggleMedia,
-          TCC.mediaEntry(size),
+          TCC.mediaEntry(WSConfig.lookup(choice)),
           lane: widget.lane,
           index: widget.index,
         );
-        setState(() => size = trueChoice);
       },
     );
 
@@ -126,7 +122,7 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
         AppState.standard => MenuAnchor(
             builder: (_, MenuController controller, __) => EzIconButton(
               widget.config,
-              icon: (size == WidgetSize.button)
+              icon: (widget._size == WidgetSize.button)
                   ? const Icon(Icons.headphones)
                   : EzRow(widget.config, children: <Widget>[
                       // Previous
@@ -142,7 +138,7 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
                       GestureDetector(onTap: skipNext, child: const Icon(Icons.skip_next)),
                       widget.config.rowMargin,
                     ]),
-              onPressed: (size == WidgetSize.button) ? toggleMedia : doNothing,
+              onPressed: (widget._size == WidgetSize.button) ? toggleMedia : doNothing,
               onLongPress: () => canToggleMenu(widget.config, controller),
             ),
             menuChildren: <Widget>[resize, remove],

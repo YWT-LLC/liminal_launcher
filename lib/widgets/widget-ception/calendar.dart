@@ -18,7 +18,7 @@ class CalendarWidget extends StatefulWidget {
   final AppState state;
   final ValueNotifier<double>? rippleProgress;
 
-  late final String _size;
+  late final WidgetSize _size;
 
   CalendarWidget(
     this.config,
@@ -32,7 +32,8 @@ class CalendarWidget extends StatefulWidget {
     final List<String> data =
         appInfo.homeItem(config, lane: lane, index: index).split(widgetSplit)[1].split(configSplit);
 
-    _size = data[0];
+    final WidgetSize storedWS = WSConfig.lookup(data[0]);
+    _size = (storedWS == WidgetSize.system) ? bt2WS(config) : storedWS;
   }
 
   @override
@@ -46,9 +47,6 @@ class _CalendarWidgetState extends State<CalendarWidget> {
   Timer? rippleThrottle;
 
   final MenuController menuControl = MenuController();
-
-  late final WidgetSize _storedWS = WSConfig.lookup(widget._size);
-  late WidgetSize size = (_storedWS == WidgetSize.system) ? bt2WS(widget.config) : _storedWS;
 
   final TextEditingController eventCon = TextEditingController();
   OverlayEntry? overlayEntry;
@@ -179,19 +177,17 @@ class _CalendarWidgetState extends State<CalendarWidget> {
         final String? choice = await resizeWidgetDialog(
           widget.config,
           context,
-          size,
+          widget._size,
         );
         if (choice == null) return;
-        final WidgetSize trueChoice = WSConfig.lookup(choice);
 
         await widget.appInfo.updateWidget(
           widget.config,
           WidWidGetGet.calendar,
-          TCC.calendarEntry(size),
+          TCC.calendarEntry(WSConfig.lookup(choice)),
           lane: widget.lane,
           index: widget.index,
         );
-        setState(() => size = trueChoice);
       },
     );
 
@@ -202,7 +198,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
       forceFade: true,
       child: switch (state) {
         AppState.standard => MenuAnchor(
-            builder: (_, MenuController controller, __) => (size == WidgetSize.button)
+            builder: (_, MenuController controller, __) => (widget._size == WidgetSize.button)
                 ? EzIconButton(
                     widget.config,
                     icon: const Icon(Icons.edit_calendar),

@@ -18,8 +18,8 @@ class TimerWidget extends StatefulWidget {
   final AppState state;
   final ValueNotifier<double>? rippleProgress;
 
-  late final String _size;
-  late final String _time;
+  late final WidgetSize _size;
+  late final List<String> _times;
 
   TimerWidget(
     this.config,
@@ -33,8 +33,11 @@ class TimerWidget extends StatefulWidget {
     final List<String> data =
         appInfo.homeItem(config, lane: lane, index: index).split(widgetSplit)[1].split(configSplit);
 
-    _size = data[0];
-    _time = data[1];
+    final WidgetSize storedWS = WSConfig.lookup(data[0]);
+    _size = (storedWS == WidgetSize.system) ? bt2WS(config) : storedWS;
+
+    final List<String> storedTs = data[1].split(':');
+    _times = storedTs.length == 3 ? storedTs : <String>['00', '00', '00'];
   }
 
   @override
@@ -49,13 +52,9 @@ class _TimerWidgetState extends State<TimerWidget> {
 
   final MenuController menuControl = MenuController();
 
-  late final WidgetSize _storedWS = WSConfig.lookup(widget._size);
-  late WidgetSize size = (_storedWS == WidgetSize.system) ? bt2WS(widget.config) : _storedWS;
-
-  late final List<String> _storedT = widget._time.split(':');
-  late final TextEditingController ourCon = TextEditingController(text: _storedT[0]);
-  late final TextEditingController minCon = TextEditingController(text: _storedT[1]);
-  late final TextEditingController secCon = TextEditingController(text: _storedT[2]);
+  late final TextEditingController ourCon = TextEditingController(text: widget._times[0]);
+  late final TextEditingController minCon = TextEditingController(text: widget._times[1]);
+  late final TextEditingController secCon = TextEditingController(text: widget._times[2]);
 
   late final FocusNode ourNode = FocusNode();
   late final FocusNode minNode = FocusNode();
@@ -274,7 +273,7 @@ class _TimerWidgetState extends State<TimerWidget> {
           await widget.appInfo.updateWidget(
             widget.config,
             WidWidGetGet.timer,
-            TCC.timerEntry(size, <String>[ourCon.text, minCon.text, secCon.text].join(':')),
+            TCC.timerEntry(widget._size, <String>[ourCon.text, minCon.text, secCon.text].join(':')),
             lane: widget.lane,
             index: widget.index,
           );
@@ -294,19 +293,18 @@ class _TimerWidgetState extends State<TimerWidget> {
         final String? choice = await resizeWidgetDialog(
           widget.config,
           context,
-          size,
+          widget._size,
         );
         if (choice == null) return;
-        final WidgetSize trueChoice = WSConfig.lookup(choice);
 
         await widget.appInfo.updateWidget(
           widget.config,
           WidWidGetGet.timer,
-          TCC.timerEntry(size, <String>[ourCon.text, minCon.text, secCon.text].join(':')),
+          TCC.timerEntry(
+              WSConfig.lookup(choice), <String>[ourCon.text, minCon.text, secCon.text].join(':')),
           lane: widget.lane,
           index: widget.index,
         );
-        setState(() => size = trueChoice);
       },
     );
 
@@ -317,7 +315,7 @@ class _TimerWidgetState extends State<TimerWidget> {
       forceFade: true,
       child: switch (state) {
         AppState.standard => MenuAnchor(
-            builder: (_, MenuController controller, __) => (size == WidgetSize.button)
+            builder: (_, MenuController controller, __) => (widget._size == WidgetSize.button)
                 ? EzIconButton(
                     widget.config,
                     icon: const Icon(Icons.timer_outlined),

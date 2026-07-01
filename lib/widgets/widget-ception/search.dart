@@ -20,8 +20,8 @@ class SearchWidget extends StatefulWidget {
   final AppState state;
   final ValueNotifier<double>? rippleProgress;
 
-  late final String _size;
-  late final String _engine;
+  late final WidgetSize _size;
+  late final Engine _engine;
 
   SearchWidget(
     this.config,
@@ -35,8 +35,10 @@ class SearchWidget extends StatefulWidget {
     final List<String> data =
         appInfo.homeItem(config, lane: lane, index: index).split(widgetSplit)[1].split(configSplit);
 
-    _size = data[0];
-    _engine = data[1];
+    final WidgetSize storedWS = WSConfig.lookup(data[0]);
+    _size = (storedWS == WidgetSize.system) ? bt2WS(config) : storedWS;
+
+    _engine = Ignition.lookup(data[1]);
   }
 
   @override
@@ -51,15 +53,10 @@ class _SearchWidgetState extends State<SearchWidget> {
 
   final MenuController menuControl = MenuController();
 
-  late final WidgetSize _storedWS = WSConfig.lookup(widget._size);
-  late WidgetSize size = (_storedWS == WidgetSize.system) ? bt2WS(widget.config) : _storedWS;
-
-  late Engine engine = Ignition.lookup(widget._engine);
-
   final TextEditingController queryCon = TextEditingController();
   OverlayEntry? overlayEntry;
 
-  Widget get icon => switch (engine) {
+  Widget get icon => switch (widget._engine) {
         Engine.archive => const Icon(Icons.archive),
         Engine.baidu => const Icon(LineIcons.paw),
         Engine.bing => const Icon(Icons.search),
@@ -139,9 +136,9 @@ class _SearchWidgetState extends State<SearchWidget> {
 
   Future<void> search(String text) async {
     await launchUrl(Uri.https(
-      engine.base,
-      engine.path,
-      text.trim().isEmpty ? null : <String, dynamic>{engine.query: text.trim()},
+      widget._engine.base,
+      widget._engine.path,
+      text.trim().isEmpty ? null : <String, dynamic>{widget._engine.query: text.trim()},
     ));
 
     queryCon.clear();
@@ -153,20 +150,17 @@ class _SearchWidgetState extends State<SearchWidget> {
     overlayEntry = null;
   }
 
-  List<Widget> get engineMC => Engine.values
+  List<Widget> get engineChoices => Engine.values
       .map((Engine e) => EzMenuButton(
             widget.config,
             label: ezCamelToTitle(e.value),
-            onPressed: () async {
-              await widget.appInfo.updateWidget(
-                widget.config,
-                WidWidGetGet.search,
-                TCC.searchEntry(size, engine),
-                lane: widget.lane,
-                index: widget.index,
-              );
-              setState(() => engine = e);
-            },
+            onPressed: () => widget.appInfo.updateWidget(
+              widget.config,
+              WidWidGetGet.search,
+              TCC.searchEntry(widget._size, e),
+              lane: widget.lane,
+              index: widget.index,
+            ),
           ))
       .toList();
 
@@ -195,19 +189,17 @@ class _SearchWidgetState extends State<SearchWidget> {
         final String? choice = await resizeWidgetDialog(
           widget.config,
           context,
-          size,
+          widget._size,
         );
         if (choice == null) return;
-        final WidgetSize trueChoice = WSConfig.lookup(choice);
 
         await widget.appInfo.updateWidget(
           widget.config,
           WidWidGetGet.search,
-          TCC.searchEntry(size, engine),
+          TCC.searchEntry(WSConfig.lookup(choice), widget._engine),
           lane: widget.lane,
           index: widget.index,
         );
-        setState(() => size = trueChoice);
       },
     );
 
@@ -218,11 +210,11 @@ class _SearchWidgetState extends State<SearchWidget> {
       forceFade: true,
       child: switch (state) {
         AppState.standard => MenuAnchor(
-            builder: (_, MenuController controller, __) => (size == WidgetSize.button)
+            builder: (_, MenuController controller, __) => (widget._size == WidgetSize.button)
                 ? EzIconButton(
                     widget.config,
                     icon: icon,
-                    onPressed: () => launchUrl(Uri.https(engine.base, '/')),
+                    onPressed: () => launchUrl(Uri.https(widget._engine.base, '/')),
                     onLongPress: () => canToggleMenu(widget.config, controller),
                   )
                 : EzRow(widget.config, children: <Widget>[
@@ -238,7 +230,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                       ),
                       child: EzScrollBlocker(TextFormField(
                         controller: queryCon,
-                        decoration: InputDecoration(hintText: engine.value),
+                        decoration: InputDecoration(hintText: widget._engine.value),
                         textAlign: TextAlign.center,
                         textAlignVertical: TextAlignVertical.center,
                         keyboardType: TextInputType.webSearch,
@@ -254,7 +246,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                       onLongPress: () => canToggleMenu(widget.config, controller),
                     ),
                   ]),
-            menuChildren: <Widget>[...engineMC, resize, remove],
+            menuChildren: <Widget>[...engineChoices, resize, remove],
           ),
         _ => EditContainer(
             widget.config,
