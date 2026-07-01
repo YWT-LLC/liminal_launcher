@@ -150,11 +150,15 @@ class _AppFolderState extends State<FolderTile> {
     late final EzMenuButton edit = EzMenuButton(
       widget.config,
       onPressed: () async {
-        final TextEditingController renameCon = TextEditingController(text: widget._name);
-        final ValueNotifier<List<String>> appsNotif = ValueNotifier<List<String>>(widget._appList);
-
         bool showUI = false;
         int delta = 0;
+
+        final TextEditingController renameCon = TextEditingController(text: widget._name);
+        bool showIcon = iconBTs.contains(buttonType ?? folderBT(widget.config));
+        bool elevated = elevatedBTs.contains(buttonType ?? folderBT(widget.config));
+        // TODO: re-add colors when this is done
+
+        final ValueNotifier<List<String>> appsNotif = ValueNotifier<List<String>>(widget._appList);
 
         await ezModal(
           widget.config,
@@ -163,6 +167,21 @@ class _AppFolderState extends State<FolderTile> {
           isDismissible: false,
           showDragHandle: false,
           builder: (_) => StatefulBuilder(builder: (BuildContext mCon, StateSetter setModal) {
+            void nav(bool choice) {
+              delta = choice ? -1 : 1;
+              setModal(() => showUI = choice);
+            }
+
+            void resetPreview() {
+              labelType = null;
+              buttonType = null;
+
+              showIcon = iconBTs.contains(folderBT(widget.config));
+              elevated = elevatedBTs.contains(folderBT(widget.config));
+
+              setState(() {});
+            }
+
             Widget appearanceSettings() => EzScrollView(widget.config, children: <Widget>[
                   EzRow(widget.config, children: <Widget>[
                     // (Re)name
@@ -194,170 +213,91 @@ class _AppFolderState extends State<FolderTile> {
                   ]),
                   widget.config.separator,
 
-                  // Label type TODO: handle the ones that aren't allowed to co-exist (disable and potentially re-set)
-                  Text(
-                    'Label type',
-                    style: widget.config.titleStyle,
-                    textAlign: TextAlign.center,
-                  ),
-                  widget.config.margin,
-                  EzScrollView(
+                  // Label type
+                  EzRow(
                     widget.config,
-                    scrollDirection: Axis.horizontal,
-                    thumbVisibility: false,
-                    showScrollHint: true,
-                    children: LabelType.values
-                        .map((LabelType lt) => Padding(
-                              padding: EdgeInsets.symmetric(horizontal: widget.config.spacing / 2),
-                              child: EzCol(children: <Widget>[
-                                labelType == lt
-                                    ? FolderButton(
-                                        widget.config,
-                                        name: renameCon.text,
-                                        icon: icon,
-                                        buttonType: buttonType ?? folderBT(widget.config),
-                                        labelType: lt,
-                                        onPressed: () => setModal(() => labelType = lt),
-                                        onLongPress: () => setModal(() => labelType = null),
-                                      ) // TODO: something visual
-                                    : FolderButton(
-                                        widget.config,
-                                        name: renameCon.text,
-                                        icon: icon,
-                                        buttonType: buttonType ?? folderBT(widget.config),
-                                        labelType: lt,
-                                        onPressed: () => setModal(() => labelType = lt),
-                                        onLongPress: () => setModal(() => labelType = null),
-                                      ),
-                                ExcludeSemantics(
-                                  child: EzTextButton(
-                                    widget.config,
-                                    text: ezCamelToTitle(lt.value),
-                                    textAlign: TextAlign.center,
-                                    style: TextButton.styleFrom(
-                                      padding: EdgeInsets.zero,
-                                      foregroundColor: labelType == lt
-                                          ? widget.config.colors.primary
-                                          : widget.config.colors.onSurface,
-                                      backgroundColor: widget.config.colors.surfaceContainer,
-                                    ),
-                                    onPressed: () => setModal(() => labelType = lt),
-                                    onLongPress: () => setModal(() => labelType = null),
-                                  ),
-                                ),
-                              ]),
-                            ))
-                        .toList(),
-                  ),
-                  widget.config.separator,
+                    children: <Widget>[
+                      EzText(widget.config, text: 'Label type'),
+                      widget.config.rowSpacer,
+                      EzDropdownMenu<LabelType?>(
+                        widget.config,
+                        widthEntry: 'Full name',
+                        dropdownMenuEntries: <DropdownMenuEntry<LabelType?>>[
+                          const DropdownMenuEntry<LabelType?>(
+                            value: null,
+                            label: 'System',
+                          ),
+                          ...LabelType.values.map((LabelType lt) => DropdownMenuEntry<LabelType?>(
+                                value: lt,
+                                label: ezCamelToTitle(lt.value),
+                              )),
+                        ],
+                        enableSearch: false,
+                        initialSelection: labelType,
+                        onSelected: (LabelType? choice) {
+                          if (choice == null) {
+                            resetPreview();
+                            return;
+                          }
 
-                  // Button type
-                  Text(
-                    'Button type',
-                    style: widget.config.titleStyle,
-                    textAlign: TextAlign.center,
+                          if (choice == LabelType.none) showIcon = true;
+                          setModal(() => labelType = choice);
+                        },
+                      ),
+                    ],
                   ),
-                  widget.config.margin,
-                  EzScrollView(
+                  widget.config.spacer,
+
+                  // Show icon
+                  EzSwitchPair(
                     widget.config,
-                    scrollDirection: Axis.horizontal,
-                    thumbVisibility: false,
-                    showScrollHint: true,
-                    children: ButtonType.values
-                        .map((ButtonType bt) => Padding(
-                              padding: EdgeInsets.symmetric(horizontal: widget.config.spacing / 2),
-                              child: EzCol(children: <Widget>[
-                                buttonType == bt
-                                    ? FolderButton(
-                                        widget.config,
-                                        name: renameCon.text,
-                                        icon: icon,
-                                        buttonType: bt,
-                                        labelType: labelType ?? folderLabels(widget.config),
-                                        onPressed: () => setModal(() => buttonType = bt),
-                                        onLongPress: () => setModal(() => buttonType = null),
-                                      ) // TODO: something visual
-                                    : FolderButton(
-                                        widget.config,
-                                        name: renameCon.text,
-                                        icon: icon,
-                                        buttonType: bt,
-                                        labelType: labelType ?? folderLabels(widget.config),
-                                        onPressed: () => setModal(() => buttonType = bt),
-                                        onLongPress: () => setModal(() => buttonType = null),
-                                      ),
-                                ExcludeSemantics(
-                                  child: EzTextButton(
-                                    widget.config,
-                                    text: ezCamelToTitle(bt.value),
-                                    textAlign: TextAlign.center,
-                                    style: TextButton.styleFrom(
-                                      padding: EdgeInsets.zero,
-                                      foregroundColor: buttonType == bt
-                                          ? widget.config.colors.primary
-                                          : widget.config.colors.onSurface,
-                                      backgroundColor: widget.config.colors.surfaceContainer,
-                                    ),
-                                    onPressed: () => setModal(() => buttonType = bt),
-                                    onLongPress: () => setModal(() => buttonType = null),
-                                  ),
-                                ),
-                              ]),
-                            ))
-                        .toList(),
+                    key: ValueKey<String>('icon-$showIcon'),
+                    text: 'Show icon',
+                    value: showIcon,
+                    onChanged: (bool? choice) {
+                      if (choice == null) {
+                        resetPreview();
+                        return;
+                      }
+
+                      if (choice == false && labelType == LabelType.none) {
+                        labelType = LabelType.full;
+                      }
+                      setModal(() => showIcon = choice);
+                    },
+                  ),
+                  widget.config.spacer,
+
+                  // Elevated
+                  EzSwitchPair(
+                    widget.config,
+                    key: ValueKey<String>('elevated-$showIcon'),
+                    text: 'Elevated button',
+                    value: elevated,
+                    afterChanged: (bool? choice) {
+                      if (choice == null) {
+                        resetPreview();
+                        return;
+                      }
+
+                      setModal(() => elevated = choice);
+                    },
                   ),
                   widget.config.divider,
 
-                  // Long press note/reminder TODO: get highlighting working and copy upgrades to app tile
-                  Text(
-                    'Long press settings to reset/use default',
-                    style: widget.config.labelStyle,
-                    textAlign: TextAlign.center,
-                  ),
-                  EzRichText(
+                  // Preview
+                  FolderButton(
                     widget.config,
-                    children: <InlineSpan>[
-                      WidgetSpan(
-                        child: Container(
-                          height: widget.config.iconSize,
-                          width: widget.config.iconSize,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: widget.config.colors.secondary,
-                            border: BoxBorder.all(
-                              color: widget.config.colors.onSecondary,
-                              width: widget.config.borderWidth,
-                            ),
-                          ),
-                        ),
-                        alignment: PlaceholderAlignment.middle,
-                      ),
-                      EzPlainText(
-                        text: ' highlight == current choice\n',
-                        style: widget.config.labelStyle,
-                      ),
-                      WidgetSpan(
-                        child: Container(
-                          height: widget.config.iconSize,
-                          width: widget.config.iconSize,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: widget.config.colors.tertiary,
-                            border: BoxBorder.all(
-                              color: widget.config.colors.onTertiary,
-                              width: widget.config.borderWidth,
-                            ),
-                          ),
-                        ),
-                        alignment: PlaceholderAlignment.middle,
-                      ),
-                      EzPlainText(
-                        text: ' highlight == current default',
-                        style: widget.config.labelStyle,
-                      ),
-                    ],
-                    textAlign: TextAlign.center,
-                    style: widget.config.labelStyle,
+                    name: renameCon.text.trim(),
+                    icon: icon,
+                    buttonType: BTConfig.build(
+                      labelType ?? folderLabels(widget.config),
+                      icons: showIcon,
+                      elevated: elevated,
+                    ),
+                    labelType: labelType ?? folderLabels(widget.config),
+                    onPressed: doNothing,
+                    onLongPress: doNothing,
                   ),
                   widget.config.spacer,
 
@@ -514,11 +454,6 @@ class _AppFolderState extends State<FolderTile> {
                           ),
                         ]),
                 );
-
-            void nav(bool choice) {
-              delta = choice ? -1 : 1;
-              setModal(() => showUI = choice);
-            }
 
             return EzCol(mainAxisSize: MainAxisSize.max, children: <Widget>[
               EzHeader(widget.config),
