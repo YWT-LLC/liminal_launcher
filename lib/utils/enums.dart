@@ -45,6 +45,19 @@ enum AppState { standard, groupEdit, verbose }
 
 enum ButtonType { icon, eIcon, text, eText, textIcon, eTextIcon }
 
+const Set<ButtonType> elevatedBTs = <ButtonType>{
+  ButtonType.eIcon,
+  ButtonType.eText,
+  ButtonType.eTextIcon,
+};
+
+const Set<ButtonType> iconBTs = <ButtonType>{
+  ButtonType.icon,
+  ButtonType.eIcon,
+  ButtonType.textIcon,
+  ButtonType.eTextIcon,
+};
+
 const String esIcon = 'iconButton';
 const String esEIcon = 'elevatedIconButton';
 const String esText = 'textButton';
