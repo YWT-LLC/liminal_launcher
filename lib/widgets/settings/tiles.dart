@@ -36,23 +36,31 @@ class AppTileSetting extends StatelessWidget {
   Widget build(BuildContext context) => EzElevatedIconButton(
         config,
         onPressed: () async {
-          final String label = folder ? 'Liminal Folder' : 'Liminal Launcher';
-          final Widget icon = folder
-              ? const Icon(Icons.folder_outlined)
-              : ClipOval(
-                  child: Image.asset(
-                    appIconPath,
-                    semanticLabel: 'Liminal Launcher icon',
-                    width: appIconSize(config),
-                    height: appIconSize(config),
-                    fit: BoxFit.cover,
-                  ),
-                );
-
           LabelType labelType = folder ? folderLabels(config) : listLabels(config);
           bool showIcon = folder ? folderIcons(config) : listIcons(config);
           bool elevated = folder ? elevatedFolders(config) : elevatedLists(config);
           bool useWide = wideTiles(config);
+
+          Widget core() => folder
+              ? FolderButton(
+                  config,
+                  name: 'Liminal Folder',
+                  icon: Icons.folder_outlined,
+                  buttonType: BTConfig.build(labelType, icons: showIcon, elevated: elevated),
+                  labelType: labelType,
+                  onPressed: doNothing,
+                  onLongPress: doNothing,
+                )
+              : AppButton(
+                  config,
+                  name: 'Liminal Launcher',
+                  image: null,
+                  icon: Icons.launch,
+                  buttonType: BTConfig.build(labelType, icons: showIcon, elevated: elevated),
+                  labelType: labelType,
+                  onPressed: doNothing,
+                  onLongPress: doNothing,
+                );
 
           await ezModal(
             config,
@@ -67,29 +75,10 @@ class AppTileSetting extends StatelessWidget {
                         child: Container(
                           width: double.infinity,
                           alignment: LAConfig.merge(h: hAlign(config), v: ListAlignment.center),
-                          child: AppButton(
-                            config,
-                            name: label,
-                            image: null,
-                            icon: icon,
-                            buttonType:
-                                BTConfig.build(labelType, icons: showIcon, elevated: elevated),
-                            labelType: labelType,
-                            onPressed: doNothing,
-                            onLongPress: doNothing,
-                          ),
+                          child: core(),
                         ),
                       )
-                    : AppButton(
-                        config,
-                        name: label,
-                        image: null,
-                        icon: icon,
-                        buttonType: BTConfig.build(labelType, icons: showIcon, elevated: elevated),
-                        labelType: labelType,
-                        onPressed: doNothing,
-                        onLongPress: doNothing,
-                      ),
+                    : core(),
 
                 config.separator,
 
