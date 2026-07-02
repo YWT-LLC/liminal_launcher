@@ -406,9 +406,10 @@ class _AppTileState extends State<AppTile> {
                 name: widget.app.label,
                 image: widget.app.icon,
                 icon: widget._icon,
-                buttonType: folderBT(widget.config), // TODO: third one?
-                labelType: folderLabels(widget.config),
+                buttonType: listBT(widget.config),
+                labelType: listLabels(widget.config),
                 onPressed: () => widget.onSelected(widget.app),
+                onLongPress: doNothing,
               )
             : MenuAnchor(
                 builder: (_, MenuController controller, __) => wideTiles(widget.config)
