@@ -9,8 +9,6 @@ import '../export.dart';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-// TODO: HFSJFC how many copy/paste mistakes are you gonna have? I guess re-read everything
-
 class AppTileSetting extends StatelessWidget {
   final EzCP config;
   final bool folder;
@@ -53,7 +51,7 @@ class AppTileSetting extends StatelessWidget {
                 )
               : AppButton(
                   config,
-                  name: 'Liminal Launcher',
+                  name: 'Liminal App',
                   image: null,
                   icon: Icons.launch,
                   buttonType: BTConfig.build(labelType, icons: showIcon, elevated: elevated),
@@ -182,7 +180,7 @@ class AppTileSetting extends StatelessWidget {
                     if (EzCM.updateBoth) {
                       await EzCM.setBool(
                         config.isDark ? lightWideTilesKey : darkWideTilesKey,
-                        useWide,
+                        choice,
                       );
                     }
                     setModal(() => useWide = choice);
