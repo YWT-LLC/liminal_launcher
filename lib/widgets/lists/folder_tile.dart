@@ -68,8 +68,6 @@ class _AppFolderState extends State<FolderTile> {
 
   final MenuController menuControl = MenuController();
 
-  bool open = false;
-
   // Define custom functions //
 
   void rippling() {
@@ -96,36 +94,34 @@ class _AppFolderState extends State<FolderTile> {
     }
   }
 
-  List<Widget> showApps(void Function() toggleMenu) {
-    final List<Widget> toReturn = <Widget>[];
-
-    for (final String id in widget._appList) {
-      final AppInfo? app = widget.appInfo.appMap[id];
-      if (app == null) continue;
-
-      toReturn.addAll(<Widget>[
-        AppTile(
+  Future<void> showApps() => ezModal(
+        widget.config,
+        context: context,
+        builder: (BuildContext mCon) => ezModalScroll(
           widget.config,
-          appInfo: widget.appInfo,
-          app: app,
-          location: AppLocation.folder,
-          state: state,
-          onSelected: (AppInfo app) async {
-            setState(() => open = false);
-            await launchApp(app);
-          },
+          children: <Widget>[
+            ...widget._appList
+                .map((String id) => widget.appInfo.appMap.containsKey(id)
+                    ? Padding(
+                        padding: EzInsets.wrap(widget.config.spacing),
+                        child: AppTile(
+                          widget.config,
+                          appInfo: widget.appInfo,
+                          app: widget.appInfo.appMap[id]!,
+                          location: AppLocation.folder,
+                          state: state,
+                          onSelected: (AppInfo app) async {
+                            Navigator.of(mCon).pop();
+                            await launchApp(app);
+                          },
+                        ),
+                      )
+                    : const SizedBox.shrink())
+                .where((Widget entry) => entry.runtimeType != SizedBox),
+            widget.config.spacer,
+          ],
         ),
-        GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () => setState(() => open = false),
-          onLongPress: toggleMenu,
-          child: SizedBox(height: widget.config.iconSize, width: widget.config.spacing),
-        ),
-      ]);
-    }
-
-    return toReturn;
-  }
+      );
 
   // Init //
 
@@ -525,56 +521,33 @@ class _AppFolderState extends State<FolderTile> {
       forceFade: true,
       child: state == AppState.standard
           ? MenuAnchor(
-              builder: (_, MenuController controller, __) => open
-                  ? TapRegion(
-                      onTapOutside: (_) => setState(() => open = false),
-                      child: EzScrollBlocker(
-                        EzScrollView(
-                          widget.config,
-                          reverseHands: true,
-                          thumbVisibility: false,
-                          mainAxisAlignment: hAlign(widget.config).mainAxis,
-                          scrollDirection: Axis.horizontal,
-                          children: <Widget>[
-                            ...showApps(() => canToggleMenu(widget.config, controller)),
-
-                            // Close folder
-                            EzIconButton(
-                              widget.config,
-                              icon: EzIcon(widget.config, Icons.close),
-                              onPressed: () => setState(() => open = false),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  : wideTiles(widget.config)
-                      ? InkWell(
-                          onTap: () => setState(() => open = true),
-                          onLongPress: () => canToggleMenu(widget.config, controller),
-                          child: Container(
-                            width: double.infinity,
-                            alignment: subAlign,
-                            child: FolderButton(
-                              widget.config,
-                              name: widget._name,
-                              icon: widget._icon,
-                              buttonType: widget._buttonType ?? folderBT(widget.config),
-                              labelType: widget._labelType ?? folderLabels(widget.config),
-                              onPressed: () => setState(() => open = true),
-                              onLongPress: () => canToggleMenu(widget.config, controller),
-                            ),
-                          ),
-                        )
-                      : FolderButton(
+              builder: (_, MenuController controller, __) => wideTiles(widget.config)
+                  ? InkWell(
+                      onTap: () async => await showApps(),
+                      onLongPress: () => canToggleMenu(widget.config, controller),
+                      child: Container(
+                        width: double.infinity,
+                        alignment: subAlign,
+                        child: FolderButton(
                           widget.config,
                           name: widget._name,
                           icon: widget._icon,
                           buttonType: widget._buttonType ?? folderBT(widget.config),
                           labelType: widget._labelType ?? folderLabels(widget.config),
-                          onPressed: () => setState(() => open = true),
+                          onPressed: () async => await showApps(),
                           onLongPress: () => canToggleMenu(widget.config, controller),
                         ),
+                      ),
+                    )
+                  : FolderButton(
+                      widget.config,
+                      name: widget._name,
+                      icon: widget._icon,
+                      buttonType: widget._buttonType ?? folderBT(widget.config),
+                      labelType: widget._labelType ?? folderLabels(widget.config),
+                      onPressed: () async => await showApps(),
+                      onLongPress: () => canToggleMenu(widget.config, controller),
+                    ),
               menuChildren: <Widget>[edit, remove],
             )
           : EditContainer(
