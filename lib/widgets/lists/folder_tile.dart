@@ -100,24 +100,27 @@ class _AppFolderState extends State<FolderTile> {
         builder: (BuildContext mCon) => ezModalScroll(
           widget.config,
           children: <Widget>[
-            ...widget._appList
-                .map((String id) => widget.appInfo.appMap.containsKey(id)
-                    ? Padding(
-                        padding: EzInsets.wrap(widget.config.spacing),
-                        child: AppTile(
-                          widget.config,
-                          appInfo: widget.appInfo,
-                          app: widget.appInfo.appMap[id]!,
-                          location: AppLocation.folder,
-                          state: state,
-                          onSelected: (AppInfo app) async {
-                            Navigator.of(mCon).pop();
-                            await launchApp(app);
-                          },
-                        ),
-                      )
-                    : const SizedBox.shrink())
-                .where((Widget entry) => entry.runtimeType != SizedBox),
+            EzWrap(
+              children: widget._appList
+                  .map((String id) => widget.appInfo.appMap.containsKey(id)
+                      ? Padding(
+                          padding: EzInsets.wrap(widget.config.spacing),
+                          child: AppTile(
+                            widget.config,
+                            appInfo: widget.appInfo,
+                            app: widget.appInfo.appMap[id]!,
+                            location: AppLocation.folder,
+                            state: state,
+                            onSelected: (AppInfo app) async {
+                              Navigator.of(mCon).pop();
+                              await launchApp(app);
+                            },
+                          ),
+                        )
+                      : const SizedBox.shrink())
+                  .where((Widget entry) => entry.runtimeType != SizedBox)
+                  .toList(),
+            ),
             widget.config.spacer,
           ],
         ),
