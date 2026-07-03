@@ -238,7 +238,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                       widget.config,
                       icon: const Icon(Icons.edit_calendar),
                       onPressed: () async {
-                        final bool success = await createCalendarEvent(eventCon.text.trim());
+                        final bool success = await createCalendarEvent(eventCon.text);
                         eventCon.clear();
                         removeOverlay();
                         if (!success && context.mounted) await selfDestruct();

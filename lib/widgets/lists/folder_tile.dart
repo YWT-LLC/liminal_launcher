@@ -293,7 +293,7 @@ class _AppFolderState extends State<FolderTile> {
                   // Preview
                   FolderButton(
                     widget.config,
-                    name: renameCon.text.trim(),
+                    name: validateName(renameCon.text) == null ? renameCon.text : widget._name,
                     icon: icon,
                     buttonType: BTConfig.build(
                       labelType ?? folderLabels(widget.config),
@@ -346,7 +346,8 @@ class _AppFolderState extends State<FolderTile> {
                                 title: EzTextButton(
                                   widget.config,
                                   onPressed: doNothing,
-                                  text: "Add to '${renameCon.text}'",
+                                  text:
+                                      "Add to '${validateName(renameCon.text) == null ? renameCon.text : widget._name}'",
                                   textStyle: widget.config.labelStyle,
                                 ),
                               ),
@@ -445,7 +446,8 @@ class _AppFolderState extends State<FolderTile> {
                                     title: EzTextButton(
                                       widget.config,
                                       onPressed: doNothing,
-                                      text: "Add to '${renameCon.text}'",
+                                      text:
+                                          "Add to '${validateName(renameCon.text) == null ? renameCon.text : widget._name}'",
                                       textStyle: widget.config.labelStyle,
                                     ),
                                   ),
@@ -504,7 +506,7 @@ class _AppFolderState extends State<FolderTile> {
               widget.config,
               lane: widget.lane,
               index: widget.index,
-              name: renameCon.text,
+              name: validateName(renameCon.text) == null ? renameCon.text : widget._name,
               extra: TCC.folderEntry(
                   icon,
                   BTConfig.build(labelType ?? folderLabels(widget.config),

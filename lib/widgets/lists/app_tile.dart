@@ -345,7 +345,7 @@ class _AppTileState extends State<AppTile> {
               // Preview
               AppButton(
                 widget.config,
-                name: renameCon.text.trim(),
+                name: validateName(renameCon.text) == null ? renameCon.text : widget.app.label,
                 image: widget.app.icon,
                 icon: icon,
                 buttonType: BTConfig.build(
@@ -377,14 +377,13 @@ class _AppTileState extends State<AppTile> {
           }),
         );
 
-        // TODO: validate here (and all others)
         await widget.appInfo.updateApp(
           widget.config,
           lane: widget.lane!,
           index: widget.index!,
           id: widget.app.id,
           extra: TCC.appEntry(
-            renameCon.text.trim(),
+            validateName(renameCon.text) == null ? renameCon.text : widget.app.label,
             icon,
             BTConfig.build(labelType ?? listLabels(widget.config),
                 icons: showIcon, elevated: elevated),

@@ -273,7 +273,14 @@ class _TimerWidgetState extends State<TimerWidget> {
           await widget.appInfo.updateWidget(
             widget.config,
             WidWidGetGet.timer,
-            TCC.timerEntry(widget._size, <String>[ourCon.text, minCon.text, secCon.text].join(':')),
+            TCC.timerEntry(
+              widget._size,
+              <String>[
+                _validateTime(ourCon.text),
+                _validateTime(minCon.text),
+                _validateTime(secCon.text),
+              ].join(':'),
+            ),
             lane: widget.lane,
             index: widget.index,
           );
@@ -301,7 +308,13 @@ class _TimerWidgetState extends State<TimerWidget> {
           widget.config,
           WidWidGetGet.timer,
           TCC.timerEntry(
-              WSConfig.lookup(choice), <String>[ourCon.text, minCon.text, secCon.text].join(':')),
+            WSConfig.lookup(choice),
+            <String>[
+              _validateTime(ourCon.text),
+              _validateTime(minCon.text),
+              _validateTime(secCon.text),
+            ].join(':'),
+          ),
           lane: widget.lane,
           index: widget.index,
         );
@@ -320,9 +333,9 @@ class _TimerWidgetState extends State<TimerWidget> {
                     widget.config,
                     icon: const Icon(Icons.timer_outlined),
                     onPressed: () async {
-                      final int ours = int.tryParse(ourCon.text) ?? 0;
-                      final int mins = int.tryParse(minCon.text) ?? 0;
-                      final int secs = int.tryParse(secCon.text) ?? 0;
+                      final int ours = _toInt(ourCon.text);
+                      final int mins = _toInt(minCon.text);
+                      final int secs = _toInt(secCon.text);
 
                       ((ours + mins + secs) > 0)
                           ? await setTimer(<int>[ours, mins, secs])
@@ -357,9 +370,9 @@ class _TimerWidgetState extends State<TimerWidget> {
                       () async {
                         removeOverlay();
                         await setTimer(<int>[
-                          int.tryParse(ourCon.text) ?? 0,
-                          int.tryParse(minCon.text) ?? 0,
-                          int.tryParse(secCon.text) ?? 0,
+                          _toInt(ourCon.text),
+                          _toInt(minCon.text),
+                          _toInt(secCon.text),
                         ]);
                       },
                       last: true,
@@ -372,9 +385,9 @@ class _TimerWidgetState extends State<TimerWidget> {
                       onPressed: () async {
                         removeOverlay();
                         await setTimer(<int>[
-                          int.tryParse(ourCon.text) ?? 0,
-                          int.tryParse(minCon.text) ?? 0,
-                          int.tryParse(secCon.text) ?? 0,
+                          _toInt(ourCon.text),
+                          _toInt(minCon.text),
+                          _toInt(secCon.text),
                         ]);
                       },
                       onLongPress: () => canToggleMenu(widget.config, controller),
@@ -415,4 +428,14 @@ class _TimerWidgetState extends State<TimerWidget> {
     widget.rippleProgress?.removeListener(rippling);
     super.dispose();
   }
+}
+
+String _validateTime(String time) {
+  final int? value = int.tryParse(time);
+  return (value == null) ? '00' : ((value > 99) ? '99' : time);
+}
+
+int _toInt(String time) {
+  final int? value = int.tryParse(time);
+  return (value == null) ? 0 : ((value > 99) ? 99 : value);
 }
