@@ -147,9 +147,9 @@ class _AppListScreenState extends State<AppListScreen> {
                     config,
                     icon: EzIcon(config, ascList ? Icons.arrow_upward : Icons.arrow_downward),
                     onPressed: () async {
-                      await EzCM.setBool(ascListKey, ascList);
+                      await EzCM.setBool(ascListKey, !ascList);
 
-                      appInfo.sort(listSort, ascList);
+                      appInfo.sort(listSort, !ascList);
                       setState(() => ascList = !ascList);
                     },
                   ),
