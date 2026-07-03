@@ -8,6 +8,7 @@
 // am I using my cleanup properly?
 
 import './export.dart';
+import '../widgets/export.dart';
 
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -296,7 +297,7 @@ class AppInfoProvider extends ChangeNotifier {
   Future<void> addSearch(EzCP config, int lane) async {
     final String entry = <String>[
       WidWidGetGet.search.value,
-      TCC.searchEntry(WidgetSize.system, Engine.ecosia),
+      TCC.searchEntry(WidgetSize.system, ecosia, Engine.defaults.map((Engine e) => e.value)),
     ].join(widgetSplit);
 
     if (interlinked || config.isDark) {

@@ -4,6 +4,7 @@
  */
 
 import './export.dart';
+import '../widgets/export.dart';
 
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
@@ -195,7 +196,7 @@ final Map<String, Object> liminalDefault = <String, Object>{
       ].join(widgetSplit),
       <String>[
         WidWidGetGet.search.value,
-        TCC.searchEntry(WidgetSize.tile, Engine.ecosia),
+        TCC.searchEntry(WidgetSize.tile, ecosia, Engine.defaults.map((Engine e) => e.value)),
       ].join(widgetSplit),
     ].join(listSplit),
   ],
@@ -211,7 +212,7 @@ final Map<String, Object> liminalDefault = <String, Object>{
       ].join(widgetSplit),
       <String>[
         WidWidGetGet.search.value,
-        TCC.searchEntry(WidgetSize.tile, Engine.ecosia),
+        TCC.searchEntry(WidgetSize.tile, ecosia, Engine.defaults.map((Engine e) => e.value)),
       ].join(widgetSplit),
     ].join(listSplit),
   ],

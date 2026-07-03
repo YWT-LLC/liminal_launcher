@@ -4,6 +4,7 @@
  */
 
 import './export.dart';
+import '../widgets/export.dart';
 
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
@@ -141,121 +142,6 @@ extension DTConfig on DateType {
         esMedium => DateType.medium,
         esLong => DateType.long,
         esNone || _ => DateType.none,
-      };
-}
-
-// Engine //
-
-enum Engine {
-  archive,
-  baidu,
-  bing,
-  ducks,
-  ecosia,
-  google,
-  naver,
-  qwant,
-  wikipedia,
-  wolframAlpha,
-  yahoo,
-  yandex,
-  youTube,
-}
-
-const String _archive = 'archive';
-const String _baidu = 'baidu';
-const String _bing = 'bing';
-const String _ducks = 'ducks';
-const String _ecosia = 'ecosia';
-const String _google = 'google';
-const String _naver = 'naver';
-const String _qwant = 'qwant';
-const String _wikipedia = 'wikipedia';
-const String _wolframAlpha = 'wolframAlpha';
-const String _yahoo = 'yahoo';
-const String _yandex = 'yandex';
-const String _youTube = 'youTube';
-
-extension Ignition on Engine {
-  String get value => switch (this) {
-        Engine.archive => _archive,
-        Engine.baidu => _baidu,
-        Engine.bing => _bing,
-        Engine.ducks => _ducks,
-        Engine.ecosia => _ecosia,
-        Engine.google => _google,
-        Engine.naver => _naver,
-        Engine.qwant => _qwant,
-        Engine.wikipedia => _wikipedia,
-        Engine.wolframAlpha => _wolframAlpha,
-        Engine.yahoo => _yahoo,
-        Engine.yandex => _yandex,
-        Engine.youTube => _youTube,
-      };
-
-  String get base => switch (this) {
-        Engine.archive => 'archive.org',
-        Engine.baidu => 'baidu.com',
-        Engine.bing => 'bing.com',
-        Engine.ducks => 'duckduckgo.com',
-        Engine.ecosia => 'ecosia.org',
-        Engine.google => 'google.com',
-        Engine.naver => 'search.naver.com',
-        Engine.qwant => 'qwant.com',
-        Engine.wikipedia => 'wikipedia.org',
-        Engine.wolframAlpha => 'wolframalpha.com',
-        Engine.yahoo => 'search.yahoo.com',
-        Engine.yandex => 'yandex.com',
-        Engine.youTube => 'youtube.com',
-      };
-
-  String get path => switch (this) {
-        Engine.archive => '/search',
-        Engine.baidu => '/s',
-        Engine.bing => '/search',
-        Engine.ducks => '/',
-        Engine.ecosia => '/search',
-        Engine.google => '/search',
-        Engine.naver => '/search.naver',
-        Engine.qwant => '/',
-        Engine.wikipedia => '/w/index.php',
-        Engine.wolframAlpha => '/input',
-        Engine.yahoo => '/search',
-        Engine.yandex => '/search/',
-        Engine.youTube => '/results',
-      };
-
-  String get query => switch (this) {
-        Engine.archive => 'query',
-        Engine.baidu => 'wd',
-        Engine.bing => 'q',
-        Engine.ducks => 'q',
-        Engine.ecosia => 'q',
-        Engine.google => 'q',
-        Engine.naver => 'query',
-        Engine.qwant => 'q',
-        Engine.wikipedia => 'search',
-        Engine.wolframAlpha => 'i',
-        Engine.yahoo => 'p',
-        Engine.yandex => 'text',
-        Engine.youTube => 'search_query',
-      };
-
-  static Engine lookup(String value) => switch (value) {
-        _archive => Engine.archive,
-        _baidu => Engine.baidu,
-        _bing => Engine.bing,
-        _ducks => Engine.ducks,
-        _ecosia => Engine.ecosia,
-        _google => Engine.google,
-        _naver => Engine.naver,
-        _qwant => Engine.qwant,
-        _wikipedia => Engine.wikipedia,
-        _wolframAlpha => Engine.wolframAlpha,
-        _yahoo => Engine.yahoo,
-        _yandex => Engine.yandex,
-        _youTube => Engine.youTube,
-        _ => Engine.ecosia,
       };
 }
 
@@ -413,10 +299,8 @@ extension TCC on TileConfig {
         dateColor == null ? esSystem : dateColor.toARGB32().toString(),
       ].join(configSplit);
 
-  static String searchEntry(WidgetSize size, Engine engine) => <String>[
-        size.value,
-        engine.value,
-      ].join(configSplit);
+  static String searchEntry(WidgetSize size, Engine engine, Iterable<String> choices) =>
+      <String>[size.value, engine.value, choices.join(engineSplit)].join(configSplit);
 
   static String timerEntry(WidgetSize size, String autoTime) => <String>[
         size.value,
