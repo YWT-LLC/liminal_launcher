@@ -356,7 +356,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
             // Minimal-ish
             Text(
-              "It's geared toward minimalism, but with limitless customization.\nWho said minimal has to be boring?",
+              "It's geared toward minimalism,\nbut has limitless customization.",
               textAlign: TextAlign.center,
               style: config.bodyStyle,
             ),
@@ -368,8 +368,10 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
               children: <InlineSpan>[
                 EzPlainText(
                   text:
-                      '''Personalizing your launcher is simple, with one potential exception: most settings (appearance AND app list) can be completely separate for dark/light themes!
-                
+                      '''Personalization is easy, and everything that needs explanation will have it. 
+
+As a general rule: Liminal's appearance can be completely separate based on theme mode!
+
 While in the relevant settings, you will see a toggle-able icon that indicates whether you're editing the dark ''',
                   style: config.bodyStyle,
                 ),
@@ -397,7 +399,7 @@ While in the relevant settings, you will see a toggle-able icon that indicates w
                   ),
                 ),
                 EzPlainText(
-                  text: ' themes.\n\nLong press the home screen to get started!',
+                  text: ' themes.',
                   style: config.bodyStyle,
                 ),
               ],
@@ -408,7 +410,7 @@ While in the relevant settings, you will see a toggle-able icon that indicates w
 
             // Have fun!
             Text(
-              'Thank you, and enjoy!',
+              'Long press the home screen to get started.\nThank you, and enjoy!',
               textAlign: TextAlign.center,
               style: config.bodyStyle,
             ),
