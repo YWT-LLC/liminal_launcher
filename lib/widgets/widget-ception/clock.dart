@@ -129,7 +129,7 @@ class _ClockWidgetState extends State<ClockWidget> {
                 widget.config,
                 children: <InlineSpan>[
                   EzPlainText(
-                    text: 'Long press any button to reset/use default',
+                    text: 'Long press any button to reset/use default\n',
                     style: widget.config.labelStyle,
                   ),
                   WidgetSpan(
@@ -293,6 +293,7 @@ class _ClockWidgetState extends State<ClockWidget> {
               // Time color
               EzElevatedIconButton(
                 widget.config,
+                enabled: showTime,
                 onPressed: () async {
                   Color curr = timeColor ?? widget.config.colors.onSurface;
 
@@ -414,6 +415,7 @@ class _ClockWidgetState extends State<ClockWidget> {
               // Date color
               EzElevatedIconButton(
                 widget.config,
+                enabled: dateType != DateType.none,
                 onPressed: () async {
                   Color curr = dateColor ?? widget.config.colors.onSurface;
 
