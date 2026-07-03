@@ -341,30 +341,28 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
     // Check for welcome message
     if (!EzCM.get(shownIntroKey)) {
-      final bool isGPlay = await isGPlayInstall();
-
       if (context.mounted) {
         await ezModal(
           config,
           context: context,
           builder: (_) => ezModalScroll(config, children: <Widget>[
+            // Welcome
             Text(
               'Welcome to Liminal Launcher',
               textAlign: TextAlign.center,
               style: config.titleStyle,
             ),
-            Text(
-              'I hope it serves you well!',
-              textAlign: TextAlign.center,
-              style: config.bodyStyle,
-            ),
             config.centerLine,
+
+            // Minimal-ish
             Text(
               "It's geared toward minimalism, but with limitless customization.\nWho said minimal has to be boring?",
               textAlign: TextAlign.center,
               style: config.bodyStyle,
             ),
             config.centerLine,
+
+            // Yin/Yang
             EzRichText(
               config,
               children: <InlineSpan>[
@@ -406,36 +404,9 @@ While in the relevant settings, you will see a toggle-able icon that indicates w
               textAlign: TextAlign.center,
               style: config.bodyStyle,
             ),
-            if (!isGPlay) ...<Widget>[
-              config.divider,
-              EzRichText(
-                config,
-                children: <InlineSpan>[
-                  const EzPlainText(
-                    text: '''This version is not from the Play Store, so it should have been free.
-Rest assured, the free version of Liminal will always be identical to the Google Play version.
-
-If you want to support Liminal's development, or the development of more Empathetech software, please consider ''',
-                  ),
-                  EzInlineLink(
-                    config,
-                    text: 'contributing',
-                    style: config.bodyStyle,
-                    textAlign: TextAlign.center,
-                    url: Uri.parse('https://www.empathetech.net/#/contribute'),
-                    hint: 'Open a link to the Empathetic contribution options.',
-                  ),
-                  const EzPlainText(
-                    text:
-                        '.\n\nThis is the only non-tutorial pop-up, and its only appearance this install.',
-                  ),
-                ],
-                style: config.bodyStyle,
-                textBackground: false,
-                textAlign: TextAlign.center,
-              ),
-            ],
             config.centerLine,
+
+            // Have fun!
             Text(
               'Thank you, and enjoy!',
               textAlign: TextAlign.center,
@@ -445,6 +416,81 @@ If you want to support Liminal's development, or the development of more Empathe
           ]),
         );
       }
+
+      final bool isGPlay = await isGPlayInstall();
+      if (context.mounted && !isGPlay) {
+        const String m1 = '''This version is not from the Play Store, so it should have been free.
+Rest assured, the free version of Liminal will always be identical to the Google Play version.
+
+If you want to support Liminal's development, or the development of more Empathetech software, please consider ''';
+        const String m2 = 'contributing';
+        const String m3 =
+            '.\n\nThis is the only non-tutorial pop-up, and its only appearance this install.';
+
+        bool read = false;
+
+        await ezModal(
+          config,
+          context: context,
+          enableDrag: false,
+          isDismissible: false,
+          showDragHandle: false,
+          builder: (_) => StatefulBuilder(builder: (BuildContext mCon, StateSetter setModal) {
+            final Duration readTime = Duration(
+                milliseconds:
+                    ((ezReadingTime(config, <String>[m1, m2, m3].join()).inMilliseconds) / 2)
+                        .ceil());
+
+            Future<void>.delayed(readTime, () => setModal(() => read = true));
+
+            return ezModalScroll(config, children: <Widget>[
+              EzHeader(config),
+
+              // Title
+              Text(
+                'One more thing...',
+                textAlign: TextAlign.center,
+                style: config.titleStyle,
+              ),
+              config.centerLine,
+
+              // Message
+              EzRichText(
+                config,
+                children: <InlineSpan>[
+                  const EzPlainText(text: m1),
+                  EzInlineLink(
+                    config,
+                    text: m2,
+                    style: config.bodyStyle,
+                    textAlign: TextAlign.center,
+                    url: Uri.parse('https://www.empathetech.net/#/contribute'),
+                    hint: 'Open a link to the Empathetic contribution options.',
+                  ),
+                  const EzPlainText(text: m3),
+                ],
+                style: config.bodyStyle,
+                textBackground: false,
+                textAlign: TextAlign.center,
+              ),
+              config.separator,
+
+              // Leave after (half) read
+              EzTextIconButton(
+                config,
+                label: 'Okay',
+                style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
+                icon: read
+                    ? EzIcon(config, Icons.done)
+                    : EzCountdownTimer(config, duration: readTime),
+                onPressed: () => read ? Navigator.of(mCon).pop() : doNothing(),
+              ),
+              config.separator,
+            ]);
+          }),
+        );
+      }
+
       await EzCM.setBool(shownIntroKey, true);
     }
   }
