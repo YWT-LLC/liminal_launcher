@@ -13,6 +13,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 // TODO: let peeps make custom ones && make those ones fully removable
+// TODO: don't let 0 happen
 
 class SearchWidget extends StatefulWidget {
   final EzCP config;
@@ -43,7 +44,7 @@ class SearchWidget extends StatefulWidget {
 
     _engine = Engine.library[data[1]] ?? ecosia;
 
-    final List<String> storedChoices = data[2].split(engineSplit);
+    final List<String> storedChoices = data.sublist(2);
     _choices = storedChoices.map((String value) => Engine.library[value] ?? ecosia).toList();
   }
 
@@ -182,8 +183,6 @@ class _SearchWidgetState extends State<SearchWidget> {
         final List<Engine> inActive = List<Engine>.from(Engine.defaults);
         inActive.removeWhere((Engine e) => widget._choices.contains(e));
 
-        double bottomSpace = widget.config.spacing * 2;
-
         await ezModal(
           widget.config,
           context: context,
@@ -251,113 +250,125 @@ class _SearchWidgetState extends State<SearchWidget> {
                       final TextEditingController pathCon = TextEditingController();
                       final TextEditingController qeryCon = TextEditingController();
 
+                      double bottomSpace = widget.config.spacing * 2;
+
                       await ezModal(
                         widget.config,
                         context: context,
                         builder: (_) => StatefulBuilder(
-                          builder: (BuildContext customCon, StateSetter setCustom) =>
-                              ezModalScroll(widget.config, children: <Widget>[
-                            // Name && icon
-                            EzRow(widget.config, children: <Widget>[
+                          builder: (BuildContext customCon, StateSetter setCustom) {
+                            void shrink(_) =>
+                                setCustom(() => bottomSpace = (widget.config.spacing * 2));
+
+                            Future<void> grow() async {
+                              // Wait a bit for the keyboard to open
+                              await Future<void>.delayed(const Duration(milliseconds: 300));
+
+                              setCustom(() => bottomSpace = ((widget.config.spacing * 2) +
+                                  MediaQuery.of(context).viewInsets.bottom));
+                            }
+
+                            return ezModalScroll(widget.config, children: <Widget>[
+                              // Name && icon
+                              EzRow(widget.config, children: <Widget>[
+                                ConstrainedBox(
+                                  constraints: BoxConstraints.tightFor(
+                                    height: appIconSize(widget.config),
+                                    width: widthOf(mCon) / 2,
+                                  ),
+                                  child: TextFormField(
+                                    controller: nameCon,
+                                    textAlign: TextAlign.center,
+                                    textAlignVertical: TextAlignVertical.center,
+                                    decoration: const InputDecoration(hintText: 'Name (Ecosia)'),
+                                    onTap: grow,
+                                    onFieldSubmitted: shrink,
+                                  ),
+                                ),
+                                widget.config.rowMargin,
+                                EzIconButton(
+                                  widget.config,
+                                  icon: Icon(icon),
+                                  onPressed: () async {
+                                    final IconData? choice =
+                                        await chooseIcon(widget.config, context);
+                                    if (choice != null) setCustom(() => icon = choice);
+                                  },
+                                ),
+                              ]),
+                              widget.config.spacer,
+
+                              // Base site
                               ConstrainedBox(
                                 constraints: BoxConstraints.tightFor(
                                   height: appIconSize(widget.config),
                                   width: widthOf(mCon) / 2,
                                 ),
                                 child: TextFormField(
-                                  controller: nameCon,
+                                  controller: baseCon,
                                   textAlign: TextAlign.center,
                                   textAlignVertical: TextAlignVertical.center,
-                                  decoration: const InputDecoration(hintText: 'Name (Ecosia)'),
-                                  onTap: () => setCustom(() => bottomSpace =
-                                      ((widget.config.spacing * 2) +
-                                          MediaQuery.of(context).viewInsets.bottom)),
-                                  onFieldSubmitted: (_) =>
-                                      setCustom(() => bottomSpace = (widget.config.spacing * 2)),
+                                  decoration:
+                                      const InputDecoration(hintText: 'Base site (ecosia.org)'),
+                                  onTap: grow,
+                                  onFieldSubmitted: shrink,
                                 ),
                               ),
-                              widget.config.rowMargin,
-                              EzIconButton(
-                                widget.config,
-                                icon: Icon(icon),
-                                onPressed: () async {
-                                  final IconData? choice = await chooseIcon(widget.config, context);
-                                  if (choice != null) setCustom(() => icon = choice);
-                                },
-                              ),
-                            ]),
-                            widget.config.spacer,
+                              widget.config.spacer,
 
-                            // Base site
-                            ConstrainedBox(
-                              constraints: BoxConstraints.tightFor(
-                                height: appIconSize(widget.config),
-                                width: widthOf(mCon) / 2,
+                              // Path
+                              ConstrainedBox(
+                                constraints: BoxConstraints.tightFor(
+                                  height: appIconSize(widget.config),
+                                  width: widthOf(mCon) / 2,
+                                ),
+                                child: TextFormField(
+                                  controller: pathCon,
+                                  textAlign: TextAlign.center,
+                                  textAlignVertical: TextAlignVertical.center,
+                                  decoration: const InputDecoration(hintText: 'Path (/search)'),
+                                  onTap: grow,
+                                  onFieldSubmitted: shrink,
+                                ),
                               ),
-                              child: TextFormField(
-                                controller: baseCon,
+                              widget.config.spacer,
+
+                              // Parameter
+                              ConstrainedBox(
+                                constraints: BoxConstraints.tightFor(
+                                  height: appIconSize(widget.config),
+                                  width: widthOf(mCon) / 2,
+                                ),
+                                child: TextFormField(
+                                  controller: qeryCon,
+                                  textAlign: TextAlign.center,
+                                  textAlignVertical: TextAlignVertical.center,
+                                  decoration: const InputDecoration(hintText: 'Parameter (q)'),
+                                  onTap: grow,
+                                  onFieldSubmitted: shrink,
+                                ),
+                              ),
+                              widget.config.separator,
+
+                              // Warning TODO: add/cancel
+                              Text(
+                                'Liminal does not validate these custom inputs.\nPlay at your own risk.',
                                 textAlign: TextAlign.center,
-                                textAlignVertical: TextAlignVertical.center,
-                                decoration:
-                                    const InputDecoration(hintText: 'Base site (ecosia.org)'),
-                                onTap: () => setCustom(() => bottomSpace =
-                                    ((widget.config.spacing * 2) +
-                                        MediaQuery.of(context).viewInsets.bottom)),
-                                onFieldSubmitted: (_) =>
-                                    setCustom(() => bottomSpace = (widget.config.spacing * 2)),
+                                style: widget.config.labelStyle,
                               ),
-                            ),
-                            widget.config.spacer,
-
-                            // Path
-                            ConstrainedBox(
-                              constraints: BoxConstraints.tightFor(
-                                height: appIconSize(widget.config),
-                                width: widthOf(mCon) / 2,
-                              ),
-                              child: TextFormField(
-                                controller: pathCon,
-                                textAlign: TextAlign.center,
-                                textAlignVertical: TextAlignVertical.center,
-                                decoration: const InputDecoration(hintText: 'Path (/search)'),
-                                onTap: () => setCustom(() => bottomSpace =
-                                    ((widget.config.spacing * 2) +
-                                        MediaQuery.of(context).viewInsets.bottom)),
-                                onFieldSubmitted: (_) =>
-                                    setCustom(() => bottomSpace = (widget.config.spacing * 2)),
-                              ),
-                            ),
-                            widget.config.spacer,
-
-                            // Parameter
-                            ConstrainedBox(
-                              constraints: BoxConstraints.tightFor(
-                                height: appIconSize(widget.config),
-                                width: widthOf(mCon) / 2,
-                              ),
-                              child: TextFormField(
-                                controller: qeryCon,
-                                textAlign: TextAlign.center,
-                                textAlignVertical: TextAlignVertical.center,
-                                decoration: const InputDecoration(hintText: 'Parameter (q)'),
-                                onTap: () => setCustom(() => bottomSpace =
-                                    ((widget.config.spacing * 2) +
-                                        MediaQuery.of(context).viewInsets.bottom)),
-                                onFieldSubmitted: (_) =>
-                                    setCustom(() => bottomSpace = (widget.config.spacing * 2)),
-                              ),
-                            ),
-                            widget.config.spacer,
-
-                            // Warning
-                            Text(
-                              'Liminal does not validate these custom inputs.\nPlay at your own risk.',
-                              textAlign: TextAlign.center,
-                              style: widget.config.labelStyle,
-                            ),
-                            EzSpacer(bottomSpace),
-                          ]),
+                              EzSpacer(bottomSpace),
+                            ]);
+                          },
                         ),
+                      );
+
+// TODO: local
+                      await widget.appInfo.updateWidget(
+                        widget.config,
+                        WidWidGetGet.search,
+                        TCC.searchEntry(size, widget._engine, active.map((Engine e) => e.value)),
+                        lane: widget.lane,
+                        index: widget.index,
                       );
                     },
                   ),

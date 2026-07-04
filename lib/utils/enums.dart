@@ -300,7 +300,7 @@ extension TCC on TileConfig {
       ].join(configSplit);
 
   static String searchEntry(WidgetSize size, Engine engine, Iterable<String> choices) =>
-      <String>[size.value, engine.value, choices.join(engineSplit)].join(configSplit);
+      <String>[size.value, engine.value, ...choices].join(configSplit);
 
   static String timerEntry(WidgetSize size, String autoTime) => <String>[
         size.value,
