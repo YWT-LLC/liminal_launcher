@@ -12,8 +12,6 @@ import 'package:line_icons/line_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-// TODO: let peeps make custom ones && make those ones fully removable
-
 class SearchWidget extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
@@ -41,10 +39,50 @@ class SearchWidget extends StatefulWidget {
     final WidgetSize storedWS = WSConfig.lookup(data[0]);
     _size = (storedWS == WidgetSize.system) ? bt2WS(config) : storedWS;
 
-    _engine = Engine.library[data[1]] ?? ecosia;
+    final String storedCurr = data[1];
+    if (storedCurr.contains(engineSplit)) {
+      final List<String> details = storedCurr.split(engineSplit);
+
+      _engine = Engine(
+        name: details[0],
+        icon: IconData(
+          // ignore: non_const_argument_for_const_parameter
+          int.tryParse(details[1]) ?? Icons.search.codePoint,
+          fontFamily: 'MaterialIcons',
+        ),
+        id: details[2],
+        base: details[3],
+        path: details[4],
+        query: details[5],
+      );
+    } else {
+      _engine = Engine.library[storedCurr] ?? ecosia;
+    }
 
     final List<String> storedChoices = data.sublist(2);
-    _choices = storedChoices.map((String value) => Engine.library[value] ?? ecosia).toList();
+    _choices = storedChoices
+        .map((String entry) {
+          if (entry.contains(engineSplit)) {
+            final List<String> details = entry.split(engineSplit);
+
+            return Engine(
+              name: details[0],
+              icon: IconData(
+                // ignore: non_const_argument_for_const_parameter
+                int.tryParse(details[1]) ?? Icons.search.codePoint,
+                fontFamily: 'MaterialIcons',
+              ),
+              id: details[2],
+              base: details[3],
+              path: details[4],
+              query: details[5],
+            );
+          } else {
+            return Engine.library[entry];
+          }
+        })
+        .whereType<Engine>()
+        .toList();
   }
 
   @override
@@ -154,10 +192,6 @@ class _SearchWidgetState extends State<SearchWidget> {
           ))
       .toList();
 
-  void removeCustom() {
-    // TODO
-  }
-
   // Init //
 
   @override
@@ -181,10 +215,11 @@ class _SearchWidgetState extends State<SearchWidget> {
       icon: EzIcon(widget.config, Icons.edit),
       onPressed: () async {
         WidgetSize size = widget._size;
+        Engine curr = widget._engine;
 
-        final List<Engine> active = List<Engine>.from(widget._choices);
-        final List<Engine> inActive = List<Engine>.from(Engine.defaultOrder);
-        inActive.removeWhere((Engine e) => widget._choices.contains(e));
+        final List<Engine> shown = List<Engine>.from(widget._choices);
+        final List<Engine> hidden = List<Engine>.from(Engine.defaultOrder);
+        hidden.removeWhere((Engine e) => widget._choices.contains(e));
 
         await ezModal(
           widget.config,
@@ -221,24 +256,30 @@ class _SearchWidgetState extends State<SearchWidget> {
               ),
               widget.config.spacer,
 
-              // Active
-              Text('Active', textAlign: TextAlign.center, style: widget.config.labelStyle),
+              // Shown
+              Text('Shown', textAlign: TextAlign.center, style: widget.config.labelStyle),
               EzWrap(children: <Widget>[
-                ...active.map((Engine e) => Padding(
+                ...shown.map((Engine e) => Padding(
                       padding: EzInsets.wrap(widget.config.spacing),
                       child: EzElevatedIconButton(
                         widget.config,
                         key: ValueKey<Engine>(e),
-                        enabled: active.length > 1,
+                        enabled: shown.length > 1,
                         icon: EzIcon(widget.config, e.icon),
                         label: e.name,
                         onPressed: () {
-                          active.remove(e);
-                          inActive.add(e);
-                          inActive.sort();
+                          shown.remove(e);
+                          hidden.add(e);
+                          hidden.sort();
                           setModal(() {});
                         },
-                        onLongPress: Engine.defaultSet.contains(e) ? null : removeCustom,
+                        onLongPress: Engine.defaultSet.contains(e)
+                            ? null
+                            : () {
+                                shown.remove(e);
+                                if (widget._engine == e) curr = shown.first;
+                                setModal(() {});
+                              },
                       ),
                     )),
                 Padding(
@@ -357,21 +398,21 @@ class _SearchWidgetState extends State<SearchWidget> {
 
                               // Add/cancel
                               EzRow(widget.config, children: <Widget>[
-                                EzElevatedIconButton(
+                                EzTextIconButton(
                                   widget.config,
                                   icon: EzIcon(widget.config, Icons.cancel_outlined),
                                   label: 'Cancel',
                                   onPressed: () => Navigator.of(customCon).pop(),
                                 ),
                                 widget.config.rowSpacer,
-                                EzElevatedIconButton(
+                                EzTextIconButton(
                                   widget.config,
                                   icon: EzIcon(widget.config, Icons.done),
                                   label: 'Add',
                                   onPressed: () => Navigator.of(customCon).pop(Engine(
                                     name: nameCon.text,
                                     icon: icon,
-                                    value: 'zz_custom_${nameCon.text}',
+                                    id: 'zz_custom_${nameCon.text}',
                                     base: baseCon.text,
                                     path: pathCon.text,
                                     query: queryCon.text,
@@ -391,22 +432,20 @@ class _SearchWidgetState extends State<SearchWidget> {
                         ),
                       );
 
-                      if (custom != null) {
-                        // TODO: add it
-                      }
+                      if (custom != null) shown.add(custom);
                     },
                   ),
                 ),
               ]),
               EzTitledDivider(
-                Text('Inactive', textAlign: TextAlign.center, style: widget.config.labelStyle),
+                Text('Hidden', textAlign: TextAlign.center, style: widget.config.labelStyle),
                 height: widget.config.spacing * 2,
                 margin: widget.config.marginVal,
               ),
 
-              // Inactive
+              // Hidden
               EzWrap(
-                children: inActive
+                children: hidden
                     .map((Engine e) => Padding(
                           padding: EzInsets.wrap(widget.config.spacing),
                           child: EzElevatedIconButton(
@@ -415,17 +454,23 @@ class _SearchWidgetState extends State<SearchWidget> {
                             icon: EzIcon(widget.config, e.icon),
                             label: e.name,
                             onPressed: () {
-                              inActive.remove(e);
-                              active.add(e);
-                              active.sort();
+                              hidden.remove(e);
+                              shown.add(e);
+                              shown.sort();
                               setModal(() {});
                             },
-                            onLongPress: Engine.defaultSet.contains(e) ? null : removeCustom,
+                            onLongPress: Engine.defaultSet.contains(e)
+                                ? null
+                                : () {
+                                    shown.remove(e);
+                                    if (widget._engine == e) curr = shown.first;
+                                    setModal(() {});
+                                  },
                           ),
                         ))
                     .toList(),
               ),
-              inActive.isEmpty ? widget.config.separator : widget.config.spacer,
+              hidden.isEmpty ? widget.config.separator : widget.config.spacer,
             ]),
           ),
         );
@@ -433,7 +478,7 @@ class _SearchWidgetState extends State<SearchWidget> {
         await widget.appInfo.updateWidget(
           widget.config,
           WidWidGetGet.search,
-          TCC.searchEntry(size, widget._engine, active.map((Engine e) => e.value)),
+          TCC.searchEntry(size, curr, shown.map((Engine e) => e.value)),
           lane: widget.lane,
           index: widget.index,
         );
@@ -519,7 +564,7 @@ class _SearchWidgetState extends State<SearchWidget> {
 class Engine implements Comparable<Engine> {
   final String name;
   final IconData icon;
-  final String value;
+  final String id;
   final String base;
   final String path;
   final String query;
@@ -528,7 +573,7 @@ class Engine implements Comparable<Engine> {
   const Engine({
     required this.name,
     required this.icon,
-    required this.value,
+    required this.id,
     required this.base,
     required this.path,
     required this.query,
@@ -580,25 +625,27 @@ class Engine implements Comparable<Engine> {
     _yahoo: yahoo,
     _yandex: yandex,
     _youTube: youTube,
-    esSystem: ecosia,
-    null: ecosia,
   };
 
-  @override
-  int compareTo(Engine other) => value.compareTo(other.value);
+  String get value => defaultSet.contains(this)
+      ? id
+      : <String>[name, icon.codePoint.toString(), id, base, path, query].join(engineSplit);
 
   @override
-  bool operator ==(Object other) => other is Engine && other.value == value;
+  int compareTo(Engine other) => id.compareTo(other.id);
 
   @override
-  int get hashCode => value.hashCode;
+  bool operator ==(Object other) => other is Engine && other.id == id;
+
+  @override
+  int get hashCode => id.hashCode;
 }
 
 const String _archive = 'archive';
 const Engine archive = Engine(
   name: 'Archive.org',
   icon: Icons.archive,
-  value: _archive,
+  id: _archive,
   base: 'archive.org',
   path: '/search',
   query: 'query',
@@ -608,7 +655,7 @@ const String _baidu = 'baidu';
 const Engine baidu = Engine(
   name: 'Baidu',
   icon: LineIcons.paw,
-  value: _baidu,
+  id: _baidu,
   base: 'baidu.com',
   path: '/s',
   query: 'wd',
@@ -618,7 +665,7 @@ const String _bing = 'bing';
 const Engine bing = Engine(
   name: 'Bing',
   icon: Icons.search,
-  value: _bing,
+  id: _bing,
   base: 'bing.com',
   path: '/search',
   query: 'q',
@@ -628,7 +675,7 @@ const String _ducks = 'ducks';
 const Engine ducks = Engine(
   name: 'DuckDuckGo',
   icon: Icons.bathtub,
-  value: _ducks,
+  id: _ducks,
   base: 'duckduckgo.com',
   path: '/',
   query: 'q',
@@ -638,7 +685,7 @@ const String _ecosia = 'ecosia';
 const Engine ecosia = Engine(
   name: 'Ecosia',
   icon: LineIcons.tree,
-  value: _ecosia,
+  id: _ecosia,
   base: 'ecosia.org',
   path: '/search',
   query: 'q',
@@ -648,7 +695,7 @@ const String _google = 'google';
 const Engine google = Engine(
   name: 'Google',
   icon: LineIcons.googleLogo,
-  value: _google,
+  id: _google,
   base: 'google.com',
   path: '/search',
   query: 'q',
@@ -658,7 +705,7 @@ const String _naver = 'naver';
 const Engine naver = Engine(
   name: 'Naver',
   icon: LineIcons.neos,
-  value: _naver,
+  id: _naver,
   base: 'search.naver.com',
   path: '/search.naver',
   query: 'query',
@@ -668,7 +715,7 @@ const String _qwant = 'qwant';
 const Engine qwant = Engine(
   name: 'Qwant',
   icon: LineIcons.quora,
-  value: _qwant,
+  id: _qwant,
   base: 'qwant.com',
   path: '/',
   query: 'q',
@@ -678,7 +725,7 @@ const String _wikipedia = 'wikipedia';
 const Engine wikipedia = Engine(
   name: 'Wikipedia',
   icon: LineIcons.wikipediaW,
-  value: _wikipedia,
+  id: _wikipedia,
   base: 'wikipedia.org',
   path: '/w/index.php',
   query: 'search',
@@ -688,7 +735,7 @@ const String _wolframAlpha = 'wolframAlpha';
 const Engine wolframAlpha = Engine(
   name: 'Wolfram Alpha',
   icon: LineIcons.equals,
-  value: _wolframAlpha,
+  id: _wolframAlpha,
   base: 'wolframalpha.com',
   path: '/input',
   query: 'i',
@@ -698,7 +745,7 @@ const String _yahoo = 'yahoo';
 const Engine yahoo = Engine(
   name: 'Yahoo',
   icon: LineIcons.yahooLogo,
-  value: _yahoo,
+  id: _yahoo,
   base: 'search.yahoo.com',
   path: '/search',
   query: 'p',
@@ -708,7 +755,7 @@ const String _yandex = 'yandex';
 const Engine yandex = Engine(
   name: 'Yandex',
   icon: LineIcons.yandex,
-  value: _yandex,
+  id: _yandex,
   base: 'yandex.com',
   path: '/search/',
   query: 'text',
@@ -718,7 +765,7 @@ const String _youTube = 'youTube';
 const Engine youTube = Engine(
   name: 'YouTube',
   icon: LineIcons.youtube,
-  value: _youTube,
+  id: _youTube,
   base: 'youtube.com',
   path: '/results',
   query: 'search_query',
