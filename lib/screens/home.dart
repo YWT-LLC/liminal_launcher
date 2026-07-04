@@ -136,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                           child: EzIcon(config, Icons.add),
                         ),
 
-                        // Delete TODO: confirm (where else?)
+                        // Delete
                         MenuItemButton(
                           onPressed: () => appInfo.removeLane(config, lane),
                           child: EzIcon(config, Icons.delete),

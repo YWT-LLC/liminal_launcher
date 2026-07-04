@@ -1126,7 +1126,7 @@ For example: if an app has always on location permissions, banishing it will not
     notifyListeners();
   }
 
-  /// Does notify
+  /// Does notify TODO: confirm (where else?)
   Future<void> removeLane(EzCP config, int lane) async {
     if (interlinked || config.isDark) {
       _darkHomeMatrix.removeAt(lane);
