@@ -402,6 +402,10 @@ class _SearchWidgetState extends State<SearchWidget> {
                                   widget.config,
                                   icon: EzIcon(widget.config, Icons.cancel_outlined),
                                   label: 'Cancel',
+                                  style: TextButton.styleFrom(
+                                    padding: EdgeInsets.zero,
+                                    backgroundColor: widget.config.colors.surfaceContainer,
+                                  ),
                                   onPressed: () => Navigator.of(customCon).pop(),
                                 ),
                                 widget.config.rowSpacer,
@@ -409,6 +413,10 @@ class _SearchWidgetState extends State<SearchWidget> {
                                   widget.config,
                                   icon: EzIcon(widget.config, Icons.done),
                                   label: 'Add',
+                                  style: TextButton.styleFrom(
+                                    padding: EdgeInsets.zero,
+                                    backgroundColor: widget.config.colors.surfaceContainer,
+                                  ),
                                   onPressed: () {
                                     if (nameCon.text.trim().isEmpty) {
                                       ezSnackBar(widget.config,
@@ -436,6 +444,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                                   },
                                 ),
                               ]),
+                              widget.config.spacer,
 
                               // Warning
                               Text(
