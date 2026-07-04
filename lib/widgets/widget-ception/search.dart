@@ -560,12 +560,12 @@ class _SearchWidgetState extends State<SearchWidget> {
             widget.config,
             menuControl: menuControl,
             menuChildren: <Widget>[
-              if (numLanes > 1)
+              if (numLanes > 1 && widget.lane != 0)
                 moveDownLane(widget.config, widget.appInfo,
                     numLanes: numLanes, lane: widget.lane, index: widget.index),
               resize,
               remove,
-              if (numLanes > 1)
+              if (numLanes > 1 && widget.lane < (numLanes - 1))
                 moveUpLane(widget.config, widget.appInfo,
                     numLanes: numLanes, lane: widget.lane, index: widget.index),
             ],

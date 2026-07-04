@@ -559,12 +559,12 @@ class _AppFolderState extends State<FolderTile> {
               widget.config,
               menuControl: menuControl,
               menuChildren: <Widget>[
-                if (numLanes > 1)
+                if (numLanes > 1 && widget.lane != 0)
                   moveDownLane(widget.config, widget.appInfo,
                       numLanes: numLanes, lane: widget.lane, index: widget.index),
                 edit,
                 remove,
-                if (numLanes > 1)
+                if (numLanes > 1 && widget.lane < (numLanes - 1))
                   moveUpLane(widget.config, widget.appInfo,
                       numLanes: numLanes, lane: widget.lane, index: widget.index),
               ],
