@@ -409,15 +409,26 @@ class _SearchWidgetState extends State<SearchWidget> {
                                   widget.config,
                                   icon: EzIcon(widget.config, Icons.done),
                                   label: 'Add',
-                                  onPressed: () => Navigator.of(customCon).pop(Engine(
-                                    name: nameCon.text,
-                                    icon: icon,
-                                    id: 'zz_custom_${nameCon.text}',
-                                    base: baseCon.text,
-                                    path: pathCon.text,
-                                    query: queryCon.text,
-                                  )),
-                                ), // TODO: prevent custom w/ same name as other custom
+                                  onPressed: () {
+                                    if (shown.any((Engine e) => (!Engine.defaultSet.contains(e) &&
+                                        e.name == nameCon.text))) {
+                                      ezSnackBar(widget.config,
+                                          context: customCon,
+                                          message:
+                                              'A custom entry with that name already exists.\nPlease change the name and try again.');
+                                      return;
+                                    }
+
+                                    Navigator.of(customCon).pop(Engine(
+                                      name: nameCon.text,
+                                      icon: icon,
+                                      id: 'zz_custom_${nameCon.text}',
+                                      base: baseCon.text,
+                                      path: pathCon.text,
+                                      query: queryCon.text,
+                                    ));
+                                  },
+                                ),
                               ]),
 
                               // Warning
