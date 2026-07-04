@@ -145,8 +145,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                             icon: EzIcon(
                               config,
                               config.isLTR && hAlign(config) != ListAlignment.end
-                                  ? Icons.keyboard_arrow_left
-                                  : Icons.keyboard_arrow_right,
+                                  ? Icons.keyboard_arrow_right
+                                  : Icons.keyboard_arrow_left,
                             ),
                           ),
                       ],
