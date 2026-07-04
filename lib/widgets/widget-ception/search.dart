@@ -410,6 +410,12 @@ class _SearchWidgetState extends State<SearchWidget> {
                                   icon: EzIcon(widget.config, Icons.done),
                                   label: 'Add',
                                   onPressed: () {
+                                    if (nameCon.text.trim().isEmpty) {
+                                      ezSnackBar(widget.config,
+                                          context: customCon, message: 'Need a non-empty name.');
+                                      return;
+                                    }
+
                                     if (shown.any((Engine e) => (!Engine.defaultSet.contains(e) &&
                                         e.name == nameCon.text))) {
                                       ezSnackBar(widget.config,
