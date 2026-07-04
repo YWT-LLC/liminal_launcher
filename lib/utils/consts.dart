@@ -196,7 +196,7 @@ final Map<String, Object> liminalDefault = <String, Object>{
       ].join(widgetSplit),
       <String>[
         WidWidGetGet.search.value,
-        TCC.searchEntry(WidgetSize.tile, ecosia, Engine.defaults.map((Engine e) => e.value)),
+        TCC.searchEntry(WidgetSize.tile, ecosia, Engine.defaultOrder.map((Engine e) => e.value)),
       ].join(widgetSplit),
     ].join(listSplit),
   ],
@@ -212,7 +212,7 @@ final Map<String, Object> liminalDefault = <String, Object>{
       ].join(widgetSplit),
       <String>[
         WidWidGetGet.search.value,
-        TCC.searchEntry(WidgetSize.tile, ecosia, Engine.defaults.map((Engine e) => e.value)),
+        TCC.searchEntry(WidgetSize.tile, ecosia, Engine.defaultOrder.map((Engine e) => e.value)),
       ].join(widgetSplit),
     ].join(listSplit),
   ],

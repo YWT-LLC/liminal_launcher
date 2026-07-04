@@ -297,7 +297,7 @@ class AppInfoProvider extends ChangeNotifier {
   Future<void> addSearch(EzCP config, int lane) async {
     final String entry = <String>[
       WidWidGetGet.search.value,
-      TCC.searchEntry(WidgetSize.system, ecosia, Engine.defaults.map((Engine e) => e.value)),
+      TCC.searchEntry(WidgetSize.system, ecosia, Engine.defaultOrder.map((Engine e) => e.value)),
     ].join(widgetSplit);
 
     if (interlinked || config.isDark) {
