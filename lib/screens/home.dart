@@ -130,7 +130,13 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                             ),
                           ),
 
-                        // Delete
+                        // Add
+                        MenuItemButton(
+                          onPressed: () => addModal(config, appInfo, lane),
+                          child: EzIcon(config, Icons.add),
+                        ),
+
+                        // Delete TODO: confirm (where else?)
                         MenuItemButton(
                           onPressed: () => appInfo.removeLane(config, lane),
                           child: EzIcon(config, Icons.delete),
@@ -278,6 +284,179 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
     _janitor[lane] = errors;
     return toReturn;
+  }
+
+  Future<void> addModal(EzCP config, AppInfoProvider appInfo, int lane) async {
+    final double screenWidth = widthOf(context);
+
+    await ezModal(
+      config,
+      context: context,
+      builder: (BuildContext mCon) => ezModalScroll(
+        config,
+        children: <Widget>[
+          EzWrap(children: <Widget>[
+            // Apps
+            Padding(
+              padding: EzInsets.wrap(config.spacing),
+              child: EzElevatedIconButton(
+                config,
+                onPressed: () => context.goNamed(
+                  appListPath,
+                  extra: ListConfig(
+                    listContent: <ListContent>{
+                      ListContent.hidden,
+                      ListContent.banished,
+                    },
+                    include: false,
+                    onSelected: (AppInfo app) => appInfo.addApp(config, lane: lane, id: app.id),
+                    title: EzTextIconButton(
+                      config,
+                      onPressed: doNothing,
+                      label: 'Home',
+                      icon: EzIcon(config, Icons.add, color: config.colors.onSurface),
+                      textStyle: config.labelStyle,
+                    ),
+                  ),
+                ),
+                label: 'Apps',
+                icon: EzIcon(config, Icons.apps),
+              ),
+            ),
+
+            // Folder
+            Padding(
+              padding: EzInsets.wrap(config.spacing),
+              child: EzElevatedIconButton(
+                config,
+                onPressed: () => appInfo.addFolder(config, lane),
+                label: 'Folder',
+                icon: EzIcon(config, Icons.folder_outlined),
+              ),
+            ),
+
+            // Widgets
+            Padding(
+              padding: EzInsets.wrap(config.spacing),
+              child: EzElevatedIconButton(
+                config,
+                onPressed: () => ezModal(config, context: context, builder: (_) {
+                  WidgetSize size = WidgetSize.system;
+                  WidgetSize preview = bt2WS(config);
+
+                  return StatefulBuilder(
+                    builder: (BuildContext wmCon, StateSetter setModal) =>
+                        ezModalScroll(config, children: <Widget>[
+                      // Clock
+                      _AddClock(config, appInfo, lane),
+                      EzTitledDivider(
+                        constraints: BoxConstraints(maxWidth: widthOf(wmCon) / 2),
+                        EzDropdownMenu<WidgetSize>(
+                          config,
+                          enableSearch: false,
+                          initialSelection: size,
+                          widthEntry: WidgetSize.system.value,
+                          dropdownMenuEntries: WidgetSize.values
+                              .map((WidgetSize ws) => DropdownMenuEntry<WidgetSize>(
+                                    value: ws,
+                                    label: ezCamelToTitle(ws.value),
+                                  ))
+                              .toList(),
+                          onSelected: (WidgetSize? choice) {
+                            if (choice == null) return;
+                            size = choice;
+                            preview = (choice == WidgetSize.system) ? bt2WS(config) : choice;
+
+                            setModal(() {});
+                          },
+                        ),
+                        height: config.spacing * 2,
+                        margin: config.padding,
+                      ),
+                      config.spacer,
+
+                      // Calendar
+                      _AddCalendar(config, appInfo, lane, save: size, preview: preview),
+                      config.spacer,
+
+                      // Search
+                      _AddSearch(config, appInfo, lane, save: size, preview: preview),
+                      config.spacer,
+
+                      // Timer
+                      _AddTimer(config, appInfo, lane, save: size, preview: preview),
+                      config.spacer,
+
+                      // Toggle media
+                      _AddMedia(config, appInfo, lane, save: size, preview: preview),
+                      config.separator,
+                    ]),
+                  );
+                }),
+                label: 'Widgets',
+                icon: EzIcon(config, Icons.widgets),
+              ),
+            ),
+
+            // Spacer
+            Padding(
+              padding: EzInsets.wrap(config.spacing),
+              child: EzElevatedIconButton(
+                config,
+                onPressed: () async {
+                  final int index = await appInfo.addSpacer(config, lane: lane);
+                  if (mCon.mounted) Navigator.of(mCon).pop();
+                  setState(() => editing = false);
+
+                  if (context.mounted) {
+                    await editSpacer(
+                      config,
+                      appInfo: appInfo,
+                      lane: lane,
+                      index: index,
+                    );
+                  }
+                },
+                label: 'Spacer',
+                icon: EzIcon(config, Icons.space_bar),
+              ),
+            ),
+
+            // Lane
+            Padding(
+              padding: EzInsets.wrap(config.spacing),
+              child: EzElevatedIconButton(
+                config,
+                onPressed: () => appInfo.addLane(config),
+                label: 'Lane',
+                icon: EzIcon(config, Icons.view_column_outlined),
+              ),
+            ),
+          ]),
+          EzSpacer(config.spacing / 2),
+
+          // Screen space note
+          EzRow(
+            config,
+            children: <Widget>[
+              Text(
+                '${(screenWidth / (config.iconSize + config.padding + config.spacing)).toStringAsFixed(2)} lanes on screen',
+                textAlign: TextAlign.center,
+                style: config.labelStyle,
+              ),
+              EzToolTipper(
+                config,
+                message:
+                    '''With your current...\n\nicon size (${config.iconSize.toStringAsFixed(1)}),\npadding (${config.padding.toStringAsFixed(0)}),\n& spacing (${config.spacing.toStringAsFixed(1)})
+
+...values, you can fit up to ${(screenWidth / (config.iconSize + config.padding + config.spacing)).toStringAsFixed(2)} lanes on your screen.${(config.iconSize != minIconSize && config.padding != minPadding && config.spacing != minSpacing) ? ' With the minimum values, you can fit up to ${(screenWidth / (minIconSize + minPadding + minSpacing)).toStringAsFixed(2)} lanes.' : ''}''',
+              ),
+            ],
+          ),
+          config.separator,
+        ],
+      ),
+    );
   }
 
   Future<void> swipeUp(EzCP config, AppInfoProvider appInfo) async => (editing)
@@ -637,185 +816,7 @@ If you want to support Liminal's development, or the development of more Empathe
 
                 // Add (iff one list)
                 if (appInfo.numLanes(config) == 1) ...<Widget>[
-                  AddFAB(config, () async {
-                    final double screenWidth = widthOf(context);
-
-                    await ezModal(
-                      config,
-                      context: context,
-                      builder: (BuildContext mCon) => ezModalScroll(
-                        config,
-                        children: <Widget>[
-                          EzWrap(children: <Widget>[
-                            // Apps
-                            Padding(
-                              padding: EzInsets.wrap(config.spacing),
-                              child: EzElevatedIconButton(
-                                config,
-                                onPressed: () => context.goNamed(
-                                  appListPath,
-                                  extra: ListConfig(
-                                    listContent: <ListContent>{
-                                      ListContent.hidden,
-                                      ListContent.banished,
-                                    },
-                                    include: false,
-                                    onSelected: (AppInfo app) => appInfo.addApp(
-                                      config,
-                                      lane: 0,
-                                      id: app.id,
-                                    ),
-                                    title: EzTextIconButton(
-                                      config,
-                                      onPressed: doNothing,
-                                      label: 'Home',
-                                      icon:
-                                          EzIcon(config, Icons.add, color: config.colors.onSurface),
-                                      textStyle: config.labelStyle,
-                                    ),
-                                  ),
-                                ),
-                                label: 'Apps',
-                                icon: EzIcon(config, Icons.apps),
-                              ),
-                            ),
-
-                            // Folder
-                            Padding(
-                              padding: EzInsets.wrap(config.spacing),
-                              child: EzElevatedIconButton(
-                                config,
-                                onPressed: () => appInfo.addFolder(config, 0),
-                                label: 'Folder',
-                                icon: EzIcon(config, Icons.folder_outlined),
-                              ),
-                            ),
-
-                            // Widgets
-                            Padding(
-                              padding: EzInsets.wrap(config.spacing),
-                              child: EzElevatedIconButton(
-                                config,
-                                onPressed: () => ezModal(config, context: context, builder: (_) {
-                                  WidgetSize size = WidgetSize.system;
-                                  WidgetSize preview = bt2WS(config);
-
-                                  return StatefulBuilder(
-                                    builder: (BuildContext wmCon, StateSetter setModal) =>
-                                        ezModalScroll(config, children: <Widget>[
-                                      // Clock
-                                      _AddClock(config, appInfo),
-                                      EzTitledDivider(
-                                        constraints: BoxConstraints(maxWidth: widthOf(wmCon) / 2),
-                                        EzDropdownMenu<WidgetSize>(
-                                          config,
-                                          enableSearch: false,
-                                          initialSelection: size,
-                                          widthEntry: WidgetSize.system.value,
-                                          dropdownMenuEntries: WidgetSize.values
-                                              .map((WidgetSize ws) => DropdownMenuEntry<WidgetSize>(
-                                                    value: ws,
-                                                    label: ezCamelToTitle(ws.value),
-                                                  ))
-                                              .toList(),
-                                          onSelected: (WidgetSize? choice) {
-                                            if (choice == null) return;
-                                            size = choice;
-                                            preview = (choice == WidgetSize.system)
-                                                ? bt2WS(config)
-                                                : choice;
-
-                                            setModal(() {});
-                                          },
-                                        ),
-                                        height: config.spacing * 2,
-                                        margin: config.padding,
-                                      ),
-                                      config.spacer,
-
-                                      // Calendar
-                                      _AddCalendar(config, appInfo, save: size, preview: preview),
-                                      config.spacer,
-
-                                      // Search
-                                      _AddSearch(config, appInfo, save: size, preview: preview),
-                                      config.spacer,
-
-                                      // Timer
-                                      _AddTimer(config, appInfo, save: size, preview: preview),
-                                      config.spacer,
-
-                                      // Toggle media
-                                      _AddMedia(config, appInfo, save: size, preview: preview),
-                                      config.separator,
-                                    ]),
-                                  );
-                                }),
-                                label: 'Widgets',
-                                icon: EzIcon(config, Icons.widgets),
-                              ),
-                            ),
-
-                            // Spacer
-                            Padding(
-                              padding: EzInsets.wrap(config.spacing),
-                              child: EzElevatedIconButton(
-                                config,
-                                onPressed: () async {
-                                  final int index = await appInfo.addSpacer(config, lane: 0);
-                                  if (mCon.mounted) Navigator.of(mCon).pop();
-                                  setState(() => editing = false);
-
-                                  if (context.mounted) {
-                                    await editSpacer(
-                                      config,
-                                      appInfo: appInfo,
-                                      lane: 0,
-                                      index: index,
-                                    );
-                                  }
-                                },
-                                label: 'Spacer',
-                                icon: EzIcon(config, Icons.space_bar),
-                              ),
-                            ),
-
-                            // Lane
-                            Padding(
-                              padding: EzInsets.wrap(config.spacing),
-                              child: EzElevatedIconButton(
-                                config,
-                                onPressed: () => appInfo.addLane(config),
-                                label: 'Lane',
-                                icon: EzIcon(config, Icons.view_column_outlined),
-                              ),
-                            ),
-                          ]),
-                          EzSpacer(config.spacing / 2),
-
-                          // Screen space note
-                          EzRow(
-                            config,
-                            children: <Widget>[
-                              Text(
-                                '${(screenWidth / (config.iconSize + config.padding + config.spacing)).toStringAsFixed(2)} lanes on screen',
-                                textAlign: TextAlign.center,
-                                style: config.labelStyle,
-                              ),
-                              EzToolTipper(
-                                config,
-                                message:
-                                    '''With your current...\n\nicon size (${config.iconSize.toStringAsFixed(1)}),\npadding (${config.padding.toStringAsFixed(0)}),\n& spacing (${config.spacing.toStringAsFixed(1)})
-
-...values, you can fit up to ${(screenWidth / (config.iconSize + config.padding + config.spacing)).toStringAsFixed(2)} lanes on your screen.${(config.iconSize != minIconSize && config.padding != minPadding && config.spacing != minSpacing) ? ' With the minimum values, you can fit up to ${(screenWidth / (minIconSize + minPadding + minSpacing)).toStringAsFixed(2)} lanes.' : ''}''',
-                              ),
-                            ],
-                          ),
-                          config.separator,
-                        ],
-                      ),
-                    );
-                  }),
+                  AddFAB(config, () => addModal(config, appInfo, 0)),
                   config.spacer,
                 ],
 
@@ -847,17 +848,19 @@ If you want to support Liminal's development, or the development of more Empathe
 class _AddCalendar extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
+  final int lane;
   final WidgetSize save;
   final WidgetSize preview;
 
   const _AddCalendar(
     this.config,
-    this.appInfo, {
+    this.appInfo,
+    this.lane, {
     required this.save,
     required this.preview,
   });
 
-  void onTap() => appInfo.addCalendar(config, 0);
+  void onTap() => appInfo.addCalendar(config, lane);
 
   @override
   Widget build(BuildContext context) => (preview == WidgetSize.button)
@@ -897,10 +900,11 @@ class _AddCalendar extends StatelessWidget {
 class _AddClock extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
+  final int lane;
 
-  const _AddClock(this.config, this.appInfo);
+  const _AddClock(this.config, this.appInfo, this.lane);
 
-  void onTap() => appInfo.addClock(config, 0);
+  void onTap() => appInfo.addClock(config, lane);
 
   @override
   Widget build(BuildContext context) {
@@ -935,17 +939,19 @@ class _AddClock extends StatelessWidget {
 class _AddSearch extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
+  final int lane;
   final WidgetSize save;
   final WidgetSize preview;
 
   const _AddSearch(
     this.config,
-    this.appInfo, {
+    this.appInfo,
+    this.lane, {
     required this.save,
     required this.preview,
   });
 
-  void onTap() => appInfo.addSearch(config, 0);
+  void onTap() => appInfo.addSearch(config, lane);
 
   @override
   Widget build(BuildContext context) => (preview == WidgetSize.button)
@@ -981,17 +987,19 @@ class _AddSearch extends StatelessWidget {
 class _AddTimer extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
+  final int lane;
   final WidgetSize save;
   final WidgetSize preview;
 
   const _AddTimer(
     this.config,
-    this.appInfo, {
+    this.appInfo,
+    this.lane, {
     required this.save,
     required this.preview,
   });
 
-  void onTap() => appInfo.addTimer(config, 0);
+  void onTap() => appInfo.addTimer(config, lane);
 
   @override
   Widget build(BuildContext context) {
@@ -1038,17 +1046,19 @@ class _AddTimer extends StatelessWidget {
 class _AddMedia extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
+  final int lane;
   final WidgetSize save;
   final WidgetSize preview;
 
   const _AddMedia(
     this.config,
-    this.appInfo, {
+    this.appInfo,
+    this.lane, {
     required this.save,
     required this.preview,
   });
 
-  void onTap() => appInfo.addMedia(config, 0);
+  void onTap() => appInfo.addMedia(config, lane);
 
   @override
   Widget build(BuildContext context) => EzIconButton(
