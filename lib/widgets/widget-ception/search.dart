@@ -13,7 +13,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 // TODO: let peeps make custom ones && make those ones fully removable
-// TODO: don't let 0 happen
 
 class SearchWidget extends StatefulWidget {
   final EzCP config;
@@ -155,6 +154,10 @@ class _SearchWidgetState extends State<SearchWidget> {
           ))
       .toList();
 
+  void removeCustom() {
+    // TODO
+  }
+
   // Init //
 
   @override
@@ -180,7 +183,7 @@ class _SearchWidgetState extends State<SearchWidget> {
         WidgetSize size = widget._size;
 
         final List<Engine> active = List<Engine>.from(widget._choices);
-        final List<Engine> inActive = List<Engine>.from(Engine.defaults);
+        final List<Engine> inActive = List<Engine>.from(Engine.defaultOrder);
         inActive.removeWhere((Engine e) => widget._choices.contains(e));
 
         await ezModal(
@@ -224,8 +227,9 @@ class _SearchWidgetState extends State<SearchWidget> {
                 ...active.map((Engine e) => Padding(
                       padding: EzInsets.wrap(widget.config.spacing),
                       child: EzElevatedIconButton(
-                        key: ValueKey<Engine>(e),
                         widget.config,
+                        key: ValueKey<Engine>(e),
+                        enabled: active.length > 1,
                         icon: EzIcon(widget.config, e.icon),
                         label: e.name,
                         onPressed: () {
@@ -234,6 +238,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                           inActive.sort();
                           setModal(() {});
                         },
+                        onLongPress: Engine.defaultSet.contains(e) ? null : removeCustom,
                       ),
                     )),
                 Padding(
@@ -248,11 +253,11 @@ class _SearchWidgetState extends State<SearchWidget> {
                       IconData icon = Icons.search;
                       final TextEditingController baseCon = TextEditingController();
                       final TextEditingController pathCon = TextEditingController();
-                      final TextEditingController qeryCon = TextEditingController();
+                      final TextEditingController queryCon = TextEditingController();
 
                       double bottomSpace = widget.config.spacing * 2;
 
-                      await ezModal(
+                      final Engine? custom = await ezModal(
                         widget.config,
                         context: context,
                         builder: (_) => StatefulBuilder(
@@ -340,7 +345,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                                   width: widthOf(mCon) / 2,
                                 ),
                                 child: TextFormField(
-                                  controller: qeryCon,
+                                  controller: queryCon,
                                   textAlign: TextAlign.center,
                                   textAlignVertical: TextAlignVertical.center,
                                   decoration: const InputDecoration(hintText: 'Parameter (q)'),
@@ -350,7 +355,31 @@ class _SearchWidgetState extends State<SearchWidget> {
                               ),
                               widget.config.separator,
 
-                              // Warning TODO: add/cancel
+                              // Add/cancel
+                              EzRow(widget.config, children: <Widget>[
+                                EzElevatedIconButton(
+                                  widget.config,
+                                  icon: EzIcon(widget.config, Icons.cancel_outlined),
+                                  label: 'Cancel',
+                                  onPressed: () => Navigator.of(customCon).pop(),
+                                ),
+                                widget.config.rowSpacer,
+                                EzElevatedIconButton(
+                                  widget.config,
+                                  icon: EzIcon(widget.config, Icons.done),
+                                  label: 'Add',
+                                  onPressed: () => Navigator.of(customCon).pop(Engine(
+                                    name: nameCon.text,
+                                    icon: icon,
+                                    value: 'zz_custom_${nameCon.text}',
+                                    base: baseCon.text,
+                                    path: pathCon.text,
+                                    query: queryCon.text,
+                                  )),
+                                ), // TODO: prevent custom w/ same name as other custom
+                              ]),
+
+                              // Warning
                               Text(
                                 'Liminal does not validate these custom inputs.\nPlay at your own risk.',
                                 textAlign: TextAlign.center,
@@ -362,14 +391,9 @@ class _SearchWidgetState extends State<SearchWidget> {
                         ),
                       );
 
-// TODO: local
-                      await widget.appInfo.updateWidget(
-                        widget.config,
-                        WidWidGetGet.search,
-                        TCC.searchEntry(size, widget._engine, active.map((Engine e) => e.value)),
-                        lane: widget.lane,
-                        index: widget.index,
-                      );
+                      if (custom != null) {
+                        // TODO: add it
+                      }
                     },
                   ),
                 ),
@@ -396,6 +420,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                               active.sort();
                               setModal(() {});
                             },
+                            onLongPress: Engine.defaultSet.contains(e) ? null : removeCustom,
                           ),
                         ))
                     .toList(),
@@ -509,7 +534,23 @@ class Engine implements Comparable<Engine> {
     required this.query,
   });
 
-  static const List<Engine> defaults = <Engine>[
+  static const List<Engine> defaultOrder = <Engine>[
+    archive,
+    baidu,
+    bing,
+    ducks,
+    ecosia,
+    google,
+    naver,
+    qwant,
+    wikipedia,
+    wolframAlpha,
+    yahoo,
+    yandex,
+    youTube,
+  ];
+
+  static const List<Engine> defaultSet = <Engine>[
     archive,
     baidu,
     bing,
