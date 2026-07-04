@@ -30,8 +30,7 @@ class AppSecSettings extends StatelessWidget {
             context: context,
             style: config.bodyStyle,
           );
-          final double sep = config.spacing * 2;
-          double bottomSpace = sep;
+          double bottomSpace = config.spacing * 2;
 
           if (context.mounted) {
             await ezModal(
@@ -104,11 +103,11 @@ class AppSecSettings extends StatelessWidget {
                               // Wait a bit for the keyboard to open
                               await Future<void>.delayed(const Duration(milliseconds: 300));
 
-                              setModal(() =>
-                                  bottomSpace = (sep + MediaQuery.of(context).viewInsets.bottom));
+                              setModal(() => bottomSpace = ((config.spacing * 2) +
+                                  MediaQuery.of(context).viewInsets.bottom));
                             },
                             onTapAlwaysCalled: true,
-                            onTapOutside: (_) => setModal(() => bottomSpace = sep),
+                            onTapOutside: (_) => setModal(() => bottomSpace = (config.spacing * 2)),
                             validator: (String? value) {
                               if (value == null) return null;
                               final int? intVal = int.tryParse(value);
@@ -120,7 +119,7 @@ class AppSecSettings extends StatelessWidget {
                               final int? intVal = int.tryParse(stringVal);
                               if (intVal == null || intVal < 0) return;
 
-                              setModal(() => bottomSpace = sep);
+                              setModal(() => bottomSpace = (config.spacing * 2));
                               await EzCM.secSet(authTimeoutKey, intVal.toString());
                             },
                           ),
