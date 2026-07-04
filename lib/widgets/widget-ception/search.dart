@@ -12,7 +12,7 @@ import 'package:line_icons/line_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-// TODO: let people control their quick-list, and let them set custom ones
+// TODO: let peeps make custom ones && make those ones fully removable
 
 class SearchWidget extends StatefulWidget {
   final EzCP config;
@@ -24,6 +24,7 @@ class SearchWidget extends StatefulWidget {
 
   late final WidgetSize _size;
   late final Engine _engine;
+  late final List<Engine> _choices;
 
   SearchWidget(
     this.config,
@@ -40,7 +41,10 @@ class SearchWidget extends StatefulWidget {
     final WidgetSize storedWS = WSConfig.lookup(data[0]);
     _size = (storedWS == WidgetSize.system) ? bt2WS(config) : storedWS;
 
-    _engine = Ignition.lookup(data[1]);
+    _engine = Engine.library[data[1]] ?? ecosia;
+
+    final List<String> storedChoices = data[2].split(engineSplit);
+    _choices = storedChoices.map((String value) => Engine.library[value] ?? ecosia).toList();
   }
 
   @override
@@ -57,22 +61,6 @@ class _SearchWidgetState extends State<SearchWidget> {
 
   final TextEditingController queryCon = TextEditingController();
   OverlayEntry? overlayEntry;
-
-  Widget get icon => switch (widget._engine) {
-        Engine.archive => const Icon(Icons.archive),
-        Engine.baidu => const Icon(LineIcons.paw),
-        Engine.bing => const Icon(Icons.search),
-        Engine.ducks => const Icon(Icons.bathtub),
-        Engine.ecosia => const Icon(LineIcons.tree),
-        Engine.google => const Icon(LineIcons.googleLogo),
-        Engine.naver => const Icon(LineIcons.neos), // close enough
-        Engine.qwant => const Icon(LineIcons.quora), // ditto
-        Engine.wikipedia => const Icon(LineIcons.wikipediaW),
-        Engine.wolframAlpha => const Icon(LineIcons.equals),
-        Engine.yahoo => const Icon(LineIcons.yahooLogo),
-        Engine.yandex => const Icon(LineIcons.yandex),
-        Engine.youTube => const Icon(LineIcons.youtube),
-      };
 
   // Define custom functions //
 
@@ -152,14 +140,14 @@ class _SearchWidgetState extends State<SearchWidget> {
     overlayEntry = null;
   }
 
-  List<Widget> get engineChoices => Engine.values
+  List<Widget> get engineChoices => widget._choices
       .map((Engine e) => EzMenuButton(
             widget.config,
-            label: ezCamelToTitle(e.value),
+            label: e.name,
             onPressed: () => widget.appInfo.updateWidget(
               widget.config,
               WidWidGetGet.search,
-              TCC.searchEntry(widget._size, e),
+              TCC.searchEntry(widget._size, e, widget._choices.map((Engine e) => e.value)),
               lane: widget.lane,
               index: widget.index,
             ),
@@ -185,20 +173,228 @@ class _SearchWidgetState extends State<SearchWidget> {
 
     late final EzMenuButton resize = EzMenuButton(
       widget.config,
-      label: 'Resize',
+      label: 'Edit',
       icon: EzIcon(widget.config, Icons.edit),
       onPressed: () async {
-        final String? choice = await resizeWidgetDialog(
+        WidgetSize size = widget._size;
+
+        final List<Engine> active = List<Engine>.from(widget._choices);
+        final List<Engine> inActive = List<Engine>.from(Engine.defaults);
+        inActive.removeWhere((Engine e) => widget._choices.contains(e));
+
+        double bottomSpace = widget.config.spacing * 2;
+
+        await ezModal(
           widget.config,
-          context,
-          widget._size,
+          context: context,
+          builder: (_) => StatefulBuilder(
+            builder: (BuildContext mCon, StateSetter setModal) =>
+                ezModalScroll(widget.config, children: <Widget>[
+              // Size
+              EzRow(
+                widget.config,
+                children: <Widget>[
+                  Flexible(
+                    child:
+                        Text('Size:', textAlign: TextAlign.center, style: widget.config.labelStyle),
+                  ),
+                  widget.config.rowMargin,
+                  EzDropdownMenu<WidgetSize>(
+                    widget.config,
+                    enableSearch: false,
+                    initialSelection: size,
+                    widthEntry: WidgetSize.system.value,
+                    dropdownMenuEntries: WidgetSize.values
+                        .map((WidgetSize ws) => DropdownMenuEntry<WidgetSize>(
+                              value: ws,
+                              label: ezCamelToTitle(ws.value),
+                            ))
+                        .toList(),
+                    onSelected: (WidgetSize? choice) {
+                      if (choice == null) return;
+                      setModal(() => size = choice);
+                    },
+                  )
+                ],
+              ),
+              widget.config.spacer,
+
+              // Active
+              Text('Active', textAlign: TextAlign.center, style: widget.config.labelStyle),
+              EzWrap(children: <Widget>[
+                ...active.map((Engine e) => Padding(
+                      padding: EzInsets.wrap(widget.config.spacing),
+                      child: EzElevatedIconButton(
+                        key: ValueKey<Engine>(e),
+                        widget.config,
+                        icon: EzIcon(widget.config, e.icon),
+                        label: e.name,
+                        onPressed: () {
+                          active.remove(e);
+                          inActive.add(e);
+                          inActive.sort();
+                          setModal(() {});
+                        },
+                      ),
+                    )),
+                Padding(
+                  padding: EzInsets.wrap(widget.config.spacing),
+                  child: EzElevatedIconButton(
+                    key: const ValueKey<String>('addNew'),
+                    widget.config,
+                    icon: EzIcon(widget.config, Icons.add),
+                    label: 'Custom',
+                    onPressed: () async {
+                      final TextEditingController nameCon = TextEditingController();
+                      IconData icon = Icons.search;
+                      final TextEditingController baseCon = TextEditingController();
+                      final TextEditingController pathCon = TextEditingController();
+                      final TextEditingController qeryCon = TextEditingController();
+
+                      await ezModal(
+                        widget.config,
+                        context: context,
+                        builder: (BuildContext customContext) =>
+                            ezModalScroll(widget.config, children: <Widget>[
+                          // Name && icon
+                          EzRow(widget.config, children: <Widget>[
+                            ConstrainedBox(
+                              constraints: BoxConstraints.tightFor(
+                                height: appIconSize(widget.config),
+                                width: widthOf(mCon) / 2,
+                              ),
+                              child: TextFormField(
+                                controller: nameCon,
+                                textAlign: TextAlign.center,
+                                textAlignVertical: TextAlignVertical.center,
+                                decoration: const InputDecoration(hintText: 'Name (Ecosia)'),
+                                onTap: () => setModal(() => bottomSpace =
+                                    ((widget.config.spacing * 2) +
+                                        MediaQuery.of(context).viewInsets.bottom)),
+                                onFieldSubmitted: (_) =>
+                                    setModal(() => bottomSpace = (widget.config.spacing * 2)),
+                              ),
+                            ),
+                            widget.config.rowMargin,
+                            EzIconButton(
+                              widget.config,
+                              icon: Icon(icon),
+                              onPressed: () async {
+                                final IconData? choice = await chooseIcon(widget.config, context);
+                                if (choice != null) setModal(() => icon = choice);
+                              },
+                            ),
+                          ]),
+                          widget.config.spacer,
+
+                          // Base site
+                          ConstrainedBox(
+                            constraints: BoxConstraints.tightFor(
+                              height: appIconSize(widget.config),
+                              width: widthOf(mCon) / 2,
+                            ),
+                            child: TextFormField(
+                              controller: baseCon,
+                              textAlign: TextAlign.center,
+                              textAlignVertical: TextAlignVertical.center,
+                              decoration: const InputDecoration(hintText: 'Base site (ecosia.org)'),
+                              onTap: () => setModal(() => bottomSpace =
+                                  ((widget.config.spacing * 2) +
+                                      MediaQuery.of(context).viewInsets.bottom)),
+                              onFieldSubmitted: (_) =>
+                                  setModal(() => bottomSpace = (widget.config.spacing * 2)),
+                            ),
+                          ),
+                          widget.config.spacer,
+
+                          // Path
+                          ConstrainedBox(
+                            constraints: BoxConstraints.tightFor(
+                              height: appIconSize(widget.config),
+                              width: widthOf(mCon) / 2,
+                            ),
+                            child: TextFormField(
+                              controller: pathCon,
+                              textAlign: TextAlign.center,
+                              textAlignVertical: TextAlignVertical.center,
+                              decoration: const InputDecoration(hintText: 'Path (/search)'),
+                              onTap: () => setModal(() => bottomSpace =
+                                  ((widget.config.spacing * 2) +
+                                      MediaQuery.of(context).viewInsets.bottom)),
+                              onFieldSubmitted: (_) =>
+                                  setModal(() => bottomSpace = (widget.config.spacing * 2)),
+                            ),
+                          ),
+                          widget.config.spacer,
+
+                          // Parameter
+                          ConstrainedBox(
+                            constraints: BoxConstraints.tightFor(
+                              height: appIconSize(widget.config),
+                              width: widthOf(mCon) / 2,
+                            ),
+                            child: TextFormField(
+                              controller: qeryCon,
+                              textAlign: TextAlign.center,
+                              textAlignVertical: TextAlignVertical.center,
+                              decoration: const InputDecoration(hintText: 'Parameter (q)'),
+                              onTap: () => setModal(() => bottomSpace =
+                                  ((widget.config.spacing * 2) +
+                                      MediaQuery.of(context).viewInsets.bottom)),
+                              onFieldSubmitted: (_) =>
+                                  setModal(() => bottomSpace = (widget.config.spacing * 2)),
+                            ),
+                          ),
+                          widget.config.spacer,
+
+                          // Warning
+                          Text(
+                            'Liminal does not validate these custom inputs.\nPlay at your own risk.',
+                            textAlign: TextAlign.center,
+                            style: widget.config.labelStyle,
+                          ),
+                          EzSpacer(bottomSpace),
+                        ]),
+                      );
+                    },
+                  ),
+                ),
+              ]),
+              EzTitledDivider(
+                Text('Inactive', textAlign: TextAlign.center, style: widget.config.labelStyle),
+                height: widget.config.spacing * 2,
+                margin: widget.config.marginVal,
+              ),
+
+              // Inactive
+              EzWrap(
+                children: inActive
+                    .map((Engine e) => Padding(
+                          padding: EzInsets.wrap(widget.config.spacing),
+                          child: EzElevatedIconButton(
+                            key: ValueKey<Engine>(e),
+                            widget.config,
+                            icon: EzIcon(widget.config, e.icon),
+                            label: e.name,
+                            onPressed: () {
+                              inActive.remove(e);
+                              active.add(e);
+                              active.sort();
+                              setModal(() {});
+                            },
+                          ),
+                        ))
+                    .toList(),
+              ),
+              inActive.isEmpty ? widget.config.separator : widget.config.spacer,
+            ]),
+          ),
         );
-        if (choice == null) return;
 
         await widget.appInfo.updateWidget(
           widget.config,
           WidWidGetGet.search,
-          TCC.searchEntry(WSConfig.lookup(choice), widget._engine),
+          TCC.searchEntry(size, widget._engine, active.map((Engine e) => e.value)),
           lane: widget.lane,
           index: widget.index,
         );
@@ -215,7 +411,7 @@ class _SearchWidgetState extends State<SearchWidget> {
             builder: (_, MenuController controller, __) => (widget._size == WidgetSize.button)
                 ? EzIconButton(
                     widget.config,
-                    icon: icon,
+                    icon: EzIcon(widget.config, widget._engine.icon),
                     onPressed: () => launchUrl(Uri.https(widget._engine.base, '/')),
                     onLongPress: () => canToggleMenu(widget.config, controller),
                   )
@@ -232,7 +428,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                       ),
                       child: EzScrollBlocker(TextFormField(
                         controller: queryCon,
-                        decoration: InputDecoration(hintText: widget._engine.value),
+                        decoration: InputDecoration(hintText: widget._engine.name),
                         textAlign: TextAlign.center,
                         textAlignVertical: TextAlignVertical.center,
                         keyboardType: TextInputType.webSearch,
@@ -243,7 +439,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                     widget.config.rowMargin,
                     EzIconButton(
                       widget.config,
-                      icon: icon,
+                      icon: EzIcon(widget.config, widget._engine.icon),
                       onPressed: () => search(queryCon.text),
                       onLongPress: () => canToggleMenu(widget.config, controller),
                     ),
@@ -280,3 +476,198 @@ class _SearchWidgetState extends State<SearchWidget> {
     super.dispose();
   }
 }
+
+class Engine implements Comparable<Engine> {
+  final String name;
+  final IconData icon;
+  final String value;
+  final String base;
+  final String path;
+  final String query;
+
+  // A constant constructor allows us to define immutable static instances.
+  const Engine({
+    required this.name,
+    required this.icon,
+    required this.value,
+    required this.base,
+    required this.path,
+    required this.query,
+  });
+
+  static const List<Engine> defaults = <Engine>[
+    archive,
+    baidu,
+    bing,
+    ducks,
+    ecosia,
+    google,
+    naver,
+    qwant,
+    wikipedia,
+    wolframAlpha,
+    yahoo,
+    yandex,
+    youTube,
+  ];
+
+  static const Map<String?, Engine> library = <String?, Engine>{
+    _archive: archive,
+    _baidu: baidu,
+    _bing: bing,
+    _ducks: ducks,
+    _ecosia: ecosia,
+    _google: google,
+    _naver: naver,
+    _qwant: qwant,
+    _wikipedia: wikipedia,
+    _wolframAlpha: wolframAlpha,
+    _yahoo: yahoo,
+    _yandex: yandex,
+    _youTube: youTube,
+    esSystem: ecosia,
+    null: ecosia,
+  };
+
+  @override
+  int compareTo(Engine other) => value.compareTo(other.value);
+
+  @override
+  bool operator ==(Object other) => other is Engine && other.value == value;
+
+  @override
+  int get hashCode => value.hashCode;
+}
+
+const String _archive = 'archive';
+const Engine archive = Engine(
+  name: 'Archive.org',
+  icon: Icons.archive,
+  value: _archive,
+  base: 'archive.org',
+  path: '/search',
+  query: 'query',
+);
+
+const String _baidu = 'baidu';
+const Engine baidu = Engine(
+  name: 'Baidu',
+  icon: LineIcons.paw,
+  value: _baidu,
+  base: 'baidu.com',
+  path: '/s',
+  query: 'wd',
+);
+
+const String _bing = 'bing';
+const Engine bing = Engine(
+  name: 'Bing',
+  icon: Icons.search,
+  value: _bing,
+  base: 'bing.com',
+  path: '/search',
+  query: 'q',
+);
+
+const String _ducks = 'ducks';
+const Engine ducks = Engine(
+  name: 'DuckDuckGo',
+  icon: Icons.bathtub,
+  value: _ducks,
+  base: 'duckduckgo.com',
+  path: '/',
+  query: 'q',
+);
+
+const String _ecosia = 'ecosia';
+const Engine ecosia = Engine(
+  name: 'Ecosia',
+  icon: LineIcons.tree,
+  value: _ecosia,
+  base: 'ecosia.org',
+  path: '/search',
+  query: 'q',
+);
+
+const String _google = 'google';
+const Engine google = Engine(
+  name: 'Google',
+  icon: LineIcons.googleLogo,
+  value: _google,
+  base: 'google.com',
+  path: '/search',
+  query: 'q',
+);
+
+const String _naver = 'naver';
+const Engine naver = Engine(
+  name: 'Naver',
+  icon: LineIcons.neos,
+  value: _naver,
+  base: 'search.naver.com',
+  path: '/search.naver',
+  query: 'query',
+);
+
+const String _qwant = 'qwant';
+const Engine qwant = Engine(
+  name: 'Qwant',
+  icon: LineIcons.quora,
+  value: _qwant,
+  base: 'qwant.com',
+  path: '/',
+  query: 'q',
+);
+
+const String _wikipedia = 'wikipedia';
+const Engine wikipedia = Engine(
+  name: 'Wikipedia',
+  icon: LineIcons.wikipediaW,
+  value: _wikipedia,
+  base: 'wikipedia.org',
+  path: '/w/index.php',
+  query: 'search',
+);
+
+const String _wolframAlpha = 'wolframAlpha';
+const Engine wolframAlpha = Engine(
+  name: 'Wolfram Alpha',
+  icon: LineIcons.equals,
+  value: _wolframAlpha,
+  base: 'wolframalpha.com',
+  path: '/input',
+  query: 'i',
+);
+
+const String _yahoo = 'yahoo';
+const Engine yahoo = Engine(
+  name: 'Yahoo',
+  icon: LineIcons.yahooLogo,
+  value: _yahoo,
+  base: 'search.yahoo.com',
+  path: '/search',
+  query: 'p',
+);
+
+const String _yandex = 'yandex';
+const Engine yandex = Engine(
+  name: 'Yandex',
+  icon: LineIcons.yandex,
+  value: _yandex,
+  base: 'yandex.com',
+  path: '/search/',
+  query: 'text',
+);
+
+const String _youTube = 'youTube';
+const Engine youTube = Engine(
+  name: 'YouTube',
+  icon: LineIcons.youtube,
+  value: _youTube,
+  base: 'youtube.com',
+  path: '/results',
+  query: 'search_query',
+);
+
+/// :01000101: == :E:
+const String engineSplit = ':01000101:';
