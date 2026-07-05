@@ -32,7 +32,6 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
   Timer? overscrollPause;
 
   bool editing = false;
-  bool rippling = false; // TODO: fancier
   ValueNotifier<double> rippleProgress = ValueNotifier<double>(0.0);
 
   // Define custom functions //
@@ -61,13 +60,9 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     );
     Overlay.of(context).insert(ripple);
     lastRipple = details.globalPosition;
-    setState(() => rippling = true);
 
     await rippleController.forward().whenComplete(() {
-      setState(() {
-        editing = !editing;
-        rippling = false;
-      });
+      setState(() => editing = !editing);
       ripple.remove();
       rippleController.dispose();
     });
@@ -279,17 +274,20 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     final List<Widget> lanes = <Widget>[];
 
     for (int lane = 0; lane < numLanes; lane++) {
-      lanes.add(ConstrainedBox(
-        constraints: BoxConstraints(
-          minHeight: double.infinity,
-          minWidth: appIconSize(config) + config.spacing,
-          maxWidth: (editing && !rippling)
-              ? appIconSize(config) + config.spacing + ((config.iconSize + config.marginVal) * 2)
-              : widthOf(context),
+      lanes.add(ValueListenableBuilder<double>(
+        valueListenable: rippleProgress,
+        builder: (_, double ripple, __) => ConstrainedBox(
+          constraints: BoxConstraints(
+            minHeight: double.infinity,
+            minWidth: appIconSize(config) + config.spacing,
+            maxWidth: (editing && (ripple == 0.0 || ripple == 1.0))
+                ? appIconSize(config) + config.spacing + ((config.iconSize + config.marginVal) * 2)
+                : widthOf(context),
+          ),
+          child: _buildLane(config, appInfo, numLanes: numLanes, lane: lane),
         ),
-        child: _buildLane(config, appInfo, numLanes: numLanes, lane: lane),
       ));
-    }
+    } // TODO: mess with rippling till your really like it
 
     return lanes;
   }
@@ -838,11 +836,8 @@ If you want to support Liminal's development, or the development of more Empathe
         fabs: editing
             ? <Widget>[
                 config.spacer,
-                // TODO: add pages (actually not that bad... just use faux caurosel and an adapted func for one lane at a time)
                 // TODO: add wide tiles to everything (not clickable for widgets, just sized)
                 // TODO: add the switch pairs here
-                // TODO: make sure left/right swipe and faux caurosel play nicely
-                // TODO: got a chunk, any more redundant canToggles?
                 // TODO: mention && add split
 
                 // Add (iff one lane)
