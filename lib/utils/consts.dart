@@ -117,6 +117,7 @@ const String darkFolderLabelKey = 'darkFolderLabel';
 const String darkFolderIconKey = 'darkFolderIcon';
 const String darkElevatedFolderKey = 'darkElevatedFolder';
 const String darkWideTilesKey = 'darkWideTiles';
+const String darkPagesKey = 'darkPages';
 
 const String lightListLabelKey = 'lightListLabel';
 const String lightListIconKey = 'lightListIcon';
@@ -125,6 +126,7 @@ const String lightFolderLabelKey = 'lightFolderLabel';
 const String lightFolderIconKey = 'lightFolderIcon';
 const String lightElevatedFolderKey = 'lightElevatedFolder';
 const String lightWideTilesKey = 'lightWideTiles';
+const String lightPagesKey = 'lightPages';
 
 // Design (page) //
 
@@ -146,6 +148,7 @@ const Map<String, Type> limDesignKeys = <String, Type>{
   darkFolderIconKey: bool,
   darkElevatedFolderKey: bool,
   darkWideTilesKey: bool,
+  darkPagesKey: bool,
 
   lightListLabelKey: String,
   lightListIconKey: bool,
@@ -154,6 +157,7 @@ const Map<String, Type> limDesignKeys = <String, Type>{
   lightFolderIconKey: bool,
   lightElevatedFolderKey: bool,
   lightWideTilesKey: bool,
+  lightPagesKey: bool,
 
   // Page
   darkHideStatusKey: bool,
@@ -246,6 +250,7 @@ final Map<String, Object> liminalDefault = <String, Object>{
   darkFolderIconKey: true,
   darkElevatedFolderKey: false,
   darkWideTilesKey: true,
+  darkPagesKey: true,
 
   lightListLabelKey: LabelType.full.value,
   lightListIconKey: true,
@@ -254,6 +259,7 @@ final Map<String, Object> liminalDefault = <String, Object>{
   lightFolderIconKey: true,
   lightElevatedFolderKey: false,
   lightWideTilesKey: true,
+  lightPagesKey: true,
 
   // Page
   darkHideStatusKey: false,
