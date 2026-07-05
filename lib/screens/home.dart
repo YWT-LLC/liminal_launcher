@@ -76,19 +76,20 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     return;
   }
 
-  List<Widget> buildGrid(EzCP config, AppInfoProvider appInfo) {
-    final List<Widget> lanes = <Widget>[];
-    final int numLanes = appInfo.numLanes(config);
+  List<Widget> buildLane(EzCP config, AppInfoProvider appInfo, int lane) {
+    return <Widget>[]; // TODO
+  }
 
-    final double spaceCon = appIconSize(config) + config.spacing;
+  List<Widget> buildGrid(EzCP config, AppInfoProvider appInfo, int numLanes) {
+    final List<Widget> lanes = <Widget>[];
 
     for (int lane = 0; lane < numLanes; lane++) {
       lanes.add(ConstrainedBox(
         constraints: BoxConstraints(
           minHeight: double.infinity,
-          minWidth: spaceCon,
+          minWidth: appIconSize(config) + config.spacing,
           maxWidth: (editing && !rippling)
-              ? spaceCon + ((config.iconSize + config.marginVal) * 2)
+              ? appIconSize(config) + config.spacing + ((config.iconSize + config.marginVal) * 2)
               : widthOf(context),
         ),
         child: editing
@@ -138,12 +139,12 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
                         // Delete
                         MenuItemButton(
-                          onPressed: () => appInfo.removeLane(config, lane),
+                          onPressed: () => appInfo.removeLane(config, context, lane),
                           child: EzIcon(config, Icons.delete),
                         ),
 
                         // Up
-                        if (lane < appInfo.numLanes(config) - 1)
+                        if (lane < numLanes - 1)
                           EzMenuButton(
                             config,
                             onPressed: () => appInfo.moveLaneUp(config, lane),
@@ -190,10 +191,9 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     return lanes;
   }
 
-  /// appProvider.homeList -> AppTile/FolderTile
   List<Widget> _buildTiles(EzCP config, AppInfoProvider appInfo, int lane) {
     final List<String> entries = appInfo.homeLane(config, lane);
-    final EdgeInsets tilePadding = EdgeInsets.symmetric(vertical: config.spacing / 2);
+    final EdgeInsets tilePadding = EzInsets.wrap(config.spacing);
 
     final List<Widget> toReturn = <Widget>[];
     final List<int> errors = <int>[];
@@ -683,6 +683,9 @@ If you want to support Liminal's development, or the development of more Empathe
     return Consumer2<EzCP, AppInfoProvider>(builder: (_, EzCP config, AppInfoProvider appInfo, __) {
       final int numLanes = appInfo.numLanes(config);
 
+      int? onlyLane = (numLanes == 1 || pages(config)) ? 0 : null;
+      int delta = 0;
+
       return LiminalScaffold(
         config,
         body: GestureDetector(
@@ -794,8 +797,15 @@ If you want to support Liminal's development, or the development of more Empathe
                     }
                     return false;
                   },
-                  child: numLanes == 1
-                      ? buildGrid(config, appInfo)[0]
+                  child: onlyLane != null
+                      ? EzScrollView(
+                          config,
+                          mainAxisSize: MainAxisSize.max,
+                          physics: const ClampingScrollPhysics(),
+                          mainAxisAlignment: hAlign(config).mainAxis,
+                          crossAxisAlignment: vAlign(config).crossAxis,
+                          children: buildLane(config, appInfo, onlyLane),
+                        )
                       : EzScrollView(
                           config,
                           mainAxisSize: MainAxisSize.max,
@@ -803,7 +813,7 @@ If you want to support Liminal's development, or the development of more Empathe
                           physics: const ClampingScrollPhysics(),
                           mainAxisAlignment: hAlign(config).mainAxis,
                           crossAxisAlignment: vAlign(config).crossAxis,
-                          children: buildGrid(config, appInfo),
+                          children: buildGrid(config, appInfo, numLanes),
                         ),
                 ),
               ),
@@ -813,10 +823,34 @@ If you want to support Liminal's development, or the development of more Empathe
         fabs: editing
             ? <Widget>[
                 config.spacer,
+                // TODO: add pages (actually not that bad... just use faux caurosel and an adapted func for one lane at a time)
+                // TODO: add wide tiles to everything (not clickable for widgets, just sized)
+                // TODO: add the switch pairs here
 
-                // Add (iff one list)
-                if (appInfo.numLanes(config) == 1) ...<Widget>[
-                  AddFAB(config, () => addModal(config, appInfo, 0)),
+                // Add (iff one lane)
+                if (numLanes == 1) ...<Widget>[
+                  AddFAB(config, () async {
+                    await ezModal(
+                      config,
+                      context: context,
+                      builder: (BuildContext mCon) => ezModalScroll(config, children: <Widget>[
+                        const Text('Disable wide tiles?', textAlign: TextAlign.center),
+                        Text(
+                          '''With wide tiles enabled, each lane will be the width of one screen.
+By default, pages is also enabled, so lanes behave like pages on a traditional launcher.
+You can disable pages to have everything be a continuous scroll.
+                          
+With wide tiles disabled, lanes will be sized by the widest item & your spacing (${config.spacing}) setting.
+Pages are unavailable when wide tiles is disabled.
+
+As a heads up, this will appear any time you go from 1 -> 2 lanes.''',
+                          textAlign: TextAlign.center,
+                        ),
+                      ]),
+                    );
+
+                    await addModal(config, appInfo, 0);
+                  }),
                   config.spacer,
                 ],
 
