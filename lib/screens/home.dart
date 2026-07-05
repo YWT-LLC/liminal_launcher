@@ -3,6 +3,8 @@
  * See LICENSE for distribution and usage details.
  */
 
+// TODO: check your use of interlinked/updateBoth... I think the new stuff is wonky
+
 import '../screens/export.dart';
 import '../utils/export.dart';
 import '../widgets/export.dart';
@@ -773,7 +775,7 @@ If you want to support Liminal's development, or the development of more Empathe
               if (pages(config)) {
                 if (details.primaryVelocity! < 0) {
                   // Swipe left (drag right)
-                  if (page < numLanes) {
+                  if (page < (numLanes - 1)) {
                     delta = 1;
                     setState(() => page += 1);
                     return;
