@@ -32,10 +32,10 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
   Timer? overscrollPause;
 
   bool editing = false;
-  bool rippling = false;
+  bool rippling = false; // TODO: fancier
   ValueNotifier<double> rippleProgress = ValueNotifier<double>(0.0);
 
-  final Map<int, List<int>> _janitor = <int, List<int>>{};
+  final Map<int, List<int>> _janitor = <int, List<int>>{}; // TODO: audit
 
   // Define custom functions //
 
@@ -74,121 +74,6 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
       rippleController.dispose();
     });
     return;
-  }
-
-  List<Widget> buildLane(EzCP config, AppInfoProvider appInfo, int lane) {
-    return <Widget>[]; // TODO
-  }
-
-  List<Widget> buildGrid(EzCP config, AppInfoProvider appInfo, int numLanes) {
-    final List<Widget> lanes = <Widget>[];
-
-    for (int lane = 0; lane < numLanes; lane++) {
-      lanes.add(ConstrainedBox(
-        constraints: BoxConstraints(
-          minHeight: double.infinity,
-          minWidth: appIconSize(config) + config.spacing,
-          maxWidth: (editing && !rippling)
-              ? appIconSize(config) + config.spacing + ((config.iconSize + config.marginVal) * 2)
-              : widthOf(context),
-        ),
-        child: editing
-            ? Builder(builder: (_) {
-                final List<Widget> tiles = _buildTiles(config, appInfo, lane);
-
-                return StatefulBuilder(
-                  key: ValueKey<String>('lane-$lane'),
-                  builder: (_, StateSetter setList) => ReorderableListView(
-                    shrinkWrap: true,
-                    header: MenuAnchor(
-                      builder: (_, MenuController controller, __) => EzRow(
-                        config,
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(bottom: config.spacing / 2),
-                            child: EzIconButton(
-                              config,
-                              onPressed: () => canToggleMenu(config, controller),
-                              icon: const Icon(Icons.edit),
-                            ),
-                          ),
-                        ],
-                      ),
-                      menuChildren: <Widget>[
-                        // Down
-                        if (lane > 0)
-                          EzMenuButton(
-                            config,
-                            onPressed: () => appInfo.moveLaneDown(config, lane),
-                            label: 'Move',
-                            icon: EzIcon(
-                              config,
-                              config.isLTR && hAlign(config) != ListAlignment.end
-                                  ? Icons.keyboard_arrow_left
-                                  : Icons.keyboard_arrow_right,
-                            ),
-                          ),
-
-                        // Add
-                        MenuItemButton(
-                          onPressed: () => addModal(config, appInfo, lane),
-                          child: EzIcon(config, Icons.add),
-                        ),
-
-                        // Delete
-                        MenuItemButton(
-                          onPressed: () => appInfo.removeLane(config, context, lane),
-                          child: EzIcon(config, Icons.delete),
-                        ),
-
-                        // Up
-                        if (lane < numLanes - 1)
-                          EzMenuButton(
-                            config,
-                            onPressed: () => appInfo.moveLaneUp(config, lane),
-                            label: 'Move',
-                            icon: EzIcon(
-                              config,
-                              config.isLTR && hAlign(config) != ListAlignment.end
-                                  ? Icons.keyboard_arrow_right
-                                  : Icons.keyboard_arrow_left,
-                            ),
-                          ),
-                      ],
-                    ),
-                    onReorderItem: (int oldIndex, int newIndex) async {
-                      if (oldIndex == newIndex) return;
-
-                      final Widget element = tiles.removeAt(oldIndex);
-                      tiles.insert(newIndex, element);
-
-                      await appInfo.reorderLane(
-                        config,
-                        lane: lane,
-                        oldIndex: oldIndex,
-                        newIndex: newIndex,
-                      );
-
-                      setList(() {});
-                    },
-                    children: tiles,
-                  ),
-                );
-              })
-            : EzScrollView(
-                config,
-                key: ValueKey<String>('lane-$lane'),
-                mainAxisAlignment: vAlign(config).mainAxis,
-                crossAxisAlignment: hAlign(config).crossAxis,
-                physics: const ClampingScrollPhysics(),
-                children: _buildTiles(config, appInfo, lane),
-              ),
-      ));
-    }
-
-    return lanes;
   }
 
   List<Widget> _buildTiles(EzCP config, AppInfoProvider appInfo, int lane) {
@@ -284,6 +169,136 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
     _janitor[lane] = errors;
     return toReturn;
+  }
+
+  Widget _buildLane(
+    EzCP config,
+    AppInfoProvider appInfo, {
+    required int numLanes,
+    required int lane,
+  }) =>
+      editing
+          ? Builder(builder: (_) {
+              final List<Widget> tiles = _buildTiles(config, appInfo, lane);
+
+              return StatefulBuilder(
+                key: ValueKey<String>('lane-$lane'),
+                builder: (_, StateSetter setList) => ReorderableListView(
+                  shrinkWrap: true,
+                  header: MenuAnchor(
+                    builder: (_, MenuController controller, __) => EzRow(
+                      config,
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(bottom: config.spacing / 2),
+                          child: EzIconButton(
+                            config,
+                            onPressed: () => toggleMenu(controller),
+                            icon: const Icon(Icons.edit),
+                          ),
+                        ),
+                      ],
+                    ),
+                    menuChildren: <Widget>[
+                      // Down
+                      if (lane > 0)
+                        EzMenuButton(
+                          config,
+                          onPressed: () => appInfo.moveLaneDown(config, lane),
+                          label: 'Move',
+                          icon: EzIcon(
+                            config,
+                            config.isLTR && hAlign(config) != ListAlignment.end
+                                ? Icons.keyboard_arrow_left
+                                : Icons.keyboard_arrow_right,
+                          ),
+                        ),
+
+                      // Add
+                      MenuItemButton(
+                        onPressed: () => addModal(config, appInfo, lane),
+                        child: EzIcon(config, Icons.add),
+                      ),
+
+                      // Delete
+                      MenuItemButton(
+                        onPressed: () => appInfo.removeLane(config, context, lane),
+                        child: EzIcon(config, Icons.delete),
+                      ),
+
+                      // Up
+                      if (lane < numLanes - 1)
+                        EzMenuButton(
+                          config,
+                          onPressed: () => appInfo.moveLaneUp(config, lane),
+                          label: 'Move',
+                          icon: EzIcon(
+                            config,
+                            config.isLTR && hAlign(config) != ListAlignment.end
+                                ? Icons.keyboard_arrow_right
+                                : Icons.keyboard_arrow_left,
+                          ),
+                        ),
+                    ],
+                  ),
+                  onReorderItem: (int oldIndex, int newIndex) async {
+                    if (oldIndex == newIndex) return;
+
+                    final Widget element = tiles.removeAt(oldIndex);
+                    tiles.insert(newIndex, element);
+
+                    await appInfo.reorderLane(
+                      config,
+                      lane: lane,
+                      oldIndex: oldIndex,
+                      newIndex: newIndex,
+                    );
+
+                    setList(() {});
+                  },
+                  children: tiles,
+                ),
+              );
+            })
+          : EzScrollView(
+              config,
+              key: ValueKey<String>('lane-$lane'),
+              mainAxisAlignment: vAlign(config).mainAxis,
+              crossAxisAlignment: hAlign(config).crossAxis,
+              physics: const ClampingScrollPhysics(),
+              children: _buildTiles(config, appInfo, lane),
+            );
+
+  Widget buildPage(
+    EzCP config,
+    AppInfoProvider appInfo, {
+    required int numLanes,
+    required int lane,
+  }) =>
+      ConstrainedBox(
+        constraints: const BoxConstraints.tightFor(width: double.infinity, height: double.infinity),
+        child: _buildLane(config, appInfo, numLanes: numLanes, lane: lane),
+      );
+
+  List<Widget> buildGrid(EzCP config, AppInfoProvider appInfo, int numLanes) {
+    final List<Widget> lanes = <Widget>[];
+
+    for (int lane = 0; lane < numLanes; lane++) {
+      lanes.add(ConstrainedBox(
+        constraints: BoxConstraints(
+          minHeight: double.infinity,
+          minWidth: appIconSize(config) + config.spacing,
+          maxWidth: (editing && !rippling)
+              ? appIconSize(config) + config.spacing + ((config.iconSize + config.marginVal) * 2)
+              : widthOf(context),
+        ),
+        child: _buildLane(config, appInfo, numLanes: numLanes, lane: lane),
+      ));
+    }
+
+    return lanes;
   }
 
   Future<void> addModal(EzCP config, AppInfoProvider appInfo, int lane) async {
@@ -683,7 +698,7 @@ If you want to support Liminal's development, or the development of more Empathe
     return Consumer2<EzCP, AppInfoProvider>(builder: (_, EzCP config, AppInfoProvider appInfo, __) {
       final int numLanes = appInfo.numLanes(config);
 
-      int? onlyLane = (numLanes == 1 || pages(config)) ? 0 : null;
+      int page = 0;
       int delta = 0;
 
       return LiminalScaffold(
@@ -700,6 +715,24 @@ If you want to support Liminal's development, or the development of more Empathe
           },
           onHorizontalDragEnd: (DragEndDetails details) {
             if (details.primaryVelocity != null && details.primaryVelocity! != 0) {
+              if (pages(config)) {
+                if (details.primaryVelocity! < 0) {
+                  // Swipe left (drag right)
+                  if (page < numLanes) {
+                    delta = 1;
+                    setState(() => page += 1);
+                    return;
+                  }
+                } else {
+                  // Swipe right (drag left)
+                  if (page > 0) {
+                    delta = -1;
+                    setState(() => page -= 1);
+                    return;
+                  }
+                }
+              }
+
               final AppInfo? toLaunch = editing
                   ? null
                   : ((details.primaryVelocity! < 0)
@@ -709,115 +742,104 @@ If you want to support Liminal's development, or the development of more Empathe
               if (toLaunch != null) launchApp(toLaunch);
             }
           },
-          child: EzCol(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: vAlign(config).mainAxis,
-            crossAxisAlignment: hAlign(config).crossAxis,
-            children: <Widget>[
-              // App list
-              Expanded(
-                child: NotificationListener<ScrollNotification>(
-                  onNotification: (ScrollNotification notification) {
-                    switch (notification.runtimeType) {
-                      case const (OverscrollNotification):
-                        if (notification.metrics.axis == Axis.vertical) {
-                          // Vertical overscroll
-                          if ((notification as OverscrollNotification).overscroll > 0) {
-                            if (atBottom) {
-                              swipeUp(config, appInfo);
-                              return true;
-                            } else {
-                              overscrollPause = Timer(scrollDelay, () => atBottom = true);
-                              return true;
-                            }
-                          }
-                        } else {
-                          // Horizontal overscroll
-                          AppInfo? toLaunch;
-
-                          if ((notification as OverscrollNotification).overscroll < 0) {
-                            if (atLeft) {
-                              toLaunch = appInfo.appMap[rightSwipeID];
-                            } else {
-                              overscrollPause = Timer(scrollDelay, () => atLeft = true);
-                              return true;
-                            }
-                          }
-
-                          if (notification.overscroll > 0) {
-                            if (atRight) {
-                              toLaunch = appInfo.appMap[leftSwipeID];
-                            } else {
-                              overscrollPause = Timer(scrollDelay, () => atRight = true);
-                              return true;
-                            }
-                          }
-
-                          if (toLaunch != null) launchApp(toLaunch);
-                          return true;
-                        }
-                        break;
-
-                      case const (ScrollUpdateNotification):
-                        if (notification.metrics.axis == Axis.vertical) {
-                          // Vertical scroll
-                          if (atBottom && notification.metrics.pixels < 0) {
-                            atBottom = false;
-                          }
-                        } else {
-                          // Horizontal scroll
-                          if (atLeft && notification.metrics.pixels > 0) {
-                            atLeft = false;
-                          }
-                          if (atRight && notification.metrics.pixels < 0) {
-                            atRight = false;
-                          }
-                        }
-                        break;
-
-                      case const (ScrollEndNotification):
-                        if (notification.metrics.axis == Axis.vertical) {
-                          // Vertical end
-                          if (notification.metrics.pixels == notification.metrics.maxScrollExtent) {
-                            overscrollPause = Timer(scrollDelay, () => atBottom = true);
-                          } else {
-                            atBottom = false;
-                          }
-                        } else {
-                          // Horizontal end
-                          if (notification.metrics.pixels == notification.metrics.maxScrollExtent) {
-                            atLeft = false;
-                            overscrollPause = Timer(scrollDelay, () => atRight = true);
-                          } else {
-                            atRight = false;
-                            overscrollPause = Timer(scrollDelay, () => atLeft = true);
-                          }
-                        }
-                        break;
+          // App list
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (ScrollNotification notification) {
+              switch (notification.runtimeType) {
+                case const (OverscrollNotification):
+                  if (notification.metrics.axis == Axis.vertical) {
+                    // Vertical overscroll
+                    if ((notification as OverscrollNotification).overscroll > 0) {
+                      if (atBottom) {
+                        swipeUp(config, appInfo);
+                        return true;
+                      } else {
+                        overscrollPause = Timer(scrollDelay, () => atBottom = true);
+                        return true;
+                      }
                     }
-                    return false;
-                  },
-                  child: onlyLane != null
-                      ? EzScrollView(
-                          config,
-                          mainAxisSize: MainAxisSize.max,
-                          physics: const ClampingScrollPhysics(),
-                          mainAxisAlignment: hAlign(config).mainAxis,
-                          crossAxisAlignment: vAlign(config).crossAxis,
-                          children: buildLane(config, appInfo, onlyLane),
-                        )
-                      : EzScrollView(
-                          config,
-                          mainAxisSize: MainAxisSize.max,
-                          scrollDirection: Axis.horizontal,
-                          physics: const ClampingScrollPhysics(),
-                          mainAxisAlignment: hAlign(config).mainAxis,
-                          crossAxisAlignment: vAlign(config).crossAxis,
-                          children: buildGrid(config, appInfo, numLanes),
-                        ),
-                ),
-              ),
-            ],
+                  } else {
+                    // Horizontal overscroll
+                    AppInfo? toLaunch;
+
+                    if ((notification as OverscrollNotification).overscroll < 0) {
+                      if (atLeft) {
+                        toLaunch = appInfo.appMap[rightSwipeID];
+                      } else {
+                        overscrollPause = Timer(scrollDelay, () => atLeft = true);
+                        return true;
+                      }
+                    }
+
+                    if (notification.overscroll > 0) {
+                      if (atRight) {
+                        toLaunch = appInfo.appMap[leftSwipeID];
+                      } else {
+                        overscrollPause = Timer(scrollDelay, () => atRight = true);
+                        return true;
+                      }
+                    }
+
+                    if (toLaunch != null) launchApp(toLaunch);
+                    return true;
+                  }
+                  break;
+
+                case const (ScrollUpdateNotification):
+                  if (notification.metrics.axis == Axis.vertical) {
+                    // Vertical scroll
+                    if (atBottom && notification.metrics.pixels < 0) {
+                      atBottom = false;
+                    }
+                  } else {
+                    // Horizontal scroll
+                    if (atLeft && notification.metrics.pixels > 0) {
+                      atLeft = false;
+                    }
+                    if (atRight && notification.metrics.pixels < 0) {
+                      atRight = false;
+                    }
+                  }
+                  break;
+
+                case const (ScrollEndNotification):
+                  if (notification.metrics.axis == Axis.vertical) {
+                    // Vertical end
+                    if (notification.metrics.pixels == notification.metrics.maxScrollExtent) {
+                      overscrollPause = Timer(scrollDelay, () => atBottom = true);
+                    } else {
+                      atBottom = false;
+                    }
+                  } else {
+                    // Horizontal end
+                    if (notification.metrics.pixels == notification.metrics.maxScrollExtent) {
+                      atLeft = false;
+                      overscrollPause = Timer(scrollDelay, () => atRight = true);
+                    } else {
+                      atRight = false;
+                      overscrollPause = Timer(scrollDelay, () => atLeft = true);
+                    }
+                  }
+                  break;
+              }
+              return false;
+            },
+            child: pages(config)
+                ? EzFauxCarousel(
+                    config,
+                    position: page,
+                    delta: delta,
+                    child: buildPage(config, appInfo, numLanes: numLanes, lane: page),
+                  )
+                : EzScrollView(
+                    config,
+                    mainAxisSize: MainAxisSize.max,
+                    scrollDirection: Axis.horizontal,
+                    physics: const ClampingScrollPhysics(),
+                    mainAxisAlignment: hAlign(config).mainAxis,
+                    crossAxisAlignment: vAlign(config).crossAxis,
+                    children: buildGrid(config, appInfo, numLanes),
+                  ),
           ),
         ),
         fabs: editing
@@ -826,6 +848,8 @@ If you want to support Liminal's development, or the development of more Empathe
                 // TODO: add pages (actually not that bad... just use faux caurosel and an adapted func for one lane at a time)
                 // TODO: add wide tiles to everything (not clickable for widgets, just sized)
                 // TODO: add the switch pairs here
+                // TODO: make sure left/right swipe and faux caurosel play nicely
+                // TODO: got a chunk, any more redundant canToggles?
 
                 // Add (iff one lane)
                 if (numLanes == 1) ...<Widget>[
