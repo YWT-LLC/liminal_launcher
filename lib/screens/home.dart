@@ -292,14 +292,13 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
             minHeight: double.infinity,
             minWidth: appIconSize(config) + config.spacing,
             maxWidth: (editing && (ripple == 0.0 || ripple == 1.0))
-                ? appIconSize(config) + config.spacing + ((config.iconSize + config.marginVal) * 2)
+                ? appIconSize(config) * 3 + config.spargin
                 : widthOf(context),
           ),
           child: _buildLane(config, appInfo, numLanes: numLanes, lane: lane),
         ),
       ));
-    } // TODO: mess with rippling till your really like it
-
+    }
     return lanes;
   }
 
