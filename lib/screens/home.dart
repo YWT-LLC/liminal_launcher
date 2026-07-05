@@ -26,6 +26,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScreen> {
   // Define build data //
 
+  int page = 0;
+  int delta = 0;
+
   bool atBottom = false;
   bool atLeft = false;
   bool atRight = false;
@@ -752,9 +755,6 @@ If you want to support Liminal's development, or the development of more Empathe
   Widget build(BuildContext context) {
     return Consumer2<EzCP, AppInfoProvider>(builder: (_, EzCP config, AppInfoProvider appInfo, __) {
       final int numLanes = appInfo.numLanes(config);
-
-      int page = 0;
-      int delta = 0;
 
       return LiminalScaffold(
         config,
