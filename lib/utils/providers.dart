@@ -1158,25 +1158,6 @@ For example: if an app has always on location permissions, banishing it will not
     notifyListeners();
   }
 
-  /// Does notify
-  void cleanup(EzCP config, {required int lane, required List<int> entries}) {
-    entries.sort((int a, int b) => b.compareTo(a));
-
-    if (interlinked || config.isDark) {
-      for (final int entry in entries) {
-        _darkHomeMatrix[lane].removeAt(entry);
-      }
-    }
-
-    if (interlinked || !config.isDark) {
-      for (final int entry in entries) {
-        _lightHomeMatrix[lane].removeAt(entry);
-      }
-    }
-
-    notifyListeners();
-  }
-
   // Dispose //
 
   @override

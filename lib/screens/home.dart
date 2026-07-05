@@ -35,8 +35,6 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
   bool rippling = false; // TODO: fancier
   ValueNotifier<double> rippleProgress = ValueNotifier<double>(0.0);
 
-  final Map<int, List<int>> _janitor = <int, List<int>>{}; // TODO: audit
-
   // Define custom functions //
 
   Future<void> ripple(EzCP config, LongPressStartDetails details) async {
@@ -81,7 +79,6 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     final EdgeInsets tilePadding = EzInsets.wrap(config.spacing);
 
     final List<Widget> toReturn = <Widget>[];
-    final List<int> errors = <int>[];
 
     for (int index = 0; index < entries.length; index++) {
       final String entry = entries[index];
@@ -92,12 +89,9 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
       switch (delim) {
         case idSplit:
           final List<String> parts = entry.split(idSplit);
-          final AppInfo? app = appInfo.appMap[<String>[parts[0], parts[1]].join(idSplit)];
 
-          if (app == null) {
-            errors.add(index);
-            continue;
-          }
+          final AppInfo? app = appInfo.appMap[<String>[parts[0], parts[1]].join(idSplit)];
+          if (app == null) continue;
 
           toReturn.add(Padding(
             key: ValueKey<String>('$lane-$index-${app.id}'),
@@ -167,7 +161,6 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
       }
     }
 
-    _janitor[lane] = errors;
     return toReturn;
   }
 
@@ -850,6 +843,7 @@ If you want to support Liminal's development, or the development of more Empathe
                 // TODO: add the switch pairs here
                 // TODO: make sure left/right swipe and faux caurosel play nicely
                 // TODO: got a chunk, any more redundant canToggles?
+                // TODO: mention && add split
 
                 // Add (iff one lane)
                 if (numLanes == 1) ...<Widget>[
@@ -885,21 +879,6 @@ As a heads up, this will appear any time you go from 1 -> 2 lanes.''',
         isHome: true,
       );
     });
-  }
-
-  @override
-  void dispose() {
-    final AppInfoProvider appWatcher = Provider.of<AppInfoProvider>(context, listen: false);
-
-    if (_janitor.isNotEmpty) {
-      _janitor.forEach((int lane, List<int> entries) => appWatcher.cleanup(
-            configWatcher(context),
-            lane: lane,
-            entries: entries,
-          ));
-    }
-
-    super.dispose();
   }
 }
 
