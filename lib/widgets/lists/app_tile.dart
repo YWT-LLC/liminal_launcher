@@ -396,8 +396,8 @@ class _AppTileState extends State<AppTile> {
     return EzAnimSwitch(
       widget.config,
       mod: 0.667,
-      forceType: EzTransitionType.none,
       forceFade: true,
+      forceType: EzTransitionType.none,
       child: switch (state) {
         AppState.standard => inFolder
             ? AppButton(

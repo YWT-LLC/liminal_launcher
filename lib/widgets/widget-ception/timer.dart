@@ -324,8 +324,8 @@ class _TimerWidgetState extends State<TimerWidget> {
     return EzAnimSwitch(
       widget.config,
       mod: 0.667,
-      forceType: EzTransitionType.none,
       forceFade: true,
+      forceType: EzTransitionType.none,
       child: switch (state) {
         AppState.standard => MenuAnchor(
             builder: (_, MenuController controller, __) => (widget._size == WidgetSize.button)
