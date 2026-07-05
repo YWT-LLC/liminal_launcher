@@ -3,9 +3,6 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: check your use of interlinked/updateBoth... I think the new stuff is wonky
-// TODO: add page location overlay to bottom
-
 import '../screens/export.dart';
 import '../utils/export.dart';
 import '../widgets/export.dart';
