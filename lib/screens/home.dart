@@ -190,6 +190,12 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       ],
                     ),
                     menuChildren: <Widget>[
+                      // Dupe
+                      MenuItemButton(
+                        onPressed: () => appInfo.dupeLane(config, lane),
+                        child: EzIcon(config, Icons.copy),
+                      ),
+
                       // Down
                       if (lane > 0)
                         EzMenuButton(
@@ -210,12 +216,6 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                         child: EzIcon(config, Icons.add),
                       ),
 
-                      // Delete
-                      MenuItemButton(
-                        onPressed: () => appInfo.removeLane(config, context, lane),
-                        child: EzIcon(config, Icons.delete),
-                      ),
-
                       // Up
                       if (lane < numLanes - 1)
                         EzMenuButton(
@@ -229,6 +229,12 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                                 : Icons.keyboard_arrow_left,
                           ),
                         ),
+
+                      // Delete
+                      MenuItemButton(
+                        onPressed: () => appInfo.removeLane(config, context, lane),
+                        child: EzIcon(config, Icons.delete),
+                      ),
                     ],
                   ),
                   onReorderItem: (int oldIndex, int newIndex) async {
@@ -441,7 +447,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       builder: (BuildContext mCon) => ezModalScroll(config, children: <Widget>[
                         // Title
                         const Text('Multi-lane configuration', textAlign: TextAlign.center),
-                        config.margin,
+                        config.spacer,
 
                         // Switches
                         EzSwitchPair(
@@ -459,7 +465,6 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                             }
                           },
                         ),
-                        config.spacer,
                         EzSwitchPair(
                           config,
                           valueKey: config.isDark ? darkPagesKey : lightPagesKey,
@@ -483,8 +488,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 By default, pages are also enabled, so lanes behave like pages on a traditional launcher.
 You can disable pages to have everything be a continuous scroll.
                           
-With wide tiles disabled, lanes will be sized by the widest item & your spacing setting.
-Pages are unavailable when wide tiles is disabled.''',
+With wide tiles disabled, lanes will be sized by the widest item & your spacing setting, and the pages setting is ignored.''',
                           textAlign: TextAlign.center,
                         ),
                         config.separator,
