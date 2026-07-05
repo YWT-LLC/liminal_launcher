@@ -309,6 +309,8 @@ class SettingsScreen extends StatelessWidget {
                           choice,
                         );
                       }
+
+                      await config.rebuildUI(<EzCacheType>{EzCacheType.design});
                     },
                   ),
                   config.separator,
