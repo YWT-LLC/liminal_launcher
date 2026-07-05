@@ -4,6 +4,7 @@
  */
 
 // TODO: check your use of interlinked/updateBoth... I think the new stuff is wonky
+// TODO: add page location overlay to bottom
 
 import '../screens/export.dart';
 import '../utils/export.dart';
@@ -404,7 +405,11 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       config.spacer,
 
                       // Toggle media
-                      _AddMedia(config, appInfo, lane, save: size, preview: preview),
+                      _AddToggleMedia(config, appInfo, lane, save: size, preview: preview),
+                      config.spacer,
+
+                      // Theme mode
+                      _AddThemeMode(config, appInfo, lane, save: size, preview: preview),
                       config.separator,
                     ]),
                   );
@@ -450,7 +455,11 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       context: context,
                       builder: (BuildContext mCon) => ezModalScroll(config, children: <Widget>[
                         // Title
-                        const Text('Multi-lane configuration', textAlign: TextAlign.center),
+                        Text(
+                          'Multi-lane configuration',
+                          textAlign: TextAlign.center,
+                          style: config.titleStyle,
+                        ),
                         config.spacer,
 
                         // Switches
@@ -1116,14 +1125,14 @@ class _AddTimer extends StatelessWidget {
   }
 }
 
-class _AddMedia extends StatelessWidget {
+class _AddToggleMedia extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
   final int lane;
   final WidgetSize save;
   final WidgetSize preview;
 
-  const _AddMedia(
+  const _AddToggleMedia(
     this.config,
     this.appInfo,
     this.lane, {
@@ -1131,7 +1140,7 @@ class _AddMedia extends StatelessWidget {
     required this.preview,
   });
 
-  void onTap() => appInfo.addMedia(config, lane);
+  void onTap() => appInfo.addToggleMedia(config, lane);
 
   @override
   Widget build(BuildContext context) => EzIconButton(
@@ -1149,4 +1158,38 @@ class _AddMedia extends StatelessWidget {
                 config.rowMargin,
               ]),
       );
+}
+
+class _AddThemeMode extends StatelessWidget {
+  final EzCP config;
+  final AppInfoProvider appInfo;
+  final int lane;
+  final WidgetSize save;
+  final WidgetSize preview;
+
+  const _AddThemeMode(
+    this.config,
+    this.appInfo,
+    this.lane, {
+    required this.save,
+    required this.preview,
+  });
+
+  void onTap() => appInfo.addThemeWidget(config, lane);
+
+  @override
+  Widget build(BuildContext context) => (preview == WidgetSize.button)
+      ? EzIconButton(
+          config,
+          onPressed: onTap,
+          icon: Icon(config.isDark ? Icons.dark_mode : Icons.light_mode),
+        )
+      : EzDropdownMenu<bool>(
+          config,
+          dropdownMenuEntries: <DropdownMenuEntry<bool>>[
+            const DropdownMenuEntry<bool>(label: 'Widget', value: true),
+          ],
+          widthEntry: 'Widget',
+          onSelected: (_) => onTap(),
+        );
 }

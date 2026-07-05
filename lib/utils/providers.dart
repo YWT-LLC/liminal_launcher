@@ -338,10 +338,32 @@ class AppInfoProvider extends ChangeNotifier {
 
   /// Does notify
   /// Shows added overlay
-  Future<void> addMedia(EzCP config, int lane) async {
+  Future<void> addToggleMedia(EzCP config, int lane) async {
     final String entry = <String>[
       WidWidGetGet.toggleMedia.value,
       TCC.mediaEntry(WidgetSize.system),
+    ].join(widgetSplit);
+
+    if (interlinked || config.isDark) {
+      _add(true, lane, entry);
+      unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
+    }
+
+    if (interlinked || !config.isDark) {
+      _add(false, lane, entry);
+      unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
+    }
+
+    notifyListeners();
+    unawaited(_added(config));
+  }
+
+  /// Does notify
+  /// Shows added overlay
+  Future<void> addThemeWidget(EzCP config, int lane) async {
+    final String entry = <String>[
+      WidWidGetGet.themeMode.value,
+      TCC.themeModeEntry(WidgetSize.system),
     ].join(widgetSplit);
 
     if (interlinked || config.isDark) {

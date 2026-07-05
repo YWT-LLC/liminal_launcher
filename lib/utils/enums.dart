@@ -310,6 +310,10 @@ extension TCC on TileConfig {
   static String mediaEntry(WidgetSize size) => <String>[
         size.value,
       ].join(configSplit);
+
+  static String themeModeEntry(WidgetSize size) => <String>[
+        size.value,
+      ].join(configSplit);
 }
 
 // Text Style //
@@ -351,13 +355,14 @@ extension TSConfig on TxtStile {
 
 // Widget-ception //
 
-enum WidWidGetGet { calendar, clock, search, timer, toggleMedia }
+enum WidWidGetGet { calendar, clock, search, timer, toggleMedia, themeMode }
 
 const String esCalendar = 'calendar';
 const String esClock = 'clock';
 const String esSearch = 'search';
 const String esTimer = 'timer';
 const String esToggleMedia = 'toggleMedia';
+const String esThemeMode = 'themeMode';
 
 extension WWGGConfig on WidWidGetGet {
   String get value => switch (this) {
@@ -366,6 +371,7 @@ extension WWGGConfig on WidWidGetGet {
         WidWidGetGet.search => esSearch,
         WidWidGetGet.timer => esTimer,
         WidWidGetGet.toggleMedia => esToggleMedia,
+        WidWidGetGet.themeMode => esThemeMode,
       };
 }
 
