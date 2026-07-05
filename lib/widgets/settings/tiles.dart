@@ -38,6 +38,7 @@ class AppTileSetting extends StatelessWidget {
           bool showIcon = folder ? folderIcons(config) : listIcons(config);
           bool elevated = folder ? elevatedFolders(config) : elevatedLists(config);
           bool useWide = wideTiles(config);
+          bool fullscreen = pages(config);
 
           Widget core() => folder
               ? FolderButton(
@@ -167,12 +168,20 @@ class AppTileSetting extends StatelessWidget {
                     setModal(() => elevated = choice);
                   },
                 ),
-                config.separator,
+                EzTitledDivider(
+                  Text(
+                    'Shared (App, Folder, Widget)',
+                    textAlign: TextAlign.center,
+                    style: config.labelStyle,
+                  ),
+                  height: config.spacing * 3,
+                  margin: config.marginVal,
+                ),
 
                 // Wide tiles
                 EzSwitchPair(
                   config,
-                  text: 'Use max width (shared)',
+                  text: 'Max width tiles',
                   valueKey: config.isDark ? darkWideTilesKey : lightWideTilesKey,
                   afterChanged: (bool? choice) async {
                     if (choice == null) return;
@@ -186,6 +195,25 @@ class AppTileSetting extends StatelessWidget {
                     setModal(() => useWide = choice);
                   },
                 ),
+                config.spacer,
+
+                // Fullscreen pages
+                EzSwitchPair(
+                  config,
+                  text: 'Fullscreen pages',
+                  valueKey: config.isDark ? darkPagesKey : lightPagesKey,
+                  afterChanged: (bool? choice) async {
+                    if (choice == null) return;
+
+                    if (EzCM.updateBoth) {
+                      await EzCM.setBool(
+                        config.isDark ? lightPagesKey : darkPagesKey,
+                        choice,
+                      );
+                    }
+                    setModal(() => fullscreen = choice);
+                  },
+                ),
                 config.separator,
               ]),
             ),
@@ -194,7 +222,8 @@ class AppTileSetting extends StatelessWidget {
           if ((labelType != (folder ? folderLabels(config) : listLabels(config))) ||
               (showIcon != (folder ? folderIcons(config) : listIcons(config))) ||
               (elevated != (folder ? elevatedFolders(config) : elevatedLists(config))) ||
-              (useWide != wideTiles(config))) {
+              (useWide != wideTiles(config)) ||
+              fullscreen != pages(config)) {
             await config.rebuildUI(<EzCacheType>{EzCacheType.design});
           }
         },

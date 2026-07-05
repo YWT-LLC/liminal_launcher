@@ -264,7 +264,7 @@ class SettingsScreen extends StatelessWidget {
                     label: 'List alignment',
                     icon: EzIcon(config, Icons.grid_3x3),
                   ),
-                  config.spacer,
+                  config.separator,
 
                   // Hide status bar
                   EzSwitchPair(
@@ -289,6 +289,24 @@ class SettingsScreen extends StatelessWidget {
                         await SystemChrome.setEnabledSystemUIMode(
                           SystemUiMode.manual,
                           overlays: SystemUiOverlay.values,
+                        );
+                      }
+                    },
+                  ),
+                  config.spacer,
+
+                  // Use fullscreen pages
+                  EzSwitchPair(
+                    config,
+                    text: 'Fullscreen home pages',
+                    valueKey: config.isDark ? darkPagesKey : lightPagesKey,
+                    afterChanged: (bool? choice) async {
+                      if (choice == null) return;
+
+                      if (EzCM.updateBoth) {
+                        await EzCM.setBool(
+                          config.isDark ? lightPagesKey : darkPagesKey,
+                          choice,
                         );
                       }
                     },
