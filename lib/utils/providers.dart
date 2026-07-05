@@ -1126,8 +1126,25 @@ For example: if an app has always on location permissions, banishing it will not
     notifyListeners();
   }
 
-  /// Does notify TODO: confirm (where else?)
-  Future<void> removeLane(EzCP config, int lane) async {
+  /// Does notify
+  /// Includes confirm dialog
+  Future<void> removeLane(EzCP config, BuildContext context, int lane) async {
+    final bool confirmed = await showDialog(
+      context: context,
+      builder: (BuildContext dCon) => EzAlertDialog(
+        config,
+        title: Text('Delete lane $lane?', textAlign: TextAlign.center),
+        actions: ezActionPair(
+          config,
+          onConfirm: () => Navigator.of(dCon).pop(true),
+          onDeny: () => Navigator.of(dCon).pop(false),
+        ),
+        needsClose: false,
+      ),
+    );
+
+    if (!confirmed) return;
+
     if (interlinked || config.isDark) {
       _darkHomeMatrix.removeAt(lane);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
