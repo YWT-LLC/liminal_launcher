@@ -433,7 +433,67 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
               padding: EzInsets.wrap(config.spacing),
               child: EzElevatedIconButton(
                 config,
-                onPressed: () => appInfo.addLane(config),
+                onPressed: () async {
+                  if (appInfo.numLanes(config) == 1) {
+                    await ezModal(
+                      config,
+                      context: context,
+                      builder: (BuildContext mCon) => ezModalScroll(config, children: <Widget>[
+                        // Title
+                        const Text('Multi-lane configuration', textAlign: TextAlign.center),
+                        config.margin,
+
+                        // Switches
+                        EzSwitchPair(
+                          config,
+                          valueKey: config.isDark ? darkWideTilesKey : lightWideTilesKey,
+                          text: 'Wide tiles',
+                          afterChanged: (bool? value) async {
+                            if (value == null) return;
+
+                            if (interlinked) {
+                              await EzCM.setBool(
+                                config.isDark ? lightWideTilesKey : darkWideTilesKey,
+                                value,
+                              );
+                            }
+                          },
+                        ),
+                        config.spacer,
+                        EzSwitchPair(
+                          config,
+                          valueKey: config.isDark ? darkPagesKey : lightPagesKey,
+                          text: 'Use pages',
+                          afterChanged: (bool? value) async {
+                            if (value == null) return;
+
+                            if (interlinked) {
+                              await EzCM.setBool(
+                                config.isDark ? lightPagesKey : darkPagesKey,
+                                value,
+                              );
+                            }
+                          },
+                        ),
+                        config.spacer,
+
+                        // Description
+                        const Text(
+                          '''With wide tiles enabled, each lane with an item will be the width of one screen.
+By default, pages are also enabled, so lanes behave like pages on a traditional launcher.
+You can disable pages to have everything be a continuous scroll.
+                          
+With wide tiles disabled, lanes will be sized by the widest item & your spacing setting.
+Pages are unavailable when wide tiles is disabled.''',
+                          textAlign: TextAlign.center,
+                        ),
+                        config.separator,
+                      ]),
+                    );
+                  }
+
+                  await appInfo.addLane(config);
+                },
                 label: 'Lane',
                 icon: EzIcon(config, Icons.view_column_outlined),
               ),
@@ -836,34 +896,10 @@ If you want to support Liminal's development, or the development of more Empathe
         fabs: editing
             ? <Widget>[
                 config.spacer,
-                // TODO: add wide tiles to everything (not clickable for widgets, just sized)
-                // TODO: add the switch pairs here
-                // TODO: mention && add split
 
                 // Add (iff one lane)
                 if (numLanes == 1) ...<Widget>[
-                  AddFAB(config, () async {
-                    await ezModal(
-                      config,
-                      context: context,
-                      builder: (BuildContext mCon) => ezModalScroll(config, children: <Widget>[
-                        const Text('Disable wide tiles?', textAlign: TextAlign.center),
-                        Text(
-                          '''With wide tiles enabled, each lane will be the width of one screen.
-By default, pages is also enabled, so lanes behave like pages on a traditional launcher.
-You can disable pages to have everything be a continuous scroll.
-                          
-With wide tiles disabled, lanes will be sized by the widest item & your spacing (${config.spacing}) setting.
-Pages are unavailable when wide tiles is disabled.
-
-As a heads up, this will appear any time you go from 1 -> 2 lanes.''',
-                          textAlign: TextAlign.center,
-                        ),
-                      ]),
-                    );
-
-                    await addModal(config, appInfo, 0);
-                  }),
+                  AddFAB(config, () => addModal(config, appInfo, 0)),
                   config.spacer,
                 ],
 
