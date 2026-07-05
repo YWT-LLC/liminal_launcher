@@ -172,3 +172,39 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
     super.dispose();
   }
 }
+
+class AddToggleMedia extends StatelessWidget {
+  final EzCP config;
+  final AppInfoProvider appInfo;
+  final int lane;
+  final WidgetSize save;
+  final WidgetSize preview;
+
+  const AddToggleMedia(
+    this.config,
+    this.appInfo,
+    this.lane, {
+    super.key,
+    required this.save,
+    required this.preview,
+  });
+
+  void onTap() => appInfo.addToggleMedia(config, lane);
+
+  @override
+  Widget build(BuildContext context) => EzIconButton(
+        config,
+        onPressed: onTap,
+        icon: (preview == WidgetSize.button)
+            ? const Icon(Icons.headphones)
+            : EzRow(config, children: <Widget>[
+                config.rowMargin,
+                const Icon(Icons.skip_previous),
+                config.rowSpacer,
+                const Icon(Icons.headphones),
+                config.rowSpacer,
+                const Icon(Icons.skip_next),
+                config.rowMargin,
+              ]),
+      );
+}

@@ -587,6 +587,55 @@ class _SearchWidgetState extends State<SearchWidget> {
   }
 }
 
+class AddSearch extends StatelessWidget {
+  final EzCP config;
+  final AppInfoProvider appInfo;
+  final int lane;
+  final WidgetSize save;
+  final WidgetSize preview;
+
+  const AddSearch(
+    this.config,
+    this.appInfo,
+    this.lane, {
+    super.key,
+    required this.save,
+    required this.preview,
+  });
+
+  void onTap() => appInfo.addSearch(config, lane);
+
+  @override
+  Widget build(BuildContext context) => (preview == WidgetSize.button)
+      ? EzIconButton(config, onPressed: onTap, icon: const Icon(Icons.search))
+      : GestureDetector(
+          onTap: onTap,
+          child: EzRow(config, children: <Widget>[
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth:
+                    ezTextSize('Search bar', context: context, style: config.bodyStyle).width +
+                        config.padding,
+                maxHeight: appIconSize(config),
+              ),
+              child: TextFormField(
+                onTap: onTap,
+                readOnly: true,
+                decoration: const InputDecoration(hintText: 'Search'),
+                textAlign: TextAlign.center,
+                textAlignVertical: TextAlignVertical.center,
+              ),
+            ),
+            config.rowMargin,
+            EzIconButton(
+              config,
+              icon: const Icon(Icons.search),
+              onPressed: onTap,
+            ),
+          ]),
+        );
+}
+
 class Engine implements Comparable<Engine> {
   final String name;
   final IconData icon;

@@ -643,3 +643,42 @@ extension _ETName on _Edits {
         _Edits.date => 'Date',
       };
 }
+
+class AddClock extends StatelessWidget {
+  final EzCP config;
+  final AppInfoProvider appInfo;
+  final int lane;
+
+  const AddClock(this.config, this.appInfo, this.lane, {super.key});
+
+  void onTap() => appInfo.addClock(config, lane);
+
+  @override
+  Widget build(BuildContext context) {
+    final DateTime now = DateTime.now();
+
+    return GestureDetector(
+      onTap: onTap,
+      child: EzTextBackground(
+        config,
+        padding: EdgeInsets.all(config.padding),
+        text: EzCol(
+          mainAxisAlignment: vAlign(config).mainAxis,
+          crossAxisAlignment: hAlign(config).crossAxis,
+          children: <Widget>[
+            Text(
+              TimeOfDay.fromDateTime(now).format(context),
+              style: config.headlineStyle,
+              textAlign: hAlign(config).textAlign,
+            ),
+            Text(
+              DTConfig.buildDate(context, now, DateType.compact),
+              style: config.labelStyle,
+              textAlign: hAlign(config).textAlign,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

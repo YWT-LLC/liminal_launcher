@@ -365,7 +365,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                     builder: (BuildContext wmCon, StateSetter setModal) =>
                         ezModalScroll(config, children: <Widget>[
                       // Clock
-                      _AddClock(config, appInfo, lane),
+                      AddClock(config, appInfo, lane),
                       EzTitledDivider(
                         constraints: BoxConstraints(maxWidth: widthOf(wmCon) / 2),
                         EzDropdownMenu<WidgetSize>(
@@ -393,23 +393,23 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       config.spacer,
 
                       // Calendar
-                      _AddCalendar(config, appInfo, lane, save: size, preview: preview),
+                      AddCalendar(config, appInfo, lane, save: size, preview: preview),
                       config.spacer,
 
                       // Search
-                      _AddSearch(config, appInfo, lane, save: size, preview: preview),
+                      AddSearch(config, appInfo, lane, save: size, preview: preview),
                       config.spacer,
 
                       // Timer
-                      _AddTimer(config, appInfo, lane, save: size, preview: preview),
+                      AddTimer(config, appInfo, lane, save: size, preview: preview),
                       config.spacer,
 
                       // Toggle media
-                      _AddToggleMedia(config, appInfo, lane, save: size, preview: preview),
+                      AddToggleMedia(config, appInfo, lane, save: size, preview: preview),
                       config.spacer,
 
                       // Theme mode
-                      _AddThemeMode(config, appInfo, lane, save: size, preview: preview),
+                      AddThemeMode(config, appInfo, lane, save: size, preview: preview),
                       config.separator,
                     ]),
                   );
@@ -925,271 +925,4 @@ If you want to support Liminal's development, or the development of more Empathe
       );
     });
   }
-}
-
-class _AddCalendar extends StatelessWidget {
-  final EzCP config;
-  final AppInfoProvider appInfo;
-  final int lane;
-  final WidgetSize save;
-  final WidgetSize preview;
-
-  const _AddCalendar(
-    this.config,
-    this.appInfo,
-    this.lane, {
-    required this.save,
-    required this.preview,
-  });
-
-  void onTap() => appInfo.addCalendar(config, lane);
-
-  @override
-  Widget build(BuildContext context) => (preview == WidgetSize.button)
-      ? EzIconButton(
-          config,
-          onPressed: onTap,
-          icon: const Icon(Icons.edit_calendar),
-        )
-      : GestureDetector(
-          onTap: onTap,
-          child: EzRow(config, children: <Widget>[
-            ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth:
-                    ezTextSize('Create event', context: context, style: config.bodyStyle).width +
-                        config.padding,
-                maxHeight: appIconSize(config),
-              ),
-              child: TextFormField(
-                onTap: onTap,
-                readOnly: true,
-                decoration: const InputDecoration(hintText: 'New event'),
-                textAlign: TextAlign.center,
-                textAlignVertical: TextAlignVertical.center,
-              ),
-            ),
-            config.rowMargin,
-            EzIconButton(
-              config,
-              icon: const Icon(Icons.edit_calendar),
-              onPressed: onTap,
-            ),
-          ]),
-        );
-}
-
-class _AddClock extends StatelessWidget {
-  final EzCP config;
-  final AppInfoProvider appInfo;
-  final int lane;
-
-  const _AddClock(this.config, this.appInfo, this.lane);
-
-  void onTap() => appInfo.addClock(config, lane);
-
-  @override
-  Widget build(BuildContext context) {
-    final DateTime now = DateTime.now();
-
-    return GestureDetector(
-      onTap: onTap,
-      child: EzTextBackground(
-        config,
-        padding: EdgeInsets.all(config.padding),
-        text: EzCol(
-          mainAxisAlignment: vAlign(config).mainAxis,
-          crossAxisAlignment: hAlign(config).crossAxis,
-          children: <Widget>[
-            Text(
-              TimeOfDay.fromDateTime(now).format(context),
-              style: config.headlineStyle,
-              textAlign: hAlign(config).textAlign,
-            ),
-            Text(
-              DTConfig.buildDate(context, now, DateType.compact),
-              style: config.labelStyle,
-              textAlign: hAlign(config).textAlign,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _AddSearch extends StatelessWidget {
-  final EzCP config;
-  final AppInfoProvider appInfo;
-  final int lane;
-  final WidgetSize save;
-  final WidgetSize preview;
-
-  const _AddSearch(
-    this.config,
-    this.appInfo,
-    this.lane, {
-    required this.save,
-    required this.preview,
-  });
-
-  void onTap() => appInfo.addSearch(config, lane);
-
-  @override
-  Widget build(BuildContext context) => (preview == WidgetSize.button)
-      ? EzIconButton(config, onPressed: onTap, icon: const Icon(Icons.search))
-      : GestureDetector(
-          onTap: onTap,
-          child: EzRow(config, children: <Widget>[
-            ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth:
-                    ezTextSize('Search bar', context: context, style: config.bodyStyle).width +
-                        config.padding,
-                maxHeight: appIconSize(config),
-              ),
-              child: TextFormField(
-                onTap: onTap,
-                readOnly: true,
-                decoration: const InputDecoration(hintText: 'Search'),
-                textAlign: TextAlign.center,
-                textAlignVertical: TextAlignVertical.center,
-              ),
-            ),
-            config.rowMargin,
-            EzIconButton(
-              config,
-              icon: const Icon(Icons.search),
-              onPressed: onTap,
-            ),
-          ]),
-        );
-}
-
-class _AddTimer extends StatelessWidget {
-  final EzCP config;
-  final AppInfoProvider appInfo;
-  final int lane;
-  final WidgetSize save;
-  final WidgetSize preview;
-
-  const _AddTimer(
-    this.config,
-    this.appInfo,
-    this.lane, {
-    required this.save,
-    required this.preview,
-  });
-
-  void onTap() => appInfo.addTimer(config, lane);
-
-  @override
-  Widget build(BuildContext context) {
-    late final Widget fauxTimerField = ConstrainedBox(
-      constraints: BoxConstraints(
-        maxWidth:
-            ezTextSize('00', context: context, style: config.bodyStyle).width + config.padding,
-        maxHeight: appIconSize(config),
-      ),
-      child: TextFormField(
-        onTap: onTap,
-        readOnly: true,
-        decoration: const InputDecoration(hintText: '00'),
-        textAlign: TextAlign.center,
-        textAlignVertical: TextAlignVertical.center,
-      ),
-    );
-
-    return (preview == WidgetSize.button)
-        ? EzIconButton(config, onPressed: onTap, icon: const Icon(Icons.timer))
-        : GestureDetector(
-            onTap: onTap,
-            child: EzRow(
-              config,
-              reverseHands: false,
-              children: <Widget>[
-                fauxTimerField,
-                config.rowMargin,
-                fauxTimerField,
-                config.rowMargin,
-                fauxTimerField,
-                config.rowMargin,
-                EzIconButton(
-                  config,
-                  onPressed: onTap,
-                  icon: const Icon(Icons.timer),
-                ),
-              ],
-            ),
-          );
-  }
-}
-
-class _AddToggleMedia extends StatelessWidget {
-  final EzCP config;
-  final AppInfoProvider appInfo;
-  final int lane;
-  final WidgetSize save;
-  final WidgetSize preview;
-
-  const _AddToggleMedia(
-    this.config,
-    this.appInfo,
-    this.lane, {
-    required this.save,
-    required this.preview,
-  });
-
-  void onTap() => appInfo.addToggleMedia(config, lane);
-
-  @override
-  Widget build(BuildContext context) => EzIconButton(
-        config,
-        onPressed: onTap,
-        icon: (preview == WidgetSize.button)
-            ? const Icon(Icons.headphones)
-            : EzRow(config, children: <Widget>[
-                config.rowMargin,
-                const Icon(Icons.skip_previous),
-                config.rowSpacer,
-                const Icon(Icons.headphones),
-                config.rowSpacer,
-                const Icon(Icons.skip_next),
-                config.rowMargin,
-              ]),
-      );
-}
-
-class _AddThemeMode extends StatelessWidget {
-  final EzCP config;
-  final AppInfoProvider appInfo;
-  final int lane;
-  final WidgetSize save;
-  final WidgetSize preview;
-
-  const _AddThemeMode(
-    this.config,
-    this.appInfo,
-    this.lane, {
-    required this.save,
-    required this.preview,
-  });
-
-  void onTap() => appInfo.addThemeWidget(config, lane);
-
-  @override
-  Widget build(BuildContext context) => (preview == WidgetSize.button)
-      ? EzIconButton(
-          config,
-          onPressed: onTap,
-          icon: Icon(config.isDark ? Icons.dark_mode : Icons.light_mode),
-        )
-      : EzDropdownMenu<bool>(
-          config,
-          dropdownMenuEntries: <DropdownMenuEntry<bool>>[
-            const DropdownMenuEntry<bool>(label: 'Widget', value: true),
-          ],
-          widthEntry: 'Widget',
-          onSelected: (_) => onTap(),
-        );
 }

@@ -278,3 +278,56 @@ class _CalendarWidgetState extends State<CalendarWidget> {
     super.dispose();
   }
 }
+
+class AddCalendar extends StatelessWidget {
+  final EzCP config;
+  final AppInfoProvider appInfo;
+  final int lane;
+  final WidgetSize save;
+  final WidgetSize preview;
+
+  const AddCalendar(
+    this.config,
+    this.appInfo,
+    this.lane, {
+    super.key,
+    required this.save,
+    required this.preview,
+  });
+
+  void onTap() => appInfo.addCalendar(config, lane);
+
+  @override
+  Widget build(BuildContext context) => (preview == WidgetSize.button)
+      ? EzIconButton(
+          config,
+          onPressed: onTap,
+          icon: const Icon(Icons.edit_calendar),
+        )
+      : GestureDetector(
+          onTap: onTap,
+          child: EzRow(config, children: <Widget>[
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth:
+                    ezTextSize('Create event', context: context, style: config.bodyStyle).width +
+                        config.padding,
+                maxHeight: appIconSize(config),
+              ),
+              child: TextFormField(
+                onTap: onTap,
+                readOnly: true,
+                decoration: const InputDecoration(hintText: 'New event'),
+                textAlign: TextAlign.center,
+                textAlignVertical: TextAlignVertical.center,
+              ),
+            ),
+            config.rowMargin,
+            EzIconButton(
+              config,
+              icon: const Icon(Icons.edit_calendar),
+              onPressed: onTap,
+            ),
+          ]),
+        );
+}

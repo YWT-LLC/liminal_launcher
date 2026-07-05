@@ -430,6 +430,66 @@ class _TimerWidgetState extends State<TimerWidget> {
   }
 }
 
+class AddTimer extends StatelessWidget {
+  final EzCP config;
+  final AppInfoProvider appInfo;
+  final int lane;
+  final WidgetSize save;
+  final WidgetSize preview;
+
+  const AddTimer(
+    this.config,
+    this.appInfo,
+    this.lane, {
+    super.key,
+    required this.save,
+    required this.preview,
+  });
+
+  void onTap() => appInfo.addTimer(config, lane);
+
+  @override
+  Widget build(BuildContext context) {
+    late final Widget fauxTimerField = ConstrainedBox(
+      constraints: BoxConstraints(
+        maxWidth:
+            ezTextSize('00', context: context, style: config.bodyStyle).width + config.padding,
+        maxHeight: appIconSize(config),
+      ),
+      child: TextFormField(
+        onTap: onTap,
+        readOnly: true,
+        decoration: const InputDecoration(hintText: '00'),
+        textAlign: TextAlign.center,
+        textAlignVertical: TextAlignVertical.center,
+      ),
+    );
+
+    return (preview == WidgetSize.button)
+        ? EzIconButton(config, onPressed: onTap, icon: const Icon(Icons.timer))
+        : GestureDetector(
+            onTap: onTap,
+            child: EzRow(
+              config,
+              reverseHands: false,
+              children: <Widget>[
+                fauxTimerField,
+                config.rowMargin,
+                fauxTimerField,
+                config.rowMargin,
+                fauxTimerField,
+                config.rowMargin,
+                EzIconButton(
+                  config,
+                  onPressed: onTap,
+                  icon: const Icon(Icons.timer),
+                ),
+              ],
+            ),
+          );
+  }
+}
+
 String _validateTime(String time) {
   final int? value = int.tryParse(time);
   return (value == null) ? '00' : ((value > 99) ? '99' : time);

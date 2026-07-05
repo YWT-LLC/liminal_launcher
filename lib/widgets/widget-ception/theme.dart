@@ -168,3 +168,38 @@ class _ThemeWidgetState extends State<ThemeWidget> {
     super.dispose();
   }
 }
+
+class AddThemeMode extends StatelessWidget {
+  final EzCP config;
+  final AppInfoProvider appInfo;
+  final int lane;
+  final WidgetSize save;
+  final WidgetSize preview;
+
+  const AddThemeMode(
+    this.config,
+    this.appInfo,
+    this.lane, {
+    super.key,
+    required this.save,
+    required this.preview,
+  });
+
+  void onTap() => appInfo.addThemeWidget(config, lane);
+
+  @override
+  Widget build(BuildContext context) => (preview == WidgetSize.button)
+      ? EzIconButton(
+          config,
+          onPressed: onTap,
+          icon: Icon(config.isDark ? Icons.dark_mode : Icons.light_mode),
+        )
+      : EzDropdownMenu<bool>(
+          config,
+          dropdownMenuEntries: <DropdownMenuEntry<bool>>[
+            const DropdownMenuEntry<bool>(label: 'Widget', value: true),
+          ],
+          widthEntry: 'Widget',
+          onSelected: (_) => onTap(),
+        );
+}
