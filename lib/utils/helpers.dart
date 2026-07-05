@@ -609,14 +609,29 @@ Widget renderWidget(
   required AppState state,
   ValueNotifier<double>? rippleProgress,
 }) =>
-    switch (appInfo.homeItem(config, lane: lane, index: index).split(widgetSplit)[0]) {
-      esCalendar => CalendarWidget(config, appInfo, lane, index, state, rippleProgress),
-      esClock => ClockWidget(config, appInfo, lane, index, state, rippleProgress),
-      esSearch => SearchWidget(config, appInfo, lane, index, state, rippleProgress),
-      esTimer => TimerWidget(config, appInfo, lane, index, state, rippleProgress),
-      esToggleMedia => ToggleMediaWidget(config, appInfo, lane, index, state, rippleProgress),
-      _ => const SizedBox.shrink(),
-    };
+    wideTiles(config)
+        ? Container(
+            width: double.infinity,
+            alignment: LAConfig.merge(h: hAlign(config), v: ListAlignment.center),
+            child: switch (
+                appInfo.homeItem(config, lane: lane, index: index).split(widgetSplit)[0]) {
+              esCalendar => CalendarWidget(config, appInfo, lane, index, state, rippleProgress),
+              esClock => ClockWidget(config, appInfo, lane, index, state, rippleProgress),
+              esSearch => SearchWidget(config, appInfo, lane, index, state, rippleProgress),
+              esTimer => TimerWidget(config, appInfo, lane, index, state, rippleProgress),
+              esToggleMedia =>
+                ToggleMediaWidget(config, appInfo, lane, index, state, rippleProgress),
+              _ => const SizedBox.shrink(),
+            },
+          )
+        : switch (appInfo.homeItem(config, lane: lane, index: index).split(widgetSplit)[0]) {
+            esCalendar => CalendarWidget(config, appInfo, lane, index, state, rippleProgress),
+            esClock => ClockWidget(config, appInfo, lane, index, state, rippleProgress),
+            esSearch => SearchWidget(config, appInfo, lane, index, state, rippleProgress),
+            esTimer => TimerWidget(config, appInfo, lane, index, state, rippleProgress),
+            esToggleMedia => ToggleMediaWidget(config, appInfo, lane, index, state, rippleProgress),
+            _ => const SizedBox.shrink(),
+          };
 
 Future<String?> resizeWidgetDialog(EzCP config, BuildContext context, WidgetSize curr) =>
     showDialog(
