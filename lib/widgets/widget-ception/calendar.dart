@@ -264,7 +264,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
             child: EzIconButton(
               widget.config,
               icon: const Icon(Icons.edit_calendar),
-              onPressed: () => canToggleMenu(widget.config, menuControl),
+              onPressed: () => toggleMenu(menuControl),
             ),
           ),
       },

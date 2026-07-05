@@ -411,7 +411,7 @@ class _TimerWidgetState extends State<TimerWidget> {
             child: EzIconButton(
               widget.config,
               icon: const Icon(Icons.timer_outlined),
-              onPressed: () => canToggleMenu(widget.config, menuControl),
+              onPressed: () => toggleMenu(menuControl),
             ),
           ),
       },

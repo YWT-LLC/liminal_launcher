@@ -159,7 +159,7 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
             child: EzIconButton(
               widget.config,
               icon: const Icon(Icons.headphones),
-              onPressed: () => canToggleMenu(widget.config, menuControl),
+              onPressed: () => toggleMenu(menuControl),
             ),
           ),
       },

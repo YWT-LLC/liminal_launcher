@@ -572,7 +572,7 @@ class _SearchWidgetState extends State<SearchWidget> {
             child: EzIconButton(
               widget.config,
               icon: const Icon(Icons.search),
-              onPressed: () => canToggleMenu(widget.config, menuControl),
+              onPressed: () => toggleMenu(menuControl),
             ),
           ),
       },

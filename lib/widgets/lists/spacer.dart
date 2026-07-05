@@ -161,7 +161,7 @@ class _LimSpacerState extends State<LimSpacer> {
                       child: EzIconButton(
                         widget.config,
                         icon: const Icon(Icons.space_bar),
-                        onPressed: () => canToggleMenu(widget.config, menuControl),
+                        onPressed: () => toggleMenu(menuControl),
                       ),
                     ),
             ),
