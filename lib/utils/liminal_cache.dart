@@ -56,6 +56,7 @@ class LiminalCache extends EzAppCache {
         elevatedFolders: elevatedFolders,
         folderBT: BTConfig.build(folderLabels, icons: folderIcons, elevated: elevatedFolders),
         wideTiles: EzCM.get(darkWideTilesKey),
+        pages: EzCM.get(darkPagesKey),
       );
     } else {
       final bool listIcons = EzCM.get(lightListIconKey);
@@ -78,6 +79,7 @@ class LiminalCache extends EzAppCache {
         elevatedFolders: elevatedFolders,
         folderBT: BTConfig.build(folderLabels, icons: folderIcons, elevated: elevatedFolders),
         wideTiles: EzCM.get(lightWideTilesKey),
+        pages: EzCM.get(lightPagesKey),
       );
     }
 
@@ -121,6 +123,7 @@ class DesignCache {
   final ButtonType folderBT;
 
   final bool wideTiles;
+  final bool pages;
 
   DesignCache({
     required this.horizontalAlign,
@@ -134,6 +137,7 @@ class DesignCache {
     required this.elevatedFolders,
     required this.folderBT,
     required this.wideTiles,
+    required this.pages,
   });
 }
 
@@ -179,6 +183,7 @@ bool elevatedFolders(EzCP config) => _cache(config)._design.elevatedFolders;
 ButtonType folderBT(EzCP config) => _cache(config)._design.folderBT;
 
 bool wideTiles(EzCP config) => _cache(config)._design.wideTiles;
+bool pages(EzCP config) => _cache(config)._design.pages;
 double appIconSize(EzCP config) => config.iconSize + config.padding;
 
 ListAlignment hAlign(EzCP config) => _cache(config)._design.horizontalAlign;
