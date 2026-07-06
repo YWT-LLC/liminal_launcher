@@ -399,7 +399,7 @@ class _AppFolderState extends State<FolderTile> {
                                               widget.config.rowSpacer,
                                               EzIconButton(
                                                 widget.config,
-                                                icon: EzIcon(widget.config, Icons.remove),
+                                                icon: const Icon(Icons.remove),
                                                 onPressed: () => appsNotif.value =
                                                     List<String>.from(apps)..remove(id),
                                               ),

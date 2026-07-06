@@ -381,7 +381,7 @@ class _TimerWidgetState extends State<TimerWidget> {
 
                     EzIconButton(
                       widget.config,
-                      icon: EzIcon(widget.config, Icons.timer_outlined),
+                      icon: const Icon(Icons.timer_outlined),
                       onPressed: () async {
                         removeOverlay();
                         await setTimer(<int>[

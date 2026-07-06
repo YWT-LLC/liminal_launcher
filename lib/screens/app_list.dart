@@ -124,7 +124,7 @@ class _AppListScreenState extends State<AppListScreen> {
                     builder: (_, MenuController controller, __) => EzIconButton(
                       config,
                       onPressed: () => canToggleMenu(config, controller),
-                      icon: EzIcon(config, Icons.sort),
+                      icon: const Icon(Icons.sort),
                     ),
                     menuChildren: AppSort.values
                         .map((AppSort type) => EzMenuButton(
@@ -145,7 +145,7 @@ class _AppListScreenState extends State<AppListScreen> {
                   // Order
                   EzIconButton(
                     config,
-                    icon: EzIcon(config, ascList ? Icons.arrow_upward : Icons.arrow_downward),
+                    icon: Icon(ascList ? Icons.arrow_upward : Icons.arrow_downward),
                     onPressed: () async {
                       await EzCM.setBool(ascListKey, !ascList);
 
@@ -165,7 +165,7 @@ class _AppListScreenState extends State<AppListScreen> {
                       children: <Widget>[
                         EzIconButton(
                           config,
-                          icon: EzIcon(config, Icons.search),
+                          icon: const Icon(Icons.search),
                           onPressed: () {
                             if (searching) {
                               closeKeyboard(context);

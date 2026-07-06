@@ -513,7 +513,7 @@ class _SearchWidgetState extends State<SearchWidget> {
             builder: (_, MenuController controller, __) => (widget._size == WidgetSize.button)
                 ? EzIconButton(
                     widget.config,
-                    icon: EzIcon(widget.config, widget._engine.icon),
+                    icon: Icon(widget._engine.icon),
                     onPressed: () => launchUrl(Uri.https(widget._engine.base, '/')),
                     onLongPress: () => canToggleMenu(widget.config, controller),
                   )
@@ -539,7 +539,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                     widget.config.rowMargin,
                     EzIconButton(
                       widget.config,
-                      icon: EzIcon(widget.config, widget._engine.icon),
+                      icon: Icon(widget._engine.icon),
                       onPressed: () => search(queryCon.text),
                       onLongPress: () => canToggleMenu(widget.config, controller),
                     ),
