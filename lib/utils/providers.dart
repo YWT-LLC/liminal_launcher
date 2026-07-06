@@ -1186,11 +1186,13 @@ For example: if an app has always on location permissions, banishing it will not
 
     if (interlinked || config.isDark) {
       _darkHomeMatrix.removeAt(lane);
+      if (_darkHomeMatrix.isEmpty) _darkHomeMatrix.add(<String>[]);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
       _lightHomeMatrix.removeAt(lane);
+      if (_lightHomeMatrix.isEmpty) _lightHomeMatrix.add(<String>[]);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
