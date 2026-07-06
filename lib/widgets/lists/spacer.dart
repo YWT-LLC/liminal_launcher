@@ -176,8 +176,7 @@ class _LimSpacerState extends State<LimSpacer> {
   }
 }
 
-// TODO: scrolling
-
+// TODO: get v2 with toggle-able moving working
 Future<void> editSpacer(
   EzCP config, {
   required AppInfoProvider appInfo,
@@ -196,444 +195,460 @@ Future<void> editSpacer(
   double height = hBack;
   double width = wBack;
 
+  final double maxHeight = heightOf(ezRootNav.currentContext!) * 0.75;
+  final double maxWidth = widthOf(ezRootNav.currentContext!) * 0.75;
+
   editSpacerHeight.value = height;
   editSpacerWidth.value = width;
   marked.value = (lane, index);
 
   Axis axis = Axis.vertical;
+  bool moveable = false;
   double step = 5.0;
 
-  final bool? keep = await ezRootNav.currentState!.push(
-    PageRouteBuilder<bool>(
-      opaque: false,
-      transitionsBuilder: (_, __, ___, Widget child) => child,
-      transitionDuration: Duration.zero,
-      reverseTransitionDuration: Duration.zero,
-      pageBuilder: (_, __, ___) => StatefulBuilder(builder: (_, StateSetter setOverlay) {
-        final double maxHeight = heightOf(ezRootNav.currentContext!) * 0.75;
-        final double maxWidth = widthOf(ezRootNav.currentContext!) * 0.75;
+  final Completer<bool?> completer = Completer<bool?>();
+  late OverlayEntry overlayEntry;
 
-        final List<Widget> stepOptions = <Widget>[
-          MenuItemButton(
-            child: Text(
-              '1',
-              textAlign: TextAlign.center,
-              style: config.bodyStyle?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            onPressed: () => setOverlay(() => step = 1.0),
+  overlayEntry = OverlayEntry(
+    builder: (_) => StatefulBuilder(builder: (_, StateSetter setOverlay) {
+      final List<Widget> stepOptions = <Widget>[
+        MenuItemButton(
+          child: Text(
+            '1',
+            textAlign: TextAlign.center,
+            style: config.bodyStyle?.copyWith(fontWeight: FontWeight.bold),
           ),
-          MenuItemButton(
-            child: Text(
-              '5',
-              textAlign: TextAlign.center,
-              style: config.bodyStyle?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            onPressed: () => setOverlay(() => step = 5.0),
+          onPressed: () => setOverlay(() => step = 1.0),
+        ),
+        MenuItemButton(
+          child: Text(
+            '5',
+            textAlign: TextAlign.center,
+            style: config.bodyStyle?.copyWith(fontWeight: FontWeight.bold),
           ),
-          MenuItemButton(
-            child: Text(
-              '10',
-              textAlign: TextAlign.center,
-              style: config.bodyStyle?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            onPressed: () => setOverlay(() => step = 10.0),
+          onPressed: () => setOverlay(() => step = 5.0),
+        ),
+        MenuItemButton(
+          child: Text(
+            '10',
+            textAlign: TextAlign.center,
+            style: config.bodyStyle?.copyWith(fontWeight: FontWeight.bold),
           ),
-          MenuItemButton(
-            child: Text(
-              config.marginVal.toString(),
-              textAlign: TextAlign.center,
-              style: config.bodyStyle,
-            ),
-            onPressed: () => setOverlay(() => step = config.marginVal),
+          onPressed: () => setOverlay(() => step = 10.0),
+        ),
+        MenuItemButton(
+          child: Text(
+            config.marginVal.toString(),
+            textAlign: TextAlign.center,
+            style: config.bodyStyle,
           ),
-          MenuItemButton(
-            child: Text(
-              config.padding.toString(),
-              textAlign: TextAlign.center,
-              style: config.bodyStyle,
-            ),
-            onPressed: () => setOverlay(() => step = config.padding),
+          onPressed: () => setOverlay(() => step = config.marginVal),
+        ),
+        MenuItemButton(
+          child: Text(
+            config.padding.toString(),
+            textAlign: TextAlign.center,
+            style: config.bodyStyle,
           ),
-          MenuItemButton(
-            child: Text(
-              config.spacing.toString(),
-              textAlign: TextAlign.center,
-              style: config.bodyStyle,
-            ),
-            onPressed: () => setOverlay(() => step = config.spacing),
+          onPressed: () => setOverlay(() => step = config.padding),
+        ),
+        MenuItemButton(
+          child: Text(
+            config.spacing.toString(),
+            textAlign: TextAlign.center,
+            style: config.bodyStyle,
           ),
-          MenuItemButton(
-            child: Text(
-              config.iconSize.toString(),
-              textAlign: TextAlign.center,
-              style: config.bodyStyle,
-            ),
-            onPressed: () => setOverlay(() => step = config.iconSize),
+          onPressed: () => setOverlay(() => step = config.spacing),
+        ),
+        MenuItemButton(
+          child: Text(
+            config.iconSize.toString(),
+            textAlign: TextAlign.center,
+            style: config.bodyStyle,
           ),
-          MenuItemButton(
-            child: Text(
-              appIconSize(config).toString(),
-              textAlign: TextAlign.center,
-              style: config.bodyStyle,
-            ),
-            onPressed: () => setOverlay(() => step = appIconSize(config)),
+          onPressed: () => setOverlay(() => step = config.iconSize),
+        ),
+        MenuItemButton(
+          child: Text(
+            appIconSize(config).toString(),
+            textAlign: TextAlign.center,
+            style: config.bodyStyle,
           ),
-        ];
+          onPressed: () => setOverlay(() => step = appIconSize(config)),
+        ),
+      ];
 
-        // Define custom functions //
+      // Define custom functions //
 
-        void quickValue(double value) {
-          if (axis == Axis.vertical) {
-            height = value;
-            editSpacerHeight.value = value;
-          } else {
-            width = value;
-            editSpacerWidth.value = value;
-          }
-          setOverlay(() {});
+      void quickValue(double value) {
+        if (axis == Axis.vertical) {
+          height = value;
+          editSpacerHeight.value = value;
+        } else {
+          width = value;
+          editSpacerWidth.value = value;
         }
+        setOverlay(() {});
+      }
 
-        // Return the build //
+      // Return the build //
 
-        return Material(
-          type: MaterialType.transparency,
-          child: Stack(children: <Widget>[
-            // Top: controls
-            Positioned(
-              top: safeTop(ezRootNav.currentContext!),
-              left: 0,
-              right: 0,
-              child: Center(
-                child: EzScrollView(
-                  config,
-                  startCentered: true,
-                  showScrollHint: true,
-                  mainAxisSize: MainAxisSize.max,
-                  scrollDirection: Axis.horizontal,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    // Slider select
-                    MenuAnchor(
-                      builder: (_, MenuController c, __) => EzIconButton(
-                        config,
-                        icon: Icon((axis == Axis.vertical) ? Icons.height : Icons.horizontal_rule),
-                        onPressed: () => toggleMenu(c),
-                      ),
-                      menuChildren: Axis.values
-                          .map((Axis a) => EzMenuButton(
-                                config,
-                                label: a.name,
-                                icon: EzIcon(
-                                  config,
-                                  (a == Axis.vertical) ? Icons.height : Icons.horizontal_rule,
-                                ),
-                                onPressed: () => setOverlay(() => axis = a),
-                              ))
-                          .toList(),
-                    ),
-                    config.rowSpacer,
+      return Material(
+        type: MaterialType.transparency,
+        child: Stack(children: <Widget>[
+          // Top: controls //
 
-                    // Move (lane) up
-                    if (numLanes > 1) ...<Widget>[
-                      EzIconButton(
-                        config,
-                        enabled: currLane < (numLanes - 1),
-                        icon: Icon(config.isLTR && hAlign(config) != ListAlignment.end
-                            ? Icons.keyboard_arrow_right
-                            : Icons.keyboard_arrow_left),
-                        onPressed: () async {
-                          final int nextLane = currLane + 1;
-                          final int nextIndex = appInfo.homeLane(config, nextLane).length;
-
-                          marked.value = (nextLane, nextIndex);
-                          await appInfo.moveItemUpLane(config, lane: currLane, index: currIndex);
-
-                          currLane = nextLane;
-                          currIndex = nextIndex;
-                          setOverlay(() {});
-                        },
-                      ),
-                      config.rowSpacer,
-                    ],
-
-                    // Move (item) up
-                    EzIconButton(
-                      config,
-                      icon: Icon((vAlign(config) == ListAlignment.end)
-                          ? Icons.keyboard_arrow_up
-                          : Icons.keyboard_arrow_down),
-                      enabled: currIndex < (appInfo.homeLane(config, currLane).length - 1),
-                      onPressed: () async {
-                        final int nextIndex = currIndex + 1;
-
-                        marked.value = (currLane, nextIndex);
-                        await appInfo.reorderLane(
-                          config,
-                          lane: currLane,
-                          oldIndex: currIndex,
-                          newIndex: nextIndex,
-                          notify: true,
-                        );
-
-                        setOverlay(() => currIndex = nextIndex);
-                      },
-                    ),
-                    config.rowSpacer,
-
-                    // Key/quick values
-                    MenuAnchor(
-                      builder: (_, MenuController c, __) => EzIconButton(
-                        config,
-                        icon: const Icon(Icons.key),
-                        onPressed: () => toggleMenu(c),
-                      ),
-                      menuChildren: <Widget>[
-                        MenuItemButton(
-                          onPressed: () => quickValue(config.marginVal),
-                          child: Text('Margin: ${config.marginVal}'),
-                        ),
-                        MenuItemButton(
-                          onPressed: () => quickValue(config.padding),
-                          child: Text('Padding: ${config.padding}'),
-                        ),
-                        MenuItemButton(
-                          onPressed: () => quickValue(config.spacing),
-                          child: Text('Spacing: ${config.spacing}'),
-                        ),
-                        MenuItemButton(
-                          onPressed: () => quickValue(config.iconSize),
-                          child: Text('Icon size: ${config.iconSize}'),
-                        ),
-                        MenuItemButton(
-                          onPressed: () => quickValue(appIconSize(config)),
-                          child: Text('App icon size: ${appIconSize(config)}'),
-                        ),
-                      ],
-                    ),
-                    config.rowSpacer,
-
-                    // Moved (item) down
-                    EzIconButton(
-                      config,
-                      icon: Icon((vAlign(config) == ListAlignment.end)
-                          ? Icons.keyboard_arrow_down
-                          : Icons.keyboard_arrow_up),
-                      enabled: currIndex > 0,
-                      onPressed: () async {
-                        final int nextIndex = currIndex - 1;
-
-                        marked.value = (currLane, nextIndex);
-                        await appInfo.reorderLane(
-                          config,
-                          lane: currLane,
-                          oldIndex: currIndex,
-                          newIndex: nextIndex,
-                          notify: true,
-                        );
-
-                        setOverlay(() => currIndex = nextIndex);
-                      },
-                    ),
-                    config.rowSpacer,
-
-                    // Move (lane) down
-                    if (numLanes > 1) ...<Widget>[
-                      EzIconButton(
-                        config,
-                        enabled: currLane > 0,
-                        icon: Icon(config.isLTR && hAlign(config) != ListAlignment.end
-                            ? Icons.keyboard_arrow_left
-                            : Icons.keyboard_arrow_right),
-                        onPressed: () async {
-                          final int nextLane = currLane - 1;
-                          final int nextIndex = appInfo.homeLane(config, nextLane).length;
-
-                          marked.value = (nextLane, nextIndex);
-                          await appInfo.moveItemDownLane(config, lane: currLane, index: currIndex);
-
-                          currLane = nextLane;
-                          currIndex = nextIndex;
-                          setOverlay(() {});
-                        },
-                      ),
-                      config.rowSpacer,
-                    ],
-
-                    // Edits
-                    MenuAnchor(
-                      builder: (_, MenuController controller, __) => EzIconButton(
-                        config,
-                        icon: const Icon(Icons.build),
-                        onPressed: () => toggleMenu(controller),
-                      ),
-                      menuChildren: <Widget>[
-                        EzMenuButton(
-                          config,
-                          label: 'Delete',
-                          icon: EzIcon(config, Icons.delete),
-                          onPressed: () => Navigator.of(ezRootNav.currentContext!).pop(false),
-                        ),
-                        EzMenuButton(
-                          config,
-                          label: 'Reset',
-                          icon: EzIcon(config, Icons.refresh),
-                          onPressed: () {
-                            height = hBack;
-                            editSpacerHeight.value = hBack;
-
-                            width = wBack;
-                            editSpacerWidth.value = wBack;
-
-                            setOverlay(() {});
-                          },
-                        ),
-                        EzMenuButton(
-                          config,
-                          label: 'Duplicate',
-                          icon: EzIcon(config, Icons.copy),
-                          onPressed: () async {
-                            await appInfo.updateSpacer(
-                              config,
-                              height: height,
-                              width: width,
-                              lane: currLane,
-                              index: currIndex,
-                            );
-                            await appInfo.addSpacer(
-                              config,
-                              height: height,
-                              width: width,
-                              lane: currLane,
-                              index: currIndex,
-                            );
-
-                            marked.value = (currLane, currIndex + 1);
-                            setOverlay(() => currIndex += 1);
-                          },
-                        ),
-                        EzMenuButton(
-                          config,
-                          label: 'Done',
-                          icon: EzIcon(config, Icons.done),
-                          onPressed: () => Navigator.of(ezRootNav.currentContext!).pop(true),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            // Center: readout
-            Align(
-              alignment: config.isLefty ? Alignment.centerRight : Alignment.centerLeft,
-              child: EzText(
+          Positioned(
+            top: safeTop(ezRootNav.currentContext!),
+            left: 0,
+            right: 0,
+            child: Center(
+              child: EzScrollView(
                 config,
-                shape: EzButtonShape.roundRect.shape,
-                backgroundColor: config.colors.surfaceContainer
-                    .withValues(alpha: max(0.75, config.textBackgroundOpacity)),
-                text: (axis == Axis.vertical ? height : width).toStringAsFixed(2),
-                textAlign: TextAlign.center,
-              ),
-            ),
-
-            // Bottom: steps && sliders
-            Positioned(
-              bottom: safeBottom(ezRootNav.currentContext!),
-              left: 0,
-              right: 0,
-              child: EzRow(
-                config,
-                reverseHands: false,
+                startCentered: true,
+                showScrollHint: true,
                 mainAxisSize: MainAxisSize.max,
+                scrollDirection: Axis.horizontal,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  // Step down
+                  // Slider select
                   MenuAnchor(
                     builder: (_, MenuController c, __) => EzIconButton(
                       config,
-                      enabled: (axis == Axis.vertical ? height : width) != 0,
-                      icon: const Icon(Icons.keyboard_arrow_left),
-                      onPressed: (axis == Axis.vertical)
-                          ? () {
-                              height -= step;
-                              if (height < 0) height = 0;
-
-                              editSpacerHeight.value = height;
-                              setOverlay(() {});
-                            }
-                          : () {
-                              width -= step;
-                              if (width < 0) width = 0;
-
-                              editSpacerWidth.value = width;
-                              setOverlay(() {});
-                            },
-                      onLongPress: () => toggleMenu(c),
+                      icon: Icon((axis == Axis.vertical) ? Icons.height : Icons.horizontal_rule),
+                      onPressed: () => toggleMenu(c),
                     ),
-                    menuChildren: stepOptions,
+                    menuChildren: Axis.values
+                        .map((Axis a) => EzMenuButton(
+                              config,
+                              label: a.name,
+                              icon: EzIcon(
+                                config,
+                                (a == Axis.vertical) ? Icons.height : Icons.horizontal_rule,
+                              ),
+                              onPressed: () => setOverlay(() => axis = a),
+                            ))
+                        .toList(),
                   ),
-                  config.rowMargin,
+                  config.rowSpacer,
 
-                  // Slide
-                  Expanded(
-                    child: EzTextBackground(
+                  // Move (lane) up
+                  if (numLanes > 1) ...<Widget>[
+                    EzIconButton(
                       config,
-                      text: (axis == Axis.vertical)
-                          ? Slider(
-                              value: height,
-                              max: maxHeight,
-                              onChanged: (double value) {
-                                editSpacerHeight.value = value;
-                                setOverlay(() => height = value);
-                              },
-                            )
-                          : Slider(
-                              value: width,
-                              max: maxWidth,
-                              onChanged: (double value) {
-                                editSpacerWidth.value = value;
-                                setOverlay(() => width = value);
-                              },
-                            ),
-                      backgroundColor: config.colors.surface,
-                    ),
-                  ),
-                  config.rowMargin,
+                      enabled: currLane < (numLanes - 1),
+                      icon: Icon(config.isLTR && hAlign(config) != ListAlignment.end
+                          ? Icons.keyboard_arrow_right
+                          : Icons.keyboard_arrow_left),
+                      onPressed: () async {
+                        final int nextLane = currLane + 1;
+                        final int nextIndex = appInfo.homeLane(config, nextLane).length;
 
-                  // Step up
+                        marked.value = (nextLane, nextIndex);
+                        await appInfo.moveItemUpLane(config, lane: currLane, index: currIndex);
+
+                        currLane = nextLane;
+                        currIndex = nextIndex;
+
+                        setOverlay(() {});
+                      },
+                    ),
+                    config.rowSpacer,
+                  ],
+
+                  // Move (item) up
+                  EzIconButton(
+                    config,
+                    icon: Icon((vAlign(config) == ListAlignment.end)
+                        ? Icons.keyboard_arrow_up
+                        : Icons.keyboard_arrow_down),
+                    enabled: currIndex < (appInfo.homeLane(config, currLane).length - 1),
+                    onPressed: () async {
+                      final int nextIndex = currIndex + 1;
+
+                      marked.value = (currLane, nextIndex);
+                      await appInfo.reorderLane(
+                        config,
+                        lane: currLane,
+                        oldIndex: currIndex,
+                        newIndex: nextIndex,
+                        notify: true,
+                      );
+
+                      setOverlay(() => currIndex = nextIndex);
+                    },
+                  ),
+                  config.rowSpacer,
+
+                  // Key/quick values
                   MenuAnchor(
                     builder: (_, MenuController c, __) => EzIconButton(
                       config,
-                      enabled:
-                          (axis == Axis.vertical) ? (height != maxHeight) : (width != maxWidth),
-                      icon: const Icon(Icons.keyboard_arrow_right),
-                      onPressed: (axis == Axis.vertical)
-                          ? () {
-                              height += step;
-                              if (height > maxHeight) height = maxHeight;
-
-                              editSpacerHeight.value = height;
-                              setOverlay(() {});
-                            }
-                          : () {
-                              width += step;
-                              if (width > maxWidth) width = maxWidth;
-
-                              editSpacerWidth.value = width;
-                              setOverlay(() {});
-                            },
-                      onLongPress: () => toggleMenu(c),
+                      icon: const Icon(Icons.key),
+                      onPressed: () => toggleMenu(c),
                     ),
-                    menuChildren: stepOptions,
+                    menuChildren: <Widget>[
+                      MenuItemButton(
+                        onPressed: () => quickValue(config.marginVal),
+                        child: Text('Margin: ${config.marginVal}'),
+                      ),
+                      MenuItemButton(
+                        onPressed: () => quickValue(config.padding),
+                        child: Text('Padding: ${config.padding}'),
+                      ),
+                      MenuItemButton(
+                        onPressed: () => quickValue(config.spacing),
+                        child: Text('Spacing: ${config.spacing}'),
+                      ),
+                      MenuItemButton(
+                        onPressed: () => quickValue(config.iconSize),
+                        child: Text('Icon size: ${config.iconSize}'),
+                      ),
+                      MenuItemButton(
+                        onPressed: () => quickValue(appIconSize(config)),
+                        child: Text('App icon size: ${appIconSize(config)}'),
+                      ),
+                    ],
+                  ),
+                  config.rowSpacer,
+
+                  // Moved (item) down
+                  EzIconButton(
+                    config,
+                    icon: Icon((vAlign(config) == ListAlignment.end)
+                        ? Icons.keyboard_arrow_down
+                        : Icons.keyboard_arrow_up),
+                    enabled: currIndex > 0,
+                    onPressed: () async {
+                      final int nextIndex = currIndex - 1;
+
+                      marked.value = (currLane, nextIndex);
+                      await appInfo.reorderLane(
+                        config,
+                        lane: currLane,
+                        oldIndex: currIndex,
+                        newIndex: nextIndex,
+                        notify: true,
+                      );
+
+                      setOverlay(() => currIndex = nextIndex);
+                    },
+                  ),
+                  config.rowSpacer,
+
+                  // Move (lane) down
+                  if (numLanes > 1) ...<Widget>[
+                    EzIconButton(
+                      config,
+                      enabled: currLane > 0,
+                      icon: Icon(config.isLTR && hAlign(config) != ListAlignment.end
+                          ? Icons.keyboard_arrow_left
+                          : Icons.keyboard_arrow_right),
+                      onPressed: () async {
+                        final int nextLane = currLane - 1;
+                        final int nextIndex = appInfo.homeLane(config, nextLane).length;
+
+                        marked.value = (nextLane, nextIndex);
+                        await appInfo.moveItemDownLane(config, lane: currLane, index: currIndex);
+
+                        currLane = nextLane;
+                        currIndex = nextIndex;
+
+                        setOverlay(() {});
+                      },
+                    ),
+                    config.rowSpacer,
+                  ],
+
+                  // Edits
+                  MenuAnchor(
+                    builder: (_, MenuController controller, __) => EzIconButton(
+                      config,
+                      icon: const Icon(Icons.build),
+                      onPressed: () => toggleMenu(controller),
+                    ),
+                    menuChildren: <Widget>[
+                      EzMenuButton(
+                        config,
+                        label: 'Delete',
+                        icon: EzIcon(config, Icons.delete),
+                        onPressed: () => Navigator.of(ezRootNav.currentContext!).pop(false),
+                      ),
+                      EzMenuButton(
+                        config,
+                        label: 'Reset',
+                        icon: EzIcon(config, Icons.refresh),
+                        onPressed: () {
+                          height = hBack;
+                          editSpacerHeight.value = hBack;
+
+                          width = wBack;
+                          editSpacerWidth.value = wBack;
+
+                          setOverlay(() {});
+                        },
+                      ),
+                      EzMenuButton(
+                        config,
+                        label: 'Duplicate',
+                        icon: EzIcon(config, Icons.copy),
+                        onPressed: () async {
+                          await appInfo.updateSpacer(
+                            config,
+                            height: height,
+                            width: width,
+                            lane: currLane,
+                            index: currIndex,
+                          );
+                          await appInfo.addSpacer(
+                            config,
+                            height: height,
+                            width: width,
+                            lane: currLane,
+                            index: currIndex,
+                          );
+
+                          marked.value = (currLane, currIndex + 1);
+                          setOverlay(() => currIndex += 1);
+                        },
+                      ),
+                      EzMenuButton(
+                        config,
+                        label: 'Done',
+                        icon: EzIcon(config, Icons.done),
+                        onPressed: () => Navigator.of(ezRootNav.currentContext!).pop(true),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
-          ]),
-        );
-      }),
-    ),
+          ),
+
+          // Center //
+          // Readout
+          Align(
+            alignment: config.isLefty ? Alignment.centerRight : Alignment.centerLeft,
+            child: EzText(
+              config,
+              shape: EzButtonShape.roundRect.shape,
+              backgroundColor: config.colors.surfaceContainer
+                  .withValues(alpha: max(0.75, config.textBackgroundOpacity)),
+              text: (axis == Axis.vertical ? height : width).toStringAsFixed(2),
+              textAlign: TextAlign.center,
+            ),
+          ),
+
+          // Move toggle
+          Align(
+            alignment: config.isLefty ? Alignment.centerLeft : Alignment.centerRight,
+            child: EzIconButton(
+              config,
+              fauxDisabled: !moveable,
+              icon: const Icon(Icons.zoom_out_map),
+              onPressed: () => setOverlay(() => moveable = !moveable),
+            ),
+          ),
+
+          // Bottom: steps && sliders //
+
+          Positioned(
+            bottom: safeBottom(ezRootNav.currentContext!),
+            left: 0,
+            right: 0,
+            child: EzRow(
+              config,
+              reverseHands: false,
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                // Step down
+                MenuAnchor(
+                  builder: (_, MenuController c, __) => EzIconButton(
+                    config,
+                    enabled: (axis == Axis.vertical ? height : width) != 0,
+                    icon: const Icon(Icons.keyboard_arrow_left),
+                    onPressed: (axis == Axis.vertical)
+                        ? () {
+                            height -= step;
+                            if (height < 0) height = 0;
+
+                            editSpacerHeight.value = height;
+                            setOverlay(() {});
+                          }
+                        : () {
+                            width -= step;
+                            if (width < 0) width = 0;
+
+                            editSpacerWidth.value = width;
+                            setOverlay(() {});
+                          },
+                    onLongPress: () => toggleMenu(c),
+                  ),
+                  menuChildren: stepOptions,
+                ),
+                config.rowMargin,
+
+                // Slide
+                Expanded(
+                  child: EzTextBackground(
+                    config,
+                    text: (axis == Axis.vertical)
+                        ? Slider(
+                            value: height,
+                            max: maxHeight,
+                            onChanged: (double value) {
+                              editSpacerHeight.value = value;
+                              setOverlay(() => height = value);
+                            },
+                          )
+                        : Slider(
+                            value: width,
+                            max: maxWidth,
+                            onChanged: (double value) {
+                              editSpacerWidth.value = value;
+                              setOverlay(() => width = value);
+                            },
+                          ),
+                    backgroundColor: config.colors.surface,
+                  ),
+                ),
+                config.rowMargin,
+
+                // Step up
+                MenuAnchor(
+                  builder: (_, MenuController c, __) => EzIconButton(
+                    config,
+                    enabled: (axis == Axis.vertical) ? (height != maxHeight) : (width != maxWidth),
+                    icon: const Icon(Icons.keyboard_arrow_right),
+                    onPressed: (axis == Axis.vertical)
+                        ? () {
+                            height += step;
+                            if (height > maxHeight) height = maxHeight;
+
+                            editSpacerHeight.value = height;
+                            setOverlay(() {});
+                          }
+                        : () {
+                            width += step;
+                            if (width > maxWidth) width = maxWidth;
+
+                            editSpacerWidth.value = width;
+                            setOverlay(() {});
+                          },
+                    onLongPress: () => toggleMenu(c),
+                  ),
+                  menuChildren: stepOptions,
+                ),
+              ],
+            ),
+          ),
+        ]),
+      );
+    }),
   );
+
+  Overlay.of(ezRootNav.currentContext!).insert(overlayEntry);
+  final bool? keep = await completer.future;
 
   await ezNoTouch(() async {
     marked.value = (null, null);
