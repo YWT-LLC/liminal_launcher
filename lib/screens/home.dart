@@ -16,8 +16,6 @@ import 'package:after_layout/after_layout.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-// TODO: page indicator on swipe && always on for editing
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -30,6 +28,9 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
   int page = 0;
   int delta = 0;
+
+  Timer? pagePosTimer;
+  OverlayEntry? pagePosEntry;
 
   bool atBottom = false;
   bool atLeft = false;
@@ -541,6 +542,81 @@ With wide tiles disabled, lanes will be sized by the widest item & your spacing 
     );
   }
 
+  Future<void> showPagePos(EzCP config, {required int numLanes, required int lane}) async {
+    if (pagePosTimer?.isActive ?? false) {
+      pagePosTimer!.cancel();
+      pagePosTimer = Timer(_showTime, _clearPagePos);
+
+      return;
+    }
+
+    final List<Widget> nodes = <Widget>[];
+    for (int i = 0; i < numLanes; i++) {
+      nodes.addAll(<Widget>[
+        Container(
+          constraints: BoxConstraints.tightFor(
+            height: config.iconSize,
+            width: config.iconSize,
+          ),
+          decoration: BoxDecoration(
+            color: i == lane ? config.colors.primary : config.colors.surface,
+            shape: BoxShape.circle,
+          ),
+        ),
+        EzSpacer(config.padding, vertical: false),
+      ]);
+    }
+    if (nodes.length > 2) nodes.removeLast();
+
+    pagePosEntry = OverlayEntry(
+      builder: (BuildContext oCon) => Positioned(
+        bottom: safeBottom(context),
+        left: 0,
+        right: 0,
+        child: Material(
+          type: MaterialType.transparency,
+          child: IgnorePointer(
+            child: Center(
+              child: EzScrollView(
+                config,
+                startCentered: true,
+                thumbVisibility: false,
+                scrollDirection: Axis.horizontal,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.all(config.marginVal),
+                    decoration: BoxDecoration(
+                      borderRadius: config.buttonShape.radius,
+                      color: config.colors.outline,
+                    ),
+                    child: EzRow(
+                      config,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: nodes,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    Overlay.of(context).insert(pagePosEntry!);
+    pagePosTimer = Timer(_showTime, _clearPagePos);
+  }
+
+  void _clearPagePos() {
+    pagePosTimer?.cancel();
+
+    if (pagePosEntry?.mounted ?? false) {
+      pagePosEntry!.remove();
+      pagePosEntry = null;
+    }
+  }
+
   Future<void> swipeUp(EzCP config, AppInfoProvider appInfo) async => (editing)
       ? await navToHidden(config, appInfo)
       : context.goNamed(
@@ -785,6 +861,7 @@ If you want to support Liminal's development, or the development of more Empathe
                   if (page < (numLanes - 1)) {
                     delta = 1;
                     setState(() => page += 1);
+                    showPagePos(config, numLanes: numLanes, lane: page);
                     return;
                   }
                 } else {
@@ -792,6 +869,7 @@ If you want to support Liminal's development, or the development of more Empathe
                   if (page > 0) {
                     delta = -1;
                     setState(() => page -= 1);
+                    showPagePos(config, numLanes: numLanes, lane: page);
                     return;
                   }
                 }
@@ -925,3 +1003,5 @@ If you want to support Liminal's development, or the development of more Empathe
     });
   }
 }
+
+const Duration _showTime = Duration(seconds: 1);
