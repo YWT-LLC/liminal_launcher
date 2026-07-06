@@ -124,21 +124,21 @@ class AppInfoProvider extends ChangeNotifier {
 
   final ValueNotifier<bool> _invert = ValueNotifier<bool>(false);
 
-  Timer? _showTimer;
-  OverlayEntry? _activeEntry;
+  Timer? _addedTimer;
+  OverlayEntry? _addedEntry;
 
   Future<void> _added(EzCP config) async {
-    if (_showTimer?.isActive ?? false) {
+    if (_addedTimer?.isActive ?? false) {
       _invert.value = !_invert.value;
 
-      _showTimer!.cancel();
-      _showTimer = Timer(_showTime, _clearOverlay);
+      _addedTimer!.cancel();
+      _addedTimer = Timer(_showTime, _clearAdded);
 
       return;
     }
 
     final double size = appIconSize(config) + config.marginVal;
-    _activeEntry = OverlayEntry(
+    _addedEntry = OverlayEntry(
       builder: (BuildContext context) => Positioned(
         top: safeTop(context),
         left: 0,
@@ -166,7 +166,7 @@ class AppInfoProvider extends ChangeNotifier {
                     backgroundColor: flipped ? config.colors.primary : config.colors.surface,
                     foregroundColor: flipped ? config.colors.surface : config.colors.primary,
                   ),
-                  onPressed: _clearOverlay,
+                  onPressed: _clearAdded,
                 ),
               ]),
             ),
@@ -175,16 +175,16 @@ class AppInfoProvider extends ChangeNotifier {
       ),
     );
 
-    ezRootNav.currentState?.overlay?.insert(_activeEntry!);
-    _showTimer = Timer(_showTime, _clearOverlay);
+    ezRootNav.currentState?.overlay?.insert(_addedEntry!);
+    _addedTimer = Timer(_showTime, _clearAdded);
   }
 
-  void _clearOverlay() {
-    _showTimer?.cancel();
+  void _clearAdded() {
+    _addedTimer?.cancel();
 
-    if (_activeEntry?.mounted ?? false) {
-      _activeEntry!.remove();
-      _activeEntry = null;
+    if (_addedEntry?.mounted ?? false) {
+      _addedEntry!.remove();
+      _addedEntry = null;
     }
 
     _invert.value = false;
