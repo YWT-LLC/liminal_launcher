@@ -39,9 +39,9 @@ class AppListSettings extends StatelessWidget {
                       text: 'The home list can be dark/light theme based too!',
                       style: config.bodyStyle,
                     ),
-                    EzPlainText(text: '\n', style: config.bodyStyle),
+                    EzPlainText(text: '\n\n', style: config.bodyStyle),
                     EzPlainText(
-                      text: 'Note that the home page(s) have no update both (',
+                      text: 'Note that the home page(s) have no update both system (',
                       style: config.bodyStyle,
                     ),
                     WidgetSpan(
@@ -52,10 +52,10 @@ class AppListSettings extends StatelessWidget {
                       ),
                     ),
                     EzPlainText(
-                      text: ') system. The lists will be independent.',
+                      text: '). The lists will be independent.',
                       style: config.bodyStyle,
                     ),
-                    EzPlainText(text: '\n', style: config.bodyStyle),
+                    EzPlainText(text: '\n\n', style: config.bodyStyle),
                     EzPlainText(
                       text: 'If/when re-linked, you will be asked which version to keep.',
                       style: config.bodyStyle,
