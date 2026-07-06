@@ -16,6 +16,8 @@ import 'package:after_layout/after_layout.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
+// TODO: page indicator on swipe && always on for editing
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
