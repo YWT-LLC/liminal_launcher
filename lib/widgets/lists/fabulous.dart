@@ -25,12 +25,33 @@ class AddFAB extends FloatingActionButton {
         );
 }
 
-class SettingsFAB extends FloatingActionButton {
-  SettingsFAB(EzCP config, void Function() onPressed, {super.key})
-      : super(
-          heroTag: 'settings_FAB',
-          onPressed: onPressed,
-          tooltip: config.ezL10n.ssNavHint,
-          child: EzIcon(config, Icons.settings),
-        );
+class SettingsFAB extends StatelessWidget {
+  final EzCP config;
+  final void Function() onPressed;
+
+  const SettingsFAB(this.config, this.onPressed, {super.key});
+
+  @override
+  Widget build(BuildContext context) => MenuAnchor(
+        builder: (_, MenuController c, __) => GestureDetector(
+          onLongPress: () => toggleMenu(c),
+          child: FloatingActionButton(
+            heroTag: 'settings_FAB',
+            onPressed: onPressed,
+            child: EzIcon(config, Icons.settings),
+          ),
+        ),
+        menuChildren: <Widget>[
+          EzMenuButton(
+            config,
+            label: config.ezL10n.ssSaveConfig,
+            onPressed: () => EzCM.saveConfig(config, context: context),
+          ),
+          EzMenuButton(
+            config,
+            label: config.ezL10n.ssLoadConfig,
+            onPressed: () => ezConfigLoader(config, context: context),
+          ),
+        ],
+      );
 }
