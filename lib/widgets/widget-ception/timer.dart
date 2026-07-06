@@ -459,7 +459,7 @@ class AddTimer extends StatelessWidget {
       child: LimField(
         onTap: onTap,
         readOnly: true,
-        decoration: const InputDecoration(hintText: '00'),
+        hintText: '00',
       ),
     );
 

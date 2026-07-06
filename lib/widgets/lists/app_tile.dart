@@ -243,6 +243,7 @@ class _AppTileState extends State<AppTile> {
                   ),
                   child: LimField(
                     controller: renameCon,
+                    hintText: 'App',
                     autofillHints: const <String>[AutofillHints.name],
                   ),
                 ),

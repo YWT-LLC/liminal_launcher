@@ -324,7 +324,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                                   ),
                                   child: LimField(
                                     controller: nameCon,
-                                    decoration: const InputDecoration(hintText: 'Name (Ecosia)'),
+                                    hintText: 'Name (Ecosia)',
                                     onTap: grow,
                                     onFieldSubmitted: shrink,
                                   ),
@@ -350,8 +350,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                                 ),
                                 child: LimField(
                                   controller: baseCon,
-                                  decoration:
-                                      const InputDecoration(hintText: 'Base site (ecosia.org)'),
+                                  hintText: 'Base site (ecosia.org)',
                                   onTap: grow,
                                   onFieldSubmitted: shrink,
                                 ),
@@ -366,7 +365,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                                 ),
                                 child: LimField(
                                   controller: pathCon,
-                                  decoration: const InputDecoration(hintText: 'Path (/search)'),
+                                  hintText: 'Path (/search)',
                                   onTap: grow,
                                   onFieldSubmitted: shrink,
                                 ),
@@ -381,7 +380,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                                 ),
                                 child: LimField(
                                   controller: queryCon,
-                                  decoration: const InputDecoration(hintText: 'Parameter (q)'),
+                                  hintText: 'Parameter (q)',
                                   onTap: grow,
                                   onFieldSubmitted: shrink,
                                 ),
@@ -530,7 +529,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                       ),
                       child: EzScrollBlocker(LimField(
                         controller: queryCon,
-                        decoration: InputDecoration(hintText: widget._engine.name),
+                        hintText: widget._engine.name,
                         keyboardType: TextInputType.webSearch,
                         onChanged: onChanged,
                         onFieldSubmitted: search,
@@ -611,7 +610,7 @@ class AddSearch extends StatelessWidget {
               child: LimField(
                 onTap: onTap,
                 readOnly: true,
-                decoration: const InputDecoration(hintText: 'Search'),
+                hintText: 'Search',
               ),
             ),
             config.rowMargin,

@@ -221,7 +221,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                       ),
                       child: EzScrollBlocker(LimField(
                         controller: eventCon,
-                        decoration: const InputDecoration(hintText: 'New event'),
+                        hintText: 'New event',
                         onChanged: onChanged,
                         onFieldSubmitted: (String entry) async {
                           final bool success = await createCalendarEvent(entry.trim());
@@ -315,7 +315,7 @@ class AddCalendar extends StatelessWidget {
               child: LimField(
                 onTap: onTap,
                 readOnly: true,
-                decoration: const InputDecoration(hintText: 'New event'),
+                hintText: 'New event',
               ),
             ),
             config.rowMargin,

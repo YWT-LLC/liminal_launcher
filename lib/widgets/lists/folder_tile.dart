@@ -191,6 +191,7 @@ class _AppFolderState extends State<FolderTile> {
                       ),
                       child: LimField(
                         controller: renameCon,
+                        hintText: 'Folder',
                         autofillHints: const <String>[AutofillHints.name],
                       ),
                     ),
