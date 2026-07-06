@@ -543,12 +543,7 @@ With wide tiles disabled, lanes will be sized by the widest item & your spacing 
   }
 
   Future<void> showPagePos(EzCP config, {required int numLanes, required int lane}) async {
-    if (pagePosTimer?.isActive ?? false) {
-      pagePosTimer!.cancel();
-      pagePosTimer = Timer(_showTime, _clearPagePos);
-
-      return;
-    }
+    if (pagePosTimer?.isActive ?? false) _clearPagePos();
 
     final List<Widget> nodes = <Widget>[];
     for (int i = 0; i < numLanes; i++) {
