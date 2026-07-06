@@ -101,7 +101,7 @@ class AppInfoProvider extends ChangeNotifier {
   int numLanes(EzCP config) => config.isDark ? _darkHomeMatrix.length : _lightHomeMatrix.length;
 
   List<String> homeLane(EzCP config, int lane) =>
-      config.isDark ? _darkHomeMatrix[lane] : _darkHomeMatrix[lane];
+      config.isDark ? _darkHomeMatrix[lane] : _lightHomeMatrix[lane];
 
   String homeItem(EzCP config, {required int lane, required int index}) =>
       config.isDark ? _darkHomeMatrix[lane][index] : _lightHomeMatrix[lane][index];
