@@ -64,17 +64,6 @@ class AppInfo {
 }''';
 }
 
-const String _pattern = r"^[\w\s\-\.\&\(\)']+$";
-
-String? validateName(String? name) {
-  if (name == null || name.trim().isEmpty) return 'Cannot be empty';
-
-  final RegExp validNameRegExp = RegExp(_pattern);
-  if (!validNameRegExp.hasMatch(name)) return 'Invalid; $_pattern';
-
-  return null;
-}
-
 /// Helpful for creating [AppInfo] lists
 /// [nullAppLabel], [nullAppPackage], false, 0, 0
 final AppInfo nullApp = AppInfo(

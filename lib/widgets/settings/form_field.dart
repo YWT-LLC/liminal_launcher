@@ -3,8 +3,6 @@
  * See LICENSE for distribution and usage details.
  */
 
-import '../../utils/export.dart';
-
 import 'package:flutter/material.dart';
 
 class LimField extends TextFormField {
@@ -24,4 +22,14 @@ class LimField extends TextFormField {
           autovalidateMode: AutovalidateMode.onUnfocus,
           validator: validateName,
         );
+}
+
+const String _pattern = r'^(?!.*:[01]{8}:)[^/\\\x00]{1,100}$';
+String? validateName(String? name) {
+  if (name == null || name.trim().isEmpty) return 'Cannot be empty';
+
+  final RegExp regex = RegExp(_pattern);
+  if (regex.hasMatch(name)) return 'Invalid. Regex pattern: $_pattern';
+
+  return null;
 }
