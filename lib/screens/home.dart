@@ -771,7 +771,9 @@ If you want to support Liminal's development, or the development of more Empathe
                     ((ezReadingTime(config, <String>[m1, m2, m3].join()).inMilliseconds) / 2)
                         .ceil());
 
-            Future<void>.delayed(readTime, () => setModal(() => read = true));
+            Future<void>.delayed(readTime, () {
+              if (mCon.mounted) setModal(() => read = true);
+            });
 
             return ezModalScroll(config, children: <Widget>[
               EzHeader(config),
