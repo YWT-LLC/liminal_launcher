@@ -68,6 +68,13 @@ class AppInfoProvider extends ChangeNotifier {
 
               if (uninstalled.isNotEmpty) {
                 for (final AppInfo app in uninstalled) {
+                  if (ezRootNav.currentContext != null && ezRootNav.currentContext!.mounted) {
+                    await ezSnackBar(
+                      configWatcher(ezRootNav.currentContext!),
+                      context: ezRootNav.currentContext!,
+                      message: 'Removing ${app.label}',
+                    ).closed;
+                  }
                   await _clearHomeOf(null, app.id, true);
                 }
               }
