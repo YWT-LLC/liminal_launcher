@@ -435,8 +435,6 @@ class AppInfoProvider extends ChangeNotifier {
   Future<void> dupeLane(EzCP config, int lane) async {
     if (interlinked || config.isDark) {
       _darkHomeMatrix.insert(lane, List<String>.from(_darkHomeMatrix[lane]));
-      // TODO: don't do this. you're duping items with with lane and index in their data
-      // TODO: update this to be more like the spacer strat... then audit any other duping vibes you have
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
