@@ -8,6 +8,7 @@ import '../../widgets/export.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class AppListSettings extends StatelessWidget {
@@ -33,7 +34,31 @@ class AppListSettings extends StatelessWidget {
                 EzSwitchPair(
                   config,
                   text: 'Linked home lists',
-                  tipper: 'The home list can be dark/light theme based too!',
+                  bigTipper: TextSpan(children: <InlineSpan>[
+                    EzPlainText(
+                      text: 'The home list can be dark/light theme based too!',
+                      style: config.bodyStyle,
+                    ),
+                    EzPlainText(
+                      text: '\nNote that the home page(s) have no update both (',
+                      style: config.bodyStyle,
+                    ),
+                    WidgetSpan(
+                      alignment: PlaceholderAlignment.middle,
+                      child: FaIcon(
+                        FontAwesomeIcons.yinYang,
+                        size: config.iconSize,
+                      ),
+                    ),
+                    EzPlainText(
+                      text: ') system. The lists will be independent.',
+                      style: config.bodyStyle,
+                    ),
+                    EzPlainText(
+                      text: '\nIf/when re-linked, you will be asked which version to keep.',
+                      style: config.bodyStyle,
+                    ),
+                  ], style: config.bodyStyle),
                   valueKey: interlinkedKey,
                   canChange: (bool choice) async {
                     if (choice == false) return true;
