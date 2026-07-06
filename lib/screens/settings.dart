@@ -60,7 +60,9 @@ class SettingsScreen extends StatelessWidget {
                     await EzCM.setString(darkFolderLabelKey, LabelType.full.value);
                     await EzCM.setBool(darkFolderIconKey, true);
                     await EzCM.setBool(darkElevatedFolderKey, true);
+
                     await EzCM.setBool(darkWideTilesKey, true);
+                    await EzCM.setBool(darkPagesKey, true);
 
                     // Page design
                     await EzCM.setBool(darkHideStatusKey, false);
@@ -77,7 +79,9 @@ class SettingsScreen extends StatelessWidget {
                     await EzCM.setString(lightFolderLabelKey, LabelType.full.value);
                     await EzCM.setBool(lightFolderIconKey, true);
                     await EzCM.setBool(lightElevatedFolderKey, true);
+
                     await EzCM.setBool(lightWideTilesKey, true);
+                    await EzCM.setBool(lightPagesKey, true);
 
                     // Page design
                     await EzCM.setBool(lightHideStatusKey, false);
@@ -93,9 +97,11 @@ class SettingsScreen extends StatelessWidget {
                     await EzCM.setBool(darkListIconKey, true);
                     await EzCM.setBool(darkElevatedListKey, true);
                     await EzCM.setString(darkFolderLabelKey, LabelType.full.value);
-                    await EzCM.setBool(darkFolderIconKey, false);
+                    await EzCM.setBool(darkFolderIconKey, true);
                     await EzCM.setBool(darkElevatedFolderKey, true);
+
                     await EzCM.setBool(darkWideTilesKey, true);
+                    await EzCM.setBool(darkPagesKey, true);
 
                     // Page design
                     await EzCM.setBool(darkHideStatusKey, true);
@@ -109,9 +115,11 @@ class SettingsScreen extends StatelessWidget {
                     await EzCM.setBool(lightListIconKey, true);
                     await EzCM.setBool(lightElevatedListKey, true);
                     await EzCM.setString(lightFolderLabelKey, LabelType.full.value);
-                    await EzCM.setBool(lightFolderIconKey, false);
+                    await EzCM.setBool(lightFolderIconKey, true);
                     await EzCM.setBool(lightElevatedFolderKey, true);
+
                     await EzCM.setBool(lightWideTilesKey, true);
+                    await EzCM.setBool(lightPagesKey, true);
 
                     // Page design
                     await EzCM.setBool(lightHideStatusKey, true);
@@ -127,28 +135,32 @@ class SettingsScreen extends StatelessWidget {
                   await EzCM.setString(darkFolderLabelKey, LabelType.full.value);
                   await EzCM.setBool(darkFolderIconKey, false);
                   await EzCM.setBool(darkElevatedFolderKey, false);
+
                   await EzCM.setBool(darkWideTilesKey, true);
+                  await EzCM.setBool(darkPagesKey, true);
 
                   // Page design
-                  await EzCM.setBool(darkHideStatusKey, false);
+                  await EzCM.setBool(darkHideStatusKey, true);
                   await EzCM.setString(darkHorizontalAlignKey, ListAlignment.center.value);
                   await EzCM.setString(darkVerticalAlignKey, ListAlignment.start.value);
                 },
                 extraNebula: (_) async {
                   // Button design
-                  await EzCM.setString(darkListLabelKey, LabelType.initials.value);
+                  await EzCM.setString(darkListLabelKey, LabelType.none.value);
                   await EzCM.setBool(darkListIconKey, true);
                   await EzCM.setBool(darkElevatedListKey, false);
-                  await EzCM.setString(darkFolderLabelKey, LabelType.initials.value);
-                  await EzCM.setBool(darkFolderIconKey, false);
-                  await EzCM.setBool(darkElevatedFolderKey, true);
-                  await EzCM.setBool(darkWideTilesKey, true);
+                  await EzCM.setString(darkFolderLabelKey, LabelType.none.value);
+                  await EzCM.setBool(darkFolderIconKey, true);
+                  await EzCM.setBool(darkElevatedFolderKey, false);
+
+                  await EzCM.setBool(darkWideTilesKey, false);
+                  await EzCM.setBool(darkPagesKey, false);
 
                   // Page design
                   await EzCM.setBool(darkHideStatusKey, true);
                   await EzCM.setString(darkHorizontalAlignKey,
                       config.isLefty ? ListAlignment.end.value : ListAlignment.start.value);
-                  await EzCM.setString(darkVerticalAlignKey, ListAlignment.end.value);
+                  await EzCM.setString(darkVerticalAlignKey, ListAlignment.start.value);
                 },
                 extraWall: (_) async {
                   // Button design
@@ -158,7 +170,9 @@ class SettingsScreen extends StatelessWidget {
                   await EzCM.setString(lightFolderLabelKey, LabelType.full.value);
                   await EzCM.setBool(lightFolderIconKey, true);
                   await EzCM.setBool(lightElevatedFolderKey, false);
+
                   await EzCM.setBool(lightWideTilesKey, true);
+                  await EzCM.setBool(lightPagesKey, true);
 
                   // Page design
                   await EzCM.setBool(lightHideStatusKey, false);
