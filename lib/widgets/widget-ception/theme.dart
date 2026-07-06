@@ -10,6 +10,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
+// TODO: finish && test
+
 class ThemeWidget extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
