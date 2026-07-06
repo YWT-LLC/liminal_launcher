@@ -13,6 +13,7 @@ export 'lists/spacer.dart';
 export 'settings/alignment.dart';
 export 'settings/app_list.dart';
 export 'settings/app_sec.dart';
+export 'settings/form_field.dart';
 export 'settings/swipe_selector.dart';
 export 'settings/tiles.dart';
 
