@@ -102,8 +102,7 @@ Future<IconData?> chooseIcon(EzCP config, BuildContext context) => ezModal(
       },
     );
 
-// TODO: testing reminders...
-// with a bunch of items lanes and handle (both) scrolling
+// TODO: scrolling
 
 Future<void> editSpacer(
   EzCP config, {

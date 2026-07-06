@@ -3,10 +3,6 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: testing reminders...
-// what happens when I remove everything?
-// am I using my cleanup properly?
-
 import './export.dart';
 import '../widgets/export.dart';
 
