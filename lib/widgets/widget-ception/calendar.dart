@@ -219,11 +219,9 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                             widget.config.padding,
                         maxHeight: appIconSize(widget.config),
                       ),
-                      child: EzScrollBlocker(TextFormField(
+                      child: EzScrollBlocker(LimField(
                         controller: eventCon,
                         decoration: const InputDecoration(hintText: 'New event'),
-                        textAlign: TextAlign.center,
-                        textAlignVertical: TextAlignVertical.center,
                         onChanged: onChanged,
                         onFieldSubmitted: (String entry) async {
                           final bool success = await createCalendarEvent(entry.trim());
@@ -314,12 +312,10 @@ class AddCalendar extends StatelessWidget {
                         config.padding,
                 maxHeight: appIconSize(config),
               ),
-              child: TextFormField(
+              child: LimField(
                 onTap: onTap,
                 readOnly: true,
                 decoration: const InputDecoration(hintText: 'New event'),
-                textAlign: TextAlign.center,
-                textAlignVertical: TextAlignVertical.center,
               ),
             ),
             config.rowMargin,

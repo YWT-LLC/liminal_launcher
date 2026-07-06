@@ -189,13 +189,9 @@ class _AppFolderState extends State<FolderTile> {
                         height: appIconSize(widget.config),
                         width: widthOf(mCon) / 3,
                       ),
-                      child: TextFormField(
+                      child: LimField(
                         controller: renameCon,
-                        textAlign: TextAlign.center,
-                        textAlignVertical: TextAlignVertical.center,
                         autofillHints: const <String>[AutofillHints.name],
-                        autovalidateMode: AutovalidateMode.onUnfocus,
-                        validator: validateName,
                       ),
                     ),
                     widget.config.rowSpacer,

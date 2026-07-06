@@ -456,12 +456,10 @@ class AddTimer extends StatelessWidget {
             ezTextSize('00', context: context, style: config.bodyStyle).width + config.padding,
         maxHeight: appIconSize(config),
       ),
-      child: TextFormField(
+      child: LimField(
         onTap: onTap,
         readOnly: true,
         decoration: const InputDecoration(hintText: '00'),
-        textAlign: TextAlign.center,
-        textAlignVertical: TextAlignVertical.center,
       ),
     );
 

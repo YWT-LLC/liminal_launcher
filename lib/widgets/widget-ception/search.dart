@@ -322,10 +322,8 @@ class _SearchWidgetState extends State<SearchWidget> {
                                     height: appIconSize(widget.config),
                                     width: widthOf(mCon) / 2,
                                   ),
-                                  child: TextFormField(
+                                  child: LimField(
                                     controller: nameCon,
-                                    textAlign: TextAlign.center,
-                                    textAlignVertical: TextAlignVertical.center,
                                     decoration: const InputDecoration(hintText: 'Name (Ecosia)'),
                                     onTap: grow,
                                     onFieldSubmitted: shrink,
@@ -350,10 +348,8 @@ class _SearchWidgetState extends State<SearchWidget> {
                                   height: appIconSize(widget.config),
                                   width: widthOf(mCon) / 2,
                                 ),
-                                child: TextFormField(
+                                child: LimField(
                                   controller: baseCon,
-                                  textAlign: TextAlign.center,
-                                  textAlignVertical: TextAlignVertical.center,
                                   decoration:
                                       const InputDecoration(hintText: 'Base site (ecosia.org)'),
                                   onTap: grow,
@@ -368,10 +364,8 @@ class _SearchWidgetState extends State<SearchWidget> {
                                   height: appIconSize(widget.config),
                                   width: widthOf(mCon) / 2,
                                 ),
-                                child: TextFormField(
+                                child: LimField(
                                   controller: pathCon,
-                                  textAlign: TextAlign.center,
-                                  textAlignVertical: TextAlignVertical.center,
                                   decoration: const InputDecoration(hintText: 'Path (/search)'),
                                   onTap: grow,
                                   onFieldSubmitted: shrink,
@@ -385,10 +379,8 @@ class _SearchWidgetState extends State<SearchWidget> {
                                   height: appIconSize(widget.config),
                                   width: widthOf(mCon) / 2,
                                 ),
-                                child: TextFormField(
+                                child: LimField(
                                   controller: queryCon,
-                                  textAlign: TextAlign.center,
-                                  textAlignVertical: TextAlignVertical.center,
                                   decoration: const InputDecoration(hintText: 'Parameter (q)'),
                                   onTap: grow,
                                   onFieldSubmitted: shrink,
@@ -536,11 +528,9 @@ class _SearchWidgetState extends State<SearchWidget> {
                             widget.config.padding,
                         maxHeight: appIconSize(widget.config),
                       ),
-                      child: EzScrollBlocker(TextFormField(
+                      child: EzScrollBlocker(LimField(
                         controller: queryCon,
                         decoration: InputDecoration(hintText: widget._engine.name),
-                        textAlign: TextAlign.center,
-                        textAlignVertical: TextAlignVertical.center,
                         keyboardType: TextInputType.webSearch,
                         onChanged: onChanged,
                         onFieldSubmitted: search,
@@ -618,12 +608,10 @@ class AddSearch extends StatelessWidget {
                         config.padding,
                 maxHeight: appIconSize(config),
               ),
-              child: TextFormField(
+              child: LimField(
                 onTap: onTap,
                 readOnly: true,
                 decoration: const InputDecoration(hintText: 'Search'),
-                textAlign: TextAlign.center,
-                textAlignVertical: TextAlignVertical.center,
               ),
             ),
             config.rowMargin,
