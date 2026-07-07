@@ -184,7 +184,6 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                   header: MenuAnchor(
                     builder: (_, MenuController controller, __) => EzRow(
                       config,
-                      mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Padding(
@@ -418,7 +417,14 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                               );
                             },
                           );
-                          // TODO: save changes
+
+                          await ezNoTouch(() async => await appInfo.updateLane(
+                                config,
+                                startPos: lane,
+                                currPos: pos,
+                                hA: hA,
+                                vA: vA,
+                              ));
                         },
                         child: EzIcon(config, Icons.edit),
                       ),
@@ -446,8 +452,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           : EzScrollView(
               config,
               key: ValueKey<String>('lane-$lane'),
-              mainAxisAlignment: vAlign(config).mainAxis,
-              crossAxisAlignment: hAlign(config).crossAxis,
+              mainAxisAlignment: vAlign(config).mainAxis, // TODO: here
+              crossAxisAlignment: hAlign(config).crossAxis, // TODO: here
               physics: const ClampingScrollPhysics(),
               children: _buildTiles(config, appInfo, lane),
             );
@@ -1156,8 +1162,8 @@ If you want to support Liminal's development, or the development of more Empathe
                     mainAxisSize: MainAxisSize.max,
                     scrollDirection: Axis.horizontal,
                     physics: const ClampingScrollPhysics(),
-                    mainAxisAlignment: hAlign(config).mainAxis,
-                    crossAxisAlignment: vAlign(config).crossAxis,
+                    mainAxisAlignment: hAlign(config).mainAxis, // TODO: here
+                    crossAxisAlignment: vAlign(config).crossAxis, // TODO: here
                     children: buildGrid(config, appInfo, numLanes),
                   ),
           ),
