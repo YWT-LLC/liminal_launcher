@@ -419,13 +419,15 @@ class AppInfoProvider extends ChangeNotifier {
   /// Does notify
   /// Shows added overlay
   Future<void> addLane(EzCP config) async {
+    final List<String> entry = <String>[TCC.laneEntry(null, null)];
+
     if (interlinked || config.isDark) {
-      _darkHomeMatrix.add(<String>[]);
+      _darkHomeMatrix.add(entry);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix.add(<String>[]);
+      _lightHomeMatrix.add(entry);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -1199,13 +1201,13 @@ For example: if an app has always on location permissions, banishing it will not
 
     if (interlinked || config.isDark) {
       _darkHomeMatrix.removeAt(lane);
-      if (_darkHomeMatrix.isEmpty) _darkHomeMatrix.add(<String>[]);
+      if (_darkHomeMatrix.isEmpty) _darkHomeMatrix.add(<String>[TCC.laneEntry(null, null)]);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
       _lightHomeMatrix.removeAt(lane);
-      if (_lightHomeMatrix.isEmpty) _lightHomeMatrix.add(<String>[]);
+      if (_lightHomeMatrix.isEmpty) _lightHomeMatrix.add(<String>[TCC.laneEntry(null, null)]);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
