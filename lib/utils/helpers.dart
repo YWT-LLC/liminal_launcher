@@ -145,6 +145,7 @@ Widget renderWidget(
               esTimer => TimerWidget(config, appInfo, lane, index, state, rippleProgress),
               esToggleMedia =>
                 ToggleMediaWidget(config, appInfo, lane, index, state, rippleProgress),
+              esThemeMode => ThemeModeWidget(config, appInfo, lane, index, state, rippleProgress),
               _ => const SizedBox.shrink(),
             },
           )

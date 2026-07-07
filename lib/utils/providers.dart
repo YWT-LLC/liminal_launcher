@@ -363,7 +363,7 @@ class AppInfoProvider extends ChangeNotifier {
 
   /// Does notify
   /// Shows added overlay
-  Future<void> addThemeWidget(EzCP config, int lane) async {
+  Future<void> addThemeModeWidget(EzCP config, int lane) async {
     final String entry = <String>[
       WidWidGetGet.themeMode.value,
       TCC.themeModeEntry(WidgetSize.system),

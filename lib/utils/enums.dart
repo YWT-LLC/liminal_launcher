@@ -262,6 +262,7 @@ enum TileConfig {
   search,
   timer,
   toggleMedia,
+  themeMode,
 }
 
 /// Tile Config Config

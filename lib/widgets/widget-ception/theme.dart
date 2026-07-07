@@ -12,7 +12,7 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 // TODO: finish && test
 
-class ThemeWidget extends StatefulWidget {
+class ThemeModeWidget extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
   final int lane;
@@ -22,7 +22,7 @@ class ThemeWidget extends StatefulWidget {
 
   late final WidgetSize _size;
 
-  ThemeWidget(
+  ThemeModeWidget(
     this.config,
     this.appInfo,
     this.lane,
@@ -39,10 +39,10 @@ class ThemeWidget extends StatefulWidget {
   }
 
   @override
-  State<ThemeWidget> createState() => _ThemeWidgetState();
+  State<ThemeModeWidget> createState() => _ThemeModeWidgetState();
 }
 
-class _ThemeWidgetState extends State<ThemeWidget> {
+class _ThemeModeWidgetState extends State<ThemeModeWidget> {
   // Define the build data //
 
   late AppState state = widget.state;
@@ -187,7 +187,7 @@ class AddThemeMode extends StatelessWidget {
     required this.preview,
   });
 
-  void onTap() => appInfo.addThemeWidget(config, lane);
+  void onTap() => appInfo.addThemeModeWidget(config, lane);
 
   @override
   Widget build(BuildContext context) => (preview == WidgetSize.button)
