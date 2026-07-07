@@ -3,6 +3,8 @@
  * See LICENSE for distribution and usage details.
  */
 
+// TODO: this (and maybe other) is lying now because of the new eztextbackground... prolly just use live shape? easiest?
+
 import '../../utils/export.dart';
 import '../export.dart';
 
@@ -129,7 +131,11 @@ class _ClockWidgetState extends State<ClockWidget> {
                 widget.config,
                 children: <InlineSpan>[
                   EzPlainText(
-                    text: 'Long press any button to reset/use default\n',
+                    text: 'Long press any button to reset/use default',
+                    style: widget.config.bodyStyle,
+                  ),
+                  EzPlainText(
+                    text: '\n\n',
                     style: widget.config.labelStyle,
                   ),
                   WidgetSpan(
