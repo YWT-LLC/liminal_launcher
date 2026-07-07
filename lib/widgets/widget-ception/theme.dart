@@ -10,8 +10,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-// TODO: finish && test
-
 class ThemeModeWidget extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
@@ -196,12 +194,20 @@ class AddThemeMode extends StatelessWidget {
           onPressed: onTap,
           icon: Icon(config.isDark ? Icons.dark_mode : Icons.light_mode),
         )
-      : EzDropdownMenu<bool>(
-          config,
-          dropdownMenuEntries: <DropdownMenuEntry<bool>>[
-            const DropdownMenuEntry<bool>(label: 'Widget', value: true),
-          ],
-          widthEntry: 'Widget',
-          onSelected: (_) => onTap(),
+      : GestureDetector(
+          onTap: onTap,
+          child: EzRow(config, children: <Widget>[
+            Text('Theme mode', textAlign: TextAlign.center, style: config.labelStyle),
+            config.rowMargin,
+            EzDropdownMenu<bool>(
+              config,
+              dropdownMenuEntries: <DropdownMenuEntry<bool>>[
+                const DropdownMenuEntry<bool>(label: 'selector', value: true),
+              ],
+              enabled: false,
+              widthEntry: 'Widget',
+              initialSelection: true,
+            ),
+          ]),
         );
 }
