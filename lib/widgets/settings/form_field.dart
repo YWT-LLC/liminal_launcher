@@ -6,8 +6,6 @@
 import 'package:flutter/material.dart';
 
 // TODO: get error text to behave
-// TODO: the other TODOs
-// TODO: start the maticulous testing
 
 class LimField extends TextFormField {
   final String hintText;
