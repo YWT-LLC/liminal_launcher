@@ -73,21 +73,12 @@ class _TimerWidgetState extends State<TimerWidget> {
       ConstrainedBox(
         constraints: constraints,
         child: EzScrollBlocker(
-          TextFormField(
+          LimField(
             controller: controller,
             focusNode: curr,
-            textAlign: TextAlign.center,
-            textAlignVertical: TextAlignVertical.center,
+            hintText: '00',
             keyboardType: TextInputType.number,
             textInputAction: last ? TextInputAction.done : TextInputAction.next,
-            validator: (String? value) {
-              const String failure = '0-99';
-
-              if (value == null) return failure;
-              final int parsed = int.tryParse(value) ?? -1;
-
-              return (parsed > 99 || parsed < 0) ? failure : null;
-            },
             onTap: controller.clear,
             onTapOutside: (_) {
               if (controller.text.isEmpty) controller.text = '00';
@@ -105,6 +96,14 @@ class _TimerWidgetState extends State<TimerWidget> {
             onFieldSubmitted: (String value) {
               if (value.isEmpty) controller.text = '00';
               onSubmit.call();
+            },
+            validator: (String? value) {
+              const String failure = '0-99';
+
+              if (value == null) return failure;
+              final int parsed = int.tryParse(value) ?? -1;
+
+              return (parsed > 99 || parsed < 0) ? failure : null;
             },
           ),
         ),
@@ -460,6 +459,7 @@ class AddTimer extends StatelessWidget {
         onTap: onTap,
         readOnly: true,
         hintText: '00',
+        validator: null,
       ),
     );
 

@@ -4,6 +4,7 @@
  */
 
 import '../../utils/export.dart';
+import '../export.dart';
 
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -93,12 +94,10 @@ class AppSecSettings extends StatelessWidget {
                             maxWidth:
                                 max(fieldSize.width + config.padding, kMinInteractiveDimension),
                           ),
-                          child: TextFormField(
+                          child: LimField(
                             controller: _timeoutText,
-                            textAlign: TextAlign.center,
-                            textAlignVertical: TextAlignVertical.top,
+                            hintText: '0',
                             keyboardType: TextInputType.number,
-                            autovalidateMode: AutovalidateMode.onUnfocus,
                             onTap: () async {
                               // Wait a bit for the keyboard to open
                               await Future<void>.delayed(const Duration(milliseconds: 300));
@@ -106,21 +105,20 @@ class AppSecSettings extends StatelessWidget {
                               setModal(() => bottomSpace = ((config.spacing * 2) +
                                   MediaQuery.of(context).viewInsets.bottom));
                             },
-                            onTapAlwaysCalled: true,
                             onTapOutside: (_) => setModal(() => bottomSpace = (config.spacing * 2)),
-                            validator: (String? value) {
-                              if (value == null) return null;
-                              final int? intVal = int.tryParse(value);
-                              if (intVal == null || intVal < 0) return 'Positive integers only';
-
-                              return null;
-                            },
                             onFieldSubmitted: (String stringVal) async {
                               final int? intVal = int.tryParse(stringVal);
                               if (intVal == null || intVal < 0) return;
 
                               setModal(() => bottomSpace = (config.spacing * 2));
                               await EzCM.secSet(authTimeoutKey, intVal.toString());
+                            },
+                            validator: (String? value) {
+                              if (value == null) return null;
+                              final int? intVal = int.tryParse(value);
+                              if (intVal == null || intVal < 0) return 'Positive integers only';
+
+                              return null;
                             },
                           ),
                         ),
