@@ -267,6 +267,11 @@ enum TileConfig {
 
 /// Tile Config Config
 extension TCC on TileConfig {
+  static String laneEntry(ListAlignment? hA, ListAlignment? vA) => <String>[
+        hA?.value ?? esSystem,
+        vA?.value ?? esSystem,
+      ].join(configSplit);
+
   static String appEntry(
           String name, IconData? icon, ButtonType? buttonType, LabelType? labelType) =>
       <String>[
