@@ -627,41 +627,44 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Does notify
-  Future<void> moveLaneUp(EzCP config, int lane) async {
+  Future<void> _reorderLanes(EzCP config, int oldPos, int newPos) async {
     if (interlinked || config.isDark) {
-      final List<String> col = _darkHomeMatrix.removeAt(lane);
+      final List<String> lane = _darkHomeMatrix.removeAt(oldPos);
+      _darkHomeMatrix.insert(newPos, lane);
 
-      _darkHomeMatrix.insert(lane, col);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      final List<String> col = _lightHomeMatrix.removeAt(lane);
+      final List<String> lane = _lightHomeMatrix.removeAt(oldPos);
+      _lightHomeMatrix.insert(newPos, lane);
 
-      _lightHomeMatrix.insert(lane, col);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
-
-    notifyListeners();
   }
 
-  /// Does notify
-  Future<void> moveLaneDown(EzCP config, int lane) async {
-    if (interlinked || config.isDark) {
-      final List<String> col = _darkHomeMatrix.removeAt(lane);
+  Future<void> updateLane(
+    EzCP config, {
+    required int startPos,
+    required int currPos,
+    required ListAlignment hA,
+    required ListAlignment vA,
+  }) async {
+    final String configEntry = (hA == hAlign(config) && vA == vAlign(config))
+        ? TCC.laneEntry(null, null)
+        : TCC.laneEntry(hA, vA);
 
-      _darkHomeMatrix.insert(lane - 1, col);
+    if (interlinked || config.isDark) {
+      _darkHomeMatrix[startPos][0] = configEntry;
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      final List<String> col = _lightHomeMatrix.removeAt(lane);
-
-      _lightHomeMatrix.insert(lane - 1, col);
+      _lightHomeMatrix[startPos][0] = configEntry;
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
+    if (startPos != currPos) await _reorderLanes(config, startPos, currPos);
     notifyListeners();
   }
 
