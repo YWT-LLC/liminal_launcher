@@ -245,6 +245,7 @@ class _AppTileState extends State<AppTile> {
                     controller: renameCon,
                     hintText: 'App',
                     autofillHints: const <String>[AutofillHints.name],
+                    validator: validateName,
                   ),
                 ),
                 widget.config.rowSpacer,

@@ -193,6 +193,7 @@ class _AppFolderState extends State<FolderTile> {
                         controller: renameCon,
                         hintText: 'Folder',
                         autofillHints: const <String>[AutofillHints.name],
+                        validator: validateName,
                       ),
                     ),
                     widget.config.rowSpacer,
