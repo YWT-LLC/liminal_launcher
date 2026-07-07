@@ -3,6 +3,8 @@
  * See LICENSE for distribution and usage details.
  */
 
+// TODO: one part of ripple cleanup should be to instantly add a spacer for the header to eventually replace
+
 import '../screens/export.dart';
 import '../utils/export.dart';
 import '../widgets/export.dart';
@@ -196,23 +198,20 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       ],
                     ),
                     menuChildren: <Widget>[
-                      // Dupe
-                      MenuItemButton(
-                        onPressed: () => appInfo.dupeLane(config, lane),
-                        child: EzIcon(config, Icons.copy),
-                      ),
-
-                      // Down
-                      if (lane > 0)
-                        MenuItemButton(
-                          onPressed: () => appInfo.moveLaneDown(config, lane),
-                          child: EzIcon(
-                            config,
-                            config.isLTR && hAlign(config) != ListAlignment.end
-                                ? Icons.keyboard_arrow_left
-                                : Icons.keyboard_arrow_right,
+                      // Delete/Dupe
+                      SubmenuButton(
+                        menuChildren: <Widget>[
+                          MenuItemButton(
+                            onPressed: () => appInfo.removeLane(config, context, lane),
+                            child: EzIcon(config, Icons.delete),
                           ),
-                        ),
+                          MenuItemButton(
+                            onPressed: () => appInfo.dupeLane(config, lane),
+                            child: EzIcon(config, Icons.copy),
+                          ),
+                        ],
+                        child: EzIcon(config, Icons.build),
+                      ),
 
                       // Add
                       MenuItemButton(
@@ -220,22 +219,212 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                         child: EzIcon(config, Icons.add),
                       ),
 
-                      // Up
-                      if (lane < numLanes - 1)
-                        MenuItemButton(
-                          onPressed: () => appInfo.moveLaneUp(config, lane),
-                          child: EzIcon(
-                            config,
-                            config.isLTR && hAlign(config) != ListAlignment.end
-                                ? Icons.keyboard_arrow_right
-                                : Icons.keyboard_arrow_left,
-                          ),
-                        ),
-
-                      // Delete
+                      // Edit
                       MenuItemButton(
-                        onPressed: () => appInfo.removeLane(config, context, lane),
-                        child: EzIcon(config, Icons.delete),
+                        onPressed: () async {
+                          final ListAlignment hBack = hAlign(config);
+                          final ListAlignment vBack = vAlign(config);
+                          ListAlignment hA = hAlign(config);
+                          ListAlignment vA = vAlign(config);
+                          const double sizeMod = 0.333;
+
+                          int pos = lane;
+
+                          await ezModal(
+                            config,
+                            context: context,
+                            builder: (_) {
+                              List<Widget> buildNodes() {
+                                final List<Widget> nodes = <Widget>[];
+
+                                for (int i = 0; i < numLanes; i++) {
+                                  nodes.addAll(<Widget>[
+                                    Container(
+                                      constraints: BoxConstraints.tightFor(
+                                        height: appIconSize(config),
+                                        width: appIconSize(config),
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: i == pos
+                                            ? config.colors.primary
+                                            : config.colors.surface,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          i.toString(),
+                                          textAlign: TextAlign.center,
+                                          style: config.labelStyle?.copyWith(
+                                            color: i == pos
+                                                ? config.colors.onPrimary
+                                                : config.colors.onSurface,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    EzSpacer(config.padding, vertical: false),
+                                  ]);
+                                }
+                                if (numLanes > 1) nodes.removeLast();
+
+                                return nodes;
+                              }
+
+                              return StatefulBuilder(
+                                builder: (BuildContext mCon, StateSetter setModal) => ezModalScroll(
+                                  config,
+                                  children: <Widget>[
+                                    // Move
+                                    Text(
+                                      'Move',
+                                      textAlign: TextAlign.center,
+                                      style: config.labelStyle,
+                                    ),
+                                    config.margin,
+                                    EzRow(
+                                      config,
+                                      reverseHands: false,
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        if (numLanes > 1)
+                                          Padding(
+                                            padding: EdgeInsets.only(right: config.padding),
+                                            child: EzIconButton(
+                                              config,
+                                              enabled: pos > 0,
+                                              icon: const Icon(Icons.keyboard_arrow_left),
+                                              onPressed: () => setModal(() => pos -= 1),
+                                            ),
+                                          ),
+                                        Container(
+                                          padding: EdgeInsets.all(config.marginVal),
+                                          color: config.colors.outline,
+                                          child: EzScrollView(
+                                            config,
+                                            startCentered: true,
+                                            scrollDirection: Axis.horizontal,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: buildNodes(),
+                                          ),
+                                        ),
+                                        if (numLanes > 1)
+                                          Padding(
+                                            padding: EdgeInsets.only(left: config.padding),
+                                            child: EzIconButton(
+                                              config,
+                                              enabled: pos < (numLanes - 1),
+                                              icon: const Icon(Icons.keyboard_arrow_right),
+                                              onPressed: () => setModal(() => pos += 1),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+
+                                    // Divider
+                                    EzTitledDivider(
+                                      Text(
+                                        'Align',
+                                        textAlign: TextAlign.center,
+                                        style: config.labelStyle,
+                                      ),
+                                      height: config.spacing * 3,
+                                      margin: config.marginVal,
+                                    ),
+
+                                    // Align
+                                    Container(
+                                      color: config.colors.onSurface,
+                                      height: heightOf(context) * sizeMod,
+                                      width: widthOf(context) * sizeMod,
+                                      child: Stack(children: <Widget>[
+                                        // Background
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            color: config.colors.surface,
+                                            image: (config.backgroundImagePath == noImageValue)
+                                                ? null
+                                                : config.backgroundImage,
+                                          ),
+                                          margin: EdgeInsets.all(config.marginVal * sizeMod),
+                                        ),
+
+                                        // Aligned circular icon (curr)
+                                        Align(
+                                          alignment: LAConfig.merge(h: hA, v: vA),
+                                          child: Container(
+                                            constraints: BoxConstraints.tightFor(
+                                              height: appIconSize(config),
+                                              width: appIconSize(config),
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: config.colors.secondary,
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                pos.toString(),
+                                                textAlign: TextAlign.center,
+                                                style: config.labelStyle?.copyWith(
+                                                  color: config.colors.onSecondary,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+
+                                        // Aligned circular icon (default)
+                                        Align(
+                                          alignment: LAConfig.merge(h: hBack, v: vBack),
+                                          child: ClipOval(
+                                            child: Image.asset(
+                                              appIconPath,
+                                              semanticLabel: 'Default list alignment',
+                                              width: appIconSize(config),
+                                              height: appIconSize(config),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                      ]),
+                                    ),
+                                    config.separator,
+
+                                    // Controls
+                                    EzWrap(children: <Widget>[
+                                      // Horizontal
+                                      SegmentedButton<ListAlignment>(
+                                        segments: alignmentSegments,
+                                        selected: <ListAlignment>{hA},
+                                        showSelectedIcon: false,
+                                        onSelectionChanged: (Set<ListAlignment>? choice) {
+                                          if (choice?.first == null) return;
+                                          setModal(() => hA = choice!.first);
+                                        },
+                                      ),
+                                      config.spacer,
+
+                                      // Vertical
+                                      SegmentedButton<ListAlignment>(
+                                        segments: alignmentSegments,
+                                        direction: Axis.vertical,
+                                        selected: <ListAlignment>{vA},
+                                        showSelectedIcon: false,
+                                        onSelectionChanged: (Set<ListAlignment>? choice) {
+                                          if (choice?.first == null) return;
+                                          setModal(() => vA = choice!.first);
+                                        },
+                                      ),
+                                    ]),
+                                    config.separator,
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                          // TODO: save changes
+                        },
+                        child: EzIcon(config, Icons.edit),
                       ),
                     ],
                   ),
