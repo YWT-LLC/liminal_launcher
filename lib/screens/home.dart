@@ -274,7 +274,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                                 builder: (BuildContext mCon, StateSetter setModal) => ezModalScroll(
                                   config,
                                   children: <Widget>[
-                                    // Move
+                                    // Move TODO: account for end align
                                     Text(
                                       'Move',
                                       textAlign: TextAlign.center,
