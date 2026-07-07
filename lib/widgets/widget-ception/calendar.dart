@@ -229,6 +229,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                           removeOverlay();
                           if (!success && context.mounted) await selfDestruct();
                         },
+                        validator: null,
                       )),
                     ),
                     widget.config.rowMargin,
@@ -315,6 +316,7 @@ class AddCalendar extends StatelessWidget {
               child: LimField(
                 onTap: onTap,
                 readOnly: true,
+                validator: null,
                 hintText: 'New event',
               ),
             ),
