@@ -265,7 +265,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                                     EzSpacer(config.padding, vertical: false),
                                   ]);
                                 }
-                                if (numLanes > 1) nodes.removeLast();
+                                nodes.removeLast();
 
                                 return nodes;
                               }
@@ -297,16 +297,12 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                                               onPressed: () => setModal(() => pos -= 1),
                                             ),
                                           ),
-                                        Container(
-                                          padding: EdgeInsets.all(config.marginVal),
-                                          color: config.colors.outline,
-                                          child: EzScrollView(
-                                            config,
-                                            startCentered: true,
-                                            scrollDirection: Axis.horizontal,
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: buildNodes(),
-                                          ),
+                                        EzScrollView(
+                                          config,
+                                          startCentered: true,
+                                          scrollDirection: Axis.horizontal,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: buildNodes(),
                                         ),
                                         if (numLanes > 1)
                                           Padding(
