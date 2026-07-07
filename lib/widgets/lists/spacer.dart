@@ -531,7 +531,6 @@ Future<void> editSpacer(
             alignment: config.isLefty ? Alignment.centerRight : Alignment.centerLeft,
             child: EzText(
               config,
-              shape: EzButtonShape.roundRect.shape,
               backgroundColor: config.colors.surfaceContainer
                   .withValues(alpha: max(0.75, config.textBackgroundOpacity)),
               text: (axis == Axis.vertical ? height : width).toStringAsFixed(2),

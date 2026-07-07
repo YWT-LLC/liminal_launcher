@@ -493,7 +493,7 @@ class _ClockWidgetState extends State<ClockWidget> {
           EzTextBackground(
             widget.config,
             padding: EdgeInsets.all(widget.config.padding),
-            shape: shape?.shape,
+            shape: shape ?? EzButtonShape.roundRect,
             backgroundColor: background,
             text: EzCol(
               mainAxisAlignment: vAlign(widget.config).mainAxis,
@@ -573,7 +573,7 @@ class _ClockWidgetState extends State<ClockWidget> {
               child: EzTextBackground(
                 widget.config,
                 padding: EdgeInsets.all(widget.config.padding),
-                shape: widget._shape?.shape,
+                shape: widget._shape ?? EzButtonShape.roundRect,
                 backgroundColor: widget._background,
                 text: EzCol(
                   mainAxisAlignment: vAlign(widget.config).mainAxis,
