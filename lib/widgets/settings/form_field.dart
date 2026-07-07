@@ -5,8 +5,6 @@
 
 import 'package:flutter/material.dart';
 
-// TODO: use for every field
-// TODO: don't always validate (widget entries)
 // TODO: get error text to behave
 // TODO: the other TODOs
 // TODO: start the maticulous testing
@@ -18,18 +16,23 @@ class LimField extends TextFormField {
     super.key,
     super.autofillHints,
     super.controller,
+    super.focusNode,
     required this.hintText,
     super.keyboardType,
     super.onChanged,
+    super.onEditingComplete,
     super.onFieldSubmitted,
     super.onTap,
+    super.onTapAlwaysCalled = true,
+    super.onTapOutside,
     super.readOnly,
+    super.textInputAction,
+    required super.validator,
   }) : super(
           autovalidateMode: AutovalidateMode.onUnfocus,
           decoration: InputDecoration(hintText: hintText),
           textAlign: TextAlign.center,
           textAlignVertical: TextAlignVertical.center,
-          validator: validateName,
         );
 }
 
