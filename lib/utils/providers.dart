@@ -1169,23 +1169,30 @@ For example: if an app has always on location permissions, banishing it will not
   }
 
   /// Does notify
-  /// Includes confirm dialog
-  Future<void> removeLane(EzCP config, BuildContext context, int lane) async {
-    final bool confirmed = await showDialog(
-      context: context,
-      builder: (BuildContext dCon) => EzAlertDialog(
-        config,
-        title: Text('Delete lane $lane?', textAlign: TextAlign.center),
-        actions: ezActionPair(
+  /// Includes optional confirm dialog
+  Future<void> removeLane(
+    EzCP config,
+    BuildContext context,
+    int lane, {
+    bool confirm = false,
+  }) async {
+    if (confirm) {
+      final bool confirmed = await showDialog(
+        context: context,
+        builder: (BuildContext dCon) => EzAlertDialog(
           config,
-          onConfirm: () => Navigator.of(dCon).pop(true),
-          onDeny: () => Navigator.of(dCon).pop(false),
+          title: Text('Delete lane $lane?', textAlign: TextAlign.center),
+          actions: ezActionPair(
+            config,
+            onConfirm: () => Navigator.of(dCon).pop(true),
+            onDeny: () => Navigator.of(dCon).pop(false),
+          ),
+          needsClose: false,
         ),
-        needsClose: false,
-      ),
-    );
+      );
 
-    if (!confirmed) return;
+      if (!confirmed) return;
+    }
 
     if (interlinked || config.isDark) {
       _darkHomeMatrix.removeAt(lane);
