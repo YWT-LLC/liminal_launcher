@@ -73,7 +73,8 @@ class AppTileSetting extends StatelessWidget {
                         onTap: doNothing,
                         child: Container(
                           width: double.infinity,
-                          alignment: LAConfig.merge(h: hAlign(config), v: ListAlignment.center),
+                          alignment:
+                              LAConfig.merge(h: horizontalAlign(config), v: ListAlignment.center),
                           child: core(),
                         ),
                       )

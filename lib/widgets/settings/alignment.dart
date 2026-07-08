@@ -37,8 +37,8 @@ const List<ButtonSegment<ListAlignment>> alignmentSegments = <ButtonSegment<List
 ];
 
 class _AlignmentSelectorsState extends State<AlignmentSelectors> {
-  late ListAlignment h = hAlign(widget.config);
-  late ListAlignment v = vAlign(widget.config);
+  late ListAlignment h = horizontalAlign(widget.config);
+  late ListAlignment v = verticalAlign(widget.config);
 
   // Return the build //
 

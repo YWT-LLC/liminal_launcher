@@ -45,8 +45,8 @@ class LiminalCache extends EzAppCache {
       final bool elevatedFolders = EzCM.get(darkElevatedFolderKey);
 
       _design = DesignCache(
-        horizontalAlign: LAConfig.lookup(EzCM.get(darkHorizontalAlignKey)),
-        verticalAlign: LAConfig.lookup(EzCM.get(darkVerticalAlignKey)),
+        horizontalAlign: LAConfig.lookup(EzCM.get(darkHorizontalAlignKey)) ?? ListAlignment.center,
+        verticalAlign: LAConfig.lookup(EzCM.get(darkVerticalAlignKey)) ?? ListAlignment.start,
         listIcons: listIcons,
         listLabels: listLabels,
         elevatedLists: elevatedLists,
@@ -68,8 +68,8 @@ class LiminalCache extends EzAppCache {
       final bool elevatedFolders = EzCM.get(lightElevatedFolderKey);
 
       _design = DesignCache(
-        horizontalAlign: LAConfig.lookup(EzCM.get(lightHorizontalAlignKey)),
-        verticalAlign: LAConfig.lookup(EzCM.get(lightVerticalAlignKey)),
+        horizontalAlign: LAConfig.lookup(EzCM.get(lightHorizontalAlignKey)) ?? ListAlignment.center,
+        verticalAlign: LAConfig.lookup(EzCM.get(lightVerticalAlignKey)) ?? ListAlignment.start,
         listIcons: listIcons,
         listLabels: listLabels,
         elevatedLists: elevatedLists,
@@ -186,8 +186,8 @@ bool wideTiles(EzCP config) => _cache(config)._design.wideTiles;
 bool pages(EzCP config) => _cache(config)._design.pages;
 double appIconSize(EzCP config) => config.iconSize + config.padding;
 
-ListAlignment hAlign(EzCP config) => _cache(config)._design.horizontalAlign;
-ListAlignment vAlign(EzCP config) => _cache(config)._design.verticalAlign;
+ListAlignment horizontalAlign(EzCP config) => _cache(config)._design.horizontalAlign;
+ListAlignment verticalAlign(EzCP config) => _cache(config)._design.verticalAlign;
 
 bool authToEdit(EzCP config) => _cache(config)._security.authToEdit;
 bool authForHidden(EzCP config) => _cache(config)._security.authForHidden;
