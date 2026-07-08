@@ -37,7 +37,7 @@ class AppInfoProvider extends ChangeNotifier {
     _lightHomeMatrix = _buildHomeMatrix(EzCM.get(lightHomeDataKey));
 
     // Sort based on the user's preferences
-    sort(ASConfig.lookup(EzCM.get(listSortKey)), EzCM.get(ascListKey));
+    sort(ASConfig.safeLookup(EzCM.get(listSortKey)), EzCM.get(ascListKey));
 
     // Listen to events (installs, external deletes, etc.)
     _listenToAppEvents();
@@ -89,7 +89,7 @@ class AppInfoProvider extends ChangeNotifier {
     _apps.add(installed);
     _appMap[installed.id] = installed;
 
-    sort(ASConfig.lookup(EzCM.get(listSortKey)), EzCM.get(ascListKey));
+    sort(ASConfig.safeLookup(EzCM.get(listSortKey)), EzCM.get(ascListKey));
     notifyListeners();
   }
 
@@ -277,8 +277,8 @@ class AppInfoProvider extends ChangeNotifier {
   Future<void> addClock(EzCP config, int lane) async {
     final String entry = <String>[
       WidWidGetGet.clock.value,
-      TCC.clockEntry(
-          null, null, true, TxtStile.headline, null, DateType.compact, TxtStile.label, null),
+      TCC.clockEntry(EzButtonShape.roundRect, null, true, TxtStile.headline, null, DateType.compact,
+          TxtStile.label, null),
     ].join(widgetSplit);
 
     if (interlinked || config.isDark) {
