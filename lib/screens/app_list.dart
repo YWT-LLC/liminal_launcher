@@ -90,8 +90,8 @@ class _AppListScreenState extends State<AppListScreen> {
   @override
   Widget build(BuildContext context) {
     return Consumer2<EzCP, AppInfoProvider>(builder: (_, EzCP config, AppInfoProvider appInfo, __) {
-      final ListAlignment hA = hAlign(config);
-      final ListAlignment vA = vAlign(config);
+      final ListAlignment hAlign = horizontalAlign(config);
+      final ListAlignment vAlign = verticalAlign(config);
 
       return LiminalScaffold(
         config,
@@ -107,8 +107,8 @@ class _AppListScreenState extends State<AppListScreen> {
           },
           child: EzCol(
             mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: vA.mainAxis,
-            crossAxisAlignment: hA.crossAxis,
+            mainAxisAlignment: vAlign.mainAxis,
+            crossAxisAlignment: hAlign.crossAxis,
             children: <Widget>[
               EzHeader(config),
 
@@ -117,7 +117,7 @@ class _AppListScreenState extends State<AppListScreen> {
                 config,
                 showScrollHint: true,
                 scrollDirection: Axis.horizontal,
-                mainAxisAlignment: hA.mainAxis,
+                mainAxisAlignment: hAlign.mainAxis,
                 children: <Widget>[
                   // Sort by...
                   MenuAnchor(
@@ -130,7 +130,7 @@ class _AppListScreenState extends State<AppListScreen> {
                         .map((AppSort type) => EzMenuButton(
                               config,
                               label: type.name.replaceRange(0, 1, type.name[0].toUpperCase()),
-                              textAlign: hA.textAlign,
+                              textAlign: hAlign.textAlign,
                               onPressed: () async {
                                 await EzCM.setString(listSortKey, type.value);
 
@@ -255,8 +255,8 @@ class _AppListScreenState extends State<AppListScreen> {
                     config,
                     controller: scrollControl,
                     mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: vA.mainAxis,
-                    crossAxisAlignment: hA.crossAxis,
+                    mainAxisAlignment: vAlign.mainAxis,
+                    crossAxisAlignment: hAlign.crossAxis,
                     physics: const ClampingScrollPhysics(),
                     children: appInfo.apps
                         .where((AppInfo app) =>
@@ -271,11 +271,13 @@ class _AppListScreenState extends State<AppListScreen> {
                               child: AppTile(
                                 config,
                                 appInfo: appInfo,
+                                hAlign: hAlign,
+                                vAlign: vAlign,
+                                state: verbose ? AppState.verbose : AppState.standard,
+                                rippleProgress: rippleProgress,
                                 app: app,
                                 location: AppLocation.list,
-                                state: verbose ? AppState.verbose : AppState.standard,
                                 onSelected: widget.listConfig.onSelected,
-                                rippleProgress: rippleProgress,
                               ),
                             ))
                         .toList(),
