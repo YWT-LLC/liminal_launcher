@@ -220,11 +220,20 @@ extension LAConfig on ListAlignment {
         ListAlignment.end => TextAlign.end,
       };
 
-  static ListAlignment lookup(String value) => switch (value) {
+  static ListAlignment? lookup(String? value) => switch (value) {
         esStart => ListAlignment.start,
         esEnd => ListAlignment.end,
-        esCenter || _ => ListAlignment.center,
+        esCenter => ListAlignment.center,
+        _ => null,
       };
+
+  static ListAlignment buildLookup(String laneEntry, Axis axis, EzCP config) {
+    final List<String> parts = laneEntry.split(configSplit);
+
+    return axis == Axis.horizontal
+        ? LAConfig.lookup(parts[0]) ?? horizontalAlign(config)
+        : LAConfig.lookup(parts[1]) ?? verticalAlign(config);
+  }
 
   static Alignment merge({required ListAlignment h, required ListAlignment v}) => switch (h) {
         ListAlignment.start => switch (v) {
