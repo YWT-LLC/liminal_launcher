@@ -265,11 +265,11 @@ class SettingsScreen extends StatelessWidget {
                         ]),
                       );
 
-                      if (hAlign(config) !=
+                      if (horizontalAlign(config) !=
                               LAConfig.lookup(EzCM.get(config.isDark
                                   ? darkHorizontalAlignKey
                                   : lightHorizontalAlignKey)) ||
-                          vAlign(config) !=
+                          verticalAlign(config) !=
                               LAConfig.lookup(EzCM.get(
                                   config.isDark ? darkVerticalAlignKey : lightVerticalAlignKey))) {
                         await config.rebuildUI(<EzCacheType>{EzCacheType.design});
