@@ -86,12 +86,11 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
   }) {
     final List<String> entries = appInfo.homeLane(config, lane);
 
-    final List<String> tileEntries = entries.length == 1 ? <String>[] : entries.sublist(1);
-    final EdgeInsets tilePadding = EzInsets.wrap(config.spacing);
     final List<Widget> tiles = <Widget>[];
+    final EdgeInsets tilePadding = EzInsets.wrap(config.spacing);
 
-    for (int index = 0; index < tileEntries.length; index++) {
-      final String entry = tileEntries[index];
+    for (int index = 1; index < entries.length; index++) {
+      final String entry = entries[index];
 
       final RegExpMatch? splitMatch = tileRegex.firstMatch(entry);
       final String? delim = splitMatch?.group(0);
