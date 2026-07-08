@@ -32,7 +32,7 @@ class ThemeModeWidget extends StatefulWidget {
     final List<String> data =
         appInfo.homeItem(config, lane: lane, index: index).split(widgetSplit)[1].split(configSplit);
 
-    late final WidgetSize storedWS = WSConfig.lookup(data[0]);
+    late final WidgetSize storedWS = WSConfig.safeLookup(data[0]);
     _size = (storedWS == WidgetSize.system) ? bt2WS(config) : storedWS;
   }
 
@@ -106,7 +106,7 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
         await widget.appInfo.updateWidget(
           widget.config,
           WidWidGetGet.themeMode,
-          TCC.mediaEntry(WSConfig.lookup(choice)),
+          TCC.mediaEntry(WSConfig.safeLookup(choice)),
           lane: widget.lane,
           index: widget.index,
         );

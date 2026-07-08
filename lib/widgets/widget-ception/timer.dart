@@ -33,7 +33,7 @@ class TimerWidget extends StatefulWidget {
     final List<String> data =
         appInfo.homeItem(config, lane: lane, index: index).split(widgetSplit)[1].split(configSplit);
 
-    final WidgetSize storedWS = WSConfig.lookup(data[0]);
+    final WidgetSize storedWS = WSConfig.safeLookup(data[0]);
     _size = (storedWS == WidgetSize.system) ? bt2WS(config) : storedWS;
 
     final List<String> storedTs = data[1].split(':');
@@ -307,7 +307,7 @@ class _TimerWidgetState extends State<TimerWidget> {
           widget.config,
           WidWidGetGet.timer,
           TCC.timerEntry(
-            WSConfig.lookup(choice),
+            WSConfig.safeLookup(choice),
             <String>[
               _validateTime(ourCon.text),
               _validateTime(minCon.text),

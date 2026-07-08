@@ -36,7 +36,7 @@ class SearchWidget extends StatefulWidget {
     final List<String> data =
         appInfo.homeItem(config, lane: lane, index: index).split(widgetSplit)[1].split(configSplit);
 
-    final WidgetSize storedWS = WSConfig.lookup(data[0]);
+    final WidgetSize storedWS = WSConfig.safeLookup(data[0]);
     _size = (storedWS == WidgetSize.system) ? bt2WS(config) : storedWS;
 
     final String storedCurr = data[1];

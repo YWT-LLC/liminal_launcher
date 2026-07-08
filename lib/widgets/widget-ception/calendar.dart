@@ -32,7 +32,7 @@ class CalendarWidget extends StatefulWidget {
     final List<String> data =
         appInfo.homeItem(config, lane: lane, index: index).split(widgetSplit)[1].split(configSplit);
 
-    final WidgetSize storedWS = WSConfig.lookup(data[0]);
+    final WidgetSize storedWS = WSConfig.safeLookup(data[0]);
     _size = (storedWS == WidgetSize.system) ? bt2WS(config) : storedWS;
   }
 
@@ -184,7 +184,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
         await widget.appInfo.updateWidget(
           widget.config,
           WidWidGetGet.calendar,
-          TCC.calendarEntry(WSConfig.lookup(choice)),
+          TCC.calendarEntry(WSConfig.safeLookup(choice)),
           lane: widget.lane,
           index: widget.index,
         );
