@@ -30,11 +30,20 @@ extension ASConfig on AppSort {
         AppSort.size => esSize,
       };
 
-  static AppSort lookup(String value) => switch (value) {
+  static AppSort? lookup(String? value) => switch (value) {
+        esName => AppSort.name,
         esPublisher => AppSort.publisher,
         esDate => AppSort.date,
         esSize => AppSort.size,
-        esName || _ => AppSort.name,
+        _ => null,
+      };
+
+  /// Defaults to [AppSort.name]
+  static AppSort safeLookup(String? value) => switch (value) {
+        esPublisher => AppSort.publisher,
+        esDate => AppSort.date,
+        esSize => AppSort.size,
+        _ => AppSort.name,
       };
 }
 
@@ -99,12 +108,12 @@ extension BTConfig on ButtonType {
         _ => null,
       };
 
+  /// Defaults to [ButtonType.textIcon]
   static ButtonType safeLookup(String? value) => switch (value) {
         esIcon => ButtonType.icon,
         esEIcon => ButtonType.eIcon,
         esText => ButtonType.text,
         esEText => ButtonType.eText,
-        esTextIcon => ButtonType.textIcon,
         esETextIcon => ButtonType.eTextIcon,
         _ => ButtonType.textIcon,
       };
@@ -133,15 +142,25 @@ extension DTConfig on DateType {
         DateType.short => MaterialLocalizations.of(context).formatShortDate(time),
         DateType.medium => MaterialLocalizations.of(context).formatMediumDate(time),
         DateType.long => MaterialLocalizations.of(context).formatFullDate(time),
-        DateType.none || _ => '---',
+        _ => '---',
       };
 
-  static DateType lookup(String value) => switch (value) {
+  static DateType? lookup(String? value) => switch (value) {
+        esNone => DateType.none,
         esCompact => DateType.compact,
         esShort => DateType.short,
         esMedium => DateType.medium,
         esLong => DateType.long,
-        esNone || _ => DateType.none,
+        _ => null,
+      };
+
+  /// Defaults to [DateType.none]
+  static DateType safeLookup(String? value) => switch (value) {
+        esCompact => DateType.compact,
+        esShort => DateType.short,
+        esMedium => DateType.medium,
+        esLong => DateType.long,
+        _ => DateType.none,
       };
 }
 
@@ -169,10 +188,10 @@ extension LTConfig on LabelType {
         _ => null,
       };
 
+  /// Defaults to [LabelType.full]
   static LabelType safeLookup(String? value) => switch (value) {
         esNone => LabelType.none,
         esInitials => LabelType.initials,
-        esFull => LabelType.full,
         esWingding => LabelType.wingding,
         _ => LabelType.full,
       };
@@ -301,10 +320,10 @@ extension TCC on TileConfig {
         size.value,
       ].join(configSplit);
 
-  static String clockEntry(EzButtonShape? shape, Color? background, bool time, TxtStile timeStyle,
+  static String clockEntry(EzButtonShape shape, Color? background, bool time, TxtStile timeStyle,
           Color? timeColor, DateType date, TxtStile dateStyle, Color? dateColor) =>
       <String>[
-        shape == null ? esSystem : shape.value,
+        shape.value,
         background == null ? esSystem : background.toARGB32().toString(),
         time.toString(),
         timeStyle.value,
@@ -402,9 +421,17 @@ extension WSConfig on WidgetSize {
         WidgetSize.tile => esTile,
       };
 
-  static WidgetSize lookup(String? value) => switch (value) {
+  static WidgetSize? lookup(String? value) => switch (value) {
+        esSystem => WidgetSize.system,
         esButton => WidgetSize.button,
         esTile => WidgetSize.tile,
-        esSystem || _ => WidgetSize.system,
+        _ => null,
+      };
+
+  /// Defaults to [WidgetSize.system]
+  static WidgetSize safeLookup(String? value) => switch (value) {
+        esButton => WidgetSize.button,
+        esTile => WidgetSize.tile,
+        _ => WidgetSize.system,
       };
 }
