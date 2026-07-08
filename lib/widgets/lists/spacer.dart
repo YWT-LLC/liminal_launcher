@@ -16,8 +16,10 @@ class LimSpacer extends StatefulWidget {
   final AppInfoProvider appInfo;
   final int lane;
   final int index;
+
   final AppState state;
   final ValueNotifier<double>? rippleProgress;
+
   final void Function() resizeCallback;
 
   late final double _height;
@@ -211,6 +213,10 @@ Future<void> editSpacer(
 
   overlayEntry = OverlayEntry(
     builder: (_) => StatefulBuilder(builder: (_, StateSetter setOverlay) {
+      final String alignEntry = appInfo.homeItem(config, lane: lane, index: 0);
+      final ListAlignment hAlign = LAConfig.buildLookup(alignEntry, Axis.horizontal, config);
+      final ListAlignment vAlign = LAConfig.buildLookup(alignEntry, Axis.vertical, config);
+
       final List<Widget> stepOptions = <Widget>[
         MenuItemButton(
           child: Text(
@@ -337,7 +343,7 @@ Future<void> editSpacer(
                     EzIconButton(
                       config,
                       enabled: currLane < (numLanes - 1),
-                      icon: Icon(config.isLTR && hAlign(config) != ListAlignment.end
+                      icon: Icon(config.isLTR && hAlign != ListAlignment.end
                           ? Icons.keyboard_arrow_right
                           : Icons.keyboard_arrow_left),
                       onPressed: () async {
@@ -359,7 +365,7 @@ Future<void> editSpacer(
                   // Move (item) up
                   EzIconButton(
                     config,
-                    icon: Icon((vAlign(config) == ListAlignment.end)
+                    icon: Icon(vAlign == ListAlignment.end
                         ? Icons.keyboard_arrow_up
                         : Icons.keyboard_arrow_down),
                     enabled: currIndex < (appInfo.homeLane(config, currLane).length - 1),
@@ -415,7 +421,7 @@ Future<void> editSpacer(
                   // Moved (item) down
                   EzIconButton(
                     config,
-                    icon: Icon((vAlign(config) == ListAlignment.end)
+                    icon: Icon(vAlign == ListAlignment.end
                         ? Icons.keyboard_arrow_down
                         : Icons.keyboard_arrow_up),
                     enabled: currIndex > 0,
@@ -441,7 +447,7 @@ Future<void> editSpacer(
                     EzIconButton(
                       config,
                       enabled: currLane > 0,
-                      icon: Icon(config.isLTR && hAlign(config) != ListAlignment.end
+                      icon: Icon(config.isLTR && hAlign != ListAlignment.end
                           ? Icons.keyboard_arrow_left
                           : Icons.keyboard_arrow_right),
                       onPressed: () async {
