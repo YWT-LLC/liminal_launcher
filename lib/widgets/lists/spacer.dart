@@ -424,7 +424,7 @@ Future<void> editSpacer(
                     icon: Icon(vAlign == ListAlignment.end
                         ? Icons.keyboard_arrow_down
                         : Icons.keyboard_arrow_up),
-                    enabled: currIndex > 0,
+                    enabled: currIndex > 1, // Config entry
                     onPressed: () async {
                       final int nextIndex = currIndex - 1;
 
