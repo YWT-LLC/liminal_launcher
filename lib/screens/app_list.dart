@@ -28,7 +28,7 @@ class _AppListScreenState extends State<AppListScreen> {
   final TextEditingController searchControl = TextEditingController();
 
   bool searching = autoSearch;
-  AppSort listSort = ASConfig.lookup(EzCM.get(listSortKey));
+  AppSort listSort = ASConfig.safeLookup(EzCM.get(listSortKey));
   bool ascList = EzCM.get(ascListKey);
 
   bool atTop = true;
