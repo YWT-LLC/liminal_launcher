@@ -21,7 +21,7 @@ EzMenuButton moveDownLane(
       label: 'Move',
       icon: EzIcon(
         config,
-        config.isLTR && hAlign(config) != ListAlignment.end
+        config.isLTR && horizontalAlign(config) != ListAlignment.end
             ? Icons.keyboard_arrow_left
             : Icons.keyboard_arrow_right,
       ),
@@ -41,7 +41,7 @@ EzMenuButton moveUpLane(
       label: 'Move',
       icon: EzIcon(
         config,
-        config.isLTR && hAlign(config) != ListAlignment.end
+        config.isLTR && horizontalAlign(config) != ListAlignment.end
             ? Icons.keyboard_arrow_right
             : Icons.keyboard_arrow_left,
       ),
