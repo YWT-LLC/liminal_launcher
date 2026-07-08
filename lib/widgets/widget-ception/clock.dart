@@ -17,6 +17,8 @@ class ClockWidget extends StatefulWidget {
   final AppInfoProvider appInfo;
   final int lane;
   final int index;
+  final ListAlignment hAlign;
+  final ListAlignment vAlign;
   final AppState state;
   final ValueNotifier<double>? rippleProgress;
 
@@ -34,6 +36,8 @@ class ClockWidget extends StatefulWidget {
     this.appInfo,
     this.lane,
     this.index,
+    this.hAlign,
+    this.vAlign,
     this.state,
     this.rippleProgress, {
     super.key,
@@ -502,20 +506,20 @@ class _ClockWidgetState extends State<ClockWidget> {
             shape: shape ?? EzButtonShape.roundRect,
             backgroundColor: background,
             text: EzCol(
-              mainAxisAlignment: vAlign(widget.config).mainAxis,
-              crossAxisAlignment: hAlign(widget.config).crossAxis,
+              mainAxisAlignment: widget.vAlign.mainAxis,
+              crossAxisAlignment: widget.hAlign.crossAxis,
               children: <Widget>[
                 if (showTime)
                   Text(
                     TimeOfDay.fromDateTime(now).format(context),
                     style: timeStyle.style(widget.config)?.copyWith(color: timeColor),
-                    textAlign: hAlign(widget.config).textAlign,
+                    textAlign: widget.hAlign.textAlign,
                   ),
                 if (dateType != DateType.none)
                   Text(
                     DTConfig.buildDate(context, now, dateType),
                     style: dateStyle.style(widget.config)?.copyWith(color: dateColor),
-                    textAlign: hAlign(widget.config).textAlign,
+                    textAlign: widget.hAlign.textAlign,
                   ),
               ],
             ),
@@ -582,8 +586,8 @@ class _ClockWidgetState extends State<ClockWidget> {
                 shape: widget._shape ?? EzButtonShape.roundRect,
                 backgroundColor: widget._background,
                 text: EzCol(
-                  mainAxisAlignment: vAlign(widget.config).mainAxis,
-                  crossAxisAlignment: hAlign(widget.config).crossAxis,
+                  mainAxisAlignment: widget.vAlign.mainAxis,
+                  crossAxisAlignment: widget.hAlign.crossAxis,
                   children: <Widget>[
                     if (widget._showTime)
                       Text(
@@ -591,7 +595,7 @@ class _ClockWidgetState extends State<ClockWidget> {
                         style: widget._timeStyle
                             .style(widget.config)
                             ?.copyWith(color: widget._timeColor),
-                        textAlign: hAlign(widget.config).textAlign,
+                        textAlign: widget.hAlign.textAlign,
                       ),
                     if (widget._dateType != DateType.none)
                       Text(
@@ -599,7 +603,7 @@ class _ClockWidgetState extends State<ClockWidget> {
                         style: widget._dateStyle
                             .style(widget.config)
                             ?.copyWith(color: widget._dateColor),
-                        textAlign: hAlign(widget.config).textAlign,
+                        textAlign: widget.hAlign.textAlign,
                       ),
                   ],
                 ),
@@ -654,8 +658,17 @@ class AddClock extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
   final int lane;
+  final ListAlignment hAlign;
+  final ListAlignment vAlign;
 
-  const AddClock(this.config, this.appInfo, this.lane, {super.key});
+  const AddClock(
+    this.config,
+    this.appInfo,
+    this.lane, {
+    super.key,
+    required this.hAlign,
+    required this.vAlign,
+  });
 
   void onTap() => appInfo.addClock(config, lane);
 
@@ -669,18 +682,18 @@ class AddClock extends StatelessWidget {
         config,
         padding: EdgeInsets.all(config.padding),
         text: EzCol(
-          mainAxisAlignment: vAlign(config).mainAxis,
-          crossAxisAlignment: hAlign(config).crossAxis,
+          mainAxisAlignment: vAlign.mainAxis,
+          crossAxisAlignment: hAlign.crossAxis,
           children: <Widget>[
             Text(
               TimeOfDay.fromDateTime(now).format(context),
               style: config.headlineStyle,
-              textAlign: hAlign(config).textAlign,
+              textAlign: hAlign.textAlign,
             ),
             Text(
               DTConfig.buildDate(context, now, DateType.compact),
               style: config.labelStyle,
-              textAlign: hAlign(config).textAlign,
+              textAlign: hAlign.textAlign,
             ),
           ],
         ),
