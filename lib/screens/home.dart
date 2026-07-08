@@ -77,14 +77,21 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     return;
   }
 
-  List<Widget> _buildTiles(EzCP config, AppInfoProvider appInfo, int lane) {
+  List<Widget> _buildTiles(
+    EzCP config,
+    AppInfoProvider appInfo,
+    int lane, {
+    required ListAlignment hAlign,
+    required ListAlignment vAlign,
+  }) {
     final List<String> entries = appInfo.homeLane(config, lane);
+
+    final List<String> tileEntries = entries.length == 1 ? <String>[] : entries.sublist(1);
     final EdgeInsets tilePadding = EzInsets.wrap(config.spacing);
+    final List<Widget> tiles = <Widget>[];
 
-    final List<Widget> toReturn = <Widget>[];
-
-    for (int index = 0; index < entries.length; index++) {
-      final String entry = entries[index];
+    for (int index = 0; index < tileEntries.length; index++) {
+      final String entry = tileEntries[index];
 
       final RegExpMatch? splitMatch = tileRegex.firstMatch(entry);
       final String? delim = splitMatch?.group(0);
@@ -96,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           final AppInfo? app = appInfo.appMap[<String>[parts[0], parts[1]].join(idSplit)];
           if (app == null) continue;
 
-          toReturn.add(Padding(
+          tiles.add(Padding(
             key: ValueKey<String>('$lane-$index-${app.id}'),
             padding: tilePadding,
             child: AppTile(
@@ -104,6 +111,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
               appInfo: appInfo,
               lane: lane,
               index: index,
+              hAlign: hAlign,
+              vAlign: vAlign,
               state: editing ? AppState.groupEdit : AppState.standard,
               rippleProgress: rippleProgress,
               app: app,
@@ -114,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           break;
 
         case folderSplit:
-          toReturn.add(Padding(
+          tiles.add(Padding(
             key: ValueKey<String>('$index-${entry.split(folderSplit)[0]}'),
             padding: tilePadding,
             child: FolderTile(
@@ -122,6 +131,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
               appInfo: appInfo,
               lane: lane,
               index: index,
+              hAlign: hAlign,
+              vAlign: vAlign,
               state: editing ? AppState.groupEdit : AppState.standard,
               rippleProgress: rippleProgress,
             ),
@@ -129,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           break;
 
         case widgetSplit:
-          toReturn.add(Padding(
+          tiles.add(Padding(
             key: ValueKey<String>('$index-${entry.split(widgetSplit)[0]}'),
             padding: tilePadding,
             child: renderWidget(
@@ -137,6 +148,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
               appInfo: appInfo,
               lane: lane,
               index: index,
+              hAlign: hAlign,
+              vAlign: vAlign,
               state: editing ? AppState.groupEdit : AppState.standard,
               rippleProgress: rippleProgress,
             ),
@@ -144,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           break;
 
         case spacerSplit:
-          toReturn.add(Padding(
+          tiles.add(Padding(
             key: ValueKey<String>('$index-spacer-$editing'),
             padding: editing ? tilePadding : EdgeInsets.zero,
             child: LimSpacer(
@@ -164,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
       }
     }
 
-    return toReturn;
+    return tiles;
   }
 
   Widget _buildLane(
@@ -172,291 +185,315 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     AppInfoProvider appInfo, {
     required int numLanes,
     required int lane,
-  }) =>
-      editing
-          ? Builder(builder: (_) {
-              final List<Widget> tiles = _buildTiles(config, appInfo, lane);
+  }) {
+    final ListAlignment hAlign = LAConfig.buildLookup(
+      appInfo.homeItem(config, lane: lane, index: 0),
+      Axis.horizontal,
+      config,
+    );
+    final ListAlignment vAlign = LAConfig.buildLookup(
+      appInfo.homeItem(config, lane: lane, index: 0),
+      Axis.vertical,
+      config,
+    );
 
-              return StatefulBuilder(
-                key: ValueKey<String>('lane-$lane'),
-                builder: (_, StateSetter setList) => ReorderableListView(
-                  shrinkWrap: true,
-                  header: MenuAnchor(
-                    builder: (_, MenuController controller, __) => EzRow(
-                      config,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(bottom: config.spacing / 2),
-                          child: EzIconButton(
-                            config,
-                            onPressed: () => toggleMenu(controller),
-                            icon: const Icon(Icons.edit),
-                          ),
+    return editing
+        ? Builder(builder: (_) {
+            final List<Widget> tiles = _buildTiles(
+              config,
+              appInfo,
+              lane,
+              hAlign: hAlign,
+              vAlign: vAlign,
+            );
+
+            return StatefulBuilder(
+              key: ValueKey<String>('lane-$lane'),
+              builder: (_, StateSetter setList) => ReorderableListView(
+                shrinkWrap: true,
+                header: MenuAnchor(
+                  builder: (_, MenuController controller, __) => EzRow(
+                    config,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(bottom: config.spacing / 2),
+                        child: EzIconButton(
+                          config,
+                          onPressed: () => toggleMenu(controller),
+                          icon: const Icon(Icons.edit),
+                        ),
+                      ),
+                    ],
+                  ),
+                  menuChildren: <Widget>[
+                    // Delete/Dupe
+                    SubmenuButton(
+                      menuChildren: <Widget>[
+                        MenuItemButton(
+                          onPressed: () => appInfo.removeLane(config, context, lane),
+                          child: EzIcon(config, Icons.delete),
+                        ),
+                        MenuItemButton(
+                          onPressed: () => appInfo.dupeLane(config, lane),
+                          child: EzIcon(config, Icons.copy),
                         ),
                       ],
+                      child: EzIcon(config, Icons.build),
                     ),
-                    menuChildren: <Widget>[
-                      // Delete/Dupe
-                      SubmenuButton(
-                        menuChildren: <Widget>[
-                          MenuItemButton(
-                            onPressed: () => appInfo.removeLane(config, context, lane),
-                            child: EzIcon(config, Icons.delete),
-                          ),
-                          MenuItemButton(
-                            onPressed: () => appInfo.dupeLane(config, lane),
-                            child: EzIcon(config, Icons.copy),
-                          ),
-                        ],
-                        child: EzIcon(config, Icons.build),
-                      ),
 
-                      // Add
-                      MenuItemButton(
-                        onPressed: () => addModal(config, appInfo, lane),
-                        child: EzIcon(config, Icons.add),
-                      ),
+                    // Add
+                    MenuItemButton(
+                      onPressed: () => addModal(config, appInfo, lane, hAlign, vAlign),
+                      child: EzIcon(config, Icons.add),
+                    ),
 
-                      // Edit
-                      MenuItemButton(
-                        onPressed: () async {
-                          final ListAlignment hBack = hAlign(config);
-                          final ListAlignment vBack = vAlign(config);
-                          ListAlignment hA = hAlign(config);
-                          ListAlignment vA = vAlign(config);
-                          const double sizeMod = 0.333;
+                    // Edit
+                    MenuItemButton(
+                      onPressed: () async {
+                        final ListAlignment hDef = horizontalAlign(config);
+                        final ListAlignment vDef = verticalAlign(config);
+                        ListAlignment hA = hAlign;
+                        ListAlignment vA = vAlign;
+                        const double sizeMod = 0.333;
 
-                          int pos = lane;
+                        int pos = lane;
 
-                          await ezModal(
-                            config,
-                            context: context,
-                            builder: (_) {
-                              List<Widget> buildNodes() {
-                                final List<Widget> nodes = <Widget>[];
+                        await ezModal(
+                          config,
+                          context: context,
+                          builder: (_) {
+                            List<Widget> buildNodes() {
+                              final List<Widget> nodes = <Widget>[];
 
-                                for (int i = 0; i < numLanes; i++) {
-                                  nodes.addAll(<Widget>[
-                                    Container(
-                                      constraints: BoxConstraints.tightFor(
-                                        height: appIconSize(config),
-                                        width: appIconSize(config),
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: i == pos
-                                            ? config.colors.primary
-                                            : config.colors.surface,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          i.toString(),
-                                          textAlign: TextAlign.center,
-                                          style: config.labelStyle?.copyWith(
-                                            color: i == pos
-                                                ? config.colors.onPrimary
-                                                : config.colors.onSurface,
-                                          ),
+                              for (int i = 0; i < numLanes; i++) {
+                                nodes.addAll(<Widget>[
+                                  Container(
+                                    constraints: BoxConstraints.tightFor(
+                                      height: appIconSize(config),
+                                      width: appIconSize(config),
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: i == pos
+                                          ? config.colors.secondary
+                                          : i == lane // this order is important
+                                              ? config.colors.tertiary
+                                              : config.colors.surface,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        i.toString(),
+                                        textAlign: TextAlign.center,
+                                        style: config.labelStyle?.copyWith(
+                                          color: i == pos
+                                              ? config.colors.onSecondary
+                                              : i == lane
+                                                  ? config.colors.onTertiary
+                                                  : config.colors.onSurface,
                                         ),
                                       ),
                                     ),
-                                    EzSpacer(config.padding, vertical: false),
-                                  ]);
-                                }
-                                nodes.removeLast();
-
-                                return nodes;
+                                  ),
+                                  EzSpacer(config.padding, vertical: false),
+                                ]);
                               }
+                              nodes.removeLast();
 
-                              return StatefulBuilder(
-                                builder: (BuildContext mCon, StateSetter setModal) => ezModalScroll(
-                                  config,
-                                  children: <Widget>[
-                                    // Move TODO: account for end align
+                              return nodes;
+                            }
+
+                            return StatefulBuilder(
+                              builder: (BuildContext mCon, StateSetter setModal) => ezModalScroll(
+                                config,
+                                children: <Widget>[
+                                  // Move
+                                  Text(
+                                    'Move',
+                                    textAlign: TextAlign.center,
+                                    style: config.labelStyle,
+                                  ),
+                                  config.margin,
+                                  EzRow(
+                                    config,
+                                    reverseHands: false,
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      if (numLanes > 1)
+                                        Padding(
+                                          padding: EdgeInsets.only(right: config.padding),
+                                          child: EzIconButton(
+                                            config,
+                                            enabled: pos > 0,
+                                            icon: const Icon(Icons.keyboard_arrow_left),
+                                            onPressed: () => setModal(() => pos -= 1),
+                                          ),
+                                        ),
+                                      EzScrollView(
+                                        config,
+                                        startCentered: true,
+                                        scrollDirection: Axis.horizontal,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: (hA == ListAlignment.end) // TODO: ltr check?
+                                            ? buildNodes().reversed.toList()
+                                            : buildNodes(),
+                                      ),
+                                      if (numLanes > 1)
+                                        Padding(
+                                          padding: EdgeInsets.only(left: config.padding),
+                                          child: EzIconButton(
+                                            config,
+                                            enabled: pos < (numLanes - 1),
+                                            icon: const Icon(Icons.keyboard_arrow_right),
+                                            onPressed: () => setModal(() => pos += 1),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+
+                                  // Divider
+                                  EzTitledDivider(
                                     Text(
-                                      'Move',
+                                      'Align',
                                       textAlign: TextAlign.center,
                                       style: config.labelStyle,
                                     ),
-                                    config.margin,
-                                    EzRow(
-                                      config,
-                                      reverseHands: false,
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        if (numLanes > 1)
-                                          Padding(
-                                            padding: EdgeInsets.only(right: config.padding),
-                                            child: EzIconButton(
-                                              config,
-                                              enabled: pos > 0,
-                                              icon: const Icon(Icons.keyboard_arrow_left),
-                                              onPressed: () => setModal(() => pos -= 1),
-                                            ),
-                                          ),
-                                        EzScrollView(
-                                          config,
-                                          startCentered: true,
-                                          scrollDirection: Axis.horizontal,
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: buildNodes(),
-                                        ),
-                                        if (numLanes > 1)
-                                          Padding(
-                                            padding: EdgeInsets.only(left: config.padding),
-                                            child: EzIconButton(
-                                              config,
-                                              enabled: pos < (numLanes - 1),
-                                              icon: const Icon(Icons.keyboard_arrow_right),
-                                              onPressed: () => setModal(() => pos += 1),
-                                            ),
-                                          ),
-                                      ],
-                                    ),
+                                    height: config.spacing * 3,
+                                    margin: config.marginVal,
+                                  ),
 
-                                    // Divider
-                                    EzTitledDivider(
-                                      Text(
-                                        'Align',
-                                        textAlign: TextAlign.center,
-                                        style: config.labelStyle,
+                                  // Align
+                                  Container(
+                                    color: config.colors.onSurface,
+                                    height: heightOf(context) * sizeMod,
+                                    width: widthOf(context) * sizeMod,
+                                    child: Stack(children: <Widget>[
+                                      // Background
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: config.colors.surface,
+                                          image: (config.backgroundImagePath == noImageValue)
+                                              ? null
+                                              : config.backgroundImage,
+                                        ),
+                                        margin: EdgeInsets.all(config.marginVal * sizeMod),
                                       ),
-                                      height: config.spacing * 3,
-                                      margin: config.marginVal,
-                                    ),
 
-                                    // Align
-                                    Container(
-                                      color: config.colors.onSurface,
-                                      height: heightOf(context) * sizeMod,
-                                      width: widthOf(context) * sizeMod,
-                                      child: Stack(children: <Widget>[
-                                        // Background
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            color: config.colors.surface,
-                                            image: (config.backgroundImagePath == noImageValue)
-                                                ? null
-                                                : config.backgroundImage,
+                                      // Aligned circular icon (curr)
+                                      Align(
+                                        alignment: LAConfig.merge(h: hA, v: vA),
+                                        child: Container(
+                                          constraints: BoxConstraints.tightFor(
+                                            height: appIconSize(config),
+                                            width: appIconSize(config),
                                           ),
-                                          margin: EdgeInsets.all(config.marginVal * sizeMod),
-                                        ),
-
-                                        // Aligned circular icon (curr)
-                                        Align(
-                                          alignment: LAConfig.merge(h: hA, v: vA),
-                                          child: Container(
-                                            constraints: BoxConstraints.tightFor(
-                                              height: appIconSize(config),
-                                              width: appIconSize(config),
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: config.colors.secondary,
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: Center(
-                                              child: Text(
-                                                pos.toString(),
-                                                textAlign: TextAlign.center,
-                                                style: config.labelStyle?.copyWith(
-                                                  color: config.colors.onSecondary,
-                                                ),
+                                          decoration: BoxDecoration(
+                                            color: config.colors.secondary,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              pos.toString(),
+                                              textAlign: TextAlign.center,
+                                              style: config.labelStyle?.copyWith(
+                                                color: config.colors.onSecondary,
                                               ),
                                             ),
                                           ),
                                         ),
+                                      ),
 
-                                        // Aligned circular icon (default)
-                                        Align(
-                                          alignment: LAConfig.merge(h: hBack, v: vBack),
-                                          child: ClipOval(
-                                            child: Image.asset(
-                                              appIconPath,
-                                              semanticLabel: 'Default list alignment',
-                                              width: appIconSize(config),
-                                              height: appIconSize(config),
-                                              fit: BoxFit.cover,
-                                            ),
+                                      // Aligned circular icon (default)
+                                      Align(
+                                        alignment: LAConfig.merge(h: hDef, v: vDef),
+                                        child: ClipOval(
+                                          child: Image.asset(
+                                            appIconPath,
+                                            semanticLabel: 'Default list alignment',
+                                            width: appIconSize(config),
+                                            height: appIconSize(config),
+                                            fit: BoxFit.cover,
                                           ),
                                         ),
-                                      ]),
-                                    ),
-                                    config.separator,
-
-                                    // Controls
-                                    EzWrap(children: <Widget>[
-                                      // Horizontal
-                                      SegmentedButton<ListAlignment>(
-                                        segments: alignmentSegments,
-                                        selected: <ListAlignment>{hA},
-                                        showSelectedIcon: false,
-                                        onSelectionChanged: (Set<ListAlignment>? choice) {
-                                          if (choice?.first == null) return;
-                                          setModal(() => hA = choice!.first);
-                                        },
-                                      ),
-                                      config.spacer,
-
-                                      // Vertical
-                                      SegmentedButton<ListAlignment>(
-                                        segments: alignmentSegments,
-                                        direction: Axis.vertical,
-                                        selected: <ListAlignment>{vA},
-                                        showSelectedIcon: false,
-                                        onSelectionChanged: (Set<ListAlignment>? choice) {
-                                          if (choice?.first == null) return;
-                                          setModal(() => vA = choice!.first);
-                                        },
                                       ),
                                     ]),
-                                    config.separator,
-                                  ],
-                                ),
-                              );
-                            },
-                          );
+                                  ),
+                                  config.separator,
 
-                          await ezNoTouch(() async => await appInfo.updateLane(
-                                config,
-                                startPos: lane,
-                                currPos: pos,
-                                hA: hA,
-                                vA: vA,
-                              ));
-                        },
-                        child: EzIcon(config, Icons.edit),
-                      ),
-                    ],
-                  ),
-                  onReorderItem: (int oldIndex, int newIndex) async {
-                    if (oldIndex == newIndex) return;
+                                  // Controls
+                                  EzWrap(children: <Widget>[
+                                    // Horizontal
+                                    SegmentedButton<ListAlignment>(
+                                      segments: alignmentSegments,
+                                      selected: <ListAlignment>{hA},
+                                      showSelectedIcon: false,
+                                      onSelectionChanged: (Set<ListAlignment>? choice) {
+                                        if (choice?.first == null) return;
+                                        setModal(() => hA = choice!.first);
+                                      },
+                                    ),
+                                    config.spacer,
 
-                    final Widget element = tiles.removeAt(oldIndex);
-                    tiles.insert(newIndex, element);
+                                    // Vertical
+                                    SegmentedButton<ListAlignment>(
+                                      segments: alignmentSegments,
+                                      direction: Axis.vertical,
+                                      selected: <ListAlignment>{vA},
+                                      showSelectedIcon: false,
+                                      onSelectionChanged: (Set<ListAlignment>? choice) {
+                                        if (choice?.first == null) return;
+                                        setModal(() => vA = choice!.first);
+                                      },
+                                    ),
+                                  ]),
+                                  config.separator,
+                                ],
+                              ),
+                            );
+                          },
+                        );
 
-                    await appInfo.reorderLane(
-                      config,
-                      lane: lane,
-                      oldIndex: oldIndex,
-                      newIndex: newIndex,
-                    );
-
-                    setList(() {});
-                  },
-                  children: tiles,
+                        await ezNoTouch(() async => await appInfo.updateLane(
+                              config,
+                              startPos: lane,
+                              currPos: pos,
+                              hA: hA,
+                              vA: vA,
+                            ));
+                      },
+                      child: EzIcon(config, Icons.edit),
+                    ),
+                  ],
                 ),
-              );
-            })
-          : EzScrollView(
-              config,
-              key: ValueKey<String>('lane-$lane'),
-              mainAxisAlignment: vAlign(config).mainAxis, // TODO: here
-              crossAxisAlignment: hAlign(config).crossAxis, // TODO: here
-              physics: const ClampingScrollPhysics(),
-              children: _buildTiles(config, appInfo, lane),
+                onReorderItem: (int oldIndex, int newIndex) async {
+                  if (oldIndex == newIndex) return;
+
+                  final Widget element = tiles.removeAt(oldIndex);
+                  tiles.insert(newIndex, element);
+
+                  await appInfo.reorderLane(
+                    config,
+                    lane: lane,
+                    oldIndex: oldIndex,
+                    newIndex: newIndex,
+                  );
+
+                  setList(() {});
+                },
+                children: tiles,
+              ),
             );
+          })
+        : EzScrollView(
+            config,
+            key: ValueKey<String>('lane-$lane'),
+            mainAxisAlignment: vAlign.mainAxis,
+            crossAxisAlignment: hAlign.crossAxis,
+            physics: const ClampingScrollPhysics(),
+            children: _buildTiles(config, appInfo, lane, hAlign: hAlign, vAlign: vAlign),
+          );
+  }
 
   Widget buildPage(
     EzCP config,
@@ -490,7 +527,13 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     return lanes;
   }
 
-  Future<void> addModal(EzCP config, AppInfoProvider appInfo, int lane) async {
+  Future<void> addModal(
+    EzCP config,
+    AppInfoProvider appInfo,
+    int lane,
+    ListAlignment hAlign,
+    ListAlignment vAlign,
+  ) async {
     final double screenWidth = widthOf(context);
 
     await ezModal(
@@ -552,7 +595,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                     builder: (BuildContext wmCon, StateSetter setModal) =>
                         ezModalScroll(config, children: <Widget>[
                       // Clock
-                      AddClock(config, appInfo, lane),
+                      AddClock(config, appInfo, lane, hAlign: hAlign, vAlign: vAlign),
                       EzTitledDivider(
                         constraints: BoxConstraints(maxWidth: widthOf(wmCon) / 2),
                         EzDropdownMenu<WidgetSize>(
@@ -729,7 +772,12 @@ With wide tiles disabled, lanes will be sized by the widest item & your spacing 
     );
   }
 
-  Future<void> showPagePos(EzCP config, {required int numLanes, required int lane}) async {
+  Future<void> showPagePos(
+    EzCP config,
+    bool forward, {
+    required int numLanes,
+    required int lane,
+  }) async {
     if (pagePosTimer?.isActive ?? false) _clearPagePos();
 
     final List<Widget> nodes = <Widget>[];
@@ -775,7 +823,7 @@ With wide tiles disabled, lanes will be sized by the widest item & your spacing 
                     child: EzRow(
                       config,
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: nodes,
+                      children: forward ? nodes : nodes.reversed.toList(),
                     ),
                   ),
                 ],
@@ -1045,7 +1093,14 @@ If you want to support Liminal's development, or the development of more Empathe
                   if (page < (numLanes - 1)) {
                     delta = 1;
                     setState(() => page += 1);
-                    showPagePos(config, numLanes: numLanes, lane: page);
+                    showPagePos(
+                      config,
+                      LAConfig.buildLookup(appInfo.homeItem(config, lane: page, index: 0),
+                              Axis.horizontal, config) !=
+                          ListAlignment.end,
+                      numLanes: numLanes,
+                      lane: page,
+                    );
                     return;
                   }
                 } else {
@@ -1053,7 +1108,14 @@ If you want to support Liminal's development, or the development of more Empathe
                   if (page > 0) {
                     delta = -1;
                     setState(() => page -= 1);
-                    showPagePos(config, numLanes: numLanes, lane: page);
+                    showPagePos(
+                      config,
+                      LAConfig.buildLookup(appInfo.homeItem(config, lane: page, index: 0),
+                              Axis.horizontal, config) !=
+                          ListAlignment.end,
+                      numLanes: numLanes,
+                      lane: page,
+                    );
                     return;
                   }
                 }
@@ -1162,8 +1224,9 @@ If you want to support Liminal's development, or the development of more Empathe
                     mainAxisSize: MainAxisSize.max,
                     scrollDirection: Axis.horizontal,
                     physics: const ClampingScrollPhysics(),
-                    mainAxisAlignment: hAlign(config).mainAxis, // TODO: here
-                    crossAxisAlignment: vAlign(config).crossAxis, // TODO: here
+                    mainAxisAlignment: horizontalAlign(config).mainAxis,
+                    // TODO: not here... I think? If so, how does that change things? If not, add it
+                    crossAxisAlignment: verticalAlign(config).crossAxis,
                     children: buildGrid(config, appInfo, numLanes),
                   ),
           ),
@@ -1174,7 +1237,18 @@ If you want to support Liminal's development, or the development of more Empathe
 
                 // Add (iff one lane)
                 if (numLanes == 1) ...<Widget>[
-                  AddFAB(config, () => addModal(config, appInfo, 0)),
+                  AddFAB(
+                    config,
+                    () => addModal(
+                      config,
+                      appInfo,
+                      0,
+                      LAConfig.buildLookup(
+                          appInfo.homeItem(config, lane: 0, index: 0), Axis.horizontal, config),
+                      LAConfig.buildLookup(
+                          appInfo.homeItem(config, lane: 0, index: 0), Axis.vertical, config),
+                    ),
+                  ),
                   config.spacer,
                 ],
 
