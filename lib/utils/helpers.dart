@@ -130,17 +130,20 @@ Widget renderWidget(
   required AppInfoProvider appInfo,
   required int lane,
   required int index,
+  required ListAlignment hAlign,
+  required ListAlignment vAlign,
   required AppState state,
   ValueNotifier<double>? rippleProgress,
 }) =>
     wideTiles(config)
         ? Container(
             width: double.infinity,
-            alignment: LAConfig.merge(h: hAlign(config), v: ListAlignment.center),
+            alignment: LAConfig.merge(h: hAlign, v: ListAlignment.center),
             child: switch (
                 appInfo.homeItem(config, lane: lane, index: index).split(widgetSplit)[0]) {
               esCalendar => CalendarWidget(config, appInfo, lane, index, state, rippleProgress),
-              esClock => ClockWidget(config, appInfo, lane, index, state, rippleProgress),
+              esClock =>
+                ClockWidget(config, appInfo, lane, index, hAlign, vAlign, state, rippleProgress),
               esSearch => SearchWidget(config, appInfo, lane, index, state, rippleProgress),
               esTimer => TimerWidget(config, appInfo, lane, index, state, rippleProgress),
               esToggleMedia =>
@@ -151,7 +154,8 @@ Widget renderWidget(
           )
         : switch (appInfo.homeItem(config, lane: lane, index: index).split(widgetSplit)[0]) {
             esCalendar => CalendarWidget(config, appInfo, lane, index, state, rippleProgress),
-            esClock => ClockWidget(config, appInfo, lane, index, state, rippleProgress),
+            esClock =>
+              ClockWidget(config, appInfo, lane, index, hAlign, vAlign, state, rippleProgress),
             esSearch => SearchWidget(config, appInfo, lane, index, state, rippleProgress),
             esTimer => TimerWidget(config, appInfo, lane, index, state, rippleProgress),
             esToggleMedia => ToggleMediaWidget(config, appInfo, lane, index, state, rippleProgress),
