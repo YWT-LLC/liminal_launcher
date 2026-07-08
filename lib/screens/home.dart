@@ -1006,7 +1006,7 @@ If you want to support Liminal's development, or the development of more Empathe
           builder: (_) => StatefulBuilder(builder: (BuildContext mCon, StateSetter setModal) {
             final Duration readTime = Duration(
                 milliseconds:
-                    ((ezReadingTime(config, <String>[m1, m2, m3].join()).inMilliseconds) / 2)
+                    ((ezReadingTime(config, <String>[m1, m2, m3].join()).inMilliseconds) / 3)
                         .ceil());
 
             Future<void>.delayed(readTime, () {
