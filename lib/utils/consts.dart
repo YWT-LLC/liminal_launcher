@@ -193,11 +193,17 @@ final Map<String, Object> liminalDefault = <String, Object>{
   // ID lists
   darkHomeDataKey: <String>[
     <String>[
+      // Lane config
+      TCC.laneEntry(null, null),
+
+      // Clock
       <String>[
         WidWidGetGet.clock.value,
         TCC.clockEntry(
             null, null, true, TxtStile.headline, null, DateType.compact, TxtStile.label, null),
       ].join(widgetSplit),
+
+      // Search
       <String>[
         WidWidGetGet.search.value,
         TCC.searchEntry(WidgetSize.tile, ecosia, Engine.defaultOrder.map((Engine e) => e.value)),
@@ -209,11 +215,17 @@ final Map<String, Object> liminalDefault = <String, Object>{
 
   lightHomeDataKey: <String>[
     <String>[
+      // Lane config
+      TCC.laneEntry(null, null),
+
+      // Clock
       <String>[
         WidWidGetGet.clock.value,
         TCC.clockEntry(
             null, null, true, TxtStile.headline, null, DateType.compact, TxtStile.label, null),
       ].join(widgetSplit),
+
+      // Search
       <String>[
         WidWidGetGet.search.value,
         TCC.searchEntry(WidgetSize.tile, ecosia, Engine.defaultOrder.map((Engine e) => e.value)),
