@@ -17,6 +17,8 @@ class AppTile extends StatefulWidget {
   final AppInfoProvider appInfo;
   final int? lane;
   final int? index;
+  final ListAlignment hAlign;
+  final ListAlignment vAlign;
   final AppState state;
   final ValueNotifier<double>? rippleProgress;
 
@@ -34,6 +36,8 @@ class AppTile extends StatefulWidget {
     required this.appInfo,
     this.lane,
     this.index,
+    required this.hAlign,
+    required this.vAlign,
     required this.state,
     this.rippleProgress,
     required this.app,
@@ -135,7 +139,7 @@ class _AppTileState extends State<AppTile> {
               url: Uri.parse('https://$base'),
               hint: widget.config.ezL10n.gOpenLink,
               style: widget.config.bodyStyle,
-              textAlign: hAlign(widget.config).textAlign,
+              textAlign: TextAlign.center,
             ),
             rowSpacer(),
           ]
@@ -155,9 +159,7 @@ class _AppTileState extends State<AppTile> {
   @override
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
-
-    final ListAlignment hA = hAlign(widget.config);
-    final AlignmentGeometry subAlign = LAConfig.merge(h: hA, v: ListAlignment.center);
+    final AlignmentGeometry subAlign = LAConfig.merge(h: widget.hAlign, v: ListAlignment.center);
 
     late final EzMenuButton remove =
         removeItem(widget.config, widget.appInfo, lane: widget.lane!, index: widget.index!);
@@ -462,7 +464,7 @@ class _AppTileState extends State<AppTile> {
               widget.config,
               showScrollHint: true,
               thumbVisibility: false,
-              mainAxisAlignment: hA.mainAxis,
+              mainAxisAlignment: widget.hAlign.mainAxis,
               scrollDirection: Axis.horizontal,
               children: <Widget>[
                 // Name && icon
@@ -481,7 +483,7 @@ class _AppTileState extends State<AppTile> {
                 EzText(
                   widget.config,
                   text: widget.app.package,
-                  textAlign: hA.textAlign,
+                  textAlign: TextAlign.center,
                 ),
                 rowSpacer(),
 
@@ -496,7 +498,7 @@ class _AppTileState extends State<AppTile> {
                     DateTime.fromMillisecondsSinceEpoch(widget.app.installDate),
                     DateType.compact,
                   ),
-                  textAlign: hA.textAlign,
+                  textAlign: TextAlign.center,
                 ),
                 rowSpacer(),
 
@@ -504,7 +506,7 @@ class _AppTileState extends State<AppTile> {
                 EzText(
                   widget.config,
                   text: '${(widget.app.packageSize / _toMB).toStringAsFixed(2)} MB',
-                  textAlign: hA.textAlign,
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),

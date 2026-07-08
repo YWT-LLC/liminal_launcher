@@ -17,6 +17,8 @@ class FolderTile extends StatefulWidget {
   final AppInfoProvider appInfo;
   final int lane;
   final int index;
+  final ListAlignment hAlign;
+  final ListAlignment vAlign;
   final AppState state;
   final ValueNotifier<double>? rippleProgress;
 
@@ -31,6 +33,8 @@ class FolderTile extends StatefulWidget {
     required this.appInfo,
     required this.lane,
     required this.index,
+    required this.hAlign,
+    required this.vAlign,
     required this.state,
     this.rippleProgress,
   }) : super(key: ValueKey<String>('$lane-$index-${state.index}')) {
@@ -108,9 +112,11 @@ class _AppFolderState extends State<FolderTile> {
                           child: AppTile(
                             widget.config,
                             appInfo: widget.appInfo,
+                            hAlign: widget.hAlign,
+                            vAlign: widget.vAlign,
+                            state: state,
                             app: widget.appInfo.appMap[id]!,
                             location: AppLocation.folder,
-                            state: state,
                             onSelected: (AppInfo app) async {
                               Navigator.of(mCon).pop();
                               await launchApp(app);
@@ -139,8 +145,7 @@ class _AppFolderState extends State<FolderTile> {
   @override
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
-    final AlignmentGeometry subAlign =
-        LAConfig.merge(h: hAlign(widget.config), v: ListAlignment.center);
+    final AlignmentGeometry subAlign = LAConfig.merge(h: widget.hAlign, v: ListAlignment.center);
 
     late final EzMenuButton remove =
         removeItem(widget.config, widget.appInfo, lane: widget.lane, index: widget.index);
