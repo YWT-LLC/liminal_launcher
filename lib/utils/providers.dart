@@ -3,6 +3,9 @@
  * See LICENSE for distribution and usage details.
  */
 
+// TODO: what do I have to do to account for lane entries?
+// TODO: potnentially just switch a bunch of 0 checks to 1?
+
 import './export.dart';
 import '../widgets/export.dart';
 
@@ -652,7 +655,7 @@ class AppInfoProvider extends ChangeNotifier {
     required ListAlignment hA,
     required ListAlignment vA,
   }) async {
-    final String configEntry = (hA == hAlign(config) && vA == vAlign(config))
+    final String configEntry = (hA == horizontalAlign(config) && vA == verticalAlign(config))
         ? TCC.laneEntry(null, null)
         : TCC.laneEntry(hA, vA);
 
