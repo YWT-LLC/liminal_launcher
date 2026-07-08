@@ -3,7 +3,7 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: this (and maybe other) is lying now because of the new eztextbackground... prolly just use live shape? easiest?
+// TODO: add swiping nav to edit modal
 
 import '../../utils/export.dart';
 import '../export.dart';
@@ -22,7 +22,7 @@ class ClockWidget extends StatefulWidget {
   final AppState state;
   final ValueNotifier<double>? rippleProgress;
 
-  late final EzButtonShape? _shape;
+  late final EzButtonShape _shape;
   late final Color? _background;
   late final bool _showTime;
   late final TxtStile _timeStyle;
@@ -45,7 +45,7 @@ class ClockWidget extends StatefulWidget {
     final List<String> data =
         appInfo.homeItem(config, lane: lane, index: index).split(widgetSplit)[1].split(configSplit);
 
-    _shape = EBSConfig.lookup(data[0]);
+    _shape = EBSConfig.safeLookup(data[0]);
 
     late final int? bCV = int.tryParse(data[1]);
     _background = bCV == null ? null : Color(bCV);
@@ -56,7 +56,7 @@ class ClockWidget extends StatefulWidget {
     late final int? tCV = int.tryParse(data[4]);
     _timeColor = tCV == null ? null : Color(tCV);
 
-    _dateType = DTConfig.lookup(data[5]);
+    _dateType = DTConfig.safeLookup(data[5]);
     _dateStyle = TSConfig.lookup(data[6]) ?? TxtStile.label;
 
     late final int? dCV = int.tryParse(data[7]);
@@ -110,7 +110,7 @@ class _ClockWidgetState extends State<ClockWidget> {
     _Edits curr = _Edits.background;
     int delta = 0;
 
-    EzButtonShape? shape = widget._shape;
+    EzButtonShape shape = widget._shape;
     Color? background = widget._background;
 
     TxtStile timeStyle = widget._timeStyle;
@@ -131,93 +131,43 @@ class _ClockWidgetState extends State<ClockWidget> {
         }
 
         Widget backgroundSettings() => EzScrollView(widget.config, children: <Widget>[
-              EzRichText(
-                widget.config,
-                children: <InlineSpan>[
-                  EzPlainText(
-                    text: 'Long press any button to reset/use default',
-                    style: widget.config.bodyStyle,
-                  ),
-                  EzPlainText(
-                    text: '\n\n',
-                    style: widget.config.labelStyle,
-                  ),
-                  WidgetSpan(
-                    child: Container(
-                      height: widget.config.iconSize,
-                      width: widget.config.iconSize,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: widget.config.colors.secondary,
-                        border: BoxBorder.all(
-                          color: widget.config.colors.onSecondary,
-                          width: widget.config.borderWidth,
-                        ),
-                      ),
-                    ),
-                    alignment: PlaceholderAlignment.middle,
-                  ),
-                  EzPlainText(
-                    text: ' == current choice\n',
-                    style: widget.config.labelStyle,
-                  ),
-                  WidgetSpan(
-                    child: Container(
-                      height: widget.config.iconSize,
-                      width: widget.config.iconSize,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: widget.config.colors.tertiary,
-                        border: BoxBorder.all(
-                          color: widget.config.colors.onTertiary,
-                          width: widget.config.borderWidth,
-                        ),
-                      ),
-                    ),
-                    alignment: PlaceholderAlignment.middle,
-                  ),
-                  EzPlainText(
-                    text: ' == using default',
-                    style: widget.config.labelStyle,
-                  ),
-                ],
+              // Shape
+              Text(
+                'Background shape',
                 textAlign: TextAlign.center,
                 style: widget.config.labelStyle,
               ),
-              widget.config.spacer,
-
-              // Shape
               EzWrap(
-                children: EzButtonShape.values
+                children: <EzButtonShape>[
+                  EzButtonShape.pill,
+                  EzButtonShape.rect,
+                  EzButtonShape.roundRect,
+                  EzButtonShape.jewel,
+                ]
                     .map((EzButtonShape bs) => Padding(
                           padding: EzInsets.wrap(widget.config.spacing),
                           child: EzCol(children: <Widget>[
                             EzElevatedButton(
                               widget.config,
                               text: bs.name(widget.config.ezL10n),
-                              style: shape == null
-                                  ? (bs == widget.config.buttonShape
-                                      ? ElevatedButton.styleFrom(
-                                          shape: bs.shape,
-                                          foregroundColor: widget.config.colors.onTertiary,
-                                          backgroundColor: widget.config.colors.tertiary,
-                                        )
-                                      : ElevatedButton.styleFrom(shape: bs.shape))
-                                  : (bs == shape
-                                      ? ElevatedButton.styleFrom(
-                                          shape: bs.shape,
-                                          foregroundColor: widget.config.colors.onSecondary,
-                                          backgroundColor: widget.config.colors.secondary,
-                                        )
-                                      : ElevatedButton.styleFrom(shape: bs.shape)),
+                              textStyle: bs == shape
+                                  ? widget.config.bodyStyle
+                                      ?.copyWith(color: widget.config.colors.onPrimary)
+                                  : widget.config.bodyStyle,
+                              style: bs == shape
+                                  ? ElevatedButton.styleFrom(
+                                      shape: bs.shape,
+                                      foregroundColor: widget.config.colors.onPrimary,
+                                      backgroundColor: widget.config.colors.primary,
+                                    )
+                                  : ElevatedButton.styleFrom(shape: bs.shape),
                               onPressed: () => setModal(() => shape = bs),
-                              onLongPress: () => setModal(() => shape = null),
                             ),
                           ]),
                         ))
                     .toList(),
               ),
-              widget.config.spacer,
+              widget.config.separator,
 
               // Background color
               EzElevatedIconButton(
@@ -263,12 +213,9 @@ class _ClockWidgetState extends State<ClockWidget> {
                 label: 'Background\ncolor',
                 textAlign: TextAlign.center,
               ),
-              widget.config.separator,
             ]);
 
         Widget timeSettings() => EzScrollView(widget.config, children: <Widget>[
-              widget.config.spacer,
-
               // Time style
               EzRow(widget.config, children: <Widget>[
                 Flexible(
@@ -356,12 +303,9 @@ class _ClockWidgetState extends State<ClockWidget> {
                   setModal(() => showTime = choice);
                 },
               ),
-              widget.config.separator,
             ]);
 
         Widget dateSettings() => EzScrollView(widget.config, children: <Widget>[
-              widget.config.spacer,
-
               // Date type
               EzRow(widget.config, children: <Widget>[
                 Flexible(
@@ -465,12 +409,9 @@ class _ClockWidgetState extends State<ClockWidget> {
                 label: 'Date color',
                 textAlign: TextAlign.center,
               ),
-              widget.config.separator,
             ]);
 
         return EzCol(mainAxisSize: MainAxisSize.max, children: <Widget>[
-          EzHeader(widget.config),
-
           // Switcher
           SegmentedButton<_Edits>(
             segments: _Edits.values
@@ -483,6 +424,7 @@ class _ClockWidgetState extends State<ClockWidget> {
             showSelectedIcon: false,
             onSelectionChanged: (Set<_Edits> selected) => nav(selected.first),
           ),
+          widget.config.spacer,
 
           // Settings
           Expanded(
@@ -497,13 +439,13 @@ class _ClockWidgetState extends State<ClockWidget> {
               },
             ),
           ),
-          EzDivider(widget.config.spacing * 2),
+          widget.config.divider,
 
           // Preview
           EzTextBackground(
             widget.config,
             padding: EdgeInsets.all(widget.config.padding),
-            shape: shape ?? EzButtonShape.roundRect,
+            shape: shape,
             backgroundColor: background,
             text: EzCol(
               mainAxisAlignment: widget.vAlign.mainAxis,
@@ -524,7 +466,7 @@ class _ClockWidgetState extends State<ClockWidget> {
               ],
             ),
           ),
-          widget.config.spacer,
+          widget.config.separator,
         ]);
       }),
     );
@@ -583,7 +525,7 @@ class _ClockWidgetState extends State<ClockWidget> {
               child: EzTextBackground(
                 widget.config,
                 padding: EdgeInsets.all(widget.config.padding),
-                shape: widget._shape ?? EzButtonShape.roundRect,
+                shape: widget._shape,
                 backgroundColor: widget._background,
                 text: EzCol(
                   mainAxisAlignment: widget.vAlign.mainAxis,
