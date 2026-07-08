@@ -199,8 +199,8 @@ final Map<String, Object> liminalDefault = <String, Object>{
       // Clock
       <String>[
         WidWidGetGet.clock.value,
-        TCC.clockEntry(
-            null, null, true, TxtStile.headline, null, DateType.compact, TxtStile.label, null),
+        TCC.clockEntry(EzButtonShape.roundRect, null, true, TxtStile.headline, null,
+            DateType.compact, TxtStile.label, null),
       ].join(widgetSplit),
 
       // Search
@@ -221,8 +221,8 @@ final Map<String, Object> liminalDefault = <String, Object>{
       // Clock
       <String>[
         WidWidGetGet.clock.value,
-        TCC.clockEntry(
-            null, null, true, TxtStile.headline, null, DateType.compact, TxtStile.label, null),
+        TCC.clockEntry(EzButtonShape.roundRect, null, true, TxtStile.headline, null,
+            DateType.compact, TxtStile.label, null),
       ].join(widgetSplit),
 
       // Search
