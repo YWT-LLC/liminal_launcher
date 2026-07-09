@@ -206,6 +206,10 @@ class _SearchWidgetState extends State<SearchWidget> {
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
+    final double fieldHeight = appIconSize(widget.config);
+    final double textWidth =
+        ezTextSize('Search bar', context: context, style: widget.config.bodyStyle).width;
+
     late final EzMenuButton remove =
         removeItem(widget.config, widget.appInfo, lane: widget.lane, index: widget.index);
 
@@ -295,6 +299,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                       final TextEditingController baseCon = TextEditingController();
                       final TextEditingController pathCon = TextEditingController();
                       final TextEditingController queryCon = TextEditingController();
+                      final double fieldWidth = widthOf(mCon) / 2;
 
                       double bottomSpace = widget.config.spacing * 2;
 
@@ -317,18 +322,14 @@ class _SearchWidgetState extends State<SearchWidget> {
                             return ezModalScroll(widget.config, children: <Widget>[
                               // Name && icon
                               EzRow(widget.config, children: <Widget>[
-                                ConstrainedBox(
+                                EzTextField(
+                                  controller: nameCon,
                                   constraints: BoxConstraints.tightFor(
-                                    height: appIconSize(widget.config),
-                                    width: widthOf(mCon) / 2,
-                                  ),
-                                  child: LimField(
-                                    controller: nameCon,
-                                    hintText: 'Name (Ecosia)',
-                                    onTap: grow,
-                                    onFieldSubmitted: shrink,
-                                    validator: validateName,
-                                  ),
+                                      height: fieldHeight, width: fieldWidth),
+                                  hintText: 'Name (Ecosia)',
+                                  onFieldSubmitted: shrink,
+                                  onTap: grow,
+                                  validator: validateName,
                                 ),
                                 widget.config.rowMargin,
                                 EzIconButton(
@@ -344,50 +345,38 @@ class _SearchWidgetState extends State<SearchWidget> {
                               widget.config.spacer,
 
                               // Base site
-                              ConstrainedBox(
-                                constraints: BoxConstraints.tightFor(
-                                  height: appIconSize(widget.config),
-                                  width: widthOf(mCon) / 2,
-                                ),
-                                child: LimField(
-                                  controller: baseCon,
-                                  hintText: 'Base site (ecosia.org)',
-                                  onTap: grow,
-                                  onFieldSubmitted: shrink,
-                                  validator: validateName,
-                                ),
+                              EzTextField(
+                                controller: baseCon,
+                                constraints:
+                                    BoxConstraints.tightFor(height: fieldHeight, width: fieldWidth),
+                                hintText: 'Base site (ecosia.org)',
+                                onFieldSubmitted: shrink,
+                                onTap: grow,
+                                validator: validateName,
                               ),
                               widget.config.spacer,
 
                               // Path
-                              ConstrainedBox(
-                                constraints: BoxConstraints.tightFor(
-                                  height: appIconSize(widget.config),
-                                  width: widthOf(mCon) / 2,
-                                ),
-                                child: LimField(
-                                  controller: pathCon,
-                                  hintText: 'Path (/search)',
-                                  onTap: grow,
-                                  onFieldSubmitted: shrink,
-                                  validator: validateName,
-                                ),
+                              EzTextField(
+                                controller: pathCon,
+                                constraints:
+                                    BoxConstraints.tightFor(height: fieldHeight, width: fieldWidth),
+                                hintText: 'Path (/search)',
+                                onFieldSubmitted: shrink,
+                                onTap: grow,
+                                validator: validateName,
                               ),
                               widget.config.spacer,
 
                               // Parameter
-                              ConstrainedBox(
-                                constraints: BoxConstraints.tightFor(
-                                  height: appIconSize(widget.config),
-                                  width: widthOf(mCon) / 2,
-                                ),
-                                child: LimField(
-                                  controller: queryCon,
-                                  hintText: 'Parameter (q)',
-                                  onTap: grow,
-                                  onFieldSubmitted: shrink,
-                                  validator: validateName,
-                                ),
+                              EzTextField(
+                                controller: queryCon,
+                                constraints:
+                                    BoxConstraints.tightFor(height: fieldHeight, width: fieldWidth),
+                                hintText: 'Parameter (q)',
+                                onFieldSubmitted: shrink,
+                                onTap: grow,
+                                validator: validateName,
                               ),
                               widget.config.separator,
 
@@ -521,25 +510,22 @@ class _SearchWidgetState extends State<SearchWidget> {
                     onLongPress: () => canToggleMenu(widget.config, controller),
                   )
                 : EzRow(widget.config, children: <Widget>[
-                    ConstrainedBox(
+                    EzScrollBlocker(EzTextField(
+                      controller: queryCon,
                       constraints: BoxConstraints(
-                        maxWidth: ezTextSize(
-                              'Search bar',
-                              context: context,
-                              style: widget.config.bodyStyle,
-                            ).width +
-                            widget.config.padding,
-                        maxHeight: appIconSize(widget.config),
+                        maxHeight: fieldHeight,
+                        maxWidth: textWidth + widget.config.padding,
                       ),
-                      child: EzScrollBlocker(LimField(
-                        controller: queryCon,
-                        hintText: widget._engine.name,
-                        keyboardType: TextInputType.webSearch,
-                        onChanged: onChanged,
-                        onFieldSubmitted: search,
-                        validator: null,
-                      )),
-                    ),
+                      errorConstraints: BoxConstraints(
+                        maxHeight: fieldHeight,
+                        maxWidth: (textWidth * 2) + widget.config.padding,
+                      ),
+                      hintText: widget._engine.name,
+                      keyboardType: TextInputType.webSearch,
+                      onChanged: onChanged,
+                      onFieldSubmitted: search,
+                      validator: null,
+                    )),
                     widget.config.rowMargin,
                     EzIconButton(
                       widget.config,
@@ -605,19 +591,17 @@ class AddSearch extends StatelessWidget {
       : GestureDetector(
           onTap: onTap,
           child: EzRow(config, children: <Widget>[
-            ConstrainedBox(
+            EzTextField(
               constraints: BoxConstraints(
                 maxWidth:
                     ezTextSize('Search bar', context: context, style: config.bodyStyle).width +
                         config.padding,
                 maxHeight: appIconSize(config),
               ),
-              child: LimField(
-                onTap: onTap,
-                readOnly: true,
-                hintText: 'Search',
-                validator: null,
-              ),
+              hintText: 'Search',
+              onTap: onTap,
+              readOnly: true,
+              validator: null,
             ),
             config.rowMargin,
             EzIconButton(
