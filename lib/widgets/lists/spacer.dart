@@ -3,6 +3,12 @@
  * See LICENSE for distribution and usage details.
  */
 
+// TODO: all menus...
+// 0. MenuButtons w/ only icons!
+// 1/4. if laneS, then both move buttons! use enabled to grey when n/a
+// 2. edit icon, edits. prolly already always a modal at this point.
+// 3. build icon, remove && dupe. make this a shared func or something.
+
 import '../../utils/export.dart';
 import '../export.dart';
 
@@ -104,11 +110,12 @@ class _LimSpacerState extends State<LimSpacer> {
         await editSpacer(
           widget.config,
           appInfo: widget.appInfo,
+          context: context,
           lane: widget.lane,
           index: widget.index,
         );
       },
-      label: 'Resize',
+      label: 'Edit',
       icon: EzIcon(widget.config, Icons.edit),
     );
 
@@ -182,6 +189,7 @@ class _LimSpacerState extends State<LimSpacer> {
 Future<void> editSpacer(
   EzCP config, {
   required AppInfoProvider appInfo,
+  required BuildContext context,
   required int lane,
   required int index,
 }) async {
@@ -192,16 +200,17 @@ Future<void> editSpacer(
   int currIndex = index;
 
   final List<String> data = appInfo.homeItem(config, lane: lane, index: index).split(spacerSplit);
+
   final double hBack = double.tryParse(data[0]) ?? config.spacing;
-  final double wBack = double.tryParse(data[1]) ?? appIconSize(config);
-  double height = hBack;
-  double width = wBack;
-
   final double maxHeight = heightOf(ezRootNav.currentContext!) * 0.75;
-  final double maxWidth = widthOf(ezRootNav.currentContext!) * 0.75;
-
+  double height = hBack;
   editSpacerHeight.value = height;
+
+  final double wBack = double.tryParse(data[1]) ?? appIconSize(config);
+  final double maxWidth = widthOf(ezRootNav.currentContext!) * 0.75;
+  double width = wBack;
   editSpacerWidth.value = width;
+
   marked.value = (lane, index);
 
   Axis axis = Axis.vertical;
@@ -597,6 +606,7 @@ Future<void> editSpacer(
                 Expanded(
                   child: EzTextBackground(
                     config,
+                    shape: config.buttonShape,
                     text: (axis == Axis.vertical)
                         ? Slider(
                             value: height,
@@ -652,7 +662,7 @@ Future<void> editSpacer(
     }),
   );
 
-  Overlay.of(ezRootNav.currentContext!).insert(overlayEntry);
+  Overlay.of(context).insert(overlayEntry);
   final bool? keep = await completer.future;
 
   await ezNoTouch(() async {
