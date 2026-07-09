@@ -334,9 +334,9 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                                         startCentered: true,
                                         scrollDirection: Axis.horizontal,
                                         mainAxisAlignment: MainAxisAlignment.center,
-                                        children: (hA == ListAlignment.end) // TODO: ltr check?
-                                            ? buildNodes().reversed.toList()
-                                            : buildNodes(),
+                                        children: (config.isLTR && hA != ListAlignment.end)
+                                            ? buildNodes()
+                                            : buildNodes().reversed.toList(),
                                       ),
                                       if (numLanes > 1)
                                         Padding(
