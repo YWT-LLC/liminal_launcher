@@ -191,6 +191,9 @@ class _CalendarWidgetState extends State<CalendarWidget> {
       },
     );
 
+    final double textWidth =
+        ezTextSize('Create event', context: context, style: widget.config.bodyStyle).width;
+
     return EzAnimSwitch(
       widget.config,
       mod: 0.667,
@@ -209,29 +212,26 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                     onLongPress: () => canToggleMenu(widget.config, controller),
                   )
                 : EzRow(widget.config, children: <Widget>[
-                    ConstrainedBox(
+                    EzScrollBlocker(EzTextField(
+                      controller: eventCon,
                       constraints: BoxConstraints(
-                        maxWidth: ezTextSize(
-                              'Create event',
-                              context: context,
-                              style: widget.config.bodyStyle,
-                            ).width +
-                            widget.config.padding,
+                        maxWidth: textWidth + widget.config.padding,
                         maxHeight: appIconSize(widget.config),
                       ),
-                      child: EzScrollBlocker(LimField(
-                        controller: eventCon,
-                        hintText: 'New event',
-                        onChanged: onChanged,
-                        onFieldSubmitted: (String entry) async {
-                          final bool success = await createCalendarEvent(entry.trim());
-                          eventCon.clear();
-                          removeOverlay();
-                          if (!success && context.mounted) await selfDestruct();
-                        },
-                        validator: null,
-                      )),
-                    ),
+                      errorConstraints: BoxConstraints(
+                        maxWidth: (textWidth * 2) + widget.config.padding,
+                        maxHeight: appIconSize(widget.config),
+                      ),
+                      hintText: 'New event',
+                      onChanged: onChanged,
+                      onFieldSubmitted: (String entry) async {
+                        final bool success = await createCalendarEvent(entry.trim());
+                        eventCon.clear();
+                        removeOverlay();
+                        if (!success && context.mounted) await selfDestruct();
+                      },
+                      validator: null,
+                    )),
                     widget.config.rowMargin,
                     EzIconButton(
                       widget.config,
@@ -306,19 +306,17 @@ class AddCalendar extends StatelessWidget {
       : GestureDetector(
           onTap: onTap,
           child: EzRow(config, children: <Widget>[
-            ConstrainedBox(
+            EzTextField(
               constraints: BoxConstraints(
                 maxWidth:
                     ezTextSize('Create event', context: context, style: config.bodyStyle).width +
                         config.padding,
                 maxHeight: appIconSize(config),
               ),
-              child: LimField(
-                onTap: onTap,
-                readOnly: true,
-                validator: null,
-                hintText: 'New event',
-              ),
+              hintText: 'New event',
+              onTap: onTap,
+              readOnly: true,
+              validator: null,
             ),
             config.rowMargin,
             EzIconButton(
