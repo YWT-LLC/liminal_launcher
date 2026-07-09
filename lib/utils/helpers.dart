@@ -115,7 +115,7 @@ Future<bool> liminalAuth(EzCP config, String reason) async {
   final String lastAuth = await EzCM.secGet(lastAuthKey);
 
   // Check quick exit(s)
-  if (lastAuth.isEmpty || authTimeout(config) <= Duration.zero) return _externalAuth(reason);
+  if (lastAuth.isEmpty || authTimeout(config) <= oneMS) return _externalAuth(reason);
 
   // Do the math
   final DateTime? saved = DateTime.tryParse(lastAuth);
