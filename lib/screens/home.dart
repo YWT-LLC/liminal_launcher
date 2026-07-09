@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     if (!context.mounted) return;
 
     final Duration animDur =
-        homeRipple(config) ? ezDuration(config.animDur, mod: rippleMod) : Duration.zero;
+        homeRipple ? ezDuration(config.animDur, mod: rippleMod) : Duration.zero;
     if (animDur <= oneMS) {
       setState(() => editing = !editing);
       return;

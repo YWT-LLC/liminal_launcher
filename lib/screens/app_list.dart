@@ -44,7 +44,7 @@ class _AppListScreenState extends State<AppListScreen> {
     if (!context.mounted) return;
 
     final Duration animDur =
-        listRipple(config) ? ezDuration(config.animDur, mod: rippleMod) : Duration.zero;
+        listRipple ? ezDuration(config.animDur, mod: rippleMod) : Duration.zero;
     if (animDur <= oneMS) {
       setState(() => verbose = !verbose);
       return;
