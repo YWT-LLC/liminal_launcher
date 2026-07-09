@@ -8,8 +8,6 @@ import '../../utils/export.dart';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-// TODO: why so inconsistent?
-
 class EditContainer extends StatefulWidget {
   final EzCP config;
   final Widget child;
@@ -58,12 +56,11 @@ class _EditContainerState extends State<EditContainer> with SingleTickerProvider
             animation: _animation,
             builder: (_, __) => Container(
               decoration: BoxDecoration(
-                borderRadius: widget.config.buttonShape.radius,
                 border: Border.all(
-                  color:
-                      widget.config.colors.secondaryContainer.withValues(alpha: _animation.value),
+                  color: widget.config.colors.secondary.withValues(alpha: _animation.value),
                   width: widget.config.borderWidth,
                 ),
+                borderRadius: widget.config.buttonShape.radius,
               ),
               child: widget.child,
             ),
