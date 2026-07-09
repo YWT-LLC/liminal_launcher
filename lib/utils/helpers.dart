@@ -190,3 +190,13 @@ Future<String?> resizeWidgetDialog(EzCP config, BuildContext context, WidgetSize
         ],
       ),
     );
+
+const String _pattern = r'^(?!.*:[01]{8}:)[^/\\\x00]{1,100}$';
+String? validateName(String? name) {
+  if (name == null || name.trim().isEmpty) return 'Cannot be empty';
+
+  final RegExp regex = RegExp(_pattern);
+  if (regex.hasMatch(name)) return 'Invalid. Regex pattern: $_pattern';
+
+  return null;
+}
