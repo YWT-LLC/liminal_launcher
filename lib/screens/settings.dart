@@ -45,7 +45,7 @@ class SettingsScreen extends StatelessWidget {
                 config,
                 resetTitle: () => config.ezL10n.ssResetAppearance,
                 additionalSettings: <Widget>[
-                  config.spacer,
+                  config.separator,
                   AppListSettings(config),
                   config.spacer,
                   AppSecSettings(config),
