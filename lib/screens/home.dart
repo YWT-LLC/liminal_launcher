@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     if (!context.mounted) return;
 
     final Duration animDur = ezDuration(config.animDur, mod: rippleMod);
-    if (animDur <= Duration.zero) {
+    if (animDur <= oneMS) {
       setState(() => editing = !editing);
       return;
     }
@@ -210,14 +210,18 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
               key: ValueKey<String>('lane-$lane'),
               builder: (_, StateSetter setList) => ReorderableListView(
                 shrinkWrap: true,
-                header: LaneHeader(
+                header: EzAnimVis(
                   config,
-                  appInfo: appInfo,
-                  lane: lane,
-                  numLanes: numLanes,
-                  hAlign: hAlign,
-                  vAlign: vAlign,
-                  addModal: addModal,
+                  visible: editing,
+                  kid: LaneHeader(
+                    config,
+                    appInfo: appInfo,
+                    lane: lane,
+                    numLanes: numLanes,
+                    hAlign: hAlign,
+                    vAlign: vAlign,
+                    addModal: addModal,
+                  ),
                 ),
                 onReorderItem: (int oldIndex, int newIndex) async {
                   if (oldIndex == newIndex) return;
@@ -269,10 +273,10 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           constraints: BoxConstraints(
             minHeight: double.infinity,
             minWidth: appIconSize(config) + config.spacing,
-            maxWidth: (editing && (ripple == 0.0 || ripple == 1.0))
+            maxWidth: (editing && (ripple % 1.0 == 0))
                 ? appIconSize(config) * 3 + config.spargin
                 : widthOf(context),
-          ),
+          ), // TODO: "animate" this with the value?
           child: _buildLane(config, appInfo, numLanes: numLanes, lane: lane),
         ),
       ));
@@ -816,22 +820,30 @@ With wide tiles disabled, lanes will be sized by the widest item & your spacing 
               }
               return false;
             },
-            child: pages(config)
-                ? EzFauxCarousel(
-                    config,
-                    position: page,
-                    delta: delta,
-                    child: buildPage(config, appInfo, numLanes: numLanes, lane: page),
-                  )
-                : EzScrollView(
-                    config,
-                    mainAxisSize: MainAxisSize.max,
-                    scrollDirection: Axis.horizontal,
-                    physics: const ClampingScrollPhysics(),
-                    mainAxisAlignment: horizontalAlign(config).mainAxis,
-                    crossAxisAlignment: verticalAlign(config).crossAxis,
-                    children: buildGrid(config, appInfo, numLanes),
-                  ),
+            child: ValueListenableBuilder<double>(
+              valueListenable: rippleProgress,
+              builder: (_, double ripple, __) => Padding(
+                padding: editing
+                    ? EdgeInsets.zero
+                    : EdgeInsets.only(top: config.spargin * (ripple % 1.0)),
+                child: pages(config)
+                    ? EzFauxCarousel(
+                        config,
+                        position: page,
+                        delta: delta,
+                        child: buildPage(config, appInfo, numLanes: numLanes, lane: page),
+                      )
+                    : EzScrollView(
+                        config,
+                        mainAxisSize: MainAxisSize.max,
+                        scrollDirection: Axis.horizontal,
+                        physics: const ClampingScrollPhysics(),
+                        mainAxisAlignment: horizontalAlign(config).mainAxis,
+                        crossAxisAlignment: verticalAlign(config).crossAxis,
+                        children: buildGrid(config, appInfo, numLanes),
+                      ),
+              ),
+            ),
           ),
         ),
         fabs: editing
