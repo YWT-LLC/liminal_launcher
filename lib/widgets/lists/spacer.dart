@@ -196,9 +196,12 @@ Future<void> editSpacer(
   // Define build data //
 
   final int numLanes = appInfo.numLanes(config);
+
+  final double appIS = appIconSize(config);
+  final Widget rowSpacer = EzSpacer(appIS, vertical: false);
+
   int currLane = lane;
   int currIndex = index;
-
   final List<String> data = appInfo.homeItem(config, lane: lane, index: index).split(spacerSplit);
 
   final double hBack = double.tryParse(data[0]) ?? config.spacing;
@@ -206,7 +209,7 @@ Future<void> editSpacer(
   double height = hBack;
   editSpacerHeight.value = height;
 
-  final double wBack = double.tryParse(data[1]) ?? appIconSize(config);
+  final double wBack = double.tryParse(data[1]) ?? appIS;
   final double maxWidth = widthOf(context) * 0.75;
   double width = wBack;
   editSpacerWidth.value = width;
@@ -285,11 +288,11 @@ Future<void> editSpacer(
         ),
         MenuItemButton(
           child: Text(
-            appIconSize(config).toString(),
+            appIS.toString(),
             textAlign: TextAlign.center,
             style: config.bodyStyle,
           ),
-          onPressed: () => setOverlay(() => step = appIconSize(config)),
+          onPressed: () => setOverlay(() => step = appIS),
         ),
       ];
 
@@ -356,7 +359,7 @@ Future<void> editSpacer(
                               ))
                           .toList(),
                     ),
-                    config.rowSpacer,
+                    rowSpacer,
 
                     // Key/quick values
                     MenuAnchor(
@@ -383,12 +386,12 @@ Future<void> editSpacer(
                           child: Text('Icon size: ${config.iconSize}'),
                         ),
                         MenuItemButton(
-                          onPressed: () => quickValue(appIconSize(config)),
-                          child: Text('App icon size: ${appIconSize(config)}'),
+                          onPressed: () => quickValue(appIS),
+                          child: Text('App icon size: $appIS'),
                         ),
                       ],
                     ),
-                    config.rowSpacer,
+                    rowSpacer,
 
                     // Edits
                     MenuAnchor(
@@ -402,7 +405,10 @@ Future<void> editSpacer(
                           config,
                           label: 'Delete',
                           icon: EzIcon(config, Icons.delete),
-                          onPressed: () => Navigator.of(context).pop(false),
+                          onPressed: () {
+                            overlayEntry.remove();
+                            completer.complete(false);
+                          },
                         ),
                         EzMenuButton(
                           config,
@@ -446,7 +452,10 @@ Future<void> editSpacer(
                           config,
                           label: 'Done',
                           icon: EzIcon(config, Icons.done),
-                          onPressed: () => Navigator.of(context).pop(true),
+                          onPressed: () {
+                            overlayEntry.remove();
+                            completer.complete(true);
+                          },
                         ),
                       ],
                     ),
@@ -481,7 +490,7 @@ Future<void> editSpacer(
                           setOverlay(() {});
                         },
                       ),
-                      config.rowSpacer,
+                      rowSpacer,
                     ],
 
                     // Move (item) up
@@ -506,7 +515,7 @@ Future<void> editSpacer(
                         setOverlay(() => currIndex = nextIndex);
                       },
                     ),
-                    config.rowSpacer,
+                    rowSpacer,
 
                     // Moved (item) down
                     EzIconButton(
@@ -530,7 +539,7 @@ Future<void> editSpacer(
                         setOverlay(() => currIndex = nextIndex);
                       },
                     ),
-                    config.rowSpacer,
+                    rowSpacer,
 
                     // Move (lane) down
                     if (numLanes > 1) ...<Widget>[
@@ -553,7 +562,7 @@ Future<void> editSpacer(
                           setOverlay(() {});
                         },
                       ),
-                      config.rowSpacer,
+                      rowSpacer,
                     ],
                   ],
                 ),
