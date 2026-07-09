@@ -86,6 +86,9 @@ const String interlinkedKey = 'interlinked';
 const String leftSwipeIDKey = 'leftSwipeID';
 const String rightSwipeIDKey = 'rightSwipeID';
 
+const String homeRippleKey = 'homeRipple';
+const String listRippleKey = 'listRipple';
+
 const String autoSearchKey = 'autoSearch';
 
 /// Header, quick launch, and app list settings
@@ -96,6 +99,10 @@ const Map<String, Type> limListKeys = <String, Type>{
   // Quick launch
   leftSwipeIDKey: String,
   rightSwipeIDKey: String,
+
+  // Ripple
+  homeRippleKey: bool,
+  listRippleKey: bool,
 
   // App list
   autoSearchKey: bool,
@@ -249,6 +256,10 @@ final Map<String, Object> liminalDefault = <String, Object>{
   // Quick launch
   leftSwipeIDKey: '',
   rightSwipeIDKey: '',
+
+  // Ripple
+  homeRippleKey: true,
+  listRippleKey: true,
 
   // All
   autoSearchKey: false,

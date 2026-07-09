@@ -13,8 +13,9 @@ class LiminalCache extends EzAppCache {
   Locale _locale;
   Lang _l10n;
 
-  late SecureCache _security;
   late DesignCache _design;
+  late RippleCache _ripple;
+  late SecureCache _security;
 
   LiminalCache(Locale locale, Lang l10n)
       : _locale = locale,
@@ -95,6 +96,12 @@ class LiminalCache extends EzAppCache {
       );
     }
 
+    // Ripple cache
+    _ripple = RippleCache(
+      homeRipple: EzCM.get(homeRippleKey),
+      listRipple: EzCM.get(listRippleKey),
+    );
+
     // Secure cache
     final bool defATE = limSecDef[authToEditKey] as bool;
     final bool defAFH = limSecDef[authForHiddenKey] as bool;
@@ -106,6 +113,16 @@ class LiminalCache extends EzAppCache {
       authTimeout: Duration(minutes: int.tryParse(await EzCM.secGet(authTimeoutKey)) ?? defAT),
     );
   }
+}
+
+class RippleCache {
+  final bool homeRipple;
+  final bool listRipple;
+
+  RippleCache({
+    required this.homeRipple,
+    required this.listRipple,
+  });
 }
 
 class DesignCache {
@@ -161,16 +178,16 @@ class SecureCache {
 
 // Aliases/helpers //
 
-LiminalCache _cache(EzCP config) => config.appCache! as LiminalCache;
-
-Lang l10n(EzCP config) => _cache(config)._l10n;
-
 bool get interlinked => EzCM.get(interlinkedKey);
 
 String get leftSwipeID => EzCM.get(leftSwipeIDKey);
 String get rightSwipeID => EzCM.get(rightSwipeIDKey);
 
 bool get autoSearch => EzCM.get(autoSearchKey);
+
+LiminalCache _cache(EzCP config) => config.appCache! as LiminalCache;
+
+Lang l10n(EzCP config) => _cache(config)._l10n;
 
 bool listIcons(EzCP config) => _cache(config)._design.listIcons;
 LabelType listLabels(EzCP config) => _cache(config)._design.listLabels;
@@ -188,6 +205,9 @@ double appIconSize(EzCP config) => config.iconSize + config.padding;
 
 ListAlignment horizontalAlign(EzCP config) => _cache(config)._design.horizontalAlign;
 ListAlignment verticalAlign(EzCP config) => _cache(config)._design.verticalAlign;
+
+bool homeRipple(EzCP config) => _cache(config)._ripple.homeRipple;
+bool listRipple(EzCP config) => _cache(config)._ripple.listRipple;
 
 bool authToEdit(EzCP config) => _cache(config)._security.authToEdit;
 bool authForHidden(EzCP config) => _cache(config)._security.authForHidden;
