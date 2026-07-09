@@ -1224,7 +1224,6 @@ If you want to support Liminal's development, or the development of more Empathe
                     scrollDirection: Axis.horizontal,
                     physics: const ClampingScrollPhysics(),
                     mainAxisAlignment: horizontalAlign(config).mainAxis,
-                    // TODO: not here... I think? If so, how does that change things? If not, add it
                     crossAxisAlignment: verticalAlign(config).crossAxis,
                     children: buildGrid(config, appInfo, numLanes),
                   ),
