@@ -849,18 +849,24 @@ With wide tiles disabled, lanes will be sized by the widest item & your spacing 
             ? <Widget>[
                 config.spacer,
 
-                // Add (iff one lane)
-                if (numLanes == 1) ...<Widget>[
+                // Add (if one lane || using pages)
+                if (numLanes == 1 || (wideTiles(config) && pages(config))) ...<Widget>[
                   AddFAB(
                     config,
                     () => addModal(
                       config,
                       appInfo,
-                      0,
+                      numLanes == 1 ? 0 : page,
                       LAConfig.buildLookup(
-                          appInfo.homeItem(config, lane: 0, index: 0), Axis.horizontal, config),
+                        appInfo.homeItem(config, lane: numLanes == 1 ? 0 : page, index: 0),
+                        Axis.horizontal,
+                        config,
+                      ),
                       LAConfig.buildLookup(
-                          appInfo.homeItem(config, lane: 0, index: 0), Axis.vertical, config),
+                        appInfo.homeItem(config, lane: numLanes == 1 ? 0 : page, index: 0),
+                        Axis.vertical,
+                        config,
+                      ),
                     ),
                   ),
                   config.spacer,
