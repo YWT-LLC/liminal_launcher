@@ -3,8 +3,6 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: one part of ripple cleanup should be to instantly add a spacer for the header to eventually replace
-
 import '../screens/export.dart';
 import '../utils/export.dart';
 import '../widgets/export.dart';
@@ -47,7 +45,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
   Future<void> ripple(EzCP config, LongPressStartDetails details) async {
     if (!context.mounted) return;
 
-    final Duration animDur = ezDuration(config.animDur, mod: rippleMod);
+    final Duration animDur =
+        homeRipple(config) ? ezDuration(config.animDur, mod: rippleMod) : Duration.zero;
     if (animDur <= oneMS) {
       setState(() => editing = !editing);
       return;
@@ -276,7 +275,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
             maxWidth: (editing && (ripple % 1.0 == 0))
                 ? appIconSize(config) * 3 + config.spargin
                 : widthOf(context),
-          ), // TODO: "animate" this with the value?
+          ),
           child: _buildLane(config, appInfo, numLanes: numLanes, lane: lane),
         ),
       ));
