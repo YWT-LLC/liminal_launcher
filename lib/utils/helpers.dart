@@ -69,13 +69,13 @@ Future<IconData?> chooseIcon(EzCP config, BuildContext context) => ezModal(
                 onHorizontalDragEnd: (DragEndDetails details) {
                   if (details.primaryVelocity == null) return;
 
-                  if (details.primaryVelocity! < -100) {
+                  if (details.primaryVelocity! < -ezSwipeV) {
                     // RTL -> nav right
                     if (outlined) return;
                     setModal(() => outlined = true);
                   }
 
-                  if (details.primaryVelocity! > 100) {
+                  if (details.primaryVelocity! > ezSwipeV) {
                     // LTR -> nav left
                     if (!outlined) return;
                     setModal(() => outlined = false);
