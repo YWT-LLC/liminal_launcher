@@ -657,163 +657,14 @@ With wide tiles disabled, lanes will be sized by the widest item & your spacing 
 
   @override
   Future<void> afterFirstLayout(BuildContext context) async {
-    final EzCP config = configWatcher(context);
+    late final EzCP config = configWatcher(context);
 
-    // Check for welcome message
+    // Check for welcome message(s)
     if (!EzCM.get(shownIntroKey)) {
-      if (context.mounted) {
-        await ezModal(
-          config,
-          context: context,
-          builder: (_) => ezModalScroll(config, children: <Widget>[
-            // Welcome
-            Text(
-              'Welcome to Liminal Launcher',
-              textAlign: TextAlign.center,
-              style: config.titleStyle,
-            ),
-            config.centerLine,
-
-            // Minimal-ish
-            Text(
-              "It's geared toward minimalism,\nbut has limitless customization.",
-              textAlign: TextAlign.center,
-              style: config.bodyStyle,
-            ),
-            config.centerLine,
-
-            // Yin/Yang
-            EzRichText(
-              config,
-              children: <InlineSpan>[
-                EzPlainText(
-                  text:
-                      '''Personalization is easy, and everything that needs explanation will have it. 
-
-As a general rule: Liminal's appearance can be completely separate based on theme mode!
-
-While in the relevant settings, you will see a toggle-able icon that indicates whether you're editing the dark ''',
-                  style: config.bodyStyle,
-                ),
-                WidgetSpan(
-                  alignment: PlaceholderAlignment.middle,
-                  child: EzIcon(config, Icons.dark_mode),
-                ),
-                EzPlainText(
-                  text: ', light ',
-                  style: config.bodyStyle,
-                ),
-                WidgetSpan(
-                  alignment: PlaceholderAlignment.middle,
-                  child: EzIcon(config, Icons.light_mode),
-                ),
-                EzPlainText(
-                  text: ', or both ',
-                  style: config.bodyStyle,
-                ),
-                WidgetSpan(
-                  alignment: PlaceholderAlignment.middle,
-                  child: FaIcon(
-                    FontAwesomeIcons.yinYang,
-                    size: config.iconSize,
-                  ),
-                ),
-                EzPlainText(
-                  text: ' themes.',
-                  style: config.bodyStyle,
-                ),
-              ],
-              textAlign: TextAlign.center,
-              style: config.bodyStyle,
-            ),
-            config.centerLine,
-
-            // Have fun!
-            Text(
-              'Long press the home screen to get started.\nThank you, and enjoy!',
-              textAlign: TextAlign.center,
-              style: config.bodyStyle,
-            ),
-            config.separator,
-          ]),
-        );
-      }
+      if (context.mounted) await _welcome(config, context);
 
       final bool isGPlay = await isGPlayInstall();
-      if (context.mounted && !isGPlay) {
-        const String m1 = '''This version is not from the Play Store, so it should have been free.
-Rest assured, the free version of Liminal will always be identical to the Google Play version.
-
-If you want to support Liminal's development, or the development of more Empathetech software, please consider ''';
-        const String m2 = 'contributing';
-        const String m3 =
-            '.\n\nThis is the only non-tutorial pop-up, and its only appearance this install.';
-
-        bool read = false;
-
-        await ezModal(
-          config,
-          context: context,
-          enableDrag: false,
-          isDismissible: false,
-          showDragHandle: false,
-          builder: (_) => StatefulBuilder(builder: (BuildContext mCon, StateSetter setModal) {
-            final Duration readTime = Duration(
-                milliseconds:
-                    ((ezReadingTime(config, <String>[m1, m2, m3].join()).inMilliseconds) / 3)
-                        .ceil());
-
-            Future<void>.delayed(readTime, () {
-              if (mCon.mounted) setModal(() => read = true);
-            });
-
-            return ezModalScroll(config, children: <Widget>[
-              EzHeader(config),
-
-              // Title
-              Text(
-                'One more thing...',
-                textAlign: TextAlign.center,
-                style: config.titleStyle,
-              ),
-              config.centerLine,
-
-              // Message
-              EzRichText(
-                config,
-                children: <InlineSpan>[
-                  const EzPlainText(text: m1),
-                  EzInlineLink(
-                    config,
-                    text: m2,
-                    style: config.bodyStyle,
-                    textAlign: TextAlign.center,
-                    url: Uri.parse('https://www.empathetech.net/#/contribute'),
-                    hint: 'Open a link to the Empathetic contribution options.',
-                  ),
-                  const EzPlainText(text: m3),
-                ],
-                style: config.bodyStyle,
-                textBackground: false,
-                textAlign: TextAlign.center,
-              ),
-              config.separator,
-
-              // Leave after (half) read
-              EzTextIconButton(
-                config,
-                label: 'Okay',
-                style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
-                icon: read
-                    ? EzIcon(config, Icons.done)
-                    : EzCountdownTimer(config, duration: readTime),
-                onPressed: () => read ? Navigator.of(mCon).pop() : doNothing(),
-              ),
-              config.separator,
-            ]);
-          }),
-        );
-      }
+      if (context.mounted && !isGPlay) await _free99(config, context);
 
       await EzCM.setBool(shownIntroKey, true);
     }
@@ -1015,3 +866,150 @@ If you want to support Liminal's development, or the development of more Empathe
 }
 
 const Duration _showTime = Duration(seconds: 1);
+
+Future<void> _welcome(EzCP config, BuildContext context) => ezModal(
+      config,
+      context: context,
+      builder: (_) => ezModalScroll(config, children: <Widget>[
+        // Welcome
+        Text(
+          'Welcome to Liminal Launcher',
+          textAlign: TextAlign.center,
+          style: config.titleStyle,
+        ),
+        config.centerLine,
+
+        // Minimal-ish
+        Text(
+          "It's geared toward minimalism,\nbut has limitless customization.",
+          textAlign: TextAlign.center,
+          style: config.bodyStyle,
+        ),
+        config.centerLine,
+
+        // Yin/Yang
+        EzRichText(
+          config,
+          children: <InlineSpan>[
+            EzPlainText(
+              text: '''Personalization is easy, and everything that needs explanation will have it. 
+
+As a general rule: Liminal's appearance can be completely separate based on theme mode!
+
+While in the relevant settings, you will see a toggle-able icon that indicates whether you're editing the dark ''',
+              style: config.bodyStyle,
+            ),
+            WidgetSpan(
+              alignment: PlaceholderAlignment.middle,
+              child: EzIcon(config, Icons.dark_mode),
+            ),
+            EzPlainText(
+              text: ', light ',
+              style: config.bodyStyle,
+            ),
+            WidgetSpan(
+              alignment: PlaceholderAlignment.middle,
+              child: EzIcon(config, Icons.light_mode),
+            ),
+            EzPlainText(
+              text: ', or both ',
+              style: config.bodyStyle,
+            ),
+            WidgetSpan(
+              alignment: PlaceholderAlignment.middle,
+              child: FaIcon(
+                FontAwesomeIcons.yinYang,
+                size: config.iconSize,
+              ),
+            ),
+            EzPlainText(
+              text: ' themes.',
+              style: config.bodyStyle,
+            ),
+          ],
+          textAlign: TextAlign.center,
+          style: config.bodyStyle,
+        ),
+        config.centerLine,
+
+        // Have fun!
+        Text(
+          'Long press the home screen to get started.\nThank you, and enjoy!',
+          textAlign: TextAlign.center,
+          style: config.bodyStyle,
+        ),
+        config.separator,
+      ]),
+    );
+
+Future<void> _free99(EzCP config, BuildContext context) async {
+  const String m1 = '''This version is not from the Play Store, so it should have been free.
+Rest assured, the free version of Liminal will always be identical to the Google Play version.
+
+If you want to support Liminal's development, or the development of more Empathetech software, please consider ''';
+  const String m2 = 'contributing';
+  const String m3 =
+      '.\n\nThis is the only non-tutorial pop-up, and its only appearance this install.';
+
+  bool read = false;
+
+  await ezModal(
+    config,
+    context: context,
+    enableDrag: false,
+    isDismissible: false,
+    showDragHandle: false,
+    builder: (_) => StatefulBuilder(builder: (BuildContext mCon, StateSetter setModal) {
+      final Duration readTime = Duration(
+          milliseconds:
+              ((ezReadingTime(config, <String>[m1, m2, m3].join()).inMilliseconds) / 3).ceil());
+
+      Future<void>.delayed(readTime, () {
+        if (mCon.mounted) setModal(() => read = true);
+      });
+
+      return ezModalScroll(config, children: <Widget>[
+        EzHeader(config),
+
+        // Title
+        Text(
+          'One more thing...',
+          textAlign: TextAlign.center,
+          style: config.titleStyle,
+        ),
+        config.centerLine,
+
+        // Message
+        EzRichText(
+          config,
+          children: <InlineSpan>[
+            const EzPlainText(text: m1),
+            EzInlineLink(
+              config,
+              text: m2,
+              style: config.bodyStyle,
+              textAlign: TextAlign.center,
+              url: Uri.parse('https://www.empathetech.net/#/contribute'),
+              hint: 'Open a link to the Empathetic contribution options.',
+            ),
+            const EzPlainText(text: m3),
+          ],
+          style: config.bodyStyle,
+          textBackground: false,
+          textAlign: TextAlign.center,
+        ),
+        config.separator,
+
+        // Leave after (half) read
+        EzTextIconButton(
+          config,
+          label: 'Okay',
+          style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
+          icon: read ? EzIcon(config, Icons.done) : EzCountdownTimer(config, duration: readTime),
+          onPressed: () => read ? Navigator.of(mCon).pop() : doNothing(),
+        ),
+        config.separator,
+      ]);
+    }),
+  );
+}
