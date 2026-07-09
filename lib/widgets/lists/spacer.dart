@@ -469,20 +469,20 @@ Future<void> editSpacer(
                   scrollDirection: Axis.horizontal,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    // Move (lane) up
+                    // Move (lane) down
                     if (numLanes > 1) ...<Widget>[
                       EzIconButton(
                         config,
-                        enabled: currLane < (numLanes - 1),
+                        enabled: currLane > 0,
                         icon: Icon(config.isLTR && hAlign != ListAlignment.end
-                            ? Icons.keyboard_arrow_right
-                            : Icons.keyboard_arrow_left),
+                            ? Icons.keyboard_arrow_left
+                            : Icons.keyboard_arrow_right),
                         onPressed: () async {
-                          final int nextLane = currLane + 1;
+                          final int nextLane = currLane - 1;
                           final int nextIndex = appInfo.homeLane(config, nextLane).length;
 
                           marked.value = (nextLane, nextIndex);
-                          await appInfo.moveItemUpLane(config, lane: currLane, index: currIndex);
+                          await appInfo.moveItemDownLane(config, lane: currLane, index: currIndex);
 
                           currLane = nextLane;
                           currIndex = nextIndex;
@@ -539,22 +539,22 @@ Future<void> editSpacer(
                         setOverlay(() => currIndex = nextIndex);
                       },
                     ),
-                    rowSpacer,
 
-                    // Move (lane) down
+                    // Move (lane) up
                     if (numLanes > 1) ...<Widget>[
+                      rowSpacer,
                       EzIconButton(
                         config,
-                        enabled: currLane > 0,
+                        enabled: currLane < (numLanes - 1),
                         icon: Icon(config.isLTR && hAlign != ListAlignment.end
-                            ? Icons.keyboard_arrow_left
-                            : Icons.keyboard_arrow_right),
+                            ? Icons.keyboard_arrow_right
+                            : Icons.keyboard_arrow_left),
                         onPressed: () async {
-                          final int nextLane = currLane - 1;
+                          final int nextLane = currLane + 1;
                           final int nextIndex = appInfo.homeLane(config, nextLane).length;
 
                           marked.value = (nextLane, nextIndex);
-                          await appInfo.moveItemDownLane(config, lane: currLane, index: currIndex);
+                          await appInfo.moveItemUpLane(config, lane: currLane, index: currIndex);
 
                           currLane = nextLane;
                           currIndex = nextIndex;
@@ -562,7 +562,6 @@ Future<void> editSpacer(
                           setOverlay(() {});
                         },
                       ),
-                      rowSpacer,
                     ],
                   ],
                 ),
