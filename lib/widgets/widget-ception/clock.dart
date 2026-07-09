@@ -3,8 +3,6 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: add swiping nav to edit modal
-
 import '../../utils/export.dart';
 import '../export.dart';
 
@@ -428,15 +426,30 @@ class _ClockWidgetState extends State<ClockWidget> {
 
           // Settings
           Expanded(
-            child: EzFauxCarousel(
-              widget.config,
-              position: curr.index,
-              delta: delta,
-              child: switch (curr) {
-                _Edits.background => backgroundSettings(),
-                _Edits.time => timeSettings(),
-                _Edits.date => dateSettings(),
+            child: GestureDetector(
+              onHorizontalDragEnd: (DragEndDetails details) {
+                if (details.primaryVelocity == null) return;
+
+                if (details.primaryVelocity! < -ezSwipeV) {
+                  // RTL -> nav right
+                  if (curr.index < 2) nav(_Edits.values[curr.index + 1]);
+                }
+
+                if (details.primaryVelocity! > ezSwipeV) {
+                  // LTR -> nav left
+                  if (curr.index > 0) nav(_Edits.values[curr.index - 1]);
+                }
               },
+              child: EzFauxCarousel(
+                widget.config,
+                position: curr.index,
+                delta: delta,
+                child: switch (curr) {
+                  _Edits.background => backgroundSettings(),
+                  _Edits.time => timeSettings(),
+                  _Edits.date => dateSettings(),
+                },
+              ),
             ),
           ),
           widget.config.divider,
