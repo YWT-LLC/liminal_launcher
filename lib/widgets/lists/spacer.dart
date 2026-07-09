@@ -234,7 +234,10 @@ Future<void> editSpacer(
           child: Text(
             '1',
             textAlign: TextAlign.center,
-            style: config.bodyStyle?.copyWith(fontWeight: FontWeight.bold),
+            style: config.bodyStyle?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: step == 1.0 ? config.colors.primary : config.colors.onSurface,
+            ),
           ),
           onPressed: () => setOverlay(() => step = 1.0),
         ),
@@ -242,7 +245,10 @@ Future<void> editSpacer(
           child: Text(
             '5',
             textAlign: TextAlign.center,
-            style: config.bodyStyle?.copyWith(fontWeight: FontWeight.bold),
+            style: config.bodyStyle?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: step == 5.0 ? config.colors.primary : config.colors.onSurface,
+            ),
           ),
           onPressed: () => setOverlay(() => step = 5.0),
         ),
@@ -250,7 +256,10 @@ Future<void> editSpacer(
           child: Text(
             '10',
             textAlign: TextAlign.center,
-            style: config.bodyStyle?.copyWith(fontWeight: FontWeight.bold),
+            style: config.bodyStyle?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: step == 10.0 ? config.colors.primary : config.colors.onSurface,
+            ),
           ),
           onPressed: () => setOverlay(() => step = 10.0),
         ),
@@ -258,7 +267,9 @@ Future<void> editSpacer(
           child: Text(
             config.marginVal.toString(),
             textAlign: TextAlign.center,
-            style: config.bodyStyle,
+            style: config.bodyStyle?.copyWith(
+              color: step == config.marginVal ? config.colors.primary : config.colors.onSurface,
+            ),
           ),
           onPressed: () => setOverlay(() => step = config.marginVal),
         ),
@@ -266,7 +277,9 @@ Future<void> editSpacer(
           child: Text(
             config.padding.toString(),
             textAlign: TextAlign.center,
-            style: config.bodyStyle,
+            style: config.bodyStyle?.copyWith(
+              color: step == config.padding ? config.colors.primary : config.colors.onSurface,
+            ),
           ),
           onPressed: () => setOverlay(() => step = config.padding),
         ),
@@ -274,7 +287,9 @@ Future<void> editSpacer(
           child: Text(
             config.spacing.toString(),
             textAlign: TextAlign.center,
-            style: config.bodyStyle,
+            style: config.bodyStyle?.copyWith(
+              color: step == config.spacing ? config.colors.primary : config.colors.onSurface,
+            ),
           ),
           onPressed: () => setOverlay(() => step = config.spacing),
         ),
@@ -282,7 +297,9 @@ Future<void> editSpacer(
           child: Text(
             config.iconSize.toString(),
             textAlign: TextAlign.center,
-            style: config.bodyStyle,
+            style: config.bodyStyle?.copyWith(
+              color: step == config.iconSize ? config.colors.primary : config.colors.onSurface,
+            ),
           ),
           onPressed: () => setOverlay(() => step = config.iconSize),
         ),
@@ -290,7 +307,9 @@ Future<void> editSpacer(
           child: Text(
             appIS.toString(),
             textAlign: TextAlign.center,
-            style: config.bodyStyle,
+            style: config.bodyStyle?.copyWith(
+              color: step == appIS ? config.colors.primary : config.colors.onSurface,
+            ),
           ),
           onPressed: () => setOverlay(() => step = appIS),
         ),
