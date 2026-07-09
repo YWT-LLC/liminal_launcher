@@ -411,14 +411,15 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
               child: EzElevatedIconButton(
                 config,
                 onPressed: () async {
-                  final int index = await appInfo.addSpacer(config, lane: lane);
                   if (mCon.mounted) Navigator.of(mCon).pop();
+                  final int index = await appInfo.addSpacer(config, lane: lane);
                   setState(() => editing = false);
 
-                  if (context.mounted) {
+                  if (mounted) {
                     await editSpacer(
                       config,
                       appInfo: appInfo,
+                      context: context,
                       lane: lane,
                       index: index,
                     );
