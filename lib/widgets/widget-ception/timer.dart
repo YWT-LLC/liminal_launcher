@@ -70,44 +70,42 @@ class _TimerWidgetState extends State<TimerWidget> {
     bool last = false,
     bool useOverlay = true,
   }) =>
-      ConstrainedBox(
+      EzScrollBlocker(EzTextField(
+        controller: controller,
         constraints: constraints,
-        child: EzScrollBlocker(
-          LimField(
-            controller: controller,
-            focusNode: curr,
-            hintText: '00',
-            keyboardType: TextInputType.number,
-            textInputAction: last ? TextInputAction.done : TextInputAction.next,
-            onTap: controller.clear,
-            onTapOutside: (_) {
-              if (controller.text.isEmpty) controller.text = '00';
-            },
-            onChanged: (String value) => useOverlay
-                ? ((value.isEmpty)
-                    ? removeOverlay()
-                    : ((overlayEntry == null)
-                        ? showOverlay(controller)
-                        : overlayEntry!.markNeedsBuild()))
-                : doNothing(),
-            onEditingComplete: () {
-              if (controller.text.isEmpty) controller.text = '00';
-            },
-            onFieldSubmitted: (String value) {
-              if (value.isEmpty) controller.text = '00';
-              onSubmit.call();
-            },
-            validator: (String? value) {
-              const String failure = '0-99';
+        errorConstraints:
+            BoxConstraints.tightFor(height: constraints.maxHeight, width: constraints.maxWidth * 2),
+        focusNode: curr,
+        hintText: '00',
+        keyboardType: TextInputType.number,
+        textInputAction: last ? TextInputAction.done : TextInputAction.next,
+        onTap: controller.clear,
+        onTapOutside: (_) {
+          if (controller.text.isEmpty) controller.text = '00';
+        },
+        onChanged: (String value) => useOverlay
+            ? ((value.isEmpty)
+                ? removeOverlay()
+                : ((overlayEntry == null)
+                    ? showOverlay(controller)
+                    : overlayEntry!.markNeedsBuild()))
+            : doNothing(),
+        onEditingComplete: () {
+          if (controller.text.isEmpty) controller.text = '00';
+        },
+        onFieldSubmitted: (String value) {
+          if (value.isEmpty) controller.text = '00';
+          onSubmit.call();
+        },
+        validator: (String? value) {
+          const String failure = '0-99';
 
-              if (value == null) return failure;
-              final int parsed = int.tryParse(value) ?? -1;
+          if (value == null) return failure;
+          final int parsed = int.tryParse(value) ?? -1;
 
-              return (parsed > 99 || parsed < 0) ? failure : null;
-            },
-          ),
-        ),
-      );
+          return (parsed > 99 || parsed < 0) ? failure : null;
+        },
+      ));
 
   // Define custom functions //
 
@@ -449,18 +447,16 @@ class AddTimer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late final Widget fauxTimerField = ConstrainedBox(
+    late final Widget fauxTimerField = EzTextField(
       constraints: BoxConstraints(
         maxWidth:
             ezTextSize('00', context: context, style: config.bodyStyle).width + config.padding,
         maxHeight: appIconSize(config),
       ),
-      child: LimField(
-        onTap: onTap,
-        readOnly: true,
-        hintText: '00',
-        validator: null,
-      ),
+      hintText: '00',
+      onTap: onTap,
+      readOnly: true,
+      validator: null,
     );
 
     return (preview == WidgetSize.button)

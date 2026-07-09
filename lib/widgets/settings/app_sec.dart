@@ -4,7 +4,6 @@
  */
 
 import '../../utils/export.dart';
-import '../export.dart';
 
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -26,11 +25,14 @@ class AppSecSettings extends StatelessWidget {
           bool forHide = authForHidden(config);
 
           _timeoutText.text = authTimeout(config).inMinutes.toString();
-          final Size fieldSize = ezTextSize(
+          final Size ttSize = ezTextSize(
             '55',
             context: context,
             style: config.bodyStyle,
           );
+          final double fieldHeight = max(ttSize.height + config.padding, kMinInteractiveDimension);
+          final double fieldWidth = max(ttSize.width + config.padding, kMinInteractiveDimension);
+
           double bottomSpace = config.spacing * 2;
 
           if (context.mounted) {
@@ -87,40 +89,35 @@ class AppSecSettings extends StatelessWidget {
                         config.rowSpacer,
 
                         // Field
-                        ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxHeight:
-                                max(fieldSize.height + config.padding, kMinInteractiveDimension),
-                            maxWidth:
-                                max(fieldSize.width + config.padding, kMinInteractiveDimension),
-                          ),
-                          child: LimField(
-                            controller: _timeoutText,
-                            hintText: '0',
-                            keyboardType: TextInputType.number,
-                            onTap: () async {
-                              // Wait a bit for the keyboard to open
-                              await Future<void>.delayed(const Duration(milliseconds: 300));
+                        EzTextField(
+                          controller: _timeoutText,
+                          constraints: BoxConstraints(maxHeight: fieldHeight, maxWidth: fieldWidth),
+                          errorConstraints:
+                              BoxConstraints(maxHeight: fieldHeight, maxWidth: fieldWidth * 2),
+                          hintText: '0',
+                          keyboardType: TextInputType.number,
+                          onTap: () async {
+                            // Wait a bit for the keyboard to open
+                            await Future<void>.delayed(const Duration(milliseconds: 300));
 
-                              setModal(() => bottomSpace = ((config.spacing * 2) +
-                                  MediaQuery.of(context).viewInsets.bottom));
-                            },
-                            onTapOutside: (_) => setModal(() => bottomSpace = (config.spacing * 2)),
-                            onFieldSubmitted: (String stringVal) async {
-                              final int? intVal = int.tryParse(stringVal);
-                              if (intVal == null || intVal < 0) return;
+                            setModal(() => bottomSpace =
+                                ((config.spacing * 2) + MediaQuery.of(context).viewInsets.bottom));
+                          },
+                          onTapOutside: (_) => setModal(() => bottomSpace = (config.spacing * 2)),
+                          onFieldSubmitted: (String stringVal) async {
+                            final int? intVal = int.tryParse(stringVal);
+                            if (intVal == null || intVal < 0) return;
 
-                              setModal(() => bottomSpace = (config.spacing * 2));
-                              await EzCM.secSet(authTimeoutKey, intVal.toString());
-                            },
-                            validator: (String? value) {
-                              if (value == null) return null;
-                              final int? intVal = int.tryParse(value);
-                              if (intVal == null || intVal < 0) return 'Positive integers only';
+                            setModal(() => bottomSpace = (config.spacing * 2));
+                            await EzCM.secSet(authTimeoutKey, intVal.toString());
+                          },
+                          validator: (String? value) {
+                            if (value == null) return null;
+                            final int? intVal = int.tryParse(value);
+                            if (intVal == null || intVal < 0) return 'Positive integers only';
 
-                              return null;
-                            },
-                          ),
+                            return null;
+                          },
                         ),
                       ],
                     ),
