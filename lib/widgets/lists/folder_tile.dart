@@ -189,18 +189,15 @@ class _AppFolderState extends State<FolderTile> {
             Widget appearanceSettings() => EzScrollView(widget.config, children: <Widget>[
                   EzRow(widget.config, children: <Widget>[
                     // (Re)name
-                    ConstrainedBox(
+                    EzTextField(
+                      controller: renameCon,
                       constraints: BoxConstraints.tightFor(
-                        height: appIconSize(widget.config),
-                        width: widthOf(mCon) / 3,
-                      ),
-                      child: LimField(
-                        controller: renameCon,
-                        hintText: 'Folder',
-                        autofillHints: const <String>[AutofillHints.name],
-                        validator: validateName,
-                      ),
+                          height: appIconSize(widget.config), width: widthOf(mCon) / 3),
+                      hintText: 'Folder',
+                      autofillHints: const <String>[AutofillHints.name],
+                      validator: validateName,
                     ),
+
                     widget.config.rowSpacer,
 
                     // (Re)icon
