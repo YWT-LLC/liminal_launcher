@@ -222,6 +222,16 @@ class _AppTileState extends State<AppTile> {
                           index: widget.index!,
                         )
                       : null,
+                  local: (listTile && numLanes == 1)
+                      ? <Widget>[
+                          EzMenuButton(
+                            widget.config,
+                            icon: EzIcon(widget.config, Icons.add_home),
+                            onPressed: () async => await widget.appInfo
+                                .addApp(widget.config, lane: 0, id: widget.app.id),
+                          ),
+                        ]
+                      : null,
                   numLanes: numLanes,
                   lane: widget.lane,
                   index: widget.index,

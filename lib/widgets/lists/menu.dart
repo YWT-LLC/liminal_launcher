@@ -14,6 +14,7 @@ List<Widget> appMC(
   AppInfoProvider appInfo, {
   required BuildContext context,
   Widget? edit,
+  List<Widget>? local,
   required int numLanes,
   required int? lane,
   required int? index,
@@ -27,6 +28,7 @@ List<Widget> appMC(
             edit: edit,
             configure: _configureApp(config, appInfo,
                 context: context, lane: lane, index: index, app: app, homeTile: homeTile),
+            local: local,
             numLanes: homeTile ? numLanes : -1,
             lane: lane,
             index: index,
@@ -37,6 +39,7 @@ List<Widget> appMC(
             edit: edit,
             configure: _configureApp(config, appInfo,
                 context: context, lane: lane, index: index, app: app, homeTile: homeTile),
+            local: local,
           );
 
 Widget _configureApp(
@@ -206,8 +209,7 @@ List<Widget> _tileMC(
             if (edit != null) edit,
             _removeItem(config, appInfo, lane: lane, index: index),
             ...local,
-          ]; // local is only for Widget(ception: WidWidGetGet)
-// TODO: ... unless I use local for add to home when numLanes == 1?????????
+          ];
 
 /// When there's no lane/index info
 List<Widget> _miniTileMC(
