@@ -5,6 +5,7 @@
 
 // TODO: fix the edit version
 // TODO: double adding apps?
+// TODO: is my logic for wideTiles && pages && their combo consistent?
 
 import '../../utils/export.dart';
 import '../export.dart';
