@@ -173,7 +173,6 @@ Widget _removeItem(
 }) =>
     EzMenuButton(
       config,
-      label: 'Remove',
       icon: EzIcon(config, Icons.remove),
       onPressed: () => appInfo.removeItem(config, lane: lane, index: index),
     );
