@@ -703,7 +703,6 @@ class _EditFolder extends StatelessWidget {
                 ids: appsNotif.value,
               ));
         },
-        label: 'Edit',
         icon: EzIcon(config, Icons.edit),
       );
 }
