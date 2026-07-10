@@ -127,3 +127,22 @@ Widget removeItem(
       icon: EzIcon(config, Icons.remove),
       onPressed: () => appInfo.removeItem(config, lane: lane, index: index),
     );
+
+List<Widget> widgetMC(
+  EzCP config,
+  AppInfoProvider appInfo,
+  Widget edit, {
+  List<Widget>? local,
+  required int numLanes,
+  required int lane,
+  required int index,
+}) =>
+    <Widget>[
+      if (local != null) ...local,
+      if (numLanes > 1 && local == null)
+        moveDownLane(config, appInfo, numLanes: numLanes, lane: lane, index: index),
+      edit,
+      removeItem(config, appInfo, lane: lane, index: index),
+      if (numLanes > 1 && local == null)
+        moveUpLane(config, appInfo, numLanes: numLanes, lane: lane, index: index),
+    ];
