@@ -255,12 +255,11 @@ class _SearchWidgetState extends State<SearchWidget> {
               _EditSearch(
                 widget.config,
                 widget.appInfo,
-                widget._size,
-                widget._engine,
-                widget._choices,
+                parentCon: context,
+                initConfig:
+                    _SearchConfig(fieldHeight, widget._size, widget._engine, widget._choices),
                 lane: widget.lane,
                 index: widget.index,
-                fieldHeight: fieldHeight,
               ),
               local: engineChoices,
               numLanes: numLanes,
@@ -277,12 +276,11 @@ class _SearchWidgetState extends State<SearchWidget> {
               _EditSearch(
                 widget.config,
                 widget.appInfo,
-                widget._size,
-                widget._engine,
-                widget._choices,
+                parentCon: context,
+                initConfig:
+                    _SearchConfig(fieldHeight, widget._size, widget._engine, widget._choices),
                 lane: widget.lane,
                 index: widget.index,
-                fieldHeight: fieldHeight,
               ),
               numLanes: numLanes,
               lane: widget.lane,
@@ -306,42 +304,84 @@ class _SearchWidgetState extends State<SearchWidget> {
   }
 }
 
+class AddSearch extends StatelessWidget {
+  final EzCP config;
+  final AppInfoProvider appInfo;
+  final int lane;
+  final WidgetSize save;
+  final WidgetSize preview;
+
+  const AddSearch(
+    this.config,
+    this.appInfo,
+    this.lane, {
+    super.key,
+    required this.save,
+    required this.preview,
+  });
+
+  void onTap() => appInfo.addSearch(config, lane);
+
+  @override
+  Widget build(BuildContext context) => (preview == WidgetSize.button)
+      ? EzIconButton(config, onPressed: onTap, icon: const Icon(Icons.search))
+      : GestureDetector(
+          onTap: onTap,
+          child: EzRow(config, children: <Widget>[
+            EzTextField(
+              constraints: BoxConstraints(
+                maxWidth:
+                    ezTextSize('Search bar', context: context, style: config.bodyStyle).width +
+                        config.padding,
+                maxHeight: appIconSize(config),
+              ),
+              hintText: 'Search',
+              onTap: onTap,
+              readOnly: true,
+              validator: null,
+            ),
+            config.rowMargin,
+            EzIconButton(
+              config,
+              icon: const Icon(Icons.search),
+              onPressed: onTap,
+            ),
+          ]),
+        );
+}
+
 class _EditSearch extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
-  final WidgetSize initSize;
-  final Engine initEngine;
-  final List<Engine> initChoices;
+  final BuildContext parentCon;
+  final _SearchConfig initConfig;
   final int lane;
   final int index;
-  final double fieldHeight;
 
   const _EditSearch(
     this.config,
-    this.appInfo,
-    this.initSize,
-    this.initEngine,
-    this.initChoices, {
+    this.appInfo, {
+    required this.parentCon,
+    required this.initConfig,
     required this.lane,
     required this.index,
-    required this.fieldHeight,
   });
 
   @override
-  Widget build(BuildContext context) => EzMenuButton(
+  Widget build(_) => EzMenuButton(
         config,
         icon: EzIcon(config, Icons.edit),
         onPressed: () async {
-          WidgetSize size = initSize;
-          Engine curr = initEngine;
+          WidgetSize size = initConfig.size;
+          Engine curr = initConfig.engine;
 
-          final List<Engine> shown = List<Engine>.from(initChoices);
+          final List<Engine> shown = List<Engine>.from(initConfig.choices);
           final List<Engine> hidden = List<Engine>.from(Engine.defaultOrder);
-          hidden.removeWhere((Engine e) => initChoices.contains(e));
+          hidden.removeWhere((Engine e) => initConfig.choices.contains(e));
 
           await ezModal(
             config,
-            context: context,
+            context: parentCon,
             builder: (_) => StatefulBuilder(
               builder: (BuildContext mCon, StateSetter setModal) =>
                   ezModalScroll(config, children: <Widget>[
@@ -394,7 +434,7 @@ class _EditSearch extends StatelessWidget {
                               ? null
                               : () {
                                   shown.remove(e);
-                                  if (initEngine == e) curr = shown.first;
+                                  if (initConfig.engine == e) curr = shown.first;
                                   setModal(() {});
                                 },
                         ),
@@ -418,7 +458,7 @@ class _EditSearch extends StatelessWidget {
 
                         final Engine? custom = await ezModal(
                           config,
-                          context: context,
+                          context: parentCon,
                           builder: (_) => StatefulBuilder(
                             builder: (BuildContext customCon, StateSetter setCustom) {
                               void shrink(_) => setCustom(() => bottomSpace = (config.spacing * 2));
@@ -428,7 +468,7 @@ class _EditSearch extends StatelessWidget {
                                 await Future<void>.delayed(const Duration(milliseconds: 300));
 
                                 setCustom(() => bottomSpace = ((config.spacing * 2) +
-                                    MediaQuery.of(context).viewInsets.bottom));
+                                    MediaQuery.of(parentCon).viewInsets.bottom));
                               }
 
                               return ezModalScroll(config, children: <Widget>[
@@ -437,7 +477,7 @@ class _EditSearch extends StatelessWidget {
                                   EzTextField(
                                     controller: nameCon,
                                     constraints: BoxConstraints.tightFor(
-                                      height: fieldHeight,
+                                      height: initConfig.fieldHeight,
                                       width: fieldWidth,
                                     ),
                                     hintText: 'Name (Ecosia)',
@@ -450,7 +490,7 @@ class _EditSearch extends StatelessWidget {
                                     config,
                                     icon: Icon(icon),
                                     onPressed: () async {
-                                      final IconData? choice = await chooseIcon(config, context);
+                                      final IconData? choice = await chooseIcon(config, parentCon);
                                       if (choice != null) setCustom(() => icon = choice);
                                     },
                                   ),
@@ -461,7 +501,7 @@ class _EditSearch extends StatelessWidget {
                                 EzTextField(
                                   controller: baseCon,
                                   constraints: BoxConstraints.tightFor(
-                                    height: fieldHeight,
+                                    height: initConfig.fieldHeight,
                                     width: fieldWidth,
                                   ),
                                   hintText: 'Base site (ecosia.org)',
@@ -475,7 +515,7 @@ class _EditSearch extends StatelessWidget {
                                 EzTextField(
                                   controller: pathCon,
                                   constraints: BoxConstraints.tightFor(
-                                    height: fieldHeight,
+                                    height: initConfig.fieldHeight,
                                     width: fieldWidth,
                                   ),
                                   hintText: 'Path (/search)',
@@ -489,7 +529,7 @@ class _EditSearch extends StatelessWidget {
                                 EzTextField(
                                   controller: queryCon,
                                   constraints: BoxConstraints.tightFor(
-                                    height: fieldHeight,
+                                    height: initConfig.fieldHeight,
                                     width: fieldWidth,
                                   ),
                                   hintText: 'Parameter (q)',
@@ -592,7 +632,7 @@ class _EditSearch extends StatelessWidget {
                                   ? null
                                   : () {
                                       shown.remove(e);
-                                      if (initEngine == e) curr = shown.first;
+                                      if (initConfig.engine == e) curr = shown.first;
                                       setModal(() {});
                                     },
                             ),
@@ -615,51 +655,21 @@ class _EditSearch extends StatelessWidget {
       );
 }
 
-class AddSearch extends StatelessWidget {
-  final EzCP config;
-  final AppInfoProvider appInfo;
-  final int lane;
-  final WidgetSize save;
-  final WidgetSize preview;
+class _SearchConfig {
+  final double fieldHeight;
+  final WidgetSize size;
+  final Engine engine;
+  final List<Engine> choices;
 
-  const AddSearch(
-    this.config,
-    this.appInfo,
-    this.lane, {
-    super.key,
-    required this.save,
-    required this.preview,
-  });
-
-  void onTap() => appInfo.addSearch(config, lane);
-
-  @override
-  Widget build(BuildContext context) => (preview == WidgetSize.button)
-      ? EzIconButton(config, onPressed: onTap, icon: const Icon(Icons.search))
-      : GestureDetector(
-          onTap: onTap,
-          child: EzRow(config, children: <Widget>[
-            EzTextField(
-              constraints: BoxConstraints(
-                maxWidth:
-                    ezTextSize('Search bar', context: context, style: config.bodyStyle).width +
-                        config.padding,
-                maxHeight: appIconSize(config),
-              ),
-              hintText: 'Search',
-              onTap: onTap,
-              readOnly: true,
-              validator: null,
-            ),
-            config.rowMargin,
-            EzIconButton(
-              config,
-              icon: const Icon(Icons.search),
-              onPressed: onTap,
-            ),
-          ]),
-        );
+  _SearchConfig(
+    this.fieldHeight,
+    this.size,
+    this.engine,
+    this.choices,
+  );
 }
+
+//* Engine enum *//
 
 class Engine implements Comparable<Engine> {
   final String name;

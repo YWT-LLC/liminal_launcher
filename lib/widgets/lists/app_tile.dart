@@ -216,8 +216,9 @@ class _AppTileState extends State<AppTile> {
                       ? _EditApp(
                           widget.config,
                           widget.appInfo,
-                          _AppConfig(widget.app, widget._name, widget._icon, widget._buttonType,
-                              widget._labelType),
+                          parentCon: context,
+                          initConfig: _AppConfig(widget.app, widget._name, widget._icon,
+                              widget._buttonType, widget._labelType),
                           lane: widget.lane!,
                           index: widget.index!,
                         )
@@ -303,8 +304,9 @@ class _AppTileState extends State<AppTile> {
                   : _EditApp(
                       widget.config,
                       widget.appInfo,
-                      _AppConfig(widget.app, widget._name, widget._icon, widget._buttonType,
-                          widget._labelType),
+                      parentCon: context,
+                      initConfig: _AppConfig(widget.app, widget._name, widget._icon,
+                          widget._buttonType, widget._labelType),
                       lane: widget.lane!,
                       index: widget.index!,
                     ),
@@ -431,20 +433,22 @@ class AppButton extends StatelessWidget {
 class _EditApp extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
+  final BuildContext parentCon;
   final _AppConfig initConfig;
   final int lane;
   final int index;
 
   const _EditApp(
     this.config,
-    this.appInfo,
-    this.initConfig, {
+    this.appInfo, {
+    required this.parentCon,
+    required this.initConfig,
     required this.lane,
     required this.index,
   });
 
   @override
-  Widget build(BuildContext context) => EzMenuButton(
+  Widget build(_) => EzMenuButton(
         config,
         icon: EzIcon(config, Icons.edit),
         onPressed: () async {
@@ -458,7 +462,7 @@ class _EditApp extends StatelessWidget {
 
           await ezModal(
             config,
-            context: context,
+            context: parentCon,
             builder: (_) => StatefulBuilder(builder: (BuildContext mCon, StateSetter setModal) {
               void resetPreview() {
                 labelType = null;
@@ -487,7 +491,7 @@ class _EditApp extends StatelessWidget {
                     config,
                     icon: Icon(icon ?? Icons.settings),
                     onPressed: () async {
-                      final IconData? choice = await chooseIcon(config, context);
+                      final IconData? choice = await chooseIcon(config, parentCon);
                       setModal(() => icon = choice);
                     },
                   ),

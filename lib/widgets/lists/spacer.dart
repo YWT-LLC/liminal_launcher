@@ -118,7 +118,8 @@ class _LimSpacerState extends State<LimSpacer> {
                         _EditSpacer(
                           widget.config,
                           widget.appInfo,
-                          () => (state == AppState.groupEdit)
+                          parentCon: context,
+                          stateCheck: () => (state == AppState.groupEdit)
                               ? widget.resizeCallback.call()
                               : doNothing(),
                           lane: widget.lane,
@@ -138,7 +139,8 @@ class _LimSpacerState extends State<LimSpacer> {
                         _EditSpacer(
                           widget.config,
                           widget.appInfo,
-                          () => (state == AppState.groupEdit)
+                          parentCon: context,
+                          stateCheck: () => (state == AppState.groupEdit)
                               ? widget.resizeCallback.call()
                               : doNothing(),
                           lane: widget.lane,
@@ -168,24 +170,26 @@ class _LimSpacerState extends State<LimSpacer> {
 class _EditSpacer extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
+  final BuildContext parentCon;
   final void Function() stateCheck;
   final int lane;
   final int index;
 
   const _EditSpacer(
     this.config,
-    this.appInfo,
-    this.stateCheck, {
+    this.appInfo, {
+    required this.parentCon,
+    required this.stateCheck,
     required this.lane,
     required this.index,
   });
 
   @override
-  Widget build(BuildContext context) => EzMenuButton(
+  Widget build(_) => EzMenuButton(
         config,
         onPressed: () async {
           stateCheck.call();
-          await editSpacer(config, appInfo: appInfo, context: context, lane: lane, index: index);
+          await editSpacer(config, appInfo: appInfo, context: parentCon, lane: lane, index: index);
         },
         icon: EzIcon(config, Icons.edit),
       );

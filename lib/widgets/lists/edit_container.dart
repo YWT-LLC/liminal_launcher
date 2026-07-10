@@ -43,7 +43,7 @@ class _EditContainerState extends State<EditContainer> with SingleTickerProvider
   }
 
   @override
-  Widget build(BuildContext context) => EzRow(widget.config, children: <Widget>[
+  Widget build(_) => EzRow(widget.config, children: <Widget>[
         EzIcon(
           widget.config,
           Icons.drag_handle,
@@ -88,7 +88,7 @@ class EditSpacer extends StatelessWidget {
   const EditSpacer(this.config, {super.key});
 
   @override
-  Widget build(BuildContext context) => ValueListenableBuilder<double>(
+  Widget build(_) => ValueListenableBuilder<double>(
         valueListenable: editSpacerHeight,
         builder: (_, double height, __) => ValueListenableBuilder<double>(
           valueListenable: editSpacerWidth,

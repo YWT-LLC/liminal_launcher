@@ -187,13 +187,9 @@ class _AppFolderState extends State<FolderTile> {
                 _EditFolder(
                   widget.config,
                   widget.appInfo,
-                  _FolderConfig(
-                    widget._name,
-                    widget._icon,
-                    widget._buttonType,
-                    widget._labelType,
-                    widget._appList,
-                  ),
+                  parentCon: context,
+                  initConfig: _FolderConfig(widget._name, widget._icon, widget._buttonType,
+                      widget._labelType, widget._appList),
                   lane: widget.lane,
                   index: widget.index,
                 ),
@@ -216,13 +212,9 @@ class _AppFolderState extends State<FolderTile> {
                 _EditFolder(
                   widget.config,
                   widget.appInfo,
-                  _FolderConfig(
-                    widget._name,
-                    widget._icon,
-                    widget._buttonType,
-                    widget._labelType,
-                    widget._appList,
-                  ),
+                  parentCon: context,
+                  initConfig: _FolderConfig(widget._name, widget._icon, widget._buttonType,
+                      widget._labelType, widget._appList),
                   lane: widget.lane,
                   index: widget.index,
                 ),
@@ -326,20 +318,22 @@ class FolderButton extends StatelessWidget {
 class _EditFolder extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
+  final BuildContext parentCon;
   final _FolderConfig initConfig;
   final int lane;
   final int index;
 
   const _EditFolder(
     this.config,
-    this.appInfo,
-    this.initConfig, {
+    this.appInfo, {
+    required this.parentCon,
+    required this.initConfig,
     required this.lane,
     required this.index,
   });
 
   @override
-  Widget build(BuildContext context) => EzMenuButton(
+  Widget build(_) => EzMenuButton(
         config,
         onPressed: () async {
           bool showUI = false;
@@ -357,7 +351,7 @@ class _EditFolder extends StatelessWidget {
 
           await ezModal(
             config,
-            context: context,
+            context: parentCon,
             enableDrag: false,
             isDismissible: false,
             showDragHandle: false,
@@ -395,7 +389,7 @@ class _EditFolder extends StatelessWidget {
                         config,
                         icon: Icon(icon),
                         onPressed: () async {
-                          final IconData? choice = await chooseIcon(config, context);
+                          final IconData? choice = await chooseIcon(config, parentCon);
                           if (choice != null) setModal(() => icon = choice);
                         },
                       ),
