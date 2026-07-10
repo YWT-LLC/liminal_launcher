@@ -209,18 +209,14 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
               key: ValueKey<String>('lane-$lane'),
               builder: (_, StateSetter setList) => ReorderableListView(
                 shrinkWrap: true,
-                header: EzAnimVis(
+                header: LaneHeader(
                   config,
-                  visible: editing,
-                  kid: LaneHeader(
-                    config,
-                    appInfo: appInfo,
-                    lane: lane,
-                    numLanes: numLanes,
-                    hAlign: hAlign,
-                    vAlign: vAlign,
-                    addModal: addModal,
-                  ),
+                  appInfo: appInfo,
+                  lane: lane,
+                  numLanes: numLanes,
+                  hAlign: hAlign,
+                  vAlign: vAlign,
+                  addModal: addModal,
                 ),
                 onReorderItem: (int oldIndex, int newIndex) async {
                   if (oldIndex == newIndex) return;
