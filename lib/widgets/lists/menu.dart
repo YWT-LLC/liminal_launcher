@@ -18,7 +18,7 @@ List<Widget> appMC(
   required int? lane,
   required int? index,
   required AppInfo app,
-  required bool onHome,
+  required bool homeTile,
 }) =>
     (lane != null && index != null)
         ? _tileMC(
@@ -26,8 +26,8 @@ List<Widget> appMC(
             appInfo,
             edit: edit,
             configure: _configureApp(config, appInfo,
-                context: context, lane: lane, index: index, app: app, onHome: onHome),
-            numLanes: onHome ? numLanes : -1,
+                context: context, lane: lane, index: index, app: app, homeTile: homeTile),
+            numLanes: homeTile ? numLanes : -1,
             lane: lane,
             index: index,
           )
@@ -36,7 +36,7 @@ List<Widget> appMC(
             appInfo,
             edit: edit,
             configure: _configureApp(config, appInfo,
-                context: context, lane: lane, index: index, app: app, onHome: onHome),
+                context: context, lane: lane, index: index, app: app, homeTile: homeTile),
           );
 
 Widget _configureApp(
@@ -46,7 +46,7 @@ Widget _configureApp(
   required int? lane,
   required int? index,
   required AppInfo app,
-  required bool onHome,
+  required bool homeTile,
 }) =>
     SubmenuButton(
       menuChildren: <Widget>[
@@ -56,13 +56,13 @@ Widget _configureApp(
           label: 'Info',
           icon: EzIcon(config, Icons.info),
           onPressed: () async {
-            if (!onHome && context.mounted) Navigator.of(context).pop();
+            if (!homeTile && context.mounted) Navigator.of(context).pop();
             await openSettings(app);
           },
         ),
 
         // Dupe
-        if (onHome)
+        if (homeTile)
           EzMenuButton(
             config,
             label: 'Duplicate',
