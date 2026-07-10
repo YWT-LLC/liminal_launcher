@@ -3,14 +3,7 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: all menus...
-// 0. MenuButtons w/ only icons!
-// 1/4. if laneS, then both move buttons! use enabled to grey when n/a
-// 2. edit icon, edits. prolly already always a modal at this point.
-// 3. build icon, remove && dupe. make this a shared func or something.
-
 // TODO: fix the edit version
-
 // TODO: double adding apps?
 
 import '../../utils/export.dart';
