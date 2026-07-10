@@ -96,34 +96,6 @@ class _LimSpacerState extends State<LimSpacer> {
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
-    late final EzMenuButton resize = EzMenuButton(
-      widget.config,
-      onPressed: () async {
-        if (state == AppState.groupEdit) widget.resizeCallback.call();
-
-        await editSpacer(
-          widget.config,
-          appInfo: widget.appInfo,
-          context: context,
-          lane: widget.lane,
-          index: widget.index,
-        );
-      },
-      icon: EzIcon(widget.config, Icons.edit),
-    );
-
-    late final EzMenuButton dupe = EzMenuButton(
-      widget.config,
-      onPressed: () => widget.appInfo.addSpacer(
-        widget.config,
-        height: widget._height,
-        width: widget._width,
-        lane: widget.lane,
-        index: widget.index,
-      ),
-      icon: EzIcon(widget.config, Icons.copy),
-    );
-
     return ValueListenableBuilder<(int?, int?)>(
       valueListenable: marked,
       builder: (_, (int?, int?) pos, __) => (pos.$1 == widget.lane && pos.$2 == widget.index)
@@ -140,46 +112,42 @@ class _LimSpacerState extends State<LimSpacer> {
                         onLongPress: () => canToggleMenu(widget.config, controller),
                         child: SizedBox(height: widget._height, width: widget._width),
                       ),
-                      menuChildren: <Widget>[
-                        dupe,
-                        resize,
-                        removeItem(
+                      menuChildren: spacerMC(
+                        widget.config,
+                        widget.appInfo,
+                        _EditSpacer(
                           widget.config,
                           widget.appInfo,
+                          () => (state == AppState.groupEdit)
+                              ? widget.resizeCallback.call()
+                              : doNothing(),
                           lane: widget.lane,
                           index: widget.index,
                         ),
-                      ],
+                        numLanes: numLanes,
+                        lane: widget.lane,
+                        index: widget.index,
+                      ),
                     )
                   : EditContainer(
                       widget.config,
                       menuControl: menuControl,
-                      menuChildren: <Widget>[
-                        if (numLanes > 1)
-                          moveDownLane(
-                            widget.config,
-                            widget.appInfo,
-                            numLanes: numLanes,
-                            lane: widget.lane,
-                            index: widget.index,
-                          ),
-                        resize,
-                        removeItem(
+                      menuChildren: spacerMC(
+                        widget.config,
+                        widget.appInfo,
+                        _EditSpacer(
                           widget.config,
                           widget.appInfo,
+                          () => (state == AppState.groupEdit)
+                              ? widget.resizeCallback.call()
+                              : doNothing(),
                           lane: widget.lane,
                           index: widget.index,
                         ),
-                        dupe,
-                        if (numLanes > 1)
-                          moveUpLane(
-                            widget.config,
-                            widget.appInfo,
-                            numLanes: numLanes,
-                            lane: widget.lane,
-                            index: widget.index,
-                          ),
-                      ],
+                        numLanes: numLanes,
+                        lane: widget.lane,
+                        index: widget.index,
+                      ),
                       child: EzIconButton(
                         widget.config,
                         icon: const Icon(Icons.space_bar),
@@ -195,6 +163,32 @@ class _LimSpacerState extends State<LimSpacer> {
     widget.rippleProgress?.removeListener(rippling);
     super.dispose();
   }
+}
+
+class _EditSpacer extends StatelessWidget {
+  final EzCP config;
+  final AppInfoProvider appInfo;
+  final void Function() stateCheck;
+  final int lane;
+  final int index;
+
+  const _EditSpacer(
+    this.config,
+    this.appInfo,
+    this.stateCheck, {
+    required this.lane,
+    required this.index,
+  });
+
+  @override
+  Widget build(BuildContext context) => EzMenuButton(
+        config,
+        onPressed: () async {
+          stateCheck.call();
+          await editSpacer(config, appInfo: appInfo, context: context, lane: lane, index: index);
+        },
+        icon: EzIcon(config, Icons.edit),
+      );
 }
 
 Future<void> editSpacer(
