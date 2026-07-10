@@ -604,22 +604,26 @@ With wide tiles disabled, lanes will be sized by the widest item & your spacing 
     }
   }
 
-  Future<void> swipeUp(EzCP config, AppInfoProvider appInfo) async => (editing)
-      ? await navToHidden(config, appInfo)
-      : context.goNamed(
-          appListPath,
-          extra: ListConfig(
-            listContent: <ListContent>{ListContent.hidden, ListContent.banished},
-            include: false,
-            onSelected: (AppInfo app) async {
-              if (ezRootNav.currentContext!.mounted) {
-                Navigator.of(ezRootNav.currentContext!).pop();
-              }
-              await launchApp(app);
-            },
-            title: null,
-          ),
-        );
+  Future<void> swipeUp(EzCP config, AppInfoProvider appInfo) async {
+    if (marked.value.$1 != null || marked.value.$2 != null) return;
+
+    (editing)
+        ? await navToHidden(config, appInfo)
+        : context.goNamed(
+            appListPath,
+            extra: ListConfig(
+              listContent: <ListContent>{ListContent.hidden, ListContent.banished},
+              include: false,
+              onSelected: (AppInfo app) async {
+                if (ezRootNav.currentContext!.mounted) {
+                  Navigator.of(ezRootNav.currentContext!).pop();
+                }
+                await launchApp(app);
+              },
+              title: null,
+            ),
+          );
+  }
 
   Future<void> navToHidden(EzCP config, AppInfoProvider appInfo) async {
     if (authForHidden(config)) {
