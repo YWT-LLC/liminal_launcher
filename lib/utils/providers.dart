@@ -437,6 +437,23 @@ class AppInfoProvider extends ChangeNotifier {
 
   /// Does notify
   /// Shows added overlay
+  Future<void> dupeItem(EzCP config, {required int lane, required int index}) async {
+    if (interlinked || config.isDark) {
+      _darkHomeMatrix[lane].insert(index, _darkHomeMatrix[lane][index]);
+      unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
+    }
+
+    if (interlinked || !config.isDark) {
+      _lightHomeMatrix[lane].insert(index, _lightHomeMatrix[lane][index]);
+      unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
+    }
+
+    notifyListeners();
+    unawaited(_added(config));
+  }
+
+  /// Does notify
+  /// Shows added overlay
   Future<void> dupeLane(EzCP config, int lane) async {
     if (interlinked || config.isDark) {
       _darkHomeMatrix.insert(lane, List<String>.from(_darkHomeMatrix[lane]));
