@@ -210,291 +210,6 @@ class _SearchWidgetState extends State<SearchWidget> {
     final double textWidth =
         ezTextSize('Search bar', context: context, style: widget.config.bodyStyle).width;
 
-    late final EzMenuButton remove =
-        removeItem(widget.config, widget.appInfo, lane: widget.lane, index: widget.index);
-
-    late final EzMenuButton resize = EzMenuButton(
-      widget.config,
-      label: 'Edit',
-      icon: EzIcon(widget.config, Icons.edit),
-      onPressed: () async {
-        WidgetSize size = widget._size;
-        Engine curr = widget._engine;
-
-        final List<Engine> shown = List<Engine>.from(widget._choices);
-        final List<Engine> hidden = List<Engine>.from(Engine.defaultOrder);
-        hidden.removeWhere((Engine e) => widget._choices.contains(e));
-
-        await ezModal(
-          widget.config,
-          context: context,
-          builder: (_) => StatefulBuilder(
-            builder: (BuildContext mCon, StateSetter setModal) =>
-                ezModalScroll(widget.config, children: <Widget>[
-              // Size
-              EzRow(
-                widget.config,
-                children: <Widget>[
-                  Flexible(
-                    child:
-                        Text('Size:', textAlign: TextAlign.center, style: widget.config.labelStyle),
-                  ),
-                  widget.config.rowMargin,
-                  EzDropdownMenu<WidgetSize>(
-                    widget.config,
-                    enableSearch: false,
-                    initialSelection: size,
-                    widthEntry: WidgetSize.system.value,
-                    dropdownMenuEntries: WidgetSize.values
-                        .map((WidgetSize ws) => DropdownMenuEntry<WidgetSize>(
-                              value: ws,
-                              label: ezCamelToTitle(ws.value),
-                            ))
-                        .toList(),
-                    onSelected: (WidgetSize? choice) {
-                      if (choice == null) return;
-                      setModal(() => size = choice);
-                    },
-                  )
-                ],
-              ),
-              widget.config.spacer,
-
-              // Shown
-              Text('Shown', textAlign: TextAlign.center, style: widget.config.labelStyle),
-              EzWrap(children: <Widget>[
-                ...shown.map((Engine e) => Padding(
-                      padding: EzInsets.wrap(widget.config.spacing),
-                      child: EzElevatedIconButton(
-                        widget.config,
-                        key: ValueKey<Engine>(e),
-                        enabled: shown.length > 1,
-                        icon: EzIcon(widget.config, e.icon),
-                        label: e.name,
-                        onPressed: () {
-                          shown.remove(e);
-                          hidden.add(e);
-                          hidden.sort();
-                          setModal(() {});
-                        },
-                        onLongPress: Engine.defaultSet.contains(e)
-                            ? null
-                            : () {
-                                shown.remove(e);
-                                if (widget._engine == e) curr = shown.first;
-                                setModal(() {});
-                              },
-                      ),
-                    )),
-                Padding(
-                  padding: EzInsets.wrap(widget.config.spacing),
-                  child: EzElevatedIconButton(
-                    key: const ValueKey<String>('addNew'),
-                    widget.config,
-                    icon: EzIcon(widget.config, Icons.add),
-                    label: 'Custom',
-                    onPressed: () async {
-                      final TextEditingController nameCon = TextEditingController();
-                      IconData icon = Icons.search;
-                      final TextEditingController baseCon = TextEditingController();
-                      final TextEditingController pathCon = TextEditingController();
-                      final TextEditingController queryCon = TextEditingController();
-                      final double fieldWidth = widthOf(mCon) / 2;
-
-                      double bottomSpace = widget.config.spacing * 2;
-
-                      final Engine? custom = await ezModal(
-                        widget.config,
-                        context: context,
-                        builder: (_) => StatefulBuilder(
-                          builder: (BuildContext customCon, StateSetter setCustom) {
-                            void shrink(_) =>
-                                setCustom(() => bottomSpace = (widget.config.spacing * 2));
-
-                            Future<void> grow() async {
-                              // Wait a bit for the keyboard to open
-                              await Future<void>.delayed(const Duration(milliseconds: 300));
-
-                              setCustom(() => bottomSpace = ((widget.config.spacing * 2) +
-                                  MediaQuery.of(context).viewInsets.bottom));
-                            }
-
-                            return ezModalScroll(widget.config, children: <Widget>[
-                              // Name && icon
-                              EzRow(widget.config, children: <Widget>[
-                                EzTextField(
-                                  controller: nameCon,
-                                  constraints: BoxConstraints.tightFor(
-                                      height: fieldHeight, width: fieldWidth),
-                                  hintText: 'Name (Ecosia)',
-                                  onFieldSubmitted: shrink,
-                                  onTap: grow,
-                                  validator: validateName,
-                                ),
-                                widget.config.rowMargin,
-                                EzIconButton(
-                                  widget.config,
-                                  icon: Icon(icon),
-                                  onPressed: () async {
-                                    final IconData? choice =
-                                        await chooseIcon(widget.config, context);
-                                    if (choice != null) setCustom(() => icon = choice);
-                                  },
-                                ),
-                              ]),
-                              widget.config.spacer,
-
-                              // Base site
-                              EzTextField(
-                                controller: baseCon,
-                                constraints:
-                                    BoxConstraints.tightFor(height: fieldHeight, width: fieldWidth),
-                                hintText: 'Base site (ecosia.org)',
-                                onFieldSubmitted: shrink,
-                                onTap: grow,
-                                validator: validateName,
-                              ),
-                              widget.config.spacer,
-
-                              // Path
-                              EzTextField(
-                                controller: pathCon,
-                                constraints:
-                                    BoxConstraints.tightFor(height: fieldHeight, width: fieldWidth),
-                                hintText: 'Path (/search)',
-                                onFieldSubmitted: shrink,
-                                onTap: grow,
-                                validator: validateName,
-                              ),
-                              widget.config.spacer,
-
-                              // Parameter
-                              EzTextField(
-                                controller: queryCon,
-                                constraints:
-                                    BoxConstraints.tightFor(height: fieldHeight, width: fieldWidth),
-                                hintText: 'Parameter (q)',
-                                onFieldSubmitted: shrink,
-                                onTap: grow,
-                                validator: validateName,
-                              ),
-                              widget.config.separator,
-
-                              // Add/cancel
-                              EzRow(widget.config, children: <Widget>[
-                                EzTextIconButton(
-                                  widget.config,
-                                  icon: EzIcon(widget.config, Icons.cancel_outlined),
-                                  label: 'Cancel',
-                                  style: TextButton.styleFrom(
-                                    padding: EdgeInsets.zero,
-                                    backgroundColor: widget.config.colors.surfaceContainer,
-                                  ),
-                                  onPressed: () => Navigator.of(customCon).pop(),
-                                ),
-                                widget.config.rowSpacer,
-                                EzTextIconButton(
-                                  widget.config,
-                                  icon: EzIcon(widget.config, Icons.done),
-                                  label: 'Add',
-                                  style: TextButton.styleFrom(
-                                    padding: EdgeInsets.zero,
-                                    backgroundColor: widget.config.colors.surfaceContainer,
-                                  ),
-                                  onPressed: () {
-                                    if (nameCon.text.trim().isEmpty) {
-                                      ezSnackBar(widget.config,
-                                          context: customCon, message: 'Need a non-empty name.');
-                                      return;
-                                    }
-
-                                    if (shown.any((Engine e) => (!Engine.defaultSet.contains(e) &&
-                                        e.name == nameCon.text))) {
-                                      ezSnackBar(widget.config,
-                                          context: customCon,
-                                          message:
-                                              'A custom entry with that name already exists.\nPlease change the name and try again.');
-                                      return;
-                                    }
-
-                                    Navigator.of(customCon).pop(Engine(
-                                      name: nameCon.text,
-                                      icon: icon,
-                                      id: 'zz_custom_${nameCon.text}',
-                                      base: baseCon.text,
-                                      path: pathCon.text,
-                                      query: queryCon.text,
-                                    ));
-                                  },
-                                ),
-                              ]),
-                              widget.config.spacer,
-
-                              // Warning
-                              Text(
-                                'Liminal does minimal validation of these custom inputs.\nPlay at your own risk.',
-                                textAlign: TextAlign.center,
-                                style: widget.config.labelStyle,
-                              ),
-                              EzSpacer(bottomSpace),
-                            ]);
-                          },
-                        ),
-                      );
-
-                      if (custom != null) shown.add(custom);
-                    },
-                  ),
-                ),
-              ]),
-              EzTitledDivider(
-                Text('Hidden', textAlign: TextAlign.center, style: widget.config.labelStyle),
-                height: widget.config.spacing * 2,
-                margin: widget.config.marginVal,
-              ),
-
-              // Hidden
-              EzWrap(
-                children: hidden
-                    .map((Engine e) => Padding(
-                          padding: EzInsets.wrap(widget.config.spacing),
-                          child: EzElevatedIconButton(
-                            key: ValueKey<Engine>(e),
-                            widget.config,
-                            icon: EzIcon(widget.config, e.icon),
-                            label: e.name,
-                            onPressed: () {
-                              hidden.remove(e);
-                              shown.add(e);
-                              shown.sort();
-                              setModal(() {});
-                            },
-                            onLongPress: Engine.defaultSet.contains(e)
-                                ? null
-                                : () {
-                                    shown.remove(e);
-                                    if (widget._engine == e) curr = shown.first;
-                                    setModal(() {});
-                                  },
-                          ),
-                        ))
-                    .toList(),
-              ),
-              hidden.isEmpty ? widget.config.separator : widget.config.spacer,
-            ]),
-          ),
-        );
-
-        await widget.appInfo.updateWidget(
-          widget.config,
-          WidWidGetGet.search,
-          TCC.searchEntry(size, curr, shown.map((Engine e) => e.value)),
-          lane: widget.lane,
-          index: widget.index,
-        );
-      },
-    );
-
     return EzAnimSwitch(
       widget.config,
       mod: 0.667,
@@ -534,21 +249,45 @@ class _SearchWidgetState extends State<SearchWidget> {
                       onLongPress: () => canToggleMenu(widget.config, controller),
                     ),
                   ]),
-            menuChildren: <Widget>[...engineChoices, resize, remove],
+            menuChildren: widgetMC(
+              widget.config,
+              widget.appInfo,
+              _EditSearch(
+                widget.config,
+                widget.appInfo,
+                widget._size,
+                widget._engine,
+                widget._choices,
+                lane: widget.lane,
+                index: widget.index,
+                fieldHeight: fieldHeight,
+              ),
+              local: engineChoices,
+              numLanes: numLanes,
+              lane: widget.lane,
+              index: widget.index,
+            ),
           ),
         _ => EditContainer(
             widget.config,
             menuControl: menuControl,
-            menuChildren: <Widget>[
-              if (numLanes > 1 && widget.lane != 0)
-                moveDownLane(widget.config, widget.appInfo,
-                    numLanes: numLanes, lane: widget.lane, index: widget.index),
-              resize,
-              remove,
-              if (numLanes > 1 && widget.lane < (numLanes - 1))
-                moveUpLane(widget.config, widget.appInfo,
-                    numLanes: numLanes, lane: widget.lane, index: widget.index),
-            ],
+            menuChildren: widgetMC(
+              widget.config,
+              widget.appInfo,
+              _EditSearch(
+                widget.config,
+                widget.appInfo,
+                widget._size,
+                widget._engine,
+                widget._choices,
+                lane: widget.lane,
+                index: widget.index,
+                fieldHeight: fieldHeight,
+              ),
+              numLanes: numLanes,
+              lane: widget.lane,
+              index: widget.index,
+            ),
             child: EzIconButton(
               widget.config,
               icon: const Icon(Icons.search),
@@ -565,6 +304,316 @@ class _SearchWidgetState extends State<SearchWidget> {
     widget.rippleProgress?.removeListener(rippling);
     super.dispose();
   }
+}
+
+class _EditSearch extends StatelessWidget {
+  final EzCP config;
+  final AppInfoProvider appInfo;
+  final WidgetSize initSize;
+  final Engine initEngine;
+  final List<Engine> initChoices;
+  final int lane;
+  final int index;
+  final double fieldHeight;
+
+  const _EditSearch(
+    this.config,
+    this.appInfo,
+    this.initSize,
+    this.initEngine,
+    this.initChoices, {
+    required this.lane,
+    required this.index,
+    required this.fieldHeight,
+  });
+
+  @override
+  Widget build(BuildContext context) => EzMenuButton(
+        config,
+        label: 'Edit',
+        icon: EzIcon(config, Icons.edit),
+        onPressed: () async {
+          WidgetSize size = initSize;
+          Engine curr = initEngine;
+
+          final List<Engine> shown = List<Engine>.from(initChoices);
+          final List<Engine> hidden = List<Engine>.from(Engine.defaultOrder);
+          hidden.removeWhere((Engine e) => initChoices.contains(e));
+
+          await ezModal(
+            config,
+            context: context,
+            builder: (_) => StatefulBuilder(
+              builder: (BuildContext mCon, StateSetter setModal) =>
+                  ezModalScroll(config, children: <Widget>[
+                // Size
+                EzRow(
+                  config,
+                  children: <Widget>[
+                    Flexible(
+                      child: Text('Size:', textAlign: TextAlign.center, style: config.labelStyle),
+                    ),
+                    config.rowMargin,
+                    EzDropdownMenu<WidgetSize>(
+                      config,
+                      enableSearch: false,
+                      initialSelection: size,
+                      widthEntry: WidgetSize.system.value,
+                      dropdownMenuEntries: WidgetSize.values
+                          .map((WidgetSize ws) => DropdownMenuEntry<WidgetSize>(
+                                value: ws,
+                                label: ezCamelToTitle(ws.value),
+                              ))
+                          .toList(),
+                      onSelected: (WidgetSize? choice) {
+                        if (choice == null) return;
+                        setModal(() => size = choice);
+                      },
+                    )
+                  ],
+                ),
+                config.spacer,
+
+                // Shown
+                Text('Shown', textAlign: TextAlign.center, style: config.labelStyle),
+                EzWrap(children: <Widget>[
+                  ...shown.map((Engine e) => Padding(
+                        padding: EzInsets.wrap(config.spacing),
+                        child: EzElevatedIconButton(
+                          config,
+                          key: ValueKey<Engine>(e),
+                          enabled: shown.length > 1,
+                          icon: EzIcon(config, e.icon),
+                          label: e.name,
+                          onPressed: () {
+                            shown.remove(e);
+                            hidden.add(e);
+                            hidden.sort();
+                            setModal(() {});
+                          },
+                          onLongPress: Engine.defaultSet.contains(e)
+                              ? null
+                              : () {
+                                  shown.remove(e);
+                                  if (initEngine == e) curr = shown.first;
+                                  setModal(() {});
+                                },
+                        ),
+                      )),
+                  Padding(
+                    padding: EzInsets.wrap(config.spacing),
+                    child: EzElevatedIconButton(
+                      key: const ValueKey<String>('addNew'),
+                      config,
+                      icon: EzIcon(config, Icons.add),
+                      label: 'Custom',
+                      onPressed: () async {
+                        final TextEditingController nameCon = TextEditingController();
+                        IconData icon = Icons.search;
+                        final TextEditingController baseCon = TextEditingController();
+                        final TextEditingController pathCon = TextEditingController();
+                        final TextEditingController queryCon = TextEditingController();
+                        final double fieldWidth = widthOf(mCon) / 2;
+
+                        double bottomSpace = config.spacing * 2;
+
+                        final Engine? custom = await ezModal(
+                          config,
+                          context: context,
+                          builder: (_) => StatefulBuilder(
+                            builder: (BuildContext customCon, StateSetter setCustom) {
+                              void shrink(_) => setCustom(() => bottomSpace = (config.spacing * 2));
+
+                              Future<void> grow() async {
+                                // Wait a bit for the keyboard to open
+                                await Future<void>.delayed(const Duration(milliseconds: 300));
+
+                                setCustom(() => bottomSpace = ((config.spacing * 2) +
+                                    MediaQuery.of(context).viewInsets.bottom));
+                              }
+
+                              return ezModalScroll(config, children: <Widget>[
+                                // Name && icon
+                                EzRow(config, children: <Widget>[
+                                  EzTextField(
+                                    controller: nameCon,
+                                    constraints: BoxConstraints.tightFor(
+                                      height: fieldHeight,
+                                      width: fieldWidth,
+                                    ),
+                                    hintText: 'Name (Ecosia)',
+                                    onFieldSubmitted: shrink,
+                                    onTap: grow,
+                                    validator: validateName,
+                                  ),
+                                  config.rowMargin,
+                                  EzIconButton(
+                                    config,
+                                    icon: Icon(icon),
+                                    onPressed: () async {
+                                      final IconData? choice = await chooseIcon(config, context);
+                                      if (choice != null) setCustom(() => icon = choice);
+                                    },
+                                  ),
+                                ]),
+                                config.spacer,
+
+                                // Base site
+                                EzTextField(
+                                  controller: baseCon,
+                                  constraints: BoxConstraints.tightFor(
+                                    height: fieldHeight,
+                                    width: fieldWidth,
+                                  ),
+                                  hintText: 'Base site (ecosia.org)',
+                                  onFieldSubmitted: shrink,
+                                  onTap: grow,
+                                  validator: validateName,
+                                ),
+                                config.spacer,
+
+                                // Path
+                                EzTextField(
+                                  controller: pathCon,
+                                  constraints: BoxConstraints.tightFor(
+                                    height: fieldHeight,
+                                    width: fieldWidth,
+                                  ),
+                                  hintText: 'Path (/search)',
+                                  onFieldSubmitted: shrink,
+                                  onTap: grow,
+                                  validator: validateName,
+                                ),
+                                config.spacer,
+
+                                // Parameter
+                                EzTextField(
+                                  controller: queryCon,
+                                  constraints: BoxConstraints.tightFor(
+                                    height: fieldHeight,
+                                    width: fieldWidth,
+                                  ),
+                                  hintText: 'Parameter (q)',
+                                  onFieldSubmitted: shrink,
+                                  onTap: grow,
+                                  validator: validateName,
+                                ),
+                                config.separator,
+
+                                // Add/cancel
+                                EzRow(config, children: <Widget>[
+                                  EzTextIconButton(
+                                    config,
+                                    icon: EzIcon(config, Icons.cancel_outlined),
+                                    label: 'Cancel',
+                                    style: TextButton.styleFrom(
+                                      padding: EdgeInsets.zero,
+                                      backgroundColor: config.colors.surfaceContainer,
+                                    ),
+                                    onPressed: () => Navigator.of(customCon).pop(),
+                                  ),
+                                  config.rowSpacer,
+                                  EzTextIconButton(
+                                    config,
+                                    icon: EzIcon(config, Icons.done),
+                                    label: 'Add',
+                                    style: TextButton.styleFrom(
+                                      padding: EdgeInsets.zero,
+                                      backgroundColor: config.colors.surfaceContainer,
+                                    ),
+                                    onPressed: () {
+                                      if (nameCon.text.trim().isEmpty) {
+                                        ezSnackBar(config,
+                                            context: customCon, message: 'Need a non-empty name.');
+                                        return;
+                                      }
+
+                                      if (shown.any((Engine e) => (!Engine.defaultSet.contains(e) &&
+                                          e.name == nameCon.text))) {
+                                        ezSnackBar(config,
+                                            context: customCon,
+                                            message:
+                                                'A custom entry with that name already exists.\nPlease change the name and try again.');
+                                        return;
+                                      }
+
+                                      Navigator.of(customCon).pop(Engine(
+                                        name: nameCon.text,
+                                        icon: icon,
+                                        id: 'zz_custom_${nameCon.text}',
+                                        base: baseCon.text,
+                                        path: pathCon.text,
+                                        query: queryCon.text,
+                                      ));
+                                    },
+                                  ),
+                                ]),
+                                config.spacer,
+
+                                // Warning
+                                Text(
+                                  'Liminal does minimal validation of these custom inputs.\nPlay at your own risk.',
+                                  textAlign: TextAlign.center,
+                                  style: config.labelStyle,
+                                ),
+                                EzSpacer(bottomSpace),
+                              ]);
+                            },
+                          ),
+                        );
+
+                        if (custom != null) shown.add(custom);
+                      },
+                    ),
+                  ),
+                ]),
+                EzTitledDivider(
+                  Text('Hidden', textAlign: TextAlign.center, style: config.labelStyle),
+                  height: config.spacing * 2,
+                  margin: config.marginVal,
+                ),
+
+                // Hidden
+                EzWrap(
+                  children: hidden
+                      .map((Engine e) => Padding(
+                            padding: EzInsets.wrap(config.spacing),
+                            child: EzElevatedIconButton(
+                              key: ValueKey<Engine>(e),
+                              config,
+                              icon: EzIcon(config, e.icon),
+                              label: e.name,
+                              onPressed: () {
+                                hidden.remove(e);
+                                shown.add(e);
+                                shown.sort();
+                                setModal(() {});
+                              },
+                              onLongPress: Engine.defaultSet.contains(e)
+                                  ? null
+                                  : () {
+                                      shown.remove(e);
+                                      if (initEngine == e) curr = shown.first;
+                                      setModal(() {});
+                                    },
+                            ),
+                          ))
+                      .toList(),
+                ),
+                hidden.isEmpty ? config.separator : config.spacer,
+              ]),
+            ),
+          );
+
+          await appInfo.updateWidget(
+            config,
+            WidWidGetGet.search,
+            TCC.searchEntry(size, curr, shown.map((Engine e) => e.value)),
+            lane: lane,
+            index: index,
+          );
+        },
+      );
 }
 
 class AddSearch extends StatelessWidget {

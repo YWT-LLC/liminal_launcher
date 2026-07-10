@@ -102,398 +102,6 @@ class _ClockWidgetState extends State<ClockWidget> {
     }
   }
 
-  Future<void> openEdits() async {
-    final double iconRadius = widget.config.iconSize / 2;
-
-    _Edits curr = _Edits.background;
-    int delta = 0;
-
-    EzButtonShape shape = widget._shape;
-    Color? background = widget._background;
-
-    TxtStile timeStyle = widget._timeStyle;
-    Color? timeColor = widget._timeColor;
-    bool showTime = widget._showTime;
-
-    DateType dateType = widget._dateType;
-    TxtStile dateStyle = widget._dateStyle;
-    Color? dateColor = widget._dateColor;
-
-    await ezModal(
-      widget.config,
-      context: context,
-      builder: (_) => StatefulBuilder(builder: (_, StateSetter setModal) {
-        void nav(_Edits choice) {
-          delta = choice.index - curr.index;
-          setModal(() => curr = choice);
-        }
-
-        Widget backgroundSettings() => EzScrollView(widget.config, children: <Widget>[
-              // Shape
-              Text(
-                'Background shape',
-                textAlign: TextAlign.center,
-                style: widget.config.labelStyle,
-              ),
-              EzWrap(
-                children: <EzButtonShape>[
-                  EzButtonShape.pill,
-                  EzButtonShape.rect,
-                  EzButtonShape.roundRect,
-                  EzButtonShape.jewel,
-                ]
-                    .map((EzButtonShape bs) => Padding(
-                          padding: EzInsets.wrap(widget.config.spacing),
-                          child: EzCol(children: <Widget>[
-                            EzElevatedButton(
-                              widget.config,
-                              text: bs.name(widget.config.ezL10n),
-                              textStyle: bs == shape
-                                  ? widget.config.bodyStyle
-                                      ?.copyWith(color: widget.config.colors.onPrimary)
-                                  : widget.config.bodyStyle,
-                              style: bs == shape
-                                  ? ElevatedButton.styleFrom(
-                                      shape: bs.shape,
-                                      foregroundColor: widget.config.colors.onPrimary,
-                                      backgroundColor: widget.config.colors.primary,
-                                    )
-                                  : ElevatedButton.styleFrom(shape: bs.shape),
-                              onPressed: () => setModal(() => shape = bs),
-                            ),
-                          ]),
-                        ))
-                    .toList(),
-              ),
-              widget.config.separator,
-
-              // Background color
-              EzElevatedIconButton(
-                widget.config,
-                onPressed: () async {
-                  Color curr = background ??
-                      widget.config.colors.surfaceContainer
-                          .withValues(alpha: widget.config.textBackgroundOpacity);
-
-                  await ezColorPicker(
-                    widget.config,
-                    context: context,
-                    startColor: curr,
-                    onColorChange: (Color choice) => curr = choice,
-                    onConfirm: () => setModal(() => background = curr),
-                    onDeny: doNothing,
-                  );
-                },
-                onLongPress: () => setModal(() => background = null),
-                icon: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: widget.config.colors.primaryContainer,
-                      width: widget.config.borderWidth,
-                    ),
-                  ),
-                  child: (background == null || background == Colors.transparent)
-                      ? CircleAvatar(
-                          backgroundColor: widget.config.colors.surface,
-                          foregroundColor: widget.config.colors.onSurface,
-                          radius: iconRadius + widget.config.padding,
-                          child: EzIcon(
-                            widget.config,
-                            (background == null) ? Icons.settings : Icons.visibility_off,
-                          ),
-                        )
-                      : CircleAvatar(
-                          backgroundColor: background,
-                          radius: iconRadius + widget.config.padding,
-                        ),
-                ),
-                label: 'Background\ncolor',
-                textAlign: TextAlign.center,
-              ),
-            ]);
-
-        Widget timeSettings() => EzScrollView(widget.config, children: <Widget>[
-              // Time style
-              EzRow(widget.config, children: <Widget>[
-                Flexible(
-                  child: Text(
-                    'Time style',
-                    textAlign: TextAlign.center,
-                    style: timeStyle.style(widget.config),
-                  ),
-                ),
-                widget.config.rowMargin,
-                EzDropdownMenu<TxtStile>(
-                  widget.config,
-                  enabled: showTime,
-                  enableSearch: false,
-                  initialSelection: timeStyle,
-                  widthEntry: TxtStile.display.value,
-                  dropdownMenuEntries: TxtStile.values
-                      .map((TxtStile ts) => DropdownMenuEntry<TxtStile>(
-                            value: ts,
-                            label: ezCamelToTitle(ts.value),
-                          ))
-                      .toList(),
-                  textStyle: timeStyle.style(widget.config),
-                  onSelected: (TxtStile? choice) {
-                    if (choice == null) return;
-                    setModal(() => timeStyle = choice);
-                  },
-                ),
-              ]),
-              widget.config.spacer,
-
-              // Time color
-              EzElevatedIconButton(
-                widget.config,
-                enabled: showTime,
-                onPressed: () async {
-                  Color curr = timeColor ?? widget.config.colors.onSurface;
-
-                  await ezColorPicker(
-                    widget.config,
-                    context: context,
-                    startColor: curr,
-                    onColorChange: (Color choice) => curr = choice,
-                    onConfirm: () => setModal(() => timeColor = curr),
-                    onDeny: doNothing,
-                  );
-                },
-                onLongPress: () => setModal(() => timeColor = null),
-                icon: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: widget.config.colors.primaryContainer,
-                      width: widget.config.borderWidth,
-                    ),
-                  ),
-                  child: (timeColor == null || timeColor == Colors.transparent)
-                      ? CircleAvatar(
-                          backgroundColor: widget.config.colors.surface,
-                          foregroundColor: widget.config.colors.onSurface,
-                          radius: iconRadius + widget.config.padding,
-                          child: EzIcon(
-                            widget.config,
-                            (timeColor == null) ? Icons.settings : Icons.visibility_off,
-                          ),
-                        )
-                      : CircleAvatar(
-                          backgroundColor: timeColor,
-                          radius: iconRadius + widget.config.padding,
-                        ),
-                ),
-                label: 'Time color',
-                textAlign: TextAlign.center,
-              ),
-              widget.config.spacer,
-
-              // Time on/off
-              EzSwitchPair(
-                key: ValueKey<bool>(showTime),
-                widget.config,
-                value: showTime,
-                text: 'Show time',
-                onChanged: (bool? choice) {
-                  if (choice == null) return;
-                  setModal(() => showTime = choice);
-                },
-              ),
-            ]);
-
-        Widget dateSettings() => EzScrollView(widget.config, children: <Widget>[
-              // Date type
-              EzRow(widget.config, children: <Widget>[
-                Flexible(
-                  child: Text(
-                    'Date type',
-                    textAlign: TextAlign.center,
-                    style: widget.config.bodyStyle,
-                  ),
-                ),
-                widget.config.rowMargin,
-                EzDropdownMenu<DateType>(
-                  widget.config,
-                  enableSearch: false,
-                  initialSelection: dateType,
-                  widthEntry: DateType.compact.value,
-                  dropdownMenuEntries: DateType.values
-                      .map((DateType dt) => DropdownMenuEntry<DateType>(
-                            value: dt,
-                            label: ezCamelToTitle(dt.value),
-                          ))
-                      .toList(),
-                  onSelected: (DateType? choice) {
-                    if (choice == null) return;
-                    setModal(() => dateType = choice);
-                  },
-                ),
-              ]),
-              widget.config.spacer,
-
-              // Date style
-              EzRow(widget.config, children: <Widget>[
-                Flexible(
-                  child: Text(
-                    'Date style',
-                    textAlign: TextAlign.center,
-                    style: dateStyle.style(widget.config),
-                  ),
-                ),
-                widget.config.rowMargin,
-                EzDropdownMenu<TxtStile>(
-                  widget.config,
-                  enabled: dateType != DateType.none,
-                  enableSearch: false,
-                  initialSelection: dateStyle,
-                  widthEntry: TxtStile.display.value,
-                  dropdownMenuEntries: TxtStile.values
-                      .map((TxtStile ts) => DropdownMenuEntry<TxtStile>(
-                            value: ts,
-                            label: ezCamelToTitle(ts.value),
-                          ))
-                      .toList(),
-                  textStyle: dateStyle.style(widget.config),
-                  onSelected: (TxtStile? choice) {
-                    if (choice == null) return;
-                    setModal(() => dateStyle = choice);
-                  },
-                ),
-              ]),
-              widget.config.spacer,
-
-              // Date color
-              EzElevatedIconButton(
-                widget.config,
-                enabled: dateType != DateType.none,
-                onPressed: () async {
-                  Color curr = dateColor ?? widget.config.colors.onSurface;
-
-                  await ezColorPicker(
-                    widget.config,
-                    context: context,
-                    startColor: curr,
-                    onColorChange: (Color choice) => curr = choice,
-                    onConfirm: () => setModal(() => dateColor = curr),
-                    onDeny: doNothing,
-                  );
-                },
-                onLongPress: () => setModal(() => dateColor = null),
-                icon: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: widget.config.colors.primaryContainer,
-                      width: widget.config.borderWidth,
-                    ),
-                  ),
-                  child: (dateColor == null || dateColor == Colors.transparent)
-                      ? CircleAvatar(
-                          backgroundColor: widget.config.colors.surface,
-                          foregroundColor: widget.config.colors.onSurface,
-                          radius: iconRadius + widget.config.padding,
-                          child: EzIcon(
-                            widget.config,
-                            (dateColor == null) ? Icons.settings : Icons.visibility_off,
-                          ),
-                        )
-                      : CircleAvatar(
-                          backgroundColor: dateColor,
-                          radius: iconRadius + widget.config.padding,
-                        ),
-                ),
-                label: 'Date color',
-                textAlign: TextAlign.center,
-              ),
-            ]);
-
-        return EzCol(mainAxisSize: MainAxisSize.max, children: <Widget>[
-          // Switcher
-          SegmentedButton<_Edits>(
-            segments: _Edits.values
-                .map((_Edits et) => ButtonSegment<_Edits>(
-                      value: et,
-                      label: Text(et.name, textAlign: TextAlign.center),
-                    ))
-                .toList(),
-            selected: <_Edits>{curr},
-            showSelectedIcon: false,
-            onSelectionChanged: (Set<_Edits> selected) => nav(selected.first),
-          ),
-          widget.config.spacer,
-
-          // Settings
-          Expanded(
-            child: GestureDetector(
-              onHorizontalDragEnd: (DragEndDetails details) {
-                if (details.primaryVelocity == null) return;
-
-                if (details.primaryVelocity! < -ezSwipeV) {
-                  // RTL -> nav right
-                  if (curr.index < 2) nav(_Edits.values[curr.index + 1]);
-                }
-
-                if (details.primaryVelocity! > ezSwipeV) {
-                  // LTR -> nav left
-                  if (curr.index > 0) nav(_Edits.values[curr.index - 1]);
-                }
-              },
-              child: EzFauxCarousel(
-                widget.config,
-                position: curr.index,
-                delta: delta,
-                child: switch (curr) {
-                  _Edits.background => backgroundSettings(),
-                  _Edits.time => timeSettings(),
-                  _Edits.date => dateSettings(),
-                },
-              ),
-            ),
-          ),
-          widget.config.divider,
-
-          // Preview
-          EzTextBackground(
-            widget.config,
-            padding: EdgeInsets.all(widget.config.padding),
-            shape: shape,
-            backgroundColor: background,
-            text: EzCol(
-              mainAxisAlignment: widget.vAlign.mainAxis,
-              crossAxisAlignment: widget.hAlign.crossAxis,
-              children: <Widget>[
-                if (showTime)
-                  Text(
-                    TimeOfDay.fromDateTime(now).format(context),
-                    style: timeStyle.style(widget.config)?.copyWith(color: timeColor),
-                    textAlign: widget.hAlign.textAlign,
-                  ),
-                if (dateType != DateType.none)
-                  Text(
-                    DTConfig.buildDate(context, now, dateType),
-                    style: dateStyle.style(widget.config)?.copyWith(color: dateColor),
-                    textAlign: widget.hAlign.textAlign,
-                  ),
-              ],
-            ),
-          ),
-          widget.config.separator,
-        ]);
-      }),
-    );
-
-    await widget.appInfo.updateWidget(
-      widget.config,
-      WidWidGetGet.clock,
-      TCC.clockEntry(
-          shape, background, showTime, timeStyle, timeColor, dateType, dateStyle, dateColor),
-      lane: widget.lane,
-      index: widget.index,
-    );
-  }
-
   // Init //
 
   @override
@@ -515,16 +123,6 @@ class _ClockWidgetState extends State<ClockWidget> {
   @override
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
-
-    late final EzMenuButton remove =
-        removeItem(widget.config, widget.appInfo, lane: widget.lane, index: widget.index);
-
-    late final EzMenuButton editAll = EzMenuButton(
-      widget.config,
-      label: 'Edit',
-      icon: EzIcon(widget.config, Icons.edit),
-      onPressed: openEdits,
-    );
 
     return EzAnimSwitch(
       widget.config,
@@ -564,21 +162,60 @@ class _ClockWidgetState extends State<ClockWidget> {
                 ),
               ),
             ),
-            menuChildren: <Widget>[editAll, remove],
+            menuChildren: widgetMC(
+              widget.config,
+              widget.appInfo,
+              _EditClock(
+                widget.config,
+                widget.appInfo,
+                _ClockConfig(
+                  widget._shape,
+                  widget._background,
+                  widget._timeStyle,
+                  widget._timeColor,
+                  widget._showTime,
+                  widget._dateType,
+                  widget._dateStyle,
+                  widget._dateColor,
+                ),
+                lane: widget.lane,
+                index: widget.index,
+                hAlign: widget.hAlign,
+                vAlign: widget.vAlign,
+              ),
+              numLanes: numLanes,
+              lane: widget.lane,
+              index: widget.index,
+            ),
           ),
         _ => EditContainer(
             widget.config,
             menuControl: menuControl,
-            menuChildren: <Widget>[
-              if (numLanes > 1 && widget.lane != 0)
-                moveDownLane(widget.config, widget.appInfo,
-                    numLanes: numLanes, lane: widget.lane, index: widget.index),
-              editAll,
-              remove,
-              if (numLanes > 1 && widget.lane < (numLanes - 1))
-                moveUpLane(widget.config, widget.appInfo,
-                    numLanes: numLanes, lane: widget.lane, index: widget.index),
-            ],
+            menuChildren: widgetMC(
+              widget.config,
+              widget.appInfo,
+              _EditClock(
+                widget.config,
+                widget.appInfo,
+                _ClockConfig(
+                  widget._shape,
+                  widget._background,
+                  widget._timeStyle,
+                  widget._timeColor,
+                  widget._showTime,
+                  widget._dateType,
+                  widget._dateStyle,
+                  widget._dateColor,
+                ),
+                lane: widget.lane,
+                index: widget.index,
+                hAlign: widget.hAlign,
+                vAlign: widget.vAlign,
+              ),
+              numLanes: numLanes,
+              lane: widget.lane,
+              index: widget.index,
+            ),
             child: EzIconButton(
               widget.config,
               icon: const Icon(Icons.watch),
@@ -597,11 +234,452 @@ class _ClockWidgetState extends State<ClockWidget> {
   }
 }
 
+class _EditClock extends StatelessWidget {
+  final EzCP config;
+  final AppInfoProvider appInfo;
+  final _ClockConfig initConfig;
+  final int lane;
+  final int index;
+  final ListAlignment hAlign;
+  final ListAlignment vAlign;
+
+  const _EditClock(
+    this.config,
+    this.appInfo,
+    this.initConfig, {
+    required this.lane,
+    required this.index,
+    required this.hAlign,
+    required this.vAlign,
+  });
+
+  @override
+  Widget build(BuildContext context) => EzMenuButton(
+        config,
+        label: 'Edit',
+        icon: EzIcon(config, Icons.edit),
+        onPressed: () async {
+          final double iconRadius = config.iconSize / 2;
+
+          _Edits curr = _Edits.background;
+          int delta = 0;
+
+          EzButtonShape shape = initConfig.shape;
+          Color? background = initConfig.background;
+
+          TxtStile timeStyle = initConfig.timeStyle;
+          Color? timeColor = initConfig.timeColor;
+          bool showTime = initConfig.showTime;
+
+          DateType dateType = initConfig.dateType;
+          TxtStile dateStyle = initConfig.dateStyle;
+          Color? dateColor = initConfig.dateColor;
+
+          await ezModal(
+            config,
+            context: context,
+            builder: (_) => StatefulBuilder(builder: (_, StateSetter setModal) {
+              void nav(_Edits choice) {
+                delta = choice.index - curr.index;
+                setModal(() => curr = choice);
+              }
+
+              Widget backgroundSettings() => EzScrollView(config, children: <Widget>[
+                    // Shape
+                    Text(
+                      'Background shape',
+                      textAlign: TextAlign.center,
+                      style: config.labelStyle,
+                    ),
+                    EzWrap(
+                      children: <EzButtonShape>[
+                        EzButtonShape.pill,
+                        EzButtonShape.rect,
+                        EzButtonShape.roundRect,
+                        EzButtonShape.jewel,
+                      ]
+                          .map((EzButtonShape bs) => Padding(
+                                padding: EzInsets.wrap(config.spacing),
+                                child: EzCol(children: <Widget>[
+                                  EzElevatedButton(
+                                    config,
+                                    text: bs.name(config.ezL10n),
+                                    textStyle: bs == shape
+                                        ? config.bodyStyle?.copyWith(color: config.colors.onPrimary)
+                                        : config.bodyStyle,
+                                    style: bs == shape
+                                        ? ElevatedButton.styleFrom(
+                                            shape: bs.shape,
+                                            foregroundColor: config.colors.onPrimary,
+                                            backgroundColor: config.colors.primary,
+                                          )
+                                        : ElevatedButton.styleFrom(shape: bs.shape),
+                                    onPressed: () => setModal(() => shape = bs),
+                                  ),
+                                ]),
+                              ))
+                          .toList(),
+                    ),
+                    config.separator,
+
+                    // Background color
+                    EzElevatedIconButton(
+                      config,
+                      onPressed: () async {
+                        Color curr = background ??
+                            config.colors.surfaceContainer
+                                .withValues(alpha: config.textBackgroundOpacity);
+
+                        await ezColorPicker(
+                          config,
+                          context: context,
+                          startColor: curr,
+                          onColorChange: (Color choice) => curr = choice,
+                          onConfirm: () => setModal(() => background = curr),
+                          onDeny: doNothing,
+                        );
+                      },
+                      onLongPress: () => setModal(() => background = null),
+                      icon: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: config.colors.primaryContainer,
+                            width: config.borderWidth,
+                          ),
+                        ),
+                        child: (background == null || background == Colors.transparent)
+                            ? CircleAvatar(
+                                backgroundColor: config.colors.surface,
+                                foregroundColor: config.colors.onSurface,
+                                radius: iconRadius + config.padding,
+                                child: EzIcon(
+                                  config,
+                                  (background == null) ? Icons.settings : Icons.visibility_off,
+                                ),
+                              )
+                            : CircleAvatar(
+                                backgroundColor: background,
+                                radius: iconRadius + config.padding,
+                              ),
+                      ),
+                      label: 'Background\ncolor',
+                      textAlign: TextAlign.center,
+                    ),
+                  ]);
+
+              Widget timeSettings() => EzScrollView(config, children: <Widget>[
+                    // Time style
+                    EzRow(config, children: <Widget>[
+                      Flexible(
+                        child: Text(
+                          'Time style',
+                          textAlign: TextAlign.center,
+                          style: timeStyle.style(config),
+                        ),
+                      ),
+                      config.rowMargin,
+                      EzDropdownMenu<TxtStile>(
+                        config,
+                        enabled: showTime,
+                        enableSearch: false,
+                        initialSelection: timeStyle,
+                        widthEntry: TxtStile.display.value,
+                        dropdownMenuEntries: TxtStile.values
+                            .map((TxtStile ts) => DropdownMenuEntry<TxtStile>(
+                                  value: ts,
+                                  label: ezCamelToTitle(ts.value),
+                                ))
+                            .toList(),
+                        textStyle: timeStyle.style(config),
+                        onSelected: (TxtStile? choice) {
+                          if (choice == null) return;
+                          setModal(() => timeStyle = choice);
+                        },
+                      ),
+                    ]),
+                    config.spacer,
+
+                    // Time color
+                    EzElevatedIconButton(
+                      config,
+                      enabled: showTime,
+                      onPressed: () async {
+                        Color curr = timeColor ?? config.colors.onSurface;
+
+                        await ezColorPicker(
+                          config,
+                          context: context,
+                          startColor: curr,
+                          onColorChange: (Color choice) => curr = choice,
+                          onConfirm: () => setModal(() => timeColor = curr),
+                          onDeny: doNothing,
+                        );
+                      },
+                      onLongPress: () => setModal(() => timeColor = null),
+                      icon: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: config.colors.primaryContainer,
+                            width: config.borderWidth,
+                          ),
+                        ),
+                        child: (timeColor == null || timeColor == Colors.transparent)
+                            ? CircleAvatar(
+                                backgroundColor: config.colors.surface,
+                                foregroundColor: config.colors.onSurface,
+                                radius: iconRadius + config.padding,
+                                child: EzIcon(
+                                  config,
+                                  (timeColor == null) ? Icons.settings : Icons.visibility_off,
+                                ),
+                              )
+                            : CircleAvatar(
+                                backgroundColor: timeColor,
+                                radius: iconRadius + config.padding,
+                              ),
+                      ),
+                      label: 'Time color',
+                      textAlign: TextAlign.center,
+                    ),
+                    config.spacer,
+
+                    // Time on/off
+                    EzSwitchPair(
+                      key: ValueKey<bool>(showTime),
+                      config,
+                      value: showTime,
+                      text: 'Show time',
+                      onChanged: (bool? choice) {
+                        if (choice == null) return;
+                        setModal(() => showTime = choice);
+                      },
+                    ),
+                  ]);
+
+              Widget dateSettings() => EzScrollView(config, children: <Widget>[
+                    // Date type
+                    EzRow(config, children: <Widget>[
+                      Flexible(
+                        child: Text(
+                          'Date type',
+                          textAlign: TextAlign.center,
+                          style: config.bodyStyle,
+                        ),
+                      ),
+                      config.rowMargin,
+                      EzDropdownMenu<DateType>(
+                        config,
+                        enableSearch: false,
+                        initialSelection: dateType,
+                        widthEntry: DateType.compact.value,
+                        dropdownMenuEntries: DateType.values
+                            .map((DateType dt) => DropdownMenuEntry<DateType>(
+                                  value: dt,
+                                  label: ezCamelToTitle(dt.value),
+                                ))
+                            .toList(),
+                        onSelected: (DateType? choice) {
+                          if (choice == null) return;
+                          setModal(() => dateType = choice);
+                        },
+                      ),
+                    ]),
+                    config.spacer,
+
+                    // Date style
+                    EzRow(config, children: <Widget>[
+                      Flexible(
+                        child: Text(
+                          'Date style',
+                          textAlign: TextAlign.center,
+                          style: dateStyle.style(config),
+                        ),
+                      ),
+                      config.rowMargin,
+                      EzDropdownMenu<TxtStile>(
+                        config,
+                        enabled: dateType != DateType.none,
+                        enableSearch: false,
+                        initialSelection: dateStyle,
+                        widthEntry: TxtStile.display.value,
+                        dropdownMenuEntries: TxtStile.values
+                            .map((TxtStile ts) => DropdownMenuEntry<TxtStile>(
+                                  value: ts,
+                                  label: ezCamelToTitle(ts.value),
+                                ))
+                            .toList(),
+                        textStyle: dateStyle.style(config),
+                        onSelected: (TxtStile? choice) {
+                          if (choice == null) return;
+                          setModal(() => dateStyle = choice);
+                        },
+                      ),
+                    ]),
+                    config.spacer,
+
+                    // Date color
+                    EzElevatedIconButton(
+                      config,
+                      enabled: dateType != DateType.none,
+                      onPressed: () async {
+                        Color curr = dateColor ?? config.colors.onSurface;
+
+                        await ezColorPicker(
+                          config,
+                          context: context,
+                          startColor: curr,
+                          onColorChange: (Color choice) => curr = choice,
+                          onConfirm: () => setModal(() => dateColor = curr),
+                          onDeny: doNothing,
+                        );
+                      },
+                      onLongPress: () => setModal(() => dateColor = null),
+                      icon: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: config.colors.primaryContainer,
+                            width: config.borderWidth,
+                          ),
+                        ),
+                        child: (dateColor == null || dateColor == Colors.transparent)
+                            ? CircleAvatar(
+                                backgroundColor: config.colors.surface,
+                                foregroundColor: config.colors.onSurface,
+                                radius: iconRadius + config.padding,
+                                child: EzIcon(
+                                  config,
+                                  (dateColor == null) ? Icons.settings : Icons.visibility_off,
+                                ),
+                              )
+                            : CircleAvatar(
+                                backgroundColor: dateColor,
+                                radius: iconRadius + config.padding,
+                              ),
+                      ),
+                      label: 'Date color',
+                      textAlign: TextAlign.center,
+                    ),
+                  ]);
+
+              return EzCol(mainAxisSize: MainAxisSize.max, children: <Widget>[
+                // Switcher
+                SegmentedButton<_Edits>(
+                  segments: _Edits.values
+                      .map((_Edits et) => ButtonSegment<_Edits>(
+                            value: et,
+                            label: Text(et.name, textAlign: TextAlign.center),
+                          ))
+                      .toList(),
+                  selected: <_Edits>{curr},
+                  showSelectedIcon: false,
+                  onSelectionChanged: (Set<_Edits> selected) => nav(selected.first),
+                ),
+                config.spacer,
+
+                // Settings
+                Expanded(
+                  child: GestureDetector(
+                    onHorizontalDragEnd: (DragEndDetails details) {
+                      if (details.primaryVelocity == null) return;
+
+                      if (details.primaryVelocity! < -ezSwipeV) {
+                        // RTL -> nav right
+                        if (curr.index < 2) nav(_Edits.values[curr.index + 1]);
+                      }
+
+                      if (details.primaryVelocity! > ezSwipeV) {
+                        // LTR -> nav left
+                        if (curr.index > 0) nav(_Edits.values[curr.index - 1]);
+                      }
+                    },
+                    child: EzFauxCarousel(
+                      config,
+                      position: curr.index,
+                      delta: delta,
+                      child: switch (curr) {
+                        _Edits.background => backgroundSettings(),
+                        _Edits.time => timeSettings(),
+                        _Edits.date => dateSettings(),
+                      },
+                    ),
+                  ),
+                ),
+                config.divider,
+
+                // Preview
+                EzTextBackground(
+                  config,
+                  padding: EdgeInsets.all(config.padding),
+                  shape: shape,
+                  backgroundColor: background,
+                  text: EzCol(
+                    mainAxisAlignment: vAlign.mainAxis,
+                    crossAxisAlignment: hAlign.crossAxis,
+                    children: <Widget>[
+                      if (showTime)
+                        Text(
+                          TimeOfDay.fromDateTime(DateTime.now()).format(context),
+                          style: timeStyle.style(config)?.copyWith(color: timeColor),
+                          textAlign: hAlign.textAlign,
+                        ),
+                      if (dateType != DateType.none)
+                        Text(
+                          DTConfig.buildDate(context, DateTime.now(), dateType),
+                          style: dateStyle.style(config)?.copyWith(color: dateColor),
+                          textAlign: hAlign.textAlign,
+                        ),
+                    ],
+                  ),
+                ),
+                config.separator,
+              ]);
+            }),
+          );
+
+          await appInfo.updateWidget(
+            config,
+            WidWidGetGet.clock,
+            TCC.clockEntry(
+                shape, background, showTime, timeStyle, timeColor, dateType, dateStyle, dateColor),
+            lane: lane,
+            index: index,
+          );
+        },
+      );
+}
+
+class _ClockConfig {
+  EzButtonShape shape;
+  Color? background;
+
+  TxtStile timeStyle;
+  Color? timeColor;
+  bool showTime;
+
+  DateType dateType;
+  TxtStile dateStyle;
+  Color? dateColor;
+
+  _ClockConfig(
+    this.shape,
+    this.background,
+    this.timeStyle,
+    this.timeColor,
+    this.showTime,
+    this.dateType,
+    this.dateStyle,
+    this.dateColor,
+  );
+}
+
 /// background, time, date
 enum _Edits { background, time, date }
 
 /// background, time, date
-extension _ETName on _Edits {
+extension _Title on _Edits {
   String get name => switch (this) {
         _Edits.background => 'Background',
         _Edits.time => 'Time',
