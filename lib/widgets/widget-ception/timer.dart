@@ -62,51 +62,6 @@ class _TimerWidgetState extends State<TimerWidget> {
 
   OverlayEntry? overlayEntry;
 
-  Widget timeField(
-    BoxConstraints constraints,
-    TextEditingController controller,
-    FocusNode curr,
-    void Function() onSubmit, {
-    bool last = false,
-    bool useOverlay = true,
-  }) =>
-      EzScrollBlocker(EzTextField(
-        controller: controller,
-        constraints: constraints,
-        errorConstraints:
-            BoxConstraints.tightFor(height: constraints.maxHeight, width: constraints.maxWidth * 2),
-        focusNode: curr,
-        hintText: '00',
-        keyboardType: TextInputType.number,
-        textInputAction: last ? TextInputAction.done : TextInputAction.next,
-        onTap: controller.clear,
-        onTapOutside: (_) {
-          if (controller.text.isEmpty) controller.text = '00';
-        },
-        onChanged: (String value) => useOverlay
-            ? ((value.isEmpty)
-                ? removeOverlay()
-                : ((overlayEntry == null)
-                    ? showOverlay(controller)
-                    : overlayEntry!.markNeedsBuild()))
-            : doNothing(),
-        onEditingComplete: () {
-          if (controller.text.isEmpty) controller.text = '00';
-        },
-        onFieldSubmitted: (String value) {
-          if (value.isEmpty) controller.text = '00';
-          onSubmit.call();
-        },
-        validator: (String? value) {
-          const String failure = '0-99';
-
-          if (value == null) return failure;
-          final int parsed = int.tryParse(value) ?? -1;
-
-          return (parsed > 99 || parsed < 0) ? failure : null;
-        },
-      ));
-
   // Define custom functions //
 
   void rippling() {
@@ -170,7 +125,7 @@ class _TimerWidgetState extends State<TimerWidget> {
     overlayEntry = null;
   }
 
-  Future<dynamic> setAutoDialog(BoxConstraints constraints) => showDialog(
+  Future<bool?> setAutoDialog(BoxConstraints constraints) => showDialog(
         context: context,
         builder: (BuildContext mCon) => EzAlertDialog(
           widget.config,
@@ -242,80 +197,59 @@ class _TimerWidgetState extends State<TimerWidget> {
 
   // Return the build //
 
+  Widget timeField(
+    BoxConstraints constraints,
+    TextEditingController controller,
+    FocusNode curr,
+    void Function() onSubmit, {
+    bool last = false,
+    bool useOverlay = true,
+  }) =>
+      EzScrollBlocker(EzTextField(
+        controller: controller,
+        constraints: constraints,
+        errorConstraints:
+            BoxConstraints.tightFor(height: constraints.maxHeight, width: constraints.maxWidth * 2),
+        focusNode: curr,
+        hintText: '00',
+        keyboardType: TextInputType.number,
+        textInputAction: last ? TextInputAction.done : TextInputAction.next,
+        onTap: controller.clear,
+        onTapOutside: (_) {
+          if (controller.text.isEmpty) controller.text = '00';
+        },
+        onChanged: (String value) => useOverlay
+            ? ((value.isEmpty)
+                ? removeOverlay()
+                : ((overlayEntry == null)
+                    ? showOverlay(controller)
+                    : overlayEntry!.markNeedsBuild()))
+            : doNothing(),
+        onEditingComplete: () {
+          if (controller.text.isEmpty) controller.text = '00';
+        },
+        onFieldSubmitted: (String value) {
+          if (value.isEmpty) controller.text = '00';
+          onSubmit.call();
+        },
+        validator: (String? value) {
+          const String failure = '0-99';
+
+          if (value == null) return failure;
+          final int parsed = int.tryParse(value) ?? -1;
+
+          return (parsed > 99 || parsed < 0) ? failure : null;
+        },
+      ));
+
   @override
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
-
-    late final EzMenuButton remove =
-        removeItem(widget.config, widget.appInfo, lane: widget.lane, index: widget.index);
 
     final BoxConstraints numConstraints = BoxConstraints.tightFor(
       width: ezTextSize('000', context: context, style: widget.config.bodyStyle).width +
           (2 * widget.config.padding),
       height: appIconSize(widget.config),
-    );
-
-    late final EzMenuButton setAuto = EzMenuButton(
-      widget.config,
-      label: 'Auto duration',
-      icon: EzIcon(widget.config, Icons.edit),
-      onPressed: () async {
-        final String ourBackup = ourCon.text;
-        final String minBackup = ourCon.text;
-        final String secBackup = ourCon.text;
-
-        final bool save = await setAutoDialog(numConstraints);
-
-        if (save) {
-          await widget.appInfo.updateWidget(
-            widget.config,
-            WidWidGetGet.timer,
-            TCC.timerEntry(
-              widget._size,
-              <String>[
-                _validateTime(ourCon.text),
-                _validateTime(minCon.text),
-                _validateTime(secCon.text),
-              ].join(':'),
-            ),
-            lane: widget.lane,
-            index: widget.index,
-          );
-        } else {
-          ourCon.text = ourBackup;
-          minCon.text = minBackup;
-          secCon.text = secBackup;
-        }
-      },
-    );
-
-    late final EzMenuButton resize = EzMenuButton(
-      widget.config,
-      label: 'Resize',
-      icon: EzIcon(widget.config, Icons.edit),
-      onPressed: () async {
-        final String? choice = await resizeWidgetDialog(
-          widget.config,
-          context,
-          widget._size,
-        );
-        if (choice == null) return;
-
-        await widget.appInfo.updateWidget(
-          widget.config,
-          WidWidGetGet.timer,
-          TCC.timerEntry(
-            WSConfig.safeLookup(choice),
-            <String>[
-              _validateTime(ourCon.text),
-              _validateTime(minCon.text),
-              _validateTime(secCon.text),
-            ].join(':'),
-          ),
-          lane: widget.lane,
-          index: widget.index,
-        );
-      },
     );
 
     return EzAnimSwitch(
@@ -390,21 +324,38 @@ class _TimerWidgetState extends State<TimerWidget> {
                       onLongPress: () => canToggleMenu(widget.config, controller),
                     ),
                   ]),
-            menuChildren: <Widget>[setAuto, resize, remove],
+            menuChildren: widgetMC(
+              widget.config,
+              widget.appInfo,
+              _EditTimer(
+                widget.config,
+                widget.appInfo,
+                _TimerConfig(widget._size, setAutoDialog(numConstraints), ourCon, minCon, secCon),
+                lane: widget.lane,
+                index: widget.index,
+              ),
+              numLanes: numLanes,
+              lane: widget.lane,
+              index: widget.index,
+            ),
           ),
         _ => EditContainer(
             widget.config,
             menuControl: menuControl,
-            menuChildren: <Widget>[
-              if (numLanes > 1 && widget.lane != 0)
-                moveDownLane(widget.config, widget.appInfo,
-                    numLanes: numLanes, lane: widget.lane, index: widget.index),
-              resize,
-              remove,
-              if (numLanes > 1 && widget.lane < (numLanes - 1))
-                moveUpLane(widget.config, widget.appInfo,
-                    numLanes: numLanes, lane: widget.lane, index: widget.index),
-            ],
+            menuChildren: widgetMC(
+              widget.config,
+              widget.appInfo,
+              _EditTimer(
+                widget.config,
+                widget.appInfo,
+                _TimerConfig(widget._size, setAutoDialog(numConstraints), ourCon, minCon, secCon),
+                lane: widget.lane,
+                index: widget.index,
+              ),
+              numLanes: numLanes,
+              lane: widget.lane,
+              index: widget.index,
+            ),
             child: EzIconButton(
               widget.config,
               icon: const Icon(Icons.timer_outlined),
@@ -482,6 +433,99 @@ class AddTimer extends StatelessWidget {
             ),
           );
   }
+}
+
+class _EditTimer extends StatelessWidget {
+  final EzCP config;
+  final AppInfoProvider appInfo;
+  final _TimerConfig initConfig;
+  final int lane;
+  final int index;
+
+  const _EditTimer(
+    this.config,
+    this.appInfo,
+    this.initConfig, {
+    required this.lane,
+    required this.index,
+  });
+
+  @override
+  Widget build(BuildContext context) => SubmenuButton(
+        menuChildren: <Widget>[
+          EzMenuButton(
+            config,
+            label: 'Resize',
+            onPressed: () async {
+              final String? choice = await resizeWidgetDialog(config, context, initConfig.size);
+              if (choice == null) return;
+
+              await appInfo.updateWidget(
+                config,
+                WidWidGetGet.timer,
+                TCC.timerEntry(
+                  WSConfig.safeLookup(choice),
+                  <String>[
+                    _validateTime(initConfig.ourCon.text),
+                    _validateTime(initConfig.minCon.text),
+                    _validateTime(initConfig.secCon.text),
+                  ].join(':'),
+                ),
+                lane: lane,
+                index: index,
+              );
+            },
+          ),
+          EzMenuButton(
+            config,
+            label: 'Set auto',
+            onPressed: () async {
+              final String ourBackup = initConfig.ourCon.text;
+              final String minBackup = initConfig.ourCon.text;
+              final String secBackup = initConfig.ourCon.text;
+
+              final bool save = (await initConfig.setAutoDialog == true); // TODO: test
+              if (save) {
+                await appInfo.updateWidget(
+                  config,
+                  WidWidGetGet.timer,
+                  TCC.timerEntry(
+                    initConfig.size,
+                    <String>[
+                      _validateTime(initConfig.ourCon.text),
+                      _validateTime(initConfig.minCon.text),
+                      _validateTime(initConfig.secCon.text),
+                    ].join(':'),
+                  ),
+                  lane: lane,
+                  index: index,
+                );
+              } else {
+                initConfig.ourCon.text = ourBackup;
+                initConfig.minCon.text = minBackup;
+                initConfig.secCon.text = secBackup;
+              }
+            },
+          ),
+        ],
+        child: EzIcon(config, Icons.edit),
+      );
+}
+
+class _TimerConfig {
+  final WidgetSize size;
+  final Future<bool?> setAutoDialog;
+  final TextEditingController ourCon;
+  final TextEditingController minCon;
+  final TextEditingController secCon;
+
+  _TimerConfig(
+    this.size,
+    this.setAutoDialog,
+    this.ourCon,
+    this.minCon,
+    this.secCon,
+  );
 }
 
 String _validateTime(String time) {
