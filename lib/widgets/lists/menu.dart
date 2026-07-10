@@ -202,10 +202,10 @@ List<Widget> _tileMC(
                 if (numLanes > 0) _removeItem(config, appInfo, lane: lane, index: index),
               ] // > 0 is specifically for appMC
         : <Widget>[
-            ...local,
             if (configure != null) configure,
             if (edit != null) edit,
             _removeItem(config, appInfo, lane: lane, index: index),
+            ...local,
           ]; // local is only for Widget(ception: WidWidGetGet)
 
 /// When there's no lane/index info

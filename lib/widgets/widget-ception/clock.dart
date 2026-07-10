@@ -256,7 +256,6 @@ class _EditClock extends StatelessWidget {
   @override
   Widget build(BuildContext context) => EzMenuButton(
         config,
-        label: 'Edit',
         icon: EzIcon(config, Icons.edit),
         onPressed: () async {
           final double iconRadius = config.iconSize / 2;

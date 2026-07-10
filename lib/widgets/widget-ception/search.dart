@@ -330,7 +330,6 @@ class _EditSearch extends StatelessWidget {
   @override
   Widget build(BuildContext context) => EzMenuButton(
         config,
-        label: 'Edit',
         icon: EzIcon(config, Icons.edit),
         onPressed: () async {
           WidgetSize size = initSize;
