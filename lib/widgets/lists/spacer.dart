@@ -102,9 +102,6 @@ class _LimSpacerState extends State<LimSpacer> {
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
-    late final EzMenuButton remove =
-        removeItem(widget.config, widget.appInfo, lane: widget.lane, index: widget.index);
-
     late final EzMenuButton resize = EzMenuButton(
       widget.config,
       onPressed: () async {
@@ -154,7 +151,12 @@ class _LimSpacerState extends State<LimSpacer> {
                       menuChildren: <Widget>[
                         dupe,
                         resize,
-                        remove,
+                        removeItem(
+                          widget.config,
+                          widget.appInfo,
+                          lane: widget.lane,
+                          index: widget.index,
+                        ),
                       ],
                     )
                   : EditContainer(
@@ -162,14 +164,29 @@ class _LimSpacerState extends State<LimSpacer> {
                       menuControl: menuControl,
                       menuChildren: <Widget>[
                         if (numLanes > 1 && widget.lane != 0)
-                          moveDownLane(widget.config, widget.appInfo,
-                              numLanes: numLanes, lane: widget.lane, index: widget.index),
+                          moveDownLane(
+                            widget.config,
+                            widget.appInfo,
+                            numLanes: numLanes,
+                            lane: widget.lane,
+                            index: widget.index,
+                          ),
                         resize,
-                        remove,
+                        removeItem(
+                          widget.config,
+                          widget.appInfo,
+                          lane: widget.lane,
+                          index: widget.index,
+                        ),
                         dupe,
                         if (numLanes > 1 && widget.lane < (numLanes - 1))
-                          moveUpLane(widget.config, widget.appInfo,
-                              numLanes: numLanes, lane: widget.lane, index: widget.index),
+                          moveUpLane(
+                            widget.config,
+                            widget.appInfo,
+                            numLanes: numLanes,
+                            lane: widget.lane,
+                            index: widget.index,
+                          ),
                       ],
                       child: EzIconButton(
                         widget.config,
@@ -424,25 +441,11 @@ Future<void> editSpacer(
                       menuChildren: <Widget>[
                         EzMenuButton(
                           config,
-                          label: 'Delete',
-                          icon: EzIcon(config, Icons.delete),
+                          label: 'Done',
+                          icon: EzIcon(config, Icons.done),
                           onPressed: () {
                             overlayEntry.remove();
-                            completer.complete(false);
-                          },
-                        ),
-                        EzMenuButton(
-                          config,
-                          label: 'Reset',
-                          icon: EzIcon(config, Icons.refresh),
-                          onPressed: () {
-                            height = hBack;
-                            editSpacerHeight.value = hBack;
-
-                            width = wBack;
-                            editSpacerWidth.value = wBack;
-
-                            setOverlay(() {});
+                            completer.complete(true);
                           },
                         ),
                         EzMenuButton(
@@ -471,11 +474,25 @@ Future<void> editSpacer(
                         ),
                         EzMenuButton(
                           config,
-                          label: 'Done',
-                          icon: EzIcon(config, Icons.done),
+                          label: 'Reset',
+                          icon: EzIcon(config, Icons.refresh),
+                          onPressed: () {
+                            height = hBack;
+                            editSpacerHeight.value = hBack;
+
+                            width = wBack;
+                            editSpacerWidth.value = wBack;
+
+                            setOverlay(() {});
+                          },
+                        ),
+                        EzMenuButton(
+                          config,
+                          label: 'Delete',
+                          icon: EzIcon(config, Icons.delete),
                           onPressed: () {
                             overlayEntry.remove();
-                            completer.complete(true);
+                            completer.complete(false);
                           },
                         ),
                       ],
