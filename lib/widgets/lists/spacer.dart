@@ -163,7 +163,7 @@ class _LimSpacerState extends State<LimSpacer> {
                       widget.config,
                       menuControl: menuControl,
                       menuChildren: <Widget>[
-                        if (numLanes > 1 && widget.lane != 0)
+                        if (numLanes > 1)
                           moveDownLane(
                             widget.config,
                             widget.appInfo,
@@ -179,7 +179,7 @@ class _LimSpacerState extends State<LimSpacer> {
                           index: widget.index,
                         ),
                         dupe,
-                        if (numLanes > 1 && widget.lane < (numLanes - 1))
+                        if (numLanes > 1)
                           moveUpLane(
                             widget.config,
                             widget.appInfo,
