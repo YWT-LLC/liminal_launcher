@@ -220,9 +220,9 @@ List<Widget> _miniTileMC(
   List<Widget>? local,
 }) =>
     <Widget>[
-      if (local != null) ...local,
       if (configure != null) configure,
       if (edit != null) edit,
+      if (local != null) ...local,
     ];
 
 List<Widget> widgetMC(
