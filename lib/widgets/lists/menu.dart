@@ -9,13 +9,43 @@ import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-Widget configureApp(
+List<Widget> appMC(
   EzCP config,
-  BuildContext context, {
-  required AppInfoProvider appInfo,
-  required AppInfo app,
+  AppInfoProvider appInfo, {
+  required BuildContext context,
+  Widget? edit,
+  required int numLanes,
   required int? lane,
   required int? index,
+  required AppInfo app,
+  required bool onHome,
+}) =>
+    (lane != null && index != null)
+        ? _tileMC(
+            config,
+            appInfo,
+            edit: edit,
+            configure: _configureApp(config, appInfo,
+                context: context, lane: lane, index: index, app: app, onHome: onHome),
+            numLanes: onHome ? numLanes : -1,
+            lane: lane,
+            index: index,
+          )
+        : _miniTileMC(
+            config,
+            appInfo,
+            edit: edit,
+            configure: _configureApp(config, appInfo,
+                context: context, lane: lane, index: index, app: app, onHome: onHome),
+          );
+
+Widget _configureApp(
+  EzCP config,
+  AppInfoProvider appInfo, {
+  required BuildContext context,
+  required int? lane,
+  required int? index,
+  required AppInfo app,
   required bool onHome,
 }) =>
     SubmenuButton(
@@ -77,6 +107,16 @@ Widget configureApp(
       child: EzIcon(config, Icons.build),
     );
 
+List<Widget> folderMC(
+  EzCP config,
+  AppInfoProvider appInfo,
+  Widget edit, {
+  required int numLanes,
+  required int lane,
+  required int index,
+}) =>
+    _tileMC(config, appInfo, edit: edit, numLanes: numLanes, lane: lane, index: index);
+
 Widget moveDownLane(
   EzCP config,
   AppInfoProvider appInfo, {
@@ -128,6 +168,51 @@ Widget removeItem(
       onPressed: () => appInfo.removeItem(config, lane: lane, index: index),
     );
 
+List<Widget> _tileMC(
+  EzCP config,
+  AppInfoProvider appInfo, {
+  Widget? edit,
+  Widget? configure,
+  List<Widget>? local,
+  required int numLanes,
+  required int lane,
+  required int index,
+}) =>
+    local == null
+        ? (numLanes > 1)
+            ? <Widget>[
+                moveDownLane(config, appInfo, numLanes: numLanes, lane: lane, index: index),
+                if (configure != null) configure,
+                if (edit != null) edit,
+                removeItem(config, appInfo, lane: lane, index: index),
+                moveUpLane(config, appInfo, numLanes: numLanes, lane: lane, index: index),
+              ]
+            : <Widget>[
+                if (configure != null) configure,
+                if (edit != null) edit,
+                if (numLanes > 0) removeItem(config, appInfo, lane: lane, index: index),
+              ] // > 0 is specifically for appMC
+        : <Widget>[
+            ...local,
+            if (configure != null) configure,
+            if (edit != null) edit,
+            removeItem(config, appInfo, lane: lane, index: index),
+          ]; // local is only for Widget(ception: WidWidGetGet)
+
+/// When there's no lane/index info
+List<Widget> _miniTileMC(
+  EzCP config,
+  AppInfoProvider appInfo, {
+  Widget? edit,
+  Widget? configure,
+  List<Widget>? local,
+}) =>
+    <Widget>[
+      if (local != null) ...local,
+      if (configure != null) configure,
+      if (edit != null) edit,
+    ];
+
 List<Widget> widgetMC(
   EzCP config,
   AppInfoProvider appInfo,
@@ -137,24 +222,5 @@ List<Widget> widgetMC(
   required int lane,
   required int index,
 }) =>
-    <Widget>[
-      if (local != null) ...local,
-      if (numLanes > 1 && local == null)
-        moveDownLane(config, appInfo, numLanes: numLanes, lane: lane, index: index),
-      edit,
-      removeItem(config, appInfo, lane: lane, index: index),
-      if (numLanes > 1 && local == null)
-        moveUpLane(config, appInfo, numLanes: numLanes, lane: lane, index: index),
-    ];
-
-// Might be different one day lol
-// AppMC is legit different (and one-off, so local to that file)
-List<Widget> folderMC(
-  EzCP config,
-  AppInfoProvider appInfo,
-  Widget edit, {
-  required int numLanes,
-  required int lane,
-  required int index,
-}) =>
-    folderMC(config, appInfo, edit, numLanes: numLanes, lane: lane, index: index);
+    _tileMC(config, appInfo,
+        edit: edit, local: local, numLanes: numLanes, lane: lane, index: index);
