@@ -689,6 +689,7 @@ class AppInfoProvider extends ChangeNotifier {
 
   /// Does notify
   /// Calls [ezNoTouch] when saving changes
+  /// TODO: fix, not workin
   Future<void> hideApp(EzCP config, BuildContext context, String id) async {
     if (interlinked || config.isDark) {
       if (_darkHidden.contains(id)) return;
