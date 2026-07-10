@@ -3,6 +3,9 @@
  * See LICENSE for distribution and usage details.
  */
 
+// TODO: all edit modal are failing... maybe have to wait for the menu to close?
+// TODO: test this one in particular, lots of text editing controllers getting passed around
+
 import '../../utils/export.dart';
 import '../export.dart';
 
@@ -484,7 +487,7 @@ class _EditTimer extends StatelessWidget {
               final String minBackup = initConfig.ourCon.text;
               final String secBackup = initConfig.ourCon.text;
 
-              final bool save = (await initConfig.setAutoDialog == true); // TODO: test
+              final bool save = (await initConfig.setAutoDialog == true);
               if (save) {
                 await appInfo.updateWidget(
                   config,

@@ -207,6 +207,7 @@ List<Widget> _tileMC(
             _removeItem(config, appInfo, lane: lane, index: index),
             ...local,
           ]; // local is only for Widget(ception: WidWidGetGet)
+// TODO: ... unless I use local for add to home when numLanes == 1?????????
 
 /// When there's no lane/index info
 List<Widget> _miniTileMC(
