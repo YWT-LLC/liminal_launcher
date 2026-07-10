@@ -213,15 +213,15 @@ class _AppTileState extends State<AppTile> {
                   widget.appInfo,
                   context: context,
                   edit: homeTile
-                      ? null
-                      : _EditApp(
+                      ? _EditApp(
                           widget.config,
                           widget.appInfo,
                           _AppConfig(widget.app, widget._name, widget._icon, widget._buttonType,
                               widget._labelType),
                           lane: widget.lane!,
                           index: widget.index!,
-                        ),
+                        )
+                      : null,
                   numLanes: numLanes,
                   lane: widget.lane,
                   index: widget.index,
