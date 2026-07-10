@@ -9,7 +9,6 @@ import '../export.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class AppTile extends StatefulWidget {
@@ -82,6 +81,7 @@ class _AppTileState extends State<AppTile> {
 
   late final bool inList = widget.location == AppLocation.list;
   late final bool inFolder = widget.location == AppLocation.folder;
+  late final bool onHome = !inList && !inFolder;
 
   // Define custom functions //
 
@@ -160,54 +160,6 @@ class _AppTileState extends State<AppTile> {
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
     final AlignmentGeometry subAlign = LAConfig.merge(h: widget.hAlign, v: ListAlignment.center);
-
-    late final EzMenuButton remove =
-        removeItem(widget.config, widget.appInfo, lane: widget.lane!, index: widget.index!);
-
-    late final EzMenuButton uninstall = EzMenuButton(
-      widget.config,
-      label: 'Uninstall',
-      icon: EzIcon(widget.config, Icons.delete),
-      onPressed: () async => await openDelete(widget.app),
-    );
-
-    late final EzMenuButton banish = EzMenuButton(
-      widget.config,
-      label: 'Banish',
-      icon: EzIcon(widget.config, LineIcons.ghost),
-      onPressed: () async => await widget.appInfo.banishApp(widget.config, context, widget.app.id),
-    );
-
-    late final EzMenuButton hide = EzMenuButton(
-      widget.config,
-      label: 'Hide',
-      icon: EzIcon(widget.config, Icons.visibility_off),
-      onPressed: () async => await widget.appInfo.hideApp(widget.config, context, widget.app.id),
-    );
-
-    late final EzMenuButton show = EzMenuButton(
-      widget.config,
-      label: 'Show',
-      icon: EzIcon(widget.config, Icons.visibility),
-      onPressed: () async => await widget.appInfo.showApp(widget.config, widget.app.id),
-    );
-
-    late final EzMenuButton info = EzMenuButton(
-      widget.config,
-      label: 'Info',
-      icon: EzIcon(widget.config, Icons.info),
-      onPressed: () async {
-        if (inList && context.mounted) Navigator.of(context).pop();
-        await openSettings(widget.app);
-      },
-    );
-
-    late final EzMenuButton add = EzMenuButton(
-      widget.config,
-      label: 'Add',
-      icon: EzIcon(widget.config, Icons.add_home),
-      onPressed: () async => await widget.appInfo.addApp(widget.config, lane: 0, id: widget.app.id),
-    );
 
     late final EzMenuButton edit = EzMenuButton(
       widget.config,
@@ -436,24 +388,41 @@ class _AppTileState extends State<AppTile> {
                         onPressed: () => widget.onSelected(widget.app),
                         onLongPress: () => canToggleMenu(widget.config, controller),
                       ),
-                menuChildren: inList
-                    ? <Widget>[
-                        info,
-                        if (numLanes == 1 &&
-                            !widget.appInfo.hidden(widget.config).contains(widget.app.id))
-                          add,
-                        widget.appInfo.hidden(widget.config).contains(widget.app.id) ? show : hide,
-                        banish,
-                        if (widget.app.removable) uninstall,
-                      ]
-                    : <Widget>[
-                        edit,
-                        info,
-                        remove,
-                        hide,
-                        banish,
-                        if (widget.app.removable) uninstall,
-                      ],
+                menuChildren: <Widget>[
+                  if (onHome && numLanes > 1)
+                    moveDownLane(
+                      widget.config,
+                      widget.appInfo,
+                      numLanes: numLanes,
+                      lane: widget.lane!,
+                      index: widget.index!,
+                    ),
+                  configureApp(
+                    widget.config,
+                    context,
+                    appInfo: widget.appInfo,
+                    app: widget.app,
+                    lane: widget.lane,
+                    index: widget.index,
+                    onHome: onHome,
+                  ),
+                  if (!inList) edit,
+                  if (onHome)
+                    removeItem(
+                      widget.config,
+                      widget.appInfo,
+                      lane: widget.lane!,
+                      index: widget.index!,
+                    ),
+                  if (onHome && numLanes > 1)
+                    moveUpLane(
+                      widget.config,
+                      widget.appInfo,
+                      numLanes: numLanes,
+                      lane: widget.lane!,
+                      index: widget.index!,
+                    ),
+                ],
               ),
         AppState.verbose => EzScrollBlocker(
             EzScrollView(
@@ -511,12 +480,38 @@ class _AppTileState extends State<AppTile> {
             widget.config,
             menuControl: menuControl,
             menuChildren: <Widget>[
+              if (numLanes > 1)
+                moveDownLane(
+                  widget.config,
+                  widget.appInfo,
+                  numLanes: numLanes,
+                  lane: widget.lane!,
+                  index: widget.index!,
+                ),
+              configureApp(
+                widget.config,
+                context,
+                appInfo: widget.appInfo,
+                app: widget.app,
+                lane: widget.lane,
+                index: widget.index,
+                onHome: onHome,
+              ),
               edit,
-              info,
-              remove,
-              hide,
-              banish,
-              if (widget.app.removable) uninstall,
+              removeItem(
+                widget.config,
+                widget.appInfo,
+                lane: widget.lane!,
+                index: widget.index!,
+              ),
+              if (numLanes > 1)
+                moveUpLane(
+                  widget.config,
+                  widget.appInfo,
+                  numLanes: numLanes,
+                  lane: widget.lane!,
+                  index: widget.index!,
+                ),
             ],
             child: GestureDetector(
               onTap: () => toggleMenu(menuControl),
