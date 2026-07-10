@@ -45,11 +45,13 @@ class SettingsFAB extends StatelessWidget {
           EzMenuButton(
             config,
             label: config.ezL10n.ssSaveConfig,
+            icon: EzIcon(config, Icons.download),
             onPressed: () => EzCM.saveConfig(config, context: context),
           ),
           EzMenuButton(
             config,
             label: config.ezL10n.ssLoadConfig,
+            icon: EzIcon(config, Icons.upload),
             onPressed: () => ezConfigLoader(config, context: context),
           ),
         ],
