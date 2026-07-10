@@ -109,7 +109,6 @@ class _LimSpacerState extends State<LimSpacer> {
           index: widget.index,
         );
       },
-      label: 'Edit',
       icon: EzIcon(widget.config, Icons.edit),
     );
 
@@ -122,7 +121,6 @@ class _LimSpacerState extends State<LimSpacer> {
         lane: widget.lane,
         index: widget.index,
       ),
-      label: 'Duplicate',
       icon: EzIcon(widget.config, Icons.copy),
     );
 
