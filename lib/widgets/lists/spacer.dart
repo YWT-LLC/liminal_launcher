@@ -12,7 +12,6 @@
 import '../../utils/export.dart';
 import '../export.dart';
 
-import 'dart:math';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
@@ -185,7 +184,6 @@ class _LimSpacerState extends State<LimSpacer> {
   }
 }
 
-// TODO: get v2 with toggle-able moving working
 Future<void> editSpacer(
   EzCP config, {
   required AppInfoProvider appInfo,
@@ -217,7 +215,6 @@ Future<void> editSpacer(
   marked.value = (lane, index);
 
   Axis axis = Axis.vertical;
-  bool moveable = false;
   double step = 5.0;
 
   final Completer<bool?> completer = Completer<bool?>();
@@ -333,15 +330,16 @@ Future<void> editSpacer(
       return Material(
         type: MaterialType.transparency,
         child: Stack(children: <Widget>[
-          // Conditional foundation: no touchy //
+          // Block app interactions //
 
-          if (!moveable)
-            Positioned.fill(
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                child: const SizedBox.expand(),
-              ),
+          Positioned.fill(
+            child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: doNothing,
+              onLongPress: doNothing,
+              child: const SizedBox.expand(),
             ),
+          ),
 
           // Top: controls //
 
@@ -585,30 +583,6 @@ Future<void> editSpacer(
                   ],
                 ),
               ]),
-            ),
-          ),
-
-          // Center //
-          // Readout
-          Align(
-            alignment: config.isLefty ? Alignment.centerRight : Alignment.centerLeft,
-            child: EzText(
-              config,
-              backgroundColor: config.colors.surfaceContainer
-                  .withValues(alpha: max(0.75, config.textBackgroundOpacity)),
-              text: (axis == Axis.vertical ? height : width).toStringAsFixed(2),
-              textAlign: TextAlign.center,
-            ),
-          ),
-
-          // Move toggle
-          Align(
-            alignment: config.isLefty ? Alignment.centerLeft : Alignment.centerRight,
-            child: EzIconButton(
-              config,
-              fauxDisabled: !moveable,
-              icon: const Icon(Icons.touch_app),
-              onPressed: () => setOverlay(() => moveable = !moveable),
             ),
           ),
 
