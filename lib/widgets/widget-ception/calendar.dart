@@ -166,31 +166,6 @@ class _CalendarWidgetState extends State<CalendarWidget> {
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
-    late final EzMenuButton remove =
-        removeItem(widget.config, widget.appInfo, lane: widget.lane, index: widget.index);
-
-    late final EzMenuButton resize = EzMenuButton(
-      widget.config,
-      label: 'Resize',
-      icon: EzIcon(widget.config, Icons.edit),
-      onPressed: () async {
-        final String? choice = await resizeWidgetDialog(
-          widget.config,
-          context,
-          widget._size,
-        );
-        if (choice == null) return;
-
-        await widget.appInfo.updateWidget(
-          widget.config,
-          WidWidGetGet.calendar,
-          TCC.calendarEntry(WSConfig.safeLookup(choice)),
-          lane: widget.lane,
-          index: widget.index,
-        );
-      },
-    );
-
     final double textWidth =
         ezTextSize('Create event', context: context, style: widget.config.bodyStyle).width;
 
@@ -245,21 +220,38 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                       onLongPress: () => canToggleMenu(widget.config, controller),
                     ),
                   ]),
-            menuChildren: <Widget>[resize, remove],
+            menuChildren: widgetMC(
+              widget.config,
+              widget.appInfo,
+              _EditCalendar(
+                widget.config,
+                widget.appInfo,
+                widget._size,
+                lane: widget.lane,
+                index: widget.index,
+              ),
+              numLanes: numLanes,
+              lane: widget.lane,
+              index: widget.index,
+            ),
           ),
         _ => EditContainer(
             widget.config,
             menuControl: menuControl,
-            menuChildren: <Widget>[
-              if (numLanes > 1 && widget.lane != 0)
-                moveDownLane(widget.config, widget.appInfo,
-                    numLanes: numLanes, lane: widget.lane, index: widget.index),
-              resize,
-              remove,
-              if (numLanes > 1 && widget.lane < (numLanes - 1))
-                moveUpLane(widget.config, widget.appInfo,
-                    numLanes: numLanes, lane: widget.lane, index: widget.index),
-            ],
+            menuChildren: widgetMC(
+              widget.config,
+              widget.appInfo,
+              _EditCalendar(
+                widget.config,
+                widget.appInfo,
+                widget._size,
+                lane: widget.lane,
+                index: widget.index,
+              ),
+              numLanes: numLanes,
+              lane: widget.lane,
+              index: widget.index,
+            ),
             child: EzIconButton(
               widget.config,
               icon: const Icon(Icons.edit_calendar),
@@ -276,6 +268,41 @@ class _CalendarWidgetState extends State<CalendarWidget> {
     widget.rippleProgress?.removeListener(rippling);
     super.dispose();
   }
+}
+
+class _EditCalendar extends StatelessWidget {
+  final EzCP config;
+  final AppInfoProvider appInfo;
+  final WidgetSize initSize;
+  final int lane;
+  final int index;
+
+  const _EditCalendar(
+    this.config,
+    this.appInfo,
+    this.initSize, {
+    required this.lane,
+    required this.index,
+  });
+
+  @override
+  Widget build(BuildContext context) => EzMenuButton(
+        config,
+        label: 'Resize',
+        icon: EzIcon(config, Icons.edit),
+        onPressed: () async {
+          final String? choice = await resizeWidgetDialog(config, context, initSize);
+          if (choice == null) return;
+
+          await appInfo.updateWidget(
+            config,
+            WidWidGetGet.calendar,
+            TCC.calendarEntry(WSConfig.safeLookup(choice)),
+            lane: lane,
+            index: index,
+          );
+        },
+      );
 }
 
 class AddCalendar extends StatelessWidget {
