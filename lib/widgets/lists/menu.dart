@@ -117,7 +117,7 @@ List<Widget> folderMC(
 }) =>
     _tileMC(config, appInfo, edit: edit, numLanes: numLanes, lane: lane, index: index);
 
-Widget moveDownLane(
+Widget _moveDownLane(
   EzCP config,
   AppInfoProvider appInfo, {
   required int numLanes,
@@ -136,7 +136,7 @@ Widget moveDownLane(
       onPressed: () => appInfo.moveItemDownLane(config, lane: lane, index: index),
     );
 
-Widget moveUpLane(
+Widget _moveUpLane(
   EzCP config,
   AppInfoProvider appInfo, {
   required int numLanes,
@@ -155,7 +155,17 @@ Widget moveUpLane(
       onPressed: () => appInfo.moveItemUpLane(config, lane: lane, index: index),
     );
 
-Widget removeItem(
+List<Widget> spacerMC(
+  EzCP config,
+  AppInfoProvider appInfo,
+  Widget edit, {
+  required int numLanes,
+  required int lane,
+  required int index,
+}) =>
+    _tileMC(config, appInfo, edit: edit, numLanes: numLanes, lane: lane, index: index);
+
+Widget _removeItem(
   EzCP config,
   AppInfoProvider appInfo, {
   required int lane,
@@ -181,22 +191,22 @@ List<Widget> _tileMC(
     local == null
         ? (numLanes > 1)
             ? <Widget>[
-                moveDownLane(config, appInfo, numLanes: numLanes, lane: lane, index: index),
+                _moveDownLane(config, appInfo, numLanes: numLanes, lane: lane, index: index),
                 if (configure != null) configure,
                 if (edit != null) edit,
-                removeItem(config, appInfo, lane: lane, index: index),
-                moveUpLane(config, appInfo, numLanes: numLanes, lane: lane, index: index),
+                _removeItem(config, appInfo, lane: lane, index: index),
+                _moveUpLane(config, appInfo, numLanes: numLanes, lane: lane, index: index),
               ]
             : <Widget>[
                 if (configure != null) configure,
                 if (edit != null) edit,
-                if (numLanes > 0) removeItem(config, appInfo, lane: lane, index: index),
+                if (numLanes > 0) _removeItem(config, appInfo, lane: lane, index: index),
               ] // > 0 is specifically for appMC
         : <Widget>[
             ...local,
             if (configure != null) configure,
             if (edit != null) edit,
-            removeItem(config, appInfo, lane: lane, index: index),
+            _removeItem(config, appInfo, lane: lane, index: index),
           ]; // local is only for Widget(ception: WidWidGetGet)
 
 /// When there's no lane/index info
