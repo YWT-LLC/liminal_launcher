@@ -6,9 +6,78 @@
 import '../../utils/export.dart';
 
 import 'package:flutter/material.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-EzMenuButton moveDownLane(
+Widget configureApp(
+  EzCP config,
+  BuildContext context, {
+  required AppInfoProvider appInfo,
+  required AppInfo app,
+  required int? lane,
+  required int? index,
+  required bool onHome,
+}) =>
+    SubmenuButton(
+      menuChildren: <Widget>[
+        // Info
+        EzMenuButton(
+          config,
+          label: 'Info',
+          icon: EzIcon(config, Icons.info),
+          onPressed: () async {
+            if (!onHome && context.mounted) Navigator.of(context).pop();
+            await openSettings(app);
+          },
+        ),
+
+        // Dupe
+        if (onHome)
+          EzMenuButton(
+            config,
+            label: 'Duplicate',
+            icon: EzIcon(config, Icons.copy),
+            onPressed: () async {
+              await appInfo.dupeItem(config, lane: lane!, index: index!);
+            },
+          ),
+
+        // Show/hide
+        appInfo.hidden(config).contains(app.id)
+            ? EzMenuButton(
+                config,
+                label: 'Show',
+                icon: EzIcon(config, Icons.visibility),
+                onPressed: () async => await appInfo.showApp(config, app.id),
+              )
+            : EzMenuButton(
+                config,
+                label: 'Hide',
+                icon: EzIcon(config, Icons.visibility_off),
+                onPressed: () async => await appInfo.hideApp(config, context, app.id),
+              ),
+
+        // Banish
+        EzMenuButton(
+          config,
+          label: 'Banish',
+          icon: EzIcon(config, LineIcons.ghost),
+          onPressed: () async => await appInfo.banishApp(config, context, app.id),
+        ),
+
+        // Uninstall
+        if (app.removable)
+          EzMenuButton(
+            config,
+            label: 'Uninstall',
+            icon: EzIcon(config, Icons.delete),
+            onPressed: () async => await openDelete(app),
+          ),
+      ],
+      child: EzIcon(config, Icons.build),
+    );
+
+Widget moveDownLane(
   EzCP config,
   AppInfoProvider appInfo, {
   required int numLanes,
@@ -18,7 +87,6 @@ EzMenuButton moveDownLane(
     EzMenuButton(
       config,
       enabled: lane != 0,
-      label: 'Move',
       icon: EzIcon(
         config,
         config.isLTR && horizontalAlign(config) != ListAlignment.end
@@ -28,7 +96,7 @@ EzMenuButton moveDownLane(
       onPressed: () => appInfo.moveItemDownLane(config, lane: lane, index: index),
     );
 
-EzMenuButton moveUpLane(
+Widget moveUpLane(
   EzCP config,
   AppInfoProvider appInfo, {
   required int numLanes,
@@ -38,7 +106,6 @@ EzMenuButton moveUpLane(
     EzMenuButton(
       config,
       enabled: lane < (numLanes - 1),
-      label: 'Move',
       icon: EzIcon(
         config,
         config.isLTR && horizontalAlign(config) != ListAlignment.end
@@ -48,7 +115,7 @@ EzMenuButton moveUpLane(
       onPressed: () => appInfo.moveItemUpLane(config, lane: lane, index: index),
     );
 
-EzMenuButton removeItem(
+Widget removeItem(
   EzCP config,
   AppInfoProvider appInfo, {
   required int lane,
