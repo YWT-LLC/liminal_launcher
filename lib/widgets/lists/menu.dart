@@ -146,3 +146,15 @@ List<Widget> widgetMC(
       if (numLanes > 1 && local == null)
         moveUpLane(config, appInfo, numLanes: numLanes, lane: lane, index: index),
     ];
+
+// Might be different one day lol
+// AppMC is legit different (and one-off, so local to that file)
+List<Widget> folderMC(
+  EzCP config,
+  AppInfoProvider appInfo,
+  Widget edit, {
+  required int numLanes,
+  required int lane,
+  required int index,
+}) =>
+    folderMC(config, appInfo, edit, numLanes: numLanes, lane: lane, index: index);
