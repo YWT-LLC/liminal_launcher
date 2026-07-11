@@ -122,7 +122,8 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
               _EditTM(
                 widget.config,
                 widget.appInfo,
-                widget._size,
+                parentCon: context,
+                initSize: widget._size,
                 lane: widget.lane,
                 index: widget.index,
               ),
@@ -140,7 +141,8 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
               _EditTM(
                 widget.config,
                 widget.appInfo,
-                widget._size,
+                parentCon: context,
+                initSize: widget._size,
                 lane: widget.lane,
                 index: widget.index,
               ),
@@ -163,41 +165,6 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
     widget.rippleProgress?.removeListener(rippling);
     super.dispose();
   }
-}
-
-class _EditTM extends StatelessWidget {
-  final EzCP config;
-  final AppInfoProvider appInfo;
-  final WidgetSize initSize;
-  final int lane;
-  final int index;
-
-  const _EditTM(
-    this.config,
-    this.appInfo,
-    this.initSize, {
-    required this.lane,
-    required this.index,
-  });
-
-  @override
-  Widget build(BuildContext context) => EzMenuButton(
-        config,
-        label: 'Resize',
-        icon: EzIcon(config, Icons.edit),
-        onPressed: () async {
-          final String? choice = await resizeWidgetDialog(config, context, initSize);
-          if (choice == null) return;
-
-          await appInfo.updateWidget(
-            config,
-            WidWidGetGet.toggleMedia,
-            TCC.mediaEntry(WSConfig.safeLookup(choice)),
-            lane: lane,
-            index: index,
-          );
-        },
-      );
 }
 
 class AddToggleMedia extends StatelessWidget {
@@ -233,5 +200,42 @@ class AddToggleMedia extends StatelessWidget {
                 const Icon(Icons.skip_next),
                 config.rowMargin,
               ]),
+      );
+}
+
+class _EditTM extends StatelessWidget {
+  final EzCP config;
+  final AppInfoProvider appInfo;
+  final BuildContext parentCon;
+  final WidgetSize initSize;
+  final int lane;
+  final int index;
+
+  const _EditTM(
+    this.config,
+    this.appInfo, {
+    required this.parentCon,
+    required this.initSize,
+    required this.lane,
+    required this.index,
+  });
+
+  @override
+  Widget build(_) => EzMenuButton(
+        config,
+        label: 'Resize',
+        icon: EzIcon(config, Icons.edit),
+        onPressed: () async {
+          final String? choice = await resizeWidgetDialog(config, parentCon, initSize);
+          if (choice == null) return;
+
+          await appInfo.updateWidget(
+            config,
+            WidWidGetGet.toggleMedia,
+            TCC.mediaEntry(WSConfig.safeLookup(choice)),
+            lane: lane,
+            index: index,
+          );
+        },
       );
 }

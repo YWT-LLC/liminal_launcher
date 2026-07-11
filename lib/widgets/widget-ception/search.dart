@@ -206,9 +206,16 @@ class _SearchWidgetState extends State<SearchWidget> {
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
-    final double fieldHeight = appIconSize(widget.config);
-    final double textWidth =
+    late final double fieldHeight = appIconSize(widget.config);
+    late final double textWidth =
         ezTextSize('Search bar', context: context, style: widget.config.bodyStyle).width;
+
+    late final _SearchConfig init = _SearchConfig(
+      fieldHeight: fieldHeight,
+      size: widget._size,
+      engine: widget._engine,
+      choices: widget._choices,
+    );
 
     return EzAnimSwitch(
       widget.config,
@@ -256,8 +263,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                 widget.config,
                 widget.appInfo,
                 parentCon: context,
-                initConfig:
-                    _SearchConfig(fieldHeight, widget._size, widget._engine, widget._choices),
+                initConfig: init,
                 lane: widget.lane,
                 index: widget.index,
               ),
@@ -277,8 +283,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                 widget.config,
                 widget.appInfo,
                 parentCon: context,
-                initConfig:
-                    _SearchConfig(fieldHeight, widget._size, widget._engine, widget._choices),
+                initConfig: init,
                 lane: widget.lane,
                 index: widget.index,
               ),
@@ -661,12 +666,12 @@ class _SearchConfig {
   final Engine engine;
   final List<Engine> choices;
 
-  _SearchConfig(
-    this.fieldHeight,
-    this.size,
-    this.engine,
-    this.choices,
-  );
+  _SearchConfig({
+    required this.fieldHeight,
+    required this.size,
+    required this.engine,
+    required this.choices,
+  });
 }
 
 //* Engine enum *//

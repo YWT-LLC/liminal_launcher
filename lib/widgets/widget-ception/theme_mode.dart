@@ -118,7 +118,8 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
               _EditTM(
                 widget.config,
                 widget.appInfo,
-                widget._size,
+                parentCon: context,
+                initSize: widget._size,
                 lane: widget.lane,
                 index: widget.index,
               ),
@@ -136,7 +137,8 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
               _EditTM(
                 widget.config,
                 widget.appInfo,
-                widget._size,
+                parentCon: context,
+                initSize: widget._size,
                 lane: widget.lane,
                 index: widget.index,
               ),
@@ -159,41 +161,6 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
     widget.rippleProgress?.removeListener(rippling);
     super.dispose();
   }
-}
-
-class _EditTM extends StatelessWidget {
-  final EzCP config;
-  final AppInfoProvider appInfo;
-  final WidgetSize initSize;
-  final int lane;
-  final int index;
-
-  const _EditTM(
-    this.config,
-    this.appInfo,
-    this.initSize, {
-    required this.lane,
-    required this.index,
-  });
-
-  @override
-  Widget build(BuildContext context) => EzMenuButton(
-        config,
-        label: 'Resize',
-        icon: EzIcon(config, Icons.edit),
-        onPressed: () async {
-          final String? choice = await resizeWidgetDialog(config, context, initSize);
-          if (choice == null) return;
-
-          await appInfo.updateWidget(
-            config,
-            WidWidGetGet.themeMode,
-            TCC.themeModeEntry(WSConfig.safeLookup(choice)),
-            lane: lane,
-            index: index,
-          );
-        },
-      );
 }
 
 class AddThemeMode extends StatelessWidget {
@@ -237,4 +204,41 @@ class AddThemeMode extends StatelessWidget {
             ),
           ]),
         );
+}
+
+class _EditTM extends StatelessWidget {
+  final EzCP config;
+  final AppInfoProvider appInfo;
+  final BuildContext parentCon;
+  final WidgetSize initSize;
+  final int lane;
+  final int index;
+
+  const _EditTM(
+    this.config,
+    this.appInfo, {
+    required this.parentCon,
+    required this.initSize,
+    required this.lane,
+    required this.index,
+  });
+
+  @override
+  Widget build(_) => EzMenuButton(
+        config,
+        label: 'Resize',
+        icon: EzIcon(config, Icons.edit),
+        onPressed: () async {
+          final String? choice = await resizeWidgetDialog(config, parentCon, initSize);
+          if (choice == null) return;
+
+          await appInfo.updateWidget(
+            config,
+            WidWidGetGet.themeMode,
+            TCC.themeModeEntry(WSConfig.safeLookup(choice)),
+            lane: lane,
+            index: index,
+          );
+        },
+      );
 }

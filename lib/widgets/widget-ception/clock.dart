@@ -124,6 +124,19 @@ class _ClockWidgetState extends State<ClockWidget> {
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
+    late final _ClockConfig init = _ClockConfig(
+      hAlign: widget.hAlign,
+      vAlign: widget.vAlign,
+      shape: widget._shape,
+      background: widget._background,
+      timeStyle: widget._timeStyle,
+      timeColor: widget._timeColor,
+      showTime: widget._showTime,
+      dateType: widget._dateType,
+      dateStyle: widget._dateStyle,
+      dateColor: widget._dateColor,
+    );
+
     return EzAnimSwitch(
       widget.config,
       mod: 0.667,
@@ -168,20 +181,10 @@ class _ClockWidgetState extends State<ClockWidget> {
               _EditClock(
                 widget.config,
                 widget.appInfo,
-                _ClockConfig(
-                  widget._shape,
-                  widget._background,
-                  widget._timeStyle,
-                  widget._timeColor,
-                  widget._showTime,
-                  widget._dateType,
-                  widget._dateStyle,
-                  widget._dateColor,
-                ),
+                parentCon: context,
+                initConfig: init,
                 lane: widget.lane,
                 index: widget.index,
-                hAlign: widget.hAlign,
-                vAlign: widget.vAlign,
               ),
               numLanes: numLanes,
               lane: widget.lane,
@@ -197,20 +200,10 @@ class _ClockWidgetState extends State<ClockWidget> {
               _EditClock(
                 widget.config,
                 widget.appInfo,
-                _ClockConfig(
-                  widget._shape,
-                  widget._background,
-                  widget._timeStyle,
-                  widget._timeColor,
-                  widget._showTime,
-                  widget._dateType,
-                  widget._dateStyle,
-                  widget._dateColor,
-                ),
+                parentCon: context,
+                initConfig: init,
                 lane: widget.lane,
                 index: widget.index,
-                hAlign: widget.hAlign,
-                vAlign: widget.vAlign,
               ),
               numLanes: numLanes,
               lane: widget.lane,
@@ -234,27 +227,73 @@ class _ClockWidgetState extends State<ClockWidget> {
   }
 }
 
-class _EditClock extends StatelessWidget {
+class AddClock extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
-  final _ClockConfig initConfig;
   final int lane;
-  final int index;
   final ListAlignment hAlign;
   final ListAlignment vAlign;
 
-  const _EditClock(
+  const AddClock(
     this.config,
     this.appInfo,
-    this.initConfig, {
-    required this.lane,
-    required this.index,
+    this.lane, {
+    super.key,
     required this.hAlign,
     required this.vAlign,
   });
 
+  void onTap() => appInfo.addClock(config, lane);
+
   @override
-  Widget build(BuildContext context) => EzMenuButton(
+  Widget build(BuildContext context) {
+    final DateTime now = DateTime.now();
+
+    return GestureDetector(
+      onTap: onTap,
+      child: EzTextBackground(
+        config,
+        padding: EdgeInsets.all(config.padding),
+        text: EzCol(
+          mainAxisAlignment: vAlign.mainAxis,
+          crossAxisAlignment: hAlign.crossAxis,
+          children: <Widget>[
+            Text(
+              TimeOfDay.fromDateTime(now).format(context),
+              style: config.headlineStyle,
+              textAlign: hAlign.textAlign,
+            ),
+            Text(
+              DTConfig.buildDate(context, now, DateType.compact),
+              style: config.labelStyle,
+              textAlign: hAlign.textAlign,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _EditClock extends StatelessWidget {
+  final EzCP config;
+  final AppInfoProvider appInfo;
+  final BuildContext parentCon;
+  final _ClockConfig initConfig;
+  final int lane;
+  final int index;
+
+  const _EditClock(
+    this.config,
+    this.appInfo, {
+    required this.parentCon,
+    required this.initConfig,
+    required this.lane,
+    required this.index,
+  });
+
+  @override
+  Widget build(_) => EzMenuButton(
         config,
         icon: EzIcon(config, Icons.edit),
         onPressed: () async {
@@ -276,8 +315,8 @@ class _EditClock extends StatelessWidget {
 
           await ezModal(
             config,
-            context: context,
-            builder: (_) => StatefulBuilder(builder: (_, StateSetter setModal) {
+            context: parentCon,
+            builder: (_) => StatefulBuilder(builder: (BuildContext mCon, StateSetter setModal) {
               void nav(_Edits choice) {
                 delta = choice.index - curr.index;
                 setModal(() => curr = choice);
@@ -331,7 +370,7 @@ class _EditClock extends StatelessWidget {
 
                         await ezColorPicker(
                           config,
-                          context: context,
+                          context: parentCon,
                           startColor: curr,
                           onColorChange: (Color choice) => curr = choice,
                           onConfirm: () => setModal(() => background = curr),
@@ -408,7 +447,7 @@ class _EditClock extends StatelessWidget {
 
                         await ezColorPicker(
                           config,
-                          context: context,
+                          context: parentCon,
                           startColor: curr,
                           onColorChange: (Color choice) => curr = choice,
                           onConfirm: () => setModal(() => timeColor = curr),
@@ -527,7 +566,7 @@ class _EditClock extends StatelessWidget {
 
                         await ezColorPicker(
                           config,
-                          context: context,
+                          context: parentCon,
                           startColor: curr,
                           onColorChange: (Color choice) => curr = choice,
                           onConfirm: () => setModal(() => dateColor = curr),
@@ -615,20 +654,20 @@ class _EditClock extends StatelessWidget {
                   shape: shape,
                   backgroundColor: background,
                   text: EzCol(
-                    mainAxisAlignment: vAlign.mainAxis,
-                    crossAxisAlignment: hAlign.crossAxis,
+                    mainAxisAlignment: initConfig.vAlign.mainAxis,
+                    crossAxisAlignment: initConfig.hAlign.crossAxis,
                     children: <Widget>[
                       if (showTime)
                         Text(
-                          TimeOfDay.fromDateTime(DateTime.now()).format(context),
+                          TimeOfDay.fromDateTime(DateTime.now()).format(mCon),
                           style: timeStyle.style(config)?.copyWith(color: timeColor),
-                          textAlign: hAlign.textAlign,
+                          textAlign: initConfig.hAlign.textAlign,
                         ),
                       if (dateType != DateType.none)
                         Text(
-                          DTConfig.buildDate(context, DateTime.now(), dateType),
+                          DTConfig.buildDate(mCon, DateTime.now(), dateType),
                           style: dateStyle.style(config)?.copyWith(color: dateColor),
-                          textAlign: hAlign.textAlign,
+                          textAlign: initConfig.hAlign.textAlign,
                         ),
                     ],
                   ),
@@ -651,27 +690,32 @@ class _EditClock extends StatelessWidget {
 }
 
 class _ClockConfig {
-  EzButtonShape shape;
-  Color? background;
+  final ListAlignment hAlign;
+  final ListAlignment vAlign;
 
-  TxtStile timeStyle;
-  Color? timeColor;
-  bool showTime;
+  final EzButtonShape shape;
+  final Color? background;
 
-  DateType dateType;
-  TxtStile dateStyle;
-  Color? dateColor;
+  final TxtStile timeStyle;
+  final Color? timeColor;
+  final bool showTime;
 
-  _ClockConfig(
-    this.shape,
-    this.background,
-    this.timeStyle,
-    this.timeColor,
-    this.showTime,
-    this.dateType,
-    this.dateStyle,
-    this.dateColor,
-  );
+  final DateType dateType;
+  final TxtStile dateStyle;
+  final Color? dateColor;
+
+  const _ClockConfig({
+    required this.hAlign,
+    required this.vAlign,
+    required this.shape,
+    required this.background,
+    required this.timeStyle,
+    required this.timeColor,
+    required this.showTime,
+    required this.dateType,
+    required this.dateStyle,
+    required this.dateColor,
+  });
 }
 
 /// background, time, date
@@ -684,52 +728,4 @@ extension _Title on _Edits {
         _Edits.time => 'Time',
         _Edits.date => 'Date',
       };
-}
-
-class AddClock extends StatelessWidget {
-  final EzCP config;
-  final AppInfoProvider appInfo;
-  final int lane;
-  final ListAlignment hAlign;
-  final ListAlignment vAlign;
-
-  const AddClock(
-    this.config,
-    this.appInfo,
-    this.lane, {
-    super.key,
-    required this.hAlign,
-    required this.vAlign,
-  });
-
-  void onTap() => appInfo.addClock(config, lane);
-
-  @override
-  Widget build(BuildContext context) {
-    final DateTime now = DateTime.now();
-
-    return GestureDetector(
-      onTap: onTap,
-      child: EzTextBackground(
-        config,
-        padding: EdgeInsets.all(config.padding),
-        text: EzCol(
-          mainAxisAlignment: vAlign.mainAxis,
-          crossAxisAlignment: hAlign.crossAxis,
-          children: <Widget>[
-            Text(
-              TimeOfDay.fromDateTime(now).format(context),
-              style: config.headlineStyle,
-              textAlign: hAlign.textAlign,
-            ),
-            Text(
-              DTConfig.buildDate(context, now, DateType.compact),
-              style: config.labelStyle,
-              textAlign: hAlign.textAlign,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

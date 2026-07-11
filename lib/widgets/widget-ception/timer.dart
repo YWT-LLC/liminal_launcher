@@ -249,10 +249,18 @@ class _TimerWidgetState extends State<TimerWidget> {
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
-    final BoxConstraints numConstraints = BoxConstraints.tightFor(
+    late final BoxConstraints numConstraints = BoxConstraints.tightFor(
       width: ezTextSize('000', context: context, style: widget.config.bodyStyle).width +
           (2 * widget.config.padding),
       height: appIconSize(widget.config),
+    );
+
+    late final _TimerConfig init = _TimerConfig(
+      size: widget._size,
+      setAutoDialog: setAutoDialog(numConstraints),
+      ourCon: ourCon,
+      minCon: minCon,
+      secCon: secCon,
     );
 
     return EzAnimSwitch(
@@ -333,7 +341,8 @@ class _TimerWidgetState extends State<TimerWidget> {
               _EditTimer(
                 widget.config,
                 widget.appInfo,
-                _TimerConfig(widget._size, setAutoDialog(numConstraints), ourCon, minCon, secCon),
+                parentCon: context,
+                initConfig: init,
                 lane: widget.lane,
                 index: widget.index,
               ),
@@ -351,7 +360,8 @@ class _TimerWidgetState extends State<TimerWidget> {
               _EditTimer(
                 widget.config,
                 widget.appInfo,
-                _TimerConfig(widget._size, setAutoDialog(numConstraints), ourCon, minCon, secCon),
+                parentCon: context,
+                initConfig: init,
                 lane: widget.lane,
                 index: widget.index,
               ),
@@ -441,26 +451,28 @@ class AddTimer extends StatelessWidget {
 class _EditTimer extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
+  final BuildContext parentCon;
   final _TimerConfig initConfig;
   final int lane;
   final int index;
 
   const _EditTimer(
     this.config,
-    this.appInfo,
-    this.initConfig, {
+    this.appInfo, {
+    required this.parentCon,
+    required this.initConfig,
     required this.lane,
     required this.index,
   });
 
   @override
-  Widget build(BuildContext context) => SubmenuButton(
+  Widget build(_) => SubmenuButton(
         menuChildren: <Widget>[
           EzMenuButton(
             config,
             label: 'Resize',
             onPressed: () async {
-              final String? choice = await resizeWidgetDialog(config, context, initConfig.size);
+              final String? choice = await resizeWidgetDialog(config, parentCon, initConfig.size);
               if (choice == null) return;
 
               await appInfo.updateWidget(
@@ -522,13 +534,13 @@ class _TimerConfig {
   final TextEditingController minCon;
   final TextEditingController secCon;
 
-  _TimerConfig(
-    this.size,
-    this.setAutoDialog,
-    this.ourCon,
-    this.minCon,
-    this.secCon,
-  );
+  _TimerConfig({
+    required this.size,
+    required this.setAutoDialog,
+    required this.ourCon,
+    required this.minCon,
+    required this.secCon,
+  });
 }
 
 String _validateTime(String time) {
