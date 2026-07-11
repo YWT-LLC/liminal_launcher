@@ -3,6 +3,8 @@
  * See LICENSE for distribution and usage details.
  */
 
+// TODO: make the lane positions tap-able
+
 import '../../utils/export.dart';
 import '../export.dart';
 
