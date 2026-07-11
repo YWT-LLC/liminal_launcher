@@ -3,6 +3,8 @@
  * See LICENSE for distribution and usage details.
  */
 
+// TODO: when editing, it is WAY easier to re-active the ripple than it is to re-order apps (even in wide tile)
+
 import '../screens/export.dart';
 import '../utils/export.dart';
 import '../widgets/export.dart';

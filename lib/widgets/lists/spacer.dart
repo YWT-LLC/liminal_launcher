@@ -3,9 +3,9 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: fix the edit version
-// TODO: double adding apps?
-// TODO: is my logic for wideTiles && pages && their combo consistent?
+// TODO: fix the edit version (prolly similar to the edit menu buttons... parent context vibes)
+// TODO: double adding apps? only on non-0 pages?? but still on them if they move??? and never on the 0 page even if it moves????
+// TODO: check/audit: is my logic for wideTiles && pages && their combo consistent? (everywhere)
 
 import '../../utils/export.dart';
 import '../export.dart';

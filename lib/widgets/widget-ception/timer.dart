@@ -3,7 +3,6 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: all edit modal are failing... maybe have to wait for the menu to close?
 // TODO: test this one in particular, lots of text editing controllers getting passed around
 
 import '../../utils/export.dart';
