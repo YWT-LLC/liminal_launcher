@@ -3,7 +3,6 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: when editing, it is WAY easier to re-active the ripple than it is to re-order apps (even in wide tile)
 // TODO: you an save the home config, but upload doesn't seem to work
 // TODO: make the save/load here save everything by default, and have the settings page on be a toggle to save everything (default only appearance stuff)
 
