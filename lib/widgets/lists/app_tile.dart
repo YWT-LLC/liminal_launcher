@@ -14,16 +14,15 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 class AppTile extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
-  final int? lane;
-  final int? index;
-  final ListAlignment hAlign;
-  final ListAlignment vAlign;
+  final LimPos? pos;
   final AppState state;
   final ValueNotifier<double>? rippleProgress;
 
   final AppInfo app;
   final AppLocation location;
   final Future<void> Function(AppInfo app) onSelected;
+  final ListAlignment? hAlign;
+  final ListAlignment? vAlign;
 
   late final String? _name;
   late final IconData? _icon;
@@ -33,19 +32,22 @@ class AppTile extends StatefulWidget {
   AppTile(
     this.config, {
     required this.appInfo,
-    this.lane,
-    this.index,
-    required this.hAlign,
-    required this.vAlign,
+    required this.pos,
     required this.state,
     this.rippleProgress,
     required this.app,
     required this.location,
     required this.onSelected,
-  }) : super(key: ValueKey<String>('${app.id}-${state.index}')) {
-    if (lane != null && index != null) {
-      final List<String> data =
-          appInfo.homeItem(config, lane: lane!, index: index!).split(idSplit)[2].split(configSplit);
+    this.hAlign,
+    this.vAlign,
+  })  : assert(((pos == null) != (hAlign == null)) && (hAlign == null) == (vAlign == null),
+            'Provide pos OR (hAlign AND vAlign)'),
+        super(key: ValueKey<String>('${app.id}-${state.index}')) {
+    if (pos != null) {
+      final List<String> data = appInfo
+          .homeItem(config, lane: pos!.lane, index: pos!.index)
+          .split(idSplit)[2]
+          .split(configSplit);
 
       _name = data[0];
 
@@ -159,7 +161,6 @@ class _AppTileState extends State<AppTile> {
   @override
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
-    final AlignmentGeometry subAlign = LAConfig.merge(h: widget.hAlign, v: ListAlignment.center);
 
     late final _AppConfig init = _AppConfig(
       app: widget.app,
@@ -193,7 +194,9 @@ class _AppTileState extends State<AppTile> {
                         onLongPress: () => canToggleMenu(widget.config, controller),
                         child: Container(
                           width: double.infinity,
-                          alignment: subAlign,
+                          alignment: widget.pos == null
+                              ? LAConfig.merge(h: widget.hAlign!, v: widget.vAlign!)
+                              : widget.pos!.subAlign,
                           child: AppButton(
                             widget.config,
                             name: widget._name ?? widget.app.label,
@@ -226,8 +229,8 @@ class _AppTileState extends State<AppTile> {
                           widget.appInfo,
                           parentCon: context,
                           initConfig: init,
-                          lane: widget.lane!,
-                          index: widget.index!,
+                          lane: widget.pos!.lane,
+                          index: widget.pos!.index,
                         )
                       : null,
                   local: (listTile && numLanes == 1)
@@ -241,8 +244,8 @@ class _AppTileState extends State<AppTile> {
                         ]
                       : null,
                   numLanes: numLanes,
-                  lane: widget.lane,
-                  index: widget.index,
+                  lane: widget.pos?.lane,
+                  index: widget.pos?.index,
                   app: widget.app,
                   homeTile: homeTile,
                 ),
@@ -252,7 +255,7 @@ class _AppTileState extends State<AppTile> {
               widget.config,
               showScrollHint: true,
               thumbVisibility: false,
-              mainAxisAlignment: widget.hAlign.mainAxis,
+              mainAxisAlignment: widget.hAlign!.mainAxis,
               scrollDirection: Axis.horizontal,
               children: <Widget>[
                 // Name && icon
@@ -301,6 +304,7 @@ class _AppTileState extends State<AppTile> {
           ),
         AppState.groupEdit => EditContainer(
             widget.config,
+            subAlign: widget.pos!.subAlign,
             menuControl: menuControl,
             menuChildren: appMC(
               widget.config,
@@ -313,12 +317,12 @@ class _AppTileState extends State<AppTile> {
                       widget.appInfo,
                       parentCon: context,
                       initConfig: init,
-                      lane: widget.lane!,
-                      index: widget.index!,
+                      lane: widget.pos!.lane,
+                      index: widget.pos!.index,
                     ),
               numLanes: numLanes,
-              lane: widget.lane,
-              index: widget.index,
+              lane: widget.pos!.lane,
+              index: widget.pos!.index,
               app: widget.app,
               homeTile: homeTile,
             ),
@@ -330,7 +334,7 @@ class _AppTileState extends State<AppTile> {
                       semanticLabel: widget._name ?? widget.app.label,
                       width: appIconSize(widget.config),
                       height: appIconSize(widget.config),
-                      alignment: subAlign,
+                      alignment: widget.pos!.subAlign,
                     )
                   : Icon(widget._icon),
             ),
