@@ -10,16 +10,18 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 class EditContainer extends StatefulWidget {
   final EzCP config;
-  final Widget child;
+  final AlignmentGeometry subAlign;
   final MenuController menuControl;
   final List<Widget> menuChildren;
+  final Widget child;
 
   const EditContainer(
     this.config, {
     super.key,
-    required this.child,
+    required this.subAlign,
     required this.menuControl,
     required this.menuChildren,
+    required this.child,
   });
 
   @override
@@ -27,6 +29,8 @@ class EditContainer extends StatefulWidget {
 }
 
 class _EditContainerState extends State<EditContainer> with SingleTickerProviderStateMixin {
+  // Init //
+
   late final AnimationController _animControl;
   late final Animation<double> _animation;
 
@@ -42,8 +46,9 @@ class _EditContainerState extends State<EditContainer> with SingleTickerProvider
     _animControl.repeat(reverse: true);
   }
 
-  @override
-  Widget build(_) => EzRow(widget.config, children: <Widget>[
+// Return the build //
+
+  Widget core() => EzRow(widget.config, children: <Widget>[
         EzIcon(
           widget.config,
           Icons.drag_handle,
@@ -74,6 +79,17 @@ class _EditContainerState extends State<EditContainer> with SingleTickerProvider
           color: widget.config.colors.outline,
         ),
       ]);
+
+  @override
+  Widget build(_) => wideTiles(widget.config)
+      ? InkWell(
+          child: Container(
+            width: double.infinity,
+            alignment: widget.subAlign,
+            child: core(),
+          ),
+        )
+      : InkWell(child: core());
 
   @override
   void dispose() {
