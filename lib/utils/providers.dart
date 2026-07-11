@@ -486,6 +486,21 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> reloadFromStorage() async {
+    await ezNoTouch(() async {
+      _darkHidden = Set<String>.from(EzCM.get(darkHiddenIDsKey));
+      _lightHidden = Set<String>.from(EzCM.get(lightHiddenIDsKey));
+
+      _darkBanished = Set<String>.from(EzCM.get(darkBanishIDsKey));
+      _lightBanished = Set<String>.from(EzCM.get(lightBanishIDsKey));
+
+      _darkHomeMatrix = _buildHomeMatrix(EzCM.get(darkHomeDataKey));
+      _lightHomeMatrix = _buildHomeMatrix(EzCM.get(lightHomeDataKey));
+    });
+
+    notifyListeners();
+  }
+
   /// Does notify
   Future<void> updateApp(
     EzCP config, {

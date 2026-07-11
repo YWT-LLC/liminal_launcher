@@ -3,6 +3,8 @@
  * See LICENSE for distribution and usage details.
  */
 
+import '../../utils/export.dart';
+
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
@@ -27,9 +29,10 @@ class AddFAB extends FloatingActionButton {
 
 class SettingsFAB extends StatelessWidget {
   final EzCP config;
+  final AppInfoProvider appInfo;
   final void Function() onPressed;
 
-  const SettingsFAB(this.config, this.onPressed, {super.key});
+  const SettingsFAB(this.config, this.appInfo, this.onPressed, {super.key});
 
   @override
   Widget build(BuildContext context) => MenuAnchor(
@@ -52,7 +55,10 @@ class SettingsFAB extends StatelessWidget {
             config,
             label: config.ezL10n.ssLoadConfig,
             icon: EzIcon(config, Icons.upload),
-            onPressed: () => ezConfigLoader(config, context: context),
+            onPressed: () async {
+              await ezConfigLoader(config, context: context);
+              await appInfo.reloadFromStorage();
+            },
           ),
         ],
       );

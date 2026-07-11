@@ -869,7 +869,7 @@ With wide tiles disabled, lanes will be sized by the widest item & your spacing 
                 ],
 
                 // Settings
-                SettingsFAB(config, () => context.goNamed(settingsPath)),
+                SettingsFAB(config, appInfo, () => context.goNamed(settingsPath)),
               ]
             : null,
         isHome: true,
