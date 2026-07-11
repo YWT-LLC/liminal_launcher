@@ -689,7 +689,6 @@ class AppInfoProvider extends ChangeNotifier {
 
   /// Does notify
   /// Calls [ezNoTouch] when saving changes
-  /// TODO: fix, not working... banish too?
   Future<void> hideApp(EzCP config, BuildContext context, String id) async {
     if (interlinked || config.isDark) {
       if (_darkHidden.contains(id)) return;
@@ -1081,7 +1080,7 @@ For example: if an app has always on location permissions, banishing it will not
   }
 
   /// Full [ezNoTouch], then notifies
-  // TODO: it's this, this is why (this func, multiple problems, just read it and fix it)
+  // TODO: handful of issues here, audit && fix
   Future<void> _clearHomeOf(EzCP? config, String id, bool deleting) async {
     await ezNoTouch(() async {
       if (config == null || interlinked || config.isDark) {
