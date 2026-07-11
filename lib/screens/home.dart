@@ -13,6 +13,7 @@ import 'package:efui_bios/efui_bios.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -670,7 +671,7 @@ With wide tiles disabled, lanes will be sized by the widest item & your spacing 
       if (context.mounted) await _welcome(config, context);
 
       final bool isGPlay = await isGPlayInstall();
-      if (context.mounted && !isGPlay) await _free99(config, context);
+      if (!kDebugMode && context.mounted && !isGPlay) await _free99(config, context);
 
       await EzCM.setBool(shownIntroKey, true);
     }
@@ -827,7 +828,7 @@ With wide tiles disabled, lanes will be sized by the widest item & your spacing 
               builder: (_, double ripple, __) => Padding(
                 padding: editing
                     ? EdgeInsets.zero
-                    : EdgeInsets.only(top: config.spargin * (ripple % 1.0)),
+                    : EdgeInsets.only(top: appIconSize(config) * (ripple % 1.0)),
                 child: pages(config)
                     ? EzFauxCarousel(
                         config,
