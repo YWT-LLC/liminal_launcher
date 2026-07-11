@@ -1081,6 +1081,7 @@ For example: if an app has always on location permissions, banishing it will not
   }
 
   /// Full [ezNoTouch], then notifies
+  // TODO: it's this, this is why (this func, multiple problems, just read it and fix it)
   Future<void> _clearHomeOf(EzCP? config, String id, bool deleting) async {
     await ezNoTouch(() async {
       if (config == null || interlinked || config.isDark) {
