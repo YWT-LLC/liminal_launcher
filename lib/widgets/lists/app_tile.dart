@@ -161,6 +161,14 @@ class _AppTileState extends State<AppTile> {
     final int numLanes = widget.appInfo.numLanes(widget.config);
     final AlignmentGeometry subAlign = LAConfig.merge(h: widget.hAlign, v: ListAlignment.center);
 
+    late final _AppConfig init = _AppConfig(
+      app: widget.app,
+      name: widget._name,
+      icon: widget._icon,
+      buttonType: widget._buttonType,
+      labelType: widget._labelType,
+    );
+
     return EzAnimSwitch(
       widget.config,
       mod: 0.667,
@@ -217,8 +225,7 @@ class _AppTileState extends State<AppTile> {
                           widget.config,
                           widget.appInfo,
                           parentCon: context,
-                          initConfig: _AppConfig(widget.app, widget._name, widget._icon,
-                              widget._buttonType, widget._labelType),
+                          initConfig: init,
                           lane: widget.lane!,
                           index: widget.index!,
                         )
@@ -305,8 +312,7 @@ class _AppTileState extends State<AppTile> {
                       widget.config,
                       widget.appInfo,
                       parentCon: context,
-                      initConfig: _AppConfig(widget.app, widget._name, widget._icon,
-                          widget._buttonType, widget._labelType),
+                      initConfig: init,
                       lane: widget.lane!,
                       index: widget.index!,
                     ),
@@ -635,13 +641,13 @@ class _AppConfig {
   final ButtonType? buttonType;
   final LabelType? labelType;
 
-  _AppConfig(
-    this.app,
-    this.name,
-    this.icon,
-    this.buttonType,
-    this.labelType,
-  );
+  _AppConfig({
+    required this.app,
+    required this.name,
+    required this.icon,
+    required this.buttonType,
+    required this.labelType,
+  });
 }
 
 const int _toMB = 1048576;

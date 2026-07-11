@@ -147,6 +147,14 @@ class _AppFolderState extends State<FolderTile> {
     final int numLanes = widget.appInfo.numLanes(widget.config);
     final AlignmentGeometry subAlign = LAConfig.merge(h: widget.hAlign, v: ListAlignment.center);
 
+    late final _FolderConfig init = _FolderConfig(
+      name: widget._name,
+      icon: widget._icon,
+      buttonType: widget._buttonType,
+      labelType: widget._labelType,
+      appList: widget._appList,
+    );
+
     return EzAnimSwitch(
       widget.config,
       mod: 0.667,
@@ -188,8 +196,7 @@ class _AppFolderState extends State<FolderTile> {
                   widget.config,
                   widget.appInfo,
                   parentCon: context,
-                  initConfig: _FolderConfig(widget._name, widget._icon, widget._buttonType,
-                      widget._labelType, widget._appList),
+                  initConfig: init,
                   lane: widget.lane,
                   index: widget.index,
                 ),
@@ -213,8 +220,7 @@ class _AppFolderState extends State<FolderTile> {
                   widget.config,
                   widget.appInfo,
                   parentCon: context,
-                  initConfig: _FolderConfig(widget._name, widget._icon, widget._buttonType,
-                      widget._labelType, widget._appList),
+                  initConfig: init,
                   lane: widget.lane,
                   index: widget.index,
                 ),
@@ -708,11 +714,11 @@ class _FolderConfig {
   final LabelType? labelType;
   final List<String> appList;
 
-  _FolderConfig(
-    this.name,
-    this.icon,
-    this.buttonType,
-    this.labelType,
-    this.appList,
-  );
+  _FolderConfig({
+    required this.name,
+    required this.icon,
+    required this.buttonType,
+    required this.labelType,
+    required this.appList,
+  });
 }
