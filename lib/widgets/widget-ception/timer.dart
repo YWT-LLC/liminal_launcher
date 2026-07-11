@@ -3,8 +3,6 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: test this one in particular, lots of text editing controllers getting passed around
-
 import '../../utils/export.dart';
 import '../export.dart';
 
@@ -256,7 +254,7 @@ class _TimerWidgetState extends State<TimerWidget> {
 
     late final _TimerConfig init = _TimerConfig(
       size: widget._size,
-      setAutoDialog: setAutoDialog(numConstraints),
+      setAutoDialog: () => setAutoDialog(numConstraints),
       ourCon: ourCon,
       minCon: minCon,
       secCon: secCon,
@@ -499,7 +497,7 @@ class _EditTimer extends StatelessWidget {
               final String minBackup = initConfig.ourCon.text;
               final String secBackup = initConfig.ourCon.text;
 
-              final bool save = (await initConfig.setAutoDialog == true);
+              final bool save = (await initConfig.setAutoDialog() == true);
               if (save) {
                 await appInfo.updateWidget(
                   config,
@@ -529,7 +527,7 @@ class _EditTimer extends StatelessWidget {
 
 class _TimerConfig {
   final WidgetSize size;
-  final Future<bool?> setAutoDialog;
+  final Future<bool?> Function() setAutoDialog;
   final TextEditingController ourCon;
   final TextEditingController minCon;
   final TextEditingController secCon;
