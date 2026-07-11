@@ -15,10 +15,7 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 class FolderTile extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
-  final int lane;
-  final int index;
-  final ListAlignment hAlign;
-  final ListAlignment vAlign;
+  final LimPos pos;
   final AppState state;
   final ValueNotifier<double>? rippleProgress;
 
@@ -31,15 +28,12 @@ class FolderTile extends StatefulWidget {
   FolderTile(
     this.config, {
     required this.appInfo,
-    required this.lane,
-    required this.index,
-    required this.hAlign,
-    required this.vAlign,
+    required this.pos,
     required this.state,
     this.rippleProgress,
-  }) : super(key: ValueKey<String>('$lane-$index-${state.index}')) {
+  }) : super(key: ValueKey<String>('${pos.lane}-${pos.index}-${state.index}')) {
     final List<String> items =
-        appInfo.homeItem(config, lane: lane, index: index).split(folderSplit);
+        appInfo.homeItem(config, lane: pos.lane, index: pos.index).split(folderSplit);
 
     _name = items[0];
 
@@ -112,8 +106,7 @@ class _AppFolderState extends State<FolderTile> {
                           child: AppTile(
                             widget.config,
                             appInfo: widget.appInfo,
-                            hAlign: widget.hAlign,
-                            vAlign: widget.vAlign,
+                            pos: null,
                             state: state,
                             app: widget.appInfo.appMap[id]!,
                             location: AppLocation.folder,
@@ -121,6 +114,8 @@ class _AppFolderState extends State<FolderTile> {
                               Navigator.of(mCon).pop();
                               await launchApp(app);
                             },
+                            hAlign: widget.pos.hAlign,
+                            vAlign: widget.pos.vAlign,
                           ),
                         )
                       : const SizedBox.shrink())
@@ -145,7 +140,6 @@ class _AppFolderState extends State<FolderTile> {
   @override
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
-    final AlignmentGeometry subAlign = LAConfig.merge(h: widget.hAlign, v: ListAlignment.center);
 
     late final _FolderConfig init = _FolderConfig(
       name: widget._name,
@@ -168,7 +162,7 @@ class _AppFolderState extends State<FolderTile> {
                       onLongPress: () => canToggleMenu(widget.config, controller),
                       child: Container(
                         width: double.infinity,
-                        alignment: subAlign,
+                        alignment: widget.pos.subAlign,
                         child: FolderButton(
                           widget.config,
                           name: widget._name,
@@ -197,12 +191,12 @@ class _AppFolderState extends State<FolderTile> {
                   widget.appInfo,
                   parentCon: context,
                   initConfig: init,
-                  lane: widget.lane,
-                  index: widget.index,
+                  lane: widget.pos.lane,
+                  index: widget.pos.index,
                 ),
                 numLanes: numLanes,
-                lane: widget.lane,
-                index: widget.index,
+                lane: widget.pos.lane,
+                index: widget.pos.index,
               ),
               child: EzIconButton(
                 widget.config,
@@ -212,6 +206,7 @@ class _AppFolderState extends State<FolderTile> {
             )
           : EditContainer(
               widget.config,
+              subAlign: widget.pos.subAlign,
               menuControl: menuControl,
               menuChildren: folderMC(
                 widget.config,
@@ -221,12 +216,12 @@ class _AppFolderState extends State<FolderTile> {
                   widget.appInfo,
                   parentCon: context,
                   initConfig: init,
-                  lane: widget.lane,
-                  index: widget.index,
+                  lane: widget.pos.lane,
+                  index: widget.pos.index,
                 ),
                 numLanes: numLanes,
-                lane: widget.lane,
-                index: widget.index,
+                lane: widget.pos.lane,
+                index: widget.pos.index,
               ),
               child: EzIconButton(
                 widget.config,

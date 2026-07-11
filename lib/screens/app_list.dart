@@ -272,13 +272,14 @@ class _AppListScreenState extends State<AppListScreen> {
                               child: AppTile(
                                 config,
                                 appInfo: appInfo,
-                                hAlign: hAlign,
-                                vAlign: vAlign,
+                                pos: null,
                                 state: verbose ? AppState.verbose : AppState.standard,
                                 rippleProgress: rippleProgress,
                                 app: app,
                                 location: AppLocation.list,
                                 onSelected: widget.listConfig.onSelected,
+                                hAlign: hAlign,
+                                vAlign: vAlign,
                               ),
                             ))
                         .toList(),
