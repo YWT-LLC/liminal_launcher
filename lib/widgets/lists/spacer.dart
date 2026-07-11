@@ -240,93 +240,41 @@ Future<void> editSpacer(
       final ListAlignment hAlign = LAConfig.buildLookup(alignEntry, Axis.horizontal, config);
       final ListAlignment vAlign = LAConfig.buildLookup(alignEntry, Axis.vertical, config);
 
-      final List<Widget> stepOptions = <Widget>[
-        MenuItemButton(
-          child: Text(
-            '1',
-            textAlign: TextAlign.center,
-            style: config.bodyStyle?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: step == 1.0 ? config.colors.primary : config.colors.onSurface,
-            ),
-          ),
-          onPressed: () => setOverlay(() => step = 1.0),
-        ),
-        MenuItemButton(
-          child: Text(
-            '5',
-            textAlign: TextAlign.center,
-            style: config.bodyStyle?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: step == 5.0 ? config.colors.primary : config.colors.onSurface,
-            ),
-          ),
-          onPressed: () => setOverlay(() => step = 5.0),
-        ),
-        MenuItemButton(
-          child: Text(
-            '10',
-            textAlign: TextAlign.center,
-            style: config.bodyStyle?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: step == 10.0 ? config.colors.primary : config.colors.onSurface,
-            ),
-          ),
-          onPressed: () => setOverlay(() => step = 10.0),
-        ),
-        MenuItemButton(
-          child: Text(
-            config.marginVal.toString(),
-            textAlign: TextAlign.center,
-            style: config.bodyStyle?.copyWith(
-              color: step == config.marginVal ? config.colors.primary : config.colors.onSurface,
-            ),
-          ),
-          onPressed: () => setOverlay(() => step = config.marginVal),
-        ),
-        MenuItemButton(
-          child: Text(
-            config.padding.toString(),
-            textAlign: TextAlign.center,
-            style: config.bodyStyle?.copyWith(
-              color: step == config.padding ? config.colors.primary : config.colors.onSurface,
-            ),
-          ),
-          onPressed: () => setOverlay(() => step = config.padding),
-        ),
-        MenuItemButton(
-          child: Text(
-            config.spacing.toString(),
-            textAlign: TextAlign.center,
-            style: config.bodyStyle?.copyWith(
-              color: step == config.spacing ? config.colors.primary : config.colors.onSurface,
-            ),
-          ),
-          onPressed: () => setOverlay(() => step = config.spacing),
-        ),
-        MenuItemButton(
-          child: Text(
-            config.iconSize.toString(),
-            textAlign: TextAlign.center,
-            style: config.bodyStyle?.copyWith(
-              color: step == config.iconSize ? config.colors.primary : config.colors.onSurface,
-            ),
-          ),
-          onPressed: () => setOverlay(() => step = config.iconSize),
-        ),
-        MenuItemButton(
-          child: Text(
-            appIS.toString(),
-            textAlign: TextAlign.center,
-            style: config.bodyStyle?.copyWith(
-              color: step == appIS ? config.colors.primary : config.colors.onSurface,
-            ),
-          ),
-          onPressed: () => setOverlay(() => step = appIS),
-        ),
-      ];
-
       // Define custom functions //
+
+      List<Widget> staticSteps() => <double>[
+            1.0,
+            5.0,
+            10.0,
+          ]
+              .map((double value) => EzMenuButton(
+                    config,
+                    label: value.toStringAsFixed(2),
+                    icon: step == value ? EzIcon(config, Icons.circle) : null,
+                    textAlign: TextAlign.center,
+                    textStyle: config.bodyStyle?.copyWith(fontWeight: FontWeight.bold),
+                    onPressed: () => setOverlay(() => step = value),
+                  ))
+              .toList();
+
+      List<Widget> dynamicSteps() => <double>[
+            config.marginVal,
+            config.padding,
+            config.spacing,
+            config.iconSize,
+            appIS,
+          ]
+              .map((double value) => EzMenuButton(
+                    config,
+                    label: value.toStringAsFixed(2),
+                    icon: step == value ? EzIcon(config, Icons.circle) : null,
+                    textAlign: TextAlign.center,
+                    textStyle: config.bodyStyle,
+                    onPressed: () => setOverlay(() => step = value),
+                  ))
+              .toList();
+
+      List<Widget> stepOptions() => staticSteps() + dynamicSteps();
 
       void quickValue(double value) {
         if (axis == Axis.vertical) {
@@ -634,7 +582,7 @@ Future<void> editSpacer(
                           },
                     onLongPress: () => toggleMenu(c),
                   ),
-                  menuChildren: stepOptions,
+                  menuChildren: stepOptions(),
                 ),
                 config.rowMargin,
 
@@ -688,7 +636,7 @@ Future<void> editSpacer(
                           },
                     onLongPress: () => toggleMenu(c),
                   ),
-                  menuChildren: stepOptions,
+                  menuChildren: stepOptions(),
                 ),
               ],
             ),
