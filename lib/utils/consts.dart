@@ -313,23 +313,39 @@ const Map<String, Object> limSecDef = <String, Object>{
 /// :01001100: == :L:
 const String listSplit = ':01001100:';
 
-/// :01000110: == :F:
-const String folderSplit = ':01000110:';
-
 /// :01001001: == :I:
 const String idSplit = ':01001001:';
 
-/// :01010011: == :S:
-const String spacerSplit = ':01010011:';
-
 /// :01010111: == :W:
 const String widgetSplit = ':01010111:';
+
+/// :01000110: == :F:
+const String folderSplit = ':01000110:';
+
+/// :01010011: == :S:
+const String spacerSplit = ':01010011:';
 
 /// r'(:(I|W|F|S):)'... but the binaries
 final RegExp tileRegex = RegExp(r':(01001001|01010111|01000110|01010011):');
 
 /// :01000011: == :C:
 const String configSplit = ':01000011:';
+
+class LimPos {
+  final int lane;
+  final int index;
+  final ListAlignment hAlign;
+  final ListAlignment vAlign;
+
+  const LimPos({
+    required this.lane,
+    required this.index,
+    required this.hAlign,
+    required this.vAlign,
+  });
+
+  Alignment get subAlign => LAConfig.merge(h: hAlign, v: vAlign);
+}
 
 /// ---
 const String nullAppLabel = '---';
