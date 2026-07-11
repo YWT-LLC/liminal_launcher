@@ -3,8 +3,6 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: add dupe button in more places
-
 import '../../utils/export.dart';
 
 import 'package:flutter/material.dart';
@@ -112,6 +110,21 @@ Widget _configureApp(
       child: EzIcon(config, Icons.build),
     );
 
+Widget _configureOther(
+  EzCP config,
+  AppInfoProvider appInfo, {
+  required int lane,
+  required int index,
+}) =>
+    EzMenuButton(
+      config,
+      label: 'Duplicate',
+      icon: EzIcon(config, Icons.copy),
+      onPressed: () async {
+        await appInfo.dupeItem(config, lane: lane, index: index);
+      },
+    );
+
 List<Widget> folderMC(
   EzCP config,
   AppInfoProvider appInfo,
@@ -120,7 +133,15 @@ List<Widget> folderMC(
   required int lane,
   required int index,
 }) =>
-    _tileMC(config, appInfo, edit: edit, numLanes: numLanes, lane: lane, index: index);
+    _tileMC(
+      config,
+      appInfo,
+      configure: _configureOther(config, appInfo, lane: lane, index: index),
+      edit: edit,
+      numLanes: numLanes,
+      lane: lane,
+      index: index,
+    );
 
 Widget _moveDownLane(
   EzCP config,
@@ -168,7 +189,15 @@ List<Widget> spacerMC(
   required int lane,
   required int index,
 }) =>
-    _tileMC(config, appInfo, edit: edit, numLanes: numLanes, lane: lane, index: index);
+    _tileMC(
+      config,
+      appInfo,
+      configure: _configureOther(config, appInfo, lane: lane, index: index),
+      edit: edit,
+      numLanes: numLanes,
+      lane: lane,
+      index: index,
+    );
 
 Widget _removeItem(
   EzCP config,
@@ -185,8 +214,8 @@ Widget _removeItem(
 List<Widget> _tileMC(
   EzCP config,
   AppInfoProvider appInfo, {
+  required Widget configure,
   Widget? edit,
-  Widget? configure,
   List<Widget>? local,
   required int numLanes,
   required int lane,
@@ -196,18 +225,18 @@ List<Widget> _tileMC(
         ? (numLanes > 1)
             ? <Widget>[
                 _moveDownLane(config, appInfo, numLanes: numLanes, lane: lane, index: index),
-                if (configure != null) configure,
+                configure,
                 if (edit != null) edit,
                 _removeItem(config, appInfo, lane: lane, index: index),
                 _moveUpLane(config, appInfo, numLanes: numLanes, lane: lane, index: index),
               ]
             : <Widget>[
-                if (configure != null) configure,
+                configure,
                 if (edit != null) edit,
                 if (numLanes > 0) _removeItem(config, appInfo, lane: lane, index: index),
               ] // > 0 is specifically for appMC
         : <Widget>[
-            if (configure != null) configure,
+            configure,
             if (edit != null) edit,
             _removeItem(config, appInfo, lane: lane, index: index),
             ...local,
@@ -236,5 +265,13 @@ List<Widget> widgetMC(
   required int lane,
   required int index,
 }) =>
-    _tileMC(config, appInfo,
-        edit: edit, local: local, numLanes: numLanes, lane: lane, index: index);
+    _tileMC(
+      config,
+      appInfo,
+      configure: _configureOther(config, appInfo, lane: lane, index: index),
+      edit: edit,
+      local: local,
+      numLanes: numLanes,
+      lane: lane,
+      index: index,
+    );
