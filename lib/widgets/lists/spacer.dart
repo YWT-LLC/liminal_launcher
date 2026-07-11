@@ -242,39 +242,37 @@ Future<void> editSpacer(
 
       // Define custom functions //
 
-      List<Widget> staticSteps() => <double>[
-            1.0,
-            5.0,
-            10.0,
-          ]
-              .map((double value) => EzMenuButton(
-                    config,
-                    label: value.toStringAsFixed(2),
-                    icon: step == value ? EzIcon(config, Icons.circle) : null,
-                    textAlign: TextAlign.center,
-                    textStyle: config.bodyStyle?.copyWith(fontWeight: FontWeight.bold),
-                    onPressed: () => setOverlay(() => step = value),
-                  ))
-              .toList();
+      List<Widget> staticSteps() => <int>[1, 5, 10]
+          .map((int value) => EzMenuButton(
+                config,
+                label: value.toString(),
+                icon: step == value ? EzIcon(config, Icons.circle) : null,
+                textAlign: TextAlign.center,
+                textStyle: config.bodyStyle?.copyWith(fontWeight: FontWeight.bold),
+                onPressed: () => setOverlay(() => step = value.toDouble()),
+              ))
+          .toList();
 
-      List<Widget> dynamicSteps() => <double>[
-            config.marginVal,
-            config.padding,
-            config.spacing,
-            config.iconSize,
-            appIS,
-          ]
-              .map((double value) => EzMenuButton(
+      List<Widget> dynamicSteps() => <String, double>{
+            config.ezL10n.dsMargin: config.marginVal,
+            config.ezL10n.dsPadding: config.padding,
+            config.ezL10n.dsSpacing: config.spacing,
+            config.ezL10n.tsIconSize: config.iconSize,
+            'App icon size': appIS,
+          }
+              .entries
+              .map((MapEntry<String, double> entry) => EzMenuButton(
                     config,
-                    label: value.toStringAsFixed(2),
-                    icon: step == value ? EzIcon(config, Icons.circle) : null,
+                    label: '${entry.key}: ${entry.value.toStringAsFixed(2)}',
+                    icon: step == entry.value ? EzIcon(config, Icons.circle) : null,
                     textAlign: TextAlign.center,
                     textStyle: config.bodyStyle,
-                    onPressed: () => setOverlay(() => step = value),
+                    onPressed: () => setOverlay(() => step = entry.value),
                   ))
               .toList();
 
-      List<Widget> stepOptions() => staticSteps() + dynamicSteps();
+      late final List<Widget> stepOptions = staticSteps() + dynamicSteps();
+      // TODO: test if updates (prolly not, prolly needs to be a func... but worth a try)
 
       void quickValue(double value) {
         if (axis == Axis.vertical) {
@@ -582,7 +580,7 @@ Future<void> editSpacer(
                           },
                     onLongPress: () => toggleMenu(c),
                   ),
-                  menuChildren: stepOptions(),
+                  menuChildren: stepOptions,
                 ),
                 config.rowMargin,
 
@@ -636,7 +634,7 @@ Future<void> editSpacer(
                           },
                     onLongPress: () => toggleMenu(c),
                   ),
-                  menuChildren: stepOptions(),
+                  menuChildren: stepOptions,
                 ),
               ],
             ),
