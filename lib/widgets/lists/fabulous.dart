@@ -55,10 +55,8 @@ class SettingsFAB extends StatelessWidget {
             config,
             label: config.ezL10n.ssLoadConfig,
             icon: EzIcon(config, Icons.upload),
-            onPressed: () async {
-              await ezConfigLoader(config, context: context);
-              await appInfo.reloadFromStorage();
-            },
+            onPressed: () =>
+                ezConfigLoader(config, context: context, extra: appInfo.reloadFromStorage),
           ),
         ],
       );
