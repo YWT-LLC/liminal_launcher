@@ -4,6 +4,8 @@
  */
 
 // TODO: when editing, it is WAY easier to re-active the ripple than it is to re-order apps (even in wide tile)
+// TODO: you an save the home config, but upload doesn't seem to work
+// TODO: make the save/load here save everything by default, and have the settings page on be a toggle to save everything (default only appearance stuff)
 
 import '../screens/export.dart';
 import '../utils/export.dart';
@@ -93,6 +95,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
     for (int index = 1; index < entries.length; index++) {
       final String entry = entries[index];
+      final LimPos pos = LimPos(lane: lane, index: index, hAlign: hAlign, vAlign: vAlign);
 
       final RegExpMatch? splitMatch = tileRegex.firstMatch(entry);
       final String? delim = splitMatch?.group(0);
@@ -110,10 +113,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
             child: AppTile(
               config,
               appInfo: appInfo,
-              lane: lane,
-              index: index,
-              hAlign: hAlign,
-              vAlign: vAlign,
+              pos: pos,
               state: editing ? AppState.groupEdit : AppState.standard,
               rippleProgress: rippleProgress,
               app: app,
@@ -130,10 +130,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
             child: FolderTile(
               config,
               appInfo: appInfo,
-              lane: lane,
-              index: index,
-              hAlign: hAlign,
-              vAlign: vAlign,
+              pos: pos,
               state: editing ? AppState.groupEdit : AppState.standard,
               rippleProgress: rippleProgress,
             ),
@@ -147,10 +144,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
             child: renderWidget(
               config,
               appInfo: appInfo,
-              lane: lane,
-              index: index,
-              hAlign: hAlign,
-              vAlign: vAlign,
+              pos: pos,
               state: editing ? AppState.groupEdit : AppState.standard,
               rippleProgress: rippleProgress,
             ),
@@ -164,8 +158,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
             child: LimSpacer(
               config,
               appInfo: appInfo,
-              lane: lane,
-              index: index,
+              pos: pos,
               state: editing ? AppState.groupEdit : AppState.standard,
               rippleProgress: rippleProgress,
               resizeCallback: () => setState(() => editing = false),

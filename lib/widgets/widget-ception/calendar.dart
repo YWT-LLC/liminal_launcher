@@ -13,8 +13,7 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 class CalendarWidget extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
-  final int lane;
-  final int index;
+  final LimPos pos;
   final AppState state;
   final ValueNotifier<double>? rippleProgress;
 
@@ -23,14 +22,15 @@ class CalendarWidget extends StatefulWidget {
   CalendarWidget(
     this.config,
     this.appInfo,
-    this.lane,
-    this.index,
+    this.pos,
     this.state,
     this.rippleProgress, {
     super.key,
   }) {
-    final List<String> data =
-        appInfo.homeItem(config, lane: lane, index: index).split(widgetSplit)[1].split(configSplit);
+    final List<String> data = appInfo
+        .homeItem(config, lane: pos.lane, index: pos.index)
+        .split(widgetSplit)[1]
+        .split(configSplit);
 
     final WidgetSize storedWS = WSConfig.safeLookup(data[0]);
     _size = (storedWS == WidgetSize.system) ? bt2WS(config) : storedWS;
@@ -140,8 +140,8 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                 Navigator.of(context).pop();
                 await ezNoTouch(() async => await widget.appInfo.removeItem(
                       widget.config,
-                      lane: widget.lane,
-                      index: widget.index,
+                      lane: widget.pos.lane,
+                      index: widget.pos.index,
                     ));
               },
               isDestructiveAction: true,
@@ -228,16 +228,17 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                 widget.appInfo,
                 parentCon: context,
                 initSize: widget._size,
-                lane: widget.lane,
-                index: widget.index,
+                lane: widget.pos.lane,
+                index: widget.pos.index,
               ),
               numLanes: numLanes,
-              lane: widget.lane,
-              index: widget.index,
+              lane: widget.pos.lane,
+              index: widget.pos.index,
             ),
           ),
         _ => EditContainer(
             widget.config,
+            subAlign: widget.pos.subAlign,
             menuControl: menuControl,
             menuChildren: widgetMC(
               widget.config,
@@ -247,12 +248,12 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                 widget.appInfo,
                 parentCon: context,
                 initSize: widget._size,
-                lane: widget.lane,
-                index: widget.index,
+                lane: widget.pos.lane,
+                index: widget.pos.index,
               ),
               numLanes: numLanes,
-              lane: widget.lane,
-              index: widget.index,
+              lane: widget.pos.lane,
+              index: widget.pos.index,
             ),
             child: EzIconButton(
               widget.config,

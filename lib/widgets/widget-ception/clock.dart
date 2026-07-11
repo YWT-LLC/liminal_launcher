@@ -13,10 +13,7 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 class ClockWidget extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
-  final int lane;
-  final int index;
-  final ListAlignment hAlign;
-  final ListAlignment vAlign;
+  final LimPos pos;
   final AppState state;
   final ValueNotifier<double>? rippleProgress;
 
@@ -32,16 +29,15 @@ class ClockWidget extends StatefulWidget {
   ClockWidget(
     this.config,
     this.appInfo,
-    this.lane,
-    this.index,
-    this.hAlign,
-    this.vAlign,
+    this.pos,
     this.state,
     this.rippleProgress, {
     super.key,
   }) {
-    final List<String> data =
-        appInfo.homeItem(config, lane: lane, index: index).split(widgetSplit)[1].split(configSplit);
+    final List<String> data = appInfo
+        .homeItem(config, lane: pos.lane, index: pos.index)
+        .split(widgetSplit)[1]
+        .split(configSplit);
 
     _shape = EBSConfig.safeLookup(data[0]);
 
@@ -125,8 +121,8 @@ class _ClockWidgetState extends State<ClockWidget> {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
     late final _ClockConfig init = _ClockConfig(
-      hAlign: widget.hAlign,
-      vAlign: widget.vAlign,
+      hAlign: widget.pos.hAlign,
+      vAlign: widget.pos.vAlign,
       shape: widget._shape,
       background: widget._background,
       timeStyle: widget._timeStyle,
@@ -152,8 +148,8 @@ class _ClockWidgetState extends State<ClockWidget> {
                 shape: widget._shape,
                 backgroundColor: widget._background,
                 text: EzCol(
-                  mainAxisAlignment: widget.vAlign.mainAxis,
-                  crossAxisAlignment: widget.hAlign.crossAxis,
+                  mainAxisAlignment: widget.pos.vAlign.mainAxis,
+                  crossAxisAlignment: widget.pos.hAlign.crossAxis,
                   children: <Widget>[
                     if (widget._showTime)
                       Text(
@@ -161,7 +157,7 @@ class _ClockWidgetState extends State<ClockWidget> {
                         style: widget._timeStyle
                             .style(widget.config)
                             ?.copyWith(color: widget._timeColor),
-                        textAlign: widget.hAlign.textAlign,
+                        textAlign: widget.pos.hAlign.textAlign,
                       ),
                     if (widget._dateType != DateType.none)
                       Text(
@@ -169,7 +165,7 @@ class _ClockWidgetState extends State<ClockWidget> {
                         style: widget._dateStyle
                             .style(widget.config)
                             ?.copyWith(color: widget._dateColor),
-                        textAlign: widget.hAlign.textAlign,
+                        textAlign: widget.pos.hAlign.textAlign,
                       ),
                   ],
                 ),
@@ -183,16 +179,17 @@ class _ClockWidgetState extends State<ClockWidget> {
                 widget.appInfo,
                 parentCon: context,
                 initConfig: init,
-                lane: widget.lane,
-                index: widget.index,
+                lane: widget.pos.lane,
+                index: widget.pos.index,
               ),
               numLanes: numLanes,
-              lane: widget.lane,
-              index: widget.index,
+              lane: widget.pos.lane,
+              index: widget.pos.index,
             ),
           ),
         _ => EditContainer(
             widget.config,
+            subAlign: widget.pos.subAlign,
             menuControl: menuControl,
             menuChildren: widgetMC(
               widget.config,
@@ -202,12 +199,12 @@ class _ClockWidgetState extends State<ClockWidget> {
                 widget.appInfo,
                 parentCon: context,
                 initConfig: init,
-                lane: widget.lane,
-                index: widget.index,
+                lane: widget.pos.lane,
+                index: widget.pos.index,
               ),
               numLanes: numLanes,
-              lane: widget.lane,
-              index: widget.index,
+              lane: widget.pos.lane,
+              index: widget.pos.index,
             ),
             child: EzIconButton(
               widget.config,

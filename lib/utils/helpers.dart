@@ -128,38 +128,33 @@ Future<bool> liminalAuth(EzCP config, String reason) async {
 Widget renderWidget(
   EzCP config, {
   required AppInfoProvider appInfo,
-  required int lane,
-  required int index,
-  required ListAlignment hAlign,
-  required ListAlignment vAlign,
+  required LimPos pos,
   required AppState state,
   ValueNotifier<double>? rippleProgress,
 }) =>
     wideTiles(config)
         ? Container(
             width: double.infinity,
-            alignment: LAConfig.merge(h: hAlign, v: ListAlignment.center),
+            alignment: pos.subAlign,
             child: switch (
-                appInfo.homeItem(config, lane: lane, index: index).split(widgetSplit)[0]) {
-              esCalendar => CalendarWidget(config, appInfo, lane, index, state, rippleProgress),
-              esClock =>
-                ClockWidget(config, appInfo, lane, index, hAlign, vAlign, state, rippleProgress),
-              esSearch => SearchWidget(config, appInfo, lane, index, state, rippleProgress),
-              esTimer => TimerWidget(config, appInfo, lane, index, state, rippleProgress),
-              esToggleMedia =>
-                ToggleMediaWidget(config, appInfo, lane, index, state, rippleProgress),
-              esThemeMode => ThemeModeWidget(config, appInfo, lane, index, state, rippleProgress),
+                appInfo.homeItem(config, lane: pos.lane, index: pos.index).split(widgetSplit)[0]) {
+              esCalendar => CalendarWidget(config, appInfo, pos, state, rippleProgress),
+              esClock => ClockWidget(config, appInfo, pos, state, rippleProgress),
+              esSearch => SearchWidget(config, appInfo, pos, state, rippleProgress),
+              esTimer => TimerWidget(config, appInfo, pos, state, rippleProgress),
+              esToggleMedia => ToggleMediaWidget(config, appInfo, pos, state, rippleProgress),
+              esThemeMode => ThemeModeWidget(config, appInfo, pos, state, rippleProgress),
               _ => const SizedBox.shrink(),
             },
           )
-        : switch (appInfo.homeItem(config, lane: lane, index: index).split(widgetSplit)[0]) {
-            esCalendar => CalendarWidget(config, appInfo, lane, index, state, rippleProgress),
-            esClock =>
-              ClockWidget(config, appInfo, lane, index, hAlign, vAlign, state, rippleProgress),
-            esSearch => SearchWidget(config, appInfo, lane, index, state, rippleProgress),
-            esTimer => TimerWidget(config, appInfo, lane, index, state, rippleProgress),
-            esToggleMedia => ToggleMediaWidget(config, appInfo, lane, index, state, rippleProgress),
-            esThemeMode => ThemeModeWidget(config, appInfo, lane, index, state, rippleProgress),
+        : switch (
+            appInfo.homeItem(config, lane: pos.lane, index: pos.index).split(widgetSplit)[0]) {
+            esCalendar => CalendarWidget(config, appInfo, pos, state, rippleProgress),
+            esClock => ClockWidget(config, appInfo, pos, state, rippleProgress),
+            esSearch => SearchWidget(config, appInfo, pos, state, rippleProgress),
+            esTimer => TimerWidget(config, appInfo, pos, state, rippleProgress),
+            esToggleMedia => ToggleMediaWidget(config, appInfo, pos, state, rippleProgress),
+            esThemeMode => ThemeModeWidget(config, appInfo, pos, state, rippleProgress),
             _ => const SizedBox.shrink(),
           };
 
