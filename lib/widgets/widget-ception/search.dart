@@ -232,7 +232,10 @@ class _SearchWidgetState extends State<SearchWidget> {
                 : EzRow(widget.config, children: <Widget>[
                     EzScrollBlocker(EzTextField(
                       controller: queryCon,
-                      constraints: BoxConstraints(maxWidth: textWidth + widget.config.padding),
+                      constraints: BoxConstraints(
+                        maxHeight: appIconSize(widget.config),
+                        maxWidth: textWidth + widget.config.padding,
+                      ),
                       errorConstraints:
                           BoxConstraints(maxWidth: (textWidth * 2) + widget.config.padding),
                       hintText: widget._engine.name,
@@ -329,9 +332,11 @@ class AddSearch extends StatelessWidget {
           child: EzRow(config, children: <Widget>[
             EzTextField(
               constraints: BoxConstraints(
-                  maxWidth:
-                      ezTextSize('Search bar', context: context, style: config.bodyStyle).width +
-                          config.padding),
+                maxHeight: appIconSize(config),
+                maxWidth:
+                    ezTextSize('Search bar', context: context, style: config.bodyStyle).width +
+                        config.padding,
+              ),
               hintText: 'Search',
               onTap: onTap,
               readOnly: true,
@@ -449,8 +454,9 @@ class _EditSearch extends StatelessWidget {
                         final TextEditingController baseCon = TextEditingController();
                         final TextEditingController pathCon = TextEditingController();
                         final TextEditingController queryCon = TextEditingController();
-                        final double fieldWidth = widthOf(mCon) / 2;
 
+                        final double fieldHeight = appIconSize(config);
+                        final double fieldWidth = widthOf(mCon) / 2;
                         double bottomSpace = config.spacing * 2;
 
                         final Engine? custom = await ezModal(
@@ -473,7 +479,11 @@ class _EditSearch extends StatelessWidget {
                                 EzRow(config, children: <Widget>[
                                   EzTextField(
                                     controller: nameCon,
-                                    constraints: BoxConstraints.tightFor(width: fieldWidth),
+                                    constraints: BoxConstraints.tightFor(
+                                      height: fieldHeight,
+                                      width: fieldWidth,
+                                    ),
+                                    errorConstraints: BoxConstraints.tightFor(width: fieldWidth),
                                     hintText: 'Name (Ecosia)',
                                     onFieldSubmitted: shrink,
                                     onTap: grow,
@@ -494,7 +504,11 @@ class _EditSearch extends StatelessWidget {
                                 // Base site
                                 EzTextField(
                                   controller: baseCon,
-                                  constraints: BoxConstraints.tightFor(width: fieldWidth),
+                                  constraints: BoxConstraints.tightFor(
+                                    height: fieldHeight,
+                                    width: fieldWidth,
+                                  ),
+                                  errorConstraints: BoxConstraints.tightFor(width: fieldWidth),
                                   hintText: 'Base site (ecosia.org)',
                                   onFieldSubmitted: shrink,
                                   onTap: grow,
@@ -505,7 +519,11 @@ class _EditSearch extends StatelessWidget {
                                 // Path
                                 EzTextField(
                                   controller: pathCon,
-                                  constraints: BoxConstraints.tightFor(width: fieldWidth),
+                                  constraints: BoxConstraints.tightFor(
+                                    height: fieldHeight,
+                                    width: fieldWidth,
+                                  ),
+                                  errorConstraints: BoxConstraints.tightFor(width: fieldWidth),
                                   hintText: 'Path (/search)',
                                   onFieldSubmitted: shrink,
                                   onTap: grow,
@@ -516,7 +534,11 @@ class _EditSearch extends StatelessWidget {
                                 // Parameter
                                 EzTextField(
                                   controller: queryCon,
-                                  constraints: BoxConstraints.tightFor(width: fieldWidth),
+                                  constraints: BoxConstraints.tightFor(
+                                    height: fieldHeight,
+                                    width: fieldWidth,
+                                  ),
+                                  errorConstraints: BoxConstraints.tightFor(width: fieldWidth),
                                   hintText: 'Parameter (q)',
                                   onFieldSubmitted: shrink,
                                   onTap: grow,

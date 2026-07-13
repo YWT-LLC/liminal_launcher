@@ -90,7 +90,10 @@ class AppSecSettings extends StatelessWidget {
                         // Field
                         EzTextField(
                           controller: _timeoutText,
-                          constraints: BoxConstraints(maxWidth: fieldWidth),
+                          constraints: BoxConstraints(
+                            maxHeight: appIconSize(config),
+                            maxWidth: fieldWidth,
+                          ),
                           errorConstraints: BoxConstraints(maxWidth: fieldWidth * 2),
                           hintText: '0',
                           keyboardType: TextInputType.number,

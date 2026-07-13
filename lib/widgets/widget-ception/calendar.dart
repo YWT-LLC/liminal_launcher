@@ -189,7 +189,10 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                 : EzRow(widget.config, children: <Widget>[
                     EzScrollBlocker(EzTextField(
                       controller: eventCon,
-                      constraints: BoxConstraints(maxWidth: textWidth + widget.config.padding),
+                      constraints: BoxConstraints(
+                        maxHeight: appIconSize(widget.config),
+                        maxWidth: textWidth + widget.config.padding,
+                      ),
                       errorConstraints:
                           BoxConstraints(maxWidth: (textWidth * 2) + widget.config.padding),
                       hintText: 'New event',
@@ -298,9 +301,11 @@ class AddCalendar extends StatelessWidget {
           child: EzRow(config, children: <Widget>[
             EzTextField(
               constraints: BoxConstraints(
-                  maxWidth:
-                      ezTextSize('Create event', context: context, style: config.bodyStyle).width +
-                          config.padding),
+                maxHeight: appIconSize(config),
+                maxWidth:
+                    ezTextSize('Create event', context: context, style: config.bodyStyle).width +
+                        config.padding,
+              ),
               hintText: 'New event',
               onTap: onTap,
               readOnly: true,
