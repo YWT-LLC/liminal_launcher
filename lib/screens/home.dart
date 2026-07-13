@@ -80,200 +80,6 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     return;
   }
 
-  List<Widget> _buildTiles(
-    EzCP config,
-    AppInfoProvider appInfo,
-    int lane, {
-    required ListAlignment hAlign,
-    required ListAlignment vAlign,
-  }) {
-    final List<String> entries = appInfo.homeLane(config, lane);
-
-    final List<Widget> tiles = <Widget>[];
-    final EdgeInsets tilePadding = EzInsets.wrap(config.spacing);
-
-    for (int index = 1; index < entries.length; index++) {
-      final String entry = entries[index];
-      final LimPos pos = LimPos(lane: lane, index: index, hAlign: hAlign, vAlign: vAlign);
-
-      final RegExpMatch? splitMatch = tileRegex.firstMatch(entry);
-      final String? delim = splitMatch?.group(0);
-
-      switch (delim) {
-        case idSplit:
-          final List<String> parts = entry.split(idSplit);
-
-          final AppInfo? app = appInfo.appMap[<String>[parts[0], parts[1]].join(idSplit)];
-          if (app == null) continue;
-
-          tiles.add(Padding(
-            key: ValueKey<String>('$lane-$index-${app.id}'),
-            padding: tilePadding,
-            child: AppTile(
-              config,
-              appInfo: appInfo,
-              pos: pos,
-              state: editing ? AppState.groupEdit : AppState.standard,
-              rippleProgress: rippleProgress,
-              app: app,
-              location: AppLocation.home,
-              onSelected: (AppInfo app) => launchApp(app),
-            ),
-          ));
-          break;
-
-        case folderSplit:
-          tiles.add(Padding(
-            key: ValueKey<String>('$index-${entry.split(folderSplit)[0]}'),
-            padding: tilePadding,
-            child: FolderTile(
-              config,
-              appInfo: appInfo,
-              pos: pos,
-              state: editing ? AppState.groupEdit : AppState.standard,
-              rippleProgress: rippleProgress,
-            ),
-          ));
-          break;
-
-        case widgetSplit:
-          tiles.add(Padding(
-            key: ValueKey<String>('$index-${entry.split(widgetSplit)[0]}'),
-            padding: tilePadding,
-            child: renderWidget(
-              config,
-              appInfo: appInfo,
-              pos: pos,
-              state: editing ? AppState.groupEdit : AppState.standard,
-              rippleProgress: rippleProgress,
-            ),
-          ));
-          break;
-
-        case spacerSplit:
-          tiles.add(Padding(
-            key: ValueKey<String>('$index-spacer-$editing'),
-            padding: editing ? tilePadding : EdgeInsets.zero,
-            child: LimSpacer(
-              config,
-              appInfo: appInfo,
-              pos: pos,
-              state: editing ? AppState.groupEdit : AppState.standard,
-              rippleProgress: rippleProgress,
-              resizeCallback: () => setState(() => editing = false),
-            ),
-          ));
-          break;
-
-        default:
-          break;
-      }
-    }
-
-    return tiles;
-  }
-
-  Widget _buildLane(
-    EzCP config,
-    AppInfoProvider appInfo, {
-    required int numLanes,
-    required int lane,
-  }) {
-    final ListAlignment hAlign = LAConfig.buildLookup(
-      appInfo.homeItem(config, lane: lane, index: 0),
-      Axis.horizontal,
-      config,
-    );
-    final ListAlignment vAlign = LAConfig.buildLookup(
-      appInfo.homeItem(config, lane: lane, index: 0),
-      Axis.vertical,
-      config,
-    );
-
-    return editing
-        ? Builder(builder: (_) {
-            final List<Widget> tiles = _buildTiles(
-              config,
-              appInfo,
-              lane,
-              hAlign: hAlign,
-              vAlign: vAlign,
-            );
-
-            return StatefulBuilder(
-              key: ValueKey<String>('lane-$lane'),
-              builder: (_, StateSetter setList) => ReorderableListView(
-                shrinkWrap: true,
-                header: LaneHeader(
-                  config,
-                  appInfo: appInfo,
-                  lane: lane,
-                  numLanes: numLanes,
-                  hAlign: hAlign,
-                  vAlign: vAlign,
-                  addModal: addModal,
-                ),
-                onReorderItem: (int oldIndex, int newIndex) async {
-                  if (oldIndex == newIndex) return;
-
-                  final Widget element = tiles.removeAt(oldIndex);
-                  tiles.insert(newIndex, element);
-
-                  await appInfo.reorderLane(
-                    config,
-                    lane: lane,
-                    oldIndex: oldIndex,
-                    newIndex: newIndex,
-                  );
-
-                  setList(() {});
-                },
-                children: tiles,
-              ),
-            );
-          })
-        : EzScrollView(
-            config,
-            key: ValueKey<String>('lane-$lane'),
-            mainAxisAlignment: vAlign.mainAxis,
-            crossAxisAlignment: hAlign.crossAxis,
-            physics: const ClampingScrollPhysics(),
-            children: _buildTiles(config, appInfo, lane, hAlign: hAlign, vAlign: vAlign),
-          );
-  }
-
-  Widget buildPage(
-    EzCP config,
-    AppInfoProvider appInfo, {
-    required int numLanes,
-    required int lane,
-  }) =>
-      ConstrainedBox(
-        constraints: const BoxConstraints.tightFor(width: double.infinity, height: double.infinity),
-        child: _buildLane(config, appInfo, numLanes: numLanes, lane: lane),
-      );
-
-  List<Widget> buildGrid(EzCP config, AppInfoProvider appInfo, int numLanes) {
-    final List<Widget> lanes = <Widget>[];
-
-    for (int lane = 0; lane < numLanes; lane++) {
-      lanes.add(ValueListenableBuilder<double>(
-        valueListenable: rippleProgress,
-        builder: (_, double ripple, __) => ConstrainedBox(
-          constraints: BoxConstraints(
-            minHeight: double.infinity,
-            minWidth: appIconSize(config) + config.spacing,
-            maxWidth: (editing && (ripple % 1.0 == 0))
-                ? appIconSize(config) * 3 + config.spargin
-                : widthOf(context),
-          ),
-          child: _buildLane(config, appInfo, numLanes: numLanes, lane: lane),
-        ),
-      ));
-    }
-    return lanes;
-  }
-
   Future<void> addModal(
     EzCP config,
     AppInfoProvider appInfo,
@@ -595,11 +401,45 @@ With wide tiles disabled, lanes will be sized by the widest item & your spacing 
     }
   }
 
+  /// Checks out of bounds, safe to always call directly
+  void navPageLeft(EzCP config, AppInfoProvider appInfo, int numLanes) {
+    if (page <= 0) return;
+
+    delta = -1;
+    setState(() => page -= 1);
+
+    showPagePos(
+      config,
+      LAConfig.buildLookup(
+              appInfo.homeItem(config, lane: page, index: 0), Axis.horizontal, config) !=
+          ListAlignment.end,
+      numLanes: numLanes,
+      lane: page,
+    );
+  }
+
+  /// Checks out of bounds, safe to always call directly
+  void navPageRight(EzCP config, AppInfoProvider appInfo, int numLanes) {
+    if (page >= (numLanes - 1)) return;
+
+    delta = 1;
+    setState(() => page += 1);
+
+    showPagePos(
+      config,
+      LAConfig.buildLookup(
+              appInfo.homeItem(config, lane: page, index: 0), Axis.horizontal, config) !=
+          ListAlignment.end,
+      numLanes: numLanes,
+      lane: page,
+    );
+  }
+
   Future<void> swipeUp(EzCP config, AppInfoProvider appInfo) async {
     if (marked.value.$1 != null || marked.value.$2 != null) return;
 
     (editing)
-        ? await navToHidden(config, appInfo)
+        ? await _navToHidden(config, appInfo)
         : context.goNamed(
             appListPath,
             extra: ListConfig(
@@ -616,7 +456,7 @@ With wide tiles disabled, lanes will be sized by the widest item & your spacing 
           );
   }
 
-  Future<void> navToHidden(EzCP config, AppInfoProvider appInfo) async {
+  Future<void> _navToHidden(EzCP config, AppInfoProvider appInfo) async {
     if (authForHidden(config)) {
       bool authed = false;
       try {
@@ -650,6 +490,204 @@ With wide tiles disabled, lanes will be sized by the widest item & your spacing 
         ),
       );
     }
+  }
+
+  // Build custom Widgets //
+
+  List<Widget> _buildTiles(
+    EzCP config,
+    AppInfoProvider appInfo,
+    int lane, {
+    required ListAlignment hAlign,
+    required ListAlignment vAlign,
+  }) {
+    final List<String> entries = appInfo.homeLane(config, lane);
+
+    final List<Widget> tiles = <Widget>[];
+    final EdgeInsets tilePadding = EzInsets.wrap(config.spacing);
+
+    for (int index = 1; index < entries.length; index++) {
+      final String entry = entries[index];
+      final LimPos pos = LimPos(lane: lane, index: index, hAlign: hAlign, vAlign: vAlign);
+
+      final RegExpMatch? splitMatch = tileRegex.firstMatch(entry);
+      final String? delim = splitMatch?.group(0);
+
+      switch (delim) {
+        case idSplit:
+          final List<String> parts = entry.split(idSplit);
+
+          final AppInfo? app = appInfo.appMap[<String>[parts[0], parts[1]].join(idSplit)];
+          if (app == null) continue;
+
+          tiles.add(Padding(
+            key: ValueKey<String>('$lane-$index-${app.id}'),
+            padding: tilePadding,
+            child: AppTile(
+              config,
+              appInfo: appInfo,
+              pos: pos,
+              state: editing ? AppState.groupEdit : AppState.standard,
+              rippleProgress: rippleProgress,
+              app: app,
+              location: AppLocation.home,
+              onSelected: (AppInfo app) => launchApp(app),
+            ),
+          ));
+          break;
+
+        case folderSplit:
+          tiles.add(Padding(
+            key: ValueKey<String>('$index-${entry.split(folderSplit)[0]}'),
+            padding: tilePadding,
+            child: FolderTile(
+              config,
+              appInfo: appInfo,
+              pos: pos,
+              state: editing ? AppState.groupEdit : AppState.standard,
+              rippleProgress: rippleProgress,
+            ),
+          ));
+          break;
+
+        case widgetSplit:
+          tiles.add(Padding(
+            key: ValueKey<String>('$index-${entry.split(widgetSplit)[0]}'),
+            padding: tilePadding,
+            child: renderWidget(
+              config,
+              appInfo: appInfo,
+              pos: pos,
+              state: editing ? AppState.groupEdit : AppState.standard,
+              rippleProgress: rippleProgress,
+            ),
+          ));
+          break;
+
+        case spacerSplit:
+          tiles.add(Padding(
+            key: ValueKey<String>('$index-spacer-$editing'),
+            padding: editing ? tilePadding : EdgeInsets.zero,
+            child: LimSpacer(
+              config,
+              appInfo: appInfo,
+              pos: pos,
+              state: editing ? AppState.groupEdit : AppState.standard,
+              rippleProgress: rippleProgress,
+              resizeCallback: () => setState(() => editing = false),
+            ),
+          ));
+          break;
+
+        default:
+          break;
+      }
+    }
+
+    return tiles;
+  }
+
+  Widget _buildLane(
+    EzCP config,
+    AppInfoProvider appInfo, {
+    required int numLanes,
+    required int lane,
+  }) {
+    final ListAlignment hAlign = LAConfig.buildLookup(
+      appInfo.homeItem(config, lane: lane, index: 0),
+      Axis.horizontal,
+      config,
+    );
+    final ListAlignment vAlign = LAConfig.buildLookup(
+      appInfo.homeItem(config, lane: lane, index: 0),
+      Axis.vertical,
+      config,
+    );
+
+    return editing
+        ? Builder(builder: (_) {
+            final List<Widget> tiles = _buildTiles(
+              config,
+              appInfo,
+              lane,
+              hAlign: hAlign,
+              vAlign: vAlign,
+            );
+
+            return StatefulBuilder(
+              key: ValueKey<String>('lane-$lane'),
+              builder: (_, StateSetter setList) => ReorderableListView(
+                shrinkWrap: true,
+                header: LaneHeader(
+                  config,
+                  appInfo: appInfo,
+                  lane: lane,
+                  numLanes: numLanes,
+                  hAlign: hAlign,
+                  vAlign: vAlign,
+                  addModal: addModal,
+                  navLeft: pages(config) ? () => navPageLeft(config, appInfo, numLanes) : null,
+                  navRight: pages(config) ? () => navPageRight(config, appInfo, numLanes) : null,
+                ),
+                onReorderItem: (int oldIndex, int newIndex) async {
+                  if (oldIndex == newIndex) return;
+
+                  final Widget element = tiles.removeAt(oldIndex);
+                  tiles.insert(newIndex, element);
+
+                  await appInfo.reorderLane(
+                    config,
+                    lane: lane,
+                    oldIndex: oldIndex,
+                    newIndex: newIndex,
+                  );
+
+                  setList(() {});
+                },
+                children: tiles,
+              ),
+            );
+          })
+        : EzScrollView(
+            config,
+            key: ValueKey<String>('lane-$lane'),
+            mainAxisAlignment: vAlign.mainAxis,
+            crossAxisAlignment: hAlign.crossAxis,
+            physics: const ClampingScrollPhysics(),
+            children: _buildTiles(config, appInfo, lane, hAlign: hAlign, vAlign: vAlign),
+          );
+  }
+
+  Widget buildPage(
+    EzCP config,
+    AppInfoProvider appInfo, {
+    required int numLanes,
+    required int lane,
+  }) =>
+      ConstrainedBox(
+        constraints: const BoxConstraints.tightFor(width: double.infinity, height: double.infinity),
+        child: _buildLane(config, appInfo, numLanes: numLanes, lane: lane),
+      );
+
+  List<Widget> buildGrid(EzCP config, AppInfoProvider appInfo, int numLanes) {
+    final List<Widget> lanes = <Widget>[];
+
+    for (int lane = 0; lane < numLanes; lane++) {
+      lanes.add(ValueListenableBuilder<double>(
+        valueListenable: rippleProgress,
+        builder: (_, double ripple, __) => ConstrainedBox(
+          constraints: BoxConstraints(
+            minHeight: double.infinity,
+            minWidth: appIconSize(config) + config.spacing,
+            maxWidth: (editing && (ripple % 1.0 == 0))
+                ? appIconSize(config) * 3 + config.spargin
+                : widthOf(context),
+          ),
+          child: _buildLane(config, appInfo, numLanes: numLanes, lane: lane),
+        ),
+      ));
+    }
+    return lanes;
   }
 
   // Init //
@@ -692,37 +730,13 @@ With wide tiles disabled, lanes will be sized by the widest item & your spacing 
             if (details.primaryVelocity != null && details.primaryVelocity! != 0) {
               if (pages(config)) {
                 if (details.primaryVelocity! < 0) {
-                  // Swipe left (drag right)
-                  if (page < (numLanes - 1)) {
-                    delta = 1;
-                    setState(() => page += 1);
-                    showPagePos(
-                      config,
-                      LAConfig.buildLookup(appInfo.homeItem(config, lane: page, index: 0),
-                              Axis.horizontal, config) !=
-                          ListAlignment.end,
-                      numLanes: numLanes,
-                      lane: page,
-                    );
-                    return;
-                  }
+                  navPageRight(config, appInfo, numLanes);
+                  return;
                 } else {
-                  // Swipe right (drag left)
-                  if (page > 0) {
-                    delta = -1;
-                    setState(() => page -= 1);
-                    showPagePos(
-                      config,
-                      LAConfig.buildLookup(appInfo.homeItem(config, lane: page, index: 0),
-                              Axis.horizontal, config) !=
-                          ListAlignment.end,
-                      numLanes: numLanes,
-                      lane: page,
-                    );
-                    return;
-                  }
+                  navPageLeft(config, appInfo, numLanes);
+                  return;
                 }
-              }
+              } // TODO: acconut for end/ltr here too? rename funcs?
 
               final AppInfo? toLaunch = editing
                   ? null
