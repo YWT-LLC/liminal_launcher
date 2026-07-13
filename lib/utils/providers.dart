@@ -193,17 +193,6 @@ class AppInfoProvider extends ChangeNotifier {
     _invert.value = false;
   }
 
-  /// Doesn't notify
-  void _add(bool dark, int lane, String entry) {
-    if (dark) {
-      _darkHomeMatrix[lane].add(entry);
-      if (_darkHomeMatrix[lane][0] == '[]') _darkHomeMatrix[lane].removeAt(0);
-    } else {
-      _lightHomeMatrix[lane].add(entry);
-      if (_lightHomeMatrix[lane][0] == '[]') _lightHomeMatrix[lane].removeAt(0);
-    }
-  }
-
   // Core //
 
   /// Does notify
@@ -215,12 +204,12 @@ class AppInfoProvider extends ChangeNotifier {
     ].join(idSplit);
 
     if (interlinked || config.isDark) {
-      _add(true, lane, entry);
+      _darkHomeMatrix[lane].add(entry);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _add(false, lane, entry);
+      _lightHomeMatrix[lane].add(entry);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -237,12 +226,12 @@ class AppInfoProvider extends ChangeNotifier {
     ].join(folderSplit);
 
     if (interlinked || config.isDark) {
-      _add(true, lane, entry);
+      _darkHomeMatrix[lane].add(entry);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _add(false, lane, entry);
+      _lightHomeMatrix[lane].add(entry);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -259,12 +248,12 @@ class AppInfoProvider extends ChangeNotifier {
     ].join(widgetSplit);
 
     if (interlinked || config.isDark) {
-      _add(true, lane, entry);
+      _darkHomeMatrix[lane].add(entry);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _add(false, lane, entry);
+      _lightHomeMatrix[lane].add(entry);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -282,12 +271,12 @@ class AppInfoProvider extends ChangeNotifier {
     ].join(widgetSplit);
 
     if (interlinked || config.isDark) {
-      _add(true, lane, entry);
+      _darkHomeMatrix[lane].add(entry);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _add(false, lane, entry);
+      _lightHomeMatrix[lane].add(entry);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -304,12 +293,12 @@ class AppInfoProvider extends ChangeNotifier {
     ].join(widgetSplit);
 
     if (interlinked || config.isDark) {
-      _add(true, lane, entry);
+      _darkHomeMatrix[lane].add(entry);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _add(false, lane, entry);
+      _lightHomeMatrix[lane].add(entry);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -326,12 +315,12 @@ class AppInfoProvider extends ChangeNotifier {
     ].join(widgetSplit);
 
     if (interlinked || config.isDark) {
-      _add(true, lane, entry);
+      _darkHomeMatrix[lane].add(entry);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _add(false, lane, entry);
+      _lightHomeMatrix[lane].add(entry);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -348,12 +337,12 @@ class AppInfoProvider extends ChangeNotifier {
     ].join(widgetSplit);
 
     if (interlinked || config.isDark) {
-      _add(true, lane, entry);
+      _darkHomeMatrix[lane].add(entry);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _add(false, lane, entry);
+      _lightHomeMatrix[lane].add(entry);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -370,12 +359,12 @@ class AppInfoProvider extends ChangeNotifier {
     ].join(widgetSplit);
 
     if (interlinked || config.isDark) {
-      _add(true, lane, entry);
+      _darkHomeMatrix[lane].add(entry);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _add(false, lane, entry);
+      _lightHomeMatrix[lane].add(entry);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -401,14 +390,16 @@ class AppInfoProvider extends ChangeNotifier {
     if (interlinked || config.isDark) {
       pos = index ?? _darkHomeMatrix[lane].length;
 
-      index == null ? _add(true, lane, entry) : _darkHomeMatrix[lane].insert(index, entry);
+      index == null ? _darkHomeMatrix[lane].add(entry) : _darkHomeMatrix[lane].insert(index, entry);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
       pos = index ?? _lightHomeMatrix[lane].length;
 
-      index == null ? _add(false, lane, entry) : _lightHomeMatrix[lane].insert(index, entry);
+      index == null
+          ? _lightHomeMatrix[lane].add(entry)
+          : _lightHomeMatrix[lane].insert(index, entry);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
