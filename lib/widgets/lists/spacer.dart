@@ -272,7 +272,6 @@ Future<void> editSpacer(
               .toList();
 
       late final List<Widget> stepOptions = staticSteps() + dynamicSteps();
-      // TODO: test if updates (prolly not, prolly needs to be a func... but worth a try)
 
       void quickValue(double value) {
         if (axis == Axis.vertical) {
