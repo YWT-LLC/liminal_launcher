@@ -376,8 +376,7 @@ class _EditFolder extends StatelessWidget {
                       // (Re)name
                       EzTextField(
                         controller: renameCon,
-                        constraints: BoxConstraints.tightFor(
-                            height: appIconSize(config), width: widthOf(mCon) / 3),
+                        constraints: BoxConstraints.tightFor(width: widthOf(mCon) / 3),
                         hintText: 'Folder',
                         autofillHints: const <String>[AutofillHints.name],
                         validator: validateName,

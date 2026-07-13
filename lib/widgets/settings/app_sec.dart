@@ -30,7 +30,6 @@ class AppSecSettings extends StatelessWidget {
             context: context,
             style: config.bodyStyle,
           );
-          final double fieldHeight = max(ttSize.height + config.padding, kMinInteractiveDimension);
           final double fieldWidth = max(ttSize.width + config.padding, kMinInteractiveDimension);
 
           double bottomSpace = config.spacing * 2;
@@ -91,9 +90,8 @@ class AppSecSettings extends StatelessWidget {
                         // Field
                         EzTextField(
                           controller: _timeoutText,
-                          constraints: BoxConstraints(maxHeight: fieldHeight, maxWidth: fieldWidth),
-                          errorConstraints:
-                              BoxConstraints(maxHeight: fieldHeight, maxWidth: fieldWidth * 2),
+                          constraints: BoxConstraints(maxWidth: fieldWidth),
+                          errorConstraints: BoxConstraints(maxWidth: fieldWidth * 2),
                           hintText: '0',
                           keyboardType: TextInputType.number,
                           onTap: () async {

@@ -206,12 +206,10 @@ class _SearchWidgetState extends State<SearchWidget> {
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
-    late final double fieldHeight = appIconSize(widget.config);
     late final double textWidth =
         ezTextSize('Search bar', context: context, style: widget.config.bodyStyle).width;
 
     late final _SearchConfig init = _SearchConfig(
-      fieldHeight: fieldHeight,
       size: widget._size,
       engine: widget._engine,
       choices: widget._choices,
@@ -234,14 +232,9 @@ class _SearchWidgetState extends State<SearchWidget> {
                 : EzRow(widget.config, children: <Widget>[
                     EzScrollBlocker(EzTextField(
                       controller: queryCon,
-                      constraints: BoxConstraints(
-                        maxHeight: fieldHeight,
-                        maxWidth: textWidth + widget.config.padding,
-                      ),
-                      errorConstraints: BoxConstraints(
-                        maxHeight: fieldHeight,
-                        maxWidth: (textWidth * 2) + widget.config.padding,
-                      ),
+                      constraints: BoxConstraints(maxWidth: textWidth + widget.config.padding),
+                      errorConstraints:
+                          BoxConstraints(maxWidth: (textWidth * 2) + widget.config.padding),
                       hintText: widget._engine.name,
                       keyboardType: TextInputType.webSearch,
                       onChanged: onChanged,
@@ -336,11 +329,9 @@ class AddSearch extends StatelessWidget {
           child: EzRow(config, children: <Widget>[
             EzTextField(
               constraints: BoxConstraints(
-                maxWidth:
-                    ezTextSize('Search bar', context: context, style: config.bodyStyle).width +
-                        config.padding,
-                maxHeight: appIconSize(config),
-              ),
+                  maxWidth:
+                      ezTextSize('Search bar', context: context, style: config.bodyStyle).width +
+                          config.padding),
               hintText: 'Search',
               onTap: onTap,
               readOnly: true,
@@ -482,10 +473,7 @@ class _EditSearch extends StatelessWidget {
                                 EzRow(config, children: <Widget>[
                                   EzTextField(
                                     controller: nameCon,
-                                    constraints: BoxConstraints.tightFor(
-                                      height: initConfig.fieldHeight,
-                                      width: fieldWidth,
-                                    ),
+                                    constraints: BoxConstraints.tightFor(width: fieldWidth),
                                     hintText: 'Name (Ecosia)',
                                     onFieldSubmitted: shrink,
                                     onTap: grow,
@@ -506,10 +494,7 @@ class _EditSearch extends StatelessWidget {
                                 // Base site
                                 EzTextField(
                                   controller: baseCon,
-                                  constraints: BoxConstraints.tightFor(
-                                    height: initConfig.fieldHeight,
-                                    width: fieldWidth,
-                                  ),
+                                  constraints: BoxConstraints.tightFor(width: fieldWidth),
                                   hintText: 'Base site (ecosia.org)',
                                   onFieldSubmitted: shrink,
                                   onTap: grow,
@@ -520,10 +505,7 @@ class _EditSearch extends StatelessWidget {
                                 // Path
                                 EzTextField(
                                   controller: pathCon,
-                                  constraints: BoxConstraints.tightFor(
-                                    height: initConfig.fieldHeight,
-                                    width: fieldWidth,
-                                  ),
+                                  constraints: BoxConstraints.tightFor(width: fieldWidth),
                                   hintText: 'Path (/search)',
                                   onFieldSubmitted: shrink,
                                   onTap: grow,
@@ -534,10 +516,7 @@ class _EditSearch extends StatelessWidget {
                                 // Parameter
                                 EzTextField(
                                   controller: queryCon,
-                                  constraints: BoxConstraints.tightFor(
-                                    height: initConfig.fieldHeight,
-                                    width: fieldWidth,
-                                  ),
+                                  constraints: BoxConstraints.tightFor(width: fieldWidth),
                                   hintText: 'Parameter (q)',
                                   onFieldSubmitted: shrink,
                                   onTap: grow,
@@ -662,13 +641,11 @@ class _EditSearch extends StatelessWidget {
 }
 
 class _SearchConfig {
-  final double fieldHeight;
   final WidgetSize size;
   final Engine engine;
   final List<Engine> choices;
 
   _SearchConfig({
-    required this.fieldHeight,
     required this.size,
     required this.engine,
     required this.choices,

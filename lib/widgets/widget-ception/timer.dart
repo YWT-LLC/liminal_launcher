@@ -208,8 +208,7 @@ class _TimerWidgetState extends State<TimerWidget> {
       EzScrollBlocker(EzTextField(
         controller: controller,
         constraints: constraints,
-        errorConstraints:
-            BoxConstraints.tightFor(height: constraints.maxHeight, width: constraints.maxWidth * 2),
+        errorConstraints: BoxConstraints.tightFor(width: constraints.maxWidth * 2),
         focusNode: curr,
         hintText: '00',
         keyboardType: TextInputType.number,
@@ -247,10 +246,8 @@ class _TimerWidgetState extends State<TimerWidget> {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
     late final BoxConstraints numConstraints = BoxConstraints.tightFor(
-      width: ezTextSize('000', context: context, style: widget.config.bodyStyle).width +
-          (2 * widget.config.padding),
-      height: appIconSize(widget.config),
-    );
+        width: ezTextSize('000', context: context, style: widget.config.bodyStyle).width +
+            (2 * widget.config.padding));
 
     late final _TimerConfig init = _TimerConfig(
       size: widget._size,
@@ -411,10 +408,8 @@ class AddTimer extends StatelessWidget {
   Widget build(BuildContext context) {
     late final Widget fauxTimerField = EzTextField(
       constraints: BoxConstraints(
-        maxWidth:
-            ezTextSize('00', context: context, style: config.bodyStyle).width + config.padding,
-        maxHeight: appIconSize(config),
-      ),
+          maxWidth:
+              ezTextSize('00', context: context, style: config.bodyStyle).width + config.padding),
       hintText: '00',
       onTap: onTap,
       readOnly: true,
