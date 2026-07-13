@@ -3,8 +3,6 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: make the lane positions tap-able
-
 import '../../utils/export.dart';
 import '../export.dart';
 
@@ -85,34 +83,37 @@ class LaneHeader extends StatelessWidget {
                 config,
                 context: context,
                 builder: (_) {
-                  List<Widget> buildNodes() {
+                  List<Widget> buildNodes(StateSetter setModal) {
                     final List<Widget> nodes = <Widget>[];
 
                     for (int i = 0; i < numLanes; i++) {
                       nodes.addAll(<Widget>[
-                        Container(
-                          constraints: BoxConstraints.tightFor(
-                            height: appIconSize(config),
-                            width: appIconSize(config),
-                          ),
-                          decoration: BoxDecoration(
-                            color: i == pos
-                                ? config.colors.secondary
-                                : i == lane // this order is important
-                                    ? config.colors.tertiary
-                                    : config.colors.surface,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Center(
-                            child: Text(
-                              i.toString(),
-                              textAlign: TextAlign.center,
-                              style: config.labelStyle?.copyWith(
-                                color: i == pos
-                                    ? config.colors.onSecondary
-                                    : i == lane
-                                        ? config.colors.onTertiary
-                                        : config.colors.onSurface,
+                        GestureDetector(
+                          onTap: () => setModal(() => pos = i),
+                          child: Container(
+                            constraints: BoxConstraints.tightFor(
+                              height: appIconSize(config),
+                              width: appIconSize(config),
+                            ),
+                            decoration: BoxDecoration(
+                              color: i == pos
+                                  ? config.colors.secondary
+                                  : i == lane // this order is important
+                                      ? config.colors.tertiary
+                                      : config.colors.surface,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Center(
+                              child: Text(
+                                i.toString(),
+                                textAlign: TextAlign.center,
+                                style: config.labelStyle?.copyWith(
+                                  color: i == pos
+                                      ? config.colors.onSecondary
+                                      : i == lane
+                                          ? config.colors.onTertiary
+                                          : config.colors.onSurface,
+                                ),
                               ),
                             ),
                           ),
@@ -158,8 +159,8 @@ class LaneHeader extends StatelessWidget {
                               scrollDirection: Axis.horizontal,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: (config.isLTR && hA != ListAlignment.end)
-                                  ? buildNodes()
-                                  : buildNodes().reversed.toList(),
+                                  ? buildNodes(setModal)
+                                  : buildNodes(setModal).reversed.toList(),
                             ),
                             if (numLanes > 1)
                               Padding(
