@@ -71,7 +71,7 @@ class AppInfoProvider extends ChangeNotifier {
                       message: 'Removing ${app.label}',
                     ).closed;
                   }
-                  await _clearHomeOf(null, app.id, true);
+                  await _clearHomeOf(null, app.id);
                 }
               }
               break;
@@ -794,7 +794,7 @@ class AppInfoProvider extends ChangeNotifier {
       unawaited(EzCM.setStringList(lightHiddenIDsKey, _lightHidden.toList()));
     }
 
-    await _clearHomeOf(config, id, false);
+    await _clearHomeOf(config, id);
   }
 
   /// Does notify, as long as not [batch]
@@ -1037,7 +1037,7 @@ For example: if an app has always on location permissions, banishing it will not
       unawaited(EzCM.setStringList(lightBanishIDsKey, _lightBanished.toList()));
     }
 
-    await _clearHomeOf(config, id, false);
+    await _clearHomeOf(config, id);
     return true;
   }
 
@@ -1095,13 +1095,12 @@ For example: if an app has always on location permissions, banishing it will not
   }
 
   /// Full [ezNoTouch], then notifies
-  // TODO: handful of issues here, audit && fix
-  Future<void> _clearHomeOf(EzCP? config, String id, bool deleting) async {
+  Future<void> _clearHomeOf(EzCP? config, String id) async {
     await ezNoTouch(() async {
       if (config == null || interlinked || config.isDark) {
         final List<List<String>> copy = List<List<String>>.from(_darkHomeMatrix);
 
-        if (deleting) {
+        if (config == null) {
           if (_darkHidden.contains(id)) {
             _darkHidden.remove(id);
             unawaited(EzCM.setStringList(darkHiddenIDsKey, _darkHidden.toList()));
@@ -1145,16 +1144,13 @@ For example: if an app has always on location permissions, banishing it will not
           }
         }
 
-        if (config != null && !interlinked) {
-          _apps.remove(_appMap[id]);
-          _appMap.remove(id);
-        }
+        unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
       }
 
       if (config == null || interlinked || !config.isDark) {
         final List<List<String>> copy = List<List<String>>.from(_lightHomeMatrix);
 
-        if (deleting) {
+        if (config == null) {
           if (_lightHidden.contains(id)) {
             _lightHidden.remove(id);
             unawaited(EzCM.setStringList(lightHiddenIDsKey, _lightHidden.toList()));
@@ -1198,6 +1194,10 @@ For example: if an app has always on location permissions, banishing it will not
           }
         }
 
+        unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
+      }
+
+      if (config == null) {
         _apps.remove(_appMap[id]);
         _appMap.remove(id);
       }
