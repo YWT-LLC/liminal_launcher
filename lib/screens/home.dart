@@ -849,21 +849,37 @@ With wide tiles disabled, lanes will be sized by the widest item & your spacing 
                 if (numLanes == 1 || (wideTiles(config) && pages(config))) ...<Widget>[
                   AddFAB(
                     config,
-                    () => addModal(
-                      config,
-                      appInfo,
-                      numLanes == 1 ? 0 : page,
-                      LAConfig.buildLookup(
-                        appInfo.homeItem(config, lane: numLanes == 1 ? 0 : page, index: 0),
-                        Axis.horizontal,
-                        config,
-                      ),
-                      LAConfig.buildLookup(
-                        appInfo.homeItem(config, lane: numLanes == 1 ? 0 : page, index: 0),
-                        Axis.vertical,
-                        config,
-                      ),
-                    ),
+                    () => numLanes == 1
+                        ? addModal(
+                            config,
+                            appInfo,
+                            0,
+                            LAConfig.buildLookup(
+                              appInfo.homeItem(config, lane: 0, index: 0),
+                              Axis.horizontal,
+                              config,
+                            ),
+                            LAConfig.buildLookup(
+                              appInfo.homeItem(config, lane: 0, index: 0),
+                              Axis.vertical,
+                              config,
+                            ),
+                          )
+                        : addModal(
+                            config,
+                            appInfo,
+                            page,
+                            LAConfig.buildLookup(
+                              appInfo.homeItem(config, lane: page, index: 0),
+                              Axis.horizontal,
+                              config,
+                            ),
+                            LAConfig.buildLookup(
+                              appInfo.homeItem(config, lane: page, index: 0),
+                              Axis.vertical,
+                              config,
+                            ),
+                          ),
                   ),
                   config.spacer,
                 ],
