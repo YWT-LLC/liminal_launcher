@@ -18,6 +18,8 @@ class LaneHeader extends StatelessWidget {
   final ListAlignment hAlign;
   final ListAlignment vAlign;
   final Future<void> Function(EzCP, AppInfoProvider, int, ListAlignment, ListAlignment) addModal;
+  final void Function()? navLeft;
+  final void Function()? navRight;
 
   const LaneHeader(
     this.config, {
@@ -28,6 +30,8 @@ class LaneHeader extends StatelessWidget {
     required this.hAlign,
     required this.vAlign,
     required this.addModal,
+    required this.navRight,
+    required this.navLeft,
   });
 
   @override
@@ -51,7 +55,10 @@ class LaneHeader extends StatelessWidget {
           SubmenuButton(
             menuChildren: <Widget>[
               MenuItemButton(
-                onPressed: () => appInfo.removeLane(config, context, lane),
+                onPressed: () async {
+                  lane == 0 ? navRight?.call() : navLeft?.call();
+                  await appInfo.removeLane(config, context, lane);
+                },
                 child: EzIcon(config, Icons.delete),
               ),
               MenuItemButton(
