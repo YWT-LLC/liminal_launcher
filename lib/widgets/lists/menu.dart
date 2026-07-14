@@ -155,9 +155,7 @@ Widget _moveDownLane(
       enabled: lane != 0,
       icon: EzIcon(
         config,
-        config.isLTR && horizontalAlign(config) != ListAlignment.end
-            ? Icons.keyboard_arrow_left
-            : Icons.keyboard_arrow_right,
+        standardFlow(config) ? Icons.keyboard_arrow_left : Icons.keyboard_arrow_right,
       ),
       onPressed: () => appInfo.moveItemDownLane(config, lane: lane, index: index),
     );
@@ -174,9 +172,7 @@ Widget _moveUpLane(
       enabled: lane < (numLanes - 1),
       icon: EzIcon(
         config,
-        config.isLTR && horizontalAlign(config) != ListAlignment.end
-            ? Icons.keyboard_arrow_right
-            : Icons.keyboard_arrow_left,
+        standardFlow(config) ? Icons.keyboard_arrow_right : Icons.keyboard_arrow_left,
       ),
       onPressed: () => appInfo.moveItemUpLane(config, lane: lane, index: index),
     );

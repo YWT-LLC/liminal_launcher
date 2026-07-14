@@ -186,6 +186,9 @@ Future<String?> resizeWidgetDialog(EzCP config, BuildContext context, WidgetSize
       ),
     );
 
+/// [EzCP.isLTR] && [horizontalAlign] != [ListAlignment.end]
+bool standardFlow(EzCP config) => config.isLTR && horizontalAlign(config) != ListAlignment.end;
+
 const String _pattern = r'^(?!.*:[01]{8}:)[^/\\\x00]{1,50}$';
 String? validateName(String? name) {
   if (name == null || name.trim().isEmpty) return 'Cannot be empty';

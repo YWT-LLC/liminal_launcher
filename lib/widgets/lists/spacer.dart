@@ -237,7 +237,6 @@ Future<void> editSpacer(
   overlayEntry = OverlayEntry(
     builder: (_) => StatefulBuilder(builder: (_, StateSetter setOverlay) {
       final String alignEntry = appInfo.homeItem(config, lane: lane, index: 0);
-      final ListAlignment hAlign = LAConfig.buildLookup(alignEntry, Axis.horizontal, config);
       final ListAlignment vAlign = LAConfig.buildLookup(alignEntry, Axis.vertical, config);
 
       // Define custom functions //
@@ -450,7 +449,7 @@ Future<void> editSpacer(
                       EzIconButton(
                         config,
                         enabled: currLane > 0,
-                        icon: Icon(config.isLTR && hAlign != ListAlignment.end
+                        icon: Icon(standardFlow(config)
                             ? Icons.keyboard_arrow_left
                             : Icons.keyboard_arrow_right),
                         onPressed: () async {
@@ -522,7 +521,7 @@ Future<void> editSpacer(
                       EzIconButton(
                         config,
                         enabled: currLane < (numLanes - 1),
-                        icon: Icon(config.isLTR && hAlign != ListAlignment.end
+                        icon: Icon(standardFlow(config)
                             ? Icons.keyboard_arrow_right
                             : Icons.keyboard_arrow_left),
                         onPressed: () async {
