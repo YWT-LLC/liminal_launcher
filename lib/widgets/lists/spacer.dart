@@ -3,8 +3,6 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: 2 fix the edit version (prolly similar to the edit menu buttons... parent context vibes)
-
 import '../../utils/export.dart';
 import '../export.dart';
 
@@ -115,7 +113,6 @@ class _LimSpacerState extends State<LimSpacer> {
                             _EditSpacer(
                               widget.config,
                               widget.appInfo,
-                              parentCon: context,
                               pos: widget.pos,
                               stateCheck: () => (state == AppState.groupEdit)
                                   ? widget.resizeCallback.call()
@@ -136,7 +133,6 @@ class _LimSpacerState extends State<LimSpacer> {
                             _EditSpacer(
                               widget.config,
                               widget.appInfo,
-                              parentCon: context,
                               pos: widget.pos,
                               stateCheck: () => (state == AppState.groupEdit)
                                   ? widget.resizeCallback.call()
@@ -166,14 +162,13 @@ class _LimSpacerState extends State<LimSpacer> {
 class _EditSpacer extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
-  final BuildContext parentCon;
+
   final LimPos pos;
   final void Function() stateCheck;
 
   const _EditSpacer(
     this.config,
     this.appInfo, {
-    required this.parentCon,
     required this.pos,
     required this.stateCheck,
   });
@@ -182,12 +177,13 @@ class _EditSpacer extends StatelessWidget {
   Widget build(_) => EzMenuButton(
         config,
         onPressed: () async {
-          stateCheck.call();
+          if (ezRootNav.currentContext == null || !ezRootNav.currentContext!.mounted) return;
 
+          stateCheck.call();
           await editSpacer(
             config,
             appInfo: appInfo,
-            context: parentCon,
+            context: ezRootNav.currentContext!,
             lane: pos.lane,
             index: pos.index,
           );
@@ -640,7 +636,7 @@ Future<void> editSpacer(
     }),
   );
 
-  Overlay.of(context).insert(overlayEntry);
+  ezRootNav.currentState?.overlay?.insert(overlayEntry);
   final bool? keep = await completer.future;
 
   await ezNoTouch(() async {
