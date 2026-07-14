@@ -739,8 +739,7 @@ With wide tiles disabled, lanes will be sized by the widest item & your spacing 
                       : navPageUp(config, appInfo, numLanes);
                   return;
                 }
-              } // TODO: account for end/ltr here too? rename functions?
-              // TODO: should i auto-nav on lane move?
+              }
 
               final AppInfo? toLaunch = editing
                   ? null
