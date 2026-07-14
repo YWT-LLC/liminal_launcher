@@ -3,7 +3,6 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: 1 check/audit: is my logic for wideTiles && pages && their combo consistent? (everywhere)
 // TODO: 2 fix the edit version (prolly similar to the edit menu buttons... parent context vibes)
 
 import '../../utils/export.dart';

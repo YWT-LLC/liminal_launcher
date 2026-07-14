@@ -198,7 +198,6 @@ class AppTileSetting extends StatelessWidget {
                 EzSwitchPair(
                   config,
                   text: 'Fullscreen pages',
-                  enabled: useWide,
                   valueKey: config.isDark ? darkPagesKey : lightPagesKey,
                   afterChanged: (bool? choice) async {
                     if (choice == null) return;

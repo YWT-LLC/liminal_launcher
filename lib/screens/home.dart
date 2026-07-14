@@ -278,11 +278,16 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
                         // Description
                         const Text(
-                          '''With wide tiles enabled, each lane with an item will be the width of one screen.
-By default, pages are also enabled, so lanes behave like pages on a traditional launcher.
-You can disable pages to have everything be a continuous scroll.
-                          
-With wide tiles disabled, lanes will be sized by the widest item & your spacing setting, and the pages setting is ignored.''',
+                          '''When wide tiles is enabled, each lane with an item will be the width of one screen.
+With wide tiles disabled, lanes will be sized by their widest item & your spacing setting.
+
+When pages is enabled, lanes behave like pages on a traditional launcher.
+With pages disabled, all lanes share one horizontal scroll.
+
+Turn both on if you want a minimalist setup.
+Turn both off if you want pixel perfect tile placement.
+
+Or, something in-between.''',
                           textAlign: TextAlign.center,
                         ),
                         config.separator,
@@ -863,7 +868,7 @@ With wide tiles disabled, lanes will be sized by the widest item & your spacing 
                 config.spacer,
 
                 // Add (if one lane || using pages)
-                if (numLanes == 1 || (wideTiles(config) && pages(config))) ...<Widget>[
+                if (numLanes == 1 || pages(config)) ...<Widget>[
                   AddFAB(
                     config,
                     () => numLanes == 1
