@@ -45,7 +45,7 @@ class LaneHeader extends StatelessWidget {
               child: EzIconButton(
                 config,
                 onPressed: () => toggleMenu(controller),
-                icon: const Icon(Icons.edit),
+                icon: const Icon(Icons.more_vert),
               ),
             ),
           ],
