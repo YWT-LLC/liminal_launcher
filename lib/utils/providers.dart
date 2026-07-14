@@ -11,8 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-// TODO: 3 double adding apps? only on non-0 pages?? but still on them if they move??? and never on the 0 page even if it moves????
-
 class AppInfoProvider extends ChangeNotifier {
   //* Construct *//
 
@@ -200,18 +198,21 @@ class AppInfoProvider extends ChangeNotifier {
   /// Does notify
   /// Shows added overlay
   Future<void> addApp(EzCP config, {required int lane, required String id}) async {
-    final String entry = <String>[
-      id,
-      TCC.appEntry(id.split(idSplit)[1], null, null, null),
-    ].join(idSplit);
-
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane].add(entry);
+      _darkHomeMatrix[lane].add(<String>[
+        id,
+        TCC.appEntry(id.split(idSplit)[1], null, null, null),
+      ].join(idSplit));
+
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane].add(entry);
+      _lightHomeMatrix[lane].add(<String>[
+        id,
+        TCC.appEntry(id.split(idSplit)[1], null, null, null),
+      ].join(idSplit));
+
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -222,18 +223,21 @@ class AppInfoProvider extends ChangeNotifier {
   /// Does notify
   /// Shows added overlay
   Future<void> addFolder(EzCP config, int lane) async {
-    final String entry = <String>[
-      'Folder',
-      TCC.folderEntry(Icons.folder_outlined, null, null),
-    ].join(folderSplit);
-
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane].add(entry);
+      _darkHomeMatrix[lane].add(<String>[
+        'Folder',
+        TCC.folderEntry(Icons.folder_outlined, null, null),
+      ].join(folderSplit));
+
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane].add(entry);
+      _lightHomeMatrix[lane].add(<String>[
+        'Folder',
+        TCC.folderEntry(Icons.folder_outlined, null, null),
+      ].join(folderSplit));
+
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -244,18 +248,21 @@ class AppInfoProvider extends ChangeNotifier {
   /// Does notify
   /// Shows added overlay
   Future<void> addCalendar(EzCP config, int lane) async {
-    final String entry = <String>[
-      WidWidGetGet.calendar.value,
-      TCC.calendarEntry(WidgetSize.system),
-    ].join(widgetSplit);
-
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane].add(entry);
+      _darkHomeMatrix[lane].add(<String>[
+        WidWidGetGet.calendar.value,
+        TCC.calendarEntry(WidgetSize.system),
+      ].join(widgetSplit));
+
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane].add(entry);
+      _lightHomeMatrix[lane].add(<String>[
+        WidWidGetGet.calendar.value,
+        TCC.calendarEntry(WidgetSize.system),
+      ].join(widgetSplit));
+
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -266,19 +273,23 @@ class AppInfoProvider extends ChangeNotifier {
   /// Does notify
   /// Shows added overlay
   Future<void> addClock(EzCP config, int lane) async {
-    final String entry = <String>[
-      WidWidGetGet.clock.value,
-      TCC.clockEntry(EzButtonShape.roundRect, null, true, TxtStile.headline, null, DateType.compact,
-          TxtStile.label, null),
-    ].join(widgetSplit);
-
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane].add(entry);
+      _darkHomeMatrix[lane].add(<String>[
+        WidWidGetGet.clock.value,
+        TCC.clockEntry(EzButtonShape.roundRect, null, true, TxtStile.headline, null,
+            DateType.compact, TxtStile.label, null),
+      ].join(widgetSplit));
+
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane].add(entry);
+      _lightHomeMatrix[lane].add(<String>[
+        WidWidGetGet.clock.value,
+        TCC.clockEntry(EzButtonShape.roundRect, null, true, TxtStile.headline, null,
+            DateType.compact, TxtStile.label, null),
+      ].join(widgetSplit));
+
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -289,18 +300,21 @@ class AppInfoProvider extends ChangeNotifier {
   /// Does notify
   /// Shows added overlay
   Future<void> addSearch(EzCP config, int lane) async {
-    final String entry = <String>[
-      WidWidGetGet.search.value,
-      TCC.searchEntry(WidgetSize.system, ecosia, Engine.defaultOrder.map((Engine e) => e.value)),
-    ].join(widgetSplit);
-
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane].add(entry);
+      _darkHomeMatrix[lane].add(<String>[
+        WidWidGetGet.search.value,
+        TCC.searchEntry(WidgetSize.system, ecosia, Engine.defaultOrder.map((Engine e) => e.value)),
+      ].join(widgetSplit));
+
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane].add(entry);
+      _lightHomeMatrix[lane].add(<String>[
+        WidWidGetGet.search.value,
+        TCC.searchEntry(WidgetSize.system, ecosia, Engine.defaultOrder.map((Engine e) => e.value)),
+      ].join(widgetSplit));
+
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -311,18 +325,21 @@ class AppInfoProvider extends ChangeNotifier {
   /// Does notify
   /// Shows added overlay
   Future<void> addTimer(EzCP config, int lane) async {
-    final String entry = <String>[
-      WidWidGetGet.timer.value,
-      TCC.timerEntry(WidgetSize.system, '00:00:00'),
-    ].join(widgetSplit);
-
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane].add(entry);
+      _darkHomeMatrix[lane].add(<String>[
+        WidWidGetGet.timer.value,
+        TCC.timerEntry(WidgetSize.system, '00:00:00'),
+      ].join(widgetSplit));
+
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane].add(entry);
+      _lightHomeMatrix[lane].add(<String>[
+        WidWidGetGet.timer.value,
+        TCC.timerEntry(WidgetSize.system, '00:00:00'),
+      ].join(widgetSplit));
+
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -333,18 +350,21 @@ class AppInfoProvider extends ChangeNotifier {
   /// Does notify
   /// Shows added overlay
   Future<void> addToggleMedia(EzCP config, int lane) async {
-    final String entry = <String>[
-      WidWidGetGet.toggleMedia.value,
-      TCC.mediaEntry(WidgetSize.system),
-    ].join(widgetSplit);
-
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane].add(entry);
+      _darkHomeMatrix[lane].add(<String>[
+        WidWidGetGet.toggleMedia.value,
+        TCC.mediaEntry(WidgetSize.system),
+      ].join(widgetSplit));
+
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane].add(entry);
+      _lightHomeMatrix[lane].add(<String>[
+        WidWidGetGet.toggleMedia.value,
+        TCC.mediaEntry(WidgetSize.system),
+      ].join(widgetSplit));
+
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -355,18 +375,21 @@ class AppInfoProvider extends ChangeNotifier {
   /// Does notify
   /// Shows added overlay
   Future<void> addThemeModeWidget(EzCP config, int lane) async {
-    final String entry = <String>[
-      WidWidGetGet.themeMode.value,
-      TCC.themeModeEntry(WidgetSize.system),
-    ].join(widgetSplit);
-
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane].add(entry);
+      _darkHomeMatrix[lane].add(<String>[
+        WidWidGetGet.themeMode.value,
+        TCC.themeModeEntry(WidgetSize.system),
+      ].join(widgetSplit));
+
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane].add(entry);
+      _lightHomeMatrix[lane].add(<String>[
+        WidWidGetGet.themeMode.value,
+        TCC.themeModeEntry(WidgetSize.system),
+      ].join(widgetSplit));
+
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -384,13 +407,13 @@ class AppInfoProvider extends ChangeNotifier {
     int? index,
   }) async {
     int pos = 0;
-    final String entry = <String>[
-      (height ?? config.spacing).toString(),
-      (width ?? appIconSize(config)).toString(),
-    ].join(spacerSplit);
 
     if (interlinked || config.isDark) {
       pos = index ?? _darkHomeMatrix[lane].length;
+      final String entry = <String>[
+        (height ?? config.spacing).toString(),
+        (width ?? appIconSize(config)).toString(),
+      ].join(spacerSplit);
 
       index == null ? _darkHomeMatrix[lane].add(entry) : _darkHomeMatrix[lane].insert(index, entry);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
@@ -398,6 +421,10 @@ class AppInfoProvider extends ChangeNotifier {
 
     if (interlinked || !config.isDark) {
       pos = index ?? _lightHomeMatrix[lane].length;
+      final String entry = <String>[
+        (height ?? config.spacing).toString(),
+        (width ?? appIconSize(config)).toString(),
+      ].join(spacerSplit);
 
       index == null
           ? _lightHomeMatrix[lane].add(entry)
@@ -412,15 +439,15 @@ class AppInfoProvider extends ChangeNotifier {
   /// Does notify
   /// Shows added overlay
   Future<void> addLane(EzCP config) async {
-    final List<String> entry = <String>[TCC.laneEntry(null, null)];
-
     if (interlinked || config.isDark) {
-      _darkHomeMatrix.add(entry);
+      _darkHomeMatrix.add(<String>[TCC.laneEntry(null, null)]);
+
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix.add(entry);
+      _lightHomeMatrix.add(<String>[TCC.laneEntry(null, null)]);
+
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -502,15 +529,13 @@ class AppInfoProvider extends ChangeNotifier {
     required String id,
     required String extra,
   }) async {
-    final String entry = <String>[id, extra].join(idSplit);
-
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane][index] = entry;
+      _darkHomeMatrix[lane][index] = <String>[id, extra].join(idSplit);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane][index] = entry;
+      _lightHomeMatrix[lane][index] = <String>[id, extra].join(idSplit);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -526,19 +551,23 @@ class AppInfoProvider extends ChangeNotifier {
     required String extra,
     required List<String> ids,
   }) async {
-    final String entry = <String>[
-      name,
-      extra,
-      if (ids.isNotEmpty) ...ids,
-    ].join(folderSplit);
-
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane][index] = entry;
+      _darkHomeMatrix[lane][index] = <String>[
+        name,
+        extra,
+        if (ids.isNotEmpty) ...ids,
+      ].join(folderSplit);
+
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane][index] = entry;
+      _lightHomeMatrix[lane][index] = <String>[
+        name,
+        extra,
+        if (ids.isNotEmpty) ...ids,
+      ].join(folderSplit);
+
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -553,15 +582,13 @@ class AppInfoProvider extends ChangeNotifier {
     required int lane,
     required int index,
   }) async {
-    final String entry = <String>[type.value, extra].join(widgetSplit);
-
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane][index] = entry;
+      _darkHomeMatrix[lane][index] = <String>[type.value, extra].join(widgetSplit);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane][index] = entry;
+      _lightHomeMatrix[lane][index] = <String>[type.value, extra].join(widgetSplit);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -576,15 +603,17 @@ class AppInfoProvider extends ChangeNotifier {
     required int lane,
     required int index,
   }) async {
-    final String entry = <String>[height.toString(), width.toString()].join(spacerSplit);
-
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane][index] = entry;
+      _darkHomeMatrix[lane][index] =
+          <String>[height.toString(), width.toString()].join(spacerSplit);
+
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane][index] = entry;
+      _lightHomeMatrix[lane][index] =
+          <String>[height.toString(), width.toString()].join(spacerSplit);
+
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -677,17 +706,19 @@ class AppInfoProvider extends ChangeNotifier {
     required ListAlignment hA,
     required ListAlignment vA,
   }) async {
-    final String configEntry = (hA == horizontalAlign(config) && vA == verticalAlign(config))
-        ? TCC.laneEntry(null, null)
-        : TCC.laneEntry(hA, vA);
-
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[startPos][0] = configEntry;
+      _darkHomeMatrix[startPos][0] = (hA == horizontalAlign(config) && vA == verticalAlign(config))
+          ? TCC.laneEntry(null, null)
+          : TCC.laneEntry(hA, vA);
+
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[startPos][0] = configEntry;
+      _lightHomeMatrix[startPos][0] = (hA == horizontalAlign(config) && vA == verticalAlign(config))
+          ? TCC.laneEntry(null, null)
+          : TCC.laneEntry(hA, vA);
+
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -1037,7 +1068,9 @@ For example: if an app has always on location permissions, banishing it will not
   /// Does notify
   Future<void> cloneMatrix(bool keepDark) async {
     if (keepDark) {
-      final List<List<String>> homeCopy = List<List<String>>.from(_darkHomeMatrix);
+      final List<List<String>> homeCopy =
+          _darkHomeMatrix.map((List<String> lane) => List<String>.from(lane)).toList();
+
       final Set<String> hiddenCopy = Set<String>.from(_darkHidden);
       final Set<String> banishedCopy = Set<String>.from(_darkBanished);
 
@@ -1049,7 +1082,9 @@ For example: if an app has always on location permissions, banishing it will not
       unawaited(EzCM.setStringList(lightHiddenIDsKey, hiddenCopy.toList()));
       unawaited(EzCM.setStringList(lightBanishIDsKey, banishedCopy.toList()));
     } else {
-      final List<List<String>> homeCopy = List<List<String>>.from(_lightHomeMatrix);
+      final List<List<String>> homeCopy =
+          _lightHomeMatrix.map((List<String> lane) => List<String>.from(lane)).toList();
+
       final Set<String> hiddenCopy = Set<String>.from(_lightHidden);
       final Set<String> banishedCopy = Set<String>.from(_lightBanished);
 
