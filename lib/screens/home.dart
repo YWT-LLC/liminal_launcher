@@ -3,7 +3,6 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: you can save the home config, but upload doesn't seem to work
 // TODO: make the save/load here save everything by default, and have the settings page on be a toggle to save everything (default only appearance stuff)
 
 import '../screens/export.dart';
@@ -736,7 +735,7 @@ With wide tiles disabled, lanes will be sized by the widest item & your spacing 
                   navPageLeft(config, appInfo, numLanes);
                   return;
                 }
-              } // TODO: acconut for end/ltr here too? rename funcs?
+              } // TODO: account for end/ltr here too? rename functions?
 
               final AppInfo? toLaunch = editing
                   ? null
