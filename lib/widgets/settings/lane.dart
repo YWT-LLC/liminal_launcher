@@ -56,7 +56,9 @@ class LaneHeader extends StatelessWidget {
             menuChildren: <Widget>[
               MenuItemButton(
                 onPressed: () async {
-                  lane == 0 ? navPageUp?.call() : navPageDown?.call();
+                  lane != 0
+                      ? navPageDown?.call()
+                      : (numLanes == 1 ? doNothing() : navPageUp?.call());
                   await appInfo.removeLane(config, context, lane);
                 },
                 child: EzIcon(config, Icons.delete),
