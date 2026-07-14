@@ -18,8 +18,8 @@ class LaneHeader extends StatelessWidget {
   final ListAlignment hAlign;
   final ListAlignment vAlign;
   final Future<void> Function(EzCP, AppInfoProvider, int, ListAlignment, ListAlignment) addModal;
-  final void Function()? navLeft;
-  final void Function()? navRight;
+  final void Function()? navPageDown;
+  final void Function()? navPageUp;
 
   const LaneHeader(
     this.config, {
@@ -30,8 +30,8 @@ class LaneHeader extends StatelessWidget {
     required this.hAlign,
     required this.vAlign,
     required this.addModal,
-    required this.navRight,
-    required this.navLeft,
+    required this.navPageDown,
+    required this.navPageUp,
   });
 
   @override
@@ -56,7 +56,7 @@ class LaneHeader extends StatelessWidget {
             menuChildren: <Widget>[
               MenuItemButton(
                 onPressed: () async {
-                  lane == 0 ? navRight?.call() : navLeft?.call();
+                  lane == 0 ? navPageUp?.call() : navPageDown?.call();
                   await appInfo.removeLane(config, context, lane);
                 },
                 child: EzIcon(config, Icons.delete),
@@ -165,7 +165,7 @@ class LaneHeader extends StatelessWidget {
                               startCentered: true,
                               scrollDirection: Axis.horizontal,
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: (config.isLTR && hA != ListAlignment.end)
+                              children: standardFlow(config)
                                   ? buildNodes(setModal)
                                   : buildNodes(setModal).reversed.toList(),
                             ),

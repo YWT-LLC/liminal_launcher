@@ -399,7 +399,7 @@ With wide tiles disabled, lanes will be sized by the widest item & your spacing 
   }
 
   /// Checks out of bounds, safe to always call directly
-  void navPageLeft(EzCP config, AppInfoProvider appInfo, int numLanes) {
+  void navPageDown(EzCP config, AppInfoProvider appInfo, int numLanes) {
     if (page <= 0) return;
 
     delta = -1;
@@ -416,7 +416,7 @@ With wide tiles disabled, lanes will be sized by the widest item & your spacing 
   }
 
   /// Checks out of bounds, safe to always call directly
-  void navPageRight(EzCP config, AppInfoProvider appInfo, int numLanes) {
+  void navPageUp(EzCP config, AppInfoProvider appInfo, int numLanes) {
     if (page >= (numLanes - 1)) return;
 
     delta = 1;
@@ -623,8 +623,8 @@ With wide tiles disabled, lanes will be sized by the widest item & your spacing 
                   hAlign: hAlign,
                   vAlign: vAlign,
                   addModal: addModal,
-                  navLeft: pages(config) ? () => navPageLeft(config, appInfo, numLanes) : null,
-                  navRight: pages(config) ? () => navPageRight(config, appInfo, numLanes) : null,
+                  navPageDown: pages(config) ? () => navPageDown(config, appInfo, numLanes) : null,
+                  navPageUp: pages(config) ? () => navPageUp(config, appInfo, numLanes) : null,
                 ),
                 onReorderItem: (int oldIndex, int newIndex) async {
                   if (oldIndex == newIndex) return;
@@ -727,13 +727,20 @@ With wide tiles disabled, lanes will be sized by the widest item & your spacing 
             if (details.primaryVelocity != null && details.primaryVelocity! != 0) {
               if (pages(config)) {
                 if (details.primaryVelocity! < 0) {
-                  navPageRight(config, appInfo, numLanes);
+                  // Swipe right to left -> nav to right
+                  standardFlow(config)
+                      ? navPageUp(config, appInfo, numLanes)
+                      : navPageDown(config, appInfo, numLanes);
                   return;
                 } else {
-                  navPageLeft(config, appInfo, numLanes);
+                  // Swipe left to right -> nav to left
+                  standardFlow(config)
+                      ? navPageDown(config, appInfo, numLanes)
+                      : navPageUp(config, appInfo, numLanes);
                   return;
                 }
               } // TODO: account for end/ltr here too? rename functions?
+              // TODO: should i auto-nav on lane move?
 
               final AppInfo? toLaunch = editing
                   ? null
