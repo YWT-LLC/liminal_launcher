@@ -89,7 +89,7 @@ class AppListSettings extends StatelessWidget {
                         ],
                         needsClose: false,
                       ),
-                    ); // todo: add fancy line x line stuffs
+                    );
 
                     if (keepDark != null) {
                       await appInfo.cloneMatrix(keepDark);
