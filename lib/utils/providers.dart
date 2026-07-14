@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
+// TODO: 3 double adding apps? only on non-0 pages?? but still on them if they move??? and never on the 0 page even if it moves????
+
 class AppInfoProvider extends ChangeNotifier {
   //* Construct *//
 
