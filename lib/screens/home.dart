@@ -313,7 +313,6 @@ Or, something in-between.''',
           EzSpacer(config.spacing / 2),
 
           // Screen space note
-          // TODO: more space for the tooltip
           EzRow(
             config,
             children: <Widget>[
@@ -322,6 +321,7 @@ Or, something in-between.''',
                 textAlign: TextAlign.center,
                 style: config.labelStyle,
               ),
+              config.rowMargin,
               EzToolTipper(
                 config,
                 message:
