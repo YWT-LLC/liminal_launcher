@@ -3,6 +3,8 @@
  * See LICENSE for distribution and usage details.
  */
 
+// TODO: get the manifest exactly how you want it - be cognizant of SafeArea usage as you do
+
 import '../screens/export.dart';
 import '../utils/export.dart';
 import '../widgets/export.dart';
