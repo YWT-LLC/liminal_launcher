@@ -251,7 +251,7 @@ Future<void> editSpacer(
             config.ezL10n.dsPadding: config.padding,
             config.ezL10n.dsSpacing: config.spacing,
             config.ezL10n.tsIconSize: config.iconSize,
-            'App icon size': appIS,
+            'Icon button size': appIS,
           }
               .entries
               .map((MapEntry<String, double> entry) => EzMenuButton(
@@ -356,7 +356,7 @@ Future<void> editSpacer(
                         ),
                         MenuItemButton(
                           onPressed: () => quickValue(appIS),
-                          child: Text('App icon size: $appIS'),
+                          child: Text('Icon button size: $appIS'),
                         ),
                       ],
                     ),
