@@ -51,7 +51,6 @@ class SettingsFAB extends StatelessWidget {
             icon: EzIcon(config, Icons.settings),
             onPressed: () => openSystemSettings(),
           ),
-          EzMenuButton(config, enabled: false, label: '---'),
           EzMenuButton(
             config,
             label: config.ezL10n.ssSaveConfig,
