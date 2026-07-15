@@ -3,8 +3,6 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: no background on the labels
-
 import '../../../screens/export.dart';
 import '../../../utils/export.dart';
 import '../../../widgets/export.dart';
@@ -48,6 +46,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
           widget.config,
           text: '$dir app',
           textColor: widget.config.colors.onSurface,
+          backgroundColor: widget.config.colors.surfaceContainer,
           onTap: () => showDialog(
             context: context,
             builder: (_) => EzAlertDialog(
