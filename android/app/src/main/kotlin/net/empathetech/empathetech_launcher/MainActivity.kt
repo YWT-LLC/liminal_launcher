@@ -76,18 +76,27 @@ class MainActivity : FlutterFragmentActivity() {
           }
         }
 
-        "openSettings" -> {
+        "openAppSettings" -> {
           try {
             val packageName: String? = call.argument<String>("packageName")
 
             if (packageName != null) {
-              openSettings(packageName)
+              openAppSettings(packageName)
               result.success(true)
             } else {
               result.error("INVALID_PACKAGE", "null package name", null)
             }
           } catch (e: Exception) {
             result.error("LAUNCH_ERROR", "Could not open settings", e.message)
+          }
+        }
+
+        "openSystemSettings" -> {
+          try {
+            openSystemSettings()
+            result.success(true)
+          } catch (e: Exception) {
+            result.error("LAUNCH_ERROR", "Could not open system settings", e.message)
           }
         }
 
@@ -237,11 +246,17 @@ class MainActivity : FlutterFragmentActivity() {
     if (launchIntent != null) startActivity(launchIntent)
   }
 
-  private fun openSettings(packageName: String) {
+  private fun openAppSettings(packageName: String) {
     val infoIntent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
     infoIntent.data = Uri.fromParts("package", packageName, null)
     infoIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     startActivity(infoIntent)
+  }
+
+  private fun openSystemSettings() {
+    val settingsIntent = Intent(Settings.ACTION_SETTINGS)
+    settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    startActivity(settingsIntent)
   }
 
   private fun deleteApp(packageName: String) {

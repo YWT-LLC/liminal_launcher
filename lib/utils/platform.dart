@@ -39,14 +39,22 @@ Future<void> launchApp(AppInfo app) async {
   }
 }
 
-Future<void> openSettings(AppInfo app) async {
+Future<void> openAppSettings(AppInfo app) async {
   try {
     await platform.invokeMethod(
-      'openSettings',
+      'openAppSettings',
       <String, dynamic>{'packageName': app.package},
     );
   } catch (e) {
     ezLog('Failed to open ${app.package} settings: $e');
+  }
+}
+
+Future<void> openSystemSettings() async {
+  try {
+    await platform.invokeMethod('openSystemSettings');
+  } catch (e) {
+    ezLog('Failed to open system settings: $e');
   }
 }
 

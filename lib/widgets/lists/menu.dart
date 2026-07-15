@@ -60,7 +60,7 @@ Widget _configureApp(
           icon: EzIcon(config, Icons.info),
           onPressed: () async {
             if (!homeTile && context.mounted) Navigator.of(context).pop();
-            await openSettings(app);
+            await openAppSettings(app);
           },
         ),
 
