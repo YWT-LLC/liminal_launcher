@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="LaunchTheme" parent="Theme.AppCompat.Dark.NoActionBar">
+    <style name="LaunchTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:forceDarkAllowed">false</item>
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -13,7 +13,7 @@
         <item name="android:windowTranslucentStatus">true</item>
     </style>
     
-    <style name="NormalTheme" parent="Theme.AppCompat.Dark.NoActionBar">
+    <style name="NormalTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
