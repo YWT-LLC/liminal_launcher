@@ -4,6 +4,9 @@
  */
 
 // TODO: get the manifest exactly how you want it - be cognizant of SafeArea usage as you do
+//       at least, the app list should draw underneath the nav bar... not sure what else. maybe everything, maybe nothing
+
+// TODO: sit down and do the math for pixel perfect header spacing
 
 import '../screens/export.dart';
 import '../utils/export.dart';

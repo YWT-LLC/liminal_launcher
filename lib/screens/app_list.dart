@@ -3,6 +3,8 @@
  * See LICENSE for distribution and usage details.
  */
 
+// TODO: sit down and do the math for pixel perfect FAB spacing
+
 import '../utils/export.dart';
 import '../widgets/export.dart';
 import 'package:efui_bios/efui_bios.dart';
