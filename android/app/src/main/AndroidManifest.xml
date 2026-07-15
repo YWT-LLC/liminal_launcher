@@ -17,12 +17,12 @@
             android:launchMode="singleTask" 
             android:name=".MainActivity"
             android:taskAffinity=""
-            android:theme="@style/LaunchTheme"
+            android:theme="@style/LiminalTheme"
             android:windowSoftInputMode="adjustResize">
 
             <meta-data
-              android:name="io.flutter.embedding.android.NormalTheme"
-              android:resource="@style/NormalTheme"/>
+              android:name="io.flutter.embedding.android.LiminalTheme"
+              android:resource="@style/LiminalTheme"/>
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
