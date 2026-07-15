@@ -11,6 +11,7 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 // TODO: don't sub-menu? just leave it all out? iff yes, add confirm to delete/uninstall/etc(?)
 // TODO: more words - there's only one on screen, you have plenty of space (and it ignores the parent constraints)
+// TODO: only show nav buttons when editing
 
 List<Widget> appMC(
   EzCP config,

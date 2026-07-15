@@ -185,7 +185,7 @@ class _AppTileState extends State<AppTile> {
                 buttonType: listBT(widget.config),
                 labelType: listLabels(widget.config),
                 onPressed: () => widget.onSelected(widget.app),
-                onLongPress: doNothing,
+                onLongPress: doNothing, // TODO: some stuff, like info, hide, banish, etc.
               )
             : MenuAnchor(
                 builder: (_, MenuController controller, __) => wideTiles(widget.config)

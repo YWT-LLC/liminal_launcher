@@ -10,7 +10,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-// TODO: when pages is true, use a horizontal scroll (no menu)
+// TODO: when pages || wideTiles are true, use a horizontal scroll (no menu)
+// divider or something when !pages && wideTiles? maybe, maybe not.
 
 class LaneHeader extends StatelessWidget {
   final EzCP config;

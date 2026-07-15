@@ -8,6 +8,8 @@
 
 // TODO: sit down and do the math for pixel perfect header spacing
 
+// TODO: delta should be too when !standardFlow
+
 import '../screens/export.dart';
 import '../utils/export.dart';
 import '../widgets/export.dart';
@@ -203,6 +205,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                 icon: EzIcon(config, Icons.widgets),
               ),
             ),
+            // TODO: put the size label back on the dropdown
 
             // Spacer
             Padding(
@@ -310,6 +313,7 @@ Or, something in-between.''',
           EzSpacer(config.spacing / 2),
 
           // Screen space note
+          // TODO: more space for the tooltip
           EzRow(
             config,
             children: <Widget>[
@@ -877,45 +881,6 @@ Or, something in-between.''',
           fabs: editing
               ? <Widget>[
                   config.spacer,
-
-                  // Add (if one lane || using pages)
-                  if (numLanes == 1 || pages(config)) ...<Widget>[
-                    AddFAB(
-                      config,
-                      () => numLanes == 1
-                          ? addModal(
-                              config,
-                              appInfo,
-                              0,
-                              LAConfig.buildLookup(
-                                appInfo.homeItem(config, lane: 0, index: 0),
-                                Axis.horizontal,
-                                config,
-                              ),
-                              LAConfig.buildLookup(
-                                appInfo.homeItem(config, lane: 0, index: 0),
-                                Axis.vertical,
-                                config,
-                              ),
-                            )
-                          : addModal(
-                              config,
-                              appInfo,
-                              page,
-                              LAConfig.buildLookup(
-                                appInfo.homeItem(config, lane: page, index: 0),
-                                Axis.horizontal,
-                                config,
-                              ),
-                              LAConfig.buildLookup(
-                                appInfo.homeItem(config, lane: page, index: 0),
-                                Axis.vertical,
-                                config,
-                              ),
-                            ),
-                    ),
-                    config.spacer,
-                  ],
 
                   // Settings
                   SettingsFAB(config, appInfo, () => context.goNamed(settingsPath)),

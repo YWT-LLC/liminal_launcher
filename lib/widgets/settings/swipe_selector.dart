@@ -3,6 +3,8 @@
  * See LICENSE for distribution and usage details.
  */
 
+// TODO: no background on the labels
+
 import '../../../screens/export.dart';
 import '../../../utils/export.dart';
 import '../../../widgets/export.dart';

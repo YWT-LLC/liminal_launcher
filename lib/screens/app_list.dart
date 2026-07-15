@@ -4,6 +4,7 @@
  */
 
 // TODO: sit down and do the math for pixel perfect FAB spacing
+// TODO: scroll to bottom fab is showing when the entire list fits on screen??
 
 import '../utils/export.dart';
 import '../widgets/export.dart';

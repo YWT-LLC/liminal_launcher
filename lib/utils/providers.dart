@@ -130,6 +130,10 @@ class AppInfoProvider extends ChangeNotifier {
   Timer? _addedTimer;
   OverlayEntry? _addedEntry;
 
+  // TODO: the color bottom layer should consume button transparency
+  // TODO: lenghten the time a smidge, update the icon to be check for 25% and edit for 75%...
+  // ... change the on pressed (at all times) to be a passthrough for opening the edits for the newly added item
+
   Future<void> _added(EzCP config) async {
     if (_addedTimer?.isActive ?? false) {
       _invert.value = !_invert.value;
@@ -899,6 +903,7 @@ class AppInfoProvider extends ChangeNotifier {
 
   /// Does notify
   /// Calls [ezNoTouch] when saving changes
+  /// TODO: uhhh... get it to work? is banishedList not being properly consumed? is nothing happening???
   Future<bool> banishApp(EzCP config, BuildContext context, String id) async {
     if (interlinked || config.isDark) {
       if (_darkBanished.contains(id)) return false;
