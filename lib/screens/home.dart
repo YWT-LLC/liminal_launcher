@@ -713,206 +713,213 @@ Or, something in-between.''',
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<EzCP, AppInfoProvider>(builder: (_, EzCP config, AppInfoProvider appInfo, __) {
-      final int numLanes = appInfo.numLanes(config);
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (_, __) {
+        if (editing) setState(() => editing = false);
+      },
+      child:
+          Consumer2<EzCP, AppInfoProvider>(builder: (_, EzCP config, AppInfoProvider appInfo, __) {
+        final int numLanes = appInfo.numLanes(config);
 
-      return LiminalScaffold(
-        config,
-        body: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onLongPressStart: (LongPressStartDetails details) async => editing
-              ? await ripple(config, details)
-              : await canEdit(config, () => ripple(config, details)),
-          onVerticalDragEnd: (DragEndDetails details) async {
-            if (details.primaryVelocity != null) {
-              if (details.primaryVelocity! < 0) await swipeUp(config, appInfo);
-            }
-          },
-          onHorizontalDragEnd: (DragEndDetails details) {
-            if (details.primaryVelocity != null && details.primaryVelocity! != 0) {
-              if (pages(config)) {
-                if (details.primaryVelocity! < 0) {
-                  // Swipe right to left -> nav to right
-                  standardFlow(config)
-                      ? navPageUp(config, appInfo, numLanes)
-                      : navPageDown(config, appInfo, numLanes);
-                  return;
-                } else {
-                  // Swipe left to right -> nav to left
-                  standardFlow(config)
-                      ? navPageDown(config, appInfo, numLanes)
-                      : navPageUp(config, appInfo, numLanes);
-                  return;
-                }
+        return LiminalScaffold(
+          config,
+          body: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onLongPressStart: (LongPressStartDetails details) async => editing
+                ? await ripple(config, details)
+                : await canEdit(config, () => ripple(config, details)),
+            onVerticalDragEnd: (DragEndDetails details) async {
+              if (details.primaryVelocity != null) {
+                if (details.primaryVelocity! < 0) await swipeUp(config, appInfo);
               }
-
-              final AppInfo? toLaunch = editing
-                  ? null
-                  : ((details.primaryVelocity! < 0)
-                      ? appInfo.appMap[leftSwipeID]
-                      : appInfo.appMap[rightSwipeID]);
-
-              if (toLaunch != null) launchApp(toLaunch);
-            }
-          },
-          // App list
-          child: NotificationListener<ScrollNotification>(
-            onNotification: (ScrollNotification notification) {
-              switch (notification.runtimeType) {
-                case const (OverscrollNotification):
-                  if (notification.metrics.axis == Axis.vertical) {
-                    // Vertical overscroll
-                    if ((notification as OverscrollNotification).overscroll > 0) {
-                      if (atBottom) {
-                        swipeUp(config, appInfo);
-                        return true;
-                      } else {
-                        overscrollPause = Timer(scrollDelay, () => atBottom = true);
-                        return true;
-                      }
-                    }
-                  } else {
-                    // Horizontal overscroll
-                    AppInfo? toLaunch;
-
-                    if ((notification as OverscrollNotification).overscroll < 0) {
-                      if (atLeft) {
-                        toLaunch = appInfo.appMap[rightSwipeID];
-                      } else {
-                        overscrollPause = Timer(scrollDelay, () => atLeft = true);
-                        return true;
-                      }
-                    }
-
-                    if (notification.overscroll > 0) {
-                      if (atRight) {
-                        toLaunch = appInfo.appMap[leftSwipeID];
-                      } else {
-                        overscrollPause = Timer(scrollDelay, () => atRight = true);
-                        return true;
-                      }
-                    }
-
-                    if (toLaunch != null) launchApp(toLaunch);
-                    return true;
-                  }
-                  break;
-
-                case const (ScrollUpdateNotification):
-                  if (notification.metrics.axis == Axis.vertical) {
-                    // Vertical scroll
-                    if (atBottom && notification.metrics.pixels < 0) {
-                      atBottom = false;
-                    }
-                  } else {
-                    // Horizontal scroll
-                    if (atLeft && notification.metrics.pixels > 0) {
-                      atLeft = false;
-                    }
-                    if (atRight && notification.metrics.pixels < 0) {
-                      atRight = false;
-                    }
-                  }
-                  break;
-
-                case const (ScrollEndNotification):
-                  if (notification.metrics.axis == Axis.vertical) {
-                    // Vertical end
-                    if (notification.metrics.pixels == notification.metrics.maxScrollExtent) {
-                      overscrollPause = Timer(scrollDelay, () => atBottom = true);
-                    } else {
-                      atBottom = false;
-                    }
-                  } else {
-                    // Horizontal end
-                    if (notification.metrics.pixels == notification.metrics.maxScrollExtent) {
-                      atLeft = false;
-                      overscrollPause = Timer(scrollDelay, () => atRight = true);
-                    } else {
-                      atRight = false;
-                      overscrollPause = Timer(scrollDelay, () => atLeft = true);
-                    }
-                  }
-                  break;
-              }
-              return false;
             },
-            child: ValueListenableBuilder<double>(
-              valueListenable: rippleProgress,
-              builder: (_, double ripple, __) => Padding(
-                padding: editing
-                    ? EdgeInsets.zero
-                    : EdgeInsets.only(top: appIconSize(config) * (ripple % 1.0)),
-                child: pages(config)
-                    ? EzFauxCarousel(
-                        config,
-                        position: page,
-                        delta: delta,
-                        child: buildPage(config, appInfo, numLanes: numLanes, lane: page),
-                      )
-                    : EzScrollView(
-                        config,
-                        mainAxisSize: MainAxisSize.max,
-                        scrollDirection: Axis.horizontal,
-                        physics: const ClampingScrollPhysics(),
-                        mainAxisAlignment: horizontalAlign(config).mainAxis,
-                        crossAxisAlignment: verticalAlign(config).crossAxis,
-                        children: buildGrid(config, appInfo, numLanes),
-                      ),
+            onHorizontalDragEnd: (DragEndDetails details) {
+              if (details.primaryVelocity != null && details.primaryVelocity! != 0) {
+                if (pages(config)) {
+                  if (details.primaryVelocity! < 0) {
+                    // Swipe right to left -> nav to right
+                    standardFlow(config)
+                        ? navPageUp(config, appInfo, numLanes)
+                        : navPageDown(config, appInfo, numLanes);
+                    return;
+                  } else {
+                    // Swipe left to right -> nav to left
+                    standardFlow(config)
+                        ? navPageDown(config, appInfo, numLanes)
+                        : navPageUp(config, appInfo, numLanes);
+                    return;
+                  }
+                }
+
+                final AppInfo? toLaunch = editing
+                    ? null
+                    : ((details.primaryVelocity! < 0)
+                        ? appInfo.appMap[leftSwipeID]
+                        : appInfo.appMap[rightSwipeID]);
+
+                if (toLaunch != null) launchApp(toLaunch);
+              }
+            },
+            // App list
+            child: NotificationListener<ScrollNotification>(
+              onNotification: (ScrollNotification notification) {
+                switch (notification.runtimeType) {
+                  case const (OverscrollNotification):
+                    if (notification.metrics.axis == Axis.vertical) {
+                      // Vertical overscroll
+                      if ((notification as OverscrollNotification).overscroll > 0) {
+                        if (atBottom) {
+                          swipeUp(config, appInfo);
+                          return true;
+                        } else {
+                          overscrollPause = Timer(scrollDelay, () => atBottom = true);
+                          return true;
+                        }
+                      }
+                    } else {
+                      // Horizontal overscroll
+                      AppInfo? toLaunch;
+
+                      if ((notification as OverscrollNotification).overscroll < 0) {
+                        if (atLeft) {
+                          toLaunch = appInfo.appMap[rightSwipeID];
+                        } else {
+                          overscrollPause = Timer(scrollDelay, () => atLeft = true);
+                          return true;
+                        }
+                      }
+
+                      if (notification.overscroll > 0) {
+                        if (atRight) {
+                          toLaunch = appInfo.appMap[leftSwipeID];
+                        } else {
+                          overscrollPause = Timer(scrollDelay, () => atRight = true);
+                          return true;
+                        }
+                      }
+
+                      if (toLaunch != null) launchApp(toLaunch);
+                      return true;
+                    }
+                    break;
+
+                  case const (ScrollUpdateNotification):
+                    if (notification.metrics.axis == Axis.vertical) {
+                      // Vertical scroll
+                      if (atBottom && notification.metrics.pixels < 0) {
+                        atBottom = false;
+                      }
+                    } else {
+                      // Horizontal scroll
+                      if (atLeft && notification.metrics.pixels > 0) {
+                        atLeft = false;
+                      }
+                      if (atRight && notification.metrics.pixels < 0) {
+                        atRight = false;
+                      }
+                    }
+                    break;
+
+                  case const (ScrollEndNotification):
+                    if (notification.metrics.axis == Axis.vertical) {
+                      // Vertical end
+                      if (notification.metrics.pixels == notification.metrics.maxScrollExtent) {
+                        overscrollPause = Timer(scrollDelay, () => atBottom = true);
+                      } else {
+                        atBottom = false;
+                      }
+                    } else {
+                      // Horizontal end
+                      if (notification.metrics.pixels == notification.metrics.maxScrollExtent) {
+                        atLeft = false;
+                        overscrollPause = Timer(scrollDelay, () => atRight = true);
+                      } else {
+                        atRight = false;
+                        overscrollPause = Timer(scrollDelay, () => atLeft = true);
+                      }
+                    }
+                    break;
+                }
+                return false;
+              },
+              child: ValueListenableBuilder<double>(
+                valueListenable: rippleProgress,
+                builder: (_, double ripple, __) => Padding(
+                  padding: editing
+                      ? EdgeInsets.zero
+                      : EdgeInsets.only(top: appIconSize(config) * (ripple % 1.0)),
+                  child: pages(config)
+                      ? EzFauxCarousel(
+                          config,
+                          position: page,
+                          delta: delta,
+                          child: buildPage(config, appInfo, numLanes: numLanes, lane: page),
+                        )
+                      : EzScrollView(
+                          config,
+                          mainAxisSize: MainAxisSize.max,
+                          scrollDirection: Axis.horizontal,
+                          physics: const ClampingScrollPhysics(),
+                          mainAxisAlignment: horizontalAlign(config).mainAxis,
+                          crossAxisAlignment: verticalAlign(config).crossAxis,
+                          children: buildGrid(config, appInfo, numLanes),
+                        ),
+                ),
               ),
             ),
           ),
-        ),
-        fabs: editing
-            ? <Widget>[
-                config.spacer,
-
-                // Add (if one lane || using pages)
-                if (numLanes == 1 || pages(config)) ...<Widget>[
-                  AddFAB(
-                    config,
-                    () => numLanes == 1
-                        ? addModal(
-                            config,
-                            appInfo,
-                            0,
-                            LAConfig.buildLookup(
-                              appInfo.homeItem(config, lane: 0, index: 0),
-                              Axis.horizontal,
-                              config,
-                            ),
-                            LAConfig.buildLookup(
-                              appInfo.homeItem(config, lane: 0, index: 0),
-                              Axis.vertical,
-                              config,
-                            ),
-                          )
-                        : addModal(
-                            config,
-                            appInfo,
-                            page,
-                            LAConfig.buildLookup(
-                              appInfo.homeItem(config, lane: page, index: 0),
-                              Axis.horizontal,
-                              config,
-                            ),
-                            LAConfig.buildLookup(
-                              appInfo.homeItem(config, lane: page, index: 0),
-                              Axis.vertical,
-                              config,
-                            ),
-                          ),
-                  ),
+          fabs: editing
+              ? <Widget>[
                   config.spacer,
-                ],
 
-                // Settings
-                SettingsFAB(config, appInfo, () => context.goNamed(settingsPath)),
-              ]
-            : null,
-        isHome: true,
-      );
-    });
+                  // Add (if one lane || using pages)
+                  if (numLanes == 1 || pages(config)) ...<Widget>[
+                    AddFAB(
+                      config,
+                      () => numLanes == 1
+                          ? addModal(
+                              config,
+                              appInfo,
+                              0,
+                              LAConfig.buildLookup(
+                                appInfo.homeItem(config, lane: 0, index: 0),
+                                Axis.horizontal,
+                                config,
+                              ),
+                              LAConfig.buildLookup(
+                                appInfo.homeItem(config, lane: 0, index: 0),
+                                Axis.vertical,
+                                config,
+                              ),
+                            )
+                          : addModal(
+                              config,
+                              appInfo,
+                              page,
+                              LAConfig.buildLookup(
+                                appInfo.homeItem(config, lane: page, index: 0),
+                                Axis.horizontal,
+                                config,
+                              ),
+                              LAConfig.buildLookup(
+                                appInfo.homeItem(config, lane: page, index: 0),
+                                Axis.vertical,
+                                config,
+                              ),
+                            ),
+                    ),
+                    config.spacer,
+                  ],
+
+                  // Settings
+                  SettingsFAB(config, appInfo, () => context.goNamed(settingsPath)),
+                ]
+              : null,
+          isHome: true,
+        );
+      }),
+    );
   }
 }
 
