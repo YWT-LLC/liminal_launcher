@@ -10,11 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-WidgetSize bt2WS(EzCP config) => switch (listBT(config)) {
-      ButtonType.icon || ButtonType.eIcon => WidgetSize.button,
-      _ => WidgetSize.tile,
-    };
-
 Future<void> canEdit(EzCP config, Future<void> Function() onSuccess) async {
   if (!authToEdit(config)) {
     await onSuccess.call();
@@ -157,34 +152,6 @@ Widget renderWidget(
             esThemeMode => ThemeModeWidget(config, appInfo, pos, state, rippleProgress),
             _ => const SizedBox.shrink(),
           };
-
-Future<String?> resizeWidgetDialog(EzCP config, BuildContext context, WidgetSize curr) =>
-    showDialog(
-      context: context,
-      builder: (BuildContext dCon) => EzAlertDialog(
-        config,
-        title: Text('Currently: ${curr.value}', textAlign: TextAlign.center),
-        contents: <Widget>[
-          EzTextButton(
-            config,
-            text: 'System (${bt2WS(config).value})',
-            onPressed: () => Navigator.of(context).pop(WidgetSize.system.value),
-          ),
-          config.spacer,
-          EzTextButton(
-            config,
-            text: 'Button',
-            onPressed: () => Navigator.of(context).pop(WidgetSize.button.value),
-          ),
-          config.spacer,
-          EzTextButton(
-            config,
-            text: 'Tile',
-            onPressed: () => Navigator.of(context).pop(WidgetSize.tile.value),
-          ),
-        ],
-      ),
-    );
 
 /// [EzCP.isLTR] && [horizontalAlign] != [ListAlignment.end]
 bool standardFlow(EzCP config) => config.isLTR && horizontalAlign(config) != ListAlignment.end;
