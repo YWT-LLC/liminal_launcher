@@ -102,20 +102,20 @@ class AppListSettings extends StatelessWidget {
                 config.spacer,
 
                 // Home ripple
-                config.spacer,
                 EzSwitchPair(
                   config,
                   text: 'Home ripple animation',
                   valueKey: homeRippleKey,
                 ),
+                config.spacer,
 
                 // List ripple
-                config.spacer,
                 EzSwitchPair(
                   config,
                   text: 'List ripple animation',
                   valueKey: listRippleKey,
                 ),
+                config.spacer,
 
                 // Auto search
                 EzSwitchPair(
