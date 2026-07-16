@@ -34,8 +34,7 @@ class CalendarWidget extends StatefulWidget {
         .split(widgetSplit)[1]
         .split(configSplit);
 
-    final WidgetSize storedWS = WSConfig.safeLookup(data[0]);
-    _size = (storedWS == WidgetSize.system) ? bt2WS(config) : storedWS;
+    _size = WSConfig.safeLookup(data[0]);
   }
 
   @override
@@ -226,7 +225,6 @@ class _CalendarWidgetState extends State<CalendarWidget> {
               _EditCalendar(
                 widget.config,
                 widget.appInfo,
-                parentCon: context,
                 initSize: widget._size,
                 lane: widget.pos.lane,
                 index: widget.pos.index,
@@ -246,7 +244,6 @@ class _CalendarWidgetState extends State<CalendarWidget> {
               _EditCalendar(
                 widget.config,
                 widget.appInfo,
-                parentCon: context,
                 initSize: widget._size,
                 lane: widget.pos.lane,
                 index: widget.pos.index,
@@ -277,22 +274,31 @@ class AddCalendar extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
   final int lane;
-  final WidgetSize save;
-  final WidgetSize preview;
+  final WidgetSize size;
 
   const AddCalendar(
-    this.config,
-    this.appInfo,
-    this.lane, {
+    this.config, {
     super.key,
-    required this.save,
-    required this.preview,
+    required this.appInfo,
+    required this.lane,
+    required this.size,
   });
 
-  void onTap() => appInfo.addCalendar(config, lane);
+  void onTap() => appInfo.addWidget(
+        config,
+        type: WidWidGetGet.calendar,
+        editNew: _EditCalendar(
+          config,
+          appInfo,
+          initSize: WidgetSize.tile,
+          lane: lane,
+          index: appInfo.homeLane(config, lane).length,
+        ).makeItSo,
+        lane: lane,
+      );
 
   @override
-  Widget build(BuildContext context) => (preview == WidgetSize.button)
+  Widget build(BuildContext context) => (size == WidgetSize.button)
       ? EzIconButton(
           config,
           onPressed: onTap,
@@ -323,10 +329,13 @@ class AddCalendar extends StatelessWidget {
         );
 }
 
+String defaultCalendarEntry() => _calendarEntry(WidgetSize.tile);
+
+String _calendarEntry(WidgetSize size) => <String>[size.value].join(configSplit);
+
 class _EditCalendar extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
-  final BuildContext parentCon;
   final WidgetSize initSize;
   final int lane;
   final int index;
@@ -334,28 +343,24 @@ class _EditCalendar extends StatelessWidget {
   const _EditCalendar(
     this.config,
     this.appInfo, {
-    required this.parentCon,
     required this.initSize,
     required this.lane,
     required this.index,
   });
+
+  Future<void> makeItSo() => appInfo.updateWidget(
+        config,
+        WidWidGetGet.calendar,
+        _calendarEntry(initSize == WidgetSize.tile ? WidgetSize.button : WidgetSize.tile),
+        lane: lane,
+        index: index,
+      );
 
   @override
   Widget build(_) => EzMenuButton(
         config,
         label: 'Resize',
         icon: EzIcon(config, Icons.edit),
-        onPressed: () async {
-          final String? choice = await resizeWidgetDialog(config, parentCon, initSize);
-          if (choice == null) return;
-
-          await appInfo.updateWidget(
-            config,
-            WidWidGetGet.calendar,
-            TCC.calendarEntry(WSConfig.safeLookup(choice)),
-            lane: lane,
-            index: index,
-          );
-        },
+        onPressed: makeItSo,
       );
 }
