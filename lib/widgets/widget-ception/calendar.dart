@@ -287,13 +287,13 @@ class AddCalendar extends StatelessWidget {
   void onTap() => appInfo.addWidget(
         config,
         type: WidWidGetGet.calendar,
-        editNew: _EditCalendar(
+        editNew: () => _openEdits(
           config,
-          appInfo,
+          appInfo: appInfo,
           initSize: WidgetSize.tile,
           lane: lane,
           index: appInfo.homeLane(config, lane).length,
-        ).makeItSo,
+        ),
         lane: lane,
       );
 
@@ -333,6 +333,21 @@ String defaultCalendarEntry() => _calendarEntry(WidgetSize.tile);
 
 String _calendarEntry(WidgetSize size) => <String>[size.value].join(configSplit);
 
+Future<void> _openEdits(
+  EzCP config, {
+  required AppInfoProvider appInfo,
+  required WidgetSize initSize,
+  required int lane,
+  required int index,
+}) =>
+    appInfo.updateWidget(
+      config,
+      WidWidGetGet.calendar,
+      _calendarEntry(initSize == WidgetSize.tile ? WidgetSize.button : WidgetSize.tile),
+      lane: lane,
+      index: index,
+    );
+
 class _EditCalendar extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
@@ -348,19 +363,17 @@ class _EditCalendar extends StatelessWidget {
     required this.index,
   });
 
-  Future<void> makeItSo() => appInfo.updateWidget(
-        config,
-        WidWidGetGet.calendar,
-        _calendarEntry(initSize == WidgetSize.tile ? WidgetSize.button : WidgetSize.tile),
-        lane: lane,
-        index: index,
-      );
-
   @override
   Widget build(_) => EzMenuButton(
         config,
         label: 'Resize',
         icon: EzIcon(config, Icons.edit),
-        onPressed: makeItSo,
+        onPressed: () => _openEdits(
+          config,
+          appInfo: appInfo,
+          initSize: initSize,
+          lane: lane,
+          index: index,
+        ),
       );
 }

@@ -178,13 +178,13 @@ class AddThemeMode extends StatelessWidget {
   void onTap() => appInfo.addWidget(
         config,
         type: WidWidGetGet.themeMode,
-        editNew: _EditTM(
+        editNew: () => _openEdits(
           config,
-          appInfo,
+          appInfo: appInfo,
           initSize: WidgetSize.button,
           lane: lane,
           index: appInfo.homeLane(config, lane).length,
-        ).makeItSo,
+        ),
         lane: lane,
       );
 
@@ -217,6 +217,21 @@ String defaultThemeWidgetEntry() => _themeModeEntry(WidgetSize.button);
 
 String _themeModeEntry(WidgetSize size) => <String>[size.value].join(configSplit);
 
+Future<void> _openEdits(
+  EzCP config, {
+  required AppInfoProvider appInfo,
+  required WidgetSize initSize,
+  required int lane,
+  required int index,
+}) async =>
+    await appInfo.updateWidget(
+      config,
+      WidWidGetGet.themeMode,
+      _themeModeEntry(initSize == WidgetSize.tile ? WidgetSize.button : WidgetSize.tile),
+      lane: lane,
+      index: index,
+    );
+
 class _EditTM extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
@@ -232,19 +247,17 @@ class _EditTM extends StatelessWidget {
     required this.index,
   });
 
-  Future<void> makeItSo() async => await appInfo.updateWidget(
-        config,
-        WidWidGetGet.themeMode,
-        _themeModeEntry(initSize == WidgetSize.tile ? WidgetSize.button : WidgetSize.tile),
-        lane: lane,
-        index: index,
-      );
-
   @override
   Widget build(_) => EzMenuButton(
         config,
         label: 'Resize',
         icon: EzIcon(config, Icons.edit),
-        onPressed: makeItSo,
+        onPressed: () => _openEdits(
+          config,
+          appInfo: appInfo,
+          initSize: initSize,
+          lane: lane,
+          index: index,
+        ),
       );
 }
