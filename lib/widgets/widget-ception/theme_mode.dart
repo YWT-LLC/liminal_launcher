@@ -32,8 +32,7 @@ class ThemeModeWidget extends StatefulWidget {
         .split(widgetSplit)[1]
         .split(configSplit);
 
-    late final WidgetSize storedWS = WSConfig.safeLookup(data[0]);
-    _size = (storedWS == WidgetSize.system) ? bt2WS(config) : storedWS;
+    _size = WSConfig.safeLookup(data[0]);
   }
 
   @override
@@ -118,7 +117,6 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
               _EditTM(
                 widget.config,
                 widget.appInfo,
-                parentCon: context,
                 initSize: widget._size,
                 lane: widget.pos.lane,
                 index: widget.pos.index,
@@ -138,7 +136,6 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
               _EditTM(
                 widget.config,
                 widget.appInfo,
-                parentCon: context,
                 initSize: widget._size,
                 lane: widget.pos.lane,
                 index: widget.pos.index,
@@ -168,22 +165,31 @@ class AddThemeMode extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
   final int lane;
-  final WidgetSize save;
-  final WidgetSize preview;
+  final WidgetSize size;
 
   const AddThemeMode(
-    this.config,
-    this.appInfo,
-    this.lane, {
+    this.config, {
     super.key,
-    required this.save,
-    required this.preview,
+    required this.appInfo,
+    required this.lane,
+    required this.size,
   });
 
-  void onTap() => appInfo.addThemeModeWidget(config, lane);
+  void onTap() => appInfo.addWidget(
+        config,
+        type: WidWidGetGet.themeMode,
+        editNew: _EditTM(
+          config,
+          appInfo,
+          initSize: WidgetSize.button,
+          lane: lane,
+          index: appInfo.homeLane(config, lane).length,
+        ).makeItSo,
+        lane: lane,
+      );
 
   @override
-  Widget build(BuildContext context) => (preview == WidgetSize.button)
+  Widget build(BuildContext context) => (size == WidgetSize.button)
       ? EzIconButton(
           config,
           onPressed: onTap,
@@ -207,10 +213,13 @@ class AddThemeMode extends StatelessWidget {
         );
 }
 
+String defaultThemeWidgetEntry() => _themeModeEntry(WidgetSize.button);
+
+String _themeModeEntry(WidgetSize size) => <String>[size.value].join(configSplit);
+
 class _EditTM extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
-  final BuildContext parentCon;
   final WidgetSize initSize;
   final int lane;
   final int index;
@@ -218,28 +227,24 @@ class _EditTM extends StatelessWidget {
   const _EditTM(
     this.config,
     this.appInfo, {
-    required this.parentCon,
     required this.initSize,
     required this.lane,
     required this.index,
   });
+
+  Future<void> makeItSo() async => await appInfo.updateWidget(
+        config,
+        WidWidGetGet.themeMode,
+        _themeModeEntry(initSize == WidgetSize.tile ? WidgetSize.button : WidgetSize.tile),
+        lane: lane,
+        index: index,
+      );
 
   @override
   Widget build(_) => EzMenuButton(
         config,
         label: 'Resize',
         icon: EzIcon(config, Icons.edit),
-        onPressed: () async {
-          final String? choice = await resizeWidgetDialog(config, parentCon, initSize);
-          if (choice == null) return;
-
-          await appInfo.updateWidget(
-            config,
-            WidWidGetGet.themeMode,
-            TCC.themeModeEntry(WSConfig.safeLookup(choice)),
-            lane: lane,
-            index: index,
-          );
-        },
+        onPressed: makeItSo,
       );
 }
