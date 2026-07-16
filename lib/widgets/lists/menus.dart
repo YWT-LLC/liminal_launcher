@@ -75,7 +75,12 @@ Widget _configureApp(
             label: 'Duplicate',
             icon: EzIcon(config, Icons.copy),
             onPressed: () async {
-              await appInfo.dupeItem(config, lane: lane!, index: index!);
+              await appInfo.dupeItem(
+                config,
+                editNew: blarg,
+                lane: lane!,
+                index: index!,
+              );
             },
           ),
 
@@ -125,7 +130,12 @@ Widget _configureOther(
       label: 'Duplicate',
       icon: EzIcon(config, Icons.copy),
       onPressed: () async {
-        await appInfo.dupeItem(config, lane: lane, index: index);
+        await appInfo.dupeItem(
+          config,
+          editNew: blarg,
+          lane: lane,
+          index: index,
+        );
       },
     );
 
