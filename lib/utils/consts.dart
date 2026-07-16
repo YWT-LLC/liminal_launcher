@@ -200,21 +200,9 @@ final Map<String, Object> liminalDefault = <String, Object>{
   // ID lists
   darkHomeDataKey: <String>[
     <String>[
-      // Lane config
-      TCC.laneEntry(null, null),
-
-      // Clock
-      <String>[
-        WidWidGetGet.clock.value,
-        TCC.clockEntry(EzButtonShape.roundRect, null, true, TxtStile.headline, null,
-            DateType.compact, TxtStile.label, null),
-      ].join(widgetSplit),
-
-      // Search
-      <String>[
-        WidWidGetGet.search.value,
-        TCC.searchEntry(WidgetSize.tile, ecosia, Engine.defaultOrder.map((Engine e) => e.value)),
-      ].join(widgetSplit),
+      defaultLaneEntry(),
+      <String>[WidWidGetGet.clock.value, defaultClockEntry()].join(widgetSplit),
+      <String>[WidWidGetGet.search.value, defaultSearchEntry()].join(widgetSplit),
     ].join(listSplit),
   ],
   darkHiddenIDsKey: <String>[],
@@ -222,21 +210,9 @@ final Map<String, Object> liminalDefault = <String, Object>{
 
   lightHomeDataKey: <String>[
     <String>[
-      // Lane config
-      TCC.laneEntry(null, null),
-
-      // Clock
-      <String>[
-        WidWidGetGet.clock.value,
-        TCC.clockEntry(EzButtonShape.roundRect, null, true, TxtStile.headline, null,
-            DateType.compact, TxtStile.label, null),
-      ].join(widgetSplit),
-
-      // Search
-      <String>[
-        WidWidGetGet.search.value,
-        TCC.searchEntry(WidgetSize.tile, ecosia, Engine.defaultOrder.map((Engine e) => e.value)),
-      ].join(widgetSplit),
+      defaultLaneEntry(),
+      <String>[WidWidGetGet.clock.value, defaultClockEntry()].join(widgetSplit),
+      <String>[WidWidGetGet.search.value, defaultSearchEntry()].join(widgetSplit),
     ].join(listSplit),
   ],
   lightHiddenIDsKey: <String>[],
@@ -519,6 +495,9 @@ const Map<String, String> wingdingMap = <String, String>{
 
 /// 1.5
 const double rippleMod = 1.5;
+
+/// 2 seconds
+const Duration breatheTime = Duration(seconds: 2);
 
 // Not const //
 
