@@ -1245,7 +1245,7 @@ For example: if an app has always on location permissions, banishing it will not
     EzCP config,
     BuildContext context,
     int lane, {
-    bool confirm = false,
+    bool confirm = true,
   }) async {
     if (confirm) {
       final bool confirmed = await showDialog(
