@@ -4,7 +4,6 @@
  */
 
 import './export.dart';
-import '../widgets/export.dart';
 
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
@@ -277,79 +276,6 @@ extension LAConfig on ListAlignment {
 
 enum ListContent { hidden, banished }
 
-// Tile Config //
-
-enum TileConfig {
-  app,
-  folder,
-  spacer,
-
-  // Widgets
-  calendar,
-  clock,
-  search,
-  timer,
-  toggleMedia,
-  themeMode,
-}
-
-/// Tile Config Config
-extension TCC on TileConfig {
-  static String laneEntry(ListAlignment? hA, ListAlignment? vA) => <String>[
-        hA?.value ?? esSystem,
-        vA?.value ?? esSystem,
-      ].join(configSplit);
-
-  static String appEntry(
-          String name, IconData? icon, ButtonType? buttonType, LabelType? labelType) =>
-      <String>[
-        name,
-        (icon == null ? esSystem : icon.codePoint.toString()),
-        (buttonType == null ? esSystem : buttonType.value),
-        (labelType == null ? esSystem : labelType.value),
-      ].join(configSplit);
-
-  static String folderEntry(IconData icon, ButtonType? buttonType, LabelType? labelType) =>
-      <String>[
-        icon.codePoint.toString(),
-        (buttonType == null ? esSystem : buttonType.value),
-        (labelType == null ? esSystem : labelType.value),
-      ].join(configSplit);
-
-  static String calendarEntry(WidgetSize size) => <String>[
-        size.value,
-      ].join(configSplit);
-
-  static String clockEntry(EzButtonShape shape, Color? background, bool time, TxtStile timeStyle,
-          Color? timeColor, DateType date, TxtStile dateStyle, Color? dateColor) =>
-      <String>[
-        shape.value,
-        background == null ? esSystem : background.toARGB32().toString(),
-        time.toString(),
-        timeStyle.value,
-        timeColor == null ? esSystem : timeColor.toARGB32().toString(),
-        date.value,
-        dateStyle.value,
-        dateColor == null ? esSystem : dateColor.toARGB32().toString(),
-      ].join(configSplit);
-
-  static String searchEntry(WidgetSize size, Engine engine, Iterable<String> choices) =>
-      <String>[size.value, engine.value, ...choices].join(configSplit);
-
-  static String timerEntry(WidgetSize size, String autoTime) => <String>[
-        size.value,
-        autoTime,
-      ].join(configSplit);
-
-  static String mediaEntry(WidgetSize size) => <String>[
-        size.value,
-      ].join(configSplit);
-
-  static String themeModeEntry(WidgetSize size) => <String>[
-        size.value,
-      ].join(configSplit);
-}
-
 // Text Style //
 
 enum TxtStile { display, headline, title, body, label }
@@ -409,29 +335,26 @@ extension WWGGConfig on WidWidGetGet {
       };
 }
 
-enum WidgetSize { system, button, tile }
+enum WidgetSize { button, tile }
 
 const String esButton = 'button';
 const String esTile = 'tile';
 
 extension WSConfig on WidgetSize {
   String get value => switch (this) {
-        WidgetSize.system => esSystem,
         WidgetSize.button => esButton,
         WidgetSize.tile => esTile,
       };
 
   static WidgetSize? lookup(String? value) => switch (value) {
-        esSystem => WidgetSize.system,
         esButton => WidgetSize.button,
         esTile => WidgetSize.tile,
         _ => null,
       };
 
-  /// Defaults to [WidgetSize.system]
+  /// Defaults to [WidgetSize.tile]
   static WidgetSize safeLookup(String? value) => switch (value) {
         esButton => WidgetSize.button,
-        esTile => WidgetSize.tile,
-        _ => WidgetSize.system,
+        _ => WidgetSize.tile,
       };
 }
