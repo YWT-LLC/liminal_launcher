@@ -125,24 +125,11 @@ class AppInfoProvider extends ChangeNotifier {
 
   // Helpers //
 
-  final ValueNotifier<bool> _invert = ValueNotifier<bool>(false);
-
   Timer? _addedTimer;
   OverlayEntry? _addedEntry;
 
-  // TODO: the color bottom layer should consume button transparency
-  // TODO: lenghten the time a smidge, update the icon to be check for 25% and edit for 75%...
-  // ... change the on pressed (at all times) to be a passthrough for opening the edits for the newly added item
-
-  Future<void> _added(EzCP config) async {
-    if (_addedTimer?.isActive ?? false) {
-      _invert.value = !_invert.value;
-
-      _addedTimer!.cancel();
-      _addedTimer = Timer(_showTime, _clearAdded);
-
-      return;
-    }
+  Future<void> _added(EzCP config, Future<void> Function() editNew) async {
+    if (_addedTimer?.isActive ?? false) _clearAdded();
 
     final double size = appIconSize(config) + config.marginVal;
     _addedEntry = OverlayEntry(
@@ -153,27 +140,22 @@ class AppInfoProvider extends ChangeNotifier {
         child: Material(
           type: MaterialType.transparency,
           child: Center(
-            child: ValueListenableBuilder<bool>(
-              valueListenable: _invert,
-              builder: (_, bool flipped, __) =>
+            child: TweenAnimationBuilder<double>(
+              tween: Tween<double>(begin: 1.0, end: 0.0),
+              duration: breatheTime,
+              builder: (_, double progress, __) =>
                   Stack(alignment: Alignment.center, children: <Widget>[
-                TweenAnimationBuilder<double>(
-                  key: ValueKey<bool>(flipped),
-                  tween: Tween<double>(begin: 1.0, end: 0.0),
-                  duration: _showTime,
-                  builder: (_, double progress, __) => CustomPaint(
-                    size: Size(size, size),
-                    painter: EzCountdownPainter(progress, config.colors.secondary),
-                  ),
+                CustomPaint(
+                  size: Size(size, size),
+                  painter: EzCountdownPainter(progress, config.colors.secondaryContainer),
                 ),
                 EzIconButton(
                   config,
-                  icon: const Icon(Icons.check),
-                  style: IconButton.styleFrom(
-                    backgroundColor: flipped ? config.colors.primary : config.colors.surface,
-                    foregroundColor: flipped ? config.colors.surface : config.colors.primary,
-                  ),
-                  onPressed: _clearAdded,
+                  icon: Icon(progress > 0.25 ? Icons.edit : Icons.check),
+                  onPressed: () async {
+                    _clearAdded();
+                    await editNew(); // TODO: test
+                  },
                 ),
               ]),
             ),
@@ -183,7 +165,7 @@ class AppInfoProvider extends ChangeNotifier {
     );
 
     ezRootNav.currentState?.overlay?.insert(_addedEntry!);
-    _addedTimer = Timer(_showTime, _clearAdded);
+    _addedTimer = Timer(breatheTime, _clearAdded);
   }
 
   void _clearAdded() {
@@ -193,212 +175,88 @@ class AppInfoProvider extends ChangeNotifier {
       _addedEntry!.remove();
       _addedEntry = null;
     }
-
-    _invert.value = false;
   }
 
   // Core //
 
   /// Does notify
   /// Shows added overlay
-  Future<void> addApp(EzCP config, {required int lane, required String id}) async {
+  Future<void> addApp(
+    EzCP config, {
+    required Future<void> Function() editNew,
+    required int lane,
+    required String id,
+  }) async {
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane].add(<String>[
-        id,
-        TCC.appEntry(id.split(idSplit)[1], null, null, null),
-      ].join(idSplit));
-
+      _darkHomeMatrix[lane]
+          .add(<String>[id, appEntry(id.split(idSplit)[1], null, null, null)].join(idSplit));
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane].add(<String>[
-        id,
-        TCC.appEntry(id.split(idSplit)[1], null, null, null),
-      ].join(idSplit));
-
+      _lightHomeMatrix[lane]
+          .add(<String>[id, appEntry(id.split(idSplit)[1], null, null, null)].join(idSplit));
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
     notifyListeners();
-    unawaited(_added(config));
+    unawaited(_added(config, editNew));
   }
 
   /// Does notify
   /// Shows added overlay
-  Future<void> addFolder(EzCP config, int lane) async {
-    if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane].add(<String>[
-        'Folder',
-        TCC.folderEntry(Icons.folder_outlined, null, null),
-      ].join(folderSplit));
+  Future<void> addWidget(
+    EzCP config, {
+    required WidWidGetGet type,
+    required Future<void> Function() editNew,
+    required int lane,
+  }) async {
+    // Must be a function! (or twice local like the others)
+    String entry() => <String>[
+          type.value,
+          switch (type) {
+            WidWidGetGet.calendar => defaultCalendarEntry(),
+            WidWidGetGet.clock => defaultClockEntry(),
+            WidWidGetGet.search => defaultSearchEntry(),
+            WidWidGetGet.timer => defaultTimerEntry(),
+            WidWidGetGet.themeMode => defaultThemeWidgetEntry(),
+            WidWidGetGet.toggleMedia => defaultMediaEntry(),
+          },
+        ].join(widgetSplit);
 
+    if (interlinked || config.isDark) {
+      _darkHomeMatrix[lane].add(entry());
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane].add(<String>[
-        'Folder',
-        TCC.folderEntry(Icons.folder_outlined, null, null),
-      ].join(folderSplit));
-
+      _lightHomeMatrix[lane].add(entry());
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
     notifyListeners();
-    unawaited(_added(config));
+    unawaited(_added(config, editNew));
   }
 
   /// Does notify
   /// Shows added overlay
-  Future<void> addCalendar(EzCP config, int lane) async {
+  Future<void> addFolder(
+    EzCP config, {
+    required Future<void> Function() editNew,
+    required int lane,
+  }) async {
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane].add(<String>[
-        WidWidGetGet.calendar.value,
-        TCC.calendarEntry(WidgetSize.system),
-      ].join(widgetSplit));
-
+      _darkHomeMatrix[lane].add(<String>['Folder', defaultFolderEntry()].join(folderSplit));
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane].add(<String>[
-        WidWidGetGet.calendar.value,
-        TCC.calendarEntry(WidgetSize.system),
-      ].join(widgetSplit));
-
+      _lightHomeMatrix[lane].add(<String>['Folder', defaultFolderEntry()].join(folderSplit));
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
     notifyListeners();
-    unawaited(_added(config));
-  }
-
-  /// Does notify
-  /// Shows added overlay
-  Future<void> addClock(EzCP config, int lane) async {
-    if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane].add(<String>[
-        WidWidGetGet.clock.value,
-        TCC.clockEntry(EzButtonShape.roundRect, null, true, TxtStile.headline, null,
-            DateType.compact, TxtStile.label, null),
-      ].join(widgetSplit));
-
-      unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
-    }
-
-    if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane].add(<String>[
-        WidWidGetGet.clock.value,
-        TCC.clockEntry(EzButtonShape.roundRect, null, true, TxtStile.headline, null,
-            DateType.compact, TxtStile.label, null),
-      ].join(widgetSplit));
-
-      unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
-    }
-
-    notifyListeners();
-    unawaited(_added(config));
-  }
-
-  /// Does notify
-  /// Shows added overlay
-  Future<void> addSearch(EzCP config, int lane) async {
-    if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane].add(<String>[
-        WidWidGetGet.search.value,
-        TCC.searchEntry(WidgetSize.system, ecosia, Engine.defaultOrder.map((Engine e) => e.value)),
-      ].join(widgetSplit));
-
-      unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
-    }
-
-    if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane].add(<String>[
-        WidWidGetGet.search.value,
-        TCC.searchEntry(WidgetSize.system, ecosia, Engine.defaultOrder.map((Engine e) => e.value)),
-      ].join(widgetSplit));
-
-      unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
-    }
-
-    notifyListeners();
-    unawaited(_added(config));
-  }
-
-  /// Does notify
-  /// Shows added overlay
-  Future<void> addTimer(EzCP config, int lane) async {
-    if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane].add(<String>[
-        WidWidGetGet.timer.value,
-        TCC.timerEntry(WidgetSize.system, '00:00:00'),
-      ].join(widgetSplit));
-
-      unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
-    }
-
-    if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane].add(<String>[
-        WidWidGetGet.timer.value,
-        TCC.timerEntry(WidgetSize.system, '00:00:00'),
-      ].join(widgetSplit));
-
-      unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
-    }
-
-    notifyListeners();
-    unawaited(_added(config));
-  }
-
-  /// Does notify
-  /// Shows added overlay
-  Future<void> addToggleMedia(EzCP config, int lane) async {
-    if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane].add(<String>[
-        WidWidGetGet.toggleMedia.value,
-        TCC.mediaEntry(WidgetSize.system),
-      ].join(widgetSplit));
-
-      unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
-    }
-
-    if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane].add(<String>[
-        WidWidGetGet.toggleMedia.value,
-        TCC.mediaEntry(WidgetSize.system),
-      ].join(widgetSplit));
-
-      unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
-    }
-
-    notifyListeners();
-    unawaited(_added(config));
-  }
-
-  /// Does notify
-  /// Shows added overlay
-  Future<void> addThemeModeWidget(EzCP config, int lane) async {
-    if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane].add(<String>[
-        WidWidGetGet.themeMode.value,
-        TCC.themeModeEntry(WidgetSize.system),
-      ].join(widgetSplit));
-
-      unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
-    }
-
-    if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane].add(<String>[
-        WidWidGetGet.themeMode.value,
-        TCC.themeModeEntry(WidgetSize.system),
-      ].join(widgetSplit));
-
-      unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
-    }
-
-    notifyListeners();
-    unawaited(_added(config));
+    unawaited(_added(config, editNew));
   }
 
   /// Does notify
@@ -442,26 +300,29 @@ class AppInfoProvider extends ChangeNotifier {
 
   /// Does notify
   /// Shows added overlay
-  Future<void> addLane(EzCP config) async {
+  Future<void> addLane(EzCP config, {required Future<void> Function() editNew}) async {
     if (interlinked || config.isDark) {
-      _darkHomeMatrix.add(<String>[TCC.laneEntry(null, null)]);
-
+      _darkHomeMatrix.add(<String>[defaultLaneEntry()]);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix.add(<String>[TCC.laneEntry(null, null)]);
-
+      _lightHomeMatrix.add(<String>[defaultLaneEntry()]);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
     notifyListeners();
-    unawaited(_added(config));
+    unawaited(_added(config, editNew));
   }
 
   /// Does notify
   /// Shows added overlay
-  Future<void> dupeItem(EzCP config, {required int lane, required int index}) async {
+  Future<void> dupeItem(
+    EzCP config, {
+    required Future<void> Function() editNew,
+    required int lane,
+    required int index,
+  }) async {
     if (interlinked || config.isDark) {
       _darkHomeMatrix[lane].insert(index, _darkHomeMatrix[lane][index]);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
@@ -473,12 +334,16 @@ class AppInfoProvider extends ChangeNotifier {
     }
 
     notifyListeners();
-    unawaited(_added(config));
+    unawaited(_added(config, editNew));
   }
 
   /// Does notify
   /// Shows added overlay
-  Future<void> dupeLane(EzCP config, int lane) async {
+  Future<void> dupeLane(
+    EzCP config, {
+    required Future<void> Function() editNew,
+    required int lane,
+  }) async {
     if (interlinked || config.isDark) {
       _darkHomeMatrix.insert(lane, List<String>.from(_darkHomeMatrix[lane]));
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
@@ -490,7 +355,7 @@ class AppInfoProvider extends ChangeNotifier {
     }
 
     notifyListeners();
-    unawaited(_added(config));
+    unawaited(_added(config, editNew));
   }
 
   // Patch //
@@ -556,22 +421,14 @@ class AppInfoProvider extends ChangeNotifier {
     required List<String> ids,
   }) async {
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane][index] = <String>[
-        name,
-        extra,
-        if (ids.isNotEmpty) ...ids,
-      ].join(folderSplit);
-
+      _darkHomeMatrix[lane][index] =
+          <String>[name, extra, if (ids.isNotEmpty) ...ids].join(folderSplit);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane][index] = <String>[
-        name,
-        extra,
-        if (ids.isNotEmpty) ...ids,
-      ].join(folderSplit);
-
+      _lightHomeMatrix[lane][index] =
+          <String>[name, extra, if (ids.isNotEmpty) ...ids].join(folderSplit);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -705,24 +562,17 @@ class AppInfoProvider extends ChangeNotifier {
 
   Future<void> updateLane(
     EzCP config, {
+    required String entry,
     required int startPos,
     required int currPos,
-    required ListAlignment hA,
-    required ListAlignment vA,
   }) async {
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[startPos][0] = (hA == horizontalAlign(config) && vA == verticalAlign(config))
-          ? TCC.laneEntry(null, null)
-          : TCC.laneEntry(hA, vA);
-
+      _darkHomeMatrix[startPos][0] = entry;
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[startPos][0] = (hA == horizontalAlign(config) && vA == verticalAlign(config))
-          ? TCC.laneEntry(null, null)
-          : TCC.laneEntry(hA, vA);
-
+      _lightHomeMatrix[startPos][0] = entry;
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -1267,13 +1117,13 @@ For example: if an app has always on location permissions, banishing it will not
 
     if (interlinked || config.isDark) {
       _darkHomeMatrix.removeAt(lane);
-      if (_darkHomeMatrix.isEmpty) _darkHomeMatrix.add(<String>[TCC.laneEntry(null, null)]);
+      if (_darkHomeMatrix.isEmpty) _darkHomeMatrix.add(<String>[defaultLaneEntry()]);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
       _lightHomeMatrix.removeAt(lane);
-      if (_lightHomeMatrix.isEmpty) _lightHomeMatrix.add(<String>[TCC.laneEntry(null, null)]);
+      if (_lightHomeMatrix.isEmpty) _lightHomeMatrix.add(<String>[defaultLaneEntry()]);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -1303,5 +1153,3 @@ Future<bool> _saveLightMatrix(List<List<String>> matrix) => EzCM.setStringList(
       lightHomeDataKey,
       matrix.map((List<String> innie) => innie.join(listSplit)).toList(),
     );
-
-const Duration _showTime = Duration(seconds: 2);
