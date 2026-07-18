@@ -8,8 +8,6 @@ import '../../utils/export.dart';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-// TODO: make sure you have confirms on everthing that needs it
-
 Widget moveDownLane(
   EzCP config,
   AppInfoProvider appInfo, {

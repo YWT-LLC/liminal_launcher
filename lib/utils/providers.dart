@@ -64,11 +64,10 @@ class AppInfoProvider extends ChangeNotifier {
 
               if (uninstalled.isNotEmpty) {
                 for (final AppInfo app in uninstalled) {
-                  if (ezRootIsMounted) {
+                  if (ezRootIsMounted && ezRootContext.mounted) {
                     await ezSnackBar(
                       configWatcher(ezRootContext),
                       context: ezRootContext,
-                      // TODO: how much of this is there? could b v annoying, might need a fix
                       message: 'Removing ${app.label}',
                     ).closed;
                   }
@@ -724,7 +723,7 @@ class AppInfoProvider extends ChangeNotifier {
       if (!_lightHidden.contains(id)) return false;
       final bool worthAsk = !batch && !interlinked && _darkHidden.contains(id);
 
-      if (worthAsk && ezRootIsMounted) {
+      if (worthAsk && ezRootIsMounted && ezRootContext.mounted) {
         await showDialog(
           context: ezRootContext,
           builder: (BuildContext dCon) => EzAlertDialog(
@@ -761,7 +760,7 @@ class AppInfoProvider extends ChangeNotifier {
 
   /// Does notify
   /// Calls [ezNoTouch] when saving changes
-  /// TODO: uhhh... get it to work? is banishedList not being properly consumed? is nothing happening???
+  /// TODO: uhh... get it to work? is banishedList not being properly consumed? is nothing happening???
   Future<bool> banishApp(EzCP config, BuildContext context, String id) async {
     if (interlinked || config.isDark) {
       if (_darkBanished.contains(id)) return false;

@@ -3,8 +3,6 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: fix the text editing controllers. definitely no overlay from dialog
-
 import '../../utils/export.dart';
 import '../export.dart';
 
