@@ -3,9 +3,9 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: should I add/move delete to edit? would certainly pair well with the editNew (undo with extra steps)... potential saved space as well
-// TODO: sit down and do the math for pixel perfect header spacing
-// TODO: delta should be too when !standardFlow
+// TODO: add delete to edit(s)
+// TODO: sit down and do the math for pixel perfect header spacing - maybe already done?
+// TODO: delta should be swapped too when !standardFlow
 // TODO: get the manifest exactly how you want it - be cognizant of SafeArea usage as you do
 //       at least, the app list should draw underneath the nav bar... not sure what else. maybe everything, maybe nothing
 
