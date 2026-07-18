@@ -10,6 +10,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
+//* Core Widget *//
+
 class ThemeModeWidget extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
@@ -111,38 +113,28 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
                     onLongPress: () => canToggleMenu(widget.config, controller),
                     child: EzThemeModeSwitch(widget.config),
                   ),
-            menuChildren: widgetMC(
+            menuChildren: _menuChildren(
               widget.config,
-              widget.appInfo,
-              _EditTM(
-                widget.config,
-                widget.appInfo,
-                initSize: widget._size,
-                lane: widget.pos.lane,
-                index: widget.pos.index,
-              ),
+              appInfo: widget.appInfo,
+              context: context,
+              state: state,
               numLanes: numLanes,
-              lane: widget.pos.lane,
-              index: widget.pos.index,
+              pos: widget.pos,
+              initSize: widget._size,
             ),
           ),
         _ => EditContainer(
             widget.config,
             subAlign: widget.pos.subAlign,
             menuControl: menuControl,
-            menuChildren: widgetMC(
+            menuChildren: _menuChildren(
               widget.config,
-              widget.appInfo,
-              _EditTM(
-                widget.config,
-                widget.appInfo,
-                initSize: widget._size,
-                lane: widget.pos.lane,
-                index: widget.pos.index,
-              ),
+              appInfo: widget.appInfo,
+              context: context,
+              state: state,
               numLanes: numLanes,
-              lane: widget.pos.lane,
-              index: widget.pos.index,
+              pos: widget.pos,
+              initSize: widget._size,
             ),
             child: EzIconButton(
               widget.config,
@@ -161,6 +153,50 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
   }
 }
 
+List<Widget> _menuChildren(
+  EzCP config, {
+  required AppInfoProvider appInfo,
+  required BuildContext context,
+  required AppState state,
+  required int numLanes,
+  required LimPos pos,
+  required WidgetSize initSize,
+}) =>
+    <Widget>[
+      // Edit
+      _EditTM(
+        config,
+        appInfo,
+        initSize: initSize,
+        lane: pos.lane,
+        index: pos.index,
+      ),
+
+      // Dupe
+      EzMenuButton(
+        config,
+        label: 'Duplicate',
+        icon: EzIcon(config, Icons.copy),
+        onPressed: () => appInfo.dupeItem(
+          config,
+          editNew: null,
+          lane: pos.lane,
+          index: pos.index,
+        ),
+      ),
+
+      // Move
+      if (state == AppState.groupEdit && numLanes > 1) ...<Widget>[
+        moveDownLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
+        moveUpLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
+      ],
+
+      // Remove
+      removeItem(config, appInfo, lane: pos.lane, index: pos.index),
+    ];
+
+//* Add Widget *//
+
 class AddThemeMode extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
@@ -178,13 +214,7 @@ class AddThemeMode extends StatelessWidget {
   void onTap() => appInfo.addWidget(
         config,
         type: WidWidGetGet.themeMode,
-        editNew: () => _openEdits(
-          config,
-          appInfo: appInfo,
-          initSize: WidgetSize.button,
-          lane: lane,
-          index: appInfo.homeLane(config, lane).length,
-        ),
+        editNew: null,
         lane: lane,
       );
 
@@ -217,7 +247,9 @@ String defaultThemeWidgetEntry() => _themeModeEntry(WidgetSize.button);
 
 String _themeModeEntry(WidgetSize size) => <String>[size.value].join(configSplit);
 
-Future<void> _openEdits(
+//* Edit Widget *//
+
+Future<void> _quickResize(
   EzCP config, {
   required AppInfoProvider appInfo,
   required WidgetSize initSize,
@@ -252,7 +284,7 @@ class _EditTM extends StatelessWidget {
         config,
         label: 'Resize',
         icon: EzIcon(config, Icons.edit),
-        onPressed: () => _openEdits(
+        onPressed: () => _quickResize(
           config,
           appInfo: appInfo,
           initSize: initSize,

@@ -4,6 +4,7 @@
  */
 
 // TODO: last: full (runtime) audit of alignment settings. needs work
+//  ...double last: X-tuple check the canToggle vs toggle, make sure nothing got crossed
 
 import '../utils/export.dart';
 import '../widgets/export.dart';

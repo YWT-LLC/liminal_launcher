@@ -12,6 +12,8 @@ import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
 // TODO: add reset and tertiary marker to shape setting
 
+//* Core Widget *//
+
 class ClockWidget extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
@@ -122,19 +124,6 @@ class _ClockWidgetState extends State<ClockWidget> {
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
-    late final _ClockConfig init = _ClockConfig(
-      hAlign: widget.pos.hAlign,
-      vAlign: widget.pos.vAlign,
-      shape: widget._shape,
-      background: widget._background,
-      timeStyle: widget._timeStyle,
-      timeColor: widget._timeColor,
-      showTime: widget._showTime,
-      dateType: widget._dateType,
-      dateStyle: widget._dateStyle,
-      dateColor: widget._dateColor,
-    );
-
     return EzAnimSwitch(
       widget.config,
       mod: 0.667,
@@ -173,40 +162,50 @@ class _ClockWidgetState extends State<ClockWidget> {
                 ),
               ),
             ),
-            menuChildren: widgetMC(
+            menuChildren: _menuChildren(
               widget.config,
-              widget.appInfo,
-              _EditClock(
-                widget.config,
-                widget.appInfo,
-                pContext: context,
-                initConfig: init,
-                lane: widget.pos.lane,
-                index: widget.pos.index,
-              ),
+              appInfo: widget.appInfo,
+              context: context,
+              state: state,
               numLanes: numLanes,
-              lane: widget.pos.lane,
-              index: widget.pos.index,
+              pos: widget.pos,
+              initConfig: _ClockConfig(
+                hAlign: widget.pos.hAlign,
+                vAlign: widget.pos.vAlign,
+                shape: widget._shape,
+                background: widget._background,
+                timeStyle: widget._timeStyle,
+                timeColor: widget._timeColor,
+                showTime: widget._showTime,
+                dateType: widget._dateType,
+                dateStyle: widget._dateStyle,
+                dateColor: widget._dateColor,
+              ),
             ),
           ),
         _ => EditContainer(
             widget.config,
             subAlign: widget.pos.subAlign,
             menuControl: menuControl,
-            menuChildren: widgetMC(
+            menuChildren: _menuChildren(
               widget.config,
-              widget.appInfo,
-              _EditClock(
-                widget.config,
-                widget.appInfo,
-                pContext: context,
-                initConfig: init,
-                lane: widget.pos.lane,
-                index: widget.pos.index,
-              ),
+              appInfo: widget.appInfo,
+              context: context,
+              state: state,
               numLanes: numLanes,
-              lane: widget.pos.lane,
-              index: widget.pos.index,
+              pos: widget.pos,
+              initConfig: _ClockConfig(
+                hAlign: widget.pos.hAlign,
+                vAlign: widget.pos.vAlign,
+                shape: widget._shape,
+                background: widget._background,
+                timeStyle: widget._timeStyle,
+                timeColor: widget._timeColor,
+                showTime: widget._showTime,
+                dateType: widget._dateType,
+                dateStyle: widget._dateStyle,
+                dateColor: widget._dateColor,
+              ),
             ),
             child: EzIconButton(
               widget.config,
@@ -225,6 +224,61 @@ class _ClockWidgetState extends State<ClockWidget> {
     super.dispose();
   }
 }
+
+List<Widget> _menuChildren(
+  EzCP config, {
+  required AppInfoProvider appInfo,
+  required BuildContext context,
+  required AppState state,
+  required int numLanes,
+  required LimPos pos,
+  required _ClockConfig initConfig,
+}) =>
+    <Widget>[
+      // Edit
+      _EditClock(
+        config,
+        appInfo,
+        pContext: context,
+        initConfig: initConfig,
+        lane: pos.lane,
+        index: pos.index,
+      ),
+
+      // Dupe
+      EzMenuButton(
+        config,
+        label: 'Duplicate',
+        icon: EzIcon(config, Icons.copy),
+        onPressed: () => appInfo.dupeItem(
+          config,
+          editNew: () async {
+            if (!ezRootIsMounted) return;
+            await _openEdits(
+              config,
+              appInfo: appInfo,
+              pContext: ezRootContext,
+              initConfig: initConfig,
+              lane: pos.lane,
+              index: pos.index,
+            );
+          },
+          lane: pos.lane,
+          index: pos.index,
+        ),
+      ),
+
+      // Move
+      if (state == AppState.groupEdit && numLanes > 1) ...<Widget>[
+        moveDownLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
+        moveUpLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
+      ],
+
+      // Remove
+      removeItem(config, appInfo, lane: pos.lane, index: pos.index),
+    ];
+
+//* Add Widget *//
 
 class AddClock extends StatelessWidget {
   final EzCP config;
@@ -322,6 +376,8 @@ String _clockEntry(EzButtonShape shape, Color? background, bool time, TxtStile t
       dateStyle.value,
       dateColor == null ? esSystem : dateColor.toARGB32().toString(),
     ].join(configSplit);
+
+//* Edit Widget *//
 
 class _ClockConfig {
   final ListAlignment hAlign;

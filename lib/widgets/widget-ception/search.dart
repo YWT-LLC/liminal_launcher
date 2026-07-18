@@ -12,6 +12,8 @@ import 'package:line_icons/line_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
+//* Core Widget *//
+
 class SearchWidget extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
@@ -158,7 +160,7 @@ class _SearchWidgetState extends State<SearchWidget> {
         ),
       ),
     );
-    ezRootNav.currentState?.overlay?.insert(overlayEntry!);
+    ezRootOverlay?.insert(overlayEntry!);
   }
 
   Future<void> search(String text) async {
@@ -208,12 +210,6 @@ class _SearchWidgetState extends State<SearchWidget> {
     late final double textWidth =
         ezTextSize('Search bar', context: context, style: widget.config.bodyStyle).width;
 
-    late final _SearchConfig init = _SearchConfig(
-      size: widget._size,
-      engine: widget._engine,
-      choices: widget._choices,
-    );
-
     return EzAnimSwitch(
       widget.config,
       mod: 0.667,
@@ -251,41 +247,36 @@ class _SearchWidgetState extends State<SearchWidget> {
                       onLongPress: () => canToggleMenu(widget.config, controller),
                     ),
                   ]),
-            menuChildren: widgetMC(
+            menuChildren: _menuChildren(
               widget.config,
-              widget.appInfo,
-              _EditSearch(
-                widget.config,
-                widget.appInfo,
-                pContext: context,
-                initConfig: init,
-                lane: widget.pos.lane,
-                index: widget.pos.index,
-              ),
-              local: engineChoices,
+              appInfo: widget.appInfo,
+              context: context,
+              state: state,
               numLanes: numLanes,
-              lane: widget.pos.lane,
-              index: widget.pos.index,
+              pos: widget.pos,
+              initConfig: _SearchConfig(
+                size: widget._size,
+                engine: widget._engine,
+                choices: widget._choices,
+              ),
             ),
           ),
         _ => EditContainer(
             widget.config,
             subAlign: widget.pos.subAlign,
             menuControl: menuControl,
-            menuChildren: widgetMC(
+            menuChildren: _menuChildren(
               widget.config,
-              widget.appInfo,
-              _EditSearch(
-                widget.config,
-                widget.appInfo,
-                pContext: context,
-                initConfig: init,
-                lane: widget.pos.lane,
-                index: widget.pos.index,
-              ),
+              appInfo: widget.appInfo,
+              context: context,
+              state: state,
               numLanes: numLanes,
-              lane: widget.pos.lane,
-              index: widget.pos.index,
+              pos: widget.pos,
+              initConfig: _SearchConfig(
+                size: widget._size,
+                engine: widget._engine,
+                choices: widget._choices,
+              ),
             ),
             child: EzIconButton(
               widget.config,
@@ -304,6 +295,61 @@ class _SearchWidgetState extends State<SearchWidget> {
     super.dispose();
   }
 }
+
+List<Widget> _menuChildren(
+  EzCP config, {
+  required AppInfoProvider appInfo,
+  required BuildContext context,
+  required AppState state,
+  required int numLanes,
+  required LimPos pos,
+  required _SearchConfig initConfig,
+}) =>
+    <Widget>[
+      // Edit
+      _EditSearch(
+        config,
+        appInfo,
+        pContext: context,
+        initConfig: initConfig,
+        lane: pos.lane,
+        index: pos.index,
+      ),
+
+      // Dupe
+      EzMenuButton(
+        config,
+        label: 'Duplicate',
+        icon: EzIcon(config, Icons.copy),
+        onPressed: () => appInfo.dupeItem(
+          config,
+          editNew: () async {
+            if (!ezRootIsMounted) return;
+            await _openEdits(
+              config,
+              appInfo: appInfo,
+              pContext: ezRootContext,
+              initConfig: initConfig,
+              lane: pos.lane,
+              index: pos.index,
+            );
+          },
+          lane: pos.lane,
+          index: pos.index,
+        ),
+      ),
+
+      // Move
+      if (state == AppState.groupEdit && numLanes > 1) ...<Widget>[
+        moveDownLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
+        moveUpLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
+      ],
+
+      // Remove
+      removeItem(config, appInfo, lane: pos.lane, index: pos.index),
+    ];
+
+//* Add Widget *//
 
 class AddSearch extends StatelessWidget {
   final EzCP config;
@@ -367,11 +413,32 @@ class AddSearch extends StatelessWidget {
         );
 }
 
-String defaultSearchEntry() =>
-    _searchEntry(WidgetSize.tile, ecosia, Engine.defaultOrder.map((Engine e) => e.value));
+String defaultSearchEntry() => _searchEntry(
+      WidgetSize.tile,
+      ecosia,
+      Engine.defaultOrder.map((Engine e) => e.value),
+    );
 
-String _searchEntry(WidgetSize size, Engine engine, Iterable<String> choices) =>
+String _searchEntry(
+  WidgetSize size,
+  Engine engine,
+  Iterable<String> choices,
+) =>
     <String>[size.value, engine.value, ...choices].join(configSplit);
+
+//* Edit Widget *//
+
+class _SearchConfig {
+  final WidgetSize size;
+  final Engine engine;
+  final List<Engine> choices;
+
+  _SearchConfig({
+    required this.size,
+    required this.engine,
+    required this.choices,
+  });
+}
 
 Future<void> _openEdits(
   EzCP config, {
@@ -698,18 +765,6 @@ class _EditSearch extends StatelessWidget {
           index: index,
         ),
       );
-}
-
-class _SearchConfig {
-  final WidgetSize size;
-  final Engine engine;
-  final List<Engine> choices;
-
-  _SearchConfig({
-    required this.size,
-    required this.engine,
-    required this.choices,
-  });
 }
 
 //* Engine enum *//

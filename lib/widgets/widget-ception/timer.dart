@@ -12,6 +12,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
+//* Core Widget *//
+
 class TimerWidget extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
@@ -35,8 +37,7 @@ class TimerWidget extends StatefulWidget {
         .split(widgetSplit)[1]
         .split(configSplit);
 
-    final WidgetSize storedWS = WSConfig.safeLookup(data[0]);
-    _size = (storedWS == WidgetSize.system) ? bt2WS(config) : storedWS;
+    _size = WSConfig.safeLookup(data[0]);
 
     final List<String> storedTs = data[1].split(':');
     _times = storedTs.length == 3 ? storedTs : <String>['00', '00', '00'];
@@ -119,75 +120,13 @@ class _TimerWidgetState extends State<TimerWidget> {
         ),
       ),
     );
-    ezRootNav.currentState?.overlay?.insert(overlayEntry!);
+    ezRootOverlay?.insert(overlayEntry!);
   }
 
   void removeOverlay() {
     overlayEntry?.remove();
     overlayEntry = null;
   }
-
-  Future<bool?> setAutoDialog(BoxConstraints constraints) => showDialog(
-        context: context,
-        builder: (BuildContext mCon) => EzAlertDialog(
-          widget.config,
-          content: Padding(
-            padding: EdgeInsets.only(top: widget.config.marginVal),
-            child: EzRow(
-              widget.config,
-              reverseHands: false,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                // Hours
-                timeField(
-                  constraints,
-                  ourCon,
-                  ourNode,
-                  () {
-                    minNode.requestFocus();
-                    minCon.selection =
-                        TextSelection(baseOffset: 0, extentOffset: minCon.text.length);
-                  },
-                  useOverlay: false,
-                ),
-                widget.config.rowMargin,
-
-                // Minutes
-                timeField(
-                  constraints,
-                  minCon,
-                  minNode,
-                  () {
-                    secNode.requestFocus();
-                    secCon.selection =
-                        TextSelection(baseOffset: 0, extentOffset: secCon.text.length);
-                  },
-                  useOverlay: false,
-                ),
-                widget.config.rowMargin,
-
-                // Seconds
-                timeField(
-                  constraints,
-                  secCon,
-                  secNode,
-                  () => secNode.unfocus(),
-                  last: true,
-                  useOverlay: false,
-                ),
-              ],
-            ),
-          ),
-          actions: ezActionPair(
-            widget.config,
-            onConfirm: () => Navigator.of(mCon).pop(true),
-            confirmMsg: widget.config.ezL10n.gApply,
-            onDeny: () => Navigator.of(mCon).pop(false),
-            denyMsg: widget.config.ezL10n.gCancel,
-          ),
-          needsClose: false,
-        ),
-      );
 
   // Init //
 
@@ -199,50 +138,6 @@ class _TimerWidgetState extends State<TimerWidget> {
 
   // Return the build //
 
-  Widget timeField(
-    BoxConstraints constraints,
-    TextEditingController controller,
-    FocusNode curr,
-    void Function() onSubmit, {
-    bool last = false,
-    bool useOverlay = true,
-  }) =>
-      EzScrollBlocker(EzTextField(
-        controller: controller,
-        constraints: constraints,
-        errorConstraints: BoxConstraints.tightFor(width: constraints.maxWidth * 2),
-        focusNode: curr,
-        hintText: '00',
-        keyboardType: TextInputType.number,
-        textInputAction: last ? TextInputAction.done : TextInputAction.next,
-        onTap: controller.clear,
-        onTapOutside: (_) {
-          if (controller.text.isEmpty) controller.text = '00';
-        },
-        onChanged: (String value) => useOverlay
-            ? ((value.isEmpty)
-                ? removeOverlay()
-                : ((overlayEntry == null)
-                    ? showOverlay(controller)
-                    : overlayEntry!.markNeedsBuild()))
-            : doNothing(),
-        onEditingComplete: () {
-          if (controller.text.isEmpty) controller.text = '00';
-        },
-        onFieldSubmitted: (String value) {
-          if (value.isEmpty) controller.text = '00';
-          onSubmit.call();
-        },
-        validator: (String? value) {
-          const String failure = '0-99';
-
-          if (value == null) return failure;
-          final int parsed = int.tryParse(value) ?? -1;
-
-          return (parsed > 99 || parsed < 0) ? failure : null;
-        },
-      ));
-
   @override
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
@@ -253,13 +148,9 @@ class _TimerWidgetState extends State<TimerWidget> {
           (2 * widget.config.padding),
     );
 
-    late final _TimerConfig init = _TimerConfig(
-      size: widget._size,
-      setAutoDialog: () => setAutoDialog(numConstraints),
-      ourCon: ourCon,
-      minCon: minCon,
-      secCon: secCon,
-    );
+    void onChanged(String value, TextEditingController tc) => value.isEmpty
+        ? removeOverlay()
+        : ((overlayEntry == null) ? showOverlay(tc) : overlayEntry!.markNeedsBuild());
 
     return EzAnimSwitch(
       widget.config,
@@ -279,35 +170,48 @@ class _TimerWidgetState extends State<TimerWidget> {
 
                       ((ours + mins + secs) > 0)
                           ? await setTimer(<int>[ours, mins, secs])
-                          : await setAutoDialog(numConstraints);
+                          : ezSnackBar(widget.config, context: context, message: 'Invalid time');
                     },
                     onLongPress: () => canToggleMenu(widget.config, controller),
                   )
                 : EzRow(widget.config, children: <Widget>[
                     // Hours
-                    timeField(numConstraints, ourCon, ourNode, () {
-                      removeOverlay();
-                      minNode.requestFocus();
-                      minCon.selection =
-                          TextSelection(baseOffset: 0, extentOffset: minCon.text.length);
-                    }),
+                    _timeField(
+                      constraints: numConstraints,
+                      tc: ourCon,
+                      curr: ourNode,
+                      onChanged: (String s) => onChanged(s, ourCon),
+                      onSubmit: () {
+                        removeOverlay();
+                        minNode.requestFocus();
+                        minCon.selection =
+                            TextSelection(baseOffset: 0, extentOffset: minCon.text.length);
+                      },
+                    ),
                     widget.config.rowMargin,
 
                     // Minutes
-                    timeField(numConstraints, minCon, minNode, () {
-                      removeOverlay();
-                      secNode.requestFocus();
-                      secCon.selection =
-                          TextSelection(baseOffset: 0, extentOffset: secCon.text.length);
-                    }),
+                    _timeField(
+                      constraints: numConstraints,
+                      tc: minCon,
+                      curr: minNode,
+                      onChanged: (String s) => onChanged(s, minCon),
+                      onSubmit: () {
+                        removeOverlay();
+                        secNode.requestFocus();
+                        secCon.selection =
+                            TextSelection(baseOffset: 0, extentOffset: secCon.text.length);
+                      },
+                    ),
                     widget.config.rowMargin,
 
                     // Seconds
-                    timeField(
-                      numConstraints,
-                      secCon,
-                      secNode,
-                      () async {
+                    _timeField(
+                      constraints: numConstraints,
+                      tc: secCon,
+                      curr: secNode,
+                      onChanged: (String s) => onChanged(s, secCon),
+                      onSubmit: () async {
                         removeOverlay();
                         await setTimer(<int>[
                           _toInt(ourCon.text),
@@ -333,40 +237,40 @@ class _TimerWidgetState extends State<TimerWidget> {
                       onLongPress: () => canToggleMenu(widget.config, controller),
                     ),
                   ]),
-            menuChildren: widgetMC(
+            menuChildren: _menuChildren(
               widget.config,
-              widget.appInfo,
-              _EditTimer(
-                widget.config,
-                widget.appInfo,
-                parentCon: context,
-                initConfig: init,
-                lane: widget.pos.lane,
-                index: widget.pos.index,
-              ),
+              appInfo: widget.appInfo,
+              context: context,
+              state: state,
               numLanes: numLanes,
-              lane: widget.pos.lane,
-              index: widget.pos.index,
+              pos: widget.pos,
+              initConfig: _TimerConfig(
+                size: widget._size,
+                fieldCon: numConstraints,
+                ours: _validateTime(ourCon.text),
+                mins: _validateTime(minCon.text),
+                secs: _validateTime(secCon.text),
+              ),
             ),
           ),
         _ => EditContainer(
             widget.config,
             subAlign: widget.pos.subAlign,
             menuControl: menuControl,
-            menuChildren: widgetMC(
+            menuChildren: _menuChildren(
               widget.config,
-              widget.appInfo,
-              _EditTimer(
-                widget.config,
-                widget.appInfo,
-                parentCon: context,
-                initConfig: init,
-                lane: widget.pos.lane,
-                index: widget.pos.index,
-              ),
+              appInfo: widget.appInfo,
+              context: context,
+              state: state,
               numLanes: numLanes,
-              lane: widget.pos.lane,
-              index: widget.pos.index,
+              pos: widget.pos,
+              initConfig: _TimerConfig(
+                size: widget._size,
+                fieldCon: numConstraints,
+                ours: _validateTime(ourCon.text),
+                mins: _validateTime(minCon.text),
+                secs: _validateTime(secCon.text),
+              ),
             ),
             child: EzIconButton(
               widget.config,
@@ -390,23 +294,148 @@ class _TimerWidgetState extends State<TimerWidget> {
   }
 }
 
+List<Widget> _menuChildren(
+  EzCP config, {
+  required AppInfoProvider appInfo,
+  required BuildContext context,
+  required AppState state,
+  required int numLanes,
+  required LimPos pos,
+  required _TimerConfig initConfig,
+}) =>
+    <Widget>[
+      // Edit
+      _EditTimer(
+        config,
+        appInfo,
+        pContext: context,
+        initConfig: initConfig,
+        lane: pos.lane,
+        index: pos.index,
+      ),
+
+      // Dupe
+      EzMenuButton(
+        config,
+        label: 'Duplicate',
+        icon: EzIcon(config, Icons.copy),
+        onPressed: () => appInfo.dupeItem(
+          config,
+          editNew: () async {
+            if (!ezRootIsMounted) return;
+            await _openEdits(
+              config,
+              appInfo: appInfo,
+              pContext: ezRootContext,
+              initConfig: initConfig,
+              lane: pos.lane,
+              index: pos.index,
+            );
+          },
+          lane: pos.lane,
+          index: pos.index,
+        ),
+      ),
+
+      // Move
+      if (state == AppState.groupEdit && numLanes > 1) ...<Widget>[
+        moveDownLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
+        moveUpLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
+      ],
+
+      // Remove
+      removeItem(config, appInfo, lane: pos.lane, index: pos.index),
+    ];
+
+Widget _timeField({
+  required BoxConstraints constraints,
+  required TextEditingController tc,
+  required FocusNode curr,
+  void Function(String)? onChanged,
+  required void Function() onSubmit,
+  bool last = false,
+}) =>
+    EzScrollBlocker(EzTextField(
+      controller: tc,
+      constraints: constraints,
+      errorConstraints: BoxConstraints.tightFor(width: constraints.maxWidth * 2),
+      focusNode: curr,
+      hintText: '00',
+      keyboardType: TextInputType.number,
+      textInputAction: last ? TextInputAction.done : TextInputAction.next,
+      onTap: tc.clear,
+      onTapOutside: (_) {
+        if (tc.text.isEmpty) tc.text = '00';
+      },
+      onChanged: onChanged,
+      onEditingComplete: () {
+        if (tc.text.isEmpty) tc.text = '00';
+      },
+      onFieldSubmitted: (String value) {
+        if (value.isEmpty) tc.text = '00';
+        onSubmit.call();
+      },
+      validator: (String? value) {
+        const String failure = '0-99';
+
+        if (value == null) return failure;
+        final int parsed = int.tryParse(value) ?? -1;
+
+        return (parsed > 99 || parsed < 0) ? failure : null;
+      },
+    ));
+
+String _validateTime(String time) {
+  final int? value = int.tryParse(time);
+  return (value == null) ? '00' : ((value > 99) ? '99' : time);
+}
+
+int _toInt(String time) {
+  final int? value = int.tryParse(time);
+  return (value == null) ? 0 : ((value > 99) ? 99 : value);
+}
+
+//* Add Widget *//
+
 class AddTimer extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
+  final BuildContext pContext;
   final int lane;
-  final WidgetSize save;
-  final WidgetSize preview;
+  final WidgetSize size;
 
   const AddTimer(
-    this.config,
-    this.appInfo,
-    this.lane, {
+    this.config, {
     super.key,
-    required this.save,
-    required this.preview,
+    required this.appInfo,
+    required this.pContext,
+    required this.lane,
+    required this.size,
   });
 
-  void onTap() => appInfo.addTimer(config, lane);
+  void onTap() => appInfo.addWidget(
+        config,
+        type: WidWidGetGet.timer,
+        editNew: () => _openEdits(
+          config,
+          appInfo: appInfo,
+          pContext: pContext,
+          initConfig: _TimerConfig(
+            size: size,
+            fieldCon: BoxConstraints.tightFor(
+              height: appIconSize(config),
+              width: ezTextSize('000', context: pContext, style: config.bodyStyle).width +
+                  (2 * config.padding),
+            ),
+            ours: '00',
+            mins: '00',
+            secs: '00',
+          ),
+          lane: lane,
+          index: appInfo.homeLane(config, lane).length,
+        ),
+        lane: lane,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -422,7 +451,7 @@ class AddTimer extends StatelessWidget {
       validator: null,
     );
 
-    return (preview == WidgetSize.button)
+    return (size == WidgetSize.button)
         ? EzIconButton(config, onPressed: onTap, icon: const Icon(Icons.timer))
         : GestureDetector(
             onTap: onTap,
@@ -447,10 +476,136 @@ class AddTimer extends StatelessWidget {
   }
 }
 
+String defaultTimerEntry() => _timerEntry(WidgetSize.tile, '00:00:00');
+
+String _timerEntry(WidgetSize size, String autoTime) => <String>[
+      size.value,
+      autoTime,
+    ].join(configSplit);
+
+//* Edit Widget *//
+
+class _TimerConfig {
+  final WidgetSize size;
+  final BoxConstraints fieldCon;
+  final String ours;
+  final String mins;
+  final String secs;
+
+  _TimerConfig({
+    required this.size,
+    required this.fieldCon,
+    required this.ours,
+    required this.mins,
+    required this.secs,
+  });
+}
+
+Future<void> _openEdits(
+  EzCP config, {
+  required AppInfoProvider appInfo,
+  required BuildContext pContext,
+  required _TimerConfig initConfig,
+  required int lane,
+  required int index,
+}) async {
+  final TextEditingController ourCon = TextEditingController(text: initConfig.ours);
+  final TextEditingController minCon = TextEditingController(text: initConfig.mins);
+  final TextEditingController secCon = TextEditingController(text: initConfig.secs);
+
+  final FocusNode ourNode = FocusNode();
+  final FocusNode minNode = FocusNode();
+  final FocusNode secNode = FocusNode();
+
+  WidgetSize size = initConfig.size; // TODO: test
+
+  await ezModal(
+    config,
+    context: pContext,
+    builder: (_) => ezModalScroll(config, children: <Widget>[
+      // Size //
+      SegmentedButton<WidgetSize>(
+        segments: const <ButtonSegment<WidgetSize>>[
+          ButtonSegment<WidgetSize>(
+            value: WidgetSize.button,
+            label: Text('Button', textAlign: TextAlign.center),
+          ),
+          ButtonSegment<WidgetSize>(
+            value: WidgetSize.tile,
+            label: Text('Tile', textAlign: TextAlign.center),
+          ),
+        ],
+        selected: <WidgetSize>{size},
+        showSelectedIcon: false,
+        onSelectionChanged: (Set<WidgetSize> selected) => size = selected.first,
+      ),
+      config.spacer,
+
+      // Default time //
+      EzRow(
+        config,
+        reverseHands: false,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          // Hours
+          _timeField(
+            constraints: initConfig.fieldCon,
+            tc: ourCon,
+            curr: ourNode,
+            onSubmit: () {
+              minNode.requestFocus();
+              minCon.selection = TextSelection(baseOffset: 0, extentOffset: minCon.text.length);
+            },
+          ),
+          config.rowMargin,
+
+          // Minutes
+          _timeField(
+            constraints: initConfig.fieldCon,
+            tc: minCon,
+            curr: minNode,
+            onSubmit: () {
+              secNode.requestFocus();
+              secCon.selection = TextSelection(baseOffset: 0, extentOffset: secCon.text.length);
+            },
+          ),
+          config.rowMargin,
+
+          // Seconds
+          _timeField(
+            constraints: initConfig.fieldCon,
+            tc: secCon,
+            curr: secNode,
+            onSubmit: () => secNode.unfocus(),
+            last: true,
+          ),
+        ],
+      ),
+
+      config.separator,
+    ]),
+  );
+
+  await appInfo.updateWidget(
+    config,
+    WidWidGetGet.timer,
+    _timerEntry(
+      size,
+      <String>[
+        _validateTime(ourCon.text),
+        _validateTime(minCon.text),
+        _validateTime(secCon.text),
+      ].join(':'),
+    ),
+    lane: lane,
+    index: index,
+  );
+}
+
 class _EditTimer extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
-  final BuildContext parentCon;
+  final BuildContext pContext;
   final _TimerConfig initConfig;
   final int lane;
   final int index;
@@ -458,96 +613,24 @@ class _EditTimer extends StatelessWidget {
   const _EditTimer(
     this.config,
     this.appInfo, {
-    required this.parentCon,
+    required this.pContext,
     required this.initConfig,
     required this.lane,
     required this.index,
   });
 
   @override
-  Widget build(_) => SubmenuButton(
-        menuChildren: <Widget>[
-          EzMenuButton(
-            config,
-            label: 'Resize',
-            onPressed: () async {
-              final String? choice = await resizeWidgetDialog(config, parentCon, initConfig.size);
-              if (choice == null) return;
-
-              await appInfo.updateWidget(
-                config,
-                WidWidGetGet.timer,
-                TCC.timerEntry(
-                  WSConfig.safeLookup(choice),
-                  <String>[
-                    _validateTime(initConfig.ourCon.text),
-                    _validateTime(initConfig.minCon.text),
-                    _validateTime(initConfig.secCon.text),
-                  ].join(':'),
-                ),
-                lane: lane,
-                index: index,
-              );
-            },
-          ),
-          EzMenuButton(
-            config,
-            label: 'Set auto',
-            onPressed: () async {
-              final String ourBackup = initConfig.ourCon.text;
-              final String minBackup = initConfig.ourCon.text;
-              final String secBackup = initConfig.ourCon.text;
-
-              final bool save = (await initConfig.setAutoDialog() == true);
-              if (save) {
-                await appInfo.updateWidget(
-                  config,
-                  WidWidGetGet.timer,
-                  TCC.timerEntry(
-                    initConfig.size,
-                    <String>[
-                      _validateTime(initConfig.ourCon.text),
-                      _validateTime(initConfig.minCon.text),
-                      _validateTime(initConfig.secCon.text),
-                    ].join(':'),
-                  ),
-                  lane: lane,
-                  index: index,
-                );
-              } else {
-                initConfig.ourCon.text = ourBackup;
-                initConfig.minCon.text = minBackup;
-                initConfig.secCon.text = secBackup;
-              }
-            },
-          ),
-        ],
-        child: EzIcon(config, Icons.edit),
+  Widget build(_) => EzMenuButton(
+        config,
+        label: 'Edit',
+        icon: EzIcon(config, Icons.edit),
+        onPressed: () => _openEdits(
+          config,
+          appInfo: appInfo,
+          pContext: pContext,
+          initConfig: initConfig,
+          lane: lane,
+          index: index,
+        ),
       );
-}
-
-class _TimerConfig {
-  final WidgetSize size;
-  final Future<bool?> Function() setAutoDialog;
-  final TextEditingController ourCon;
-  final TextEditingController minCon;
-  final TextEditingController secCon;
-
-  _TimerConfig({
-    required this.size,
-    required this.setAutoDialog,
-    required this.ourCon,
-    required this.minCon,
-    required this.secCon,
-  });
-}
-
-String _validateTime(String time) {
-  final int? value = int.tryParse(time);
-  return (value == null) ? '00' : ((value > 99) ? '99' : time);
-}
-
-int _toInt(String time) {
-  final int? value = int.tryParse(time);
-  return (value == null) ? 0 : ((value > 99) ? 99 : value);
 }

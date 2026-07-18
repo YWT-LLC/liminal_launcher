@@ -10,6 +10,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
+//* Core Widget *//
+
 class LimSpacer extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
@@ -94,7 +96,7 @@ class _LimSpacerState extends State<LimSpacer> {
       valueListenable: marked,
       builder: (_, (int?, int?) pos, __) =>
           (pos.$1 == widget.pos.lane && pos.$2 == widget.pos.index)
-              ? EditSpacer(widget.config)
+              ? _LiveSpacer(widget.config)
               : EzAnimSwitch(
                   widget.config,
                   mod: 0.667,
@@ -107,40 +109,26 @@ class _LimSpacerState extends State<LimSpacer> {
                             onLongPress: () => canToggleMenu(widget.config, controller),
                             child: SizedBox(height: widget._height, width: widget._width),
                           ),
-                          menuChildren: spacerMC(
+                          menuChildren: _menuChildren(
                             widget.config,
-                            widget.appInfo,
-                            _EditSpacer(
-                              widget.config,
-                              widget.appInfo,
-                              pos: widget.pos,
-                              stateCheck: () => (state == AppState.groupEdit)
-                                  ? widget.resizeCallback.call()
-                                  : doNothing(),
-                            ),
+                            appInfo: widget.appInfo,
+                            state: state,
+                            stateCheck: doNothing,
                             numLanes: numLanes,
-                            lane: widget.pos.lane,
-                            index: widget.pos.index,
+                            pos: widget.pos,
                           ),
                         )
                       : EditContainer(
                           widget.config,
                           subAlign: widget.pos.subAlign,
                           menuControl: menuControl,
-                          menuChildren: spacerMC(
+                          menuChildren: _menuChildren(
                             widget.config,
-                            widget.appInfo,
-                            _EditSpacer(
-                              widget.config,
-                              widget.appInfo,
-                              pos: widget.pos,
-                              stateCheck: () => (state == AppState.groupEdit)
-                                  ? widget.resizeCallback.call()
-                                  : doNothing(),
-                            ),
+                            appInfo: widget.appInfo,
+                            state: state,
+                            stateCheck: widget.resizeCallback,
                             numLanes: numLanes,
-                            lane: widget.pos.lane,
-                            index: widget.pos.index,
+                            pos: widget.pos,
                           ),
                           child: EzIconButton(
                             widget.config,
@@ -159,38 +147,79 @@ class _LimSpacerState extends State<LimSpacer> {
   }
 }
 
-class _EditSpacer extends StatelessWidget {
+List<Widget> _menuChildren(
+  EzCP config, {
+  required AppInfoProvider appInfo,
+  required AppState state,
+  required void Function() stateCheck,
+  required int numLanes,
+  required LimPos pos,
+}) =>
+    <Widget>[
+      // Edit
+      _EditSpacer(config, appInfo, pos: pos, stateCheck: stateCheck),
+
+      // Dupe
+      EzMenuButton(
+        config,
+        label: 'Duplicate',
+        icon: EzIcon(config, Icons.copy),
+        onPressed: () => appInfo.dupeItem(
+          config,
+          editNew: () async {
+            if (!ezRootIsMounted) return;
+            await editSpacer(
+              config,
+              appInfo: appInfo,
+              context: ezRootContext,
+              lane: pos.lane,
+              index: pos.index,
+            );
+          },
+          lane: pos.lane,
+          index: pos.index,
+        ),
+      ),
+
+      // Move
+      if (state == AppState.groupEdit && numLanes > 1) ...<Widget>[
+        moveDownLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
+        moveUpLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
+      ],
+
+      // Remove
+      removeItem(config, appInfo, lane: pos.lane, index: pos.index),
+    ];
+
+//* Add Widget *//
+
+class _LiveSpacer extends StatelessWidget {
   final EzCP config;
-  final AppInfoProvider appInfo;
 
-  final LimPos pos;
-  final void Function() stateCheck;
-
-  const _EditSpacer(
-    this.config,
-    this.appInfo, {
-    required this.pos,
-    required this.stateCheck,
-  });
+  const _LiveSpacer(this.config);
 
   @override
-  Widget build(_) => EzMenuButton(
-        config,
-        onPressed: () async {
-          if (ezRootNav.currentContext == null || !ezRootNav.currentContext!.mounted) return;
-
-          stateCheck.call();
-          await editSpacer(
-            config,
-            appInfo: appInfo,
-            context: ezRootNav.currentContext!,
-            lane: pos.lane,
-            index: pos.index,
-          );
-        },
-        icon: EzIcon(config, Icons.edit),
+  Widget build(_) => ValueListenableBuilder<double>(
+        valueListenable: editSpacerHeight,
+        builder: (_, double height, __) => ValueListenableBuilder<double>(
+          valueListenable: editSpacerWidth,
+          builder: (_, double width, __) => Container(
+            decoration: BoxDecoration(
+              color: config.colors.secondary.withValues(alpha: focusOpacity),
+              borderRadius: EzButtonShape.roundRect.radius,
+              border: Border.all(
+                color: config.colors.secondary,
+                width: config.borderWidth,
+              ),
+            ),
+            height: height,
+            width: width,
+          ),
+        ),
       );
 }
+
+//* Edit Widget *//
 
 Future<void> editSpacer(
   EzCP config, {
@@ -636,7 +665,7 @@ Future<void> editSpacer(
     }),
   );
 
-  ezRootNav.currentState?.overlay?.insert(overlayEntry);
+  ezRootOverlay?.insert(overlayEntry);
   final bool? keep = await completer.future;
 
   await ezNoTouch(() async {
@@ -652,4 +681,37 @@ Future<void> editSpacer(
             index: currIndex,
           );
   });
+}
+
+class _EditSpacer extends StatelessWidget {
+  final EzCP config;
+  final AppInfoProvider appInfo;
+
+  final LimPos pos;
+  final void Function() stateCheck;
+
+  const _EditSpacer(
+    this.config,
+    this.appInfo, {
+    required this.pos,
+    required this.stateCheck,
+  });
+
+  @override
+  Widget build(_) => EzMenuButton(
+        config,
+        onPressed: () async {
+          if (!ezRootIsMounted) return;
+
+          stateCheck.call();
+          await editSpacer(
+            config,
+            appInfo: appInfo,
+            context: ezRootContext,
+            lane: pos.lane,
+            index: pos.index,
+          );
+        },
+        icon: EzIcon(config, Icons.edit),
+      );
 }

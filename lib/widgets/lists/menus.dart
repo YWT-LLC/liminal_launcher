@@ -6,158 +6,11 @@
 import '../../utils/export.dart';
 
 import 'package:flutter/material.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
-// TODO: don't sub-menu? just leave it all out? iff yes, add confirm to delete/uninstall/etc(?)
-// TODO: more words - there's only one on screen, you have plenty of space (and it ignores the parent constraints)
-// TODO: only show nav buttons when editing
+// TODO: make sure you have confirms on everthing that needs it
 
-List<Widget> appMC(
-  EzCP config,
-  AppInfoProvider appInfo, {
-  required BuildContext context,
-  Widget? edit,
-  List<Widget>? local,
-  required int numLanes,
-  required int? lane,
-  required int? index,
-  required AppInfo app,
-  required bool homeTile,
-}) =>
-    (lane != null && index != null)
-        ? _tileMC(
-            config,
-            appInfo,
-            edit: edit,
-            configure: _configureApp(config, appInfo,
-                context: context, lane: lane, index: index, app: app, homeTile: homeTile),
-            local: local,
-            numLanes: homeTile ? numLanes : -1,
-            lane: lane,
-            index: index,
-          )
-        : _miniTileMC(
-            config,
-            appInfo,
-            edit: edit,
-            configure: _configureApp(config, appInfo,
-                context: context, lane: lane, index: index, app: app, homeTile: homeTile),
-            local: local,
-          );
-
-Widget _configureApp(
-  EzCP config,
-  AppInfoProvider appInfo, {
-  required BuildContext context,
-  required int? lane,
-  required int? index,
-  required AppInfo app,
-  required bool homeTile,
-}) =>
-    SubmenuButton(
-      menuChildren: <Widget>[
-        // Info
-        EzMenuButton(
-          config,
-          label: 'Info',
-          icon: EzIcon(config, Icons.info),
-          onPressed: () async {
-            if (!homeTile && context.mounted) Navigator.of(context).pop();
-            await openAppSettings(app);
-          },
-        ),
-
-        // Dupe
-        if (homeTile)
-          EzMenuButton(
-            config,
-            label: 'Duplicate',
-            icon: EzIcon(config, Icons.copy),
-            onPressed: () async {
-              await appInfo.dupeItem(
-                config,
-                editNew: blarg,
-                lane: lane!,
-                index: index!,
-              );
-            },
-          ),
-
-        // Show/hide
-        appInfo.hidden(config).contains(app.id)
-            ? EzMenuButton(
-                config,
-                label: 'Show',
-                icon: EzIcon(config, Icons.visibility),
-                onPressed: () async => await appInfo.showApp(config, app.id),
-              )
-            : EzMenuButton(
-                config,
-                label: 'Hide',
-                icon: EzIcon(config, Icons.visibility_off),
-                onPressed: () async => await appInfo.hideApp(config, context, app.id),
-              ),
-
-        // Banish
-        EzMenuButton(
-          config,
-          label: 'Banish',
-          icon: EzIcon(config, LineIcons.ghost),
-          onPressed: () async => await appInfo.banishApp(config, context, app.id),
-        ),
-
-        // Uninstall
-        if (app.removable)
-          EzMenuButton(
-            config,
-            label: 'Uninstall',
-            icon: EzIcon(config, Icons.delete),
-            onPressed: () async => await openDelete(app),
-          ),
-      ],
-      child: EzIcon(config, Icons.build),
-    );
-
-Widget _configureOther(
-  EzCP config,
-  AppInfoProvider appInfo, {
-  required int lane,
-  required int index,
-}) =>
-    EzMenuButton(
-      config,
-      label: 'Duplicate',
-      icon: EzIcon(config, Icons.copy),
-      onPressed: () async {
-        await appInfo.dupeItem(
-          config,
-          editNew: blarg,
-          lane: lane,
-          index: index,
-        );
-      },
-    );
-
-List<Widget> folderMC(
-  EzCP config,
-  AppInfoProvider appInfo,
-  Widget edit, {
-  required int numLanes,
-  required int lane,
-  required int index,
-}) =>
-    _tileMC(
-      config,
-      appInfo,
-      configure: _configureOther(config, appInfo, lane: lane, index: index),
-      edit: edit,
-      numLanes: numLanes,
-      lane: lane,
-      index: index,
-    );
-
-Widget _moveDownLane(
+Widget moveDownLane(
   EzCP config,
   AppInfoProvider appInfo, {
   required int numLanes,
@@ -167,6 +20,7 @@ Widget _moveDownLane(
     EzMenuButton(
       config,
       enabled: lane != 0,
+      label: 'Move',
       icon: EzIcon(
         config,
         standardFlow(config) ? Icons.keyboard_arrow_left : Icons.keyboard_arrow_right,
@@ -174,7 +28,7 @@ Widget _moveDownLane(
       onPressed: () => appInfo.moveItemDownLane(config, lane: lane, index: index),
     );
 
-Widget _moveUpLane(
+Widget moveUpLane(
   EzCP config,
   AppInfoProvider appInfo, {
   required int numLanes,
@@ -184,6 +38,7 @@ Widget _moveUpLane(
     EzMenuButton(
       config,
       enabled: lane < (numLanes - 1),
+      label: 'Move',
       icon: EzIcon(
         config,
         standardFlow(config) ? Icons.keyboard_arrow_right : Icons.keyboard_arrow_left,
@@ -191,25 +46,7 @@ Widget _moveUpLane(
       onPressed: () => appInfo.moveItemUpLane(config, lane: lane, index: index),
     );
 
-List<Widget> spacerMC(
-  EzCP config,
-  AppInfoProvider appInfo,
-  Widget edit, {
-  required int numLanes,
-  required int lane,
-  required int index,
-}) =>
-    _tileMC(
-      config,
-      appInfo,
-      configure: _configureOther(config, appInfo, lane: lane, index: index),
-      edit: edit,
-      numLanes: numLanes,
-      lane: lane,
-      index: index,
-    );
-
-Widget _removeItem(
+Widget removeItem(
   EzCP config,
   AppInfoProvider appInfo, {
   required int lane,
@@ -217,71 +54,7 @@ Widget _removeItem(
 }) =>
     EzMenuButton(
       config,
+      label: 'Remove',
       icon: EzIcon(config, Icons.remove),
       onPressed: () => appInfo.removeItem(config, lane: lane, index: index),
-    );
-
-List<Widget> _tileMC(
-  EzCP config,
-  AppInfoProvider appInfo, {
-  required Widget configure,
-  Widget? edit,
-  List<Widget>? local,
-  required int numLanes,
-  required int lane,
-  required int index,
-}) =>
-    local == null
-        ? (numLanes > 1)
-            ? <Widget>[
-                _moveDownLane(config, appInfo, numLanes: numLanes, lane: lane, index: index),
-                configure,
-                if (edit != null) edit,
-                _removeItem(config, appInfo, lane: lane, index: index),
-                _moveUpLane(config, appInfo, numLanes: numLanes, lane: lane, index: index),
-              ]
-            : <Widget>[
-                configure,
-                if (edit != null) edit,
-                if (numLanes > 0) _removeItem(config, appInfo, lane: lane, index: index),
-              ] // > 0 is specifically for appMC
-        : <Widget>[
-            configure,
-            if (edit != null) edit,
-            _removeItem(config, appInfo, lane: lane, index: index),
-            ...local,
-          ];
-
-/// When there's no lane/index info
-List<Widget> _miniTileMC(
-  EzCP config,
-  AppInfoProvider appInfo, {
-  Widget? edit,
-  Widget? configure,
-  List<Widget>? local,
-}) =>
-    <Widget>[
-      if (configure != null) configure,
-      if (edit != null) edit,
-      if (local != null) ...local,
-    ];
-
-List<Widget> widgetMC(
-  EzCP config,
-  AppInfoProvider appInfo,
-  Widget edit, {
-  List<Widget>? local,
-  required int numLanes,
-  required int lane,
-  required int index,
-}) =>
-    _tileMC(
-      config,
-      appInfo,
-      configure: _configureOther(config, appInfo, lane: lane, index: index),
-      edit: edit,
-      local: local,
-      numLanes: numLanes,
-      lane: lane,
-      index: index,
     );

@@ -10,6 +10,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
 
+//* Core Widget *//
+
 class ToggleMediaWidget extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
@@ -32,8 +34,7 @@ class ToggleMediaWidget extends StatefulWidget {
         .split(widgetSplit)[1]
         .split(configSplit);
 
-    late final WidgetSize storedWS = WSConfig.safeLookup(data[0]);
-    _size = (storedWS == WidgetSize.system) ? bt2WS(config) : storedWS;
+    _size = WSConfig.safeLookup(data[0]);
   }
 
   @override
@@ -116,40 +117,28 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
               onPressed: (widget._size == WidgetSize.button) ? toggleMedia : doNothing,
               onLongPress: () => canToggleMenu(widget.config, controller),
             ),
-            menuChildren: widgetMC(
+            menuChildren: _menuChildren(
               widget.config,
-              widget.appInfo,
-              _EditTM(
-                widget.config,
-                widget.appInfo,
-                parentCon: context,
-                initSize: widget._size,
-                lane: widget.pos.lane,
-                index: widget.pos.index,
-              ),
+              appInfo: widget.appInfo,
+              context: context,
+              state: state,
               numLanes: numLanes,
-              lane: widget.pos.lane,
-              index: widget.pos.index,
+              pos: widget.pos,
+              initSize: widget._size,
             ),
           ),
         _ => EditContainer(
             widget.config,
             subAlign: widget.pos.subAlign,
             menuControl: menuControl,
-            menuChildren: widgetMC(
+            menuChildren: _menuChildren(
               widget.config,
-              widget.appInfo,
-              _EditTM(
-                widget.config,
-                widget.appInfo,
-                parentCon: context,
-                initSize: widget._size,
-                lane: widget.pos.lane,
-                index: widget.pos.index,
-              ),
+              appInfo: widget.appInfo,
+              context: context,
+              state: state,
               numLanes: numLanes,
-              lane: widget.pos.lane,
-              index: widget.pos.index,
+              pos: widget.pos,
+              initSize: widget._size,
             ),
             child: EzIconButton(
               widget.config,
@@ -168,29 +157,78 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
   }
 }
 
+List<Widget> _menuChildren(
+  EzCP config, {
+  required AppInfoProvider appInfo,
+  required BuildContext context,
+  required AppState state,
+  required int numLanes,
+  required LimPos pos,
+  required WidgetSize initSize,
+}) =>
+    <Widget>[
+      // Edit
+      _EditTM(
+        config,
+        appInfo,
+        initSize: initSize,
+        lane: pos.lane,
+        index: pos.index,
+      ),
+
+      // Dupe
+      EzMenuButton(
+        config,
+        label: 'Duplicate',
+        icon: EzIcon(config, Icons.copy),
+        onPressed: () => appInfo.dupeItem(
+          config,
+          editNew: null,
+          lane: pos.lane,
+          index: pos.index,
+        ),
+      ),
+
+      // Move
+      if (state == AppState.groupEdit && numLanes > 1) ...<Widget>[
+        moveDownLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
+        moveUpLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
+      ],
+
+      // Remove
+      removeItem(config, appInfo, lane: pos.lane, index: pos.index),
+    ];
+
+//* Add Widget *//
+
 class AddToggleMedia extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
+  final BuildContext pContext;
   final int lane;
-  final WidgetSize save;
-  final WidgetSize preview;
+  final WidgetSize size;
 
   const AddToggleMedia(
-    this.config,
-    this.appInfo,
-    this.lane, {
+    this.config, {
     super.key,
-    required this.save,
-    required this.preview,
+    required this.appInfo,
+    required this.pContext,
+    required this.lane,
+    required this.size,
   });
 
-  void onTap() => appInfo.addToggleMedia(config, lane);
+  void onTap() => appInfo.addWidget(
+        config,
+        type: WidWidGetGet.toggleMedia,
+        editNew: null,
+        lane: lane,
+      );
 
   @override
   Widget build(BuildContext context) => EzIconButton(
         config,
         onPressed: onTap,
-        icon: (preview == WidgetSize.button)
+        icon: (size == WidgetSize.button)
             ? const Icon(Icons.headphones)
             : EzRow(config, children: <Widget>[
                 config.rowMargin,
@@ -204,10 +242,30 @@ class AddToggleMedia extends StatelessWidget {
       );
 }
 
+String defaultMediaEntry() => _mediaEntry(WidgetSize.tile);
+
+String _mediaEntry(WidgetSize size) => <String>[size.value].join(configSplit);
+
+//* Edit Widget *//
+
+Future<void> _quickResize(
+  EzCP config, {
+  required AppInfoProvider appInfo,
+  required WidgetSize initSize,
+  required int lane,
+  required int index,
+}) async =>
+    await appInfo.updateWidget(
+      config,
+      WidWidGetGet.toggleMedia,
+      _mediaEntry(initSize == WidgetSize.tile ? WidgetSize.button : WidgetSize.tile),
+      lane: lane,
+      index: index,
+    );
+
 class _EditTM extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
-  final BuildContext parentCon;
   final WidgetSize initSize;
   final int lane;
   final int index;
@@ -215,7 +273,6 @@ class _EditTM extends StatelessWidget {
   const _EditTM(
     this.config,
     this.appInfo, {
-    required this.parentCon,
     required this.initSize,
     required this.lane,
     required this.index,
@@ -226,17 +283,12 @@ class _EditTM extends StatelessWidget {
         config,
         label: 'Resize',
         icon: EzIcon(config, Icons.edit),
-        onPressed: () async {
-          final String? choice = await resizeWidgetDialog(config, parentCon, initSize);
-          if (choice == null) return;
-
-          await appInfo.updateWidget(
-            config,
-            WidWidGetGet.toggleMedia,
-            TCC.mediaEntry(WSConfig.safeLookup(choice)),
-            lane: lane,
-            index: index,
-          );
-        },
+        onPressed: () => _quickResize(
+          config,
+          appInfo: appInfo,
+          initSize: initSize,
+          lane: lane,
+          index: index,
+        ),
       );
 }

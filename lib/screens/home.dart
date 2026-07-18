@@ -3,12 +3,11 @@
  * See LICENSE for distribution and usage details.
  */
 
+// TODO: should I add/move delete to edit? would certainly pair well with the editNew (undo with extra steps)... potential saved space as well
+// TODO: sit down and do the math for pixel perfect header spacing
+// TODO: delta should be too when !standardFlow
 // TODO: get the manifest exactly how you want it - be cognizant of SafeArea usage as you do
 //       at least, the app list should draw underneath the nav bar... not sure what else. maybe everything, maybe nothing
-
-// TODO: sit down and do the math for pixel perfect header spacing
-
-// TODO: delta should be too when !standardFlow
 
 import '../screens/export.dart';
 import '../utils/export.dart';
@@ -113,7 +112,25 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       ListContent.banished,
                     },
                     include: false,
-                    onSelected: (AppInfo app) => appInfo.addApp(config, lane: lane, id: app.id),
+                    onSelected: (AppInfo app) => appInfo.addApp(
+                      config,
+                      id: app.id,
+                      lane: lane,
+                      editNew: () => editApp(
+                        config,
+                        appInfo: appInfo,
+                        pContext: context,
+                        initConfig: AppConfig(
+                          app: app,
+                          name: app.label,
+                          icon: null,
+                          buttonType: null,
+                          labelType: null,
+                        ),
+                        lane: lane,
+                        index: appInfo.homeLane(config, lane).length,
+                      ),
+                    ),
                     title: EzTextIconButton(
                       config,
                       onPressed: doNothing,
@@ -133,7 +150,24 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
               padding: EzInsets.wrap(config.spacing),
               child: EzElevatedIconButton(
                 config,
-                onPressed: () => appInfo.addFolder(config, lane),
+                onPressed: () => appInfo.addFolder(
+                  config,
+                  lane: lane,
+                  editNew: () => editFolder(
+                    config,
+                    appInfo: appInfo,
+                    pContext: context,
+                    initConfig: FolderConfig(
+                      name: 'Folder',
+                      icon: Icons.folder_outlined,
+                      buttonType: null,
+                      labelType: null,
+                      appList: <String>[],
+                    ),
+                    lane: lane,
+                    index: appInfo.homeLane(config, lane).length,
+                  ),
+                ),
                 label: 'Folder',
                 icon: EzIcon(config, Icons.folder_outlined),
               ),
@@ -145,21 +179,29 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
               child: EzElevatedIconButton(
                 config,
                 onPressed: () => ezModal(config, context: context, builder: (_) {
-                  WidgetSize size = WidgetSize.system;
-                  WidgetSize preview = bt2WS(config);
+                  WidgetSize size = WidgetSize.tile;
 
                   return StatefulBuilder(
                     builder: (BuildContext wmCon, StateSetter setModal) =>
                         ezModalScroll(config, children: <Widget>[
                       // Clock
-                      AddClock(config, appInfo, lane, hAlign: hAlign, vAlign: vAlign),
+                      AddClock(
+                        config,
+                        appInfo: appInfo,
+                        pContext: context,
+                        lane: lane,
+                        hAlign: hAlign,
+                        vAlign: vAlign,
+                      ),
+
+                      // Divider (con size selector)
                       EzTitledDivider(
                         constraints: BoxConstraints(maxWidth: widthOf(wmCon) / 2),
                         EzDropdownMenu<WidgetSize>(
                           config,
                           enableSearch: false,
                           initialSelection: size,
-                          widthEntry: WidgetSize.system.value,
+                          widthEntry: WidgetSize.button.value,
                           dropdownMenuEntries: WidgetSize.values
                               .map((WidgetSize ws) => DropdownMenuEntry<WidgetSize>(
                                     value: ws,
@@ -168,10 +210,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                               .toList(),
                           onSelected: (WidgetSize? choice) {
                             if (choice == null) return;
-                            size = choice;
-                            preview = (choice == WidgetSize.system) ? bt2WS(config) : choice;
-
-                            setModal(() {});
+                            setModal(() => size = choice);
                           },
                         ),
                         height: config.spacing * 2,
@@ -180,23 +219,51 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       config.spacer,
 
                       // Calendar
-                      AddCalendar(config, appInfo, lane, save: size, preview: preview),
+                      AddCalendar(
+                        config,
+                        appInfo: appInfo,
+                        lane: lane,
+                        size: size,
+                      ),
                       config.spacer,
 
                       // Search
-                      AddSearch(config, appInfo, lane, save: size, preview: preview),
+                      AddSearch(
+                        config,
+                        appInfo: appInfo,
+                        pContext: context,
+                        lane: lane,
+                        size: size,
+                      ),
                       config.spacer,
 
                       // Timer
-                      AddTimer(config, appInfo, lane, save: size, preview: preview),
+                      AddTimer(
+                        config,
+                        appInfo: appInfo,
+                        pContext: context,
+                        lane: lane,
+                        size: size,
+                      ),
                       config.spacer,
 
                       // Toggle media
-                      AddToggleMedia(config, appInfo, lane, save: size, preview: preview),
+                      AddToggleMedia(
+                        config,
+                        appInfo: appInfo,
+                        pContext: context,
+                        lane: lane,
+                        size: size,
+                      ),
                       config.spacer,
 
                       // Theme mode
-                      AddThemeMode(config, appInfo, lane, save: size, preview: preview),
+                      AddThemeMode(
+                        config,
+                        appInfo: appInfo,
+                        lane: lane,
+                        size: size,
+                      ),
                       config.separator,
                     ]),
                   );
@@ -205,7 +272,6 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                 icon: EzIcon(config, Icons.widgets),
               ),
             ),
-            // TODO: put the size label back on the dropdown
 
             // Spacer
             Padding(
@@ -400,7 +466,7 @@ Or, something in-between.''',
     );
 
     Overlay.of(context).insert(pagePosEntry!);
-    pagePosTimer = Timer(_showTime, _clearPagePos);
+    pagePosTimer = Timer(const Duration(seconds: 1), _clearPagePos);
   }
 
   void _clearPagePos() {
@@ -457,9 +523,7 @@ Or, something in-between.''',
               listContent: <ListContent>{ListContent.hidden, ListContent.banished},
               include: false,
               onSelected: (AppInfo app) async {
-                if (ezRootNav.currentContext!.mounted) {
-                  Navigator.of(ezRootNav.currentContext!).pop();
-                }
+                if (ezRootIsMounted) Navigator.of(ezRootContext).pop();
                 await launchApp(app);
               },
               title: null,
@@ -486,9 +550,7 @@ Or, something in-between.''',
           listContent: <ListContent>{ListContent.hidden},
           include: true,
           onSelected: (AppInfo app) async {
-            if (ezRootNav.currentContext!.mounted) {
-              Navigator.of(ezRootNav.currentContext!).pop();
-            }
+            if (ezRootIsMounted) Navigator.of(ezRootContext).pop();
             await launchApp(app);
           },
           title: EzTextIconButton(
@@ -632,10 +694,9 @@ Or, something in-between.''',
                 header: LaneHeader(
                   config,
                   appInfo: appInfo,
-                  lane: lane,
+                  pContext: context,
                   numLanes: numLanes,
-                  hAlign: hAlign,
-                  vAlign: vAlign,
+                  pos: LimPos(lane: lane, index: -1, hAlign: hAlign, vAlign: vAlign),
                   addModal: addModal,
                   navPageDown: pages(config) ? () => navPageDown(config, appInfo, numLanes) : null,
                   navPageUp: pages(config) ? () => navPageUp(config, appInfo, numLanes) : null,
@@ -730,6 +791,7 @@ Or, something in-between.''',
       child:
           Consumer2<EzCP, AppInfoProvider>(builder: (_, EzCP config, AppInfoProvider appInfo, __) {
         final int numLanes = appInfo.numLanes(config);
+        final double headerSpacing = config.iconSize + config.padding + (config.spacing / 2);
 
         return LiminalScaffold(
           config,
@@ -857,7 +919,7 @@ Or, something in-between.''',
                 builder: (_, double ripple, __) => Padding(
                   padding: editing
                       ? EdgeInsets.zero
-                      : EdgeInsets.only(top: appIconSize(config) * (ripple % 1.0)),
+                      : EdgeInsets.only(top: headerSpacing * (ripple % 1.0)),
                   child: pages(config)
                       ? EzFauxCarousel(
                           config,
@@ -892,8 +954,6 @@ Or, something in-between.''',
     );
   }
 }
-
-const Duration _showTime = Duration(seconds: 1);
 
 Future<void> _welcome(EzCP config, BuildContext context) => ezModal(
       config,

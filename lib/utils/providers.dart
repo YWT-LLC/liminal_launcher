@@ -64,10 +64,11 @@ class AppInfoProvider extends ChangeNotifier {
 
               if (uninstalled.isNotEmpty) {
                 for (final AppInfo app in uninstalled) {
-                  if (ezRootNav.currentContext != null && ezRootNav.currentContext!.mounted) {
+                  if (ezRootIsMounted) {
                     await ezSnackBar(
-                      configWatcher(ezRootNav.currentContext!),
-                      context: ezRootNav.currentContext!,
+                      configWatcher(ezRootContext),
+                      context: ezRootContext,
+                      // TODO: how much of this is there? could b v annoying, might need a fix
                       message: 'Removing ${app.label}',
                     ).closed;
                   }
@@ -128,7 +129,10 @@ class AppInfoProvider extends ChangeNotifier {
   Timer? _addedTimer;
   OverlayEntry? _addedEntry;
 
-  Future<void> _added(EzCP config, Future<void> Function() editNew) async {
+  Future<void> _added(
+    EzCP config, {
+    required Future<void> Function()? editNew,
+  }) async {
     if (_addedTimer?.isActive ?? false) _clearAdded();
 
     final double size = appIconSize(config) + config.marginVal;
@@ -149,14 +153,20 @@ class AppInfoProvider extends ChangeNotifier {
                   size: Size(size, size),
                   painter: EzCountdownPainter(progress, config.colors.secondaryContainer),
                 ),
-                EzIconButton(
-                  config,
-                  icon: Icon(progress > 0.25 ? Icons.edit : Icons.check),
-                  onPressed: () async {
-                    _clearAdded();
-                    await editNew(); // TODO: test
-                  },
-                ),
+                (editNew != null)
+                    ? EzIconButton(
+                        config,
+                        icon: Icon(progress > 0.25 ? Icons.edit : Icons.check),
+                        onPressed: () async {
+                          _clearAdded();
+                          await editNew(); // TODO: test
+                        },
+                      )
+                    : EzIconButton(
+                        config,
+                        icon: const Icon(Icons.check),
+                        onPressed: _clearAdded,
+                      ),
               ]),
             ),
           ),
@@ -164,7 +174,7 @@ class AppInfoProvider extends ChangeNotifier {
       ),
     );
 
-    ezRootNav.currentState?.overlay?.insert(_addedEntry!);
+    ezRootOverlay?.insert(_addedEntry!);
     _addedTimer = Timer(breatheTime, _clearAdded);
   }
 
@@ -183,24 +193,22 @@ class AppInfoProvider extends ChangeNotifier {
   /// Shows added overlay
   Future<void> addApp(
     EzCP config, {
-    required Future<void> Function() editNew,
     required int lane,
     required String id,
+    required Future<void> Function() editNew,
   }) async {
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane]
-          .add(<String>[id, appEntry(id.split(idSplit)[1], null, null, null)].join(idSplit));
+      _darkHomeMatrix[lane].add(<String>[id, defaultAppEntry(id.split(idSplit)[1])].join(idSplit));
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane]
-          .add(<String>[id, appEntry(id.split(idSplit)[1], null, null, null)].join(idSplit));
+      _lightHomeMatrix[lane].add(<String>[id, defaultAppEntry(id.split(idSplit)[1])].join(idSplit));
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
     notifyListeners();
-    unawaited(_added(config, editNew));
+    unawaited(_added(config, editNew: editNew));
   }
 
   /// Does notify
@@ -208,7 +216,7 @@ class AppInfoProvider extends ChangeNotifier {
   Future<void> addWidget(
     EzCP config, {
     required WidWidGetGet type,
-    required Future<void> Function() editNew,
+    required Future<void> Function()? editNew,
     required int lane,
   }) async {
     // Must be a function! (or twice local like the others)
@@ -235,15 +243,15 @@ class AppInfoProvider extends ChangeNotifier {
     }
 
     notifyListeners();
-    unawaited(_added(config, editNew));
+    unawaited(_added(config, editNew: editNew));
   }
 
   /// Does notify
   /// Shows added overlay
   Future<void> addFolder(
     EzCP config, {
-    required Future<void> Function() editNew,
     required int lane,
+    required Future<void> Function() editNew,
   }) async {
     if (interlinked || config.isDark) {
       _darkHomeMatrix[lane].add(<String>['Folder', defaultFolderEntry()].join(folderSplit));
@@ -256,7 +264,7 @@ class AppInfoProvider extends ChangeNotifier {
     }
 
     notifyListeners();
-    unawaited(_added(config, editNew));
+    unawaited(_added(config, editNew: editNew));
   }
 
   /// Does notify
@@ -300,7 +308,7 @@ class AppInfoProvider extends ChangeNotifier {
 
   /// Does notify
   /// Shows added overlay
-  Future<void> addLane(EzCP config, {required Future<void> Function() editNew}) async {
+  Future<void> addLane(EzCP config) async {
     if (interlinked || config.isDark) {
       _darkHomeMatrix.add(<String>[defaultLaneEntry()]);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
@@ -312,16 +320,16 @@ class AppInfoProvider extends ChangeNotifier {
     }
 
     notifyListeners();
-    unawaited(_added(config, editNew));
+    unawaited(_added(config, editNew: null));
   }
 
   /// Does notify
   /// Shows added overlay
   Future<void> dupeItem(
     EzCP config, {
-    required Future<void> Function() editNew,
     required int lane,
     required int index,
+    required Future<void> Function()? editNew,
   }) async {
     if (interlinked || config.isDark) {
       _darkHomeMatrix[lane].insert(index, _darkHomeMatrix[lane][index]);
@@ -334,15 +342,15 @@ class AppInfoProvider extends ChangeNotifier {
     }
 
     notifyListeners();
-    unawaited(_added(config, editNew));
+    unawaited(_added(config, editNew: editNew));
   }
 
   /// Does notify
   /// Shows added overlay
   Future<void> dupeLane(
     EzCP config, {
-    required Future<void> Function() editNew,
     required int lane,
+    required Future<void> Function() editNew,
   }) async {
     if (interlinked || config.isDark) {
       _darkHomeMatrix.insert(lane, List<String>.from(_darkHomeMatrix[lane]));
@@ -355,7 +363,7 @@ class AppInfoProvider extends ChangeNotifier {
     }
 
     notifyListeners();
-    unawaited(_added(config, editNew));
+    unawaited(_added(config, editNew: editNew));
   }
 
   // Patch //
@@ -681,9 +689,9 @@ class AppInfoProvider extends ChangeNotifier {
       if (!_darkHidden.contains(id)) return false;
       final bool worthAsk = !batch && !interlinked && _lightHidden.contains(id);
 
-      if (worthAsk && ezRootNav.currentContext != null && ezRootNav.currentContext!.mounted) {
+      if (worthAsk && ezRootIsMounted) {
         await showDialog(
-          context: ezRootNav.currentContext!,
+          context: ezRootContext,
           builder: (BuildContext dCon) => EzAlertDialog(
             config,
             title: const Text('Want to...', textAlign: TextAlign.center),
@@ -716,9 +724,9 @@ class AppInfoProvider extends ChangeNotifier {
       if (!_lightHidden.contains(id)) return false;
       final bool worthAsk = !batch && !interlinked && _darkHidden.contains(id);
 
-      if (worthAsk && ezRootNav.currentContext != null && ezRootNav.currentContext!.mounted) {
+      if (worthAsk && ezRootIsMounted) {
         await showDialog(
-          context: ezRootNav.currentContext!,
+          context: ezRootContext,
           builder: (BuildContext dCon) => EzAlertDialog(
             config,
             title: const Text('Want to...', textAlign: TextAlign.center),
