@@ -6,7 +6,7 @@
 import './export.dart';
 
 import 'package:flutter/services.dart';
-import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
+import 'package:open_ui/open_ui.dart';
 
 const MethodChannel platform = MethodChannel('$androidPackage/query');
 
@@ -17,8 +17,9 @@ Future<List<AppInfo>> getApps() async {
     final List<dynamic>? appData = await platform.invokeMethod('getApps');
     if (appData == null) return <AppInfo>[];
 
-    final List<AppInfo> apps =
-        appData.map((dynamic app) => AppInfo.fromMap(Map<String, dynamic>.from(app))).toList();
+    final List<AppInfo> apps = appData
+        .map((dynamic app) => AppInfo.fromMap(Map<String, dynamic>.from(app)))
+        .toList();
     apps.remove(self);
 
     return apps;
@@ -30,10 +31,7 @@ Future<List<AppInfo>> getApps() async {
 
 Future<void> launchApp(AppInfo app) async {
   try {
-    await platform.invokeMethod(
-      'launchApp',
-      <String, dynamic>{'packageName': app.package},
-    );
+    await platform.invokeMethod('launchApp', <String, dynamic>{'packageName': app.package});
   } catch (e) {
     ezLog('Failed to launch ${app.package}: $e');
   }
@@ -41,10 +39,7 @@ Future<void> launchApp(AppInfo app) async {
 
 Future<void> openAppSettings(AppInfo app) async {
   try {
-    await platform.invokeMethod(
-      'openAppSettings',
-      <String, dynamic>{'packageName': app.package},
-    );
+    await platform.invokeMethod('openAppSettings', <String, dynamic>{'packageName': app.package});
   } catch (e) {
     ezLog('Failed to open ${app.package} settings: $e');
   }
@@ -60,10 +55,7 @@ Future<void> openSystemSettings() async {
 
 Future<void> openDelete(AppInfo app) async {
   try {
-    await platform.invokeMethod(
-      'deleteApp',
-      <String, dynamic>{'packageName': app.package},
-    );
+    await platform.invokeMethod('deleteApp', <String, dynamic>{'packageName': app.package});
   } catch (e) {
     ezLog('Failed to delete ${app.package}: $e');
   }
@@ -73,10 +65,7 @@ Future<void> openDelete(AppInfo app) async {
 
 Future<bool> createCalendarEvent(String? title) async {
   try {
-    await platform.invokeMethod(
-      'createCalendarEvent',
-      <String, dynamic>{'title': title},
-    );
+    await platform.invokeMethod('createCalendarEvent', <String, dynamic>{'title': title});
     return true;
   } catch (e) {
     ezLog('Failed to create calendar event: $e');
@@ -86,10 +75,11 @@ Future<bool> createCalendarEvent(String? title) async {
 
 Future<bool> setTimer(List<int> values) async {
   try {
-    await platform.invokeMethod(
-      'setTimer',
-      <String, dynamic>{'ours': values[0], 'mins': values[1], 'secs': values[2]},
-    );
+    await platform.invokeMethod('setTimer', <String, dynamic>{
+      'ours': values[0],
+      'mins': values[1],
+      'secs': values[2],
+    });
     return true;
   } catch (e) {
     ezLog('Failed to set timer: $e');

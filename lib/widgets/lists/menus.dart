@@ -6,7 +6,7 @@
 import '../../utils/export.dart';
 
 import 'package:flutter/material.dart';
-import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
+import 'package:open_ui/open_ui.dart';
 
 Widget moveDownLane(
   EzCP config,
@@ -14,17 +14,16 @@ Widget moveDownLane(
   required int numLanes,
   required int lane,
   required int index,
-}) =>
-    EzMenuButton(
-      config,
-      enabled: lane != 0,
-      label: 'Move',
-      icon: EzIcon(
-        config,
-        standardFlow(config) ? Icons.keyboard_arrow_left : Icons.keyboard_arrow_right,
-      ),
-      onPressed: () => appInfo.moveItemDownLane(config, lane: lane, index: index),
-    );
+}) => EzMenuButton(
+  config,
+  enabled: lane != 0,
+  label: 'Move',
+  icon: EzIcon(
+    config,
+    standardFlow(config) ? Icons.keyboard_arrow_left : Icons.keyboard_arrow_right,
+  ),
+  onPressed: () => appInfo.moveItemDownLane(config, lane: lane, index: index),
+);
 
 Widget moveUpLane(
   EzCP config,
@@ -32,24 +31,18 @@ Widget moveUpLane(
   required int numLanes,
   required int lane,
   required int index,
-}) =>
-    EzMenuButton(
-      config,
-      enabled: lane < (numLanes - 1),
-      label: 'Move',
-      icon: EzIcon(
-        config,
-        standardFlow(config) ? Icons.keyboard_arrow_right : Icons.keyboard_arrow_left,
-      ),
-      onPressed: () => appInfo.moveItemUpLane(config, lane: lane, index: index),
-    );
+}) => EzMenuButton(
+  config,
+  enabled: lane < (numLanes - 1),
+  label: 'Move',
+  icon: EzIcon(
+    config,
+    standardFlow(config) ? Icons.keyboard_arrow_right : Icons.keyboard_arrow_left,
+  ),
+  onPressed: () => appInfo.moveItemUpLane(config, lane: lane, index: index),
+);
 
-Widget removeItem(
-  EzCP config,
-  AppInfoProvider appInfo, {
-  required int lane,
-  required int index,
-}) =>
+Widget removeItem(EzCP config, AppInfoProvider appInfo, {required int lane, required int index}) =>
     EzMenuButton(
       config,
       label: 'Remove',

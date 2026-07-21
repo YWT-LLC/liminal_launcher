@@ -7,7 +7,7 @@ import './export.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
+import 'package:open_ui/open_ui.dart';
 
 class LiminalCache extends EzAppCache {
   Locale _locale;
@@ -16,9 +16,7 @@ class LiminalCache extends EzAppCache {
   late DesignCache _design;
   late SecureCache _security;
 
-  LiminalCache(Locale locale, Lang l10n)
-      : _locale = locale,
-        _l10n = l10n;
+  LiminalCache(Locale locale, Lang l10n) : _locale = locale, _l10n = l10n;
 
   @override
   void init(bool isDark) => _buildLocalCache(isDark);
@@ -150,9 +148,9 @@ class SecureCache {
     required bool authToEdit,
     required bool authForHidden,
     required Duration authTimeout,
-  })  : _authToEdit = authToEdit,
-        _authForHidden = authForHidden,
-        _authTimeout = authTimeout;
+  }) : _authToEdit = authToEdit,
+       _authForHidden = authForHidden,
+       _authTimeout = authTimeout;
 
   bool get authToEdit => _authToEdit;
   bool get authForHidden => _authForHidden;

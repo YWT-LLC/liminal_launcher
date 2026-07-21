@@ -7,15 +7,15 @@ import './export.dart';
 import '../widgets/export.dart';
 
 import 'package:flutter/material.dart';
-import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
+import 'package:open_ui/open_ui.dart';
 
 //* App config *//
 
 /// Liminal Launcher
 const String appName = 'Liminal Launcher';
 
-/// net.empathetech.liminal
-const String androidPackage = 'net.empathetech.liminal';
+/// llc.ywt.liminal
+const String androidPackage = 'llc.ywt.liminal';
 
 /// Liminal Launcher [AppInfo]
 final AppInfo self = AppInfo(
@@ -187,14 +187,11 @@ const Map<String, Type> allLimKeys = <String, Type>{
 };
 
 /// [EzCM.init] passthrough
-final Set<String> neverResetKeys = <String>{
-  ...limBTSKeys.keys,
-  ...limListKeys.keys,
-};
+final Set<String> neverResetKeys = <String>{...limBTSKeys.keys, ...limListKeys.keys};
 
-/// [empathMobileConfig] with Liminal additions
+/// [ywtMobileConfig] with Liminal additions
 final Map<String, Object> liminalDefault = <String, Object>{
-  ...empathMobileConfig,
+  ...ywtMobileConfig,
 
   // BTS //
   // ID lists
@@ -270,7 +267,6 @@ final Map<String, Object> liminalDefault = <String, Object>{
   lightVerticalAlignKey: ListAlignment.start.value,
 
   // Text //
-
   darkTextBackgroundOpacityKey: 0.75,
 
   lightTextBackgroundOpacityKey: 0.75,

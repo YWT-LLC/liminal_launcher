@@ -1,5 +1,5 @@
 name: liminal_launcher
-description: "An Empathetech Android launcher."
+description: "An Android launcher."
 version: 1.0.0+1
 publish_to: 'none'
 
@@ -26,11 +26,11 @@ dependencies:
   line_icons: ^2.0.3
   provider: ^6.1.5+1
 
-  # Empathetech
-  efui_bios:
-    path: ../efui_bios
-  empathetech_flutter_ui:
-    path: ../empathetech_flutter_ui
+  # YWT
+  oui_bios:
+    path: ../oui_bios
+  open_ui:
+    path: ../open_ui
 
 dev_dependencies:
   dependency_validator: ^5.0.5

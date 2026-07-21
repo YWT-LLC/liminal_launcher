@@ -7,7 +7,7 @@ import '../widgets/export.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
+import 'package:open_ui/open_ui.dart';
 
 class ErrorScreen extends StatelessWidget {
   const ErrorScreen({super.key});
@@ -15,9 +15,12 @@ class ErrorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<EzCP>(
-      builder: (_, EzCP config, __) => LiminalScaffold(config,
-          body: Center(
-            child: EzScrollView(config, children: <Widget>[
+      builder: (_, EzCP config, __) => LiminalScaffold(
+        config,
+        body: Center(
+          child: EzScrollView(
+            config,
+            children: <Widget>[
               EzText(
                 config,
                 text: config.ezL10n.g404Wonder,
@@ -39,8 +42,10 @@ class ErrorScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               EzFooter(config, spacing: 0),
-            ]),
-          )),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

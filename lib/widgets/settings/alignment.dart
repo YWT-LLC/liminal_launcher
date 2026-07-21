@@ -6,7 +6,7 @@
 import '../../utils/export.dart';
 
 import 'package:flutter/material.dart';
-import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
+import 'package:open_ui/open_ui.dart';
 
 class AlignmentSelectors extends StatefulWidget {
   final EzCP config;
@@ -43,13 +43,15 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
   // Return the build //
 
   @override
-  Widget build(BuildContext context) => EzCol(children: <Widget>[
-        // Preview
-        Container(
-          color: widget.config.colors.onSurface,
-          height: heightOf(context) * _sizeMod,
-          width: widthOf(context) * _sizeMod,
-          child: Stack(children: <Widget>[
+  Widget build(BuildContext context) => EzCol(
+    children: <Widget>[
+      // Preview
+      Container(
+        color: widget.config.colors.onSurface,
+        height: heightOf(context) * _sizeMod,
+        width: widthOf(context) * _sizeMod,
+        child: Stack(
+          children: <Widget>[
             // Background
             Container(
               decoration: BoxDecoration(
@@ -74,12 +76,14 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
                 ),
               ),
             ),
-          ]),
+          ],
         ),
-        widget.config.separator,
+      ),
+      widget.config.separator,
 
-        // Controls
-        EzWrap(children: <Widget>[
+      // Controls
+      EzWrap(
+        children: <Widget>[
           // Horizontal
           SegmentedButton<ListAlignment>(
             segments: alignmentSegments,
@@ -121,6 +125,8 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
               setState(() => v = selected);
             },
           ),
-        ]),
-      ]);
+        ],
+      ),
+    ],
+  );
 }

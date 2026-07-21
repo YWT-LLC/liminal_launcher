@@ -12,7 +12,7 @@
 import '../screens/export.dart';
 import '../utils/export.dart';
 import '../widgets/export.dart';
-import 'package:efui_bios/efui_bios.dart';
+import 'package:oui_bios/oui_bios.dart';
 
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -21,7 +21,7 @@ import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
+import 'package:open_ui/open_ui.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -60,8 +60,10 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     }
 
     // Ripple transition to editing
-    final AnimationController rippleController =
-        AnimationController(vsync: Overlay.of(context), duration: animDur);
+    final AnimationController rippleController = AnimationController(
+      vsync: Overlay.of(context),
+      duration: animDur,
+    );
     rippleController.addListener(() => rippleProgress.value = rippleController.value);
 
     final OverlayEntry ripple = ezRipple(
@@ -98,261 +100,259 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
       builder: (BuildContext mCon) => ezModalScroll(
         config,
         children: <Widget>[
-          EzWrap(children: <Widget>[
-            // Apps
-            Padding(
-              padding: EzInsets.wrap(config.spacing),
-              child: EzElevatedIconButton(
-                config,
-                onPressed: () => context.goNamed(
-                  appListPath,
-                  extra: ListConfig(
-                    listContent: <ListContent>{
-                      ListContent.hidden,
-                      ListContent.banished,
-                    },
-                    include: false,
-                    onSelected: (AppInfo app) => appInfo.addApp(
-                      config,
-                      id: app.id,
-                      lane: lane,
-                      editNew: () => editApp(
-                        config,
-                        appInfo: appInfo,
-                        pContext: context,
-                        initConfig: AppConfig(
-                          app: app,
-                          name: app.label,
-                          icon: null,
-                          buttonType: null,
-                          labelType: null,
-                        ),
-                        lane: lane,
-                        index: appInfo.homeLane(config, lane).length,
-                      ),
-                    ),
-                    title: EzTextIconButton(
-                      config,
-                      onPressed: doNothing,
-                      label: 'Home',
-                      icon: EzIcon(config, Icons.add, color: config.colors.onSurface),
-                      textStyle: config.labelStyle,
-                    ),
-                  ),
-                ),
-                label: 'Apps',
-                icon: EzIcon(config, Icons.apps),
-              ),
-            ),
-
-            // Folder
-            Padding(
-              padding: EzInsets.wrap(config.spacing),
-              child: EzElevatedIconButton(
-                config,
-                onPressed: () => appInfo.addFolder(
+          EzWrap(
+            children: <Widget>[
+              // Apps
+              Padding(
+                padding: EzInsets.wrap(config.spacing),
+                child: EzElevatedIconButton(
                   config,
-                  lane: lane,
-                  editNew: () => editFolder(
-                    config,
-                    appInfo: appInfo,
-                    pContext: context,
-                    initConfig: FolderConfig(
-                      name: 'Folder',
-                      icon: Icons.folder_outlined,
-                      buttonType: null,
-                      labelType: null,
-                      appList: <String>[],
-                    ),
-                    lane: lane,
-                    index: appInfo.homeLane(config, lane).length,
-                  ),
-                ),
-                label: 'Folder',
-                icon: EzIcon(config, Icons.folder_outlined),
-              ),
-            ),
-
-            // Widgets
-            Padding(
-              padding: EzInsets.wrap(config.spacing),
-              child: EzElevatedIconButton(
-                config,
-                onPressed: () => ezModal(config, context: context, builder: (_) {
-                  WidgetSize size = WidgetSize.tile;
-
-                  return StatefulBuilder(
-                    builder: (BuildContext wmCon, StateSetter setModal) =>
-                        ezModalScroll(config, children: <Widget>[
-                      // Clock
-                      AddClock(
+                  onPressed: () => context.goNamed(
+                    appListPath,
+                    extra: ListConfig(
+                      listContent: <ListContent>{ListContent.hidden, ListContent.banished},
+                      include: false,
+                      onSelected: (AppInfo app) => appInfo.addApp(
                         config,
-                        appInfo: appInfo,
-                        pContext: context,
+                        id: app.id,
                         lane: lane,
-                        hAlign: hAlign,
-                        vAlign: vAlign,
-                      ),
-
-                      // Divider (con size selector)
-                      EzTitledDivider(
-                        constraints: BoxConstraints(maxWidth: widthOf(wmCon) / 2),
-                        EzDropdownMenu<WidgetSize>(
+                        editNew: () => editApp(
                           config,
-                          enableSearch: false,
-                          initialSelection: size,
-                          widthEntry: WidgetSize.button.value,
-                          dropdownMenuEntries: WidgetSize.values
-                              .map((WidgetSize ws) => DropdownMenuEntry<WidgetSize>(
-                                    value: ws,
-                                    label: ezCamelToTitle(ws.value),
-                                  ))
-                              .toList(),
-                          onSelected: (WidgetSize? choice) {
-                            if (choice == null) return;
-                            setModal(() => size = choice);
-                          },
+                          appInfo: appInfo,
+                          pContext: context,
+                          initConfig: AppConfig(
+                            app: app,
+                            name: app.label,
+                            icon: null,
+                            buttonType: null,
+                            labelType: null,
+                          ),
+                          lane: lane,
+                          index: appInfo.homeLane(config, lane).length,
                         ),
-                        height: config.spacing * 2,
-                        margin: config.padding,
                       ),
-                      config.spacer,
-
-                      // Calendar
-                      AddCalendar(
+                      title: EzTextIconButton(
                         config,
-                        appInfo: appInfo,
-                        lane: lane,
-                        size: size,
+                        onPressed: doNothing,
+                        label: 'Home',
+                        icon: EzIcon(config, Icons.add, color: config.colors.onSurface),
+                        textStyle: config.labelStyle,
                       ),
-                      config.spacer,
-
-                      // Search
-                      AddSearch(
-                        config,
-                        appInfo: appInfo,
-                        pContext: context,
-                        lane: lane,
-                        size: size,
-                      ),
-                      config.spacer,
-
-                      // Timer
-                      AddTimer(
-                        config,
-                        appInfo: appInfo,
-                        pContext: context,
-                        lane: lane,
-                        size: size,
-                      ),
-                      config.spacer,
-
-                      // Toggle media
-                      AddToggleMedia(
-                        config,
-                        appInfo: appInfo,
-                        pContext: context,
-                        lane: lane,
-                        size: size,
-                      ),
-                      config.spacer,
-
-                      // Theme mode
-                      AddThemeMode(
-                        config,
-                        appInfo: appInfo,
-                        lane: lane,
-                        size: size,
-                      ),
-                      config.separator,
-                    ]),
-                  );
-                }),
-                label: 'Widgets',
-                icon: EzIcon(config, Icons.widgets),
+                    ),
+                  ),
+                  label: 'Apps',
+                  icon: EzIcon(config, Icons.apps),
+                ),
               ),
-            ),
 
-            // Spacer
-            Padding(
-              padding: EzInsets.wrap(config.spacing),
-              child: EzElevatedIconButton(
-                config,
-                onPressed: () async {
-                  if (mCon.mounted) Navigator.of(mCon).pop();
-                  final int index = await appInfo.addSpacer(config, lane: lane);
-                  setState(() => editing = false);
-
-                  if (mounted) {
-                    await editSpacer(
+              // Folder
+              Padding(
+                padding: EzInsets.wrap(config.spacing),
+                child: EzElevatedIconButton(
+                  config,
+                  onPressed: () => appInfo.addFolder(
+                    config,
+                    lane: lane,
+                    editNew: () => editFolder(
                       config,
                       appInfo: appInfo,
-                      context: context,
+                      pContext: context,
+                      initConfig: FolderConfig(
+                        name: 'Folder',
+                        icon: Icons.folder_outlined,
+                        buttonType: null,
+                        labelType: null,
+                        appList: <String>[],
+                      ),
                       lane: lane,
-                      index: index,
-                    );
-                  }
-                },
-                label: 'Spacer',
-                icon: EzIcon(config, Icons.space_bar),
+                      index: appInfo.homeLane(config, lane).length,
+                    ),
+                  ),
+                  label: 'Folder',
+                  icon: EzIcon(config, Icons.folder_outlined),
+                ),
               ),
-            ),
 
-            // Lane
-            Padding(
-              padding: EzInsets.wrap(config.spacing),
-              child: EzElevatedIconButton(
-                config,
-                onPressed: () async {
-                  if (appInfo.numLanes(config) == 1) {
-                    await ezModal(
-                      config,
-                      context: context,
-                      builder: (BuildContext mCon) => ezModalScroll(config, children: <Widget>[
-                        // Title
-                        Text(
-                          'Multi-lane configuration',
-                          textAlign: TextAlign.center,
-                          style: config.titleStyle,
-                        ),
-                        config.spacer,
+              // Widgets
+              Padding(
+                padding: EzInsets.wrap(config.spacing),
+                child: EzElevatedIconButton(
+                  config,
+                  onPressed: () => ezModal(
+                    config,
+                    context: context,
+                    builder: (_) {
+                      WidgetSize size = WidgetSize.tile;
 
-                        // Switches
-                        EzSwitchPair(
+                      return StatefulBuilder(
+                        builder: (BuildContext wmCon, StateSetter setModal) => ezModalScroll(
                           config,
-                          valueKey: config.isDark ? darkWideTilesKey : lightWideTilesKey,
-                          text: 'Wide tiles',
-                          afterChanged: (bool? value) async {
-                            if (value == null) return;
+                          children: <Widget>[
+                            // Clock
+                            AddClock(
+                              config,
+                              appInfo: appInfo,
+                              pContext: context,
+                              lane: lane,
+                              hAlign: hAlign,
+                              vAlign: vAlign,
+                            ),
 
-                            if (interlinked) {
-                              await EzCM.setBool(
-                                config.isDark ? lightWideTilesKey : darkWideTilesKey,
-                                value,
-                              );
-                            }
-                          },
+                            // Divider (con size selector)
+                            EzTitledDivider(
+                              constraints: BoxConstraints(maxWidth: widthOf(wmCon) / 2),
+                              EzDropdownMenu<WidgetSize>(
+                                config,
+                                enableSearch: false,
+                                initialSelection: size,
+                                widthEntry: WidgetSize.button.value,
+                                dropdownMenuEntries: WidgetSize.values
+                                    .map(
+                                      (WidgetSize ws) => DropdownMenuEntry<WidgetSize>(
+                                        value: ws,
+                                        label: ezCamelToTitle(ws.value),
+                                      ),
+                                    )
+                                    .toList(),
+                                onSelected: (WidgetSize? choice) {
+                                  if (choice == null) return;
+                                  setModal(() => size = choice);
+                                },
+                              ),
+                              height: config.spacing * 2,
+                              margin: config.padding,
+                            ),
+                            config.spacer,
+
+                            // Calendar
+                            AddCalendar(config, appInfo: appInfo, lane: lane, size: size),
+                            config.spacer,
+
+                            // Search
+                            AddSearch(
+                              config,
+                              appInfo: appInfo,
+                              pContext: context,
+                              lane: lane,
+                              size: size,
+                            ),
+                            config.spacer,
+
+                            // Timer
+                            AddTimer(
+                              config,
+                              appInfo: appInfo,
+                              pContext: context,
+                              lane: lane,
+                              size: size,
+                            ),
+                            config.spacer,
+
+                            // Toggle media
+                            AddToggleMedia(
+                              config,
+                              appInfo: appInfo,
+                              pContext: context,
+                              lane: lane,
+                              size: size,
+                            ),
+                            config.spacer,
+
+                            // Theme mode
+                            AddThemeMode(config, appInfo: appInfo, lane: lane, size: size),
+                            config.separator,
+                          ],
                         ),
-                        EzSwitchPair(
+                      );
+                    },
+                  ),
+                  label: 'Widgets',
+                  icon: EzIcon(config, Icons.widgets),
+                ),
+              ),
+
+              // Spacer
+              Padding(
+                padding: EzInsets.wrap(config.spacing),
+                child: EzElevatedIconButton(
+                  config,
+                  onPressed: () async {
+                    if (mCon.mounted) Navigator.of(mCon).pop();
+                    final int index = await appInfo.addSpacer(config, lane: lane);
+                    setState(() => editing = false);
+
+                    if (mounted) {
+                      await editSpacer(
+                        config,
+                        appInfo: appInfo,
+                        context: context,
+                        lane: lane,
+                        index: index,
+                      );
+                    }
+                  },
+                  label: 'Spacer',
+                  icon: EzIcon(config, Icons.space_bar),
+                ),
+              ),
+
+              // Lane
+              Padding(
+                padding: EzInsets.wrap(config.spacing),
+                child: EzElevatedIconButton(
+                  config,
+                  onPressed: () async {
+                    if (appInfo.numLanes(config) == 1) {
+                      await ezModal(
+                        config,
+                        context: context,
+                        builder: (BuildContext mCon) => ezModalScroll(
                           config,
-                          valueKey: config.isDark ? darkPagesKey : lightPagesKey,
-                          text: 'Use pages',
-                          afterChanged: (bool? value) async {
-                            if (value == null) return;
+                          children: <Widget>[
+                            // Title
+                            Text(
+                              'Multi-lane configuration',
+                              textAlign: TextAlign.center,
+                              style: config.titleStyle,
+                            ),
+                            config.spacer,
 
-                            if (interlinked) {
-                              await EzCM.setBool(
-                                config.isDark ? lightPagesKey : darkPagesKey,
-                                value,
-                              );
-                            }
-                          },
-                        ),
-                        config.spacer,
+                            // Switches
+                            EzSwitchPair(
+                              config,
+                              valueKey: config.isDark ? darkWideTilesKey : lightWideTilesKey,
+                              text: 'Wide tiles',
+                              afterChanged: (bool? value) async {
+                                if (value == null) return;
 
-                        // Description
-                        const Text(
-                          '''When wide tiles is enabled, each lane with an item will be the width of one screen.
+                                if (interlinked) {
+                                  await EzCM.setBool(
+                                    config.isDark ? lightWideTilesKey : darkWideTilesKey,
+                                    value,
+                                  );
+                                }
+                              },
+                            ),
+                            EzSwitchPair(
+                              config,
+                              valueKey: config.isDark ? darkPagesKey : lightPagesKey,
+                              text: 'Use pages',
+                              afterChanged: (bool? value) async {
+                                if (value == null) return;
+
+                                if (interlinked) {
+                                  await EzCM.setBool(
+                                    config.isDark ? lightPagesKey : darkPagesKey,
+                                    value,
+                                  );
+                                }
+                              },
+                            ),
+                            config.spacer,
+
+                            // Description
+                            const Text(
+                              '''When wide tiles is enabled, each lane with an item will be the width of one screen.
 With wide tiles disabled, lanes will be sized by their widest item & your spacing setting.
 
 When pages is enabled, lanes behave like pages on a traditional launcher.
@@ -362,20 +362,22 @@ Turn both on if you want a minimalist setup.
 Turn both off if you want pixel perfect tile placement.
 
 Or, something in-between.''',
-                          textAlign: TextAlign.center,
+                              textAlign: TextAlign.center,
+                            ),
+                            config.separator,
+                          ],
                         ),
-                        config.separator,
-                      ]),
-                    );
-                  }
+                      );
+                    }
 
-                  await appInfo.addLane(config);
-                },
-                label: 'Lane',
-                icon: EzIcon(config, Icons.view_column_outlined),
+                    await appInfo.addLane(config);
+                  },
+                  label: 'Lane',
+                  icon: EzIcon(config, Icons.view_column_outlined),
+                ),
               ),
-            ),
-          ]),
+            ],
+          ),
           EzSpacer(config.spacing / 2),
 
           // Screen space note
@@ -415,10 +417,7 @@ Or, something in-between.''',
     for (int i = 0; i < numLanes; i++) {
       nodes.addAll(<Widget>[
         Container(
-          constraints: BoxConstraints.tightFor(
-            height: config.iconSize,
-            width: config.iconSize,
-          ),
+          constraints: BoxConstraints.tightFor(height: config.iconSize, width: config.iconSize),
           decoration: BoxDecoration(
             color: i == lane ? config.colors.primary : config.colors.surface,
             shape: BoxShape.circle,
@@ -488,7 +487,10 @@ Or, something in-between.''',
     showPagePos(
       config,
       LAConfig.buildLookup(
-              appInfo.homeItem(config, lane: page, index: 0), Axis.horizontal, config) !=
+            appInfo.homeItem(config, lane: page, index: 0),
+            Axis.horizontal,
+            config,
+          ) !=
           ListAlignment.end,
       numLanes: numLanes,
       lane: page,
@@ -505,7 +507,10 @@ Or, something in-between.''',
     showPagePos(
       config,
       LAConfig.buildLookup(
-              appInfo.homeItem(config, lane: page, index: 0), Axis.horizontal, config) !=
+            appInfo.homeItem(config, lane: page, index: 0),
+            Axis.horizontal,
+            config,
+          ) !=
           ListAlignment.end,
       numLanes: numLanes,
       lane: page,
@@ -593,63 +598,71 @@ Or, something in-between.''',
           final AppInfo? app = appInfo.appMap[<String>[parts[0], parts[1]].join(idSplit)];
           if (app == null) continue;
 
-          tiles.add(Padding(
-            key: ValueKey<String>('$lane-$index-${app.id}'),
-            padding: tilePadding,
-            child: AppTile(
-              config,
-              appInfo: appInfo,
-              pos: pos,
-              state: editing ? AppState.groupEdit : AppState.standard,
-              rippleProgress: rippleProgress,
-              app: app,
-              location: AppLocation.home,
-              onSelected: (AppInfo app) => launchApp(app),
+          tiles.add(
+            Padding(
+              key: ValueKey<String>('$lane-$index-${app.id}'),
+              padding: tilePadding,
+              child: AppTile(
+                config,
+                appInfo: appInfo,
+                pos: pos,
+                state: editing ? AppState.groupEdit : AppState.standard,
+                rippleProgress: rippleProgress,
+                app: app,
+                location: AppLocation.home,
+                onSelected: (AppInfo app) => launchApp(app),
+              ),
             ),
-          ));
+          );
           break;
 
         case folderSplit:
-          tiles.add(Padding(
-            key: ValueKey<String>('$index-${entry.split(folderSplit)[0]}'),
-            padding: tilePadding,
-            child: FolderTile(
-              config,
-              appInfo: appInfo,
-              pos: pos,
-              state: editing ? AppState.groupEdit : AppState.standard,
-              rippleProgress: rippleProgress,
+          tiles.add(
+            Padding(
+              key: ValueKey<String>('$index-${entry.split(folderSplit)[0]}'),
+              padding: tilePadding,
+              child: FolderTile(
+                config,
+                appInfo: appInfo,
+                pos: pos,
+                state: editing ? AppState.groupEdit : AppState.standard,
+                rippleProgress: rippleProgress,
+              ),
             ),
-          ));
+          );
           break;
 
         case widgetSplit:
-          tiles.add(Padding(
-            key: ValueKey<String>('$index-${entry.split(widgetSplit)[0]}'),
-            padding: tilePadding,
-            child: renderWidget(
-              config,
-              appInfo: appInfo,
-              pos: pos,
-              state: editing ? AppState.groupEdit : AppState.standard,
-              rippleProgress: rippleProgress,
+          tiles.add(
+            Padding(
+              key: ValueKey<String>('$index-${entry.split(widgetSplit)[0]}'),
+              padding: tilePadding,
+              child: renderWidget(
+                config,
+                appInfo: appInfo,
+                pos: pos,
+                state: editing ? AppState.groupEdit : AppState.standard,
+                rippleProgress: rippleProgress,
+              ),
             ),
-          ));
+          );
           break;
 
         case spacerSplit:
-          tiles.add(Padding(
-            key: ValueKey<String>('$index-spacer-$editing'),
-            padding: editing ? tilePadding : EdgeInsets.zero,
-            child: LimSpacer(
-              config,
-              appInfo: appInfo,
-              pos: pos,
-              state: editing ? AppState.groupEdit : AppState.standard,
-              rippleProgress: rippleProgress,
-              resizeCallback: () => setState(() => editing = false),
+          tiles.add(
+            Padding(
+              key: ValueKey<String>('$index-spacer-$editing'),
+              padding: editing ? tilePadding : EdgeInsets.zero,
+              child: LimSpacer(
+                config,
+                appInfo: appInfo,
+                pos: pos,
+                state: editing ? AppState.groupEdit : AppState.standard,
+                rippleProgress: rippleProgress,
+                resizeCallback: () => setState(() => editing = false),
+              ),
             ),
-          ));
+          );
           break;
 
         default:
@@ -678,48 +691,51 @@ Or, something in-between.''',
     );
 
     return editing
-        ? Builder(builder: (_) {
-            final List<Widget> tiles = _buildTiles(
-              config,
-              appInfo,
-              lane,
-              hAlign: hAlign,
-              vAlign: vAlign,
-            );
+        ? Builder(
+            builder: (_) {
+              final List<Widget> tiles = _buildTiles(
+                config,
+                appInfo,
+                lane,
+                hAlign: hAlign,
+                vAlign: vAlign,
+              );
 
-            return StatefulBuilder(
-              key: ValueKey<String>('lane-$lane'),
-              builder: (_, StateSetter setList) => ReorderableListView(
-                shrinkWrap: true,
-                header: LaneHeader(
-                  config,
-                  appInfo: appInfo,
-                  pContext: context,
-                  numLanes: numLanes,
-                  pos: LimPos(lane: lane, index: -1, hAlign: hAlign, vAlign: vAlign),
-                  addModal: addModal,
-                  navPageDown: pages(config) ? () => navPageDown(config, appInfo, numLanes) : null,
-                  navPageUp: pages(config) ? () => navPageUp(config, appInfo, numLanes) : null,
-                ),
-                onReorderItem: (int oldIndex, int newIndex) async {
-                  if (oldIndex == newIndex) return;
-
-                  final Widget element = tiles.removeAt(oldIndex);
-                  tiles.insert(newIndex, element);
-
-                  await appInfo.reorderLane(
+              return StatefulBuilder(
+                key: ValueKey<String>('lane-$lane'),
+                builder: (_, StateSetter setList) => ReorderableListView(
+                  shrinkWrap: true,
+                  header: LaneHeader(
                     config,
-                    lane: lane,
-                    oldIndex: oldIndex,
-                    newIndex: newIndex,
-                  );
+                    appInfo: appInfo,
+                    pContext: context,
+                    numLanes: numLanes,
+                    pos: LimPos(lane: lane, index: -1, hAlign: hAlign, vAlign: vAlign),
+                    addModal: addModal,
+                    navPageDown:
+                        pages(config) ? () => navPageDown(config, appInfo, numLanes) : null,
+                    navPageUp: pages(config) ? () => navPageUp(config, appInfo, numLanes) : null,
+                  ),
+                  onReorderItem: (int oldIndex, int newIndex) async {
+                    if (oldIndex == newIndex) return;
 
-                  setList(() {});
-                },
-                children: tiles,
-              ),
-            );
-          })
+                    final Widget element = tiles.removeAt(oldIndex);
+                    tiles.insert(newIndex, element);
+
+                    await appInfo.reorderLane(
+                      config,
+                      lane: lane,
+                      oldIndex: oldIndex,
+                      newIndex: newIndex,
+                    );
+
+                    setList(() {});
+                  },
+                  children: tiles,
+                ),
+              );
+            },
+          )
         : EzScrollView(
             config,
             key: ValueKey<String>('lane-$lane'),
@@ -745,19 +761,21 @@ Or, something in-between.''',
     final List<Widget> lanes = <Widget>[];
 
     for (int lane = 0; lane < numLanes; lane++) {
-      lanes.add(ValueListenableBuilder<double>(
-        valueListenable: rippleProgress,
-        builder: (_, double ripple, __) => ConstrainedBox(
-          constraints: BoxConstraints(
-            minHeight: double.infinity,
-            minWidth: appIconSize(config) + config.spacing,
-            maxWidth: (editing && (ripple % 1.0 == 0))
-                ? appIconSize(config) * 3 + config.spargin
-                : widthOf(context),
+      lanes.add(
+        ValueListenableBuilder<double>(
+          valueListenable: rippleProgress,
+          builder: (_, double ripple, __) => ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: double.infinity,
+              minWidth: appIconSize(config) + config.spacing,
+              maxWidth: (editing && (ripple % 1.0 == 0))
+                  ? appIconSize(config) * 3 + config.spargin
+                  : widthOf(context),
+            ),
+            child: _buildLane(config, appInfo, numLanes: numLanes, lane: lane),
           ),
-          child: _buildLane(config, appInfo, numLanes: numLanes, lane: lane),
         ),
-      ));
+      );
     }
     return lanes;
   }
@@ -788,169 +806,170 @@ Or, something in-between.''',
       onPopInvokedWithResult: (_, __) {
         if (editing) setState(() => editing = false);
       },
-      child:
-          Consumer2<EzCP, AppInfoProvider>(builder: (_, EzCP config, AppInfoProvider appInfo, __) {
-        final int numLanes = appInfo.numLanes(config);
-        final double headerSpacing = config.iconSize + config.padding + (config.spacing / 2);
+      child: Consumer2<EzCP, AppInfoProvider>(
+        builder: (_, EzCP config, AppInfoProvider appInfo, __) {
+          final int numLanes = appInfo.numLanes(config);
+          final double headerSpacing = config.iconSize + config.padding + (config.spacing / 2);
 
-        return LiminalScaffold(
-          config,
-          body: GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onLongPressStart: (LongPressStartDetails details) async => editing
-                ? await ripple(config, details)
-                : await canEdit(config, () => ripple(config, details)),
-            onVerticalDragEnd: (DragEndDetails details) async {
-              if (details.primaryVelocity != null) {
-                if (details.primaryVelocity! < 0) await swipeUp(config, appInfo);
-              }
-            },
-            onHorizontalDragEnd: (DragEndDetails details) {
-              if (details.primaryVelocity != null && details.primaryVelocity! != 0) {
-                if (pages(config)) {
-                  if (details.primaryVelocity! < 0) {
-                    // Swipe right to left -> nav to right
-                    standardFlow(config)
-                        ? navPageUp(config, appInfo, numLanes)
-                        : navPageDown(config, appInfo, numLanes);
-                    return;
-                  } else {
-                    // Swipe left to right -> nav to left
-                    standardFlow(config)
-                        ? navPageDown(config, appInfo, numLanes)
-                        : navPageUp(config, appInfo, numLanes);
-                    return;
-                  }
+          return LiminalScaffold(
+            config,
+            body: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onLongPressStart: (LongPressStartDetails details) async => editing
+                  ? await ripple(config, details)
+                  : await canEdit(config, () => ripple(config, details)),
+              onVerticalDragEnd: (DragEndDetails details) async {
+                if (details.primaryVelocity != null) {
+                  if (details.primaryVelocity! < 0) await swipeUp(config, appInfo);
                 }
-
-                final AppInfo? toLaunch = editing
-                    ? null
-                    : ((details.primaryVelocity! < 0)
-                        ? appInfo.appMap[leftSwipeID]
-                        : appInfo.appMap[rightSwipeID]);
-
-                if (toLaunch != null) launchApp(toLaunch);
-              }
-            },
-            // App list
-            child: NotificationListener<ScrollNotification>(
-              onNotification: (ScrollNotification notification) {
-                switch (notification.runtimeType) {
-                  case const (OverscrollNotification):
-                    if (notification.metrics.axis == Axis.vertical) {
-                      // Vertical overscroll
-                      if ((notification as OverscrollNotification).overscroll > 0) {
-                        if (atBottom) {
-                          swipeUp(config, appInfo);
-                          return true;
-                        } else {
-                          overscrollPause = Timer(scrollDelay, () => atBottom = true);
-                          return true;
-                        }
-                      }
-                    } else {
-                      // Horizontal overscroll
-                      AppInfo? toLaunch;
-
-                      if ((notification as OverscrollNotification).overscroll < 0) {
-                        if (atLeft) {
-                          toLaunch = appInfo.appMap[rightSwipeID];
-                        } else {
-                          overscrollPause = Timer(scrollDelay, () => atLeft = true);
-                          return true;
-                        }
-                      }
-
-                      if (notification.overscroll > 0) {
-                        if (atRight) {
-                          toLaunch = appInfo.appMap[leftSwipeID];
-                        } else {
-                          overscrollPause = Timer(scrollDelay, () => atRight = true);
-                          return true;
-                        }
-                      }
-
-                      if (toLaunch != null) launchApp(toLaunch);
-                      return true;
-                    }
-                    break;
-
-                  case const (ScrollUpdateNotification):
-                    if (notification.metrics.axis == Axis.vertical) {
-                      // Vertical scroll
-                      if (atBottom && notification.metrics.pixels < 0) {
-                        atBottom = false;
-                      }
-                    } else {
-                      // Horizontal scroll
-                      if (atLeft && notification.metrics.pixels > 0) {
-                        atLeft = false;
-                      }
-                      if (atRight && notification.metrics.pixels < 0) {
-                        atRight = false;
-                      }
-                    }
-                    break;
-
-                  case const (ScrollEndNotification):
-                    if (notification.metrics.axis == Axis.vertical) {
-                      // Vertical end
-                      if (notification.metrics.pixels == notification.metrics.maxScrollExtent) {
-                        overscrollPause = Timer(scrollDelay, () => atBottom = true);
-                      } else {
-                        atBottom = false;
-                      }
-                    } else {
-                      // Horizontal end
-                      if (notification.metrics.pixels == notification.metrics.maxScrollExtent) {
-                        atLeft = false;
-                        overscrollPause = Timer(scrollDelay, () => atRight = true);
-                      } else {
-                        atRight = false;
-                        overscrollPause = Timer(scrollDelay, () => atLeft = true);
-                      }
-                    }
-                    break;
-                }
-                return false;
               },
-              child: ValueListenableBuilder<double>(
-                valueListenable: rippleProgress,
-                builder: (_, double ripple, __) => Padding(
-                  padding: editing
-                      ? EdgeInsets.zero
-                      : EdgeInsets.only(top: headerSpacing * (ripple % 1.0)),
-                  child: pages(config)
-                      ? EzFauxCarousel(
-                          config,
-                          position: page,
-                          delta: delta,
-                          child: buildPage(config, appInfo, numLanes: numLanes, lane: page),
-                        )
-                      : EzScrollView(
-                          config,
-                          mainAxisSize: MainAxisSize.max,
-                          scrollDirection: Axis.horizontal,
-                          physics: const ClampingScrollPhysics(),
-                          mainAxisAlignment: horizontalAlign(config).mainAxis,
-                          crossAxisAlignment: verticalAlign(config).crossAxis,
-                          children: buildGrid(config, appInfo, numLanes),
-                        ),
+              onHorizontalDragEnd: (DragEndDetails details) {
+                if (details.primaryVelocity != null && details.primaryVelocity! != 0) {
+                  if (pages(config)) {
+                    if (details.primaryVelocity! < 0) {
+                      // Swipe right to left -> nav to right
+                      standardFlow(config)
+                          ? navPageUp(config, appInfo, numLanes)
+                          : navPageDown(config, appInfo, numLanes);
+                      return;
+                    } else {
+                      // Swipe left to right -> nav to left
+                      standardFlow(config)
+                          ? navPageDown(config, appInfo, numLanes)
+                          : navPageUp(config, appInfo, numLanes);
+                      return;
+                    }
+                  }
+
+                  final AppInfo? toLaunch = editing
+                      ? null
+                      : ((details.primaryVelocity! < 0)
+                          ? appInfo.appMap[leftSwipeID]
+                          : appInfo.appMap[rightSwipeID]);
+
+                  if (toLaunch != null) launchApp(toLaunch);
+                }
+              },
+              // App list
+              child: NotificationListener<ScrollNotification>(
+                onNotification: (ScrollNotification notification) {
+                  switch (notification.runtimeType) {
+                    case const (OverscrollNotification):
+                      if (notification.metrics.axis == Axis.vertical) {
+                        // Vertical overscroll
+                        if ((notification as OverscrollNotification).overscroll > 0) {
+                          if (atBottom) {
+                            swipeUp(config, appInfo);
+                            return true;
+                          } else {
+                            overscrollPause = Timer(scrollDelay, () => atBottom = true);
+                            return true;
+                          }
+                        }
+                      } else {
+                        // Horizontal overscroll
+                        AppInfo? toLaunch;
+
+                        if ((notification as OverscrollNotification).overscroll < 0) {
+                          if (atLeft) {
+                            toLaunch = appInfo.appMap[rightSwipeID];
+                          } else {
+                            overscrollPause = Timer(scrollDelay, () => atLeft = true);
+                            return true;
+                          }
+                        }
+
+                        if (notification.overscroll > 0) {
+                          if (atRight) {
+                            toLaunch = appInfo.appMap[leftSwipeID];
+                          } else {
+                            overscrollPause = Timer(scrollDelay, () => atRight = true);
+                            return true;
+                          }
+                        }
+
+                        if (toLaunch != null) launchApp(toLaunch);
+                        return true;
+                      }
+                      break;
+
+                    case const (ScrollUpdateNotification):
+                      if (notification.metrics.axis == Axis.vertical) {
+                        // Vertical scroll
+                        if (atBottom && notification.metrics.pixels < 0) {
+                          atBottom = false;
+                        }
+                      } else {
+                        // Horizontal scroll
+                        if (atLeft && notification.metrics.pixels > 0) {
+                          atLeft = false;
+                        }
+                        if (atRight && notification.metrics.pixels < 0) {
+                          atRight = false;
+                        }
+                      }
+                      break;
+
+                    case const (ScrollEndNotification):
+                      if (notification.metrics.axis == Axis.vertical) {
+                        // Vertical end
+                        if (notification.metrics.pixels == notification.metrics.maxScrollExtent) {
+                          overscrollPause = Timer(scrollDelay, () => atBottom = true);
+                        } else {
+                          atBottom = false;
+                        }
+                      } else {
+                        // Horizontal end
+                        if (notification.metrics.pixels == notification.metrics.maxScrollExtent) {
+                          atLeft = false;
+                          overscrollPause = Timer(scrollDelay, () => atRight = true);
+                        } else {
+                          atRight = false;
+                          overscrollPause = Timer(scrollDelay, () => atLeft = true);
+                        }
+                      }
+                      break;
+                  }
+                  return false;
+                },
+                child: ValueListenableBuilder<double>(
+                  valueListenable: rippleProgress,
+                  builder: (_, double ripple, __) => Padding(
+                    padding: editing
+                        ? EdgeInsets.zero
+                        : EdgeInsets.only(top: headerSpacing * (ripple % 1.0)),
+                    child: pages(config)
+                        ? EzFauxCarousel(
+                            config,
+                            position: page,
+                            delta: delta,
+                            child: buildPage(config, appInfo, numLanes: numLanes, lane: page),
+                          )
+                        : EzScrollView(
+                            config,
+                            mainAxisSize: MainAxisSize.max,
+                            scrollDirection: Axis.horizontal,
+                            physics: const ClampingScrollPhysics(),
+                            mainAxisAlignment: horizontalAlign(config).mainAxis,
+                            crossAxisAlignment: verticalAlign(config).crossAxis,
+                            children: buildGrid(config, appInfo, numLanes),
+                          ),
+                  ),
                 ),
               ),
             ),
-          ),
-          fabs: editing
-              ? <Widget>[
-                  config.spacer,
+            fabs: editing
+                ? <Widget>[
+                    config.spacer,
 
-                  // Settings
-                  SettingsFAB(config, appInfo, () => context.goNamed(settingsPath)),
-                ]
-              : null,
-          isHome: true,
-        );
-      }),
+                    // Settings
+                    SettingsFAB(config, appInfo, () => context.goNamed(settingsPath)),
+                  ]
+                : null,
+            isHome: true,
+          );
+        },
+      ),
     );
   }
 }
@@ -958,83 +977,72 @@ Or, something in-between.''',
 Future<void> _welcome(EzCP config, BuildContext context) => ezModal(
       config,
       context: context,
-      builder: (_) => ezModalScroll(config, children: <Widget>[
-        // Welcome
-        Text(
-          'Welcome to Liminal Launcher',
-          textAlign: TextAlign.center,
-          style: config.titleStyle,
-        ),
-        config.centerLine,
+      builder: (_) => ezModalScroll(
+        config,
+        children: <Widget>[
+          // Welcome
+          Text('Welcome to Liminal Launcher',
+              textAlign: TextAlign.center, style: config.titleStyle),
+          config.centerLine,
 
-        // Minimal-ish
-        Text(
-          "It's geared toward minimalism,\nbut has limitless customization.",
-          textAlign: TextAlign.center,
-          style: config.bodyStyle,
-        ),
-        config.centerLine,
+          // Minimal-ish
+          Text(
+            "It's geared toward minimalism,\nbut has limitless customization.",
+            textAlign: TextAlign.center,
+            style: config.bodyStyle,
+          ),
+          config.centerLine,
 
-        // Yin/Yang
-        EzRichText(
-          config,
-          children: <InlineSpan>[
-            EzPlainText(
-              text: '''Personalization is easy, and everything that needs explanation will have it. 
+          // Yin/Yang
+          EzRichText(
+            config,
+            children: <InlineSpan>[
+              EzPlainText(
+                text:
+                    '''Personalization is easy, and everything that needs explanation will have it. 
 
 As a general rule: Liminal's appearance can be completely separate based on theme mode!
 
 While in the relevant settings, you will see a toggle-able icon that indicates whether you're editing the dark ''',
-              style: config.bodyStyle,
-            ),
-            WidgetSpan(
-              alignment: PlaceholderAlignment.middle,
-              child: EzIcon(config, Icons.dark_mode),
-            ),
-            EzPlainText(
-              text: ', light ',
-              style: config.bodyStyle,
-            ),
-            WidgetSpan(
-              alignment: PlaceholderAlignment.middle,
-              child: EzIcon(config, Icons.light_mode),
-            ),
-            EzPlainText(
-              text: ', or both ',
-              style: config.bodyStyle,
-            ),
-            WidgetSpan(
-              alignment: PlaceholderAlignment.middle,
-              child: FaIcon(
-                FontAwesomeIcons.yinYang,
-                size: config.iconSize,
+                style: config.bodyStyle,
               ),
-            ),
-            EzPlainText(
-              text: ' themes.',
-              style: config.bodyStyle,
-            ),
-          ],
-          textAlign: TextAlign.center,
-          style: config.bodyStyle,
-        ),
-        config.centerLine,
+              WidgetSpan(
+                alignment: PlaceholderAlignment.middle,
+                child: EzIcon(config, Icons.dark_mode),
+              ),
+              EzPlainText(text: ', light ', style: config.bodyStyle),
+              WidgetSpan(
+                alignment: PlaceholderAlignment.middle,
+                child: EzIcon(config, Icons.light_mode),
+              ),
+              EzPlainText(text: ', or both ', style: config.bodyStyle),
+              WidgetSpan(
+                alignment: PlaceholderAlignment.middle,
+                child: FaIcon(FontAwesomeIcons.yinYang, size: config.iconSize),
+              ),
+              EzPlainText(text: ' themes.', style: config.bodyStyle),
+            ],
+            textAlign: TextAlign.center,
+            style: config.bodyStyle,
+          ),
+          config.centerLine,
 
-        // Have fun!
-        Text(
-          'Long press the home screen to get started.\nThank you, and enjoy!',
-          textAlign: TextAlign.center,
-          style: config.bodyStyle,
-        ),
-        config.separator,
-      ]),
+          // Have fun!
+          Text(
+            'Long press the home screen to get started.\nThank you, and enjoy!',
+            textAlign: TextAlign.center,
+            style: config.bodyStyle,
+          ),
+          config.separator,
+        ],
+      ),
     );
 
 Future<void> _free99(EzCP config, BuildContext context) async {
   const String m1 = '''This version is not from the Play Store, so it should have been free.
 Rest assured, the free version of Liminal will always be identical to the Google Play version.
 
-If you want to support Liminal's development, or the development of more Empathetech software, please consider ''';
+If you want to support Liminal's development, or the development of more cool software, please consider ''';
   const String m2 = 'contributing';
   const String m3 =
       '.\n\nThis is the only non-tutorial pop-up, and its only appearance this install.';
@@ -1047,57 +1055,60 @@ If you want to support Liminal's development, or the development of more Empathe
     enableDrag: false,
     isDismissible: false,
     showDragHandle: false,
-    builder: (_) => StatefulBuilder(builder: (BuildContext mCon, StateSetter setModal) {
-      final Duration readTime = Duration(
+    builder: (_) => StatefulBuilder(
+      builder: (BuildContext mCon, StateSetter setModal) {
+        final Duration readTime = Duration(
           milliseconds:
-              ((ezReadingTime(config, <String>[m1, m2, m3].join()).inMilliseconds) / 3).ceil());
+              ((ezReadingTime(config, <String>[m1, m2, m3].join()).inMilliseconds) / 3).ceil(),
+        );
 
-      Future<void>.delayed(readTime, () {
-        if (mCon.mounted) setModal(() => read = true);
-      });
+        Future<void>.delayed(readTime, () {
+          if (mCon.mounted) setModal(() => read = true);
+        });
 
-      return ezModalScroll(config, children: <Widget>[
-        EzHeader(config),
-
-        // Title
-        Text(
-          'One more thing...',
-          textAlign: TextAlign.center,
-          style: config.titleStyle,
-        ),
-        config.centerLine,
-
-        // Message
-        EzRichText(
+        return ezModalScroll(
           config,
-          children: <InlineSpan>[
-            const EzPlainText(text: m1),
-            EzInlineLink(
+          children: <Widget>[
+            EzHeader(config),
+
+            // Title
+            Text('One more thing...', textAlign: TextAlign.center, style: config.titleStyle),
+            config.centerLine,
+
+            // Message
+            EzRichText(
               config,
-              text: m2,
+              children: <InlineSpan>[
+                const EzPlainText(text: m1),
+                EzInlineLink(
+                  config,
+                  text: m2,
+                  style: config.bodyStyle,
+                  textAlign: TextAlign.center,
+                  url: Uri.parse('https://www.ywt.llc/#/contribute'),
+                  hint: 'Open a link to contribution options.',
+                ),
+                const EzPlainText(text: m3),
+              ],
               style: config.bodyStyle,
+              textBackground: false,
               textAlign: TextAlign.center,
-              url: Uri.parse('https://www.empathetech.net/#/contribute'),
-              hint: 'Open a link to the Empathetic contribution options.',
             ),
-            const EzPlainText(text: m3),
-          ],
-          style: config.bodyStyle,
-          textBackground: false,
-          textAlign: TextAlign.center,
-        ),
-        config.separator,
+            config.separator,
 
-        // Leave after (half) read
-        EzTextIconButton(
-          config,
-          label: 'Okay',
-          style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
-          icon: read ? EzIcon(config, Icons.done) : EzCountdownTimer(config, duration: readTime),
-          onPressed: () => read ? Navigator.of(mCon).pop() : doNothing(),
-        ),
-        config.separator,
-      ]);
-    }),
+            // Leave after (half) read
+            EzTextIconButton(
+              config,
+              label: 'Okay',
+              style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
+              icon:
+                  read ? EzIcon(config, Icons.done) : EzCountdownTimer(config, duration: readTime),
+              onPressed: () => read ? Navigator.of(mCon).pop() : doNothing(),
+            ),
+            config.separator,
+          ],
+        );
+      },
+    ),
   );
 }

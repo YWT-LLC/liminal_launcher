@@ -11,7 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
+import 'package:open_ui/open_ui.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() async {
@@ -27,11 +27,9 @@ void main() async {
     assetPaths: assetPaths,
     orientations: <DeviceOrientation>[DeviceOrientation.portraitUp],
     localeFallback: americanEnglish,
-    l10nFallback: await EFUILang.delegate.load(americanEnglish),
+    l10nFallback: await OUILang.delegate.load(americanEnglish),
     preferences: await SharedPreferencesWithCache.create(
-      cacheOptions: SharedPreferencesWithCacheOptions(
-        allowList: allLimKeys.keys.toSet(),
-      ),
+      cacheOptions: SharedPreferencesWithCacheOptions(allowList: allLimKeys.keys.toSet()),
     ),
     securePreferences: const FlutterSecureStorage(),
     defaults: liminalDefault,
@@ -40,26 +38,28 @@ void main() async {
 
   // Run the app //
 
-  final (Locale storedLocale, EFUILang storedEFUILang) = await ezStoredL10n();
+  final (Locale storedLocale, OUILang storedOUILang) = await ezStoredL10n();
 
-  runApp(LiminalLauncher(
-    await getApps(),
-    storedLocale,
-    storedEFUILang,
-    await Lang.delegate.load(storedLocale),
-  ));
+  runApp(
+    LiminalLauncher(
+      await getApps(),
+      storedLocale,
+      storedOUILang,
+      await Lang.delegate.load(storedLocale),
+    ),
+  );
 }
 
 class LiminalLauncher extends StatelessWidget {
   final List<AppInfo> installedApps;
   final Locale storedLocale;
-  final EFUILang storedEFUILang;
+  final OUILang storedOUILang;
   final Lang storedLang;
 
   const LiminalLauncher(
     this.installedApps,
     this.storedLocale,
-    this.storedEFUILang,
+    this.storedOUILang,
     this.storedLang, {
     super.key,
   });
@@ -67,29 +67,24 @@ class LiminalLauncher extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider<AppInfoProvider>(
         create: (_) => AppInfoProvider(installedApps),
-        child: _TheMagic(installedApps, storedLocale, storedEFUILang, storedLang),
+        child: _TheMagic(installedApps, storedLocale, storedOUILang, storedLang),
       );
 }
 
 class _TheMagic extends StatelessWidget {
   final List<AppInfo> installedApps;
   final Locale storedLocale;
-  final EFUILang storedEFUILang;
+  final OUILang storedOUILang;
   final Lang storedLang;
 
-  const _TheMagic(
-    this.installedApps,
-    this.storedLocale,
-    this.storedEFUILang,
-    this.storedLang,
-  );
+  const _TheMagic(this.installedApps, this.storedLocale, this.storedOUILang, this.storedLang);
 
   @override
   Widget build(BuildContext context) => EzConfigurableApp(
         localizationsDelegates: ezLocalizationsDelegates(Lang.localizationsDelegates),
         supportedLocales: Lang.supportedLocales,
         locale: storedLocale,
-        el10n: storedEFUILang,
+        el10n: storedOUILang,
         appCache: LiminalCache(storedLocale, storedLang),
         routerConfig: GoRouter(
           navigatorKey: ezRootNav,

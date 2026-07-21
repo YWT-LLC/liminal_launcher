@@ -6,7 +6,7 @@
 import 'export.dart';
 
 import 'package:flutter/material.dart';
-import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
+import 'package:open_ui/open_ui.dart';
 
 class LiminalScaffold extends StatelessWidget {
   final EzCP config;
@@ -24,15 +24,11 @@ class LiminalScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => EzAdaptiveParent(
-        small: EzScaffold(
-          config,
-          body: EzScreen(config, safeArea: true, child: body),
-          backgroundColor: Colors.transparent,
-          fabs: <Widget>[
-            updater(config),
-            if (fabs != null) ...fabs!,
-            ...config.backFABs(isHome),
-          ],
-        ),
-      );
+    small: EzScaffold(
+      config,
+      body: EzScreen(config, safeArea: true, child: body),
+      backgroundColor: Colors.transparent,
+      fabs: <Widget>[updater(config), if (fabs != null) ...fabs!, ...config.backFABs(isHome)],
+    ),
+  );
 }

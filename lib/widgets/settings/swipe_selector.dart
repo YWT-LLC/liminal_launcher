@@ -10,7 +10,7 @@ import '../../../widgets/export.dart';
 import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
-import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
+import 'package:open_ui/open_ui.dart';
 
 class SwipeSelector extends StatefulWidget {
   final EzCP config;
@@ -19,7 +19,7 @@ class SwipeSelector extends StatefulWidget {
   final String _key;
 
   const SwipeSelector(this.config, this.appInfo, {super.key, required this.left})
-      : _key = left ? leftSwipeIDKey : rightSwipeIDKey;
+    : _key = left ? leftSwipeIDKey : rightSwipeIDKey;
 
   @override
   State<SwipeSelector> createState() => _SwipeSelectorState();
@@ -34,8 +34,9 @@ class _SwipeSelectorState extends State<SwipeSelector> {
     final String lowDir = dir.toLowerCase();
 
     String? appID = EzCM.get(widget._key);
-    AppInfo app =
-        (appID == null || appID.isEmpty) ? nullApp : widget.appInfo.appMap[appID] ?? nullApp;
+    AppInfo app = (appID == null || appID.isEmpty)
+        ? nullApp
+        : widget.appInfo.appMap[appID] ?? nullApp;
 
     // Return the build //
 

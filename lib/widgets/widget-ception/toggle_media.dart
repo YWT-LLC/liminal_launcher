@@ -8,7 +8,7 @@ import '../export.dart';
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
+import 'package:open_ui/open_ui.dart';
 
 //* Core Widget *//
 
@@ -62,10 +62,12 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
     final double dy = (wya.dy - lastRipple.dy).abs();
 
     if (dy <= (widget.rippleProgress!.value * heightOf(context))) {
-      setState(() => state = switch (state) {
-            AppState.standard => AppState.groupEdit,
-            _ => AppState.standard,
-          });
+      setState(
+        () => state = switch (state) {
+          AppState.standard => AppState.groupEdit,
+          _ => AppState.standard,
+        },
+      );
 
       final Duration animDur = ezDuration(widget.config.animDur, mod: rippleMod);
       rippleThrottle = Timer(
@@ -96,11 +98,13 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
       forceType: EzTransitionType.none,
       child: switch (state) {
         AppState.standard => MenuAnchor(
-            builder: (_, MenuController controller, __) => EzIconButton(
-              widget.config,
-              icon: (widget._size == WidgetSize.button)
-                  ? const Icon(Icons.headphones)
-                  : EzRow(widget.config, children: <Widget>[
+          builder: (_, MenuController controller, __) => EzIconButton(
+            widget.config,
+            icon: (widget._size == WidgetSize.button)
+                ? const Icon(Icons.headphones)
+                : EzRow(
+                    widget.config,
+                    children: <Widget>[
                       // Previous
                       widget.config.rowMargin,
                       GestureDetector(onTap: skipPrev, child: const Icon(Icons.skip_previous)),
@@ -113,39 +117,40 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
                       // Next
                       GestureDetector(onTap: skipNext, child: const Icon(Icons.skip_next)),
                       widget.config.rowMargin,
-                    ]),
-              onPressed: (widget._size == WidgetSize.button) ? toggleMedia : doNothing,
-              onLongPress: () => canToggleMenu(widget.config, controller),
-            ),
-            menuChildren: _menuChildren(
-              widget.config,
-              appInfo: widget.appInfo,
-              context: context,
-              state: state,
-              numLanes: numLanes,
-              pos: widget.pos,
-              initSize: widget._size,
-            ),
+                    ],
+                  ),
+            onPressed: (widget._size == WidgetSize.button) ? toggleMedia : doNothing,
+            onLongPress: () => canToggleMenu(widget.config, controller),
           ),
-        _ => EditContainer(
+          menuChildren: _menuChildren(
             widget.config,
-            subAlign: widget.pos.subAlign,
-            menuControl: menuControl,
-            menuChildren: _menuChildren(
-              widget.config,
-              appInfo: widget.appInfo,
-              context: context,
-              state: state,
-              numLanes: numLanes,
-              pos: widget.pos,
-              initSize: widget._size,
-            ),
-            child: EzIconButton(
-              widget.config,
-              icon: const Icon(Icons.headphones),
-              onPressed: () => toggleMenu(menuControl),
-            ),
+            appInfo: widget.appInfo,
+            context: context,
+            state: state,
+            numLanes: numLanes,
+            pos: widget.pos,
+            initSize: widget._size,
           ),
+        ),
+        _ => EditContainer(
+          widget.config,
+          subAlign: widget.pos.subAlign,
+          menuControl: menuControl,
+          menuChildren: _menuChildren(
+            widget.config,
+            appInfo: widget.appInfo,
+            context: context,
+            state: state,
+            numLanes: numLanes,
+            pos: widget.pos,
+            initSize: widget._size,
+          ),
+          child: EzIconButton(
+            widget.config,
+            icon: const Icon(Icons.headphones),
+            onPressed: () => toggleMenu(menuControl),
+          ),
+        ),
       },
     );
   }
@@ -165,39 +170,27 @@ List<Widget> _menuChildren(
   required int numLanes,
   required LimPos pos,
   required WidgetSize initSize,
-}) =>
-    <Widget>[
-      // Edit
-      _EditTM(
-        config,
-        appInfo,
-        initSize: initSize,
-        lane: pos.lane,
-        index: pos.index,
-      ),
+}) => <Widget>[
+  // Edit
+  _EditTM(config, appInfo, initSize: initSize, lane: pos.lane, index: pos.index),
 
-      // Dupe
-      EzMenuButton(
-        config,
-        label: 'Duplicate',
-        icon: EzIcon(config, Icons.copy),
-        onPressed: () => appInfo.dupeItem(
-          config,
-          editNew: null,
-          lane: pos.lane,
-          index: pos.index,
-        ),
-      ),
+  // Dupe
+  EzMenuButton(
+    config,
+    label: 'Duplicate',
+    icon: EzIcon(config, Icons.copy),
+    onPressed: () => appInfo.dupeItem(config, editNew: null, lane: pos.lane, index: pos.index),
+  ),
 
-      // Move
-      if (state == AppState.groupEdit && numLanes > 1) ...<Widget>[
-        moveDownLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
-        moveUpLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
-      ],
+  // Move
+  if (state == AppState.groupEdit && numLanes > 1) ...<Widget>[
+    moveDownLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
+    moveUpLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
+  ],
 
-      // Remove
-      removeItem(config, appInfo, lane: pos.lane, index: pos.index),
-    ];
+  // Remove
+  removeItem(config, appInfo, lane: pos.lane, index: pos.index),
+];
 
 //* Add Widget *//
 
@@ -217,29 +210,28 @@ class AddToggleMedia extends StatelessWidget {
     required this.size,
   });
 
-  void onTap() => appInfo.addWidget(
-        config,
-        type: WidWidGetGet.toggleMedia,
-        editNew: null,
-        lane: lane,
-      );
+  void onTap() =>
+      appInfo.addWidget(config, type: WidWidGetGet.toggleMedia, editNew: null, lane: lane);
 
   @override
   Widget build(BuildContext context) => EzIconButton(
-        config,
-        onPressed: onTap,
-        icon: (size == WidgetSize.button)
-            ? const Icon(Icons.headphones)
-            : EzRow(config, children: <Widget>[
-                config.rowMargin,
-                const Icon(Icons.skip_previous),
-                config.rowSpacer,
-                const Icon(Icons.headphones),
-                config.rowSpacer,
-                const Icon(Icons.skip_next),
-                config.rowMargin,
-              ]),
-      );
+    config,
+    onPressed: onTap,
+    icon: (size == WidgetSize.button)
+        ? const Icon(Icons.headphones)
+        : EzRow(
+            config,
+            children: <Widget>[
+              config.rowMargin,
+              const Icon(Icons.skip_previous),
+              config.rowSpacer,
+              const Icon(Icons.headphones),
+              config.rowSpacer,
+              const Icon(Icons.skip_next),
+              config.rowMargin,
+            ],
+          ),
+  );
 }
 
 String defaultMediaEntry() => _mediaEntry(WidgetSize.tile);
@@ -254,14 +246,13 @@ Future<void> _quickResize(
   required WidgetSize initSize,
   required int lane,
   required int index,
-}) async =>
-    await appInfo.updateWidget(
-      config,
-      WidWidGetGet.toggleMedia,
-      _mediaEntry(initSize == WidgetSize.tile ? WidgetSize.button : WidgetSize.tile),
-      lane: lane,
-      index: index,
-    );
+}) async => await appInfo.updateWidget(
+  config,
+  WidWidGetGet.toggleMedia,
+  _mediaEntry(initSize == WidgetSize.tile ? WidgetSize.button : WidgetSize.tile),
+  lane: lane,
+  index: index,
+);
 
 class _EditTM extends StatelessWidget {
   final EzCP config;
@@ -280,15 +271,10 @@ class _EditTM extends StatelessWidget {
 
   @override
   Widget build(_) => EzMenuButton(
-        config,
-        label: 'Resize',
-        icon: EzIcon(config, Icons.edit),
-        onPressed: () => _quickResize(
-          config,
-          appInfo: appInfo,
-          initSize: initSize,
-          lane: lane,
-          index: index,
-        ),
-      );
+    config,
+    label: 'Resize',
+    icon: EzIcon(config, Icons.edit),
+    onPressed: () =>
+        _quickResize(config, appInfo: appInfo, initSize: initSize, lane: lane, index: index),
+  );
 }

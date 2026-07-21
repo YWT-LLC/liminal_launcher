@@ -6,7 +6,7 @@
 import '../../utils/export.dart';
 
 import 'package:flutter/material.dart';
-import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
+import 'package:open_ui/open_ui.dart';
 
 class EditContainer extends StatefulWidget {
   final EzCP config;
@@ -40,54 +40,47 @@ class _EditContainerState extends State<EditContainer> with SingleTickerProvider
 
     _animControl = AnimationController(vsync: this, duration: breatheTime);
 
-    _animation = Tween<double>(begin: 0.0, end: 1.0)
-        .animate(CurvedAnimation(parent: _animControl, curve: Curves.linear));
+    _animation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _animControl, curve: Curves.linear));
 
     _animControl.repeat(reverse: true);
   }
 
   // Return the build //
 
-  Widget core() => EzRow(widget.config, children: <Widget>[
-        EzIcon(
-          widget.config,
-          Icons.drag_handle,
-          color: widget.config.colors.outline,
-        ),
-        widget.config.rowMargin,
-        MenuAnchor(
-          controller: widget.menuControl,
-          builder: (_, __, ___) => AnimatedBuilder(
-            animation: _animation,
-            builder: (_, __) => Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: widget.config.colors.secondary.withValues(alpha: _animation.value),
-                  width: widget.config.borderWidth,
-                ),
-                borderRadius: widget.config.buttonShape.radius,
+  Widget core() => EzRow(
+    widget.config,
+    children: <Widget>[
+      EzIcon(widget.config, Icons.drag_handle, color: widget.config.colors.outline),
+      widget.config.rowMargin,
+      MenuAnchor(
+        controller: widget.menuControl,
+        builder: (_, __, ___) => AnimatedBuilder(
+          animation: _animation,
+          builder: (_, __) => Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: widget.config.colors.secondary.withValues(alpha: _animation.value),
+                width: widget.config.borderWidth,
               ),
-              child: widget.child,
+              borderRadius: widget.config.buttonShape.radius,
             ),
+            child: widget.child,
           ),
-          menuChildren: widget.menuChildren,
         ),
-        widget.config.rowMargin,
-        EzIcon(
-          widget.config,
-          Icons.drag_handle,
-          color: widget.config.colors.outline,
-        ),
-      ]);
+        menuChildren: widget.menuChildren,
+      ),
+      widget.config.rowMargin,
+      EzIcon(widget.config, Icons.drag_handle, color: widget.config.colors.outline),
+    ],
+  );
 
   @override
   Widget build(_) => wideTiles(widget.config)
       ? InkWell(
-          child: Container(
-            width: double.infinity,
-            alignment: widget.subAlign,
-            child: core(),
-          ),
+          child: Container(width: double.infinity, alignment: widget.subAlign, child: core()),
         )
       : InkWell(child: core());
 

@@ -12,7 +12,7 @@ import '../widgets/export.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
+import 'package:open_ui/open_ui.dart';
 
 class SettingsScreen extends StatelessWidget {
   /// Optionally override the starting position
@@ -29,7 +29,6 @@ class SettingsScreen extends StatelessWidget {
           config,
           pages: <EzSettingsSection>[
             // Global //
-
             EzSettingsSection(
               position: 0,
               title: config.ezL10n.gGlobal,
@@ -37,8 +36,8 @@ class SettingsScreen extends StatelessWidget {
                 config,
                 EzCM.onMobile
                     ? EzCM.platform == TargetPlatform.iOS
-                        ? Icons.phone_iphone
-                        : Icons.phone_android
+                          ? Icons.phone_iphone
+                          : Icons.phone_android
                     : Icons.computer,
                 semanticLabel: config.ezL10n.gGlobal,
               ),
@@ -69,8 +68,10 @@ class SettingsScreen extends StatelessWidget {
 
                     // Page design
                     await EzCM.setBool(darkHideStatusKey, false);
-                    await EzCM.setString(darkHorizontalAlignKey,
-                        config.isLefty ? ListAlignment.end.value : ListAlignment.start.value);
+                    await EzCM.setString(
+                      darkHorizontalAlignKey,
+                      config.isLefty ? ListAlignment.end.value : ListAlignment.start.value,
+                    );
                     await EzCM.setString(darkVerticalAlignKey, ListAlignment.start.value);
                   }
 
@@ -88,8 +89,10 @@ class SettingsScreen extends StatelessWidget {
 
                     // Page design
                     await EzCM.setBool(lightHideStatusKey, false);
-                    await EzCM.setString(lightHorizontalAlignKey,
-                        config.isLefty ? ListAlignment.end.value : ListAlignment.start.value);
+                    await EzCM.setString(
+                      lightHorizontalAlignKey,
+                      config.isLefty ? ListAlignment.end.value : ListAlignment.start.value,
+                    );
                     await EzCM.setString(lightVerticalAlignKey, ListAlignment.start.value);
                   }
                 },
@@ -161,8 +164,10 @@ class SettingsScreen extends StatelessWidget {
 
                   // Page design
                   await EzCM.setBool(darkHideStatusKey, true);
-                  await EzCM.setString(darkHorizontalAlignKey,
-                      config.isLefty ? ListAlignment.end.value : ListAlignment.start.value);
+                  await EzCM.setString(
+                    darkHorizontalAlignKey,
+                    config.isLefty ? ListAlignment.end.value : ListAlignment.start.value,
+                  );
                   await EzCM.setString(darkVerticalAlignKey, ListAlignment.start.value);
                 },
                 extraWall: (_) async {
@@ -179,27 +184,21 @@ class SettingsScreen extends StatelessWidget {
 
                   // Page design
                   await EzCM.setBool(lightHideStatusKey, false);
-                  await EzCM.setString(lightHorizontalAlignKey,
-                      config.isLefty ? ListAlignment.end.value : ListAlignment.start.value);
+                  await EzCM.setString(
+                    lightHorizontalAlignKey,
+                    config.isLefty ? ListAlignment.end.value : ListAlignment.start.value,
+                  );
                   await EzCM.setString(lightVerticalAlignKey, ListAlignment.start.value);
                 },
               ),
             ),
 
             // Color //
-
             EzSettingsSection(
               position: 1,
               title: config.ezL10n.gColor,
-              icon: EzIcon(
-                config,
-                Icons.palette,
-                semanticLabel: config.ezL10n.gColor,
-              ),
-              subSettings: <EzSubSetting>[
-                EzSubSetting.qckColor,
-                EzSubSetting.advColor,
-              ],
+              icon: EzIcon(config, Icons.palette, semanticLabel: config.ezL10n.gColor),
+              subSettings: <EzSubSetting>[EzSubSetting.qckColor, EzSubSetting.advColor],
               fromStorage: () => EzCM.get(advancedColorsKey) == true
                   ? EzSubSetting.advColor
                   : EzSubSetting.qckColor,
@@ -207,19 +206,11 @@ class SettingsScreen extends StatelessWidget {
             ),
 
             // Design //
-
             EzSettingsSection(
               position: 2,
               title: config.ezL10n.gDesign,
-              icon: EzIcon(
-                config,
-                Icons.design_services,
-                semanticLabel: config.ezL10n.gDesign,
-              ),
-              subSettings: <EzSubSetting>[
-                EzSubSetting.butDesign,
-                EzSubSetting.pagDesign,
-              ],
+              icon: EzIcon(config, Icons.design_services, semanticLabel: config.ezL10n.gDesign),
+              subSettings: <EzSubSetting>[EzSubSetting.butDesign, EzSubSetting.pagDesign],
               fromStorage: () =>
                   EzCM.get(pageTabKey) == true ? EzSubSetting.pagDesign : EzSubSetting.butDesign,
               build: (EzSubSetting subSec) => EzDesignSettings(
@@ -262,19 +253,24 @@ class SettingsScreen extends StatelessWidget {
                       await ezModal(
                         config,
                         context: context,
-                        builder: (_) => ezModalScroll(config, children: <Widget>[
-                          AlignmentSelectors(config),
-                          config.separator,
-                        ]),
+                        builder: (_) => ezModalScroll(
+                          config,
+                          children: <Widget>[AlignmentSelectors(config), config.separator],
+                        ),
                       );
 
                       if (horizontalAlign(config) !=
-                              LAConfig.lookup(EzCM.get(config.isDark
-                                  ? darkHorizontalAlignKey
-                                  : lightHorizontalAlignKey)) ||
+                              LAConfig.lookup(
+                                EzCM.get(
+                                  config.isDark ? darkHorizontalAlignKey : lightHorizontalAlignKey,
+                                ),
+                              ) ||
                           verticalAlign(config) !=
-                              LAConfig.lookup(EzCM.get(
-                                  config.isDark ? darkVerticalAlignKey : lightVerticalAlignKey))) {
+                              LAConfig.lookup(
+                                EzCM.get(
+                                  config.isDark ? darkVerticalAlignKey : lightVerticalAlignKey,
+                                ),
+                              )) {
                         await config.rebuildUI(<EzCacheType>{EzCacheType.design});
                       }
                     },
@@ -321,10 +317,7 @@ class SettingsScreen extends StatelessWidget {
                       if (choice == null) return;
 
                       if (EzCM.updateBoth) {
-                        await EzCM.setBool(
-                          config.isDark ? lightPagesKey : darkPagesKey,
-                          choice,
-                        );
+                        await EzCM.setBool(config.isDark ? lightPagesKey : darkPagesKey, choice);
                       }
 
                       await config.rebuildUI(<EzCacheType>{EzCacheType.design});
@@ -336,19 +329,11 @@ class SettingsScreen extends StatelessWidget {
             ),
 
             // Text //
-
             EzSettingsSection(
               position: 3,
               title: config.ezL10n.gText,
-              icon: EzIcon(
-                config,
-                Icons.text_format,
-                semanticLabel: config.ezL10n.gText,
-              ),
-              subSettings: <EzSubSetting>[
-                EzSubSetting.qckText,
-                EzSubSetting.advText,
-              ],
+              icon: EzIcon(config, Icons.text_format, semanticLabel: config.ezL10n.gText),
+              subSettings: <EzSubSetting>[EzSubSetting.qckText, EzSubSetting.advText],
               fromStorage: () =>
                   EzCM.get(advancedTextKey) == true ? EzSubSetting.advText : EzSubSetting.qckText,
               build: (EzSubSetting subSec) => EzTextSettings(config, target: subSec),
@@ -358,10 +343,7 @@ class SettingsScreen extends StatelessWidget {
         ),
         fabs: <Widget>[
           // Rebuild (conditional)
-          if (config.needsRebuild) ...<Widget>[
-            config.spacer,
-            EzRebuildFAB(config),
-          ],
+          if (config.needsRebuild) ...<Widget>[config.spacer, EzRebuildFAB(config)],
 
           // Save/upload config
           config.spacer,

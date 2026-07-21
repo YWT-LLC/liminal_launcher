@@ -1,4 +1,4 @@
-package net.empathetech.liminal
+package llc.ywt.liminal
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -36,8 +36,8 @@ import java.io.File
 //* Main *//
 
 class MainActivity : FlutterFragmentActivity() {
-  private val METHOD_CHANNEL: String = "net.empathetech.liminal/query"
-  private val EVENT_CHANNEL: String = "net.empathetech.liminal/app_events"
+  private val METHOD_CHANNEL: String = "llc.ywt.liminal/query"
+  private val EVENT_CHANNEL: String = "llc.ywt.liminal/app_events"
 
   private var appEventStreamHandler: AppEventStreamHandler? = null
 

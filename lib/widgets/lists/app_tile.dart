@@ -10,7 +10,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
+import 'package:open_ui/open_ui.dart';
 
 //* Core Widget *//
 
@@ -43,9 +43,11 @@ class AppTile extends StatefulWidget {
     required this.onSelected,
     this.hAlign,
     this.vAlign,
-  })  : assert(((pos == null) != (hAlign == null)) && (hAlign == null) == (vAlign == null),
-            'Provide pos OR (hAlign AND vAlign)'),
-        super(key: ValueKey<String>('${app.id}-${state.index}')) {
+  }) : assert(
+         ((pos == null) != (hAlign == null)) && (hAlign == null) == (vAlign == null),
+         'Provide pos OR (hAlign AND vAlign)',
+       ),
+       super(key: ValueKey<String>('${app.id}-${state.index}')) {
     if (pos != null) {
       final List<String> data = appInfo
           .homeItem(config, lane: pos!.lane, index: pos!.index)
@@ -58,9 +60,9 @@ class AppTile extends StatefulWidget {
       _icon = (storedIcon == esSystem)
           ? null
           : (int.tryParse(storedIcon) == null)
-              ? null
-              // ignore: non_const_argument_for_const_parameter
-              : IconData(int.tryParse(storedIcon)!);
+          ? null
+          // ignore: non_const_argument_for_const_parameter
+          : IconData(int.tryParse(storedIcon)!);
 
       _buttonType = BTConfig.lookup(data[2]);
       _labelType = LTConfig.lookup(data[3]);
@@ -97,11 +99,13 @@ class _AppTileState extends State<AppTile> {
     final double dy = (wya.dy - lastRipple.dy).abs();
 
     if (dy <= widget.rippleProgress!.value * heightOf(context)) {
-      setState(() => state = switch (state) {
-            AppState.standard =>
-              (widget.location == AppLocation.list) ? AppState.verbose : AppState.groupEdit,
-            _ => AppState.standard,
-          });
+      setState(
+        () => state = switch (state) {
+          AppState.standard =>
+            (widget.location == AppLocation.list) ? AppState.verbose : AppState.groupEdit,
+          _ => AppState.standard,
+        },
+      );
 
       final Duration animDur = ezDuration(widget.config.animDur, mod: rippleMod);
       rippleThrottle = Timer(
@@ -148,15 +152,12 @@ class _AppTileState extends State<AppTile> {
   }
 
   Widget verboseSpace() => switch (state) {
-        AppState.verbose => SizedBox(
-            height: widget.config.iconSize,
-            child: VerticalDivider(
-              width: widget.config.spacing,
-              color: widget.config.colors.secondary,
-            ),
-          ),
-        _ => SizedBox(height: widget.config.iconSize, width: widget.config.spacing),
-      };
+    AppState.verbose => SizedBox(
+      height: widget.config.iconSize,
+      child: VerticalDivider(width: widget.config.spacing, color: widget.config.colors.secondary),
+    ),
+    _ => SizedBox(height: widget.config.iconSize, width: widget.config.spacing),
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -169,18 +170,18 @@ class _AppTileState extends State<AppTile> {
       forceType: EzTransitionType.none,
       child: switch (state) {
         AppState.standard => MenuAnchor(
-            builder: (_, MenuController controller, __) => (widget.location == AppLocation.folder)
-                ? AppButton(
-                    widget.config,
-                    name: widget.app.label,
-                    image: widget.app.icon,
-                    icon: widget._icon,
-                    buttonType: listBT(widget.config),
-                    labelType: listLabels(widget.config),
-                    onPressed: () => widget.onSelected(widget.app),
-                    onLongPress: () => canToggleMenu(widget.config, controller),
-                  )
-                : (wideTiles(widget.config)
+          builder: (_, MenuController controller, __) => (widget.location == AppLocation.folder)
+              ? AppButton(
+                  widget.config,
+                  name: widget.app.label,
+                  image: widget.app.icon,
+                  icon: widget._icon,
+                  buttonType: listBT(widget.config),
+                  labelType: listLabels(widget.config),
+                  onPressed: () => widget.onSelected(widget.app),
+                  onLongPress: () => canToggleMenu(widget.config, controller),
+                )
+              : (wideTiles(widget.config)
                     ? InkWell(
                         onTap: () => widget.onSelected(widget.app),
                         onLongPress: () => canToggleMenu(widget.config, controller),
@@ -211,114 +212,110 @@ class _AppTileState extends State<AppTile> {
                         onPressed: () => widget.onSelected(widget.app),
                         onLongPress: () => canToggleMenu(widget.config, controller),
                       )),
-            menuChildren: _menuChildren(
-              widget.config,
-              appInfo: widget.appInfo,
-              context: context,
-              app: widget.app,
-              location: widget.location,
-              state: state,
-              numLanes: numLanes,
-              lane: widget.pos?.lane,
-              index: widget.pos?.index,
-              initConfig: (widget.location == AppLocation.home)
-                  ? AppConfig(
-                      app: widget.app,
-                      name: widget._name,
-                      icon: widget._icon,
-                      buttonType: widget._buttonType,
-                      labelType: widget._labelType,
-                    )
-                  : null,
-            ),
-          ),
-        AppState.verbose => EzScrollBlocker(
-            EzScrollView(
-              widget.config,
-              showScrollHint: true,
-              thumbVisibility: false,
-              mainAxisAlignment: widget.hAlign!.mainAxis,
-              scrollDirection: Axis.horizontal,
-              children: <Widget>[
-                // Name && icon
-                AppButton(
-                  widget.config,
-                  name: widget.app.label,
-                  image: widget.app.icon,
-                  icon: null,
-                  buttonType: listBT(widget.config),
-                  labelType: listLabels(widget.config),
-                  onPressed: () => widget.onSelected(widget.app),
-                ),
-                verboseSpace(),
-
-                // Publisher (plain text)
-                EzText(
-                  widget.config,
-                  text: widget.app.package,
-                  textAlign: TextAlign.center,
-                ),
-                verboseSpace(),
-
-                // Publisher (link)
-                ...publisherLink(),
-
-                // Install date
-                EzText(
-                  widget.config,
-                  text: DTConfig.buildDate(
-                    context,
-                    DateTime.fromMillisecondsSinceEpoch(widget.app.installDate),
-                    DateType.compact,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                verboseSpace(),
-
-                // Package size
-                EzText(
-                  widget.config,
-                  text: '${(widget.app.packageSize / _toMB).toStringAsFixed(2)} MB',
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-        AppState.groupEdit => EditContainer(
+          menuChildren: _menuChildren(
             widget.config,
-            subAlign: widget.pos!.subAlign,
-            menuControl: menuControl,
-            menuChildren: _menuChildren(
-              widget.config,
-              appInfo: widget.appInfo,
-              context: context,
-              app: widget.app,
-              location: widget.location,
-              state: state,
-              numLanes: numLanes,
-              lane: widget.pos?.lane,
-              index: widget.pos?.index,
-              initConfig: AppConfig(
-                app: widget.app,
-                name: widget._name,
-                icon: widget._icon,
-                buttonType: widget._buttonType,
-                labelType: widget._labelType,
+            appInfo: widget.appInfo,
+            context: context,
+            app: widget.app,
+            location: widget.location,
+            state: state,
+            numLanes: numLanes,
+            lane: widget.pos?.lane,
+            index: widget.pos?.index,
+            initConfig: (widget.location == AppLocation.home)
+                ? AppConfig(
+                    app: widget.app,
+                    name: widget._name,
+                    icon: widget._icon,
+                    buttonType: widget._buttonType,
+                    labelType: widget._labelType,
+                  )
+                : null,
+          ),
+        ),
+        AppState.verbose => EzScrollBlocker(
+          EzScrollView(
+            widget.config,
+            showScrollHint: true,
+            thumbVisibility: false,
+            mainAxisAlignment: widget.hAlign!.mainAxis,
+            scrollDirection: Axis.horizontal,
+            children: <Widget>[
+              // Name && icon
+              AppButton(
+                widget.config,
+                name: widget.app.label,
+                image: widget.app.icon,
+                icon: null,
+                buttonType: listBT(widget.config),
+                labelType: listLabels(widget.config),
+                onPressed: () => widget.onSelected(widget.app),
               ),
-            ),
-            child: GestureDetector(
-              onTap: () => toggleMenu(menuControl),
-              child: widget._icon == null
-                  ? Image.memory(
-                      widget.app.icon!,
-                      semanticLabel: widget._name ?? widget.app.label,
-                      width: appIconSize(widget.config),
-                      height: appIconSize(widget.config),
-                      alignment: widget.pos!.subAlign,
-                    )
-                  : Icon(widget._icon),
+              verboseSpace(),
+
+              // Publisher (plain text)
+              EzText(widget.config, text: widget.app.package, textAlign: TextAlign.center),
+              verboseSpace(),
+
+              // Publisher (link)
+              ...publisherLink(),
+
+              // Install date
+              EzText(
+                widget.config,
+                text: DTConfig.buildDate(
+                  context,
+                  DateTime.fromMillisecondsSinceEpoch(widget.app.installDate),
+                  DateType.compact,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              verboseSpace(),
+
+              // Package size
+              EzText(
+                widget.config,
+                text: '${(widget.app.packageSize / _toMB).toStringAsFixed(2)} MB',
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+        AppState.groupEdit => EditContainer(
+          widget.config,
+          subAlign: widget.pos!.subAlign,
+          menuControl: menuControl,
+          menuChildren: _menuChildren(
+            widget.config,
+            appInfo: widget.appInfo,
+            context: context,
+            app: widget.app,
+            location: widget.location,
+            state: state,
+            numLanes: numLanes,
+            lane: widget.pos?.lane,
+            index: widget.pos?.index,
+            initConfig: AppConfig(
+              app: widget.app,
+              name: widget._name,
+              icon: widget._icon,
+              buttonType: widget._buttonType,
+              labelType: widget._labelType,
             ),
           ),
+          child: GestureDetector(
+            onTap: () => toggleMenu(menuControl),
+            child: widget._icon == null
+                ? Image.memory(
+                    widget.app.icon!,
+                    semanticLabel: widget._name ?? widget.app.label,
+                    width: appIconSize(widget.config),
+                    height: appIconSize(widget.config),
+                    alignment: widget.pos!.subAlign,
+                  )
+                : Icon(widget._icon),
+          ),
+        ),
       },
     );
   }
@@ -341,104 +338,102 @@ List<Widget> _menuChildren(
   required int? lane,
   required int? index,
   AppConfig? initConfig,
-}) =>
-    switch (location) {
-      AppLocation.home => <Widget>[
-          // Edit
-          _EditApp(
+}) => switch (location) {
+  AppLocation.home => <Widget>[
+    // Edit
+    _EditApp(
+      config,
+      appInfo,
+      pContext: context,
+      initConfig: initConfig!,
+      lane: lane!,
+      index: index!,
+    ),
+
+    // Dupe
+    EzMenuButton(
+      config,
+      label: 'Duplicate',
+      icon: EzIcon(config, Icons.copy),
+      onPressed: () => appInfo.dupeItem(
+        config,
+        editNew: () async {
+          if (!ezRootIsMounted) return;
+          await editApp(
             config,
-            appInfo,
-            pContext: context,
-            initConfig: initConfig!,
-            lane: lane!,
-            index: index!,
-          ),
+            appInfo: appInfo,
+            pContext: ezRootContext,
+            initConfig: initConfig,
+            lane: lane,
+            index: index,
+          );
+        },
+        lane: lane,
+        index: index,
+      ),
+    ),
 
-          // Dupe
-          EzMenuButton(
-            config,
-            label: 'Duplicate',
-            icon: EzIcon(config, Icons.copy),
-            onPressed: () => appInfo.dupeItem(
-              config,
-              editNew: () async {
-                if (!ezRootIsMounted) return;
-                await editApp(
-                  config,
-                  appInfo: appInfo,
-                  pContext: ezRootContext,
-                  initConfig: initConfig,
-                  lane: lane,
-                  index: index,
-                );
-              },
-              lane: lane,
-              index: index,
-            ),
-          ),
+    // Move
+    if (state == AppState.groupEdit && numLanes > 1) ...<Widget>[
+      moveDownLane(config, appInfo, numLanes: numLanes, lane: lane, index: index),
+      moveUpLane(config, appInfo, numLanes: numLanes, lane: lane, index: index),
+    ],
 
-          // Move
-          if (state == AppState.groupEdit && numLanes > 1) ...<Widget>[
-            moveDownLane(config, appInfo, numLanes: numLanes, lane: lane, index: index),
-            moveUpLane(config, appInfo, numLanes: numLanes, lane: lane, index: index),
-          ],
+    // Remove
+    removeItem(config, appInfo, lane: lane, index: index),
 
-          // Remove
-          removeItem(config, appInfo, lane: lane, index: index),
-
-          // Base
-          ..._baseMC(config, appInfo: appInfo, context: context, app: app),
-        ],
-      _ => _baseMC(config, appInfo: appInfo, context: context, app: app),
-    };
+    // Base
+    ..._baseMC(config, appInfo: appInfo, context: context, app: app),
+  ],
+  _ => _baseMC(config, appInfo: appInfo, context: context, app: app),
+};
 
 List<Widget> _baseMC(
   EzCP config, {
   required AppInfoProvider appInfo,
   required BuildContext context,
   required AppInfo app,
-}) =>
-    <Widget>[
-      // Info
-      EzMenuButton(
-        config,
-        label: 'Info',
-        icon: EzIcon(config, Icons.info),
-        onPressed: () => openAppSettings(app),
-      ),
+}) => <Widget>[
+  // Info
+  EzMenuButton(
+    config,
+    label: 'Info',
+    icon: EzIcon(config, Icons.info),
+    onPressed: () => openAppSettings(app),
+  ),
 
-      // Show/hide
-      appInfo.hidden(config).contains(app.id)
-          ? EzMenuButton(
-              config,
-              label: 'Show',
-              icon: EzIcon(config, Icons.visibility),
-              onPressed: () async => await appInfo.showApp(config, app.id),
-            )
-          : EzMenuButton(
-              config,
-              label: 'Hide',
-              icon: EzIcon(config, Icons.visibility_off),
-              onPressed: () async => await appInfo.hideApp(config, context, app.id),
-            ),
-
-      // Banish
-      EzMenuButton(
-        config,
-        label: 'Banish',
-        icon: EzIcon(config, LineIcons.ghost),
-        onPressed: () async => await appInfo.banishApp(config, context, app.id),
-      ),
-
-      // Uninstall
-      if (app.removable)
-        EzMenuButton(
+  // Show/hide
+  appInfo.hidden(config).contains(app.id)
+      ? EzMenuButton(
           config,
-          label: 'Uninstall',
-          icon: EzIcon(config, Icons.delete),
-          onPressed: () async => await openDelete(app),
+          label: 'Show',
+          icon: EzIcon(config, Icons.visibility),
+          onPressed: () async => await appInfo.showApp(config, app.id),
+        )
+      : EzMenuButton(
+          config,
+          label: 'Hide',
+          icon: EzIcon(config, Icons.visibility_off),
+          onPressed: () async => await appInfo.hideApp(config, context, app.id),
         ),
-    ];
+
+  // Banish
+  EzMenuButton(
+    config,
+    label: 'Banish',
+    icon: EzIcon(config, LineIcons.ghost),
+    onPressed: () async => await appInfo.banishApp(config, context, app.id),
+  ),
+
+  // Uninstall
+  if (app.removable)
+    EzMenuButton(
+      config,
+      label: 'Uninstall',
+      icon: EzIcon(config, Icons.delete),
+      onPressed: () async => await openDelete(app),
+    ),
+];
 
 //* Add Widget *//
 
@@ -466,70 +461,67 @@ class AppButton extends StatelessWidget {
 
   Widget appIcon() => (icon == null)
       ? (image == null)
-          ? Icon(Icons.question_mark, semanticLabel: name)
-          : Image.memory(
-              image!,
-              semanticLabel: name,
-              width: appIconSize(config),
-              height: appIconSize(config),
-            )
+            ? Icon(Icons.question_mark, semanticLabel: name)
+            : Image.memory(
+                image!,
+                semanticLabel: name,
+                width: appIconSize(config),
+                height: appIconSize(config),
+              )
       : Icon(icon!);
 
   @override
   Widget build(BuildContext context) => switch (buttonType) {
-        ButtonType.icon => Tooltip(
-            message: name,
-            child: GestureDetector(
-              onTap: onPressed,
-              onLongPress: onLongPress,
-              child: appIcon(),
-            )),
-        ButtonType.eIcon => EzIconButton(
-            config,
-            tooltip: name,
-            onPressed: onPressed,
-            onLongPress: onLongPress,
-            icon: appIcon(),
-          ),
-        ButtonType.text => EzTextButton(
-            config,
-            text: buildLabel(name, labelType),
-            style: TextButton.styleFrom(
-              padding: config.textBackgroundOpacity < oneP
-                  ? EdgeInsets.zero
-                  : EdgeInsets.all(config.padding),
-            ),
-            onPressed: onPressed,
-            onLongPress: onLongPress,
-          ),
-        ButtonType.eText => EzElevatedButton(
-            config,
-            text: buildLabel(name, labelType),
-            style: TextButton.styleFrom(padding: EdgeInsets.all(config.padding)),
-            onPressed: onPressed,
-            onLongPress: onLongPress,
-          ),
-        ButtonType.textIcon => EzTextIconButton(
-            config,
-            label: buildLabel(name, labelType),
-            icon: appIcon(),
-            style: TextButton.styleFrom(
-              padding: config.textBackgroundOpacity < oneP
-                  ? EdgeInsets.zero
-                  : EdgeInsets.all(config.padding),
-            ),
-            onPressed: onPressed,
-            onLongPress: onLongPress,
-          ),
-        ButtonType.eTextIcon => EzElevatedIconButton(
-            config,
-            label: buildLabel(name, labelType),
-            icon: appIcon(),
-            style: TextButton.styleFrom(padding: EdgeInsets.all(config.padding)),
-            onPressed: onPressed,
-            onLongPress: onLongPress,
-          ),
-      };
+    ButtonType.icon => Tooltip(
+      message: name,
+      child: GestureDetector(onTap: onPressed, onLongPress: onLongPress, child: appIcon()),
+    ),
+    ButtonType.eIcon => EzIconButton(
+      config,
+      tooltip: name,
+      onPressed: onPressed,
+      onLongPress: onLongPress,
+      icon: appIcon(),
+    ),
+    ButtonType.text => EzTextButton(
+      config,
+      text: buildLabel(name, labelType),
+      style: TextButton.styleFrom(
+        padding: config.textBackgroundOpacity < oneP
+            ? EdgeInsets.zero
+            : EdgeInsets.all(config.padding),
+      ),
+      onPressed: onPressed,
+      onLongPress: onLongPress,
+    ),
+    ButtonType.eText => EzElevatedButton(
+      config,
+      text: buildLabel(name, labelType),
+      style: TextButton.styleFrom(padding: EdgeInsets.all(config.padding)),
+      onPressed: onPressed,
+      onLongPress: onLongPress,
+    ),
+    ButtonType.textIcon => EzTextIconButton(
+      config,
+      label: buildLabel(name, labelType),
+      icon: appIcon(),
+      style: TextButton.styleFrom(
+        padding: config.textBackgroundOpacity < oneP
+            ? EdgeInsets.zero
+            : EdgeInsets.all(config.padding),
+      ),
+      onPressed: onPressed,
+      onLongPress: onLongPress,
+    ),
+    ButtonType.eTextIcon => EzElevatedIconButton(
+      config,
+      label: buildLabel(name, labelType),
+      icon: appIcon(),
+      style: TextButton.styleFrom(padding: EdgeInsets.all(config.padding)),
+      onPressed: onPressed,
+      onLongPress: onLongPress,
+    ),
+  };
 }
 
 String defaultAppEntry(String name) => _appEntry(name, null, null, null);
@@ -570,8 +562,9 @@ Future<void> editApp(
   required int lane,
   required int index,
 }) async {
-  final TextEditingController renameCon =
-      TextEditingController(text: initConfig.name ?? initConfig.app.label);
+  final TextEditingController renameCon = TextEditingController(
+    text: initConfig.name ?? initConfig.app.label,
+  );
   IconData? icon = initConfig.icon;
 
   LabelType? labelType = initConfig.labelType;
@@ -581,155 +574,160 @@ Future<void> editApp(
   await ezModal(
     config,
     context: pContext,
-    builder: (_) => StatefulBuilder(builder: (BuildContext mCon, StateSetter setModal) {
-      void resetPreview() {
-        labelType = null;
+    builder: (_) => StatefulBuilder(
+      builder: (BuildContext mCon, StateSetter setModal) {
+        void resetPreview() {
+          labelType = null;
 
-        showIcon = iconBTs.contains(listBT(config));
-        elevated = elevatedBTs.contains(listBT(config));
+          showIcon = iconBTs.contains(listBT(config));
+          elevated = elevatedBTs.contains(listBT(config));
 
-        setModal(() {});
-      }
+          setModal(() {});
+        }
 
-      return ezModalScroll(config, children: <Widget>[
-        EzRow(config, children: <Widget>[
-          // (Re)name
-          EzTextField(
-            controller: renameCon,
-            constraints: BoxConstraints.tightFor(
-              height: appIconSize(config),
-              width: widthOf(mCon) / 3,
-            ),
-            errorConstraints: BoxConstraints.tightFor(width: widthOf(mCon) / 3),
-            hintText: 'App',
-            autofillHints: const <String>[AutofillHints.name],
-            validator: validateName,
-          ),
-          config.rowSpacer,
-
-          // (Re)icon
-          EzIconButton(
-            config,
-            icon: Icon(icon ?? Icons.settings),
-            onPressed: () async {
-              final IconData? choice = await chooseIcon(config, pContext);
-              setModal(() => icon = choice);
-            },
-          ),
-        ]),
-        config.separator,
-
-        // Label type
-        EzRow(
+        return ezModalScroll(
           config,
           children: <Widget>[
-            EzText(config, text: 'Label type'),
-            config.rowSpacer,
-            EzDropdownMenu<LabelType?>(
+            EzRow(
               config,
-              widthEntry: 'Full name',
-              dropdownMenuEntries: <DropdownMenuEntry<LabelType?>>[
-                const DropdownMenuEntry<LabelType?>(
-                  value: null,
-                  label: 'Default',
+              children: <Widget>[
+                // (Re)name
+                EzTextField(
+                  controller: renameCon,
+                  constraints: BoxConstraints.tightFor(
+                    height: appIconSize(config),
+                    width: widthOf(mCon) / 3,
+                  ),
+                  errorConstraints: BoxConstraints.tightFor(width: widthOf(mCon) / 3),
+                  hintText: 'App',
+                  autofillHints: const <String>[AutofillHints.name],
+                  validator: validateName,
                 ),
-                ...LabelType.values.map((LabelType lt) => DropdownMenuEntry<LabelType?>(
-                      value: lt,
-                      label: ezCamelToTitle(lt.value),
-                    )),
+                config.rowSpacer,
+
+                // (Re)icon
+                EzIconButton(
+                  config,
+                  icon: Icon(icon ?? Icons.settings),
+                  onPressed: () async {
+                    final IconData? choice = await chooseIcon(config, pContext);
+                    setModal(() => icon = choice);
+                  },
+                ),
               ],
-              enableSearch: false,
-              initialSelection: labelType,
-              onSelected: (LabelType? choice) {
-                if (choice == null) {
-                  resetPreview();
-                  return;
-                }
-
-                if (choice == LabelType.none) showIcon = true;
-                setModal(() => labelType = choice);
-              },
             ),
+            config.separator,
+
+            // Label type
+            EzRow(
+              config,
+              children: <Widget>[
+                EzText(config, text: 'Label type'),
+                config.rowSpacer,
+                EzDropdownMenu<LabelType?>(
+                  config,
+                  widthEntry: 'Full name',
+                  dropdownMenuEntries: <DropdownMenuEntry<LabelType?>>[
+                    const DropdownMenuEntry<LabelType?>(value: null, label: 'Default'),
+                    ...LabelType.values.map(
+                      (LabelType lt) =>
+                          DropdownMenuEntry<LabelType?>(value: lt, label: ezCamelToTitle(lt.value)),
+                    ),
+                  ],
+                  enableSearch: false,
+                  initialSelection: labelType,
+                  onSelected: (LabelType? choice) {
+                    if (choice == null) {
+                      resetPreview();
+                      return;
+                    }
+
+                    if (choice == LabelType.none) showIcon = true;
+                    setModal(() => labelType = choice);
+                  },
+                ),
+              ],
+            ),
+            config.spacer,
+
+            // Show icon
+            GestureDetector(
+              onLongPress: resetPreview,
+              child: EzSwitchPair(
+                config,
+                key: ValueKey<String>('icon-$showIcon'),
+                text: 'Show icon',
+                value: showIcon,
+                onChanged: (bool? choice) {
+                  if (choice == null) {
+                    resetPreview();
+                    return;
+                  }
+
+                  if (choice == false && labelType == LabelType.none) {
+                    labelType = LabelType.full;
+                  }
+                  setModal(() => showIcon = choice);
+                },
+              ),
+            ),
+            config.spacer,
+
+            // Elevated
+            GestureDetector(
+              onLongPress: resetPreview,
+              child: EzSwitchPair(
+                config,
+                key: ValueKey<String>('elevated-$elevated'),
+                text: 'Elevated button',
+                value: elevated,
+                onChanged: (bool? choice) {
+                  if (choice == null) {
+                    resetPreview();
+                    return;
+                  }
+
+                  setModal(() => elevated = choice);
+                },
+              ),
+            ),
+            config.divider,
+
+            // Preview
+            AppButton(
+              config,
+              name: validateName(renameCon.text) == null ? renameCon.text : initConfig.app.label,
+              image: initConfig.app.icon,
+              icon: icon,
+              buttonType: BTConfig.build(
+                labelType ?? listLabels(config),
+                icons: showIcon,
+                elevated: elevated,
+              ),
+              labelType: labelType ?? listLabels(config),
+              onPressed: doNothing,
+              onLongPress: doNothing,
+            ),
+            config.separator,
+
+            // Default reminder && done
+            Text(
+              'Long pressing the switches also resets to default',
+              textAlign: TextAlign.center,
+              style: config.labelStyle,
+            ),
+            EzTextIconButton(
+              config,
+              label: 'Done',
+              style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
+              icon: EzIcon(config, Icons.done),
+              onPressed: () => Navigator.of(mCon).pop(),
+            ),
+            config.separator,
           ],
-        ),
-        config.spacer,
-
-        // Show icon
-        GestureDetector(
-          onLongPress: resetPreview,
-          child: EzSwitchPair(
-            config,
-            key: ValueKey<String>('icon-$showIcon'),
-            text: 'Show icon',
-            value: showIcon,
-            onChanged: (bool? choice) {
-              if (choice == null) {
-                resetPreview();
-                return;
-              }
-
-              if (choice == false && labelType == LabelType.none) {
-                labelType = LabelType.full;
-              }
-              setModal(() => showIcon = choice);
-            },
-          ),
-        ),
-        config.spacer,
-
-        // Elevated
-        GestureDetector(
-          onLongPress: resetPreview,
-          child: EzSwitchPair(
-            config,
-            key: ValueKey<String>('elevated-$elevated'),
-            text: 'Elevated button',
-            value: elevated,
-            onChanged: (bool? choice) {
-              if (choice == null) {
-                resetPreview();
-                return;
-              }
-
-              setModal(() => elevated = choice);
-            },
-          ),
-        ),
-        config.divider,
-
-        // Preview
-        AppButton(
-          config,
-          name: validateName(renameCon.text) == null ? renameCon.text : initConfig.app.label,
-          image: initConfig.app.icon,
-          icon: icon,
-          buttonType: BTConfig.build(
-            labelType ?? listLabels(config),
-            icons: showIcon,
-            elevated: elevated,
-          ),
-          labelType: labelType ?? listLabels(config),
-          onPressed: doNothing,
-          onLongPress: doNothing,
-        ),
-        config.separator,
-
-        // Default reminder && done
-        Text(
-          'Long pressing the switches also resets to default',
-          textAlign: TextAlign.center,
-          style: config.labelStyle,
-        ),
-        EzTextIconButton(
-          config,
-          label: 'Done',
-          style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
-          icon: EzIcon(config, Icons.done),
-          onPressed: () => Navigator.of(mCon).pop(),
-        ),
-        config.separator,
-      ]);
-    }),
+        );
+      },
+    ),
   );
 
   await appInfo.updateApp(
@@ -765,15 +763,15 @@ class _EditApp extends StatelessWidget {
 
   @override
   Widget build(_) => EzMenuButton(
-        config,
-        icon: EzIcon(config, Icons.edit),
-        onPressed: () => editApp(
-          config,
-          appInfo: appInfo,
-          pContext: pContext,
-          initConfig: initConfig,
-          lane: lane,
-          index: index,
-        ),
-      );
+    config,
+    icon: EzIcon(config, Icons.edit),
+    onPressed: () => editApp(
+      config,
+      appInfo: appInfo,
+      pContext: pContext,
+      initConfig: initConfig,
+      lane: lane,
+      index: index,
+    ),
+  );
 }

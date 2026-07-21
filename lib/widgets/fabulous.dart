@@ -6,15 +6,15 @@
 import '../utils/export.dart';
 
 import 'package:flutter/material.dart';
-import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
+import 'package:open_ui/open_ui.dart';
 
 EzUpdaterFAB updater(EzCP config) => EzUpdaterFAB(
       config,
       appVersion: '1.0.0',
       versionSource:
-          'https://raw.githubusercontent.com/Empathetech-LLC/liminal_launcher/refs/heads/main/APP_VERSION',
-      gPlay: 'https://play.google.com/store/apps/details?id=net.empathetech.liminal_launcher',
-      github: 'https://github.com/Empathetech-LLC/liminal_launcher/releases',
+          'https://raw.githubusercontent.com/YWT-LLC/liminal_launcher/refs/heads/main/APP_VERSION',
+      gPlay: 'https://play.google.com/store/apps/details?id=llc.ywt.liminal_launcher',
+      github: 'https://github.com/YWT-LLC/liminal_launcher/releases',
     );
 
 class AddFAB extends FloatingActionButton {

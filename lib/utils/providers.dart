@@ -9,7 +9,7 @@ import '../widgets/export.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
+import 'package:open_ui/open_ui.dart';
 
 class AppInfoProvider extends ChangeNotifier {
   //* Construct *//
@@ -30,8 +30,8 @@ class AppInfoProvider extends ChangeNotifier {
   late List<List<String>> _lightHomeMatrix;
 
   AppInfoProvider(List<AppInfo> apps)
-      : _apps = apps,
-        _appMap = <String, AppInfo>{for (AppInfo app in apps) app.id: app} {
+    : _apps = apps,
+      _appMap = <String, AppInfo>{for (AppInfo app in apps) app.id: app} {
     // Build the matrices
     _darkHomeMatrix = _buildHomeMatrix(EzCM.get(darkHomeDataKey));
     _lightHomeMatrix = _buildHomeMatrix(EzCM.get(lightHomeDataKey));
@@ -44,42 +44,40 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   void _listenToAppEvents() {
-    _appEventSubscription = _appEventChannel.receiveBroadcastStream().listen(
-      (dynamic event) async {
-        if (event is Map<dynamic, dynamic>) {
-          final String eventType = event['eventType'] as String;
+    _appEventSubscription = _appEventChannel.receiveBroadcastStream().listen((dynamic event) async {
+      if (event is Map<dynamic, dynamic>) {
+        final String eventType = event['eventType'] as String;
 
-          switch (eventType) {
-            case 'installed':
-              final Map<String, dynamic>? appInfoMap = event['appInfo'] as Map<String, dynamic>?;
-              if (appInfoMap != null) await _handleAppInstalled(appInfoMap);
+        switch (eventType) {
+          case 'installed':
+            final Map<String, dynamic>? appInfoMap = event['appInfo'] as Map<String, dynamic>?;
+            if (appInfoMap != null) await _handleAppInstalled(appInfoMap);
 
-              break;
-            case 'uninstalled':
-              final String? packageName = event['packageName'] as String?;
-              if (packageName == null) return;
+            break;
+          case 'uninstalled':
+            final String? packageName = event['packageName'] as String?;
+            if (packageName == null) return;
 
-              final List<AppInfo> uninstalled =
-                  _apps.where((AppInfo app) => app.package == packageName).toList();
+            final List<AppInfo> uninstalled = _apps
+                .where((AppInfo app) => app.package == packageName)
+                .toList();
 
-              if (uninstalled.isNotEmpty) {
-                for (final AppInfo app in uninstalled) {
-                  if (ezRootIsMounted && ezRootContext.mounted) {
-                    await ezSnackBar(
-                      configWatcher(ezRootContext),
-                      context: ezRootContext,
-                      message: 'Removing ${app.label}',
-                    ).closed;
-                  }
-                  await _clearHomeOf(null, app.id);
+            if (uninstalled.isNotEmpty) {
+              for (final AppInfo app in uninstalled) {
+                if (ezRootIsMounted && ezRootContext.mounted) {
+                  await ezSnackBar(
+                    configWatcher(ezRootContext),
+                    context: ezRootContext,
+                    message: 'Removing ${app.label}',
+                  ).closed;
                 }
+                await _clearHomeOf(null, app.id);
               }
-              break;
-          }
+            }
+            break;
         }
-      },
-      onError: (dynamic error) => ezLog('Error listening to app events: $error'),
-    );
+      }
+    }, onError: (dynamic error) => ezLog('Error listening to app events: $error'));
   }
 
   /// Does notify
@@ -128,10 +126,7 @@ class AppInfoProvider extends ChangeNotifier {
   Timer? _addedTimer;
   OverlayEntry? _addedEntry;
 
-  Future<void> _added(
-    EzCP config, {
-    required Future<void> Function()? editNew,
-  }) async {
+  Future<void> _added(EzCP config, {required Future<void> Function()? editNew}) async {
     if (_addedTimer?.isActive ?? false) _clearAdded();
 
     final double size = appIconSize(config) + config.marginVal;
@@ -146,27 +141,25 @@ class AppInfoProvider extends ChangeNotifier {
             child: TweenAnimationBuilder<double>(
               tween: Tween<double>(begin: 1.0, end: 0.0),
               duration: breatheTime,
-              builder: (_, double progress, __) =>
-                  Stack(alignment: Alignment.center, children: <Widget>[
-                CustomPaint(
-                  size: Size(size, size),
-                  painter: EzCountdownPainter(progress, config.colors.secondaryContainer),
-                ),
-                (editNew != null)
-                    ? EzIconButton(
-                        config,
-                        icon: Icon(progress > 0.25 ? Icons.edit : Icons.check),
-                        onPressed: () async {
-                          _clearAdded();
-                          await editNew(); // TODO: test
-                        },
-                      )
-                    : EzIconButton(
-                        config,
-                        icon: const Icon(Icons.check),
-                        onPressed: _clearAdded,
-                      ),
-              ]),
+              builder: (_, double progress, __) => Stack(
+                alignment: Alignment.center,
+                children: <Widget>[
+                  CustomPaint(
+                    size: Size(size, size),
+                    painter: EzCountdownPainter(progress, config.colors.secondaryContainer),
+                  ),
+                  (editNew != null)
+                      ? EzIconButton(
+                          config,
+                          icon: Icon(progress > 0.25 ? Icons.edit : Icons.check),
+                          onPressed: () async {
+                            _clearAdded();
+                            await editNew(); // TODO: test
+                          },
+                        )
+                      : EzIconButton(config, icon: const Icon(Icons.check), onPressed: _clearAdded),
+                ],
+              ),
             ),
           ),
         ),
@@ -220,16 +213,16 @@ class AppInfoProvider extends ChangeNotifier {
   }) async {
     // Must be a function! (or twice local like the others)
     String entry() => <String>[
-          type.value,
-          switch (type) {
-            WidWidGetGet.calendar => defaultCalendarEntry(),
-            WidWidGetGet.clock => defaultClockEntry(),
-            WidWidGetGet.search => defaultSearchEntry(),
-            WidWidGetGet.timer => defaultTimerEntry(),
-            WidWidGetGet.themeMode => defaultThemeWidgetEntry(),
-            WidWidGetGet.toggleMedia => defaultMediaEntry(),
-          },
-        ].join(widgetSplit);
+      type.value,
+      switch (type) {
+        WidWidGetGet.calendar => defaultCalendarEntry(),
+        WidWidGetGet.clock => defaultClockEntry(),
+        WidWidGetGet.search => defaultSearchEntry(),
+        WidWidGetGet.timer => defaultTimerEntry(),
+        WidWidGetGet.themeMode => defaultThemeWidgetEntry(),
+        WidWidGetGet.toggleMedia => defaultMediaEntry(),
+      },
+    ].join(widgetSplit);
 
     if (interlinked || config.isDark) {
       _darkHomeMatrix[lane].add(entry());
@@ -369,14 +362,17 @@ class AppInfoProvider extends ChangeNotifier {
 
   void sort(AppSort sort, bool asc) {
     _apps.sort(switch (sort) {
-      AppSort.name => (AppInfo a, AppInfo b) =>
-          asc ? a.label.compareTo(b.label) : b.label.compareTo(a.label),
-      AppSort.publisher => (AppInfo a, AppInfo b) =>
-          asc ? a.package.compareTo(b.package) : b.package.compareTo(a.package),
-      AppSort.date => (AppInfo a, AppInfo b) =>
-          asc ? a.installDate.compareTo(b.installDate) : b.installDate.compareTo(a.installDate),
-      AppSort.size => (AppInfo a, AppInfo b) =>
-          asc ? a.packageSize.compareTo(b.packageSize) : b.packageSize.compareTo(a.packageSize),
+      AppSort.name =>
+        (AppInfo a, AppInfo b) => asc ? a.label.compareTo(b.label) : b.label.compareTo(a.label),
+      AppSort.publisher =>
+        (AppInfo a, AppInfo b) =>
+            asc ? a.package.compareTo(b.package) : b.package.compareTo(a.package),
+      AppSort.date =>
+        (AppInfo a, AppInfo b) =>
+            asc ? a.installDate.compareTo(b.installDate) : b.installDate.compareTo(a.installDate),
+      AppSort.size =>
+        (AppInfo a, AppInfo b) =>
+            asc ? a.packageSize.compareTo(b.packageSize) : b.packageSize.compareTo(a.packageSize),
     });
 
     notifyListeners();
@@ -428,14 +424,20 @@ class AppInfoProvider extends ChangeNotifier {
     required List<String> ids,
   }) async {
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane][index] =
-          <String>[name, extra, if (ids.isNotEmpty) ...ids].join(folderSplit);
+      _darkHomeMatrix[lane][index] = <String>[
+        name,
+        extra,
+        if (ids.isNotEmpty) ...ids,
+      ].join(folderSplit);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane][index] =
-          <String>[name, extra, if (ids.isNotEmpty) ...ids].join(folderSplit);
+      _lightHomeMatrix[lane][index] = <String>[
+        name,
+        extra,
+        if (ids.isNotEmpty) ...ids,
+      ].join(folderSplit);
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -472,15 +474,19 @@ class AppInfoProvider extends ChangeNotifier {
     required int index,
   }) async {
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane][index] =
-          <String>[height.toString(), width.toString()].join(spacerSplit);
+      _darkHomeMatrix[lane][index] = <String>[
+        height.toString(),
+        width.toString(),
+      ].join(spacerSplit);
 
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane][index] =
-          <String>[height.toString(), width.toString()].join(spacerSplit);
+      _lightHomeMatrix[lane][index] = <String>[
+        height.toString(),
+        width.toString(),
+      ].join(spacerSplit);
 
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
@@ -599,8 +605,10 @@ class AppInfoProvider extends ChangeNotifier {
           context: context,
           builder: (BuildContext dCon) => EzAlertDialog(
             config,
-            title:
-                Text(_darkHidden.isEmpty ? 'Reminder' : 'Want to...', textAlign: TextAlign.center),
+            title: Text(
+              _darkHidden.isEmpty ? 'Reminder' : 'Want to...',
+              textAlign: TextAlign.center,
+            ),
             content: Text(
               <String>[
                 _darkHidden.isEmpty ? 'Swipe up while editing to open the hidden apps list.' : '',
@@ -644,8 +652,10 @@ class AppInfoProvider extends ChangeNotifier {
           context: context,
           builder: (BuildContext dCon) => EzAlertDialog(
             config,
-            title:
-                Text(_lightHidden.isEmpty ? 'Reminder' : 'Want to...', textAlign: TextAlign.center),
+            title: Text(
+              _lightHidden.isEmpty ? 'Reminder' : 'Want to...',
+              textAlign: TextAlign.center,
+            ),
             content: Text(
               <String>[
                 _lightHidden.isEmpty
@@ -664,11 +674,7 @@ class AppInfoProvider extends ChangeNotifier {
                   unawaited(EzCM.setStringList(darkHiddenIDsKey, _darkHidden.toList()));
                 },
               ),
-              EzAction(
-                config,
-                text: config.ezL10n.gNo,
-                onPressed: () => Navigator.of(dCon).pop(),
-              ),
+              EzAction(config, text: config.ezL10n.gNo, onPressed: () => Navigator.of(dCon).pop()),
             ],
             needsClose: false,
           ),
@@ -704,11 +710,7 @@ class AppInfoProvider extends ChangeNotifier {
                   unawaited(EzCM.setStringList(lightHiddenIDsKey, _lightHidden.toList()));
                 },
               ),
-              EzAction(
-                config,
-                text: config.ezL10n.gNo,
-                onPressed: () => Navigator.of(dCon).pop(),
-              ),
+              EzAction(config, text: config.ezL10n.gNo, onPressed: () => Navigator.of(dCon).pop()),
             ],
             needsClose: false,
           ),
@@ -739,11 +741,7 @@ class AppInfoProvider extends ChangeNotifier {
                   unawaited(EzCM.setStringList(darkHiddenIDsKey, _darkHidden.toList()));
                 },
               ),
-              EzAction(
-                config,
-                text: config.ezL10n.gNo,
-                onPressed: () => Navigator.of(dCon).pop(),
-              ),
+              EzAction(config, text: config.ezL10n.gNo, onPressed: () => Navigator.of(dCon).pop()),
             ],
             needsClose: false,
           ),
@@ -772,10 +770,7 @@ class AppInfoProvider extends ChangeNotifier {
         context: context,
         builder: (BuildContext dCon) => EzAlertDialog(
           config,
-          title: Text(
-            'Banish ${currApp.label}?',
-            textAlign: TextAlign.center,
-          ),
+          title: Text('Banish ${currApp.label}?', textAlign: TextAlign.center),
           content: _darkBanished.isEmpty
               ? Text(
                   '''When you banish an app, it will still be installed but not appear in Liminal at all.
@@ -855,10 +850,7 @@ For example: if an app has always on location permissions, banishing it will not
           context: context,
           builder: (BuildContext dCon) => EzAlertDialog(
             config,
-            title: Text(
-              'Banish ${currApp.label}?',
-              textAlign: TextAlign.center,
-            ),
+            title: Text('Banish ${currApp.label}?', textAlign: TextAlign.center),
             content: _lightBanished.isEmpty
                 ? Text(
                     '''When you banish an app, it will still be installed but not appear in Liminal at all.
@@ -930,8 +922,9 @@ For example: if an app has always on location permissions, banishing it will not
   /// Does notify
   Future<void> cloneMatrix(bool keepDark) async {
     if (keepDark) {
-      final List<List<String>> homeCopy =
-          _darkHomeMatrix.map((List<String> lane) => List<String>.from(lane)).toList();
+      final List<List<String>> homeCopy = _darkHomeMatrix
+          .map((List<String> lane) => List<String>.from(lane))
+          .toList();
 
       final Set<String> hiddenCopy = Set<String>.from(_darkHidden);
       final Set<String> banishedCopy = Set<String>.from(_darkBanished);
@@ -944,8 +937,9 @@ For example: if an app has always on location permissions, banishing it will not
       unawaited(EzCM.setStringList(lightHiddenIDsKey, hiddenCopy.toList()));
       unawaited(EzCM.setStringList(lightBanishIDsKey, banishedCopy.toList()));
     } else {
-      final List<List<String>> homeCopy =
-          _lightHomeMatrix.map((List<String> lane) => List<String>.from(lane)).toList();
+      final List<List<String>> homeCopy = _lightHomeMatrix
+          .map((List<String> lane) => List<String>.from(lane))
+          .toList();
 
       final Set<String> hiddenCopy = Set<String>.from(_lightHidden);
       final Set<String> banishedCopy = Set<String>.from(_lightBanished);
@@ -1021,8 +1015,11 @@ For example: if an app has always on location permissions, banishing it will not
                   keeping.removeWhere((String entry) => entry.startsWith(id));
 
                   if (keeping.length != (parts.length - 2)) {
-                    _darkHomeMatrix[lane][index] =
-                        <String>[parts[0], parts[1], ...keeping].join(folderSplit);
+                    _darkHomeMatrix[lane][index] = <String>[
+                      parts[0],
+                      parts[1],
+                      ...keeping,
+                    ].join(folderSplit);
                   }
                 }
                 break;
@@ -1071,8 +1068,11 @@ For example: if an app has always on location permissions, banishing it will not
                   keeping.removeWhere((String entry) => entry.startsWith(id));
 
                   if (keeping.length != (parts.length - 2)) {
-                    _lightHomeMatrix[lane][index] =
-                        <String>[parts[0], parts[1], ...keeping].join(folderSplit);
+                    _lightHomeMatrix[lane][index] = <String>[
+                      parts[0],
+                      parts[1],
+                      ...keeping,
+                    ].join(folderSplit);
                   }
                 }
                 break;
@@ -1152,11 +1152,11 @@ List<List<String>> _buildHomeMatrix(List<String> data) =>
     data.map((String outtie) => outtie.split(listSplit)).toList();
 
 Future<bool> _saveDarkMatrix(List<List<String>> matrix) => EzCM.setStringList(
-      darkHomeDataKey,
-      matrix.map((List<String> innie) => innie.join(listSplit)).toList(),
-    );
+  darkHomeDataKey,
+  matrix.map((List<String> innie) => innie.join(listSplit)).toList(),
+);
 
 Future<bool> _saveLightMatrix(List<List<String>> matrix) => EzCM.setStringList(
-      lightHomeDataKey,
-      matrix.map((List<String> innie) => innie.join(listSplit)).toList(),
-    );
+  lightHomeDataKey,
+  matrix.map((List<String> innie) => innie.join(listSplit)).toList(),
+);

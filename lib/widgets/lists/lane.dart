@@ -8,7 +8,7 @@ import '../export.dart';
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
+import 'package:open_ui/open_ui.dart';
 
 //* Core Widget *//
 
@@ -40,18 +40,18 @@ class LaneHeader extends StatelessWidget {
   }
 
   Future<void> _dupe() => appInfo.dupeLane(
-        config,
-        editNew: () => _editLane(
-          config,
-          appInfo: appInfo,
-          context: pContext,
-          lane: pos.lane,
-          numLanes: numLanes,
-          hAlign: pos.hAlign,
-          vAlign: pos.vAlign,
-        ),
-        lane: pos.lane,
-      );
+    config,
+    editNew: () => _editLane(
+      config,
+      appInfo: appInfo,
+      context: pContext,
+      lane: pos.lane,
+      numLanes: numLanes,
+      hAlign: pos.hAlign,
+      vAlign: pos.vAlign,
+    ),
+    lane: pos.lane,
+  );
 
   @override
   Widget build(BuildContext context) => pages(config)
@@ -77,11 +77,7 @@ class LaneHeader extends StatelessWidget {
                 config.rowSpacer,
 
                 // Dupe
-                EzIconButton(
-                  config,
-                  onPressed: _dupe,
-                  icon: const Icon(Icons.copy),
-                ),
+                EzIconButton(config, onPressed: _dupe, icon: const Icon(Icons.copy)),
                 config.rowSpacer,
 
                 // Edit
@@ -113,13 +109,17 @@ class LaneHeader extends StatelessWidget {
       : MenuAnchor(
           builder: (_, MenuController controller, __) => Padding(
             padding: EdgeInsets.only(bottom: config.spacing / 2),
-            child: EzRow(config, mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-              EzIconButton(
-                config,
-                onPressed: () => toggleMenu(controller),
-                icon: const Icon(Icons.more_vert),
-              ),
-            ]),
+            child: EzRow(
+              config,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                EzIconButton(
+                  config,
+                  onPressed: () => toggleMenu(controller),
+                  icon: const Icon(Icons.more_vert),
+                ),
+              ],
+            ),
           ),
           menuChildren: <Widget>[
             // Add
@@ -146,7 +146,7 @@ class LaneHeader extends StatelessWidget {
             MenuItemButton(onPressed: _dupe, child: EzIcon(config, Icons.copy)),
 
             // Delete
-            MenuItemButton(onPressed: () => _delete(context), child: EzIcon(config, Icons.delete))
+            MenuItemButton(onPressed: () => _delete(context), child: EzIcon(config, Icons.delete)),
           ],
         );
 }
@@ -189,9 +189,10 @@ Future<void> _editLane(
                 decoration: BoxDecoration(
                   color: i == pos
                       ? config.colors.secondary
-                      : i == lane // this order is important
-                          ? config.colors.tertiary
-                          : config.colors.surface,
+                      : i ==
+                            lane // this order is important
+                      ? config.colors.tertiary
+                      : config.colors.surface,
                   shape: BoxShape.circle,
                 ),
                 child: Center(
@@ -202,8 +203,8 @@ Future<void> _editLane(
                       color: i == pos
                           ? config.colors.onSecondary
                           : i == lane
-                              ? config.colors.onTertiary
-                              : config.colors.onSurface,
+                          ? config.colors.onTertiary
+                          : config.colors.onSurface,
                     ),
                   ),
                 ),
@@ -222,11 +223,7 @@ Future<void> _editLane(
           config,
           children: <Widget>[
             // Move
-            Text(
-              'Move',
-              textAlign: TextAlign.center,
-              style: config.labelStyle,
-            ),
+            Text('Move', textAlign: TextAlign.center, style: config.labelStyle),
             config.margin,
             EzRow(
               config,
@@ -268,11 +265,7 @@ Future<void> _editLane(
 
             // Divider
             EzTitledDivider(
-              Text(
-                'Align',
-                textAlign: TextAlign.center,
-                style: config.labelStyle,
-              ),
+              Text('Align', textAlign: TextAlign.center, style: config.labelStyle),
               height: config.spacing * 3,
               margin: config.marginVal,
             ),
@@ -282,85 +275,87 @@ Future<void> _editLane(
               color: config.colors.onSurface,
               height: heightOf(context) * sizeMod,
               width: widthOf(context) * sizeMod,
-              child: Stack(children: <Widget>[
-                // Background
-                Container(
-                  decoration: BoxDecoration(
-                    color: config.colors.surface,
-                    image: (config.backgroundImagePath == noImageValue)
-                        ? null
-                        : config.backgroundImage,
-                  ),
-                  margin: EdgeInsets.all(config.marginVal * sizeMod),
-                ),
-
-                // Aligned circular icon (curr)
-                Align(
-                  alignment: LAConfig.merge(h: hA, v: vA),
-                  child: Container(
-                    constraints: BoxConstraints.tightFor(
-                      height: appIconSize(config),
-                      width: appIconSize(config),
-                    ),
+              child: Stack(
+                children: <Widget>[
+                  // Background
+                  Container(
                     decoration: BoxDecoration(
-                      color: config.colors.secondary,
-                      shape: BoxShape.circle,
+                      color: config.colors.surface,
+                      image: (config.backgroundImagePath == noImageValue)
+                          ? null
+                          : config.backgroundImage,
                     ),
-                    child: Center(
-                      child: Text(
-                        pos.toString(),
-                        textAlign: TextAlign.center,
-                        style: config.labelStyle?.copyWith(
-                          color: config.colors.onSecondary,
+                    margin: EdgeInsets.all(config.marginVal * sizeMod),
+                  ),
+
+                  // Aligned circular icon (curr)
+                  Align(
+                    alignment: LAConfig.merge(h: hA, v: vA),
+                    child: Container(
+                      constraints: BoxConstraints.tightFor(
+                        height: appIconSize(config),
+                        width: appIconSize(config),
+                      ),
+                      decoration: BoxDecoration(
+                        color: config.colors.secondary,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Text(
+                          pos.toString(),
+                          textAlign: TextAlign.center,
+                          style: config.labelStyle?.copyWith(color: config.colors.onSecondary),
                         ),
                       ),
                     ),
                   ),
-                ),
 
-                // Aligned circular icon (default)
-                Align(
-                  alignment: LAConfig.merge(h: hDef, v: vDef),
-                  child: ClipOval(
-                    child: Image.asset(
-                      appIconPath,
-                      semanticLabel: 'Default list alignment',
-                      width: appIconSize(config),
-                      height: appIconSize(config),
-                      fit: BoxFit.cover,
+                  // Aligned circular icon (default)
+                  Align(
+                    alignment: LAConfig.merge(h: hDef, v: vDef),
+                    child: ClipOval(
+                      child: Image.asset(
+                        appIconPath,
+                        semanticLabel: 'Default list alignment',
+                        width: appIconSize(config),
+                        height: appIconSize(config),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
-                ),
-              ]),
+                ],
+              ),
             ),
             config.separator,
 
             // Controls
-            EzWrap(children: <Widget>[
-              // Horizontal
-              SegmentedButton<ListAlignment>(
-                segments: alignmentSegments,
-                selected: <ListAlignment>{hA},
-                showSelectedIcon: false,
-                onSelectionChanged: (Set<ListAlignment>? choice) {
-                  if (choice?.first == null) return;
-                  setModal(() => hA = choice!.first);
-                },
-              ),
-              config.spacer,
+            EzWrap(
+              children: <Widget>[
+                // Horizontal
+                SegmentedButton<ListAlignment>(
+                  segments: alignmentSegments,
+                  selected: <ListAlignment>{hA},
+                  showSelectedIcon: false,
+                  onSelectionChanged: (Set<ListAlignment>? choice) {
+                    if (choice?.first == null) return;
+                    setModal(() => hA = choice!.first);
+                  },
+                ),
+                config.spacer,
 
-              // Vertical
-              SegmentedButton<ListAlignment>(
-                segments: alignmentSegments,
-                direction: Axis.vertical,
-                selected: <ListAlignment>{vA},
-                showSelectedIcon: false,
-                onSelectionChanged: (Set<ListAlignment>? choice) {
-                  if (choice?.first == null) return;
-                  setModal(() => vA = choice!.first);
-                },
-              ),
-            ]),
+                // Vertical
+                SegmentedButton<ListAlignment>(
+                  segments: alignmentSegments,
+                  direction: Axis.vertical,
+                  selected: <ListAlignment>{vA},
+                  showSelectedIcon: false,
+                  onSelectionChanged: (Set<ListAlignment>? choice) {
+                    if (choice?.first == null) return;
+                    setModal(() => vA = choice!.first);
+                  },
+                ),
+              ],
+            ),
             config.separator,
           ],
         ),
@@ -368,17 +363,13 @@ Future<void> _editLane(
     },
   );
 
-  await ezNoTouch(() async => await appInfo.updateLane(
-        config,
-        entry: _laneEntry(hA, vA),
-        startPos: lane,
-        currPos: pos,
-      ));
+  await ezNoTouch(
+    () async =>
+        await appInfo.updateLane(config, entry: _laneEntry(hA, vA), startPos: lane, currPos: pos),
+  );
 }
 
 String defaultLaneEntry() => _laneEntry(null, null);
 
-String _laneEntry(ListAlignment? hA, ListAlignment? vA) => <String>[
-      hA?.value ?? esSystem,
-      vA?.value ?? esSystem,
-    ].join(configSplit);
+String _laneEntry(ListAlignment? hA, ListAlignment? vA) =>
+    <String>[hA?.value ?? esSystem, vA?.value ?? esSystem].join(configSplit);
