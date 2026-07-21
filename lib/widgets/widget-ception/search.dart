@@ -1,5 +1,5 @@
 /* liminal_launcher
- * Copyright (c) 2026 Empathetech LLC. All rights reserved.
+ * Copyright (c) 2026 YWT (Empathetech LLC). All rights reserved.
  * See LICENSE for distribution and usage details.
  */
 
@@ -219,79 +219,79 @@ class _SearchWidgetState extends State<SearchWidget> {
       forceType: EzTransitionType.none,
       child: switch (state) {
         AppState.standard => MenuAnchor(
-          builder: (_, MenuController controller, __) => (widget._size == WidgetSize.button)
-              ? EzIconButton(
-                  widget.config,
-                  icon: Icon(widget._engine.icon),
-                  onPressed: () => launchUrl(Uri.https(widget._engine.base, '/')),
-                  onLongPress: () => canToggleMenu(widget.config, controller),
-                )
-              : EzRow(
-                  widget.config,
-                  children: <Widget>[
-                    EzScrollBlocker(
-                      EzTextField(
-                        controller: queryCon,
-                        constraints: BoxConstraints(
-                          maxHeight: appIconSize(widget.config),
-                          maxWidth: textWidth + widget.config.padding,
+            builder: (_, MenuController controller, __) => (widget._size == WidgetSize.button)
+                ? EzIconButton(
+                    widget.config,
+                    icon: Icon(widget._engine.icon),
+                    onPressed: () => launchUrl(Uri.https(widget._engine.base, '/')),
+                    onLongPress: () => canToggleMenu(widget.config, controller),
+                  )
+                : EzRow(
+                    widget.config,
+                    children: <Widget>[
+                      EzScrollBlocker(
+                        EzTextField(
+                          controller: queryCon,
+                          constraints: BoxConstraints(
+                            maxHeight: appIconSize(widget.config),
+                            maxWidth: textWidth + widget.config.padding,
+                          ),
+                          errorConstraints: BoxConstraints(
+                            maxWidth: (textWidth * 2) + widget.config.padding,
+                          ),
+                          hintText: widget._engine.name,
+                          keyboardType: TextInputType.webSearch,
+                          onChanged: onChanged,
+                          onFieldSubmitted: search,
+                          validator: null,
                         ),
-                        errorConstraints: BoxConstraints(
-                          maxWidth: (textWidth * 2) + widget.config.padding,
-                        ),
-                        hintText: widget._engine.name,
-                        keyboardType: TextInputType.webSearch,
-                        onChanged: onChanged,
-                        onFieldSubmitted: search,
-                        validator: null,
                       ),
-                    ),
-                    widget.config.rowMargin,
-                    EzIconButton(
-                      widget.config,
-                      icon: Icon(widget._engine.icon),
-                      onPressed: () => search(queryCon.text),
-                      onLongPress: () => canToggleMenu(widget.config, controller),
-                    ),
-                  ],
-                ),
-          menuChildren: _menuChildren(
-            widget.config,
-            appInfo: widget.appInfo,
-            context: context,
-            state: state,
-            numLanes: numLanes,
-            pos: widget.pos,
-            initConfig: _SearchConfig(
-              size: widget._size,
-              engine: widget._engine,
-              choices: widget._choices,
+                      widget.config.rowMargin,
+                      EzIconButton(
+                        widget.config,
+                        icon: Icon(widget._engine.icon),
+                        onPressed: () => search(queryCon.text),
+                        onLongPress: () => canToggleMenu(widget.config, controller),
+                      ),
+                    ],
+                  ),
+            menuChildren: _menuChildren(
+              widget.config,
+              appInfo: widget.appInfo,
+              context: context,
+              state: state,
+              numLanes: numLanes,
+              pos: widget.pos,
+              initConfig: _SearchConfig(
+                size: widget._size,
+                engine: widget._engine,
+                choices: widget._choices,
+              ),
             ),
           ),
-        ),
         _ => EditContainer(
-          widget.config,
-          subAlign: widget.pos.subAlign,
-          menuControl: menuControl,
-          menuChildren: _menuChildren(
             widget.config,
-            appInfo: widget.appInfo,
-            context: context,
-            state: state,
-            numLanes: numLanes,
-            pos: widget.pos,
-            initConfig: _SearchConfig(
-              size: widget._size,
-              engine: widget._engine,
-              choices: widget._choices,
+            subAlign: widget.pos.subAlign,
+            menuControl: menuControl,
+            menuChildren: _menuChildren(
+              widget.config,
+              appInfo: widget.appInfo,
+              context: context,
+              state: state,
+              numLanes: numLanes,
+              pos: widget.pos,
+              initConfig: _SearchConfig(
+                size: widget._size,
+                engine: widget._engine,
+                choices: widget._choices,
+              ),
+            ),
+            child: EzIconButton(
+              widget.config,
+              icon: const Icon(Icons.search),
+              onPressed: () => toggleMenu(menuControl),
             ),
           ),
-          child: EzIconButton(
-            widget.config,
-            icon: const Icon(Icons.search),
-            onPressed: () => toggleMenu(menuControl),
-          ),
-        ),
       },
     );
   }
@@ -312,49 +312,50 @@ List<Widget> _menuChildren(
   required int numLanes,
   required LimPos pos,
   required _SearchConfig initConfig,
-}) => <Widget>[
-  // Edit
-  _EditSearch(
-    config,
-    appInfo,
-    pContext: context,
-    initConfig: initConfig,
-    lane: pos.lane,
-    index: pos.index,
-  ),
+}) =>
+    <Widget>[
+      // Edit
+      _EditSearch(
+        config,
+        appInfo,
+        pContext: context,
+        initConfig: initConfig,
+        lane: pos.lane,
+        index: pos.index,
+      ),
 
-  // Dupe
-  EzMenuButton(
-    config,
-    label: 'Duplicate',
-    icon: EzIcon(config, Icons.copy),
-    onPressed: () => appInfo.dupeItem(
-      config,
-      editNew: () async {
-        if (!ezRootIsMounted) return;
-        await _openEdits(
+      // Dupe
+      EzMenuButton(
+        config,
+        label: 'Duplicate',
+        icon: EzIcon(config, Icons.copy),
+        onPressed: () => appInfo.dupeItem(
           config,
-          appInfo: appInfo,
-          pContext: ezRootContext,
-          initConfig: initConfig,
+          editNew: () async {
+            if (!ezRootIsMounted) return;
+            await _openEdits(
+              config,
+              appInfo: appInfo,
+              pContext: ezRootContext,
+              initConfig: initConfig,
+              lane: pos.lane,
+              index: pos.index,
+            );
+          },
           lane: pos.lane,
           index: pos.index,
-        );
-      },
-      lane: pos.lane,
-      index: pos.index,
-    ),
-  ),
+        ),
+      ),
 
-  // Move
-  if (state == AppState.groupEdit && numLanes > 1) ...<Widget>[
-    moveDownLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
-    moveUpLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
-  ],
+      // Move
+      if (state == AppState.groupEdit && numLanes > 1) ...<Widget>[
+        moveDownLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
+        moveUpLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
+      ],
 
-  // Remove
-  removeItem(config, appInfo, lane: pos.lane, index: pos.index),
-];
+      // Remove
+      removeItem(config, appInfo, lane: pos.lane, index: pos.index),
+    ];
 
 //* Add Widget *//
 
@@ -375,18 +376,18 @@ class AddSearch extends StatelessWidget {
   });
 
   void onTap() => appInfo.addWidget(
-    config,
-    type: WidWidGetGet.search,
-    editNew: () => _openEdits(
-      config,
-      appInfo: appInfo,
-      pContext: pContext,
-      initConfig: _SearchConfig(size: size, engine: ecosia, choices: Engine.defaultOrder),
-      lane: lane,
-      index: appInfo.homeLane(config, lane).length,
-    ),
-    lane: lane,
-  );
+        config,
+        type: WidWidGetGet.search,
+        editNew: () => _openEdits(
+          config,
+          appInfo: appInfo,
+          pContext: pContext,
+          initConfig: _SearchConfig(size: size, engine: ecosia, choices: Engine.defaultOrder),
+          lane: lane,
+          index: appInfo.homeLane(config, lane).length,
+        ),
+        lane: lane,
+      );
 
   @override
   Widget build(BuildContext context) => (size == WidgetSize.button)
@@ -401,7 +402,7 @@ class AddSearch extends StatelessWidget {
                   maxHeight: appIconSize(config),
                   maxWidth:
                       ezTextSize('Search bar', context: context, style: config.bodyStyle).width +
-                      config.padding,
+                          config.padding,
                 ),
                 hintText: 'Search',
                 onTap: onTap,
@@ -540,8 +541,7 @@ Future<void> _openEdits(
                             await Future<void>.delayed(const Duration(milliseconds: 300));
 
                             setCustom(
-                              () => bottomSpace =
-                                  ((config.spacing * 2) +
+                              () => bottomSpace = ((config.spacing * 2) +
                                   MediaQuery.of(pContext).viewInsets.bottom),
                             );
                           }
@@ -657,8 +657,7 @@ Future<void> _openEdits(
                                       }
 
                                       if (shown.any(
-                                        (Engine e) =>
-                                            (!Engine.defaultSet.contains(e) &&
+                                        (Engine e) => (!Engine.defaultSet.contains(e) &&
                                             e.name == nameCon.text),
                                       )) {
                                         ezSnackBar(
@@ -774,18 +773,18 @@ class _EditSearch extends StatelessWidget {
 
   @override
   Widget build(_) => EzMenuButton(
-    config,
-    label: 'Edit',
-    icon: EzIcon(config, Icons.edit),
-    onPressed: () => _openEdits(
-      config,
-      appInfo: appInfo,
-      pContext: pContext,
-      initConfig: initConfig,
-      lane: lane,
-      index: index,
-    ),
-  );
+        config,
+        label: 'Edit',
+        icon: EzIcon(config, Icons.edit),
+        onPressed: () => _openEdits(
+          config,
+          appInfo: appInfo,
+          pContext: pContext,
+          initConfig: initConfig,
+          lane: lane,
+          index: index,
+        ),
+      );
 }
 
 //* Engine enum *//

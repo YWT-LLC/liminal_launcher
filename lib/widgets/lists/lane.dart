@@ -1,5 +1,5 @@
 /* liminal_launcher
- * Copyright (c) 2026 Empathetech LLC. All rights reserved.
+ * Copyright (c) 2026 YWT (Empathetech LLC). All rights reserved.
  * See LICENSE for distribution and usage details.
  */
 
@@ -40,18 +40,18 @@ class LaneHeader extends StatelessWidget {
   }
 
   Future<void> _dupe() => appInfo.dupeLane(
-    config,
-    editNew: () => _editLane(
-      config,
-      appInfo: appInfo,
-      context: pContext,
-      lane: pos.lane,
-      numLanes: numLanes,
-      hAlign: pos.hAlign,
-      vAlign: pos.vAlign,
-    ),
-    lane: pos.lane,
-  );
+        config,
+        editNew: () => _editLane(
+          config,
+          appInfo: appInfo,
+          context: pContext,
+          lane: pos.lane,
+          numLanes: numLanes,
+          hAlign: pos.hAlign,
+          vAlign: pos.vAlign,
+        ),
+        lane: pos.lane,
+      );
 
   @override
   Widget build(BuildContext context) => pages(config)
@@ -189,10 +189,9 @@ Future<void> _editLane(
                 decoration: BoxDecoration(
                   color: i == pos
                       ? config.colors.secondary
-                      : i ==
-                            lane // this order is important
-                      ? config.colors.tertiary
-                      : config.colors.surface,
+                      : i == lane // this order is important
+                          ? config.colors.tertiary
+                          : config.colors.surface,
                   shape: BoxShape.circle,
                 ),
                 child: Center(
@@ -203,8 +202,8 @@ Future<void> _editLane(
                       color: i == pos
                           ? config.colors.onSecondary
                           : i == lane
-                          ? config.colors.onTertiary
-                          : config.colors.onSurface,
+                              ? config.colors.onTertiary
+                              : config.colors.onSurface,
                     ),
                   ),
                 ),

@@ -1,5 +1,5 @@
 /* liminal_launcher
- * Copyright (c) 2026 Empathetech LLC. All rights reserved.
+ * Copyright (c) 2026 YWT (Empathetech LLC). All rights reserved.
  * See LICENSE for distribution and usage details.
  */
 
@@ -51,31 +51,31 @@ class _EditContainerState extends State<EditContainer> with SingleTickerProvider
   // Return the build //
 
   Widget core() => EzRow(
-    widget.config,
-    children: <Widget>[
-      EzIcon(widget.config, Icons.drag_handle, color: widget.config.colors.outline),
-      widget.config.rowMargin,
-      MenuAnchor(
-        controller: widget.menuControl,
-        builder: (_, __, ___) => AnimatedBuilder(
-          animation: _animation,
-          builder: (_, __) => Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: widget.config.colors.secondary.withValues(alpha: _animation.value),
-                width: widget.config.borderWidth,
+        widget.config,
+        children: <Widget>[
+          EzIcon(widget.config, Icons.drag_handle, color: widget.config.colors.outline),
+          widget.config.rowMargin,
+          MenuAnchor(
+            controller: widget.menuControl,
+            builder: (_, __, ___) => AnimatedBuilder(
+              animation: _animation,
+              builder: (_, __) => Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: widget.config.colors.secondary.withValues(alpha: _animation.value),
+                    width: widget.config.borderWidth,
+                  ),
+                  borderRadius: widget.config.buttonShape.radius,
+                ),
+                child: widget.child,
               ),
-              borderRadius: widget.config.buttonShape.radius,
             ),
-            child: widget.child,
+            menuChildren: widget.menuChildren,
           ),
-        ),
-        menuChildren: widget.menuChildren,
-      ),
-      widget.config.rowMargin,
-      EzIcon(widget.config, Icons.drag_handle, color: widget.config.colors.outline),
-    ],
-  );
+          widget.config.rowMargin,
+          EzIcon(widget.config, Icons.drag_handle, color: widget.config.colors.outline),
+        ],
+      );
 
   @override
   Widget build(_) => wideTiles(widget.config)

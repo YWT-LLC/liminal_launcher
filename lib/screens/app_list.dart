@@ -1,5 +1,5 @@
 /* liminal_launcher
- * Copyright (c) 2026 Empathetech LLC. All rights reserved.
+ * Copyright (c) 2026 YWT (Empathetech LLC). All rights reserved.
  * See LICENSE for distribution and usage details.
  */
 
@@ -46,9 +46,8 @@ class _AppListScreenState extends State<AppListScreen> {
   Future<void> ripple(EzCP config, LongPressStartDetails details) async {
     if (!context.mounted) return;
 
-    final Duration animDur = listRipple
-        ? ezDuration(config.animDur, mod: rippleMod)
-        : Duration.zero;
+    final Duration animDur =
+        listRipple ? ezDuration(config.animDur, mod: rippleMod) : Duration.zero;
     if (animDur <= oneMS) {
       setState(() => verbose = !verbose);
       return;
@@ -271,8 +270,8 @@ class _AppListScreenState extends State<AppListScreen> {
                                     widget.listConfig.include) &&
                                 (searching
                                     ? app.label.toLowerCase().contains(
-                                        searchControl.text.toLowerCase(),
-                                      )
+                                          searchControl.text.toLowerCase(),
+                                        )
                                     : true),
                           )
                           .map(

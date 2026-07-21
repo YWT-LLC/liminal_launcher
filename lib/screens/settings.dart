@@ -1,5 +1,5 @@
 /* liminal_launcher
- * Copyright (c) 2026 Empathetech LLC. All rights reserved.
+ * Copyright (c) 2026 YWT (Empathetech LLC). All rights reserved.
  * See LICENSE for distribution and usage details.
  */
 
@@ -36,8 +36,8 @@ class SettingsScreen extends StatelessWidget {
                 config,
                 EzCM.onMobile
                     ? EzCM.platform == TargetPlatform.iOS
-                          ? Icons.phone_iphone
-                          : Icons.phone_android
+                        ? Icons.phone_iphone
+                        : Icons.phone_android
                     : Icons.computer,
                 semanticLabel: config.ezL10n.gGlobal,
               ),

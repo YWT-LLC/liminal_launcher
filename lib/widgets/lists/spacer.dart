@@ -1,5 +1,5 @@
 /* liminal_launcher
- * Copyright (c) 2026 Empathetech LLC. All rights reserved.
+ * Copyright (c) 2026 YWT (Empathetech LLC). All rights reserved.
  * See LICENSE for distribution and usage details.
  */
 
@@ -33,9 +33,8 @@ class LimSpacer extends StatefulWidget {
     required this.rippleProgress,
     required this.resizeCallback,
   }) {
-    final List<String> data = appInfo
-        .homeItem(config, lane: pos.lane, index: pos.index)
-        .split(spacerSplit);
+    final List<String> data =
+        appInfo.homeItem(config, lane: pos.lane, index: pos.index).split(spacerSplit);
 
     _height = double.tryParse(data[0]) ?? config.spacing;
     _width = double.tryParse(data[1]) ?? appIconSize(config);
@@ -99,47 +98,47 @@ class _LimSpacerState extends State<LimSpacer> {
       valueListenable: marked,
       builder: (_, (int?, int?) pos, __) =>
           (pos.$1 == widget.pos.lane && pos.$2 == widget.pos.index)
-          ? _LiveSpacer(widget.config)
-          : EzAnimSwitch(
-              widget.config,
-              mod: 0.667,
-              forceFade: true,
-              forceType: EzTransitionType.none,
-              child: (state == AppState.standard)
-                  ? MenuAnchor(
-                      builder: (_, MenuController controller, __) => GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onLongPress: () => canToggleMenu(widget.config, controller),
-                        child: SizedBox(height: widget._height, width: widget._width),
-                      ),
-                      menuChildren: _menuChildren(
-                        widget.config,
-                        appInfo: widget.appInfo,
-                        state: state,
-                        stateCheck: doNothing,
-                        numLanes: numLanes,
-                        pos: widget.pos,
-                      ),
-                    )
-                  : EditContainer(
-                      widget.config,
-                      subAlign: widget.pos.subAlign,
-                      menuControl: menuControl,
-                      menuChildren: _menuChildren(
-                        widget.config,
-                        appInfo: widget.appInfo,
-                        state: state,
-                        stateCheck: widget.resizeCallback,
-                        numLanes: numLanes,
-                        pos: widget.pos,
-                      ),
-                      child: EzIconButton(
-                        widget.config,
-                        icon: const Icon(Icons.space_bar),
-                        onPressed: () => toggleMenu(menuControl),
-                      ),
-                    ),
-            ),
+              ? _LiveSpacer(widget.config)
+              : EzAnimSwitch(
+                  widget.config,
+                  mod: 0.667,
+                  forceFade: true,
+                  forceType: EzTransitionType.none,
+                  child: (state == AppState.standard)
+                      ? MenuAnchor(
+                          builder: (_, MenuController controller, __) => GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onLongPress: () => canToggleMenu(widget.config, controller),
+                            child: SizedBox(height: widget._height, width: widget._width),
+                          ),
+                          menuChildren: _menuChildren(
+                            widget.config,
+                            appInfo: widget.appInfo,
+                            state: state,
+                            stateCheck: doNothing,
+                            numLanes: numLanes,
+                            pos: widget.pos,
+                          ),
+                        )
+                      : EditContainer(
+                          widget.config,
+                          subAlign: widget.pos.subAlign,
+                          menuControl: menuControl,
+                          menuChildren: _menuChildren(
+                            widget.config,
+                            appInfo: widget.appInfo,
+                            state: state,
+                            stateCheck: widget.resizeCallback,
+                            numLanes: numLanes,
+                            pos: widget.pos,
+                          ),
+                          child: EzIconButton(
+                            widget.config,
+                            icon: const Icon(Icons.space_bar),
+                            onPressed: () => toggleMenu(menuControl),
+                          ),
+                        ),
+                ),
     );
   }
 
@@ -157,41 +156,42 @@ List<Widget> _menuChildren(
   required void Function() stateCheck,
   required int numLanes,
   required LimPos pos,
-}) => <Widget>[
-  // Edit
-  _EditSpacer(config, appInfo, pos: pos, stateCheck: stateCheck),
+}) =>
+    <Widget>[
+      // Edit
+      _EditSpacer(config, appInfo, pos: pos, stateCheck: stateCheck),
 
-  // Dupe
-  EzMenuButton(
-    config,
-    label: 'Duplicate',
-    icon: EzIcon(config, Icons.copy),
-    onPressed: () => appInfo.dupeItem(
-      config,
-      editNew: () async {
-        if (!ezRootIsMounted) return;
-        await editSpacer(
+      // Dupe
+      EzMenuButton(
+        config,
+        label: 'Duplicate',
+        icon: EzIcon(config, Icons.copy),
+        onPressed: () => appInfo.dupeItem(
           config,
-          appInfo: appInfo,
-          context: ezRootContext,
+          editNew: () async {
+            if (!ezRootIsMounted) return;
+            await editSpacer(
+              config,
+              appInfo: appInfo,
+              context: ezRootContext,
+              lane: pos.lane,
+              index: pos.index,
+            );
+          },
           lane: pos.lane,
           index: pos.index,
-        );
-      },
-      lane: pos.lane,
-      index: pos.index,
-    ),
-  ),
+        ),
+      ),
 
-  // Move
-  if (state == AppState.groupEdit && numLanes > 1) ...<Widget>[
-    moveDownLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
-    moveUpLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
-  ],
+      // Move
+      if (state == AppState.groupEdit && numLanes > 1) ...<Widget>[
+        moveDownLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
+        moveUpLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
+      ],
 
-  // Remove
-  removeItem(config, appInfo, lane: pos.lane, index: pos.index),
-];
+      // Remove
+      removeItem(config, appInfo, lane: pos.lane, index: pos.index),
+    ];
 
 //* Add Widget *//
 
@@ -202,20 +202,20 @@ class _LiveSpacer extends StatelessWidget {
 
   @override
   Widget build(_) => ValueListenableBuilder<double>(
-    valueListenable: editSpacerHeight,
-    builder: (_, double height, __) => ValueListenableBuilder<double>(
-      valueListenable: editSpacerWidth,
-      builder: (_, double width, __) => Container(
-        decoration: BoxDecoration(
-          color: config.colors.secondary.withValues(alpha: focusOpacity),
-          borderRadius: EzButtonShape.roundRect.radius,
-          border: Border.all(color: config.colors.secondary, width: config.borderWidth),
+        valueListenable: editSpacerHeight,
+        builder: (_, double height, __) => ValueListenableBuilder<double>(
+          valueListenable: editSpacerWidth,
+          builder: (_, double width, __) => Container(
+            decoration: BoxDecoration(
+              color: config.colors.secondary.withValues(alpha: focusOpacity),
+              borderRadius: EzButtonShape.roundRect.radius,
+              border: Border.all(color: config.colors.secondary, width: config.borderWidth),
+            ),
+            height: height,
+            width: width,
+          ),
         ),
-        height: height,
-        width: width,
-      ),
-    ),
-  );
+      );
 }
 
 //* Edit Widget *//
@@ -277,14 +277,14 @@ Future<void> editSpacer(
             )
             .toList();
 
-        List<Widget> dynamicSteps() =>
-            <String, double>{
-                  config.ezL10n.dsMargin: config.marginVal,
-                  config.ezL10n.dsPadding: config.padding,
-                  config.ezL10n.dsSpacing: config.spacing,
-                  config.ezL10n.tsIconSize: config.iconSize,
-                  'Icon button size': appIS,
-                }.entries
+        List<Widget> dynamicSteps() => <String, double>{
+              config.ezL10n.dsMargin: config.marginVal,
+              config.ezL10n.dsPadding: config.padding,
+              config.ezL10n.dsSpacing: config.spacing,
+              config.ezL10n.tsIconSize: config.iconSize,
+              'Icon button size': appIS,
+            }
+                .entries
                 .map(
                   (MapEntry<String, double> entry) => EzMenuButton(
                     config,
@@ -660,9 +660,8 @@ Future<void> editSpacer(
                     MenuAnchor(
                       builder: (_, MenuController c, __) => EzIconButton(
                         config,
-                        enabled: (axis == Axis.vertical)
-                            ? (height != maxHeight)
-                            : (width != maxWidth),
+                        enabled:
+                            (axis == Axis.vertical) ? (height != maxHeight) : (width != maxWidth),
                         icon: const Icon(Icons.keyboard_arrow_right),
                         onPressed: (axis == Axis.vertical)
                             ? () {
@@ -722,19 +721,19 @@ class _EditSpacer extends StatelessWidget {
 
   @override
   Widget build(_) => EzMenuButton(
-    config,
-    onPressed: () async {
-      if (!ezRootIsMounted) return;
-
-      stateCheck.call();
-      await editSpacer(
         config,
-        appInfo: appInfo,
-        context: ezRootContext,
-        lane: pos.lane,
-        index: pos.index,
+        onPressed: () async {
+          if (!ezRootIsMounted) return;
+
+          stateCheck.call();
+          await editSpacer(
+            config,
+            appInfo: appInfo,
+            context: ezRootContext,
+            lane: pos.lane,
+            index: pos.index,
+          );
+        },
+        icon: EzIcon(config, Icons.edit),
       );
-    },
-    icon: EzIcon(config, Icons.edit),
-  );
 }

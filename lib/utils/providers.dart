@@ -1,5 +1,5 @@
 /* liminal_launcher
- * Copyright (c) 2026 Empathetech LLC. All rights reserved.
+ * Copyright (c) 2026 YWT (Empathetech LLC). All rights reserved.
  * See LICENSE for distribution and usage details.
  */
 
@@ -30,8 +30,8 @@ class AppInfoProvider extends ChangeNotifier {
   late List<List<String>> _lightHomeMatrix;
 
   AppInfoProvider(List<AppInfo> apps)
-    : _apps = apps,
-      _appMap = <String, AppInfo>{for (AppInfo app in apps) app.id: app} {
+      : _apps = apps,
+        _appMap = <String, AppInfo>{for (AppInfo app in apps) app.id: app} {
     // Build the matrices
     _darkHomeMatrix = _buildHomeMatrix(EzCM.get(darkHomeDataKey));
     _lightHomeMatrix = _buildHomeMatrix(EzCM.get(lightHomeDataKey));
@@ -58,9 +58,8 @@ class AppInfoProvider extends ChangeNotifier {
             final String? packageName = event['packageName'] as String?;
             if (packageName == null) return;
 
-            final List<AppInfo> uninstalled = _apps
-                .where((AppInfo app) => app.package == packageName)
-                .toList();
+            final List<AppInfo> uninstalled =
+                _apps.where((AppInfo app) => app.package == packageName).toList();
 
             if (uninstalled.isNotEmpty) {
               for (final AppInfo app in uninstalled) {
@@ -213,16 +212,16 @@ class AppInfoProvider extends ChangeNotifier {
   }) async {
     // Must be a function! (or twice local like the others)
     String entry() => <String>[
-      type.value,
-      switch (type) {
-        WidWidGetGet.calendar => defaultCalendarEntry(),
-        WidWidGetGet.clock => defaultClockEntry(),
-        WidWidGetGet.search => defaultSearchEntry(),
-        WidWidGetGet.timer => defaultTimerEntry(),
-        WidWidGetGet.themeMode => defaultThemeWidgetEntry(),
-        WidWidGetGet.toggleMedia => defaultMediaEntry(),
-      },
-    ].join(widgetSplit);
+          type.value,
+          switch (type) {
+            WidWidGetGet.calendar => defaultCalendarEntry(),
+            WidWidGetGet.clock => defaultClockEntry(),
+            WidWidGetGet.search => defaultSearchEntry(),
+            WidWidGetGet.timer => defaultTimerEntry(),
+            WidWidGetGet.themeMode => defaultThemeWidgetEntry(),
+            WidWidGetGet.toggleMedia => defaultMediaEntry(),
+          },
+        ].join(widgetSplit);
 
     if (interlinked || config.isDark) {
       _darkHomeMatrix[lane].add(entry());
@@ -362,17 +361,14 @@ class AppInfoProvider extends ChangeNotifier {
 
   void sort(AppSort sort, bool asc) {
     _apps.sort(switch (sort) {
-      AppSort.name =>
-        (AppInfo a, AppInfo b) => asc ? a.label.compareTo(b.label) : b.label.compareTo(a.label),
-      AppSort.publisher =>
-        (AppInfo a, AppInfo b) =>
-            asc ? a.package.compareTo(b.package) : b.package.compareTo(a.package),
-      AppSort.date =>
-        (AppInfo a, AppInfo b) =>
-            asc ? a.installDate.compareTo(b.installDate) : b.installDate.compareTo(a.installDate),
-      AppSort.size =>
-        (AppInfo a, AppInfo b) =>
-            asc ? a.packageSize.compareTo(b.packageSize) : b.packageSize.compareTo(a.packageSize),
+      AppSort.name => (AppInfo a, AppInfo b) =>
+          asc ? a.label.compareTo(b.label) : b.label.compareTo(a.label),
+      AppSort.publisher => (AppInfo a, AppInfo b) =>
+          asc ? a.package.compareTo(b.package) : b.package.compareTo(a.package),
+      AppSort.date => (AppInfo a, AppInfo b) =>
+          asc ? a.installDate.compareTo(b.installDate) : b.installDate.compareTo(a.installDate),
+      AppSort.size => (AppInfo a, AppInfo b) =>
+          asc ? a.packageSize.compareTo(b.packageSize) : b.packageSize.compareTo(a.packageSize),
     });
 
     notifyListeners();
@@ -922,9 +918,8 @@ For example: if an app has always on location permissions, banishing it will not
   /// Does notify
   Future<void> cloneMatrix(bool keepDark) async {
     if (keepDark) {
-      final List<List<String>> homeCopy = _darkHomeMatrix
-          .map((List<String> lane) => List<String>.from(lane))
-          .toList();
+      final List<List<String>> homeCopy =
+          _darkHomeMatrix.map((List<String> lane) => List<String>.from(lane)).toList();
 
       final Set<String> hiddenCopy = Set<String>.from(_darkHidden);
       final Set<String> banishedCopy = Set<String>.from(_darkBanished);
@@ -937,9 +932,8 @@ For example: if an app has always on location permissions, banishing it will not
       unawaited(EzCM.setStringList(lightHiddenIDsKey, hiddenCopy.toList()));
       unawaited(EzCM.setStringList(lightBanishIDsKey, banishedCopy.toList()));
     } else {
-      final List<List<String>> homeCopy = _lightHomeMatrix
-          .map((List<String> lane) => List<String>.from(lane))
-          .toList();
+      final List<List<String>> homeCopy =
+          _lightHomeMatrix.map((List<String> lane) => List<String>.from(lane)).toList();
 
       final Set<String> hiddenCopy = Set<String>.from(_lightHidden);
       final Set<String> banishedCopy = Set<String>.from(_lightBanished);
@@ -1152,11 +1146,11 @@ List<List<String>> _buildHomeMatrix(List<String> data) =>
     data.map((String outtie) => outtie.split(listSplit)).toList();
 
 Future<bool> _saveDarkMatrix(List<List<String>> matrix) => EzCM.setStringList(
-  darkHomeDataKey,
-  matrix.map((List<String> innie) => innie.join(listSplit)).toList(),
-);
+      darkHomeDataKey,
+      matrix.map((List<String> innie) => innie.join(listSplit)).toList(),
+    );
 
 Future<bool> _saveLightMatrix(List<List<String>> matrix) => EzCM.setStringList(
-  lightHomeDataKey,
-  matrix.map((List<String> innie) => innie.join(listSplit)).toList(),
-);
+      lightHomeDataKey,
+      matrix.map((List<String> innie) => innie.join(listSplit)).toList(),
+    );

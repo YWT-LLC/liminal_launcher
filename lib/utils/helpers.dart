@@ -1,5 +1,5 @@
 /* liminal_launcher
- * Copyright (c) 2026 Empathetech LLC. All rights reserved.
+ * Copyright (c) 2026 YWT (Empathetech LLC). All rights reserved.
  * See LICENSE for distribution and usage details.
  */
 
@@ -30,72 +30,73 @@ Future<void> canToggleMenu(EzCP config, MenuController c) =>
     canEdit(config, () async => toggleMenu(c));
 
 Future<IconData?> chooseIcon(EzCP config, BuildContext context) => ezModal(
-  config,
-  context: context,
-  builder: (_) {
-    bool outlined = false;
+      config,
+      context: context,
+      builder: (_) {
+        bool outlined = false;
 
-    return StatefulBuilder(
-      builder: (BuildContext mCon, StateSetter setModal) => ezModalScroll(
-        config,
-        physics: const ClampingScrollPhysics(),
-        children: <Widget>[
-          // Switcher
-          SegmentedButton<bool>(
-            segments: <ButtonSegment<bool>>[
-              const ButtonSegment<bool>(
-                value: false,
-                label: Text('Solid', textAlign: TextAlign.center),
+        return StatefulBuilder(
+          builder: (BuildContext mCon, StateSetter setModal) => ezModalScroll(
+            config,
+            physics: const ClampingScrollPhysics(),
+            children: <Widget>[
+              // Switcher
+              SegmentedButton<bool>(
+                segments: <ButtonSegment<bool>>[
+                  const ButtonSegment<bool>(
+                    value: false,
+                    label: Text('Solid', textAlign: TextAlign.center),
+                  ),
+                  const ButtonSegment<bool>(
+                    value: true,
+                    label: Text('Outlined', textAlign: TextAlign.center),
+                  ),
+                ],
+                selected: <bool>{outlined},
+                showSelectedIcon: false,
+                onSelectionChanged: (Set<bool> selected) =>
+                    setModal(() => outlined = selected.first),
               ),
-              const ButtonSegment<bool>(
-                value: true,
-                label: Text('Outlined', textAlign: TextAlign.center),
+              config.spacer,
+
+              // Icons
+              GestureDetector(
+                onHorizontalDragEnd: (DragEndDetails details) {
+                  if (details.primaryVelocity == null) return;
+
+                  if (details.primaryVelocity! < -ezSwipeV) {
+                    // RTL -> nav right
+                    if (outlined) return;
+                    setModal(() => outlined = true);
+                  }
+
+                  if (details.primaryVelocity! > ezSwipeV) {
+                    // LTR -> nav left
+                    if (!outlined) return;
+                    setModal(() => outlined = false);
+                  }
+                },
+                child: EzWrap(
+                  children: (outlined ? outlinedIconChoices : solidIconChoices)
+                      .map(
+                        (IconData icon) => Padding(
+                          padding: EzInsets.wrap(config.spacing),
+                          child: EzIconButton(
+                            config,
+                            icon: Icon(icon),
+                            onPressed: () => Navigator.of(mCon).pop(icon),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
               ),
+              config.spacer,
             ],
-            selected: <bool>{outlined},
-            showSelectedIcon: false,
-            onSelectionChanged: (Set<bool> selected) => setModal(() => outlined = selected.first),
           ),
-          config.spacer,
-
-          // Icons
-          GestureDetector(
-            onHorizontalDragEnd: (DragEndDetails details) {
-              if (details.primaryVelocity == null) return;
-
-              if (details.primaryVelocity! < -ezSwipeV) {
-                // RTL -> nav right
-                if (outlined) return;
-                setModal(() => outlined = true);
-              }
-
-              if (details.primaryVelocity! > ezSwipeV) {
-                // LTR -> nav left
-                if (!outlined) return;
-                setModal(() => outlined = false);
-              }
-            },
-            child: EzWrap(
-              children: (outlined ? outlinedIconChoices : solidIconChoices)
-                  .map(
-                    (IconData icon) => Padding(
-                      padding: EzInsets.wrap(config.spacing),
-                      child: EzIconButton(
-                        config,
-                        icon: Icon(icon),
-                        onPressed: () => Navigator.of(mCon).pop(icon),
-                      ),
-                    ),
-                  )
-                  .toList(),
-            ),
-          ),
-          config.spacer,
-        ],
-      ),
+        );
+      },
     );
-  },
-);
 
 Future<bool> _externalAuth(String reason) async {
   final bool authed = await LocalAuthentication().authenticate(
@@ -127,31 +128,32 @@ Widget renderWidget(
   required LimPos pos,
   required AppState state,
   ValueNotifier<double>? rippleProgress,
-}) => wideTiles(config)
-    ? Container(
-        width: double.infinity,
-        alignment: pos.subAlign,
-        child: switch (appInfo
-            .homeItem(config, lane: pos.lane, index: pos.index)
-            .split(widgetSplit)[0]) {
-          esCalendar => CalendarWidget(config, appInfo, pos, state, rippleProgress),
-          esClock => ClockWidget(config, appInfo, pos, state, rippleProgress),
-          esSearch => SearchWidget(config, appInfo, pos, state, rippleProgress),
-          esTimer => TimerWidget(config, appInfo, pos, state, rippleProgress),
-          esToggleMedia => ToggleMediaWidget(config, appInfo, pos, state, rippleProgress),
-          esThemeMode => ThemeModeWidget(config, appInfo, pos, state, rippleProgress),
-          _ => const SizedBox.shrink(),
-        },
-      )
-    : switch (appInfo.homeItem(config, lane: pos.lane, index: pos.index).split(widgetSplit)[0]) {
-        esCalendar => CalendarWidget(config, appInfo, pos, state, rippleProgress),
-        esClock => ClockWidget(config, appInfo, pos, state, rippleProgress),
-        esSearch => SearchWidget(config, appInfo, pos, state, rippleProgress),
-        esTimer => TimerWidget(config, appInfo, pos, state, rippleProgress),
-        esToggleMedia => ToggleMediaWidget(config, appInfo, pos, state, rippleProgress),
-        esThemeMode => ThemeModeWidget(config, appInfo, pos, state, rippleProgress),
-        _ => const SizedBox.shrink(),
-      };
+}) =>
+    wideTiles(config)
+        ? Container(
+            width: double.infinity,
+            alignment: pos.subAlign,
+            child: switch (
+                appInfo.homeItem(config, lane: pos.lane, index: pos.index).split(widgetSplit)[0]) {
+              esCalendar => CalendarWidget(config, appInfo, pos, state, rippleProgress),
+              esClock => ClockWidget(config, appInfo, pos, state, rippleProgress),
+              esSearch => SearchWidget(config, appInfo, pos, state, rippleProgress),
+              esTimer => TimerWidget(config, appInfo, pos, state, rippleProgress),
+              esToggleMedia => ToggleMediaWidget(config, appInfo, pos, state, rippleProgress),
+              esThemeMode => ThemeModeWidget(config, appInfo, pos, state, rippleProgress),
+              _ => const SizedBox.shrink(),
+            },
+          )
+        : switch (
+            appInfo.homeItem(config, lane: pos.lane, index: pos.index).split(widgetSplit)[0]) {
+            esCalendar => CalendarWidget(config, appInfo, pos, state, rippleProgress),
+            esClock => ClockWidget(config, appInfo, pos, state, rippleProgress),
+            esSearch => SearchWidget(config, appInfo, pos, state, rippleProgress),
+            esTimer => TimerWidget(config, appInfo, pos, state, rippleProgress),
+            esToggleMedia => ToggleMediaWidget(config, appInfo, pos, state, rippleProgress),
+            esThemeMode => ThemeModeWidget(config, appInfo, pos, state, rippleProgress),
+            _ => const SizedBox.shrink(),
+          };
 
 /// [EzCP.isLTR] && [horizontalAlign] != [ListAlignment.end]
 bool standardFlow(EzCP config) => config.isLTR && horizontalAlign(config) != ListAlignment.end;

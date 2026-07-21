@@ -1,5 +1,5 @@
 /* liminal_launcher
- * Copyright (c) 2026 Empathetech LLC. All rights reserved.
+ * Copyright (c) 2026 YWT (Empathetech LLC). All rights reserved.
  * See LICENSE for distribution and usage details.
  */
 
@@ -124,36 +124,36 @@ class _CalendarWidgetState extends State<CalendarWidget> {
   }
 
   Future<dynamic> selfDestruct() => showDialog(
-    context: context,
-    builder: (_) => EzAlertDialog(
-      widget.config,
-      title: const Text('Failed', textAlign: TextAlign.center),
-      content: const Text(
-        "There likely isn't a default calendar app.\nShall I self-destruct?",
-        textAlign: TextAlign.center,
-      ),
-      actions: <Widget>[
-        EzAction(widget.config, text: 'No', onPressed: () => Navigator.of(context).pop()),
-        EzAction(
+        context: context,
+        builder: (_) => EzAlertDialog(
           widget.config,
-          text: 'Yes',
-          onPressed: () async {
-            Navigator.of(context).pop();
-            await ezNoTouch(
-              () async => await widget.appInfo.removeItem(
-                widget.config,
-                lane: widget.pos.lane,
-                index: widget.pos.index,
-              ),
-            );
-          },
-          isDestructiveAction: true,
-          isDefaultAction: true,
+          title: const Text('Failed', textAlign: TextAlign.center),
+          content: const Text(
+            "There likely isn't a default calendar app.\nShall I self-destruct?",
+            textAlign: TextAlign.center,
+          ),
+          actions: <Widget>[
+            EzAction(widget.config, text: 'No', onPressed: () => Navigator.of(context).pop()),
+            EzAction(
+              widget.config,
+              text: 'Yes',
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await ezNoTouch(
+                  () async => await widget.appInfo.removeItem(
+                    widget.config,
+                    lane: widget.pos.lane,
+                    index: widget.pos.index,
+                  ),
+                );
+              },
+              isDestructiveAction: true,
+              isDefaultAction: true,
+            ),
+          ],
+          needsClose: false,
         ),
-      ],
-      needsClose: false,
-    ),
-  );
+      );
 
   // Init //
 
@@ -182,83 +182,83 @@ class _CalendarWidgetState extends State<CalendarWidget> {
       forceType: EzTransitionType.none,
       child: switch (state) {
         AppState.standard => MenuAnchor(
-          builder: (_, MenuController controller, __) => (widget._size == WidgetSize.button)
-              ? EzIconButton(
-                  widget.config,
-                  icon: const Icon(Icons.edit_calendar),
-                  onPressed: () async {
-                    final bool success = await createCalendarEvent(null);
-                    if (!success && context.mounted) await selfDestruct();
-                  },
-                  onLongPress: () => canToggleMenu(widget.config, controller),
-                )
-              : EzRow(
-                  widget.config,
-                  children: <Widget>[
-                    EzScrollBlocker(
-                      EzTextField(
-                        controller: eventCon,
-                        constraints: BoxConstraints(
-                          maxHeight: appIconSize(widget.config),
-                          maxWidth: textWidth + widget.config.padding,
+            builder: (_, MenuController controller, __) => (widget._size == WidgetSize.button)
+                ? EzIconButton(
+                    widget.config,
+                    icon: const Icon(Icons.edit_calendar),
+                    onPressed: () async {
+                      final bool success = await createCalendarEvent(null);
+                      if (!success && context.mounted) await selfDestruct();
+                    },
+                    onLongPress: () => canToggleMenu(widget.config, controller),
+                  )
+                : EzRow(
+                    widget.config,
+                    children: <Widget>[
+                      EzScrollBlocker(
+                        EzTextField(
+                          controller: eventCon,
+                          constraints: BoxConstraints(
+                            maxHeight: appIconSize(widget.config),
+                            maxWidth: textWidth + widget.config.padding,
+                          ),
+                          errorConstraints: BoxConstraints(
+                            maxWidth: (textWidth * 2) + widget.config.padding,
+                          ),
+                          hintText: 'New event',
+                          onChanged: onChanged,
+                          onFieldSubmitted: (String entry) async {
+                            final bool success = await createCalendarEvent(entry.trim());
+                            eventCon.clear();
+                            removeOverlay();
+                            if (!success && context.mounted) await selfDestruct();
+                          },
+                          validator: null,
                         ),
-                        errorConstraints: BoxConstraints(
-                          maxWidth: (textWidth * 2) + widget.config.padding,
-                        ),
-                        hintText: 'New event',
-                        onChanged: onChanged,
-                        onFieldSubmitted: (String entry) async {
-                          final bool success = await createCalendarEvent(entry.trim());
+                      ),
+                      widget.config.rowMargin,
+                      EzIconButton(
+                        widget.config,
+                        icon: const Icon(Icons.edit_calendar),
+                        onPressed: () async {
+                          final bool success = await createCalendarEvent(eventCon.text);
                           eventCon.clear();
                           removeOverlay();
                           if (!success && context.mounted) await selfDestruct();
                         },
-                        validator: null,
+                        onLongPress: () => canToggleMenu(widget.config, controller),
                       ),
-                    ),
-                    widget.config.rowMargin,
-                    EzIconButton(
-                      widget.config,
-                      icon: const Icon(Icons.edit_calendar),
-                      onPressed: () async {
-                        final bool success = await createCalendarEvent(eventCon.text);
-                        eventCon.clear();
-                        removeOverlay();
-                        if (!success && context.mounted) await selfDestruct();
-                      },
-                      onLongPress: () => canToggleMenu(widget.config, controller),
-                    ),
-                  ],
-                ),
-          menuChildren: _menuChildren(
-            widget.config,
-            appInfo: widget.appInfo,
-            context: context,
-            state: state,
-            numLanes: numLanes,
-            pos: widget.pos,
-            initSize: widget._size,
+                    ],
+                  ),
+            menuChildren: _menuChildren(
+              widget.config,
+              appInfo: widget.appInfo,
+              context: context,
+              state: state,
+              numLanes: numLanes,
+              pos: widget.pos,
+              initSize: widget._size,
+            ),
           ),
-        ),
         _ => EditContainer(
-          widget.config,
-          subAlign: widget.pos.subAlign,
-          menuControl: menuControl,
-          menuChildren: _menuChildren(
             widget.config,
-            appInfo: widget.appInfo,
-            context: context,
-            state: state,
-            numLanes: numLanes,
-            pos: widget.pos,
-            initSize: widget._size,
+            subAlign: widget.pos.subAlign,
+            menuControl: menuControl,
+            menuChildren: _menuChildren(
+              widget.config,
+              appInfo: widget.appInfo,
+              context: context,
+              state: state,
+              numLanes: numLanes,
+              pos: widget.pos,
+              initSize: widget._size,
+            ),
+            child: EzIconButton(
+              widget.config,
+              icon: const Icon(Icons.edit_calendar),
+              onPressed: () => toggleMenu(menuControl),
+            ),
           ),
-          child: EzIconButton(
-            widget.config,
-            icon: const Icon(Icons.edit_calendar),
-            onPressed: () => toggleMenu(menuControl),
-          ),
-        ),
       },
     );
   }
@@ -279,27 +279,28 @@ List<Widget> _menuChildren(
   required int numLanes,
   required LimPos pos,
   required WidgetSize initSize,
-}) => <Widget>[
-  // Edit
-  _EditCalendar(config, appInfo, initSize: initSize, lane: pos.lane, index: pos.index),
+}) =>
+    <Widget>[
+      // Edit
+      _EditCalendar(config, appInfo, initSize: initSize, lane: pos.lane, index: pos.index),
 
-  // Dupe
-  EzMenuButton(
-    config,
-    label: 'Duplicate',
-    icon: EzIcon(config, Icons.copy),
-    onPressed: () => appInfo.dupeItem(config, editNew: null, lane: pos.lane, index: pos.index),
-  ),
+      // Dupe
+      EzMenuButton(
+        config,
+        label: 'Duplicate',
+        icon: EzIcon(config, Icons.copy),
+        onPressed: () => appInfo.dupeItem(config, editNew: null, lane: pos.lane, index: pos.index),
+      ),
 
-  // Move
-  if (state == AppState.groupEdit && numLanes > 1) ...<Widget>[
-    moveDownLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
-    moveUpLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
-  ],
+      // Move
+      if (state == AppState.groupEdit && numLanes > 1) ...<Widget>[
+        moveDownLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
+        moveUpLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
+      ],
 
-  // Remove
-  removeItem(config, appInfo, lane: pos.lane, index: pos.index),
-];
+      // Remove
+      removeItem(config, appInfo, lane: pos.lane, index: pos.index),
+    ];
 
 //* Add Widget *//
 
@@ -332,7 +333,7 @@ class AddCalendar extends StatelessWidget {
                   maxHeight: appIconSize(config),
                   maxWidth:
                       ezTextSize('Create event', context: context, style: config.bodyStyle).width +
-                      config.padding,
+                          config.padding,
                 ),
                 hintText: 'New event',
                 onTap: onTap,
@@ -358,13 +359,14 @@ Future<void> _quickResize(
   required WidgetSize initSize,
   required int lane,
   required int index,
-}) => appInfo.updateWidget(
-  config,
-  WidWidGetGet.calendar,
-  _calendarEntry(initSize == WidgetSize.tile ? WidgetSize.button : WidgetSize.tile),
-  lane: lane,
-  index: index,
-);
+}) =>
+    appInfo.updateWidget(
+      config,
+      WidWidGetGet.calendar,
+      _calendarEntry(initSize == WidgetSize.tile ? WidgetSize.button : WidgetSize.tile),
+      lane: lane,
+      index: index,
+    );
 
 class _EditCalendar extends StatelessWidget {
   final EzCP config;
@@ -383,10 +385,10 @@ class _EditCalendar extends StatelessWidget {
 
   @override
   Widget build(_) => EzMenuButton(
-    config,
-    label: 'Resize',
-    icon: EzIcon(config, Icons.edit),
-    onPressed: () =>
-        _quickResize(config, appInfo: appInfo, initSize: initSize, lane: lane, index: index),
-  );
+        config,
+        label: 'Resize',
+        icon: EzIcon(config, Icons.edit),
+        onPressed: () =>
+            _quickResize(config, appInfo: appInfo, initSize: initSize, lane: lane, index: index),
+      );
 }

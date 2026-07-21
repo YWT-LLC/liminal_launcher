@@ -1,5 +1,5 @@
 /* liminal_launcher
- * Copyright (c) 2026 Empathetech LLC. All rights reserved.
+ * Copyright (c) 2026 YWT (Empathetech LLC). All rights reserved.
  * See LICENSE for distribution and usage details.
  */
 
@@ -16,7 +16,9 @@ class LiminalCache extends EzAppCache {
   late DesignCache _design;
   late SecureCache _security;
 
-  LiminalCache(Locale locale, Lang l10n) : _locale = locale, _l10n = l10n;
+  LiminalCache(Locale locale, Lang l10n)
+      : _locale = locale,
+        _l10n = l10n;
 
   @override
   void init(bool isDark) => _buildLocalCache(isDark);
@@ -148,9 +150,9 @@ class SecureCache {
     required bool authToEdit,
     required bool authForHidden,
     required Duration authTimeout,
-  }) : _authToEdit = authToEdit,
-       _authForHidden = authForHidden,
-       _authTimeout = authTimeout;
+  })  : _authToEdit = authToEdit,
+        _authForHidden = authForHidden,
+        _authTimeout = authTimeout;
 
   bool get authToEdit => _authToEdit;
   bool get authForHidden => _authForHidden;

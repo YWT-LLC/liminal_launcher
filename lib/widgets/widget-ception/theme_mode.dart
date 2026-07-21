@@ -1,5 +1,5 @@
 /* liminal_launcher
- * Copyright (c) 2026 Empathetech LLC. All rights reserved.
+ * Copyright (c) 2026 YWT (Empathetech LLC). All rights reserved.
  * See LICENSE for distribution and usage details.
  */
 
@@ -98,52 +98,52 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
       forceType: EzTransitionType.none,
       child: switch (state) {
         AppState.standard => MenuAnchor(
-          builder: (_, MenuController controller, __) => (widget._size == WidgetSize.button)
-              ? EzIconButton(
-                  widget.config,
-                  icon: Icon(widget.config.isDark ? Icons.dark_mode : Icons.light_mode),
-                  onPressed: () async {
-                    await EzCM.setBool(isDarkThemeKey, !widget.config.isDark);
-                    await widget.config.rebuildThemeMode();
-                  },
-                  onLongPress: () async {
-                    await EzCM.remove(isDarkThemeKey);
-                    await widget.config.rebuildThemeMode();
-                  },
-                )
-              : GestureDetector(
-                  onLongPress: () => canToggleMenu(widget.config, controller),
-                  child: EzThemeModeSwitch(widget.config),
-                ),
-          menuChildren: _menuChildren(
-            widget.config,
-            appInfo: widget.appInfo,
-            context: context,
-            state: state,
-            numLanes: numLanes,
-            pos: widget.pos,
-            initSize: widget._size,
+            builder: (_, MenuController controller, __) => (widget._size == WidgetSize.button)
+                ? EzIconButton(
+                    widget.config,
+                    icon: Icon(widget.config.isDark ? Icons.dark_mode : Icons.light_mode),
+                    onPressed: () async {
+                      await EzCM.setBool(isDarkThemeKey, !widget.config.isDark);
+                      await widget.config.rebuildThemeMode();
+                    },
+                    onLongPress: () async {
+                      await EzCM.remove(isDarkThemeKey);
+                      await widget.config.rebuildThemeMode();
+                    },
+                  )
+                : GestureDetector(
+                    onLongPress: () => canToggleMenu(widget.config, controller),
+                    child: EzThemeModeSwitch(widget.config),
+                  ),
+            menuChildren: _menuChildren(
+              widget.config,
+              appInfo: widget.appInfo,
+              context: context,
+              state: state,
+              numLanes: numLanes,
+              pos: widget.pos,
+              initSize: widget._size,
+            ),
           ),
-        ),
         _ => EditContainer(
-          widget.config,
-          subAlign: widget.pos.subAlign,
-          menuControl: menuControl,
-          menuChildren: _menuChildren(
             widget.config,
-            appInfo: widget.appInfo,
-            context: context,
-            state: state,
-            numLanes: numLanes,
-            pos: widget.pos,
-            initSize: widget._size,
+            subAlign: widget.pos.subAlign,
+            menuControl: menuControl,
+            menuChildren: _menuChildren(
+              widget.config,
+              appInfo: widget.appInfo,
+              context: context,
+              state: state,
+              numLanes: numLanes,
+              pos: widget.pos,
+              initSize: widget._size,
+            ),
+            child: EzIconButton(
+              widget.config,
+              icon: Icon(widget.config.isDark ? Icons.dark_mode : Icons.light_mode),
+              onPressed: () => toggleMenu(menuControl),
+            ),
           ),
-          child: EzIconButton(
-            widget.config,
-            icon: Icon(widget.config.isDark ? Icons.dark_mode : Icons.light_mode),
-            onPressed: () => toggleMenu(menuControl),
-          ),
-        ),
       },
     );
   }
@@ -163,27 +163,28 @@ List<Widget> _menuChildren(
   required int numLanes,
   required LimPos pos,
   required WidgetSize initSize,
-}) => <Widget>[
-  // Edit
-  _EditTM(config, appInfo, initSize: initSize, lane: pos.lane, index: pos.index),
+}) =>
+    <Widget>[
+      // Edit
+      _EditTM(config, appInfo, initSize: initSize, lane: pos.lane, index: pos.index),
 
-  // Dupe
-  EzMenuButton(
-    config,
-    label: 'Duplicate',
-    icon: EzIcon(config, Icons.copy),
-    onPressed: () => appInfo.dupeItem(config, editNew: null, lane: pos.lane, index: pos.index),
-  ),
+      // Dupe
+      EzMenuButton(
+        config,
+        label: 'Duplicate',
+        icon: EzIcon(config, Icons.copy),
+        onPressed: () => appInfo.dupeItem(config, editNew: null, lane: pos.lane, index: pos.index),
+      ),
 
-  // Move
-  if (state == AppState.groupEdit && numLanes > 1) ...<Widget>[
-    moveDownLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
-    moveUpLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
-  ],
+      // Move
+      if (state == AppState.groupEdit && numLanes > 1) ...<Widget>[
+        moveDownLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
+        moveUpLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
+      ],
 
-  // Remove
-  removeItem(config, appInfo, lane: pos.lane, index: pos.index),
-];
+      // Remove
+      removeItem(config, appInfo, lane: pos.lane, index: pos.index),
+    ];
 
 //* Add Widget *//
 
@@ -244,13 +245,14 @@ Future<void> _quickResize(
   required WidgetSize initSize,
   required int lane,
   required int index,
-}) async => await appInfo.updateWidget(
-  config,
-  WidWidGetGet.themeMode,
-  _themeModeEntry(initSize == WidgetSize.tile ? WidgetSize.button : WidgetSize.tile),
-  lane: lane,
-  index: index,
-);
+}) async =>
+    await appInfo.updateWidget(
+      config,
+      WidWidGetGet.themeMode,
+      _themeModeEntry(initSize == WidgetSize.tile ? WidgetSize.button : WidgetSize.tile),
+      lane: lane,
+      index: index,
+    );
 
 class _EditTM extends StatelessWidget {
   final EzCP config;
@@ -269,10 +271,10 @@ class _EditTM extends StatelessWidget {
 
   @override
   Widget build(_) => EzMenuButton(
-    config,
-    label: 'Resize',
-    icon: EzIcon(config, Icons.edit),
-    onPressed: () =>
-        _quickResize(config, appInfo: appInfo, initSize: initSize, lane: lane, index: index),
-  );
+        config,
+        label: 'Resize',
+        icon: EzIcon(config, Icons.edit),
+        onPressed: () =>
+            _quickResize(config, appInfo: appInfo, initSize: initSize, lane: lane, index: index),
+      );
 }

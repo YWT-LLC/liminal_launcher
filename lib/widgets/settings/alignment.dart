@@ -1,5 +1,5 @@
 /* liminal_launcher
- * Copyright (c) 2026 Empathetech LLC. All rights reserved.
+ * Copyright (c) 2026 YWT (Empathetech LLC). All rights reserved.
  * See LICENSE for distribution and usage details.
  */
 
@@ -44,89 +44,89 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
 
   @override
   Widget build(BuildContext context) => EzCol(
-    children: <Widget>[
-      // Preview
-      Container(
-        color: widget.config.colors.onSurface,
-        height: heightOf(context) * _sizeMod,
-        width: widthOf(context) * _sizeMod,
-        child: Stack(
-          children: <Widget>[
-            // Background
-            Container(
-              decoration: BoxDecoration(
-                color: widget.config.colors.surface,
-                image: (widget.config.backgroundImagePath == noImageValue)
-                    ? null
-                    : widget.config.backgroundImage,
-              ),
-              margin: EdgeInsets.all(widget.config.marginVal * _sizeMod),
-            ),
-
-            // Aligned circular icon
-            Align(
-              alignment: LAConfig.merge(h: h, v: v),
-              child: ClipOval(
-                child: Image.asset(
-                  appIconPath,
-                  semanticLabel: 'Liminal Launcher icon used for alignment preview',
-                  width: appIconSize(widget.config),
-                  height: appIconSize(widget.config),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-      widget.config.separator,
-
-      // Controls
-      EzWrap(
         children: <Widget>[
-          // Horizontal
-          SegmentedButton<ListAlignment>(
-            segments: alignmentSegments,
-            selected: <ListAlignment>{h},
-            showSelectedIcon: false,
-            onSelectionChanged: (Set<ListAlignment>? choice) async {
-              if (choice?.first == null) return;
-              final ListAlignment selected = choice!.first;
+          // Preview
+          Container(
+            color: widget.config.colors.onSurface,
+            height: heightOf(context) * _sizeMod,
+            width: widthOf(context) * _sizeMod,
+            child: Stack(
+              children: <Widget>[
+                // Background
+                Container(
+                  decoration: BoxDecoration(
+                    color: widget.config.colors.surface,
+                    image: (widget.config.backgroundImagePath == noImageValue)
+                        ? null
+                        : widget.config.backgroundImage,
+                  ),
+                  margin: EdgeInsets.all(widget.config.marginVal * _sizeMod),
+                ),
 
-              if (EzCM.updateBoth || widget.config.isDark) {
-                await EzCM.setString(darkHorizontalAlignKey, selected.value);
-              }
-              if (EzCM.updateBoth || !widget.config.isDark) {
-                await EzCM.setString(lightHorizontalAlignKey, selected.value);
-              }
-
-              setState(() => h = selected);
-            },
+                // Aligned circular icon
+                Align(
+                  alignment: LAConfig.merge(h: h, v: v),
+                  child: ClipOval(
+                    child: Image.asset(
+                      appIconPath,
+                      semanticLabel: 'Liminal Launcher icon used for alignment preview',
+                      width: appIconSize(widget.config),
+                      height: appIconSize(widget.config),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-          widget.config.spacer,
+          widget.config.separator,
 
-          // Vertical
-          SegmentedButton<ListAlignment>(
-            segments: alignmentSegments,
-            direction: Axis.vertical,
-            selected: <ListAlignment>{v},
-            showSelectedIcon: false,
-            onSelectionChanged: (Set<ListAlignment>? choice) async {
-              if (choice?.first == null) return;
-              final ListAlignment selected = choice!.first;
+          // Controls
+          EzWrap(
+            children: <Widget>[
+              // Horizontal
+              SegmentedButton<ListAlignment>(
+                segments: alignmentSegments,
+                selected: <ListAlignment>{h},
+                showSelectedIcon: false,
+                onSelectionChanged: (Set<ListAlignment>? choice) async {
+                  if (choice?.first == null) return;
+                  final ListAlignment selected = choice!.first;
 
-              if (EzCM.updateBoth || widget.config.isDark) {
-                await EzCM.setString(darkVerticalAlignKey, selected.value);
-              }
-              if (EzCM.updateBoth || !widget.config.isDark) {
-                await EzCM.setString(lightVerticalAlignKey, selected.value);
-              }
+                  if (EzCM.updateBoth || widget.config.isDark) {
+                    await EzCM.setString(darkHorizontalAlignKey, selected.value);
+                  }
+                  if (EzCM.updateBoth || !widget.config.isDark) {
+                    await EzCM.setString(lightHorizontalAlignKey, selected.value);
+                  }
 
-              setState(() => v = selected);
-            },
+                  setState(() => h = selected);
+                },
+              ),
+              widget.config.spacer,
+
+              // Vertical
+              SegmentedButton<ListAlignment>(
+                segments: alignmentSegments,
+                direction: Axis.vertical,
+                selected: <ListAlignment>{v},
+                showSelectedIcon: false,
+                onSelectionChanged: (Set<ListAlignment>? choice) async {
+                  if (choice?.first == null) return;
+                  final ListAlignment selected = choice!.first;
+
+                  if (EzCM.updateBoth || widget.config.isDark) {
+                    await EzCM.setString(darkVerticalAlignKey, selected.value);
+                  }
+                  if (EzCM.updateBoth || !widget.config.isDark) {
+                    await EzCM.setString(lightVerticalAlignKey, selected.value);
+                  }
+
+                  setState(() => v = selected);
+                },
+              ),
+            ],
           ),
         ],
-      ),
-    ],
-  );
+      );
 }

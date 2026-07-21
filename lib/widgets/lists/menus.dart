@@ -1,5 +1,5 @@
 /* liminal_launcher
- * Copyright (c) 2026 Empathetech LLC. All rights reserved.
+ * Copyright (c) 2026 YWT (Empathetech LLC). All rights reserved.
  * See LICENSE for distribution and usage details.
  */
 
@@ -14,16 +14,17 @@ Widget moveDownLane(
   required int numLanes,
   required int lane,
   required int index,
-}) => EzMenuButton(
-  config,
-  enabled: lane != 0,
-  label: 'Move',
-  icon: EzIcon(
-    config,
-    standardFlow(config) ? Icons.keyboard_arrow_left : Icons.keyboard_arrow_right,
-  ),
-  onPressed: () => appInfo.moveItemDownLane(config, lane: lane, index: index),
-);
+}) =>
+    EzMenuButton(
+      config,
+      enabled: lane != 0,
+      label: 'Move',
+      icon: EzIcon(
+        config,
+        standardFlow(config) ? Icons.keyboard_arrow_left : Icons.keyboard_arrow_right,
+      ),
+      onPressed: () => appInfo.moveItemDownLane(config, lane: lane, index: index),
+    );
 
 Widget moveUpLane(
   EzCP config,
@@ -31,16 +32,17 @@ Widget moveUpLane(
   required int numLanes,
   required int lane,
   required int index,
-}) => EzMenuButton(
-  config,
-  enabled: lane < (numLanes - 1),
-  label: 'Move',
-  icon: EzIcon(
-    config,
-    standardFlow(config) ? Icons.keyboard_arrow_right : Icons.keyboard_arrow_left,
-  ),
-  onPressed: () => appInfo.moveItemUpLane(config, lane: lane, index: index),
-);
+}) =>
+    EzMenuButton(
+      config,
+      enabled: lane < (numLanes - 1),
+      label: 'Move',
+      icon: EzIcon(
+        config,
+        standardFlow(config) ? Icons.keyboard_arrow_right : Icons.keyboard_arrow_left,
+      ),
+      onPressed: () => appInfo.moveItemUpLane(config, lane: lane, index: index),
+    );
 
 Widget removeItem(EzCP config, AppInfoProvider appInfo, {required int lane, required int index}) =>
     EzMenuButton(

@@ -1,5 +1,5 @@
 /* liminal_launcher
- * Copyright (c) 2026 Empathetech LLC. All rights reserved.
+ * Copyright (c) 2026 YWT (Empathetech LLC). All rights reserved.
  * See LICENSE for distribution and usage details.
  */
 
@@ -24,11 +24,11 @@ class LiminalScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => EzAdaptiveParent(
-    small: EzScaffold(
-      config,
-      body: EzScreen(config, safeArea: true, child: body),
-      backgroundColor: Colors.transparent,
-      fabs: <Widget>[updater(config), if (fabs != null) ...fabs!, ...config.backFABs(isHome)],
-    ),
-  );
+        small: EzScaffold(
+          config,
+          body: EzScreen(config, safeArea: true, child: body),
+          backgroundColor: Colors.transparent,
+          fabs: <Widget>[updater(config), if (fabs != null) ...fabs!, ...config.backFABs(isHome)],
+        ),
+      );
 }

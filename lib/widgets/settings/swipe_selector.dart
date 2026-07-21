@@ -1,5 +1,5 @@
 /* liminal_launcher
- * Copyright (c) 2026 Empathetech LLC. All rights reserved.
+ * Copyright (c) 2026 YWT (Empathetech LLC). All rights reserved.
  * See LICENSE for distribution and usage details.
  */
 
@@ -19,7 +19,7 @@ class SwipeSelector extends StatefulWidget {
   final String _key;
 
   const SwipeSelector(this.config, this.appInfo, {super.key, required this.left})
-    : _key = left ? leftSwipeIDKey : rightSwipeIDKey;
+      : _key = left ? leftSwipeIDKey : rightSwipeIDKey;
 
   @override
   State<SwipeSelector> createState() => _SwipeSelectorState();
@@ -34,9 +34,8 @@ class _SwipeSelectorState extends State<SwipeSelector> {
     final String lowDir = dir.toLowerCase();
 
     String? appID = EzCM.get(widget._key);
-    AppInfo app = (appID == null || appID.isEmpty)
-        ? nullApp
-        : widget.appInfo.appMap[appID] ?? nullApp;
+    AppInfo app =
+        (appID == null || appID.isEmpty) ? nullApp : widget.appInfo.appMap[appID] ?? nullApp;
 
     // Return the build //
 
