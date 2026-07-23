@@ -1092,7 +1092,7 @@ For example: if an app has always on location permissions, banishing it will not
 
   /// Does notify
   /// Includes optional confirm dialog
-  Future<void> removeLane(
+  Future<bool> removeLane(
     EzCP config,
     BuildContext context,
     int lane, {
@@ -1113,7 +1113,7 @@ For example: if an app has always on location permissions, banishing it will not
         ),
       );
 
-      if (!confirmed) return;
+      if (!confirmed) return false;
     }
 
     if (interlinked || config.isDark) {
@@ -1129,6 +1129,7 @@ For example: if an app has always on location permissions, banishing it will not
     }
 
     notifyListeners();
+    return true;
   }
 
   // Dispose //
