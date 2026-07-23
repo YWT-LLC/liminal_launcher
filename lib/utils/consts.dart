@@ -231,7 +231,7 @@ final Map<String, Object> liminalDefault = <String, Object>{
   rightSwipeIDKey: '',
 
   // Ripple
-  homeRippleKey: true,
+  homeRippleKey: false,
   listRippleKey: true,
 
   // All
