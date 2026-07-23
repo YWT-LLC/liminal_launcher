@@ -3,8 +3,6 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: add delete to edit(s)
-// TODO: sit down and do the math for pixel perfect header spacing - maybe already done?
 // TODO: delta should be swapped too when !standardFlow
 // TODO: get the manifest exactly how you want it - be cognizant of SafeArea usage as you do
 //       at least, the app list should draw underneath the nav bar... not sure what else. maybe everything, maybe nothing
