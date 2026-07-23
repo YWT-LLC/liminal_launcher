@@ -150,10 +150,10 @@ class AppInfoProvider extends ChangeNotifier {
                   (editNew != null)
                       ? EzIconButton(
                           config,
-                          icon: Icon(progress > 0.25 ? Icons.edit : Icons.check),
+                          icon: Icon(progress > 0.667 ? Icons.check : Icons.edit),
                           onPressed: () async {
                             _clearAdded();
-                            await editNew(); // TODO: test
+                            await editNew();
                           },
                         )
                       : EzIconButton(config, icon: const Icon(Icons.check), onPressed: _clearAdded),
