@@ -384,7 +384,7 @@ class AddSearch extends StatelessWidget {
           pContext: pContext,
           initConfig: _SearchConfig(size: size, engine: ecosia, choices: Engine.defaultOrder),
           lane: lane,
-          index: appInfo.homeLane(config, lane).length,
+          index: appInfo.homeLane(config, lane).length - 1,
         ),
         lane: lane,
       );

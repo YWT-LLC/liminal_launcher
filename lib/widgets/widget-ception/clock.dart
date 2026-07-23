@@ -313,7 +313,7 @@ class AddClock extends StatelessWidget {
             dateColor: null,
           ),
           lane: lane,
-          index: appInfo.homeLane(config, lane).length,
+          index: appInfo.homeLane(config, lane).length - 1,
         ),
         lane: lane,
       );

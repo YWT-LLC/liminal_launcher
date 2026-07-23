@@ -434,7 +434,7 @@ class AddTimer extends StatelessWidget {
             secs: '00',
           ),
           lane: lane,
-          index: appInfo.homeLane(config, lane).length,
+          index: appInfo.homeLane(config, lane).length - 1,
         ),
         lane: lane,
       );

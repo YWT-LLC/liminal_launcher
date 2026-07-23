@@ -128,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                             labelType: null,
                           ),
                           lane: lane,
-                          index: appInfo.homeLane(config, lane).length,
+                          index: appInfo.homeLane(config, lane).length - 1,
                         ),
                       ),
                       title: EzTextIconButton(
@@ -165,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                         appList: <String>[],
                       ),
                       lane: lane,
-                      index: appInfo.homeLane(config, lane).length,
+                      index: appInfo.homeLane(config, lane).length - 1,
                     ),
                   ),
                   label: 'Folder',
