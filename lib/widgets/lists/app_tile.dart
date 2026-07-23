@@ -767,6 +767,7 @@ class _EditApp extends StatelessWidget {
   @override
   Widget build(_) => EzMenuButton(
         config,
+        label: 'Edit',
         icon: EzIcon(config, Icons.edit),
         onPressed: () => editApp(
           config,
