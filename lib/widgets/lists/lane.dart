@@ -35,8 +35,11 @@ class LaneHeader extends StatelessWidget {
   });
 
   Future<void> _delete(BuildContext context) async {
-    pos.lane != 0 ? navPageDown?.call() : (numLanes == 1 ? doNothing() : navPageUp?.call());
-    await appInfo.removeLane(config, context, pos.lane);
+    final bool deleted = await appInfo.removeLane(config, context, pos.lane);
+
+    if (deleted == true) {
+      (pos.lane != 0 ? navPageDown?.call() : (numLanes == 1 ? doNothing() : navPageUp?.call()));
+    }
   }
 
   Future<void> _dupe() => appInfo.dupeLane(
@@ -46,7 +49,7 @@ class LaneHeader extends StatelessWidget {
           appInfo: appInfo,
           context: pContext,
           lane: pos.lane,
-          numLanes: numLanes,
+          numLanes: numLanes + 1,
           hAlign: pos.hAlign,
           vAlign: pos.vAlign,
         ),
@@ -363,12 +366,18 @@ Future<void> _editLane(
   );
 
   await ezNoTouch(
-    () async =>
-        await appInfo.updateLane(config, entry: _laneEntry(hA, vA), startPos: lane, currPos: pos),
+    () async => await appInfo.updateLane(
+      config,
+      entry: _laneEntry(hA, vA),
+      startPos: lane,
+      currPos: pos,
+    ),
   );
 }
 
 String defaultLaneEntry() => _laneEntry(null, null);
 
-String _laneEntry(ListAlignment? hA, ListAlignment? vA) =>
-    <String>[hA?.value ?? esSystem, vA?.value ?? esSystem].join(configSplit);
+String _laneEntry(ListAlignment? hA, ListAlignment? vA) => <String>[
+      hA?.value ?? esSystem,
+      vA?.value ?? esSystem,
+    ].join(configSplit);
