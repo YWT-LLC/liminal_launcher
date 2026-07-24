@@ -72,9 +72,12 @@ Future<bool> createCalendarEvent(String? title) async {
   }
 }
 
-Future<bool> createTask(String? title) async {
+Future<bool> createTask(String? title, AppInfo? shareDest) async {
   try {
-    await platform.invokeMethod('createTask', <String, dynamic>{'title': title});
+    await platform.invokeMethod('createTask', <String, dynamic>{
+      'title': title,
+      'packageName': shareDest?.package,
+    });
     return true;
   } catch (e) {
     ezLog('Failed to create task: $e');
