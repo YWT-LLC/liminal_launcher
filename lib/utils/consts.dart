@@ -231,7 +231,7 @@ final Map<String, Object> liminalDefault = <String, Object>{
   rightSwipeIDKey: '',
 
   // Ripple
-  homeRippleKey: false,
+  homeRippleKey: true,
   listRippleKey: true,
 
   // All
@@ -488,9 +488,6 @@ const Map<String, String> wingdingMap = <String, String>{
   'Y': '\u{2721}',
   'Z': '\u{262A}',
 };
-
-/// 1.5
-const double rippleMod = 1.5;
 
 /// 2 seconds
 const Duration breatheTime = Duration(seconds: 2);

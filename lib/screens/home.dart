@@ -50,8 +50,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
   Future<void> ripple(EzCP config, LongPressStartDetails details) async {
     if (!context.mounted) return;
 
-    final Duration animDur =
-        homeRipple ? ezDuration(config.animDur, mod: rippleMod) : Duration.zero;
+    final Duration animDur = homeRipple ? ezDuration(config.animDur) : Duration.zero;
     if (animDur <= oneMS) {
       setState(() => editing = !editing);
       return;

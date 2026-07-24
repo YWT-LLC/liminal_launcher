@@ -107,7 +107,7 @@ class _AppTileState extends State<AppTile> {
         },
       );
 
-      final Duration animDur = ezDuration(widget.config.animDur, mod: rippleMod);
+      final Duration animDur = ezDuration(widget.config.animDur);
       rippleThrottle = Timer(
         (animDur + const Duration(milliseconds: 50)) - (animDur * widget.rippleProgress!.value),
         () => rippleThrottle = null,

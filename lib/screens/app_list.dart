@@ -45,8 +45,7 @@ class _AppListScreenState extends State<AppListScreen> {
   Future<void> ripple(EzCP config, LongPressStartDetails details) async {
     if (!context.mounted) return;
 
-    final Duration animDur =
-        listRipple ? ezDuration(config.animDur, mod: rippleMod) : Duration.zero;
+    final Duration animDur = listRipple ? ezDuration(config.animDur) : Duration.zero;
     if (animDur <= oneMS) {
       setState(() => verbose = !verbose);
       return;
