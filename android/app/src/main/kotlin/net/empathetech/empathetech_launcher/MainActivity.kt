@@ -138,6 +138,7 @@ class MainActivity : FlutterFragmentActivity() {
         "createTask" -> {
           try {
             val taskTitle = call.argument<String>("title")
+            val packageName: String? = call.argument<String>("packageName")
 
             val intent = Intent(Intent.ACTION_SEND).apply {
               type = "text/plain"
@@ -148,10 +149,15 @@ class MainActivity : FlutterFragmentActivity() {
               }
             }
             
-            val chooser = Intent.createChooser(intent, "Create task in...")
-            chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            if (!packageName.isNullOrEmpty()) {
+              intent.setPackage(packageName)
+              startActivity(intent)
+            } else {      
+              val chooser = Intent.createChooser(intent)
+              chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+              startActivity(chooser)
+            }
             
-            startActivity(chooser)
             result.success(true)
           } catch (e: Exception) {
             result.error("TASK_ERROR", "Could not open task app", e.message)
