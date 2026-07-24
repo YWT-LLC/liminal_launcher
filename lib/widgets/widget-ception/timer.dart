@@ -352,6 +352,8 @@ Widget _timeField({
   required TextEditingController tc,
   required FocusNode curr,
   void Function(String)? onChanged,
+  void Function()? onTap,
+  void Function()? onTapOutside,
   required void Function() onSubmit,
   bool last = false,
 }) =>
@@ -364,9 +366,13 @@ Widget _timeField({
         hintText: '00',
         keyboardType: TextInputType.number,
         textInputAction: last ? TextInputAction.done : TextInputAction.next,
-        onTap: tc.clear,
+        onTap: () {
+          tc.clear();
+          onTap?.call();
+        },
         onTapOutside: (_) {
           if (tc.text.isEmpty) tc.text = '00';
+          onTapOutside?.call();
         },
         onChanged: onChanged,
         onEditingComplete: () {
@@ -513,75 +519,100 @@ Future<void> _openEdits(
   final FocusNode minNode = FocusNode();
   final FocusNode secNode = FocusNode();
 
-  WidgetSize size = initConfig.size; // TODO: test
+  WidgetSize size = initConfig.size;
+  double bottomSpace = config.spacing * 2;
 
   await ezModal(
     config,
     context: pContext,
-    builder: (_) => ezModalScroll(
-      config,
-      children: <Widget>[
-        // Size //
-        SegmentedButton<WidgetSize>(
-          segments: const <ButtonSegment<WidgetSize>>[
-            ButtonSegment<WidgetSize>(
-              value: WidgetSize.button,
-              label: Text('Button', textAlign: TextAlign.center),
-            ),
-            ButtonSegment<WidgetSize>(
-              value: WidgetSize.tile,
-              label: Text('Tile', textAlign: TextAlign.center),
-            ),
-          ],
-          selected: <WidgetSize>{size},
-          showSelectedIcon: false,
-          onSelectionChanged: (Set<WidgetSize> selected) => size = selected.first,
-        ),
-        config.spacer,
+    builder: (_) => StatefulBuilder(
+      builder: (_, StateSetter setModal) {
+        Future<void> grow() async {
+          // Wait a bit for the keyboard to open
+          await Future<void>.delayed(keyTime);
+          setModal(
+              () => bottomSpace = (config.spacing * 2) + MediaQuery.of(pContext).viewInsets.bottom);
+        }
 
-        // Default time //
-        EzRow(
+        void shrink() => setModal(() => bottomSpace = config.spacing * 2);
+
+        return ezModalScroll(
           config,
-          reverseHands: false,
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // Hours
-            _timeField(
-              constraints: initConfig.fieldCon,
-              tc: ourCon,
-              curr: ourNode,
-              onSubmit: () {
-                minNode.requestFocus();
-                minCon.selection = TextSelection(baseOffset: 0, extentOffset: minCon.text.length);
-              },
+            // Size //
+            SegmentedButton<WidgetSize>(
+              segments: const <ButtonSegment<WidgetSize>>[
+                ButtonSegment<WidgetSize>(
+                  value: WidgetSize.button,
+                  label: Text('Button', textAlign: TextAlign.center),
+                ),
+                ButtonSegment<WidgetSize>(
+                  value: WidgetSize.tile,
+                  label: Text('Tile', textAlign: TextAlign.center),
+                ),
+              ],
+              selected: <WidgetSize>{size},
+              showSelectedIcon: false,
+              onSelectionChanged: (Set<WidgetSize> selected) =>
+                  setModal(() => size = selected.first),
             ),
-            config.rowMargin,
+            config.spacer,
 
-            // Minutes
-            _timeField(
-              constraints: initConfig.fieldCon,
-              tc: minCon,
-              curr: minNode,
-              onSubmit: () {
-                secNode.requestFocus();
-                secCon.selection = TextSelection(baseOffset: 0, extentOffset: secCon.text.length);
-              },
-            ),
-            config.rowMargin,
+            // Default time //
+            EzRow(
+              config,
+              reverseHands: false,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                // Hours
+                _timeField(
+                  constraints: initConfig.fieldCon,
+                  tc: ourCon,
+                  curr: ourNode,
+                  onTap: () async => await grow(),
+                  onTapOutside: shrink,
+                  onSubmit: () {
+                    minNode.requestFocus();
+                    minCon.selection =
+                        TextSelection(baseOffset: 0, extentOffset: minCon.text.length);
+                  },
+                ),
+                config.rowMargin,
 
-            // Seconds
-            _timeField(
-              constraints: initConfig.fieldCon,
-              tc: secCon,
-              curr: secNode,
-              onSubmit: () => secNode.unfocus(),
-              last: true,
+                // Minutes
+                _timeField(
+                  constraints: initConfig.fieldCon,
+                  tc: minCon,
+                  curr: minNode,
+                  onTap: () async => await grow(),
+                  onTapOutside: shrink,
+                  onSubmit: () {
+                    secNode.requestFocus();
+                    secCon.selection =
+                        TextSelection(baseOffset: 0, extentOffset: secCon.text.length);
+                  },
+                ),
+                config.rowMargin,
+
+                // Seconds
+                _timeField(
+                  constraints: initConfig.fieldCon,
+                  tc: secCon,
+                  curr: secNode,
+                  onTap: () async => await grow(),
+                  onTapOutside: shrink,
+                  onSubmit: () {
+                    secNode.unfocus();
+                    shrink();
+                  },
+                  last: true,
+                ),
+              ],
             ),
+            EzSpacer(bottomSpace),
           ],
-        ),
-
-        config.separator,
-      ],
+        );
+      },
     ),
   );
 
