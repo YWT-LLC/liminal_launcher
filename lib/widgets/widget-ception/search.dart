@@ -446,6 +446,8 @@ Future<void> _openEdits(
   required int lane,
   required int index,
 }) async {
+  final EdgeInsets wrapPadding = EzInsets.wrap(config.spacing);
+
   WidgetSize size = initConfig.size;
   Engine curr = initConfig.engine;
 
@@ -461,32 +463,22 @@ Future<void> _openEdits(
         config,
         children: <Widget>[
           // Size
-          EzRow(
-            config,
-            children: <Widget>[
-              Flexible(
-                child: Text('Size:', textAlign: TextAlign.center, style: config.labelStyle),
+          SegmentedButton<WidgetSize>(
+            segments: const <ButtonSegment<WidgetSize>>[
+              ButtonSegment<WidgetSize>(
+                value: WidgetSize.button,
+                label: Text('Button', textAlign: TextAlign.center),
               ),
-              config.rowMargin,
-              EzDropdownMenu<WidgetSize>(
-                config,
-                enableSearch: false,
-                initialSelection: size,
-                widthEntry: WidgetSize.button.value,
-                dropdownMenuEntries: WidgetSize.values
-                    .map(
-                      (WidgetSize ws) =>
-                          DropdownMenuEntry<WidgetSize>(value: ws, label: ezCamelToTitle(ws.value)),
-                    )
-                    .toList(),
-                onSelected: (WidgetSize? choice) {
-                  if (choice == null) return;
-                  setModal(() => size = choice);
-                },
+              ButtonSegment<WidgetSize>(
+                value: WidgetSize.tile,
+                label: Text('Tile', textAlign: TextAlign.center),
               ),
             ],
+            selected: <WidgetSize>{size},
+            showSelectedIcon: false,
+            onSelectionChanged: (Set<WidgetSize> selected) => setModal(() => size = selected.first),
           ),
-          config.spacer,
+          config.separator,
 
           // Shown
           Text('Shown', textAlign: TextAlign.center, style: config.labelStyle),
@@ -494,7 +486,7 @@ Future<void> _openEdits(
             children: <Widget>[
               ...shown.map(
                 (Engine e) => Padding(
-                  padding: EzInsets.wrap(config.spacing),
+                  padding: wrapPadding,
                   child: EzElevatedIconButton(
                     config,
                     key: ValueKey<Engine>(e),
@@ -518,7 +510,7 @@ Future<void> _openEdits(
                 ),
               ),
               Padding(
-                padding: EzInsets.wrap(config.spacing),
+                padding: wrapPadding,
                 child: EzElevatedIconButton(
                   key: const ValueKey<String>('addNew'),
                   config,
@@ -720,7 +712,7 @@ Future<void> _openEdits(
             children: hidden
                 .map(
                   (Engine e) => Padding(
-                    padding: EzInsets.wrap(config.spacing),
+                    padding: wrapPadding,
                     child: EzElevatedIconButton(
                       key: ValueKey<Engine>(e),
                       config,

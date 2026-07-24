@@ -199,23 +199,21 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                             // Divider (con size selector)
                             EzTitledDivider(
                               constraints: BoxConstraints(maxWidth: widthOf(wmCon) / 2),
-                              EzDropdownMenu<WidgetSize>(
-                                config,
-                                enableSearch: false,
-                                initialSelection: size,
-                                widthEntry: WidgetSize.button.value,
-                                dropdownMenuEntries: WidgetSize.values
-                                    .map(
-                                      (WidgetSize ws) => DropdownMenuEntry<WidgetSize>(
-                                        value: ws,
-                                        label: ezCamelToTitle(ws.value),
-                                      ),
-                                    )
-                                    .toList(),
-                                onSelected: (WidgetSize? choice) {
-                                  if (choice == null) return;
-                                  setModal(() => size = choice);
-                                },
+                              SegmentedButton<WidgetSize>(
+                                segments: const <ButtonSegment<WidgetSize>>[
+                                  ButtonSegment<WidgetSize>(
+                                    value: WidgetSize.button,
+                                    label: Text('Button', textAlign: TextAlign.center),
+                                  ),
+                                  ButtonSegment<WidgetSize>(
+                                    value: WidgetSize.tile,
+                                    label: Text('Tile', textAlign: TextAlign.center),
+                                  ),
+                                ],
+                                selected: <WidgetSize>{size},
+                                showSelectedIcon: false,
+                                onSelectionChanged: (Set<WidgetSize> selected) =>
+                                    setModal(() => size = selected.first),
                               ),
                               height: config.spacing * 2,
                               margin: config.padding,
