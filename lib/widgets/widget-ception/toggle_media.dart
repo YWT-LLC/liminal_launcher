@@ -38,7 +38,7 @@ class ToggleMediaWidget extends StatefulWidget {
 
     _size = WSConfig.safeLookup(data[0]);
     _bigSkips = bool.tryParse(data[1]) ?? true;
-    _lilSkips = bool.tryParse(data[2]) ?? true;
+    _lilSkips = bool.tryParse(data[2]) ?? false;
   }
 
   @override
@@ -285,7 +285,7 @@ class AddToggleMedia extends StatelessWidget {
           initConfig: _MediaConfig(
             size: size,
             bigSkips: true,
-            lilSkips: true,
+            lilSkips: false,
           ),
           lane: lane,
           index: appInfo.homeLane(config, lane).length - 1,
@@ -321,7 +321,7 @@ class AddToggleMedia extends StatelessWidget {
 String defaultMediaEntry() => _mediaEntry(
       WidgetSize.tile,
       bigSkips: true,
-      lilSkips: true,
+      lilSkips: false,
     );
 
 String _mediaEntry(
@@ -380,7 +380,16 @@ Future<void> _openEdits(
           ],
           selected: <WidgetSize>{size},
           showSelectedIcon: false,
-          onSelectionChanged: (Set<WidgetSize> selected) => setModal(() => size = selected.first),
+          onSelectionChanged: (Set<WidgetSize> selected) {
+            if (selected.first == WidgetSize.button) {
+              bigSkips = false;
+              lilSkips = false;
+            } else {
+              if (!bigSkips && !lilSkips) bigSkips = true;
+            }
+
+            setModal(() => size = selected.first);
+          },
         ),
         config.spacer,
 
@@ -392,7 +401,16 @@ Future<void> _openEdits(
           text: 'Skip/Prev',
           onChanged: (bool? value) {
             if (value == null) return;
-            setModal(() => bigSkips = value);
+
+            if (value) {
+              bigSkips = true;
+              if (!lilSkips && (size == WidgetSize.button)) size = WidgetSize.tile;
+              setModal(() {});
+            } else {
+              bigSkips = false;
+              if (!lilSkips && (size == WidgetSize.tile)) size = WidgetSize.button;
+              setModal(() {});
+            }
           },
         ),
         config.spacer,
@@ -403,8 +421,26 @@ Future<void> _openEdits(
           text: 'FF/Rewind',
           onChanged: (bool? value) {
             if (value == null) return;
-            setModal(() => lilSkips = value);
+
+            if (value) {
+              lilSkips = true;
+              if (!bigSkips && (size == WidgetSize.button)) size = WidgetSize.tile;
+              setModal(() {});
+            } else {
+              lilSkips = false;
+              if (!bigSkips && (size == WidgetSize.tile)) size = WidgetSize.button;
+              setModal(() {});
+            }
           },
+        ),
+        config.spacer,
+
+        // Note
+        Text(
+          '''Note: these buttons only work if the current player supports them.
+For example, some music players don't have FF/Rewind''',
+          textAlign: TextAlign.center,
+          style: config.labelStyle,
         ),
         config.separator,
       ]),
@@ -440,7 +476,7 @@ class _EditTM extends StatelessWidget {
   @override
   Widget build(_) => EzMenuButton(
         config,
-        label: 'Resize',
+        label: 'Edit',
         icon: EzIcon(config, Icons.edit),
         onPressed: () => _openEdits(
           config,
