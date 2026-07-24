@@ -161,6 +161,32 @@ class MainActivity : FlutterFragmentActivity() {
           }
         }
 
+        "fastForward" -> {
+          try {
+            val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+                
+            audioManager.dispatchMediaKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_FAST_FORWARD))
+            audioManager.dispatchMediaKeyEvent(KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_FAST_FORWARD))
+
+            result.success(true)
+          } catch (e: Exception) {
+            result.error("MEDIA_ERROR", "Could not fast forward", e.message)
+          }
+        }
+
+        "rewind" -> {
+          try {
+            val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+                
+            audioManager.dispatchMediaKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_REWIND))
+            audioManager.dispatchMediaKeyEvent(KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_REWIND))
+
+            result.success(true)
+          } catch (e: Exception) {
+            result.error("MEDIA_ERROR", "Could not rewind", e.message)
+          }
+        }
+
         "setTimer" -> {
           try { 
             val ours = call.argument<Int>("ours") ?: 0 
@@ -217,8 +243,8 @@ class MainActivity : FlutterFragmentActivity() {
           } catch (e: Exception) {
             result.error("MEDIA_ERROR", "Could not toggle media", e.message)
           }
-        } 
-        
+        }
+
         else -> result.notImplemented() 
       }
     }

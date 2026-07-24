@@ -85,6 +85,22 @@ Future<bool> createTask(String? title, AppInfo? shareDest) async {
   }
 }
 
+Future<void> fastForward() async {
+  try {
+    await platform.invokeMethod('fastForward');
+  } catch (e) {
+    ezLog('Failed to fast forward: $e');
+  }
+}
+
+Future<void> rewind() async {
+  try {
+    await platform.invokeMethod('rewind');
+  } catch (e) {
+    ezLog('Failed to rewind: $e');
+  }
+}
+
 Future<bool> setTimer(List<int> values) async {
   try {
     await platform.invokeMethod('setTimer', <String, dynamic>{
