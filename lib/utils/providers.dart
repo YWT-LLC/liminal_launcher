@@ -214,8 +214,8 @@ class AppInfoProvider extends ChangeNotifier {
     String entry() => <String>[
           type.value,
           switch (type) {
-            WidWidGetGet.calendar => defaultCalendarEntry(),
             WidWidGetGet.clock => defaultClockEntry(),
+            WidWidGetGet.event => defaultEventEntry(),
             WidWidGetGet.search => defaultSearchEntry(),
             WidWidGetGet.timer => defaultTimerEntry(),
             WidWidGetGet.themeMode => defaultThemeWidgetEntry(),

@@ -72,6 +72,16 @@ Future<bool> createCalendarEvent(String? title) async {
   }
 }
 
+Future<bool> createTask(String? title) async {
+  try {
+    await platform.invokeMethod('createTask', <String, dynamic>{'title': title});
+    return true;
+  } catch (e) {
+    ezLog('Failed to create task: $e');
+    return false;
+  }
+}
+
 Future<bool> setTimer(List<int> values) async {
   try {
     await platform.invokeMethod('setTimer', <String, dynamic>{

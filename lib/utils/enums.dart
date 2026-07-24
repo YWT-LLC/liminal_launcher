@@ -315,10 +315,10 @@ extension TSConfig on TxtStile {
 
 // Widget-ception //
 
-enum WidWidGetGet { calendar, clock, search, timer, toggleMedia, themeMode }
+enum WidWidGetGet { clock, event, search, timer, toggleMedia, themeMode }
 
-const String esCalendar = 'calendar';
 const String esClock = 'clock';
+const String esEvent = 'event';
 const String esSearch = 'search';
 const String esTimer = 'timer';
 const String esToggleMedia = 'toggleMedia';
@@ -326,8 +326,8 @@ const String esThemeMode = 'themeMode';
 
 extension WWGGConfig on WidWidGetGet {
   String get value => switch (this) {
-        WidWidGetGet.calendar => esCalendar,
         WidWidGetGet.clock => esClock,
+        WidWidGetGet.event => esEvent,
         WidWidGetGet.search => esSearch,
         WidWidGetGet.timer => esTimer,
         WidWidGetGet.toggleMedia => esToggleMedia,

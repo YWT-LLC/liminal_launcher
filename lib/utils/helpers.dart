@@ -137,8 +137,8 @@ Widget renderWidget(
             alignment: pos.subAlign,
             child: switch (
                 appInfo.homeItem(config, lane: pos.lane, index: pos.index).split(widgetSplit)[0]) {
-              esCalendar => CalendarWidget(config, appInfo, pos, state, rippleProgress),
               esClock => ClockWidget(config, appInfo, pos, state, rippleProgress),
+              esEvent => EventWidget(config, appInfo, pos, state, rippleProgress),
               esSearch => SearchWidget(config, appInfo, pos, state, rippleProgress),
               esTimer => TimerWidget(config, appInfo, pos, state, rippleProgress),
               esToggleMedia => ToggleMediaWidget(config, appInfo, pos, state, rippleProgress),
@@ -148,8 +148,8 @@ Widget renderWidget(
           )
         : switch (
             appInfo.homeItem(config, lane: pos.lane, index: pos.index).split(widgetSplit)[0]) {
-            esCalendar => CalendarWidget(config, appInfo, pos, state, rippleProgress),
             esClock => ClockWidget(config, appInfo, pos, state, rippleProgress),
+            esEvent => EventWidget(config, appInfo, pos, state, rippleProgress),
             esSearch => SearchWidget(config, appInfo, pos, state, rippleProgress),
             esTimer => TimerWidget(config, appInfo, pos, state, rippleProgress),
             esToggleMedia => ToggleMediaWidget(config, appInfo, pos, state, rippleProgress),
