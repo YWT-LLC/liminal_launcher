@@ -135,6 +135,29 @@ class MainActivity : FlutterFragmentActivity() {
           }
         }
 
+        "createTask" -> {
+          try {
+            val taskTitle = call.argument<String>("title")
+
+            val intent = Intent(Intent.ACTION_SEND).apply {
+              type = "text/plain"
+              addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+              
+              if (!taskTitle.isNullOrEmpty()) {
+                putExtra(Intent.EXTRA_TEXT, taskTitle) 
+              }
+            }
+            
+            val chooser = Intent.createChooser(intent, "Create task in...")
+            chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            
+            startActivity(chooser)
+            result.success(true)
+          } catch (e: Exception) {
+            result.error("TASK_ERROR", "Could not open task app", e.message)
+          }
+        }
+
         "setTimer" -> {
           try { 
             val ours = call.argument<Int>("ours") ?: 0 
