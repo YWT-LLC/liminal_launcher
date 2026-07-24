@@ -3,6 +3,10 @@
  * See LICENSE for distribution and usage details.
  */
 
+// TODO: add toggles for skip/prev and ff/rev
+// TODO: add custom ff/rev values
+// TODO: update edit new(s)
+
 import '../../utils/export.dart';
 import '../export.dart';
 

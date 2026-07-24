@@ -6,6 +6,7 @@
 // TODO: delta should be swapped too when !standardFlow
 // TODO: get the manifest exactly how you want it - be cognizant of SafeArea usage as you do
 //       at least, the app list should draw underneath the nav bar... not sure what else. maybe everything, maybe nothing
+// TODO: double last: how do I feel about the wideTiles + pages combo? more? less? the same number but different? ain't broke don't fix?
 
 import '../screens/export.dart';
 import '../utils/export.dart';
