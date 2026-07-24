@@ -536,82 +536,78 @@ Future<void> _openEdits(
 
         void shrink() => setModal(() => bottomSpace = config.spacing * 2);
 
-        return ezModalScroll(
-          config,
-          children: <Widget>[
-            // Size //
-            SegmentedButton<WidgetSize>(
-              segments: const <ButtonSegment<WidgetSize>>[
-                ButtonSegment<WidgetSize>(
-                  value: WidgetSize.button,
-                  label: Text('Button', textAlign: TextAlign.center),
-                ),
-                ButtonSegment<WidgetSize>(
-                  value: WidgetSize.tile,
-                  label: Text('Tile', textAlign: TextAlign.center),
-                ),
-              ],
-              selected: <WidgetSize>{size},
-              showSelectedIcon: false,
-              onSelectionChanged: (Set<WidgetSize> selected) =>
-                  setModal(() => size = selected.first),
-            ),
-            config.spacer,
+        return ezModalScroll(config, children: <Widget>[
+          // Size //
 
-            // Default time //
-            EzRow(
-              config,
-              reverseHands: false,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                // Hours
-                _timeField(
-                  constraints: initConfig.fieldCon,
-                  tc: ourCon,
-                  curr: ourNode,
-                  onTap: () async => await grow(),
-                  onTapOutside: shrink,
-                  onSubmit: () {
-                    minNode.requestFocus();
-                    minCon.selection =
-                        TextSelection(baseOffset: 0, extentOffset: minCon.text.length);
-                  },
-                ),
-                config.rowMargin,
+          SegmentedButton<WidgetSize>(
+            segments: const <ButtonSegment<WidgetSize>>[
+              ButtonSegment<WidgetSize>(
+                value: WidgetSize.button,
+                label: Text('Button', textAlign: TextAlign.center),
+              ),
+              ButtonSegment<WidgetSize>(
+                value: WidgetSize.tile,
+                label: Text('Tile', textAlign: TextAlign.center),
+              ),
+            ],
+            selected: <WidgetSize>{size},
+            showSelectedIcon: false,
+            onSelectionChanged: (Set<WidgetSize> selected) => setModal(() => size = selected.first),
+          ),
+          config.spacer,
 
-                // Minutes
-                _timeField(
-                  constraints: initConfig.fieldCon,
-                  tc: minCon,
-                  curr: minNode,
-                  onTap: () async => await grow(),
-                  onTapOutside: shrink,
-                  onSubmit: () {
-                    secNode.requestFocus();
-                    secCon.selection =
-                        TextSelection(baseOffset: 0, extentOffset: secCon.text.length);
-                  },
-                ),
-                config.rowMargin,
+          // Default time //
 
-                // Seconds
-                _timeField(
-                  constraints: initConfig.fieldCon,
-                  tc: secCon,
-                  curr: secNode,
-                  onTap: () async => await grow(),
-                  onTapOutside: shrink,
-                  onSubmit: () {
-                    secNode.unfocus();
-                    shrink();
-                  },
-                  last: true,
-                ),
-              ],
-            ),
-            EzSpacer(bottomSpace),
-          ],
-        );
+          EzRow(
+            config,
+            reverseHands: false,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              // Hours
+              _timeField(
+                constraints: initConfig.fieldCon,
+                tc: ourCon,
+                curr: ourNode,
+                onTap: () async => await grow(),
+                onTapOutside: shrink,
+                onSubmit: () {
+                  minNode.requestFocus();
+                  minCon.selection = TextSelection(baseOffset: 0, extentOffset: minCon.text.length);
+                },
+              ),
+              config.rowMargin,
+
+              // Minutes
+              _timeField(
+                constraints: initConfig.fieldCon,
+                tc: minCon,
+                curr: minNode,
+                onTap: () async => await grow(),
+                onTapOutside: shrink,
+                onSubmit: () {
+                  secNode.requestFocus();
+                  secCon.selection = TextSelection(baseOffset: 0, extentOffset: secCon.text.length);
+                },
+              ),
+              config.rowMargin,
+
+              // Seconds
+              _timeField(
+                constraints: initConfig.fieldCon,
+                tc: secCon,
+                curr: secNode,
+                onTap: () async => await grow(),
+                onTapOutside: shrink,
+                onSubmit: () {
+                  secNode.unfocus();
+                  shrink();
+                },
+                last: true,
+              ),
+            ],
+          ),
+          EzSpacer(bottomSpace),
+        ]);
       },
     ),
   );
