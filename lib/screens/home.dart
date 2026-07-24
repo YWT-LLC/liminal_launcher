@@ -773,7 +773,7 @@ Or, something in-between.''',
               minHeight: double.infinity,
               minWidth: appIconSize(config) + config.spacing,
               maxWidth: (editing && (ripple % 1.0 == 0))
-                  ? appIconSize(config) * 3 + config.spargin
+                  ? (appIconSize(config) * 3) + (config.spargin * 2)
                   : widthOf(context),
             ),
             child: _buildLane(config, appInfo, numLanes: numLanes, lane: lane),
