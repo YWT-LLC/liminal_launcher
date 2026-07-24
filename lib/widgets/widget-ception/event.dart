@@ -136,7 +136,7 @@ class _EventWidgetState extends State<EventWidget> {
             """Can't find a default calendar app.
 What shall I do?
 
-Note: 'tasks' is just share underneath. You'll choose a default app to share with.
+'Task' is just share underneath. You'll choose a default app to share with.
 We recommend using a task app, but don't require.
 Results may vary.""",
             textAlign: TextAlign.center,
@@ -536,13 +536,13 @@ Future<void> _openEdits(
         // Share Dest //
 
         Text(
-          """Note: 'Task' is just share underneath. Choose a destination app below.
+          """'Task' is just share underneath. Choose a destination app below.
 We recommend using a task app, but it's not required.
-Results may vary.""",
+Results may vary.
+""",
           textAlign: TextAlign.center,
           style: config.bodyStyle,
         ),
-        config.margin,
 
         AppButton(
           config,
