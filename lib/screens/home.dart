@@ -221,8 +221,14 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                             ),
                             config.spacer,
 
-                            // Calendar
-                            AddCalendar(config, appInfo: appInfo, lane: lane, size: size),
+                            // Event
+                            AddEvent(
+                              config,
+                              appInfo: appInfo,
+                              pContext: context,
+                              lane: lane,
+                              size: size,
+                            ),
                             config.spacer,
 
                             // Search
