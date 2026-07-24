@@ -756,6 +756,9 @@ class AppInfoProvider extends ChangeNotifier {
   /// Calls [ezNoTouch] when saving changes
   /// TODO: uhh... get it to work? is banishedList not being properly consumed? is nothing happening???
   Future<bool> banishApp(EzCP config, BuildContext context, String id) async {
+    const String dark = 'dark';
+    const String both = 'both';
+
     if (interlinked || config.isDark) {
       if (_darkBanished.contains(id)) return false;
 
@@ -788,7 +791,7 @@ For example: if an app has always on location permissions, banishing it will not
           actions: interlinked
               ? ezActionPair(
                   config,
-                  onConfirm: () => Navigator.of(dCon).pop('both'),
+                  onConfirm: () => Navigator.of(dCon).pop(both),
                   confirmMsg: config.ezL10n.gContinue,
                   confirmIsDestructive: true,
                   onDeny: () => Navigator.of(dCon).pop(),
@@ -797,12 +800,12 @@ For example: if an app has always on location permissions, banishing it will not
                   EzAction(
                     config,
                     text: config.ezL10n.gBothThemes,
-                    onPressed: () => Navigator.of(dCon).pop('both'),
+                    onPressed: () => Navigator.of(dCon).pop(both),
                   ),
                   EzAction(
                     config,
                     text: config.ezL10n.gDarkTheme,
-                    onPressed: () => Navigator.of(dCon).pop('dark'),
+                    onPressed: () => Navigator.of(dCon).pop(dark),
                   ),
                   EzAction(
                     config,
@@ -815,12 +818,12 @@ For example: if an app has always on location permissions, banishing it will not
       );
 
       switch (choice) {
-        case 'dark':
+        case dark:
           _darkBanished.add(id);
           unawaited(EzCM.setStringList(darkBanishIDsKey, _darkBanished.toList()));
           break;
 
-        case 'both':
+        case both:
           _darkBanished.add(id);
           _lightBanished.add(id);
           unawaited(EzCM.setStringList(darkBanishIDsKey, _darkBanished.toList()));
