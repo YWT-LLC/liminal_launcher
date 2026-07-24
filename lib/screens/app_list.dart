@@ -3,16 +3,14 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: scroll to bottom fab is showing when the entire list fits on screen??
-
 import '../utils/export.dart';
 import '../widgets/export.dart';
 import 'package:oui_bios/oui_bios.dart';
 
 import 'dart:async';
+import 'package:open_ui/open_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:open_ui/open_ui.dart';
 
 class AppListScreen extends StatefulWidget {
   final ListConfig listConfig;
@@ -86,6 +84,7 @@ class _AppListScreenState extends State<AppListScreen> {
   @override
   void initState() {
     super.initState();
+    if (!scrollControl.hasClients) atBottom = true;
     widget.listConfig.localContent?.addListener(_onLocalContentChanged);
   }
 
