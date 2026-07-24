@@ -95,8 +95,7 @@ class AppSecSettings extends StatelessWidget {
                           keyboardType: TextInputType.number,
                           onTap: () async {
                             // Wait a bit for the keyboard to open
-                            await Future<void>.delayed(const Duration(milliseconds: 300));
-
+                            await Future<void>.delayed(keyTime);
                             setModal(
                               () => bottomSpace =
                                   ((config.spacing * 2) + MediaQuery.of(context).viewInsets.bottom),

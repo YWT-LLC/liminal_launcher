@@ -538,8 +538,7 @@ Future<void> _openEdits(
 
                           Future<void> grow() async {
                             // Wait a bit for the keyboard to open
-                            await Future<void>.delayed(const Duration(milliseconds: 300));
-
+                            await Future<void>.delayed(keyTime);
                             setCustom(
                               () => bottomSpace = ((config.spacing * 2) +
                                   MediaQuery.of(pContext).viewInsets.bottom),
