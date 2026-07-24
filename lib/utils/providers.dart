@@ -70,7 +70,7 @@ class AppInfoProvider extends ChangeNotifier {
                     message: 'Removing ${app.label}',
                   ).closed;
                 }
-                await _clearHomeOf(null, app.id);
+                await _clearHomeOf(null, app.id, true);
               }
             }
             break;
@@ -592,12 +592,14 @@ class AppInfoProvider extends ChangeNotifier {
   /// Does notify
   /// Calls [ezNoTouch] when saving changes
   Future<void> hideApp(EzCP config, BuildContext context, String id) async {
+    bool? both;
+
     if (interlinked || config.isDark) {
       if (_darkHidden.contains(id)) return;
       final bool worthAsk = !interlinked && !_lightHidden.contains(id);
 
       if (_darkHidden.isEmpty || worthAsk) {
-        await showDialog(
+        both = await showDialog(
           context: context,
           builder: (BuildContext dCon) => EzAlertDialog(
             config,
@@ -621,12 +623,13 @@ class AppInfoProvider extends ChangeNotifier {
                       onPressed: () {
                         _lightHidden.add(id);
                         unawaited(EzCM.setStringList(lightHiddenIDsKey, _lightHidden.toList()));
+                        Navigator.of(dCon).pop(true);
                       },
                     ),
                     EzAction(
                       config,
                       text: config.ezL10n.gNo,
-                      onPressed: () => Navigator.of(dCon).pop(),
+                      onPressed: () => Navigator.of(dCon).pop(false),
                     ),
                   ]
                 : null,
@@ -644,7 +647,7 @@ class AppInfoProvider extends ChangeNotifier {
       final bool worthAsk = !interlinked && !_darkHidden.contains(id);
 
       if (worthAsk && context.mounted) {
-        await showDialog(
+        both = await showDialog(
           context: context,
           builder: (BuildContext dCon) => EzAlertDialog(
             config,
@@ -668,9 +671,14 @@ class AppInfoProvider extends ChangeNotifier {
                 onPressed: () {
                   _darkHidden.add(id);
                   unawaited(EzCM.setStringList(darkHiddenIDsKey, _darkHidden.toList()));
+                  Navigator.of(dCon).pop(true);
                 },
               ),
-              EzAction(config, text: config.ezL10n.gNo, onPressed: () => Navigator.of(dCon).pop()),
+              EzAction(
+                config,
+                text: config.ezL10n.gNo,
+                onPressed: () => Navigator.of(dCon).pop(false),
+              ),
             ],
             needsClose: false,
           ),
@@ -681,7 +689,7 @@ class AppInfoProvider extends ChangeNotifier {
       unawaited(EzCM.setStringList(lightHiddenIDsKey, _lightHidden.toList()));
     }
 
-    await _clearHomeOf(config, id);
+    await _clearHomeOf(config, id, both ?? interlinked);
   }
 
   /// Does notify, as long as not [batch]
@@ -754,167 +762,85 @@ class AppInfoProvider extends ChangeNotifier {
 
   /// Does notify
   /// Calls [ezNoTouch] when saving changes
-  /// TODO: uhh... get it to work? is banishedList not being properly consumed? is nothing happening???
-  Future<bool> banishApp(EzCP config, BuildContext context, String id) async {
-    const String dark = 'dark';
+  Future<bool> banishApp(EzCP config, BuildContext context, AppInfo app) async {
+    const String curr = 'curr';
     const String both = 'both';
 
-    if (interlinked || config.isDark) {
-      if (_darkBanished.contains(id)) return false;
-
-      final AppInfo? currApp = _appMap[id];
-      if (currApp == null) return false;
-
-      final String? choice = await showDialog(
-        context: context,
-        builder: (BuildContext dCon) => EzAlertDialog(
-          config,
-          title: Text('Banish ${currApp.label}?', textAlign: TextAlign.center),
-          content: _darkBanished.isEmpty
-              ? Text(
-                  '''When you banish an app, it will still be installed but not appear in Liminal at all.
+    final String? choice = await showDialog(
+      context: context,
+      builder: (BuildContext dCon) => EzAlertDialog(
+        config,
+        title: Text('Banish ${app.label}?', textAlign: TextAlign.center),
+        content: _darkBanished.isEmpty
+            ? Text(
+                '''When you banish an app, it will still be installed but not appear in Liminal at all.
 Banished apps can only be opened from the system settings, or via app link.
 
-The simplest way to restore/un-banish ${currApp.label} is to uninstall it from the system settings, then reinstall.
+The simplest way to restore/un-banish ${app.label} is to uninstall it from the system settings, then reinstall.
 
 Banishing is useful for utility apps that also waste time. For example, you may want to banish your web browser(s).
 That way, you can use online menus when you go out, and reduce doom scrolling when you stay in.
 
 Reminder: banishing is just for UX, not for security.
 For example: if an app has always on location permissions, banishing it will not affect that.''',
-                  textAlign: TextAlign.center,
-                )
-              : Text(
-                  'The simplest way to restore/un-banish ${currApp.label} is to uninstall it from the system settings, then reinstall.',
-                  textAlign: TextAlign.center,
-                ),
-          actions: interlinked
-              ? ezActionPair(
+                textAlign: TextAlign.center,
+              )
+            : Text(
+                'The simplest way to restore/un-banish ${app.label} is to uninstall it from the system settings, then reinstall.',
+                textAlign: TextAlign.center,
+              ),
+        actions: interlinked
+            ? ezActionPair(
+                config,
+                onConfirm: () => Navigator.of(dCon).pop(both),
+                confirmMsg: config.ezL10n.gContinue,
+                confirmIsDestructive: true,
+                onDeny: () => Navigator.of(dCon).pop(),
+              )
+            : <Widget>[
+                EzAction(
                   config,
-                  onConfirm: () => Navigator.of(dCon).pop(both),
-                  confirmMsg: config.ezL10n.gContinue,
-                  confirmIsDestructive: true,
-                  onDeny: () => Navigator.of(dCon).pop(),
-                )
-              : <Widget>[
-                  EzAction(
-                    config,
-                    text: config.ezL10n.gBothThemes,
-                    onPressed: () => Navigator.of(dCon).pop(both),
-                  ),
-                  EzAction(
-                    config,
-                    text: config.ezL10n.gDarkTheme,
-                    onPressed: () => Navigator.of(dCon).pop(dark),
-                  ),
-                  EzAction(
-                    config,
-                    text: config.ezL10n.gCancel,
-                    onPressed: () => Navigator.of(dCon).pop(),
-                  ),
-                ],
-          needsClose: false,
-        ),
-      );
+                  text: config.ezL10n.gBothThemes,
+                  onPressed: () => Navigator.of(dCon).pop(both),
+                ),
+                EzAction(
+                  config,
+                  text: 'Current (${config.isDark ? 'dark' : 'light'}) theme',
+                  onPressed: () => Navigator.of(dCon).pop(curr),
+                ),
+                EzAction(
+                  config,
+                  text: config.ezL10n.gCancel,
+                  onPressed: () => Navigator.of(dCon).pop(),
+                ),
+              ],
+        needsClose: false,
+      ),
+    );
 
-      switch (choice) {
-        case dark:
-          _darkBanished.add(id);
+    switch (choice) {
+      case curr:
+        if (config.isDark) {
+          _darkBanished.add(app.id);
           unawaited(EzCM.setStringList(darkBanishIDsKey, _darkBanished.toList()));
-          break;
-
-        case both:
-          _darkBanished.add(id);
-          _lightBanished.add(id);
-          unawaited(EzCM.setStringList(darkBanishIDsKey, _darkBanished.toList()));
+        } else {
+          _lightBanished.add(app.id);
           unawaited(EzCM.setStringList(lightBanishIDsKey, _lightBanished.toList()));
-          break;
-
-        default:
-          // doNothing
-          break;
-      }
-
-      if (choice == null) return false;
-    }
-
-    if (interlinked || !config.isDark) {
-      if (_lightBanished.contains(id)) return false;
-
-      if (!interlinked && context.mounted) {
-        final AppInfo? currApp = _appMap[id];
-        if (currApp == null) return false;
-
-        final String? choice = await showDialog(
-          context: context,
-          builder: (BuildContext dCon) => EzAlertDialog(
-            config,
-            title: Text('Banish ${currApp.label}?', textAlign: TextAlign.center),
-            content: _lightBanished.isEmpty
-                ? Text(
-                    '''When you banish an app, it will still be installed but not appear in Liminal at all.
-Banished apps can only be opened from the system settings, or via app link.
-
-The simplest way to restore/un-banish ${currApp.label} is to uninstall it from the system settings, then reinstall.
-
-Banishing is useful for utility apps that also waste time. For example, you may want to banish your web browser(s).
-That way, you can use online menus when you go out, and reduce doom scrolling when you stay in.
-
-Reminder: banishing is just for UX, not for security.
-For example: if an app has always on location permissions, banishing it will not affect that.''',
-                    textAlign: TextAlign.center,
-                  )
-                : Text(
-                    'The simplest way to restore/un-banish ${currApp.label} is to uninstall it from the system settings, then reinstall.',
-                    textAlign: TextAlign.center,
-                  ),
-            actions: <Widget>[
-              EzAction(
-                config,
-                text: config.ezL10n.gBothThemes,
-                onPressed: () => Navigator.of(dCon).pop('both'),
-              ),
-              EzAction(
-                config,
-                text: config.ezL10n.gDarkTheme,
-                onPressed: () => Navigator.of(dCon).pop('light'),
-              ),
-              EzAction(
-                config,
-                text: config.ezL10n.gCancel,
-                onPressed: () => Navigator.of(dCon).pop(),
-              ),
-            ],
-            needsClose: false,
-          ),
-        );
-
-        switch (choice) {
-          case 'light':
-            _lightBanished.add(id);
-            unawaited(EzCM.setStringList(lightBanishIDsKey, _lightBanished.toList()));
-            break;
-
-          case 'both':
-            _darkBanished.add(id);
-            _lightBanished.add(id);
-            unawaited(EzCM.setStringList(darkBanishIDsKey, _darkBanished.toList()));
-            unawaited(EzCM.setStringList(lightBanishIDsKey, _lightBanished.toList()));
-            break;
-
-          default:
-            // doNothing
-            break;
         }
+        break;
 
-        if (choice == null) return false;
-      }
+      case both:
+        _darkBanished.add(app.id);
+        _lightBanished.add(app.id);
+        unawaited(EzCM.setStringList(darkBanishIDsKey, _darkBanished.toList()));
+        unawaited(EzCM.setStringList(lightBanishIDsKey, _lightBanished.toList()));
+        break;
 
-      _lightBanished.add(id);
-      unawaited(EzCM.setStringList(lightBanishIDsKey, _lightBanished.toList()));
+      default:
+        return false;
     }
 
-    await _clearHomeOf(config, id);
+    await _clearHomeOf(config, app.id, choice == both);
     return true;
   }
 
@@ -976,9 +902,9 @@ For example: if an app has always on location permissions, banishing it will not
   }
 
   /// Full [ezNoTouch], then notifies
-  Future<void> _clearHomeOf(EzCP? config, String id) async {
+  Future<void> _clearHomeOf(EzCP? config, String id, bool both) async {
     await ezNoTouch(() async {
-      if (config == null || interlinked || config.isDark) {
+      if (config == null || both || config.isDark) {
         final List<List<String>> copy = List<List<String>>.from(_darkHomeMatrix);
 
         if (config == null) {
@@ -1031,7 +957,7 @@ For example: if an app has always on location permissions, banishing it will not
         unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
       }
 
-      if (config == null || interlinked || !config.isDark) {
+      if (config == null || both || !config.isDark) {
         final List<List<String>> copy = List<List<String>>.from(_lightHomeMatrix);
 
         if (config == null) {
