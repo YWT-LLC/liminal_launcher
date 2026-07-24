@@ -3,10 +3,6 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: add toggles for skip/prev and ff/rev
-// TODO: add custom ff/rev values
-// TODO: update edit new(s)
-
 import '../../utils/export.dart';
 import '../export.dart';
 
@@ -24,6 +20,8 @@ class ToggleMediaWidget extends StatefulWidget {
   final ValueNotifier<double>? rippleProgress;
 
   late final WidgetSize _size;
+  late final bool _bigSkips;
+  late final bool _lilSkips;
 
   ToggleMediaWidget(
     this.config,
@@ -39,6 +37,8 @@ class ToggleMediaWidget extends StatefulWidget {
         .split(configSplit);
 
     _size = WSConfig.safeLookup(data[0]);
+    _bigSkips = bool.tryParse(data[1]) ?? true;
+    _lilSkips = bool.tryParse(data[2]) ?? true;
   }
 
   @override
@@ -109,17 +109,47 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
                   : EzRow(
                       widget.config,
                       children: <Widget>[
-                        // Previous
                         widget.config.rowMargin,
-                        GestureDetector(onTap: skipPrev, child: const Icon(Icons.skip_previous)),
-                        widget.config.rowSpacer,
+
+                        // Backwards
+                        if (widget._bigSkips) ...<Widget>[
+                          GestureDetector(
+                            onTap: skipPrev,
+                            child: const Icon(Icons.skip_previous),
+                          ),
+                          widget.config.rowSpacer,
+                        ],
+
+                        if (widget._lilSkips) ...<Widget>[
+                          GestureDetector(
+                            onTap: rewind,
+                            child: const Icon(Icons.fast_rewind),
+                          ),
+                          widget.config.rowSpacer,
+                        ],
 
                         // Play/pause
-                        GestureDetector(onTap: toggleMedia, child: const Icon(Icons.headphones)),
-                        widget.config.rowSpacer,
+                        GestureDetector(
+                          onTap: toggleMedia,
+                          child: const Icon(Icons.headphones),
+                        ),
 
-                        // Next
-                        GestureDetector(onTap: skipNext, child: const Icon(Icons.skip_next)),
+                        // Forwards
+                        if (widget._lilSkips) ...<Widget>[
+                          widget.config.rowSpacer,
+                          GestureDetector(
+                            onTap: fastForward,
+                            child: const Icon(Icons.fast_forward),
+                          ),
+                        ],
+
+                        if (widget._bigSkips) ...<Widget>[
+                          widget.config.rowSpacer,
+                          GestureDetector(
+                            onTap: skipNext,
+                            child: const Icon(Icons.skip_next),
+                          ),
+                        ],
                         widget.config.rowMargin,
                       ],
                     ),
@@ -133,7 +163,11 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
               state: state,
               numLanes: numLanes,
               pos: widget.pos,
-              initSize: widget._size,
+              initConfig: _MediaConfig(
+                size: widget._size,
+                bigSkips: widget._bigSkips,
+                lilSkips: widget._lilSkips,
+              ),
             ),
           ),
         _ => EditContainer(
@@ -147,7 +181,11 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
               state: state,
               numLanes: numLanes,
               pos: widget.pos,
-              initSize: widget._size,
+              initConfig: _MediaConfig(
+                size: widget._size,
+                bigSkips: widget._bigSkips,
+                lilSkips: widget._lilSkips,
+              ),
             ),
             child: EzIconButton(
               widget.config,
@@ -173,18 +211,40 @@ List<Widget> _menuChildren(
   required AppState state,
   required int numLanes,
   required LimPos pos,
-  required WidgetSize initSize,
+  required _MediaConfig initConfig,
 }) =>
     <Widget>[
       // Edit
-      _EditTM(config, appInfo, initSize: initSize, lane: pos.lane, index: pos.index),
+      _EditTM(
+        config,
+        appInfo,
+        pContext: context,
+        initConfig: initConfig,
+        lane: pos.lane,
+        index: pos.index,
+      ),
 
       // Dupe
       EzMenuButton(
         config,
         label: 'Duplicate',
         icon: EzIcon(config, Icons.copy),
-        onPressed: () => appInfo.dupeItem(config, editNew: null, lane: pos.lane, index: pos.index),
+        onPressed: () => appInfo.dupeItem(
+          config,
+          editNew: () async {
+            if (!ezRootIsMounted) return;
+            await _openEdits(
+              config,
+              appInfo: appInfo,
+              pContext: ezRootContext,
+              initConfig: initConfig,
+              lane: pos.lane,
+              index: pos.index,
+            );
+          },
+          lane: pos.lane,
+          index: pos.index,
+        ),
       ),
 
       // Move
@@ -215,8 +275,23 @@ class AddToggleMedia extends StatelessWidget {
     required this.size,
   });
 
-  void onTap() =>
-      appInfo.addWidget(config, type: WidWidGetGet.toggleMedia, editNew: null, lane: lane);
+  void onTap() => appInfo.addWidget(
+        config,
+        type: WidWidGetGet.toggleMedia,
+        editNew: () => _openEdits(
+          config,
+          appInfo: appInfo,
+          pContext: pContext,
+          initConfig: _MediaConfig(
+            size: size,
+            bigSkips: true,
+            lilSkips: true,
+          ),
+          lane: lane,
+          index: appInfo.homeLane(config, lane).length - 1,
+        ),
+        lane: lane,
+      );
 
   @override
   Widget build(BuildContext context) => EzIconButton(
@@ -230,7 +305,11 @@ class AddToggleMedia extends StatelessWidget {
                   config.rowMargin,
                   const Icon(Icons.skip_previous),
                   config.rowSpacer,
+                  const Icon(Icons.fast_rewind),
+                  config.rowSpacer,
                   const Icon(Icons.headphones),
+                  config.rowSpacer,
+                  const Icon(Icons.fast_forward),
                   config.rowSpacer,
                   const Icon(Icons.skip_next),
                   config.rowMargin,
@@ -239,38 +318,121 @@ class AddToggleMedia extends StatelessWidget {
       );
 }
 
-String defaultMediaEntry() => _mediaEntry(WidgetSize.tile);
+String defaultMediaEntry() => _mediaEntry(
+      WidgetSize.tile,
+      bigSkips: true,
+      lilSkips: true,
+    );
 
-String _mediaEntry(WidgetSize size) => <String>[size.value].join(configSplit);
+String _mediaEntry(
+  WidgetSize size, {
+  required bool bigSkips,
+  required bool lilSkips,
+}) =>
+    <String>[
+      size.value,
+      bigSkips.toString(),
+      lilSkips.toString(),
+    ].join(configSplit);
 
 //* Edit Widget *//
 
-Future<void> _quickResize(
+class _MediaConfig {
+  final WidgetSize size;
+  final bool bigSkips;
+  final bool lilSkips;
+
+  _MediaConfig({
+    required this.size,
+    required this.bigSkips,
+    required this.lilSkips,
+  });
+}
+
+Future<void> _openEdits(
   EzCP config, {
   required AppInfoProvider appInfo,
-  required WidgetSize initSize,
+  required BuildContext pContext,
+  required _MediaConfig initConfig,
   required int lane,
   required int index,
-}) async =>
-    await appInfo.updateWidget(
-      config,
-      WidWidGetGet.toggleMedia,
-      _mediaEntry(initSize == WidgetSize.tile ? WidgetSize.button : WidgetSize.tile),
-      lane: lane,
-      index: index,
-    );
+}) async {
+  WidgetSize size = initConfig.size;
+  bool bigSkips = initConfig.bigSkips;
+  bool lilSkips = initConfig.lilSkips;
+
+  await ezModal(
+    config,
+    context: pContext,
+    builder: (_) => StatefulBuilder(
+      builder: (_, StateSetter setModal) => ezModalScroll(config, children: <Widget>[
+        // Size
+        SegmentedButton<WidgetSize>(
+          segments: const <ButtonSegment<WidgetSize>>[
+            ButtonSegment<WidgetSize>(
+              value: WidgetSize.button,
+              label: Text('Button', textAlign: TextAlign.center),
+            ),
+            ButtonSegment<WidgetSize>(
+              value: WidgetSize.tile,
+              label: Text('Tile', textAlign: TextAlign.center),
+            ),
+          ],
+          selected: <WidgetSize>{size},
+          showSelectedIcon: false,
+          onSelectionChanged: (Set<WidgetSize> selected) => setModal(() => size = selected.first),
+        ),
+        config.spacer,
+
+        // Button toggles
+        EzSwitchPair(
+          config,
+          key: ValueKey<String>('big-$bigSkips'),
+          value: bigSkips,
+          text: 'Skip/Prev',
+          onChanged: (bool? value) {
+            if (value == null) return;
+            setModal(() => bigSkips = value);
+          },
+        ),
+        config.spacer,
+        EzSwitchPair(
+          config,
+          key: ValueKey<String>('lil-$lilSkips'),
+          value: lilSkips,
+          text: 'FF/Rewind',
+          onChanged: (bool? value) {
+            if (value == null) return;
+            setModal(() => lilSkips = value);
+          },
+        ),
+        config.separator,
+      ]),
+    ),
+  );
+
+  await appInfo.updateWidget(
+    config,
+    WidWidGetGet.toggleMedia,
+    _mediaEntry(size, bigSkips: bigSkips, lilSkips: lilSkips),
+    lane: lane,
+    index: index,
+  );
+}
 
 class _EditTM extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
-  final WidgetSize initSize;
+  final BuildContext pContext;
+  final _MediaConfig initConfig;
   final int lane;
   final int index;
 
   const _EditTM(
     this.config,
     this.appInfo, {
-    required this.initSize,
+    required this.pContext,
+    required this.initConfig,
     required this.lane,
     required this.index,
   });
@@ -280,7 +442,13 @@ class _EditTM extends StatelessWidget {
         config,
         label: 'Resize',
         icon: EzIcon(config, Icons.edit),
-        onPressed: () =>
-            _quickResize(config, appInfo: appInfo, initSize: initSize, lane: lane, index: index),
+        onPressed: () => _openEdits(
+          config,
+          appInfo: appInfo,
+          pContext: pContext,
+          initConfig: initConfig,
+          lane: lane,
+          index: index,
+        ),
       );
 }
