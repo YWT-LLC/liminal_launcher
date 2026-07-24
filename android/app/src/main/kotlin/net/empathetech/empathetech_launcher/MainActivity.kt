@@ -142,7 +142,6 @@ class MainActivity : FlutterFragmentActivity() {
 
             val intent = Intent(Intent.ACTION_SEND).apply {
               type = "text/plain"
-              addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
               
               if (!taskTitle.isNullOrEmpty()) {
                 putExtra(Intent.EXTRA_TEXT, taskTitle) 
@@ -152,10 +151,8 @@ class MainActivity : FlutterFragmentActivity() {
             if (!packageName.isNullOrEmpty()) {
               intent.setPackage(packageName)
               startActivity(intent)
-            } else {      
-              val chooser = Intent.createChooser(intent)
-              chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-              startActivity(chooser)
+            } else {
+              startActivity(Intent.createChooser(intent, null))
             }
             
             result.success(true)
