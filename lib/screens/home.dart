@@ -3,7 +3,6 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: delta should be swapped too when !standardFlow
 // TODO: get the manifest exactly how you want it - be cognizant of SafeArea usage as you do
 //       at least, the app list should draw underneath the nav bar... not sure what else. maybe everything, maybe nothing
 // TODO: double last: how do I feel about the wideTiles + pages combo? more? less? the same number but different? ain't broke don't fix?
@@ -483,7 +482,7 @@ Or, something in-between.''',
   void navPageDown(EzCP config, AppInfoProvider appInfo, int numLanes) {
     if (page <= 0) return;
 
-    delta = -1;
+    delta = standardFlow(config) ? -1 : 1;
     setState(() => page -= 1);
 
     showPagePos(
@@ -503,7 +502,7 @@ Or, something in-between.''',
   void navPageUp(EzCP config, AppInfoProvider appInfo, int numLanes) {
     if (page >= (numLanes - 1)) return;
 
-    delta = 1;
+    delta = standardFlow(config) ? 1 : -1;
     setState(() => page += 1);
 
     showPagePos(
