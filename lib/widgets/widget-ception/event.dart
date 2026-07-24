@@ -211,10 +211,26 @@ Results may vary.""",
                     widget.config,
                     icon: Icon(icon),
                     onPressed: () async {
-                      final bool success = widget._isCalendar
-                          ? await createCalendarEvent(null)
-                          : await createTask(null);
-                      if (!success && context.mounted) await selfDestruct();
+                      if (widget._isCalendar) {
+                        final bool success = await createCalendarEvent(null);
+                        if (!success && context.mounted) await selfDestruct();
+                        return;
+                      }
+
+                      widget._shareDest == null
+                          ? await _openEdits(
+                              widget.config,
+                              appInfo: widget.appInfo,
+                              pContext: context,
+                              initConfig: _EventConfig(
+                                size: widget._size,
+                                isCalendar: widget._isCalendar,
+                                shareDest: widget._shareDest,
+                              ),
+                              lane: widget.pos.lane,
+                              index: widget.pos.index,
+                            )
+                          : await launchApp(widget._shareDest!);
                     },
                     onLongPress: () => canToggleMenu(widget.config, controller),
                   )
@@ -236,7 +252,7 @@ Results may vary.""",
                           onFieldSubmitted: (String entry) async {
                             final bool success = widget._isCalendar
                                 ? await createCalendarEvent(entry)
-                                : await createTask(entry);
+                                : await createTask(entry, widget._shareDest);
 
                             eventCon.clear();
                             removeOverlay();
@@ -253,7 +269,7 @@ Results may vary.""",
                         onPressed: () async {
                           final bool success = widget._isCalendar
                               ? await createCalendarEvent(eventCon.text)
-                              : await createTask(eventCon.text);
+                              : await createTask(eventCon.text, widget._shareDest);
 
                           eventCon.clear();
                           removeOverlay();
@@ -519,6 +535,15 @@ Future<void> _openEdits(
 
         // Share Dest //
 
+        Text(
+          """Note: 'Task' is just share underneath. Choose a destination app below.
+We recommend using a task app, but it's not required.
+Results may vary.""",
+          textAlign: TextAlign.center,
+          style: config.bodyStyle,
+        ),
+        config.margin,
+
         AppButton(
           config,
           name: shareDest.label,
@@ -545,6 +570,7 @@ Future<void> _openEdits(
           ),
           onLongPress: () => setModal(() => shareDest = nullApp),
         ),
+        config.margin,
         Text(
           'Long press to reset',
           textAlign: TextAlign.center,
