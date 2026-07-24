@@ -196,11 +196,6 @@ class _AppFolderState extends State<FolderTile> {
                   appList: widget._appList,
                 ),
               ),
-              child: EzIconButton(
-                widget.config,
-                icon: Icon(widget._icon),
-                onPressed: () => toggleMenu(menuControl),
-              ),
             )
           : EditContainer(
               widget.config,
