@@ -10,8 +10,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:open_ui/open_ui.dart';
 
-// TODO: add reset and tertiary marker to shape setting
-
 //* Core Widget *//
 
 class ClockWidget extends StatefulWidget {
