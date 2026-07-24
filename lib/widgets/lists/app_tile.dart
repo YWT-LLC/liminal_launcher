@@ -18,7 +18,7 @@ class AppTile extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
   final LimPos? pos;
-  final AppState state;
+  final TileState state;
   final ValueNotifier<double>? rippleProgress;
 
   final AppInfo app;
@@ -81,7 +81,7 @@ class AppTile extends StatefulWidget {
 class _AppTileState extends State<AppTile> {
   // Define the build data //
 
-  late AppState state = widget.state;
+  late TileState state = widget.state;
   Timer? rippleThrottle;
 
   final MenuController menuControl = MenuController();
@@ -101,9 +101,9 @@ class _AppTileState extends State<AppTile> {
     if (dy <= widget.rippleProgress!.value * heightOf(context)) {
       setState(
         () => state = switch (state) {
-          AppState.standard =>
-            (widget.location == AppLocation.list) ? AppState.verbose : AppState.groupEdit,
-          _ => AppState.standard,
+          TileState.standard =>
+            (widget.location == AppLocation.list) ? TileState.verbose : TileState.groupEdit,
+          _ => TileState.standard,
         },
       );
 
@@ -152,7 +152,7 @@ class _AppTileState extends State<AppTile> {
   }
 
   Widget verboseSpace() => switch (state) {
-        AppState.verbose => SizedBox(
+        TileState.verbose => SizedBox(
             height: widget.config.iconSize,
             child: VerticalDivider(
                 width: widget.config.spacing, color: widget.config.colors.secondary),
@@ -170,7 +170,7 @@ class _AppTileState extends State<AppTile> {
       forceFade: true,
       forceType: EzTransitionType.none,
       child: switch (state) {
-        AppState.standard => MenuAnchor(
+        TileState.standard => MenuAnchor(
             builder: (_, MenuController controller, __) => (widget.location == AppLocation.folder)
                 ? AppButton(
                     widget.config,
@@ -234,7 +234,7 @@ class _AppTileState extends State<AppTile> {
                   : null,
             ),
           ),
-        AppState.verbose => EzScrollBlocker(
+        TileState.verbose => EzScrollBlocker(
             EzScrollView(
               widget.config,
               showScrollHint: true,
@@ -282,7 +282,7 @@ class _AppTileState extends State<AppTile> {
               ],
             ),
           ),
-        AppState.groupEdit => EditContainer(
+        TileState.groupEdit => EditContainer(
             widget.config,
             subAlign: widget.pos!.subAlign,
             menuControl: menuControl,
@@ -334,7 +334,7 @@ List<Widget> _menuChildren(
   required BuildContext context,
   required AppInfo app,
   required AppLocation location,
-  required AppState state,
+  required TileState state,
   required int numLanes,
   required int? lane,
   required int? index,
@@ -376,7 +376,7 @@ List<Widget> _menuChildren(
           ),
 
           // Move
-          if (state == AppState.groupEdit && numLanes > 1) ...<Widget>[
+          if (state == TileState.groupEdit && numLanes > 1) ...<Widget>[
             moveDownLane(config, appInfo, numLanes: numLanes, lane: lane, index: index),
             moveUpLane(config, appInfo, numLanes: numLanes, lane: lane, index: index),
           ],

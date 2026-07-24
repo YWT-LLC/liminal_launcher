@@ -279,7 +279,7 @@ class _AppListScreenState extends State<AppListScreen> {
                                 config,
                                 appInfo: appInfo,
                                 pos: null,
-                                state: verbose ? AppState.verbose : AppState.standard,
+                                state: verbose ? TileState.verbose : TileState.standard,
                                 rippleProgress: rippleProgress,
                                 app: app,
                                 location: AppLocation.list,

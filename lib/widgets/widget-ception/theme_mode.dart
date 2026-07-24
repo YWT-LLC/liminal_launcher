@@ -16,7 +16,7 @@ class ThemeModeWidget extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
   final LimPos pos;
-  final AppState state;
+  final TileState state;
   final ValueNotifier<double>? rippleProgress;
 
   late final WidgetSize _size;
@@ -44,7 +44,7 @@ class ThemeModeWidget extends StatefulWidget {
 class _ThemeModeWidgetState extends State<ThemeModeWidget> {
   // Define the build data //
 
-  late AppState state = widget.state;
+  late TileState state = widget.state;
   Timer? rippleThrottle;
 
   final MenuController menuControl = MenuController();
@@ -64,8 +64,8 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
     if (dy <= (widget.rippleProgress!.value * heightOf(context))) {
       setState(
         () => state = switch (state) {
-          AppState.standard => AppState.groupEdit,
-          _ => AppState.standard,
+          TileState.standard => TileState.groupEdit,
+          _ => TileState.standard,
         },
       );
 
@@ -97,7 +97,7 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
       forceFade: true,
       forceType: EzTransitionType.none,
       child: switch (state) {
-        AppState.standard => MenuAnchor(
+        TileState.standard => MenuAnchor(
             builder: (_, MenuController controller, __) => (widget._size == WidgetSize.button)
                 ? EzIconButton(
                     widget.config,
@@ -159,7 +159,7 @@ List<Widget> _menuChildren(
   EzCP config, {
   required AppInfoProvider appInfo,
   required BuildContext context,
-  required AppState state,
+  required TileState state,
   required int numLanes,
   required LimPos pos,
   required WidgetSize initSize,
@@ -177,7 +177,7 @@ List<Widget> _menuChildren(
       ),
 
       // Move
-      if (state == AppState.groupEdit && numLanes > 1) ...<Widget>[
+      if (state == TileState.groupEdit && numLanes > 1) ...<Widget>[
         moveDownLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
         moveUpLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
       ],

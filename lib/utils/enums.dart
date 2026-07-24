@@ -48,7 +48,7 @@ extension ASConfig on AppSort {
 
 // App State //
 
-enum AppState { standard, groupEdit, verbose }
+enum TileState { standard, groupEdit, verbose }
 
 // Button Type //
 

@@ -128,7 +128,7 @@ Widget renderWidget(
   EzCP config, {
   required AppInfoProvider appInfo,
   required LimPos pos,
-  required AppState state,
+  required TileState state,
   ValueNotifier<double>? rippleProgress,
 }) =>
     wideTiles(config)
