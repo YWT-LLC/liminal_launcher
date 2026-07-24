@@ -568,7 +568,7 @@ Future<void> _openEdits(
                 constraints: initConfig.fieldCon,
                 tc: ourCon,
                 curr: ourNode,
-                onTap: () async => await grow(),
+                onTap: () => grow(),
                 onTapOutside: shrink,
                 onSubmit: () {
                   minNode.requestFocus();
@@ -582,7 +582,7 @@ Future<void> _openEdits(
                 constraints: initConfig.fieldCon,
                 tc: minCon,
                 curr: minNode,
-                onTap: () async => await grow(),
+                onTap: () => grow(),
                 onTapOutside: shrink,
                 onSubmit: () {
                   secNode.requestFocus();
@@ -596,7 +596,7 @@ Future<void> _openEdits(
                 constraints: initConfig.fieldCon,
                 tc: secCon,
                 curr: secNode,
-                onTap: () async => await grow(),
+                onTap: () => grow(),
                 onTapOutside: shrink,
                 onSubmit: () {
                   secNode.unfocus();

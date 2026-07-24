@@ -411,13 +411,13 @@ List<Widget> _baseMC(
               config,
               label: 'Show',
               icon: EzIcon(config, Icons.visibility),
-              onPressed: () async => await appInfo.showApp(config, app.id),
+              onPressed: () => appInfo.showApp(config, app.id),
             )
           : EzMenuButton(
               config,
               label: 'Hide',
               icon: EzIcon(config, Icons.visibility_off),
-              onPressed: () async => await appInfo.hideApp(config, context, app.id),
+              onPressed: () => appInfo.hideApp(config, context, app.id),
             ),
 
       // Banish
@@ -425,7 +425,7 @@ List<Widget> _baseMC(
         config,
         label: 'Banish',
         icon: EzIcon(config, LineIcons.ghost),
-        onPressed: () async => await appInfo.banishApp(config, context, app.id),
+        onPressed: () => appInfo.banishApp(config, context, app),
       ),
 
       // Uninstall
@@ -434,7 +434,7 @@ List<Widget> _baseMC(
           config,
           label: 'Uninstall',
           icon: EzIcon(config, Icons.delete),
-          onPressed: () async => await openDelete(app),
+          onPressed: () => openDelete(app),
         ),
     ];
 

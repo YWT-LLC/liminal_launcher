@@ -164,7 +164,7 @@ Results may vary.""",
               onPressed: () async {
                 Navigator.of(context).pop();
                 await ezNoTouch(
-                  () async => await widget.appInfo.removeItem(
+                  () => widget.appInfo.removeItem(
                     widget.config,
                     lane: widget.pos.lane,
                     index: widget.pos.index,

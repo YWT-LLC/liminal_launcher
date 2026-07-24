@@ -156,7 +156,7 @@ class _AppFolderState extends State<FolderTile> {
           ? MenuAnchor(
               builder: (_, MenuController controller, __) => wideTiles(widget.config)
                   ? InkWell(
-                      onTap: () async => await showApps(),
+                      onTap: () => showApps(),
                       onLongPress: () => canToggleMenu(widget.config, controller),
                       child: Container(
                         width: double.infinity,
@@ -167,7 +167,7 @@ class _AppFolderState extends State<FolderTile> {
                           icon: widget._icon,
                           buttonType: widget._buttonType ?? folderBT(widget.config),
                           labelType: widget._labelType ?? folderLabels(widget.config),
-                          onPressed: () async => await showApps(),
+                          onPressed: () => showApps(),
                           onLongPress: () => canToggleMenu(widget.config, controller),
                         ),
                       ),
@@ -178,7 +178,7 @@ class _AppFolderState extends State<FolderTile> {
                       icon: widget._icon,
                       buttonType: widget._buttonType ?? folderBT(widget.config),
                       labelType: widget._labelType ?? folderLabels(widget.config),
-                      onPressed: () async => await showApps(),
+                      onPressed: () => showApps(),
                       onLongPress: () => canToggleMenu(widget.config, controller),
                     ),
               menuChildren: _menuChildren(
@@ -746,7 +746,7 @@ Future<void> editFolder(
   );
 
   await ezNoTouch(
-    () async => await appInfo.updateFolder(
+    () => appInfo.updateFolder(
       config,
       lane: lane,
       index: index,

@@ -368,7 +368,7 @@ Future<void> _editLane(
   );
 
   await ezNoTouch(
-    () async => await appInfo.updateLane(
+    () => appInfo.updateLane(
       config,
       entry: _laneEntry(hA, vA),
       startPos: lane,
