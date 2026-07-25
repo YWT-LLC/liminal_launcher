@@ -258,11 +258,11 @@ final Map<String, Object> liminalDefault = <String, Object>{
   lightPagesKey: true,
 
   // Page
-  darkHideStatusKey: false,
+  darkHideStatusKey: true,
   darkHorizontalAlignKey: ListAlignment.center.value,
   darkVerticalAlignKey: ListAlignment.start.value,
 
-  lightHideStatusKey: false,
+  lightHideStatusKey: true,
   lightHorizontalAlignKey: ListAlignment.center.value,
   lightVerticalAlignKey: ListAlignment.start.value,
 
