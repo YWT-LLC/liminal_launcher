@@ -29,8 +29,6 @@ Future<void> canEdit(EzCP config, Future<void> Function() onSuccess) async {
 Future<void> canToggleMenu(EzCP config, MenuController c) =>
     canEdit(config, () async => toggleMenu(c));
 
-// TODO: make solid/outlined a switch, add names, make it search-able
-// also maybe update the list
 Future<IconData?> chooseIcon(EzCP config, BuildContext context) => ezModal(
       config,
       context: context,
