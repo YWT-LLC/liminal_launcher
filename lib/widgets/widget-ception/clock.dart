@@ -125,7 +125,7 @@ class _ClockWidgetState extends State<ClockWidget> {
       child: switch (state) {
         TileState.standard => MenuAnchor(
             builder: (_, MenuController controller, __) => GestureDetector(
-              onLongPress: () => canToggleMenu(widget.config, controller),
+              onLongPress: () async => await canToggleMenu(widget.config, controller),
               child: EzTextBackground(
                 widget.config,
                 padding: EdgeInsets.all(widget.config.padding),

@@ -180,12 +180,12 @@ class _AppTileState extends State<AppTile> {
                     buttonType: listBT(widget.config),
                     labelType: listLabels(widget.config),
                     onPressed: () => widget.onSelected(widget.app),
-                    onLongPress: () => canToggleMenu(widget.config, controller),
+                    onLongPress: () async => await canToggleMenu(widget.config, controller),
                   )
                 : (wideTiles(widget.config)
                     ? InkWell(
                         onTap: () => widget.onSelected(widget.app),
-                        onLongPress: () => canToggleMenu(widget.config, controller),
+                        onLongPress: () async => await canToggleMenu(widget.config, controller),
                         child: Container(
                           width: double.infinity,
                           alignment: widget.pos == null
@@ -199,7 +199,7 @@ class _AppTileState extends State<AppTile> {
                             buttonType: widget._buttonType ?? listBT(widget.config),
                             labelType: widget._labelType ?? listLabels(widget.config),
                             onPressed: () => widget.onSelected(widget.app),
-                            onLongPress: () => canToggleMenu(widget.config, controller),
+                            onLongPress: () async => await canToggleMenu(widget.config, controller),
                           ),
                         ),
                       )
@@ -211,7 +211,7 @@ class _AppTileState extends State<AppTile> {
                         buttonType: widget._buttonType ?? listBT(widget.config),
                         labelType: widget._labelType ?? listLabels(widget.config),
                         onPressed: () => widget.onSelected(widget.app),
-                        onLongPress: () => canToggleMenu(widget.config, controller),
+                        onLongPress: () async => await canToggleMenu(widget.config, controller),
                       )),
             menuChildren: _menuChildren(
               widget.config,

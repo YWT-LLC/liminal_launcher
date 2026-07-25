@@ -108,7 +108,7 @@ class _LimSpacerState extends State<LimSpacer> {
                       ? MenuAnchor(
                           builder: (_, MenuController controller, __) => GestureDetector(
                             behavior: HitTestBehavior.opaque,
-                            onLongPress: () => canToggleMenu(widget.config, controller),
+                            onLongPress: () async => await canToggleMenu(widget.config, controller),
                             child: SizedBox(height: widget._height, width: widget._width),
                           ),
                           menuChildren: _menuChildren(

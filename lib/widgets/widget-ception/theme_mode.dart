@@ -112,7 +112,7 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
                     },
                   )
                 : GestureDetector(
-                    onLongPress: () => canToggleMenu(widget.config, controller),
+                    onLongPress: () async => await canToggleMenu(widget.config, controller),
                     child: EzThemeModeSwitch(widget.config),
                   ),
             menuChildren: _menuChildren(

@@ -157,7 +157,7 @@ class _AppFolderState extends State<FolderTile> {
               builder: (_, MenuController controller, __) => wideTiles(widget.config)
                   ? InkWell(
                       onTap: () => showApps(),
-                      onLongPress: () => canToggleMenu(widget.config, controller),
+                      onLongPress: () async => await canToggleMenu(widget.config, controller),
                       child: Container(
                         width: double.infinity,
                         alignment: widget.pos.subAlign,
@@ -168,7 +168,7 @@ class _AppFolderState extends State<FolderTile> {
                           buttonType: widget._buttonType ?? folderBT(widget.config),
                           labelType: widget._labelType ?? folderLabels(widget.config),
                           onPressed: () => showApps(),
-                          onLongPress: () => canToggleMenu(widget.config, controller),
+                          onLongPress: () async => await canToggleMenu(widget.config, controller),
                         ),
                       ),
                     )
@@ -179,7 +179,7 @@ class _AppFolderState extends State<FolderTile> {
                       buttonType: widget._buttonType ?? folderBT(widget.config),
                       labelType: widget._labelType ?? folderLabels(widget.config),
                       onPressed: () => showApps(),
-                      onLongPress: () => canToggleMenu(widget.config, controller),
+                      onLongPress: () async => await canToggleMenu(widget.config, controller),
                     ),
               menuChildren: _menuChildren(
                 widget.config,

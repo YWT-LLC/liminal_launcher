@@ -165,7 +165,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                           ? await setTimer(<int>[ours, mins, secs])
                           : ezSnackBar(widget.config, context: context, message: 'Invalid time');
                     },
-                    onLongPress: () => canToggleMenu(widget.config, controller),
+                    onLongPress: () async => await canToggleMenu(widget.config, controller),
                   )
                 : EzRow(
                     widget.config,
@@ -233,7 +233,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                             _toInt(secCon.text),
                           ]);
                         },
-                        onLongPress: () => canToggleMenu(widget.config, controller),
+                        onLongPress: () async => await canToggleMenu(widget.config, controller),
                       ),
                     ],
                   ),

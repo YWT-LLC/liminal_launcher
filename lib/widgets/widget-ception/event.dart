@@ -232,7 +232,7 @@ Results may vary.""",
                             )
                           : await launchApp(widget._shareDest!);
                     },
-                    onLongPress: () => canToggleMenu(widget.config, controller),
+                    onLongPress: () async => await canToggleMenu(widget.config, controller),
                   )
                 : EzRow(
                     widget.config,
@@ -276,7 +276,7 @@ Results may vary.""",
 
                           if (!success && context.mounted) await selfDestruct();
                         },
-                        onLongPress: () => canToggleMenu(widget.config, controller),
+                        onLongPress: () async => await canToggleMenu(widget.config, controller),
                       ),
                     ],
                   ),

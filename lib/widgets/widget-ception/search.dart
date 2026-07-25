@@ -224,7 +224,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                     widget.config,
                     icon: Icon(widget._engine.icon),
                     onPressed: () => launchUrl(Uri.https(widget._engine.base, '/')),
-                    onLongPress: () => canToggleMenu(widget.config, controller),
+                    onLongPress: () async => await canToggleMenu(widget.config, controller),
                   )
                 : EzRow(
                     widget.config,
@@ -251,7 +251,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                         widget.config,
                         icon: Icon(widget._engine.icon),
                         onPressed: () => search(queryCon.text),
-                        onLongPress: () => canToggleMenu(widget.config, controller),
+                        onLongPress: () async => await canToggleMenu(widget.config, controller),
                       ),
                     ],
                   ),

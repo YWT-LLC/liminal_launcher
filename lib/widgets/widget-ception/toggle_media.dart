@@ -154,7 +154,7 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
                       ],
                     ),
               onPressed: (widget._size == WidgetSize.button) ? toggleMedia : doNothing,
-              onLongPress: () => canToggleMenu(widget.config, controller),
+              onLongPress: () async => await canToggleMenu(widget.config, controller),
             ),
             menuChildren: _menuChildren(
               widget.config,
