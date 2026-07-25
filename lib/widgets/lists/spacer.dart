@@ -734,6 +734,7 @@ class _EditSpacer extends StatelessWidget {
             index: pos.index,
           );
         },
+        label: 'Edit',
         icon: EzIcon(config, Icons.edit),
       );
 }
