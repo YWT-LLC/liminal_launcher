@@ -6,10 +6,12 @@
 import '../../utils/export.dart';
 import '../../widgets/export.dart';
 
+import 'package:open_ui/open_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:open_ui/open_ui.dart';
+
+// TODO: better/more search closing (onTapOutside, for example)
 
 class AppListSettings extends StatelessWidget {
   final EzCP config;
@@ -37,12 +39,12 @@ class AppListSettings extends StatelessWidget {
                   bigTipper: TextSpan(
                     children: <InlineSpan>[
                       EzPlainText(
-                        text: 'The home list can be dark/light theme based too!',
+                        text: 'The home list can be theme based too!',
                         style: config.bodyStyle,
                       ),
                       EzPlainText(text: '\n\n', style: config.bodyStyle),
                       EzPlainText(
-                        text: 'Note that the home page(s) have no update both system (',
+                        text: 'Note: the home pages have no update both system (',
                         style: config.bodyStyle,
                       ),
                       WidgetSpan(
@@ -50,7 +52,8 @@ class AppListSettings extends StatelessWidget {
                         child: FaIcon(FontAwesomeIcons.yinYang, size: config.iconSize),
                       ),
                       EzPlainText(
-                          text: '). The lists will be independent.', style: config.bodyStyle),
+                          text: ').\nThe lists will be fully independent.',
+                          style: config.bodyStyle),
                       EzPlainText(text: '\n\n', style: config.bodyStyle),
                       EzPlainText(
                         text: 'If/when re-linked, you will be asked which version to keep.',
