@@ -724,6 +724,70 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     AppInfoProvider appInfo, {
     required int numLanes,
     required int lane,
+    required ListAlignment hAlign,
+    required ListAlignment vAlign,
+  }) =>
+      editing
+          ? Builder(
+              builder: (_) {
+                final List<Widget> tiles = _buildTiles(
+                  config,
+                  appInfo,
+                  lane,
+                  hAlign: hAlign,
+                  vAlign: vAlign,
+                );
+
+                return StatefulBuilder(
+                  key: ValueKey<String>('lane-$lane'),
+                  builder: (_, StateSetter setList) => ReorderableListView(
+                    shrinkWrap: true,
+                    header: LaneHeader(
+                      config,
+                      appInfo: appInfo,
+                      pContext: context,
+                      numLanes: numLanes,
+                      pos: LimPos(lane: lane, index: -1, hAlign: hAlign, vAlign: vAlign),
+                      addModal: addModal,
+                      navPageDown:
+                          pages(config) ? () => navPageDown(config, appInfo, numLanes) : null,
+                      navPageUp: pages(config) ? () => navPageUp(config, appInfo, numLanes) : null,
+                    ),
+                    onReorderItem: (int oldIndex, int newIndex) async {
+                      if (oldIndex == newIndex) return;
+
+                      final Widget element = tiles.removeAt(oldIndex);
+                      tiles.insert(newIndex, element);
+
+                      await appInfo.reorderLane(
+                        config,
+                        lane: lane,
+                        oldIndex: oldIndex,
+                        newIndex: newIndex,
+                      );
+
+                      setList(() {});
+                    },
+                    children: tiles,
+                  ),
+                );
+              },
+            )
+          : EzScrollView(
+              config,
+              key: ValueKey<String>('lane-$lane'),
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: vAlign.mainAxis,
+              crossAxisAlignment: hAlign.crossAxis,
+              physics: const ClampingScrollPhysics(),
+              children: _buildTiles(config, appInfo, lane, hAlign: hAlign, vAlign: vAlign),
+            );
+
+  Widget buildPage(
+    EzCP config,
+    AppInfoProvider appInfo, {
+    required int numLanes,
+    required int lane,
   }) {
     final ListAlignment hAlign = LAConfig.buildLookup(
       appInfo.homeItem(config, lane: lane, index: 0),
@@ -736,81 +800,39 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
       config,
     );
 
-    return editing
-        ? Builder(
-            builder: (_) {
-              final List<Widget> tiles = _buildTiles(
-                config,
-                appInfo,
-                lane,
-                hAlign: hAlign,
-                vAlign: vAlign,
-              );
-
-              return StatefulBuilder(
-                key: ValueKey<String>('lane-$lane'),
-                builder: (_, StateSetter setList) => ReorderableListView(
-                  shrinkWrap: true,
-                  header: LaneHeader(
-                    config,
-                    appInfo: appInfo,
-                    pContext: context,
-                    numLanes: numLanes,
-                    pos: LimPos(lane: lane, index: -1, hAlign: hAlign, vAlign: vAlign),
-                    addModal: addModal,
-                    navPageDown:
-                        pages(config) ? () => navPageDown(config, appInfo, numLanes) : null,
-                    navPageUp: pages(config) ? () => navPageUp(config, appInfo, numLanes) : null,
-                  ),
-                  onReorderItem: (int oldIndex, int newIndex) async {
-                    if (oldIndex == newIndex) return;
-
-                    final Widget element = tiles.removeAt(oldIndex);
-                    tiles.insert(newIndex, element);
-
-                    await appInfo.reorderLane(
-                      config,
-                      lane: lane,
-                      oldIndex: oldIndex,
-                      newIndex: newIndex,
-                    );
-
-                    setList(() {});
-                  },
-                  children: tiles,
-                ),
-              );
-            },
-          )
-        : EzScrollView(
-            config,
-            key: ValueKey<String>('lane-$lane'),
-            mainAxisAlignment: vAlign.mainAxis,
-            crossAxisAlignment: hAlign.crossAxis,
-            physics: const ClampingScrollPhysics(),
-            children: _buildTiles(config, appInfo, lane, hAlign: hAlign, vAlign: vAlign),
-          );
+    return Container(
+      constraints: const BoxConstraints.tightFor(height: double.infinity, width: double.infinity),
+      alignment: LAConfig.merge(h: hAlign, v: vAlign),
+      child: _buildLane(
+        config,
+        appInfo,
+        numLanes: numLanes,
+        lane: lane,
+        hAlign: hAlign,
+        vAlign: vAlign,
+      ),
+    );
   }
-
-  Widget buildPage(
-    EzCP config,
-    AppInfoProvider appInfo, {
-    required int numLanes,
-    required int lane,
-  }) =>
-      ConstrainedBox(
-        constraints: const BoxConstraints.tightFor(width: double.infinity, height: double.infinity),
-        child: _buildLane(config, appInfo, numLanes: numLanes, lane: lane),
-      );
 
   List<Widget> buildGrid(EzCP config, AppInfoProvider appInfo, int numLanes) {
     final List<Widget> lanes = <Widget>[];
 
     for (int lane = 0; lane < numLanes; lane++) {
+      final ListAlignment hAlign = LAConfig.buildLookup(
+        appInfo.homeItem(config, lane: lane, index: 0),
+        Axis.horizontal,
+        config,
+      );
+      final ListAlignment vAlign = LAConfig.buildLookup(
+        appInfo.homeItem(config, lane: lane, index: 0),
+        Axis.vertical,
+        config,
+      );
+
       lanes.add(
         ValueListenableBuilder<double>(
           valueListenable: rippleProgress,
-          builder: (_, double ripple, __) => ConstrainedBox(
+          builder: (_, double ripple, __) => Container(
             constraints: BoxConstraints(
               minHeight: double.infinity,
               minWidth: appIconSize(config) + config.spacing,
@@ -818,7 +840,15 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                   ? (appIconSize(config) * 3) + (config.spargin * 2)
                   : widthOf(context),
             ),
-            child: _buildLane(config, appInfo, numLanes: numLanes, lane: lane),
+            alignment: LAConfig.merge(h: hAlign, v: vAlign),
+            child: _buildLane(
+              config,
+              appInfo,
+              numLanes: numLanes,
+              lane: lane,
+              hAlign: hAlign,
+              vAlign: vAlign,
+            ),
           ),
         ),
       );
@@ -1027,8 +1057,11 @@ Future<void> _welcome(EzCP config, BuildContext context) => ezModal(
         config,
         children: <Widget>[
           // Welcome
-          Text('Welcome to Liminal Launcher',
-              textAlign: TextAlign.center, style: config.titleStyle),
+          Text(
+            'Welcome to Liminal Launcher',
+            textAlign: TextAlign.center,
+            style: config.titleStyle,
+          ),
           config.centerLine,
 
           // Minimal-ish
@@ -1118,7 +1151,11 @@ If you want to support Liminal's development, or the development of more cool so
             EzHeader(config),
 
             // Title
-            Text('One more thing...', textAlign: TextAlign.center, style: config.titleStyle),
+            Text(
+              'One more thing...',
+              textAlign: TextAlign.center,
+              style: config.titleStyle,
+            ),
             config.centerLine,
 
             // Message

@@ -3,8 +3,6 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: last: full (runtime) audit of alignment settings. needs work
-
 import '../utils/export.dart';
 import '../widgets/export.dart';
 
