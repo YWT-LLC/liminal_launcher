@@ -832,7 +832,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
       lanes.add(
         ValueListenableBuilder<double>(
           valueListenable: rippleProgress,
-          builder: (_, double ripple, __) => Container(
+          builder: (_, double ripple, __) => ConstrainedBox(
             constraints: BoxConstraints(
               minHeight: double.infinity,
               minWidth: appIconSize(config) + config.spacing,
@@ -840,14 +840,17 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                   ? (appIconSize(config) * 3) + (config.spargin * 2)
                   : widthOf(context),
             ),
-            alignment: LAConfig.merge(h: hAlign, v: vAlign),
-            child: _buildLane(
-              config,
-              appInfo,
-              numLanes: numLanes,
-              lane: lane,
-              hAlign: hAlign,
-              vAlign: vAlign,
+            child: Align(
+              alignment: LAConfig.merge(h: hAlign, v: vAlign),
+              widthFactor: 1.0,
+              child: _buildLane(
+                config,
+                appInfo,
+                numLanes: numLanes,
+                lane: lane,
+                hAlign: hAlign,
+                vAlign: vAlign,
+              ),
             ),
           ),
         ),
