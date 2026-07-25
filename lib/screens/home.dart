@@ -342,6 +342,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                                   setModal(() => usePage = value);
                                 },
                               ),
+                              config.spacer,
                               EzSwitchPair(
                                 config,
                                 valueKey: config.isDark ? darkWideTilesKey : lightWideTilesKey,
@@ -401,7 +402,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                                   ),
                                   EzPlainText(
                                     text:
-                                        'apps and folders can/will only be activated by their button(s).\n',
+                                        'apps and folders can/will be activated only by their button(s).\n',
                                     style: useWide ? hidden : focussed,
                                   ),
                                 ],
