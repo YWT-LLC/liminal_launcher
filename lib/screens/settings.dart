@@ -307,10 +307,10 @@ class SettingsScreen extends StatelessWidget {
                   ),
                   config.spacer,
 
-                  // Use fullscreen pages
+                  // Pages
                   EzSwitchPair(
                     config,
-                    text: 'Fullscreen home pages',
+                    text: 'Home-screen pages',
                     valueKey: config.isDark ? darkPagesKey : lightPagesKey,
                     afterChanged: (bool? choice) async {
                       if (choice == null) return;
