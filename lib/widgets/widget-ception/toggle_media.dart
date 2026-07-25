@@ -305,11 +305,7 @@ class AddToggleMedia extends StatelessWidget {
                   config.rowMargin,
                   const Icon(Icons.skip_previous),
                   config.rowSpacer,
-                  const Icon(Icons.fast_rewind),
-                  config.rowSpacer,
                   const Icon(Icons.headphones),
-                  config.rowSpacer,
-                  const Icon(Icons.fast_forward),
                   config.rowSpacer,
                   const Icon(Icons.skip_next),
                   config.rowMargin,
@@ -390,6 +386,47 @@ Future<void> _openEdits(
 
             setModal(() => size = selected.first);
           },
+        ),
+        config.margin,
+
+        // Preview
+        EzIconButton(
+          config,
+          icon: (size == WidgetSize.button)
+              ? const Icon(Icons.headphones)
+              : EzRow(
+                  config,
+                  children: <Widget>[
+                    config.rowMargin,
+
+                    // Backwards
+                    if (bigSkips) ...<Widget>[
+                      const Icon(Icons.skip_previous),
+                      config.rowSpacer,
+                    ],
+
+                    if (lilSkips) ...<Widget>[
+                      const Icon(Icons.fast_rewind),
+                      config.rowSpacer,
+                    ],
+
+                    // Play/pause
+                    const Icon(Icons.headphones),
+
+                    // Forwards
+                    if (lilSkips) ...<Widget>[
+                      config.rowSpacer,
+                      const Icon(Icons.fast_forward),
+                    ],
+
+                    if (bigSkips) ...<Widget>[
+                      config.rowSpacer,
+                      const Icon(Icons.skip_next),
+                    ],
+                    config.rowMargin,
+                  ],
+                ),
+          onPressed: doNothing,
         ),
         config.spacer,
 
