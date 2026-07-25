@@ -220,7 +220,7 @@ class SettingsScreen extends StatelessWidget {
                   AppTileSetting(config, folder: false),
                   config.spacer,
                   AppTileSetting(config, folder: true),
-                  config.separator,
+                  config.divider,
                 ],
                 styleLabel: 'Elevated style',
                 includeBackgroundImage: false,
@@ -322,7 +322,7 @@ class SettingsScreen extends StatelessWidget {
                       await config.rebuildUI(<EzCacheType>{EzCacheType.design});
                     },
                   ),
-                  config.separator,
+                  config.divider,
                 ],
               ),
             ),
