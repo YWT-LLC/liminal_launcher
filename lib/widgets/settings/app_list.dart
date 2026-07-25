@@ -11,8 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-// TODO: better/more search closing (onTapOutside, for example)
-
 class AppListSettings extends StatelessWidget {
   final EzCP config;
 

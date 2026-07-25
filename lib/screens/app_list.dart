@@ -187,7 +187,7 @@ class _AppListScreenState extends State<AppListScreen> {
                             Expanded(
                               child: TextField(
                                 controller: searchControl,
-                                autofocus: searching,
+                                autofocus: autoSearch,
                                 decoration: const InputDecoration(
                                   hintText: 'Search',
                                   border: InputBorder.none,
@@ -266,9 +266,9 @@ class _AppListScreenState extends State<AppListScreen> {
                                 (appInfo.hybridIDs(config, widget.listConfig).contains(app.id) ==
                                     widget.listConfig.include) &&
                                 (searching
-                                    ? app.label.toLowerCase().contains(
-                                          searchControl.text.toLowerCase(),
-                                        )
+                                    ? app.label
+                                        .toLowerCase()
+                                        .contains(searchControl.text.toLowerCase())
                                     : true),
                           )
                           .map(
