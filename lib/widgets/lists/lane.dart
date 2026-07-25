@@ -10,8 +10,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:open_ui/open_ui.dart';
 
-// TODO: is custom alignment working?
-
 //* Core Widget *//
 
 class LaneHeader extends StatelessWidget {
