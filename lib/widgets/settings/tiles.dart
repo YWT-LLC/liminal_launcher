@@ -37,8 +37,8 @@ class AppTileSetting extends StatelessWidget {
           LabelType labelType = folder ? folderLabels(config) : listLabels(config);
           bool showIcon = folder ? folderIcons(config) : listIcons(config);
           bool elevated = folder ? elevatedFolders(config) : elevatedLists(config);
+
           bool useWide = wideTiles(config);
-          bool fullscreen = pages(config);
 
           Widget core() => folder
               ? FolderButton(
@@ -181,7 +181,7 @@ class AppTileSetting extends StatelessWidget {
                   // Wide tiles
                   EzSwitchPair(
                     config,
-                    text: 'Max width tiles',
+                    text: 'Wide tiles',
                     valueKey: config.isDark ? darkWideTilesKey : lightWideTilesKey,
                     afterChanged: (bool? choice) async {
                       if (choice == null) return;
@@ -195,22 +195,6 @@ class AppTileSetting extends StatelessWidget {
                       setModal(() => useWide = choice);
                     },
                   ),
-                  config.spacer,
-
-                  // Fullscreen pages
-                  EzSwitchPair(
-                    config,
-                    text: 'Fullscreen pages',
-                    valueKey: config.isDark ? darkPagesKey : lightPagesKey,
-                    afterChanged: (bool? choice) async {
-                      if (choice == null) return;
-
-                      if (EzCM.updateBoth) {
-                        await EzCM.setBool(config.isDark ? lightPagesKey : darkPagesKey, choice);
-                      }
-                      setModal(() => fullscreen = choice);
-                    },
-                  ),
                   config.separator,
                 ],
               ),
@@ -220,8 +204,7 @@ class AppTileSetting extends StatelessWidget {
           if ((labelType != (folder ? folderLabels(config) : listLabels(config))) ||
               (showIcon != (folder ? folderIcons(config) : listIcons(config))) ||
               (elevated != (folder ? elevatedFolders(config) : elevatedLists(config))) ||
-              (useWide != wideTiles(config)) ||
-              fullscreen != pages(config)) {
+              (useWide != wideTiles(config))) {
             await config.rebuildUI(<EzCacheType>{EzCacheType.design});
           }
         },
