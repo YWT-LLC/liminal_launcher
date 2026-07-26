@@ -239,12 +239,14 @@ Future<void> editSpacer(
   final List<String> data = appInfo.homeItem(config, lane: lane, index: index).split(spacerSplit);
 
   final double hBack = double.tryParse(data[0]) ?? config.spacing;
-  final double maxHeight = heightOf(context) * 0.75;
+  final double fullHeight = heightOf(context);
+  final double maxHeight = fullHeight * 0.75;
   double height = hBack;
   editSpacerHeight.value = height;
 
   final double wBack = double.tryParse(data[1]) ?? appIS;
-  final double maxWidth = widthOf(context) * 0.75;
+  final double fullWidth = widthOf(context);
+  final double maxWidth = fullWidth * 0.75;
   double width = wBack;
   editSpacerWidth.value = width;
 
@@ -375,25 +377,60 @@ Future<void> editSpacer(
                               onPressed: () => toggleMenu(c),
                             ),
                             menuChildren: <Widget>[
-                              MenuItemButton(
+                              EzMenuButton(
+                                config,
+                                label: 'Margin: ${config.marginVal}',
                                 onPressed: () => quickValue(config.marginVal),
-                                child: Text('Margin: ${config.marginVal}'),
                               ),
-                              MenuItemButton(
+                              EzMenuButton(
+                                config,
+                                label: 'Padding: ${config.padding}',
                                 onPressed: () => quickValue(config.padding),
-                                child: Text('Padding: ${config.padding}'),
                               ),
-                              MenuItemButton(
+                              EzMenuButton(
+                                config,
+                                label: 'Spacing: ${config.spacing}',
                                 onPressed: () => quickValue(config.spacing),
-                                child: Text('Spacing: ${config.spacing}'),
                               ),
-                              MenuItemButton(
+                              EzMenuButton(
+                                config,
+                                label: 'Icon size: ${config.iconSize}',
                                 onPressed: () => quickValue(config.iconSize),
-                                child: Text('Icon size: ${config.iconSize}'),
                               ),
-                              MenuItemButton(
-                                onPressed: () => quickValue(appIS),
-                                child: Text('Icon button size: $appIS'),
+                              EzMenuButton(
+                                config,
+                                label: '1/4',
+                                icon: EzIcon(config, Icons.phone_android),
+                                onPressed: () => quickValue(
+                                    (axis == Axis.vertical ? fullHeight : fullWidth) * 0.250),
+                              ),
+                              EzMenuButton(
+                                config,
+                                label: '1/3',
+                                icon: EzIcon(config, Icons.phone_android),
+                                onPressed: () => quickValue(
+                                    (axis == Axis.vertical ? fullHeight : fullWidth) * 0.333),
+                              ),
+                              EzMenuButton(
+                                config,
+                                label: '1/2',
+                                icon: EzIcon(config, Icons.phone_android),
+                                onPressed: () => quickValue(
+                                    (axis == Axis.vertical ? fullHeight : fullWidth) * 0.500),
+                              ),
+                              EzMenuButton(
+                                config,
+                                label: '2/3',
+                                icon: EzIcon(config, Icons.phone_android),
+                                onPressed: () => quickValue(
+                                    (axis == Axis.vertical ? fullHeight : fullWidth) * 0.667),
+                              ),
+                              EzMenuButton(
+                                config,
+                                label: '3/4',
+                                icon: EzIcon(config, Icons.phone_android),
+                                onPressed: () => quickValue(
+                                    (axis == Axis.vertical ? fullHeight : fullWidth) * 0.750),
                               ),
                             ],
                           ),
