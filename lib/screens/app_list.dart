@@ -309,7 +309,7 @@ class _AppListScreenState extends State<AppListScreen> {
                 heroTag: 'scroll_up_FAB',
                 onPressed: () => scrollControl.animateTo(
                   0,
-                  duration: ezDuration(config.animDur),
+                  duration: ezDuration(config.animDur, nonZero: true),
                   curve: Curves.easeOut,
                 ),
                 child: EzIcon(config, Icons.arrow_upward),
@@ -327,7 +327,7 @@ class _AppListScreenState extends State<AppListScreen> {
                 heroTag: 'scroll_down_FAB',
                 onPressed: () => scrollControl.animateTo(
                   scrollControl.position.maxScrollExtent,
-                  duration: ezDuration(config.animDur),
+                  duration: ezDuration(config.animDur, nonZero: true),
                   curve: Curves.easeOut,
                 ),
                 child: EzIcon(config, Icons.arrow_downward),
