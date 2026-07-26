@@ -10,7 +10,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:open_ui/open_ui.dart';
 
-//* Core Widget *//
+//* Core 'Widget' *//
 
 class LaneHeader extends StatelessWidget {
   final EzCP config;
@@ -154,7 +154,149 @@ class LaneHeader extends StatelessWidget {
         );
 }
 
-//* Edit Widget *//
+//* Add 'Widget' *//
+
+class AddLane extends StatelessWidget {
+  final EzCP config;
+  final AppInfoProvider appInfo;
+
+  const AddLane(
+    this.config, {
+    super.key,
+    required this.appInfo,
+  });
+
+  Future<void> configMultiLane(BuildContext context, {bool rebuild = false}) async {
+    bool usePage = pages(config);
+    bool useWide = wideTiles(config);
+
+    final TextStyle? focussed = config.bodyStyle;
+    final TextStyle? hidden = config.labelStyle?.copyWith(color: config.colors.outline);
+
+    await ezModal(
+      config,
+      context: context,
+      builder: (_) => StatefulBuilder(
+        builder: (BuildContext mCon, StateSetter setModal) => ezModalScroll(
+          config,
+          children: <Widget>[
+            // Title
+            Text(
+              'Multi-lane configuration',
+              textAlign: TextAlign.center,
+              style: config.titleStyle,
+            ),
+            config.spacer,
+
+            // Switches
+            EzSwitchPair(
+              config,
+              valueKey: config.isDark ? darkPagesKey : lightPagesKey,
+              text: 'Pages',
+              afterChanged: (bool? value) async {
+                if (value == null) return;
+
+                if (interlinked) {
+                  await EzCM.setBool(
+                    config.isDark ? lightPagesKey : darkPagesKey,
+                    value,
+                  );
+                }
+                setModal(() => usePage = value);
+              },
+            ),
+            config.spacer,
+            EzSwitchPair(
+              config,
+              valueKey: config.isDark ? darkWideTilesKey : lightWideTilesKey,
+              text: 'Wide tiles',
+              afterChanged: (bool? value) async {
+                if (value == null) return;
+
+                if (interlinked) {
+                  await EzCM.setBool(
+                    config.isDark ? lightWideTilesKey : darkWideTilesKey,
+                    value,
+                  );
+                }
+                setModal(() => useWide = value);
+              },
+            ),
+            config.spacer,
+
+            // Description
+            EzRichText(
+              config,
+              children: <InlineSpan>[
+                EzPlainText(
+                  text: 'With pages enabled, lanes behave like pages on a traditional launcher.\n',
+                  style: usePage ? focussed : hidden,
+                ),
+                EzPlainText(
+                  text: 'With pages disabled, all lanes share one horizontal scroll.\n',
+                  style: usePage ? hidden : focussed,
+                ),
+                config.richLine,
+                EzPlainText(
+                  text: 'With wide tiles enabled...\n',
+                  style: useWide ? focussed : hidden,
+                ),
+                EzPlainText(
+                  text: 'each lane (with an item) will be the width of one screen.\n',
+                  style: usePage ? hidden : (useWide ? focussed : hidden),
+                ),
+                EzPlainText(
+                  text:
+                      'apps and folders can/will be activated anywhere in their horizontal space.\n',
+                  style: useWide ? focussed : hidden,
+                ),
+                config.richLine,
+                EzPlainText(
+                  text: 'With wide tiles disabled...\n',
+                  style: useWide ? hidden : focussed,
+                ),
+                EzPlainText(
+                  text: 'lanes will be sized by their widest item & your spacing setting.\n',
+                  style: usePage ? hidden : (useWide ? hidden : focussed),
+                ),
+                EzPlainText(
+                  text: 'apps and folders can/will be activated only by their button(s).\n',
+                  style: useWide ? hidden : focussed,
+                ),
+              ],
+            ),
+            config.separator,
+          ],
+        ),
+      ),
+    );
+
+    if (rebuild && (usePage != pages(config) || useWide != wideTiles(config))) {
+      await config.rebuildUI(allECT);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => EzElevatedIconButton(
+        config,
+        onPressed: () async {
+          if (appInfo.numLanes(config) == 1) await configMultiLane(context);
+          await appInfo.addLane(config);
+
+          if (EzCM.get(config.isDark ? darkPagesKey : lightPagesKey) != pages(config) ||
+              EzCM.get(config.isDark ? darkWideTilesKey : lightWideTilesKey) != wideTiles(config)) {
+            await config.rebuildUI(allECT);
+          }
+        },
+        onLongPress: () async => (appInfo.numLanes(config) == 1)
+            ? doNothing()
+            : await configMultiLane(context, rebuild: true),
+        label: 'Lane',
+        icon: EzIcon(config, Icons.view_column_outlined),
+      );
+}
+
+//* Edit 'Widget' *//
 
 Future<void> _editLane(
   EzCP config, {
