@@ -31,7 +31,7 @@ class LiminalScaffold extends StatelessWidget {
             margin: EdgeInsets.only(
               left: config.marginVal,
               right: config.marginVal,
-              top: safeTop(context) + config.marginVal,
+              top: safeTop(context),
               bottom: config.marginVal,
             ),
             child: body,
