@@ -26,7 +26,16 @@ class LiminalScaffold extends StatelessWidget {
   Widget build(BuildContext context) => EzAdaptiveParent(
         small: EzScaffold(
           config,
-          body: EzScreen(config, safeArea: true, child: body),
+          body: EzScreen(
+            config,
+            margin: EdgeInsets.only(
+              left: config.marginVal,
+              right: config.marginVal,
+              top: safeTop(context) + config.marginVal,
+              bottom: config.marginVal,
+            ),
+            child: body,
+          ),
           backgroundColor: Colors.transparent,
           fabs: <Widget>[updater(config), if (fabs != null) ...fabs!, ...config.backFABs(isHome)],
         ),
