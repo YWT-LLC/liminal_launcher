@@ -3,6 +3,7 @@
         <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:colorEdgeEffect">@android:color/transparent</item>
         <item name="android:enforceNavigationBarContrast">false</item>
+        <item name="android:fitsSystemWindows">false</item>
         <item name="android:forceDarkAllowed">false</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
@@ -11,7 +12,7 @@
         <item name="android:windowFullscreen">false</item>
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
         <item name="android:windowShowWallpaper">true</item>
-        <item name="android:windowTranslucentNavigation">false</item>
-        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 </resources>
