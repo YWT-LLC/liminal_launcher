@@ -709,16 +709,7 @@ Future<void> editApp(
                 },
               ),
             ),
-            EzTitledDivider(
-              Text(
-                'Long press to use default(s)',
-                textAlign: TextAlign.center,
-                style: config.labelStyle,
-              ),
-              margin: config.marginVal,
-              height: config.spacing * 3,
-              width: widthOf(mCon) * 0.5,
-            ),
+            config.divider,
 
             // GoTo settings
             EzTextIconButton(
