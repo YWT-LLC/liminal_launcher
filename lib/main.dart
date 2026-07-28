@@ -14,6 +14,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:open_ui/open_ui.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+// TODO: finish widget edit audit
+// TODO: close all before edit new
+
 void main() async {
   // Setup the app //
 
