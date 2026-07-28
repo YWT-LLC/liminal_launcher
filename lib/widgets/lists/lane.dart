@@ -387,14 +387,15 @@ Future<void> _editLane(
                       onPressed: () => setModal(() => pos -= 1),
                     ),
                   ),
-                EzScrollView(
-                  config,
-                  startCentered: true,
-                  scrollDirection: Axis.horizontal,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: standardFlow(config)
-                      ? buildNodes(setModal)
-                      : buildNodes(setModal).reversed.toList(),
+                Expanded(
+                  child: EzScrollView(
+                    config,
+                    scrollDirection: Axis.horizontal,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: standardFlow(config)
+                        ? buildNodes(setModal)
+                        : buildNodes(setModal).reversed.toList(),
+                  ),
                 ),
                 if (numLanes > 1)
                   Padding(
