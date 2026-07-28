@@ -410,11 +410,10 @@ Future<void> editFolder(
   await ezModal(
     config,
     context: pContext,
-    enableDrag: false,
-    isDismissible: false,
-    showDragHandle: false,
     builder: (_) => StatefulBuilder(
       builder: (BuildContext mCon, StateSetter setModal) {
+        // Define custom functions //
+
         void nav(bool choice) {
           delta = choice ? -1 : 1;
           setModal(() => showUI = choice);
@@ -428,6 +427,8 @@ Future<void> editFolder(
 
           setModal(() {});
         }
+
+        // Define the builds //
 
         Widget appearanceSettings() => EzScrollView(
               config,
@@ -544,16 +545,7 @@ Future<void> editFolder(
                     },
                   ),
                 ),
-                EzTitledDivider(
-                  Text(
-                    'Long press to use default(s)',
-                    textAlign: TextAlign.center,
-                    style: config.labelStyle,
-                  ),
-                  margin: config.marginVal,
-                  height: config.spacing * 3,
-                  width: widthOf(mCon) * 0.5,
-                ),
+                config.divider,
 
                 // GoTo settings
                 EzTextIconButton(
@@ -708,12 +700,11 @@ Future<void> editFolder(
                     ),
             );
 
+        // Make it so //
+
         return EzCol(
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
-            EzHeader(config),
-
-            // Switcher
             SegmentedButton<bool>(
               segments: const <ButtonSegment<bool>>[
                 ButtonSegment<bool>(
@@ -727,8 +718,6 @@ Future<void> editFolder(
               onSelectionChanged: (Set<bool> selected) => nav(selected.first),
             ),
             config.spacer,
-
-            // Settings
             Expanded(
               child: EzFauxCarousel(
                 config,
