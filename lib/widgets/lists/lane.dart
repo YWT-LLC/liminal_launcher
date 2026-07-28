@@ -507,7 +507,7 @@ Future<void> _editLane(
             // GoTo settings
             EzTextIconButton(
               config,
-              label: 'Page settings',
+              label: 'Page defaults',
               style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
               icon: EzIcon(config, Icons.launch),
               onPressed: () {
