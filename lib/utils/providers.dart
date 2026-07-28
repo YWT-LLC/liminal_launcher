@@ -153,6 +153,7 @@ class AppInfoProvider extends ChangeNotifier {
                           icon: Icon(progress > 0.667 ? Icons.check : Icons.edit),
                           onPressed: () async {
                             _clearAdded();
+                            ezCloseAll();
                             await editNew();
                           },
                         )
