@@ -502,7 +502,7 @@ Future<void> _editLane(
                 ),
               ],
             ),
-            config.separator,
+            config.spacer,
 
             // GoTo settings
             EzTextIconButton(
