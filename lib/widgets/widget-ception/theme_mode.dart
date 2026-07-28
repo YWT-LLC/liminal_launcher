@@ -99,17 +99,20 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
       child: switch (state) {
         TileState.standard => MenuAnchor(
             builder: (_, MenuController controller, __) => (widget._size == WidgetSize.button)
-                ? EzIconButton(
-                    widget.config,
-                    icon: Icon(widget.config.isDark ? Icons.dark_mode : Icons.light_mode),
-                    onPressed: () async {
-                      await EzCM.setBool(isDarkThemeKey, !widget.config.isDark);
-                      await widget.config.rebuildThemeMode();
-                    },
-                    onLongPress: () async {
+                ? GestureDetector(
+                    onDoubleTap: () async {
                       await EzCM.remove(isDarkThemeKey);
                       await widget.config.rebuildThemeMode();
                     },
+                    child: EzIconButton(
+                      widget.config,
+                      icon: Icon(widget.config.isDark ? Icons.dark_mode : Icons.light_mode),
+                      onPressed: () async {
+                        await EzCM.setBool(isDarkThemeKey, !widget.config.isDark);
+                        await widget.config.rebuildThemeMode();
+                      },
+                      onLongPress: () async => await canToggleMenu(widget.config, controller),
+                    ),
                   )
                 : GestureDetector(
                     onLongPress: () async => await canToggleMenu(widget.config, controller),
