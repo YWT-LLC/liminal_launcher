@@ -432,36 +432,46 @@ Future<void> editFolder(
         Widget appearanceSettings() => EzScrollView(
               config,
               children: <Widget>[
-                EzRow(
+                // Preview
+                FolderButton(
                   config,
-                  children: <Widget>[
-                    // (Re)name
-                    EzTextField(
-                      controller: renameCon,
-                      constraints: BoxConstraints.tightFor(
-                        height: appIconSize(config),
-                        width: widthOf(mCon) / 3,
-                      ),
-                      errorConstraints: BoxConstraints.tightFor(width: widthOf(mCon) / 3),
-                      hintText: 'Folder',
-                      autofillHints: const <String>[AutofillHints.name],
-                      validator: validateName,
-                    ),
-
-                    config.rowSpacer,
-
-                    // (Re)icon
-                    EzIconButton(
-                      config,
-                      icon: Icon(icon),
-                      onPressed: () async {
-                        final IconData? choice = await chooseIcon(config, pContext);
-                        if (choice != null) setModal(() => icon = choice);
-                      },
-                    ),
-                  ],
+                  name: validateName(renameCon.text) == null ? renameCon.text : initConfig.name,
+                  icon: icon,
+                  buttonType: BTConfig.build(
+                    labelType ?? folderLabels(config),
+                    icons: showIcon,
+                    elevated: elevated,
+                  ),
+                  labelType: labelType ?? folderLabels(config),
+                  onPressed: doNothing,
+                  onLongPress: doNothing,
                 ),
-                config.separator,
+                config.divider,
+
+                // Name & icon
+                EzRow(config, children: <Widget>[
+                  EzTextField(
+                    controller: renameCon,
+                    constraints: BoxConstraints.tightFor(
+                      height: appIconSize(config),
+                      width: widthOf(mCon) / 3,
+                    ),
+                    errorConstraints: BoxConstraints.tightFor(width: widthOf(mCon) / 3),
+                    hintText: 'Folder',
+                    autofillHints: const <String>[AutofillHints.name],
+                    validator: validateName,
+                  ),
+                  config.rowMargin,
+                  EzIconButton(
+                    config,
+                    icon: Icon(icon),
+                    onPressed: () async {
+                      final IconData? choice = await chooseIcon(config, pContext);
+                      if (choice != null) setModal(() => icon = choice);
+                    },
+                  ),
+                ]),
+                config.spacer,
 
                 // Label type
                 EzRow(
@@ -474,10 +484,8 @@ Future<void> editFolder(
                       widthEntry: 'Full name',
                       dropdownMenuEntries: <DropdownMenuEntry<LabelType?>>[
                         const DropdownMenuEntry<LabelType?>(value: null, label: 'Default'),
-                        ...LabelType.values.map(
-                          (LabelType lt) => DropdownMenuEntry<LabelType?>(
-                              value: lt, label: ezCamelToTitle(lt.value)),
-                        ),
+                        ...LabelType.values.map((LabelType lt) => DropdownMenuEntry<LabelType?>(
+                            value: lt, label: ezCamelToTitle(lt.value))),
                       ],
                       enableSearch: false,
                       initialSelection: labelType,
@@ -536,36 +544,27 @@ Future<void> editFolder(
                     },
                   ),
                 ),
-                config.divider,
-
-                // Preview
-                FolderButton(
-                  config,
-                  name: validateName(renameCon.text) == null ? renameCon.text : initConfig.name,
-                  icon: icon,
-                  buttonType: BTConfig.build(
-                    labelType ?? folderLabels(config),
-                    icons: showIcon,
-                    elevated: elevated,
+                EzTitledDivider(
+                  Text(
+                    'Long press to use default(s)',
+                    textAlign: TextAlign.center,
+                    style: config.labelStyle,
                   ),
-                  labelType: labelType ?? folderLabels(config),
-                  onPressed: doNothing,
-                  onLongPress: doNothing,
+                  margin: config.marginVal,
+                  height: config.spacing * 3,
+                  width: widthOf(mCon) * 0.5,
                 ),
-                config.separator,
 
-                // Default reminder && done
-                Text(
-                  'Long pressing the switches also resets to default',
-                  textAlign: TextAlign.center,
-                  style: config.labelStyle,
-                ),
+                // GoTo defaults
                 EzTextIconButton(
                   config,
-                  label: 'Done',
+                  label: 'Edit defaults',
                   style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
-                  icon: EzIcon(config, Icons.done),
-                  onPressed: () => Navigator.of(mCon).pop(),
+                  icon: EzIcon(config, Icons.launch),
+                  onPressed: () {
+                    Navigator.of(mCon).pop();
+                    pContext.goNamed(settingsPath, extra: (2, false));
+                  },
                 ),
               ],
             );
