@@ -555,7 +555,7 @@ Future<void> editFolder(
                   width: widthOf(mCon) * 0.5,
                 ),
 
-                // GoTo defaults
+                // GoTo settings
                 EzTextIconButton(
                   config,
                   label: 'Edit defaults',
