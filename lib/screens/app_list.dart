@@ -28,7 +28,7 @@ class _AppListScreenState extends State<AppListScreen> {
   final TextEditingController searchControl = TextEditingController();
 
   bool searching = autoSearch;
-  AppSort listSort = ASConfig.safeLookup(EzCM.get(listSortKey));
+  ListSort listSort = LSConfig.safeLookup(EzCM.get(listSortKey));
   bool ascList = EzCM.get(ascListKey);
 
   bool atTop = true;
@@ -130,20 +130,18 @@ class _AppListScreenState extends State<AppListScreen> {
                         onPressed: () => toggleMenu(controller),
                         icon: const Icon(Icons.sort),
                       ),
-                      menuChildren: AppSort.values
-                          .map(
-                            (AppSort type) => EzMenuButton(
-                              config,
-                              label: type.name.replaceRange(0, 1, type.name[0].toUpperCase()),
-                              textAlign: hAlign.textAlign,
-                              onPressed: () async {
-                                await EzCM.setString(listSortKey, type.value);
+                      menuChildren: ListSort.values
+                          .map((ListSort type) => EzMenuButton(
+                                config,
+                                label: type.name.replaceRange(0, 1, type.name[0].toUpperCase()),
+                                textAlign: hAlign.textAlign,
+                                onPressed: () async {
+                                  await EzCM.setString(listSortKey, type.value);
 
-                                appInfo.sort(type, ascList);
-                                setState(() => listSort = type);
-                              },
-                            ),
-                          )
+                                  appInfo.sort(type, ascList);
+                                  setState(() => listSort = type);
+                                },
+                              ))
                           .toList(),
                     ),
                     config.rowSpacer,
@@ -278,7 +276,6 @@ class _AppListScreenState extends State<AppListScreen> {
                               child: AppTile(
                                 config,
                                 appInfo: appInfo,
-                                pos: null,
                                 state: verbose ? TileState.verbose : TileState.standard,
                                 rippleProgress: rippleProgress,
                                 app: app,

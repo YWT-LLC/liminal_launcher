@@ -111,7 +111,6 @@ class _AppFolderState extends State<FolderTile> {
                             child: AppTile(
                               widget.config,
                               appInfo: widget.appInfo,
-                              pos: null,
                               state: state,
                               app: widget.appInfo.appMap[id]!,
                               location: AppLocation.folder,

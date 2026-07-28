@@ -12,44 +12,6 @@ import 'package:open_ui/open_ui.dart';
 
 enum AppLocation { home, folder, list }
 
-// App Sort //
-
-enum AppSort { name, publisher, date, size }
-
-const String esName = 'name';
-const String esPublisher = 'publisher';
-const String esDate = 'date';
-const String esSize = 'size';
-
-extension ASConfig on AppSort {
-  String get value => switch (this) {
-        AppSort.name => esName,
-        AppSort.publisher => esPublisher,
-        AppSort.date => esDate,
-        AppSort.size => esSize,
-      };
-
-  static AppSort? lookup(String? value) => switch (value) {
-        esName => AppSort.name,
-        esPublisher => AppSort.publisher,
-        esDate => AppSort.date,
-        esSize => AppSort.size,
-        _ => null,
-      };
-
-  /// Defaults to [AppSort.name]
-  static AppSort safeLookup(String? value) => switch (value) {
-        esPublisher => AppSort.publisher,
-        esDate => AppSort.date,
-        esSize => AppSort.size,
-        _ => AppSort.name,
-      };
-}
-
-// App State //
-
-enum TileState { standard, groupEdit, verbose }
-
 // Button Type //
 
 enum ButtonType { icon, eIcon, text, eText, textIcon, eTextIcon }
@@ -276,6 +238,67 @@ extension LAConfig on ListAlignment {
 
 enum ListContent { hidden, banished }
 
+// List Sort //
+
+enum ListSort { name, publisher, date, size }
+
+const String esName = 'name';
+const String esPublisher = 'publisher';
+const String esDate = 'date';
+const String esSize = 'size';
+
+extension LSConfig on ListSort {
+  String get value => switch (this) {
+        ListSort.name => esName,
+        ListSort.publisher => esPublisher,
+        ListSort.date => esDate,
+        ListSort.size => esSize,
+      };
+
+  static List<ListSort> verbOrder(ListSort verbStart) => switch (verbStart) {
+        ListSort.name => <ListSort>[
+            ListSort.name,
+            ListSort.publisher,
+            ListSort.date,
+            ListSort.size,
+          ],
+        ListSort.publisher => <ListSort>[
+            ListSort.publisher,
+            ListSort.date,
+            ListSort.size,
+            ListSort.name,
+          ],
+        ListSort.date => <ListSort>[
+            ListSort.date,
+            ListSort.size,
+            ListSort.name,
+            ListSort.publisher,
+          ],
+        ListSort.size => <ListSort>[
+            ListSort.size,
+            ListSort.name,
+            ListSort.publisher,
+            ListSort.date,
+          ],
+      };
+
+  static ListSort? lookup(String? value) => switch (value) {
+        esName => ListSort.name,
+        esPublisher => ListSort.publisher,
+        esDate => ListSort.date,
+        esSize => ListSort.size,
+        _ => null,
+      };
+
+  /// Defaults to [ListSort.name]
+  static ListSort safeLookup(String? value) => switch (value) {
+        esPublisher => ListSort.publisher,
+        esDate => ListSort.date,
+        esSize => ListSort.size,
+        _ => ListSort.name,
+      };
+}
+
 // Text Style //
 
 enum TxtStile { display, headline, title, body, label }
@@ -312,6 +335,10 @@ extension TSConfig on TxtStile {
         _ => null,
       };
 }
+
+// Tile state //
+
+enum TileState { standard, groupEdit, verbose }
 
 // Widget-ception //
 

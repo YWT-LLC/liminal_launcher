@@ -37,7 +37,7 @@ class AppInfoProvider extends ChangeNotifier {
     _lightHomeMatrix = _buildHomeMatrix(EzCM.get(lightHomeDataKey));
 
     // Sort based on the user's preferences
-    sort(ASConfig.safeLookup(EzCM.get(listSortKey)), EzCM.get(ascListKey));
+    sort(LSConfig.safeLookup(EzCM.get(listSortKey)), EzCM.get(ascListKey));
 
     // Listen to events (installs, external deletes, etc.)
     _listenToAppEvents();
@@ -86,7 +86,7 @@ class AppInfoProvider extends ChangeNotifier {
     _apps.add(installed);
     _appMap[installed.id] = installed;
 
-    sort(ASConfig.safeLookup(EzCM.get(listSortKey)), EzCM.get(ascListKey));
+    sort(LSConfig.safeLookup(EzCM.get(listSortKey)), EzCM.get(ascListKey));
     notifyListeners();
   }
 
@@ -360,15 +360,15 @@ class AppInfoProvider extends ChangeNotifier {
 
   // Patch //
 
-  void sort(AppSort sort, bool asc) {
+  void sort(ListSort sort, bool asc) {
     _apps.sort(switch (sort) {
-      AppSort.name => (AppInfo a, AppInfo b) =>
+      ListSort.name => (AppInfo a, AppInfo b) =>
           asc ? a.label.compareTo(b.label) : b.label.compareTo(a.label),
-      AppSort.publisher => (AppInfo a, AppInfo b) =>
+      ListSort.publisher => (AppInfo a, AppInfo b) =>
           asc ? a.package.compareTo(b.package) : b.package.compareTo(a.package),
-      AppSort.date => (AppInfo a, AppInfo b) =>
+      ListSort.date => (AppInfo a, AppInfo b) =>
           asc ? a.installDate.compareTo(b.installDate) : b.installDate.compareTo(a.installDate),
-      AppSort.size => (AppInfo a, AppInfo b) =>
+      ListSort.size => (AppInfo a, AppInfo b) =>
           asc ? a.packageSize.compareTo(b.packageSize) : b.packageSize.compareTo(a.packageSize),
     });
 

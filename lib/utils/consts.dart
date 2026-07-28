@@ -220,7 +220,7 @@ final Map<String, Object> liminalDefault = <String, Object>{
 
   // List(s) sort
   ascListKey: true,
-  listSortKey: AppSort.name.value,
+  listSortKey: ListSort.name.value,
 
   // List //
   // Home
