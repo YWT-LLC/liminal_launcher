@@ -588,160 +588,164 @@ Future<void> editApp(
     showDragHandle: false,
     constraints: BoxConstraints.tight(Size.infinite),
     builder: (_) => StatefulBuilder(
-      builder: (BuildContext mCon, StateSetter setModal) => ezModalScroll(
-        config,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          // Preview
-          AppButton(
-            config,
-            name: validateName(renameCon.text) == null ? renameCon.text : initConfig.app.label,
-            image: initConfig.app.icon,
-            icon: icon,
-            buttonType: BTConfig.build(
-              labelType ?? listLabels(config),
-              icons: showIcon,
-              elevated: elevated,
-            ),
-            labelType: labelType ?? listLabels(config),
-            onPressed: doNothing,
-            onLongPress: doNothing,
-          ),
-          config.divider,
+      builder: (BuildContext mCon, StateSetter setModal) => Center(
+        child: ezModalScroll(
+          config,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            config.separator,
 
-          // Name && icon
-          EzRow(config, children: <Widget>[
-            EzTextField(
-              controller: renameCon,
-              constraints: BoxConstraints.tightFor(
-                height: appIconSize(config),
-                width: widthOf(mCon) / 3,
-              ),
-              errorConstraints: BoxConstraints.tightFor(width: widthOf(mCon) / 3),
-              hintText: 'App',
-              autofillHints: const <String>[AutofillHints.name],
-              validator: validateName,
-            ),
-            config.rowMargin,
-            EzIconButton(
+            // Preview
+            AppButton(
               config,
-              icon: Icon(icon ?? Icons.settings),
-              onPressed: () async {
-                final IconData? choice = await chooseIcon(config, pContext);
-                setModal(() => icon = choice);
-              },
-              onLongPress: () => setModal(() => icon = null),
+              name: validateName(renameCon.text) == null ? renameCon.text : initConfig.app.label,
+              image: initConfig.app.icon,
+              icon: icon,
+              buttonType: BTConfig.build(
+                labelType ?? listLabels(config),
+                icons: showIcon,
+                elevated: elevated,
+              ),
+              labelType: labelType ?? listLabels(config),
+              onPressed: doNothing,
+              onLongPress: doNothing,
             ),
-          ]),
-          config.spacer,
+            config.divider,
 
-          // Label type
-          EzRow(
-            config,
-            children: <Widget>[
-              EzText(config, text: 'Label type'),
-              config.rowSpacer,
-              EzDropdownMenu<LabelType?>(
+            // Name && icon
+            EzRow(config, children: <Widget>[
+              EzTextField(
+                controller: renameCon,
+                constraints: BoxConstraints.tightFor(
+                  height: appIconSize(config),
+                  width: widthOf(mCon) / 3,
+                ),
+                errorConstraints: BoxConstraints.tightFor(width: widthOf(mCon) / 3),
+                hintText: 'App',
+                autofillHints: const <String>[AutofillHints.name],
+                validator: validateName,
+              ),
+              config.rowMargin,
+              EzIconButton(
                 config,
-                widthEntry: 'Full name',
-                dropdownMenuEntries: <DropdownMenuEntry<LabelType?>>[
-                  const DropdownMenuEntry<LabelType?>(value: null, label: 'Default'),
-                  ...LabelType.values.map((LabelType lt) =>
-                      DropdownMenuEntry<LabelType?>(value: lt, label: ezCamelToTitle(lt.value))),
-                ],
-                enableSearch: false,
-                initialSelection: labelType,
-                onSelected: (LabelType? choice) {
-                  if (choice == null) return;
-                  shapeEdits = true;
-
-                  if (choice == LabelType.none) showIcon = true;
-                  setModal(() => labelType = choice);
+                icon: Icon(icon ?? Icons.settings),
+                onPressed: () async {
+                  final IconData? choice = await chooseIcon(config, pContext);
+                  setModal(() => icon = choice);
                 },
+                onLongPress: () => setModal(() => icon = null),
               ),
-            ],
-          ),
-          config.spacer,
+            ]),
+            config.spacer,
 
-          // Show icon
-          EzSwitchPair(
-            config,
-            key: ValueKey<String>('icon-$showIcon'),
-            text: 'Show icon',
-            value: showIcon,
-            onChanged: (bool? choice) {
-              if (choice == null) return;
-              shapeEdits = true;
+            // Label type
+            EzRow(
+              config,
+              children: <Widget>[
+                EzText(config, text: 'Label type'),
+                config.rowSpacer,
+                EzDropdownMenu<LabelType?>(
+                  config,
+                  widthEntry: 'Full name',
+                  dropdownMenuEntries: <DropdownMenuEntry<LabelType?>>[
+                    const DropdownMenuEntry<LabelType?>(value: null, label: 'Default'),
+                    ...LabelType.values.map((LabelType lt) =>
+                        DropdownMenuEntry<LabelType?>(value: lt, label: ezCamelToTitle(lt.value))),
+                  ],
+                  enableSearch: false,
+                  initialSelection: labelType,
+                  onSelected: (LabelType? choice) {
+                    if (choice == null) return;
+                    shapeEdits = true;
 
-              if (choice == false && labelType == LabelType.none) {
-                labelType = LabelType.full;
-              }
-              setModal(() => showIcon = choice);
-            },
-          ),
-          config.spacer,
+                    if (choice == LabelType.none) showIcon = true;
+                    setModal(() => labelType = choice);
+                  },
+                ),
+              ],
+            ),
+            config.spacer,
 
-          // Elevated
-          EzSwitchPair(
-            config,
-            key: ValueKey<String>('elevated-$elevated'),
-            text: 'Elevated button',
-            value: elevated,
-            onChanged: (bool? choice) {
-              if (choice == null) return;
-              shapeEdits = true;
+            // Show icon
+            EzSwitchPair(
+              config,
+              key: ValueKey<String>('icon-$showIcon'),
+              text: 'Show icon',
+              value: showIcon,
+              onChanged: (bool? choice) {
+                if (choice == null) return;
+                shapeEdits = true;
 
-              setModal(() => elevated = choice);
-            },
-          ),
-          config.divider,
+                if (choice == false && labelType == LabelType.none) {
+                  labelType = LabelType.full;
+                }
+                setModal(() => showIcon = choice);
+              },
+            ),
+            config.spacer,
 
-          // Reset
-          EzTextIconButton(
-            config,
-            label: 'Reset to default',
-            style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
-            icon: EzIcon(config, Icons.refresh),
-            onPressed: () => Navigator.of(mCon).pop(false),
-          ),
-          config.spacer,
+            // Elevated
+            EzSwitchPair(
+              config,
+              key: ValueKey<String>('elevated-$elevated'),
+              text: 'Elevated button',
+              value: elevated,
+              onChanged: (bool? choice) {
+                if (choice == null) return;
+                shapeEdits = true;
 
-          // GoTo settings
-          EzTextIconButton(
-            config,
-            label: 'Edit defaults',
-            style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
-            icon: EzIcon(config, Icons.launch),
-            onPressed: () {
-              Navigator.of(mCon).pop();
-              pContext.goNamed(settingsPath, extra: (2, false));
-            },
-          ),
-          config.spacer,
+                setModal(() => elevated = choice);
+              },
+            ),
+            config.divider,
 
-          EzRow(
-            config,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              EzTextIconButton(
-                config,
-                label: 'Cancel',
-                style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
-                icon: EzIcon(config, Icons.done),
-                onPressed: () => Navigator.of(mCon).pop(),
-              ),
-              config.rowSpacer,
-              EzTextIconButton(
-                config,
-                label: 'Save',
-                style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
-                icon: EzIcon(config, Icons.done),
-                onPressed: () => Navigator.of(mCon).pop(true),
-              ),
-            ],
-          ),
-          config.spacer,
-        ],
+            // Reset
+            EzTextIconButton(
+              config,
+              label: 'Reset to default',
+              style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
+              icon: EzIcon(config, Icons.refresh),
+              onPressed: () => Navigator.of(mCon).pop(false),
+            ),
+            config.spacer,
+
+            // GoTo settings
+            EzTextIconButton(
+              config,
+              label: 'Edit defaults',
+              style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
+              icon: EzIcon(config, Icons.launch),
+              onPressed: () {
+                Navigator.of(mCon).pop();
+                pContext.goNamed(settingsPath, extra: (2, false));
+              },
+            ),
+            config.spacer,
+
+            EzRow(
+              config,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                EzTextIconButton(
+                  config,
+                  label: 'Cancel',
+                  style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
+                  icon: EzIcon(config, Icons.cancel),
+                  onPressed: () => Navigator.of(mCon).pop(),
+                ),
+                config.rowSpacer,
+                EzTextIconButton(
+                  config,
+                  label: 'Save',
+                  style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
+                  icon: EzIcon(config, Icons.done),
+                  onPressed: () => Navigator.of(mCon).pop(true),
+                ),
+              ],
+            ),
+            config.separator,
+          ],
+        ),
       ),
     ),
   );
