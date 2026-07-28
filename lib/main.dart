@@ -125,8 +125,22 @@ class _TheMagic extends StatelessWidget {
                 GoRoute(
                   path: settingsPath,
                   name: settingsPath,
-                  pageBuilder: (BuildContext pbc, GoRouterState pbs) =>
-                      ezPageBuilder(configWatcher(pbc), pbc, pbs, const SettingsScreen()),
+                  pageBuilder: (BuildContext pbc, GoRouterState pbs) {
+                    final (int, bool)? data = pbs.extra as (int, bool)?;
+                    final int? target = data?.$1;
+                    final bool? primary = data?.$2;
+
+                    return ezPageBuilder(
+                      configWatcher(pbc),
+                      pbc,
+                      pbs,
+                      SettingsScreen(
+                        key: ValueKey<String>('$target:$primary'),
+                        target: target,
+                        primary: primary,
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
