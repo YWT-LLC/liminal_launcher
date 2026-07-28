@@ -685,14 +685,6 @@ Future<void> editFolder(
                                 ),
                                 child: EzIcon(config, Icons.add),
                               ),
-                              config.spacer,
-
-                              /// Done
-                              FloatingActionButton(
-                                heroTag: 'done_folder_edits_FAB',
-                                onPressed: () => Navigator.of(mCon).pop(),
-                                child: EzIcon(config, Icons.done),
-                              ),
                             ],
                           ),
                         ),
