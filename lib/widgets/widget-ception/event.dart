@@ -536,9 +536,10 @@ Future<void> _openEdits(
         // Share Dest //
 
         Text(
-          """'Task' is just share underneath. Choose a destination app below.
-We recommend using a task app, but it's not required.
-Results may vary.
+          """'Task' is just share underneath.
+Choose a destination app below.
+
+We recommend using a task app, but it's not required. Results may vary.
 """,
           textAlign: TextAlign.center,
           style: config.bodyStyle,
@@ -570,12 +571,16 @@ Results may vary.
           ),
           onLongPress: () => setModal(() => shareDest = nullApp),
         ),
-        config.margin,
-        Text(
-          'Long press to reset',
-          textAlign: TextAlign.center,
-          style: config.labelStyle,
-        ),
+
+        // Conditional clear (reminder)
+        if (shareDest != nullApp) ...<Widget>[
+          config.margin,
+          Text(
+            'Long press to clear',
+            textAlign: TextAlign.center,
+            style: config.labelStyle,
+          ),
+        ],
         config.separator,
       ]),
     ),
