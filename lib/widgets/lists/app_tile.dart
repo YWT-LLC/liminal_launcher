@@ -28,6 +28,7 @@ class AppTile extends StatefulWidget {
   final Future<void> Function(AppInfo app) onSelected;
   final ListAlignment? hAlign;
   final ListAlignment? vAlign;
+  final ListSort? verbStart;
 
   late final String? _name;
   late final IconData? _icon;
@@ -37,7 +38,7 @@ class AppTile extends StatefulWidget {
   AppTile(
     this.config, {
     required this.appInfo,
-    required this.pos,
+    this.pos,
     required this.state,
     this.rippleProgress,
     required this.app,
@@ -45,6 +46,7 @@ class AppTile extends StatefulWidget {
     required this.onSelected,
     this.hAlign,
     this.vAlign,
+    this.verbStart,
   })  : assert(
           ((pos == null) != (hAlign == null)) && (hAlign == null) == (vAlign == null),
           'Provide pos OR (hAlign AND vAlign)',
@@ -140,6 +142,7 @@ class _AppTileState extends State<AppTile> {
 
     return isUrl
         ? <Widget>[
+            verboseSpace(),
             EzLink(
               widget.config,
               text: base,
@@ -148,7 +151,6 @@ class _AppTileState extends State<AppTile> {
               style: widget.config.bodyStyle,
               textAlign: TextAlign.center,
             ),
-            verboseSpace(),
           ]
         : <Widget>[];
   }
@@ -241,47 +243,51 @@ class _AppTileState extends State<AppTile> {
               widget.config,
               showScrollHint: true,
               thumbVisibility: false,
-              mainAxisAlignment: widget.hAlign!.mainAxis,
               scrollDirection: Axis.horizontal,
-              children: <Widget>[
-                // Name && icon
-                AppButton(
-                  widget.config,
-                  name: widget.app.label,
-                  image: widget.app.icon,
-                  icon: null,
-                  buttonType: listBT(widget.config),
-                  labelType: listLabels(widget.config),
-                  onPressed: () => widget.onSelected(widget.app),
-                ),
-                verboseSpace(),
-
-                // Publisher (plain text)
-                EzText(widget.config, text: widget.app.package, textAlign: TextAlign.center),
-                verboseSpace(),
-
-                // Publisher (link)
-                ...publisherLink(),
-
-                // Install date
-                EzText(
-                  widget.config,
-                  text: DTConfig.buildDate(
-                    context,
-                    DateTime.fromMillisecondsSinceEpoch(widget.app.installDate),
-                    DateType.compact,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                verboseSpace(),
-
-                // Package size
-                EzText(
-                  widget.config,
-                  text: '${(widget.app.packageSize / _toMB).toStringAsFixed(2)} MB',
-                  textAlign: TextAlign.center,
-                ),
-              ],
+              mainAxisAlignment: widget.hAlign!.mainAxis,
+              children: LSConfig.verbOrder(widget.verbStart!).fold(
+                <Widget>[],
+                (List<Widget>? acc, ListSort field) => <Widget>[
+                  ...acc!,
+                  switch (field) {
+                    ListSort.name => AppButton(
+                        widget.config,
+                        name: widget.app.label,
+                        image: widget.app.icon,
+                        icon: null,
+                        buttonType: listBT(widget.config),
+                        labelType: listLabels(widget.config),
+                        onPressed: () => widget.onSelected(widget.app),
+                      ),
+                    ListSort.publisher => EzRow(
+                        widget.config,
+                        children: <Widget>[
+                          EzText(
+                            widget.config,
+                            text: widget.app.package,
+                            textAlign: TextAlign.center,
+                          ),
+                          ...publisherLink(),
+                        ],
+                      ),
+                    ListSort.date => EzText(
+                        widget.config,
+                        text: DTConfig.buildDate(
+                          context,
+                          DateTime.fromMillisecondsSinceEpoch(widget.app.installDate),
+                          DateType.compact,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ListSort.size => EzText(
+                        widget.config,
+                        text: '${(widget.app.packageSize / _toMB).toStringAsFixed(2)} MB',
+                        textAlign: TextAlign.center,
+                      ),
+                  },
+                  verboseSpace(),
+                ],
+              ),
             ),
           ),
         TileState.groupEdit => EditContainer(
