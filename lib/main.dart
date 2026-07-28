@@ -128,16 +128,16 @@ class _TheMagic extends StatelessWidget {
                   pageBuilder: (BuildContext pbc, GoRouterState pbs) {
                     final (int, bool)? data = pbs.extra as (int, bool)?;
                     final int? target = data?.$1;
-                    final bool? primary = data?.$2;
+                    final bool? secondary = data?.$2;
 
                     return ezPageBuilder(
                       configWatcher(pbc),
                       pbc,
                       pbs,
                       SettingsScreen(
-                        key: ValueKey<String>('$target:$primary'),
+                        key: ValueKey<String>('$target:$secondary'),
                         target: target,
-                        primary: primary,
+                        secondary: secondary,
                       ),
                     );
                   },
