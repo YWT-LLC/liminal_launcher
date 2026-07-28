@@ -3,12 +3,14 @@
  * See LICENSE for distribution and usage details.
  */
 
+import '../../screens/export.dart';
 import '../../utils/export.dart';
 import '../export.dart';
 
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:open_ui/open_ui.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 //* Core 'Widget' *//
 
@@ -499,6 +501,19 @@ Future<void> _editLane(
                   },
                 ),
               ],
+            ),
+            config.separator,
+
+            // GoTo settings
+            EzTextIconButton(
+              config,
+              label: 'Page settings',
+              style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
+              icon: EzIcon(config, Icons.launch),
+              onPressed: () {
+                Navigator.of(mCon).pop();
+                context.goNamed(settingsPath, extra: (2, true));
+              },
             ),
             config.separator,
           ],
