@@ -428,7 +428,7 @@ Future<void> _openEdits(
                 ),
           onPressed: doNothing,
         ),
-        config.spacer,
+        EzDivider(config.spacing * 2),
 
         // Button toggles
         EzSwitchPair(
@@ -470,12 +470,11 @@ Future<void> _openEdits(
             }
           },
         ),
-        config.spacer,
+        config.separator,
 
         // Note
         Text(
-          '''Note: these buttons only work if the current player supports them.
-For example, some music players don't have FF/Rewind''',
+          "Note:\nThese buttons only work if the current player supports them. Some music players don't have FF/Rewind, for example",
           textAlign: TextAlign.center,
           style: config.labelStyle,
         ),
