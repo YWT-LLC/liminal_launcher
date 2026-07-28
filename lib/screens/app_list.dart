@@ -283,6 +283,7 @@ class _AppListScreenState extends State<AppListScreen> {
                                 onSelected: widget.listConfig.onSelected,
                                 hAlign: hAlign,
                                 vAlign: vAlign,
+                                verbStart: listSort,
                               ),
                             ),
                           )
