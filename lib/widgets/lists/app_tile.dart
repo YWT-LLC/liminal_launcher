@@ -649,10 +649,8 @@ Future<void> editApp(
                   widthEntry: 'Full name',
                   dropdownMenuEntries: <DropdownMenuEntry<LabelType?>>[
                     const DropdownMenuEntry<LabelType?>(value: null, label: 'Default'),
-                    ...LabelType.values.map(
-                      (LabelType lt) =>
-                          DropdownMenuEntry<LabelType?>(value: lt, label: ezCamelToTitle(lt.value)),
-                    ),
+                    ...LabelType.values.map((LabelType lt) =>
+                        DropdownMenuEntry<LabelType?>(value: lt, label: ezCamelToTitle(lt.value))),
                   ],
                   enableSearch: false,
                   initialSelection: labelType,
