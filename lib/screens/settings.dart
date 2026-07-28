@@ -6,16 +6,15 @@
 import '../utils/export.dart';
 import '../widgets/export.dart';
 
+import 'package:open_ui/open_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:open_ui/open_ui.dart';
 
 class SettingsScreen extends StatelessWidget {
-  /// Optionally override the starting position
-  final int? targetPass;
+  final int? target;
 
-  const SettingsScreen({super.key, this.targetPass});
+  const SettingsScreen({super.key, this.target});
 
   @override
   Widget build(BuildContext context) {
@@ -336,7 +335,7 @@ class SettingsScreen extends StatelessWidget {
               build: (EzSubSetting subSec) => EzTextSettings(config, target: subSec),
             ),
           ],
-          target: targetPass,
+          target: target,
         ),
         fabs: <Widget>[
           // Rebuild (conditional)
