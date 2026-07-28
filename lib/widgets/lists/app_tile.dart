@@ -3,14 +3,16 @@
  * See LICENSE for distribution and usage details.
  */
 
+import '../../screens/export.dart';
 import '../../utils/export.dart';
 import '../export.dart';
 
 import 'dart:async';
+import 'package:open_ui/open_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:open_ui/open_ui.dart';
 
 //* Core Widget *//
 
@@ -591,35 +593,50 @@ Future<void> editApp(
         return ezModalScroll(
           config,
           children: <Widget>[
-            EzRow(
-              config,
-              children: <Widget>[
-                // (Re)name
-                EzTextField(
-                  controller: renameCon,
-                  constraints: BoxConstraints.tightFor(
-                    height: appIconSize(config),
-                    width: widthOf(mCon) / 3,
-                  ),
-                  errorConstraints: BoxConstraints.tightFor(width: widthOf(mCon) / 3),
-                  hintText: 'App',
-                  autofillHints: const <String>[AutofillHints.name],
-                  validator: validateName,
-                ),
-                config.rowSpacer,
+            EzHeader(config),
 
-                // (Re)icon
-                EzIconButton(
-                  config,
-                  icon: Icon(icon ?? Icons.settings),
-                  onPressed: () async {
-                    final IconData? choice = await chooseIcon(config, pContext);
-                    setModal(() => icon = choice);
-                  },
-                ),
-              ],
+            // Preview
+            AppButton(
+              config,
+              name: validateName(renameCon.text) == null ? renameCon.text : initConfig.app.label,
+              image: initConfig.app.icon,
+              icon: icon,
+              buttonType: BTConfig.build(
+                labelType ?? listLabels(config),
+                icons: showIcon,
+                elevated: elevated,
+              ),
+              labelType: labelType ?? listLabels(config),
+              onPressed: doNothing,
+              onLongPress: doNothing,
             ),
-            config.separator,
+            config.divider,
+
+            // Name && icon
+            EzRow(config, children: <Widget>[
+              EzTextField(
+                controller: renameCon,
+                constraints: BoxConstraints.tightFor(
+                  height: appIconSize(config),
+                  width: widthOf(mCon) / 3,
+                ),
+                errorConstraints: BoxConstraints.tightFor(width: widthOf(mCon) / 3),
+                hintText: 'App',
+                autofillHints: const <String>[AutofillHints.name],
+                validator: validateName,
+              ),
+              config.rowMargin,
+              EzIconButton(
+                config,
+                icon: Icon(icon ?? Icons.settings),
+                onPressed: () async {
+                  final IconData? choice = await chooseIcon(config, pContext);
+                  setModal(() => icon = choice);
+                },
+                onLongPress: () => setModal(() => icon = null),
+              ), // TODO: fix icons
+            ]),
+            config.spacer,
 
             // Label type
             EzRow(
@@ -694,37 +711,27 @@ Future<void> editApp(
                 },
               ),
             ),
-            config.divider,
-
-            // Preview
-            AppButton(
-              config,
-              name: validateName(renameCon.text) == null ? renameCon.text : initConfig.app.label,
-              image: initConfig.app.icon,
-              icon: icon,
-              buttonType: BTConfig.build(
-                labelType ?? listLabels(config),
-                icons: showIcon,
-                elevated: elevated,
+            EzTitledDivider(
+              Text(
+                'Long press to use default(s)',
+                textAlign: TextAlign.center,
+                style: config.labelStyle,
               ),
-              labelType: labelType ?? listLabels(config),
-              onPressed: doNothing,
-              onLongPress: doNothing,
+              margin: config.marginVal,
+              height: config.spacing * 3,
+              width: widthOf(mCon) * 0.5,
             ),
-            config.separator,
 
-            // Default reminder && done
-            Text(
-              'Long pressing the switches also resets to default',
-              textAlign: TextAlign.center,
-              style: config.labelStyle,
-            ),
+            // GoTo defaults
             EzTextIconButton(
               config,
-              label: 'Done',
+              label: 'Edit defaults',
               style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
-              icon: EzIcon(config, Icons.done),
-              onPressed: () => Navigator.of(mCon).pop(),
+              icon: EzIcon(config, Icons.launch),
+              onPressed: () {
+                Navigator.of(mCon).pop();
+                pContext.goNamed(settingsPath, extra: (2, false));
+              },
             ),
             config.separator,
           ],
