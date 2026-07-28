@@ -27,8 +27,8 @@ dependencies:
   provider: ^6.1.5+1
 
   # YWT
-  oui_bios:
-    path: ../oui_bios
+  ywt_private:
+    path: ../ywt_private
   open_ui:
     path: ../open_ui
 
