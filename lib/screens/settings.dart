@@ -13,8 +13,9 @@ import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatelessWidget {
   final int? target;
+  final bool? primary;
 
-  const SettingsScreen({super.key, this.target});
+  const SettingsScreen({super.key, this.target, this.primary});
 
   @override
   Widget build(BuildContext context) {
@@ -195,7 +196,7 @@ class SettingsScreen extends StatelessWidget {
               title: config.ezL10n.gColor,
               icon: EzIcon(config, Icons.palette, semanticLabel: config.ezL10n.gColor),
               subSettings: <EzSubSetting>[EzSubSetting.qckColor, EzSubSetting.advColor],
-              fromStorage: () => EzCM.get(advancedColorsKey) == true
+              fromStorage: () => (primary ?? EzCM.get(advancedColorsKey) == true)
                   ? EzSubSetting.advColor
                   : EzSubSetting.qckColor,
               build: (EzSubSetting subSec) => EzColorSettings(config, target: subSec),
