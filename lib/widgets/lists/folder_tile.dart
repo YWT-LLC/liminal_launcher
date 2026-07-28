@@ -404,12 +404,16 @@ Future<void> editFolder(
   LabelType? labelType = initConfig.labelType;
   bool showIcon = iconBTs.contains(initConfig.buttonType ?? folderBT(config));
   bool elevated = elevatedBTs.contains(initConfig.buttonType ?? folderBT(config));
+  bool shapeEdits = false;
 
   final ValueNotifier<List<String>> appsNotif = ValueNotifier<List<String>>(initConfig.appList);
 
-  await ezModal(
+  final bool? update = await ezModal(
     config,
     context: pContext,
+    enableDrag: false,
+    isDismissible: false,
+    showDragHandle: false,
     builder: (_) => StatefulBuilder(
       builder: (BuildContext mCon, StateSetter setModal) {
         // Define custom functions //
@@ -417,15 +421,6 @@ Future<void> editFolder(
         void nav(bool choice) {
           delta = choice ? -1 : 1;
           setModal(() => showUI = choice);
-        }
-
-        void resetPreview() {
-          labelType = null;
-
-          showIcon = iconBTs.contains(folderBT(config));
-          elevated = elevatedBTs.contains(folderBT(config));
-
-          setModal(() {});
         }
 
         // Define the builds //
@@ -491,10 +486,8 @@ Future<void> editFolder(
                       enableSearch: false,
                       initialSelection: labelType,
                       onSelected: (LabelType? choice) {
-                        if (choice == null) {
-                          resetPreview();
-                          return;
-                        }
+                        if (choice == null) return;
+                        shapeEdits = true;
 
                         if (choice == LabelType.none) showIcon = true;
                         setModal(() => labelType = choice);
@@ -505,47 +498,47 @@ Future<void> editFolder(
                 config.spacer,
 
                 // Show icon
-                GestureDetector(
-                  onLongPress: resetPreview,
-                  child: EzSwitchPair(
-                    config,
-                    key: ValueKey<String>('icon-$showIcon'),
-                    text: 'Show icon',
-                    value: showIcon,
-                    onChanged: (bool? choice) {
-                      if (choice == null) {
-                        resetPreview();
-                        return;
-                      }
+                EzSwitchPair(
+                  config,
+                  key: ValueKey<String>('icon-$showIcon'),
+                  text: 'Show icon',
+                  value: showIcon,
+                  onChanged: (bool? choice) {
+                    if (choice == null) return;
+                    shapeEdits = true;
 
-                      if (choice == false && labelType == LabelType.none) {
-                        labelType = LabelType.full;
-                      }
-                      setModal(() => showIcon = choice);
-                    },
-                  ),
+                    if (choice == false && labelType == LabelType.none) {
+                      labelType = LabelType.full;
+                    }
+                    setModal(() => showIcon = choice);
+                  },
                 ),
                 config.spacer,
 
                 // Elevated
-                GestureDetector(
-                  onLongPress: resetPreview,
-                  child: EzSwitchPair(
-                    config,
-                    key: ValueKey<String>('elevated-$elevated'),
-                    text: 'Elevated button',
-                    value: elevated,
-                    onChanged: (bool? choice) {
-                      if (choice == null) {
-                        resetPreview();
-                        return;
-                      }
+                EzSwitchPair(
+                  config,
+                  key: ValueKey<String>('elevated-$elevated'),
+                  text: 'Elevated button',
+                  value: elevated,
+                  onChanged: (bool? choice) {
+                    if (choice == null) return;
+                    shapeEdits = true;
 
-                      setModal(() => elevated = choice);
-                    },
-                  ),
+                    setModal(() => elevated = choice);
+                  },
                 ),
                 config.divider,
+
+                // Reset
+                EzTextIconButton(
+                  config,
+                  label: 'Reset to default',
+                  style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
+                  icon: EzIcon(config, Icons.refresh),
+                  onPressed: () => Navigator.of(mCon).pop(false),
+                ),
+                config.spacer,
 
                 // GoTo settings
                 EzTextIconButton(
@@ -557,6 +550,29 @@ Future<void> editFolder(
                     Navigator.of(mCon).pop();
                     pContext.goNamed(settingsPath, extra: (2, false));
                   },
+                ),
+                config.spacer,
+
+                EzRow(
+                  config,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    EzTextIconButton(
+                      config,
+                      label: 'Cancel',
+                      style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
+                      icon: EzIcon(config, Icons.cancel),
+                      onPressed: () => Navigator.of(mCon).pop(),
+                    ),
+                    config.rowSpacer,
+                    EzTextIconButton(
+                      config,
+                      label: 'Save',
+                      style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
+                      icon: EzIcon(config, Icons.done),
+                      onPressed: () => Navigator.of(mCon).pop(true),
+                    ),
+                  ],
                 ),
               ],
             );
@@ -619,8 +635,11 @@ Future<void> editFolder(
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       children: <Widget>[
                                         // Drag handle
-                                        EzIcon(config, Icons.drag_handle,
-                                            color: config.colors.outline),
+                                        EzIcon(
+                                          config,
+                                          Icons.drag_handle,
+                                          color: config.colors.outline,
+                                        ),
 
                                         // App icon && remove button
                                         EzRow(
@@ -644,8 +663,11 @@ Future<void> editFolder(
                                         ),
 
                                         // Drag handle
-                                        EzIcon(config, Icons.drag_handle,
-                                            color: config.colors.outline),
+                                        EzIcon(
+                                          config,
+                                          Icons.drag_handle,
+                                          color: config.colors.outline,
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -685,6 +707,14 @@ Future<void> editFolder(
                                 ),
                                 child: EzIcon(config, Icons.add),
                               ),
+                              config.spacer,
+
+                              /// Done
+                              FloatingActionButton(
+                                heroTag: 'done_folder_edits_FAB',
+                                onPressed: () => Navigator.of(mCon).pop(),
+                                child: EzIcon(config, Icons.done),
+                              ),
                             ],
                           ),
                         ),
@@ -697,6 +727,7 @@ Future<void> editFolder(
         return EzCol(
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
+            EzHeader(config),
             SegmentedButton<bool>(
               segments: const <ButtonSegment<bool>>[
                 ButtonSegment<bool>(
@@ -725,20 +756,43 @@ Future<void> editFolder(
     ),
   );
 
-  await ezNoTouch(
-    () => appInfo.updateFolder(
-      config,
-      lane: lane,
-      index: index,
-      name: validateName(renameCon.text) == null ? renameCon.text : initConfig.name,
-      extra: _folderEntry(
-        icon,
-        BTConfig.build(labelType ?? folderLabels(config), icons: showIcon, elevated: elevated),
-        labelType,
-      ),
-      ids: appsNotif.value,
-    ),
-  );
+  switch (update) {
+    case true:
+      await ezNoTouch(
+        () => appInfo.updateFolder(
+          config,
+          lane: lane,
+          index: index,
+          name: validateName(renameCon.text) == null ? renameCon.text : initConfig.name,
+          extra: shapeEdits
+              ? _folderEntry(
+                  icon,
+                  BTConfig.build(labelType ?? folderLabels(config),
+                      icons: showIcon, elevated: elevated),
+                  labelType,
+                )
+              : _folderEntry(icon, null, null),
+          ids: appsNotif.value,
+        ),
+      );
+      return;
+
+    case false:
+      await ezNoTouch(
+        () => appInfo.updateFolder(
+          config,
+          lane: lane,
+          index: index,
+          name: initConfig.name,
+          extra: _folderEntry(Icons.folder_outlined, null, null),
+          ids: appsNotif.value,
+        ),
+      );
+      return;
+
+    default:
+      return;
+  }
 }
 
 class _EditFolder extends StatelessWidget {
