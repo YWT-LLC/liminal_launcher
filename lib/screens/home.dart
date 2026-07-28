@@ -916,8 +916,6 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
             fabs: editing
                 ? <Widget>[
                     config.spacer,
-
-                    // Settings
                     SettingsFAB(config, appInfo, () => context.goNamed(settingsPath)),
                   ]
                 : null,
