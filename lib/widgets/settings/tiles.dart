@@ -6,8 +6,9 @@
 import '../../utils/export.dart';
 import '../export.dart';
 
-import 'package:flutter/material.dart';
 import 'package:open_ui/open_ui.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AppTileSetting extends StatelessWidget {
   final EzCP config;
@@ -34,6 +35,8 @@ class AppTileSetting extends StatelessWidget {
   Widget build(BuildContext context) => EzElevatedIconButton(
         config,
         onPressed: () async {
+          final Uint8List limIcon = (await rootBundle.load(appIconPath)).buffer.asUint8List();
+
           LabelType labelType = folder ? folderLabels(config) : listLabels(config);
           bool showIcon = folder ? folderIcons(config) : listIcons(config);
           bool elevated = folder ? elevatedFolders(config) : elevatedLists(config);
@@ -54,14 +57,15 @@ class AppTileSetting extends StatelessWidget {
               : AppButton(
                   config,
                   name: 'Liminal App',
-                  image: null,
-                  icon: Icons.launch,
-                  iconSize: config.iconSize,
+                  image: limIcon,
+                  icon: null,
+                  iconSize: null,
                   buttonType: BTConfig.build(labelType, icons: showIcon, elevated: elevated),
                   labelType: labelType,
                   onPressed: doNothing,
                   onLongPress: doNothing,
                 );
+          if (!context.mounted) return;
 
           await ezModal(
             config,
