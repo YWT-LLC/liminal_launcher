@@ -14,6 +14,8 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:line_icons/line_icons.dart';
 
+// TODO: add local icon size setting
+
 //* Core Widget *//
 
 class AppTile extends StatefulWidget {
