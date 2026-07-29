@@ -475,14 +475,14 @@ class AppButton extends StatelessWidget {
 
   Widget appIcon() => (icon == null)
       ? (image == null)
-          ? Icon(Icons.question_mark, semanticLabel: name)
+          ? EzIcon(config, Icons.question_mark, semanticLabel: name)
           : Image.memory(
               image!,
               semanticLabel: name,
               width: appIconSize(config),
               height: appIconSize(config),
             )
-      : Icon(icon!);
+      : EzIcon(config, icon!);
 
   @override
   Widget build(BuildContext context) => switch (buttonType) {

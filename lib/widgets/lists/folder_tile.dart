@@ -310,14 +310,18 @@ class FolderButton extends StatelessWidget {
   Widget build(BuildContext context) => switch (buttonType) {
         ButtonType.icon => Tooltip(
             message: name,
-            child: GestureDetector(onTap: onPressed, onLongPress: onLongPress, child: Icon(icon)),
+            child: GestureDetector(
+              onTap: onPressed,
+              onLongPress: onLongPress,
+              child: EzIcon(config, icon),
+            ),
           ),
         ButtonType.eIcon => EzIconButton(
             config,
             tooltip: name,
             onPressed: onPressed,
             onLongPress: onLongPress,
-            icon: Icon(icon),
+            icon: EzIcon(config, icon),
           ),
         ButtonType.text => EzTextButton(
             config,
@@ -340,7 +344,7 @@ class FolderButton extends StatelessWidget {
         ButtonType.textIcon => EzTextIconButton(
             config,
             label: buildLabel(name, labelType),
-            icon: Icon(icon),
+            icon: EzIcon(config, icon),
             style: TextButton.styleFrom(
               padding: config.textBackgroundOpacity < oneP
                   ? EdgeInsets.zero
@@ -352,7 +356,7 @@ class FolderButton extends StatelessWidget {
         ButtonType.eTextIcon => EzElevatedIconButton(
             config,
             label: buildLabel(name, labelType),
-            icon: Icon(icon),
+            icon: EzIcon(config, icon),
             style: TextButton.styleFrom(padding: EdgeInsets.all(config.padding)),
             onPressed: onPressed,
             onLongPress: onLongPress,
