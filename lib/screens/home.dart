@@ -637,8 +637,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       await appInfo.reorderLane(
                         config,
                         lane: lane,
-                        oldIndex: oldIndex,
-                        newIndex: newIndex,
+                        oldIndex: (oldIndex + 1),
+                        newIndex: (newIndex + 1), // +1 for config entry
                       );
 
                       setList(() {});
@@ -795,14 +795,12 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                     }
                   }
 
-                  // Don't open swipe apps while editing spacers
-                  if (marked.value.$1 != null || marked.value.$2 != null) return;
+                  // Don't open swipe apps while editing TODO: fix
+                  if (editing || marked.value.$1 != null || marked.value.$2 != null) return;
 
-                  final AppInfo? toLaunch = editing
-                      ? null
-                      : ((details.primaryVelocity! < 0)
-                          ? appInfo.appMap[leftSwipeID]
-                          : appInfo.appMap[rightSwipeID]);
+                  final AppInfo? toLaunch = ((details.primaryVelocity! < 0)
+                      ? appInfo.appMap[leftSwipeID]
+                      : appInfo.appMap[rightSwipeID]);
 
                   if (toLaunch != null) launchApp(toLaunch);
                 }
