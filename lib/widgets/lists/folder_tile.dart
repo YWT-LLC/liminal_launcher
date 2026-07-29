@@ -7,6 +7,7 @@ import '../../screens/export.dart';
 import '../../utils/export.dart';
 import '../export.dart';
 
+import 'dart:math';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -444,6 +445,11 @@ Future<void> editFolder(
 
         // Define the builds //
 
+        final ButtonStyle textButtonStyle = TextButton.styleFrom(
+          backgroundColor: config.colors.surfaceContainer,
+          padding: EdgeInsets.zero,
+        );
+
         Widget appearanceSettings() => EzScrollView(
               config,
               children: <Widget>[
@@ -464,30 +470,62 @@ Future<void> editFolder(
                 ),
                 config.divider,
 
-                // Name & icon
-                EzRow(config, children: <Widget>[
-                  EzTextField(
-                    controller: renameCon,
-                    constraints: BoxConstraints.tightFor(
-                      height: appIconSize(config),
-                      width: widthOf(mCon) / 3,
+                EzScrollView(
+                  config,
+                  reverseHands: true,
+                  startCentered: true,
+                  thumbVisibility: false,
+                  scrollDirection: Axis.horizontal,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    // Name
+                    EzTextField(
+                      controller: renameCon,
+                      constraints: BoxConstraints.tightFor(
+                        height: appIconSize(config),
+                        width: widthOf(mCon) / 3,
+                      ),
+                      errorConstraints: BoxConstraints.tightFor(width: widthOf(mCon) / 3),
+                      hintText: 'Folder',
+                      autofillHints: const <String>[AutofillHints.name],
+                      validator: validateName,
                     ),
-                    errorConstraints: BoxConstraints.tightFor(width: widthOf(mCon) / 3),
-                    hintText: 'Folder',
-                    autofillHints: const <String>[AutofillHints.name],
-                    validator: validateName,
-                  ),
-                  config.rowMargin,
-                  EzIconButton(
-                    config,
-                    icon: Icon(icon),
-                    onPressed: () async {
-                      final IconData? choice = await chooseIcon(config, pContext);
-                      if (choice != null) setModal(() => icon = choice);
-                    },
-                  ),
-                ]),
-                config.spacer,
+                    config.rowSpacer,
+
+                    // IconData && size
+                    EzIconButton(
+                      config,
+                      enabled: showIcon && (iconSize == null || iconSize! > minIconSize),
+                      icon: const Icon(Icons.remove),
+                      onPressed: () {
+                        iconSize = (iconSize == null) ? (config.iconSize - 1) : (iconSize! - 1);
+                        setModal(() => iconSize = max(iconSize!, minIconSize));
+                      },
+                    ),
+                    config.rowMargin,
+                    EzIconButton(
+                      config,
+                      enabled: showIcon,
+                      icon: Icon(icon, size: iconSize ?? config.iconSize),
+                      onPressed: () async {
+                        final IconData? choice = await chooseIcon(config, pContext);
+                        if (choice != null) setModal(() => icon = choice);
+                      },
+                      onLongPress: () => setModal(() => iconSize = null),
+                    ),
+                    config.rowMargin,
+                    EzIconButton(
+                      config,
+                      enabled: showIcon && (iconSize == null || iconSize! < maxIconSize),
+                      icon: const Icon(Icons.add),
+                      onPressed: () {
+                        iconSize = (iconSize == null) ? (config.iconSize + 1) : (iconSize! + 1);
+                        setModal(() => iconSize = min(iconSize!, maxIconSize));
+                      },
+                    ),
+                  ],
+                ),
+                config.separator,
 
                 // Label type
                 EzScrollView(
@@ -552,26 +590,32 @@ Future<void> editFolder(
                 ),
                 config.divider,
 
-                // Reset
-                EzTextIconButton(
+                EzRow(
                   config,
-                  label: 'Reset to default',
-                  style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
-                  icon: EzIcon(config, Icons.refresh),
-                  onPressed: () => Navigator.of(mCon).pop(false),
-                ),
-                config.spacer,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    // Reset
+                    EzTextIconButton(
+                      config,
+                      label: 'Reset',
+                      style: textButtonStyle,
+                      icon: EzIcon(config, Icons.refresh),
+                      onPressed: () => Navigator.of(mCon).pop(false),
+                    ),
+                    config.rowSpacer,
 
-                // GoTo settings
-                EzTextIconButton(
-                  config,
-                  label: 'Edit defaults',
-                  style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
-                  icon: EzIcon(config, Icons.launch),
-                  onPressed: () {
-                    Navigator.of(mCon).pop();
-                    pContext.goNamed(settingsPath, extra: (2, false));
-                  },
+                    // GoTo settings
+                    EzTextIconButton(
+                      config,
+                      label: 'Edit defaults',
+                      style: textButtonStyle,
+                      icon: EzIcon(config, Icons.launch),
+                      onPressed: () {
+                        Navigator.of(mCon).pop();
+                        pContext.goNamed(settingsPath, extra: (2, false));
+                      },
+                    ),
+                  ],
                 ),
                 config.spacer,
 
@@ -579,18 +623,21 @@ Future<void> editFolder(
                   config,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
+                    // Cancel
                     EzTextIconButton(
                       config,
                       label: 'Cancel',
-                      style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
+                      style: textButtonStyle,
                       icon: EzIcon(config, Icons.cancel),
                       onPressed: () => Navigator.of(mCon).pop(),
                     ),
                     config.rowSpacer,
+
+                    // Save
                     EzTextIconButton(
                       config,
                       label: 'Save',
-                      style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
+                      style: textButtonStyle,
                       icon: EzIcon(config, Icons.done),
                       onPressed: () => Navigator.of(mCon).pop(true),
                     ),
@@ -602,27 +649,31 @@ Future<void> editFolder(
         Widget appSettings() => ValueListenableBuilder<List<String>>(
               valueListenable: appsNotif,
               builder: (_, List<String> apps, __) => appsNotif.value.isEmpty
-                  ? Center(
-                      child: EzTextIconButton(
-                        config,
-                        icon: EzIcon(config, Icons.add),
-                        label: 'Apps',
-                        style:
-                            TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
-                        onPressed: () => mCon.goNamed(
-                          appListPath,
-                          extra: ListConfig(
-                            localContent: appsNotif,
-                            listContent: <ListContent>{ListContent.hidden, ListContent.banished},
-                            include: false,
-                            onSelected: (AppInfo app) async =>
-                                appsNotif.value = List<String>.from(appsNotif.value)..add(app.id),
-                            title: EzTextButton(
-                              config,
-                              onPressed: doNothing,
-                              text:
-                                  "Add to '${validateName(renameCon.text) == null ? renameCon.text : initConfig.name}'",
-                              textStyle: config.labelStyle,
+                  ? InkWell(
+                      child: Container(
+                        alignment: AlignmentGeometry.center,
+                        constraints: BoxConstraints.tight(Size.infinite),
+                        child: EzTextIconButton(
+                          config,
+                          icon: EzIcon(config, Icons.add),
+                          label: 'Apps',
+                          style:
+                              TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
+                          onPressed: () => mCon.goNamed(
+                            appListPath,
+                            extra: ListConfig(
+                              localContent: appsNotif,
+                              listContent: <ListContent>{ListContent.hidden, ListContent.banished},
+                              include: false,
+                              onSelected: (AppInfo app) async =>
+                                  appsNotif.value = List<String>.from(appsNotif.value)..add(app.id),
+                              title: EzTextButton(
+                                config,
+                                onPressed: doNothing,
+                                text:
+                                    "Add to '${validateName(renameCon.text) == null ? renameCon.text : initConfig.name}'",
+                                textStyle: config.labelStyle,
+                              ),
                             ),
                           ),
                         ),
@@ -764,11 +815,15 @@ Future<void> editFolder(
             ),
             config.spacer,
             Expanded(
-              child: EzFauxCarousel(
-                config,
-                position: showUI ? 0 : 1,
-                delta: delta,
-                child: showUI ? appearanceSettings() : appSettings(),
+              child: EzSwipeDetector(
+                rtl: () => showUI ? nav(false) : doNothing(),
+                ltr: () => showUI ? doNothing() : nav(true),
+                child: EzFauxCarousel(
+                  config,
+                  position: showUI ? 0 : 1,
+                  delta: delta,
+                  child: showUI ? appearanceSettings() : appSettings(),
+                ),
               ),
             ),
             config.separator,
