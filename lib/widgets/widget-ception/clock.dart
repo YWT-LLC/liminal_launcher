@@ -788,13 +788,16 @@ Future<void> _openEdits(
                   config,
                   position: curr.index,
                   delta: delta,
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: switch (curr) {
-                      _Edits.background => backgroundSettings(),
-                      _Edits.time => timeSettings(),
-                      _Edits.date => dateSettings(),
-                    },
+                  child: InkWell(
+                    child: Container(
+                      alignment: Alignment.topCenter,
+                      constraints: BoxConstraints.tight(Size.infinite),
+                      child: switch (curr) {
+                        _Edits.background => backgroundSettings(),
+                        _Edits.time => timeSettings(),
+                        _Edits.date => dateSettings(),
+                      },
+                    ),
                   ),
                 ),
               ),
