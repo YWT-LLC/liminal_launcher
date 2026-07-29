@@ -39,8 +39,10 @@ class _SwipeSelectorState extends State<SwipeSelector> {
 
     // Return the build //
 
-    return EzRow(
+    return EzScrollView(
       widget.config,
+      reverseHands: true,
+      scrollDirection: Axis.horizontal,
       children: <Widget>[
         EzLink(
           widget.config,
