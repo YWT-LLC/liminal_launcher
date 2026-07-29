@@ -17,6 +17,8 @@ import 'package:go_router/go_router.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+// TODO: prevent swipe apps from opening when editing spacer
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -303,24 +305,23 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           EzSpacer(config.spacing / 2),
 
           // Screen space note
-          EzRow(
-            config,
-            children: <Widget>[
-              Text(
+          EzRow(config, children: <Widget>[
+            Flexible(
+              child: Text(
                 '${(screenWidth / (config.iconSize + config.padding + config.spacing)).toStringAsFixed(2)} lanes on screen',
                 textAlign: TextAlign.center,
                 style: config.labelStyle,
               ),
-              config.rowMargin,
-              EzToolTipper(
-                config,
-                message:
-                    '''With your current...\n\nicon size (${config.iconSize.toStringAsFixed(1)}),\npadding (${config.padding.toStringAsFixed(0)}),\n& spacing (${config.spacing.toStringAsFixed(1)})
+            ),
+            config.rowMargin,
+            EzToolTipper(
+              config,
+              message:
+                  '''With your current...\n\nicon size (${config.iconSize.toStringAsFixed(1)}),\npadding (${config.padding.toStringAsFixed(0)}),\n& spacing (${config.spacing.toStringAsFixed(1)})
 
 ...values, you can fit up to ${(screenWidth / (config.iconSize + config.padding + config.spacing)).toStringAsFixed(2)} lanes on your screen.${(config.iconSize != minIconSize && config.padding != minPadding && config.spacing != minSpacing) ? ' With the minimum values, you can fit up to ${(screenWidth / (minIconSize + minPadding + minSpacing)).toStringAsFixed(2)} lanes.' : ''}''',
-              ),
-            ],
-          ),
+            ),
+          ]),
           config.separator,
         ],
       ),
