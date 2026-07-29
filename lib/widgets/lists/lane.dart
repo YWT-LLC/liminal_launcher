@@ -412,9 +412,9 @@ Future<void> _editLane(
 
             // Divider
             EzTitledDivider(
-              Text('Align', textAlign: TextAlign.center, style: config.labelStyle),
+              config,
+              title: Text('Align', textAlign: TextAlign.center, style: config.labelStyle),
               height: config.spacing * 3,
-              margin: config.marginVal,
             ),
 
             // Align

@@ -173,9 +173,9 @@ class AppTileSetting extends StatelessWidget {
                     },
                   ),
                   EzTitledDivider(
-                    Text('Shared', textAlign: TextAlign.center, style: config.labelStyle),
+                    config,
+                    title: Text('Shared', textAlign: TextAlign.center, style: config.labelStyle),
                     height: config.spacing * 3,
-                    margin: config.marginVal,
                   ),
 
                   // Wide tiles

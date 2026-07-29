@@ -702,9 +702,9 @@ Future<void> _openEdits(
             ],
           ),
           EzTitledDivider(
-            Text('Hidden', textAlign: TextAlign.center, style: config.labelStyle),
+            config,
+            title: Text('Hidden', textAlign: TextAlign.center, style: config.labelStyle),
             height: config.spacing * 2,
-            margin: config.marginVal,
           ),
 
           // Hidden

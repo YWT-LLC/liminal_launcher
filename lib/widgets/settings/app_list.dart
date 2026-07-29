@@ -108,9 +108,10 @@ class AppListSettings extends StatelessWidget {
 
                 // Swipe selectors
                 EzTitledDivider(
-                  Text('Quick launch', textAlign: TextAlign.center, style: config.titleStyle),
+                  config,
+                  title:
+                      Text('Quick launch', textAlign: TextAlign.center, style: config.titleStyle),
                   height: 0,
-                  margin: config.marginVal,
                 ),
                 EzNewLine(config.labelStyle),
                 Text(

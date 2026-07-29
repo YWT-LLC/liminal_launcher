@@ -193,8 +193,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
                             // Divider (con size selector)
                             EzTitledDivider(
-                              width: widthOf(wmCon) * 0.5,
-                              SegmentedButton<WidgetSize>(
+                              config,
+                              title: SegmentedButton<WidgetSize>(
                                 segments: const <ButtonSegment<WidgetSize>>[
                                   ButtonSegment<WidgetSize>(
                                     value: WidgetSize.button,
@@ -211,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                                     setModal(() => size = selected.first),
                               ),
                               height: config.spacing * 2,
-                              margin: config.padding,
+                              width: widthOf(wmCon) * 0.5,
                             ),
                             config.spacer,
 
