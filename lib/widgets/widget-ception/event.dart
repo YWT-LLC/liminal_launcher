@@ -234,33 +234,33 @@ Results may vary.""",
                     },
                     onLongPress: () async => await canToggleMenu(widget.config, controller),
                   )
-                : EzRow(
+                : EzScrollBlocker(EzScrollView(
                     widget.config,
+                    reverseHands: true,
+                    scrollDirection: Axis.horizontal,
                     children: <Widget>[
-                      EzScrollBlocker(
-                        EzTextField(
-                          controller: eventCon,
-                          constraints: BoxConstraints(
-                            maxHeight: appIconSize(widget.config),
-                            maxWidth: textWidth + widget.config.padding,
-                          ),
-                          errorConstraints: BoxConstraints(
-                            maxWidth: (textWidth * 2) + widget.config.padding,
-                          ),
-                          hintText: widget._isCalendar ? 'New event' : 'New task',
-                          onChanged: onChanged,
-                          onFieldSubmitted: (String entry) async {
-                            final bool success = widget._isCalendar
-                                ? await createCalendarEvent(entry)
-                                : await createTask(entry, widget._shareDest);
-
-                            eventCon.clear();
-                            removeOverlay();
-
-                            if (!success && context.mounted) await selfDestruct();
-                          },
-                          validator: null,
+                      EzTextField(
+                        controller: eventCon,
+                        constraints: BoxConstraints(
+                          maxHeight: appIconSize(widget.config),
+                          maxWidth: textWidth + widget.config.padding,
                         ),
+                        errorConstraints: BoxConstraints(
+                          maxWidth: (textWidth * 2) + widget.config.padding,
+                        ),
+                        hintText: widget._isCalendar ? 'New event' : 'New task',
+                        onChanged: onChanged,
+                        onFieldSubmitted: (String entry) async {
+                          final bool success = widget._isCalendar
+                              ? await createCalendarEvent(entry)
+                              : await createTask(entry, widget._shareDest);
+
+                          eventCon.clear();
+                          removeOverlay();
+
+                          if (!success && context.mounted) await selfDestruct();
+                        },
+                        validator: null,
                       ),
                       widget.config.rowMargin,
                       EzIconButton(
@@ -279,7 +279,7 @@ Results may vary.""",
                         onLongPress: () async => await canToggleMenu(widget.config, controller),
                       ),
                     ],
-                  ),
+                  )),
             menuChildren: _menuChildren(
               widget.config,
               appInfo: widget.appInfo,
@@ -423,8 +423,10 @@ class AddEvent extends StatelessWidget {
       ? EzIconButton(config, onPressed: onTap, icon: const Icon(Icons.edit_calendar))
       : GestureDetector(
           onTap: onTap,
-          child: EzRow(
+          child: EzScrollView(
             config,
+            reverseHands: true,
+            scrollDirection: Axis.horizontal,
             children: <Widget>[
               EzTextField(
                 constraints: BoxConstraints(

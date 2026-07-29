@@ -226,25 +226,25 @@ class _SearchWidgetState extends State<SearchWidget> {
                     onPressed: () => launchUrl(Uri.https(widget._engine.base, '/')),
                     onLongPress: () async => await canToggleMenu(widget.config, controller),
                   )
-                : EzRow(
+                : EzScrollBlocker(EzScrollView(
                     widget.config,
+                    reverseHands: true,
+                    scrollDirection: Axis.horizontal,
                     children: <Widget>[
-                      EzScrollBlocker(
-                        EzTextField(
-                          controller: queryCon,
-                          constraints: BoxConstraints(
-                            maxHeight: appIconSize(widget.config),
-                            maxWidth: textWidth + widget.config.padding,
-                          ),
-                          errorConstraints: BoxConstraints(
-                            maxWidth: (textWidth * 2) + widget.config.padding,
-                          ),
-                          hintText: widget._engine.name,
-                          keyboardType: TextInputType.webSearch,
-                          onChanged: onChanged,
-                          onFieldSubmitted: search,
-                          validator: null,
+                      EzTextField(
+                        controller: queryCon,
+                        constraints: BoxConstraints(
+                          maxHeight: appIconSize(widget.config),
+                          maxWidth: textWidth + widget.config.padding,
                         ),
+                        errorConstraints: BoxConstraints(
+                          maxWidth: (textWidth * 2) + widget.config.padding,
+                        ),
+                        hintText: widget._engine.name,
+                        keyboardType: TextInputType.webSearch,
+                        onChanged: onChanged,
+                        onFieldSubmitted: search,
+                        validator: null,
                       ),
                       widget.config.rowMargin,
                       EzIconButton(
@@ -254,7 +254,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                         onLongPress: () async => await canToggleMenu(widget.config, controller),
                       ),
                     ],
-                  ),
+                  )),
             menuChildren: _menuChildren(
               widget.config,
               appInfo: widget.appInfo,
@@ -400,8 +400,10 @@ class AddSearch extends StatelessWidget {
       ? EzIconButton(config, onPressed: onTap, icon: const Icon(Icons.search))
       : GestureDetector(
           onTap: onTap,
-          child: EzRow(
+          child: EzScrollView(
             config,
+            reverseHands: true,
+            scrollDirection: Axis.horizontal,
             children: <Widget>[
               EzTextField(
                 constraints: BoxConstraints(

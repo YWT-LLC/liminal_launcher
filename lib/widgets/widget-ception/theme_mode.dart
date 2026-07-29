@@ -220,7 +220,8 @@ class AddThemeMode extends StatelessWidget {
           child: EzRow(
             config,
             children: <Widget>[
-              Text('Theme mode', textAlign: TextAlign.center, style: config.labelStyle),
+              Flexible(
+                  child: Text('Theme mode', textAlign: TextAlign.center, style: config.labelStyle)),
               config.rowMargin,
               EzDropdownMenu<bool>(
                 config,

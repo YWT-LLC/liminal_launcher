@@ -167,8 +167,9 @@ class _TimerWidgetState extends State<TimerWidget> {
                     },
                     onLongPress: () async => await canToggleMenu(widget.config, controller),
                   )
-                : EzRow(
+                : EzScrollBlocker(EzScrollView(
                     widget.config,
+                    scrollDirection: Axis.horizontal,
                     children: <Widget>[
                       // Hours
                       _timeField(
@@ -236,7 +237,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                         onLongPress: () async => await canToggleMenu(widget.config, controller),
                       ),
                     ],
-                  ),
+                  )),
             menuChildren: _menuChildren(
               widget.config,
               appInfo: widget.appInfo,
@@ -357,40 +358,38 @@ Widget _timeField({
   required void Function() onSubmit,
   bool last = false,
 }) =>
-    EzScrollBlocker(
-      EzTextField(
-        controller: tc,
-        constraints: constraints,
-        errorConstraints: BoxConstraints.tightFor(width: constraints.maxWidth * 2),
-        focusNode: curr,
-        hintText: '00',
-        keyboardType: TextInputType.number,
-        textInputAction: last ? TextInputAction.done : TextInputAction.next,
-        onTap: () {
-          tc.clear();
-          onTap?.call();
-        },
-        onTapOutside: (_) {
-          if (tc.text.isEmpty) tc.text = '00';
-          onTapOutside?.call();
-        },
-        onChanged: onChanged,
-        onEditingComplete: () {
-          if (tc.text.isEmpty) tc.text = '00';
-        },
-        onFieldSubmitted: (String value) {
-          if (value.isEmpty) tc.text = '00';
-          onSubmit.call();
-        },
-        validator: (String? value) {
-          const String failure = '0-99';
+    EzTextField(
+      controller: tc,
+      constraints: constraints,
+      errorConstraints: BoxConstraints.tightFor(width: constraints.maxWidth * 2),
+      focusNode: curr,
+      hintText: '00',
+      keyboardType: TextInputType.number,
+      textInputAction: last ? TextInputAction.done : TextInputAction.next,
+      onTap: () {
+        tc.clear();
+        onTap?.call();
+      },
+      onTapOutside: (_) {
+        if (tc.text.isEmpty) tc.text = '00';
+        onTapOutside?.call();
+      },
+      onChanged: onChanged,
+      onEditingComplete: () {
+        if (tc.text.isEmpty) tc.text = '00';
+      },
+      onFieldSubmitted: (String value) {
+        if (value.isEmpty) tc.text = '00';
+        onSubmit.call();
+      },
+      validator: (String? value) {
+        const String failure = '0-99';
 
-          if (value == null) return failure;
-          final int parsed = int.tryParse(value) ?? -1;
+        if (value == null) return failure;
+        final int parsed = int.tryParse(value) ?? -1;
 
-          return (parsed > 99 || parsed < 0) ? failure : null;
-        },
-      ),
+        return (parsed > 99 || parsed < 0) ? failure : null;
+      },
     );
 
 String _validateTime(String time) {
@@ -463,9 +462,9 @@ class AddTimer extends StatelessWidget {
         ? EzIconButton(config, onPressed: onTap, icon: const Icon(Icons.timer))
         : GestureDetector(
             onTap: onTap,
-            child: EzRow(
+            child: EzScrollView(
               config,
-              reverseHands: false,
+              scrollDirection: Axis.horizontal,
               children: <Widget>[
                 fauxTimerField,
                 config.rowMargin,
@@ -558,9 +557,9 @@ Future<void> _openEdits(
 
           // Default time //
 
-          EzRow(
+          EzScrollView(
             config,
-            reverseHands: false,
+            scrollDirection: Axis.horizontal,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               // Hours

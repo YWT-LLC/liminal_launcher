@@ -654,35 +654,32 @@ Future<void> _openEdits(
               config.spacer,
 
               // Date style
-              EzRow(
-                config,
-                children: <Widget>[
-                  Flexible(
-                    child: Text(
-                      'Date style',
-                      textAlign: TextAlign.center,
-                      style: dateStyle.style(config),
-                    ),
+              EzRow(config, children: <Widget>[
+                Flexible(
+                  child: Text(
+                    'Date style',
+                    textAlign: TextAlign.center,
+                    style: dateStyle.style(config),
                   ),
-                  config.rowMargin,
-                  EzDropdownMenu<TxtStile>(
-                    config,
-                    enabled: dateType != DateType.none,
-                    enableSearch: false,
-                    initialSelection: dateStyle,
-                    widthEntry: TxtStile.display.value,
-                    dropdownMenuEntries: TxtStile.values
-                        .map((TxtStile ts) =>
-                            DropdownMenuEntry<TxtStile>(value: ts, label: ezCamelToTitle(ts.value)))
-                        .toList(),
-                    textStyle: dateStyle.style(config),
-                    onSelected: (TxtStile? choice) {
-                      if (choice == null) return;
-                      setModal(() => dateStyle = choice);
-                    },
-                  ),
-                ],
-              ),
+                ),
+                config.rowMargin,
+                EzDropdownMenu<TxtStile>(
+                  config,
+                  enabled: dateType != DateType.none,
+                  enableSearch: false,
+                  initialSelection: dateStyle,
+                  widthEntry: TxtStile.display.value,
+                  dropdownMenuEntries: TxtStile.values
+                      .map((TxtStile ts) =>
+                          DropdownMenuEntry<TxtStile>(value: ts, label: ezCamelToTitle(ts.value)))
+                      .toList(),
+                  textStyle: dateStyle.style(config),
+                  onSelected: (TxtStile? choice) {
+                    if (choice == null) return;
+                    setModal(() => dateStyle = choice);
+                  },
+                ),
+              ]),
               config.spacer,
 
               // Date color
