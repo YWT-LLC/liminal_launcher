@@ -17,8 +17,6 @@ import 'package:go_router/go_router.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-// TODO: prevent swipe apps from opening when editing spacer
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -796,6 +794,9 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       return;
                     }
                   }
+
+                  // Don't open swipe apps while editing spacers
+                  if (marked.value.$1 != null || marked.value.$2 != null) return;
 
                   final AppInfo? toLaunch = editing
                       ? null
