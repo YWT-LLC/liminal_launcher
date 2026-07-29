@@ -576,7 +576,7 @@ Future<void> editSpacer(
                                   ? Icons.keyboard_arrow_down
                                   : Icons.keyboard_arrow_up,
                             ),
-                            enabled: currIndex > 1, // Config entry
+                            enabled: currIndex > 1, // 0 == config entry
                             onPressed: () async {
                               final int nextIndex = currIndex - 1;
 
