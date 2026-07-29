@@ -7,8 +7,20 @@ import '../../utils/export.dart';
 import '../export.dart';
 
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:open_ui/open_ui.dart';
+import 'package:flutter/material.dart';
+
+// TODO: audit
+//  1. wrap all tiles in a new tilePadder (Padding alias)
+//  2. add a padding quadruplet to all config entries
+//  3. highlight all (non-active) spacers with tertiary while editing spacers
+//  4. add on tap to non-active spacers, when tapped they become active
+//  5. allow on tap for everything under the edit overlay
+//  6. when marked is active, onTapped for all tiles becomes edit padding
+//  7. chose default side based on hAlign; always horizontal to start, if LTR && end then left, etc.
+//  8. the horizontal/vertical toggle becomes a 4 side picker
+//  9. add position or something the editMC for everything. don't add padder edits to the existing modals, would be cluttered/confusing
+//  10. I think that's it? don't worry about highlighting padders where they exist. just highlight the active side
 
 //* Core Widget *//
 
@@ -253,7 +265,7 @@ Future<void> editSpacer(
   marked.value = (lane, index);
 
   Axis axis = Axis.vertical;
-  double step = 5.0;
+  double step = 1.0;
 
   final Completer<bool?> completer = Completer<bool?>();
   late OverlayEntry overlayEntry;
@@ -313,6 +325,11 @@ Future<void> editSpacer(
         }
 
         // Return the build //
+        // TODO: first time (and only time) use tutorials:
+        //  1. explain top widgets
+        //  2. explain bottom widgets
+        //  3. explain spacers vs padding
+        //  4. have fun!
 
         return Material(
           type: MaterialType.transparency,
