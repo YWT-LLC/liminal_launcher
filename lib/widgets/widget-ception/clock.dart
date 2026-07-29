@@ -781,20 +781,9 @@ Future<void> _openEdits(
 
             // Settings
             Expanded(
-              child: GestureDetector(
-                onHorizontalDragEnd: (DragEndDetails details) {
-                  if (details.primaryVelocity == null) return;
-
-                  if (details.primaryVelocity! < -ezSwipeV) {
-                    // RTL -> nav right
-                    if (curr.index < 2) nav(_Edits.values[curr.index + 1]);
-                  }
-
-                  if (details.primaryVelocity! > ezSwipeV) {
-                    // LTR -> nav left
-                    if (curr.index > 0) nav(_Edits.values[curr.index - 1]);
-                  }
-                },
+              child: EzSwipeDetector(
+                rtl: () => (curr.index < 2) ? nav(_Edits.values[curr.index + 1]) : doNothing(),
+                ltr: () => (curr.index > 0) ? nav(_Edits.values[curr.index - 1]) : doNothing(),
                 child: EzFauxCarousel(
                   config,
                   position: curr.index,
