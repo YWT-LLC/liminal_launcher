@@ -46,7 +46,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
       children: <Widget>[
         EzLink(
           widget.config,
-          text: '$dir app',
+          text: '$dir swipe',
           textColor: widget.config.colors.onSurface,
           backgroundColor: widget.config.colors.surfaceContainer,
           onTap: () => showDialog(
