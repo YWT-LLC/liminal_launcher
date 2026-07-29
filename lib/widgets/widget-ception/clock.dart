@@ -128,7 +128,6 @@ class _ClockWidgetState extends State<ClockWidget> {
               onLongPress: () async => await canToggleMenu(widget.config, controller),
               child: EzTextBackground(
                 widget.config,
-                padding: EdgeInsets.all(widget.config.padding),
                 shape: widget._shape,
                 backgroundColor: widget._background,
                 text: EzCol(
@@ -324,7 +323,6 @@ class AddClock extends StatelessWidget {
       onTap: onTap,
       child: EzTextBackground(
         config,
-        padding: EdgeInsets.all(config.padding),
         text: EzCol(
           mainAxisAlignment: vAlign.mainAxis,
           crossAxisAlignment: hAlign.crossAxis,
@@ -758,7 +756,6 @@ Future<void> _openEdits(
             // Preview
             EzTextBackground(
               config,
-              padding: EdgeInsets.all(config.padding),
               shape: shape,
               backgroundColor: background,
               text: EzCol(
