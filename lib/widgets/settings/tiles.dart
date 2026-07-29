@@ -217,6 +217,6 @@ class AppTileSetting extends StatelessWidget {
           }
         },
         icon: EzIcon(config, Icons.settings),
-        label: '${folder ? 'Folder' : 'App'} style',
+        label: '${folder ? 'Folder' : 'App'} tile',
       );
 }
