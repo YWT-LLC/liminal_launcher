@@ -539,32 +539,35 @@ Future<void> _openEdits(
 
         Widget timeSettings() => EzScrollView(config, children: <Widget>[
               // Time style
-              EzRow(config, children: <Widget>[
-                Flexible(
-                  child: Text(
+              EzScrollView(
+                config,
+                reverseHands: true,
+                scrollDirection: Axis.horizontal,
+                children: <Widget>[
+                  Text(
                     'Time style',
                     textAlign: TextAlign.center,
                     style: timeStyle.style(config),
                   ),
-                ),
-                config.rowMargin,
-                EzDropdownMenu<TxtStile>(
-                  config,
-                  enabled: showTime,
-                  enableSearch: false,
-                  initialSelection: timeStyle,
-                  widthEntry: TxtStile.display.value,
-                  dropdownMenuEntries: TxtStile.values
-                      .map((TxtStile ts) =>
-                          DropdownMenuEntry<TxtStile>(value: ts, label: ezCamelToTitle(ts.value)))
-                      .toList(),
-                  textStyle: timeStyle.style(config),
-                  onSelected: (TxtStile? choice) {
-                    if (choice == null) return;
-                    setModal(() => timeStyle = choice);
-                  },
-                ),
-              ]),
+                  config.rowMargin,
+                  EzDropdownMenu<TxtStile>(
+                    config,
+                    enabled: showTime,
+                    enableSearch: false,
+                    initialSelection: timeStyle,
+                    widthEntry: TxtStile.display.value,
+                    dropdownMenuEntries: TxtStile.values
+                        .map((TxtStile ts) =>
+                            DropdownMenuEntry<TxtStile>(value: ts, label: ezCamelToTitle(ts.value)))
+                        .toList(),
+                    textStyle: timeStyle.style(config),
+                    onSelected: (TxtStile? choice) {
+                      if (choice == null) return;
+                      setModal(() => timeStyle = choice);
+                    },
+                  ),
+                ],
+              ),
               config.spacer,
 
               // Time color
@@ -627,59 +630,65 @@ Future<void> _openEdits(
 
         Widget dateSettings() => EzScrollView(config, children: <Widget>[
               // Date type
-              EzRow(config, children: <Widget>[
-                Flexible(
-                  child: Text(
+              EzScrollView(
+                config,
+                reverseHands: true,
+                scrollDirection: Axis.horizontal,
+                children: <Widget>[
+                  Text(
                     'Date type',
                     textAlign: TextAlign.center,
                     style: config.bodyStyle,
                   ),
-                ),
-                config.rowMargin,
-                EzDropdownMenu<DateType>(
-                  config,
-                  enableSearch: false,
-                  initialSelection: dateType,
-                  widthEntry: DateType.compact.value,
-                  dropdownMenuEntries: DateType.values
-                      .map((DateType dt) =>
-                          DropdownMenuEntry<DateType>(value: dt, label: ezCamelToTitle(dt.value)))
-                      .toList(),
-                  onSelected: (DateType? choice) {
-                    if (choice == null) return;
-                    setModal(() => dateType = choice);
-                  },
-                ),
-              ]),
+                  config.rowMargin,
+                  EzDropdownMenu<DateType>(
+                    config,
+                    enableSearch: false,
+                    initialSelection: dateType,
+                    widthEntry: DateType.compact.value,
+                    dropdownMenuEntries: DateType.values
+                        .map((DateType dt) =>
+                            DropdownMenuEntry<DateType>(value: dt, label: ezCamelToTitle(dt.value)))
+                        .toList(),
+                    onSelected: (DateType? choice) {
+                      if (choice == null) return;
+                      setModal(() => dateType = choice);
+                    },
+                  ),
+                ],
+              ),
               config.spacer,
 
               // Date style
-              EzRow(config, children: <Widget>[
-                Flexible(
-                  child: Text(
+              EzScrollView(
+                config,
+                reverseHands: true,
+                scrollDirection: Axis.horizontal,
+                children: <Widget>[
+                  Text(
                     'Date style',
                     textAlign: TextAlign.center,
                     style: dateStyle.style(config),
                   ),
-                ),
-                config.rowMargin,
-                EzDropdownMenu<TxtStile>(
-                  config,
-                  enabled: dateType != DateType.none,
-                  enableSearch: false,
-                  initialSelection: dateStyle,
-                  widthEntry: TxtStile.display.value,
-                  dropdownMenuEntries: TxtStile.values
-                      .map((TxtStile ts) =>
-                          DropdownMenuEntry<TxtStile>(value: ts, label: ezCamelToTitle(ts.value)))
-                      .toList(),
-                  textStyle: dateStyle.style(config),
-                  onSelected: (TxtStile? choice) {
-                    if (choice == null) return;
-                    setModal(() => dateStyle = choice);
-                  },
-                ),
-              ]),
+                  config.rowMargin,
+                  EzDropdownMenu<TxtStile>(
+                    config,
+                    enabled: dateType != DateType.none,
+                    enableSearch: false,
+                    initialSelection: dateStyle,
+                    widthEntry: TxtStile.display.value,
+                    dropdownMenuEntries: TxtStile.values
+                        .map((TxtStile ts) =>
+                            DropdownMenuEntry<TxtStile>(value: ts, label: ezCamelToTitle(ts.value)))
+                        .toList(),
+                    textStyle: dateStyle.style(config),
+                    onSelected: (TxtStile? choice) {
+                      if (choice == null) return;
+                      setModal(() => dateStyle = choice);
+                    },
+                  ),
+                ],
+              ),
               config.spacer,
 
               // Date color

@@ -645,11 +645,13 @@ Future<void> editApp(
             config.spacer,
 
             // Label type
-            EzRow(
+            EzScrollView(
               config,
+              reverseHands: true,
+              scrollDirection: Axis.horizontal,
               children: <Widget>[
-                EzText(config, text: 'Label type'),
-                config.rowSpacer,
+                Text('Label type', style: config.bodyStyle),
+                config.rowMargin,
                 EzDropdownMenu<LabelType?>(
                   config,
                   widthEntry: 'Full name',
