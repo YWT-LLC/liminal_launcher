@@ -69,6 +69,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
           name: app.label,
           image: app.icon,
           icon: null,
+          iconSize: null,
           labelType: listLabels(widget.config),
           buttonType: listBT(widget.config),
           onPressed: () => context.pushNamed(

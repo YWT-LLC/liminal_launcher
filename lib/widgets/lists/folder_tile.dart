@@ -23,6 +23,7 @@ class FolderTile extends StatefulWidget {
 
   late final String _name;
   late final IconData _icon;
+  late final double? _iconSize;
   late final ButtonType? _buttonType;
   late final LabelType? _labelType;
   late final List<String> _appList;
@@ -49,9 +50,10 @@ class FolderTile extends StatefulWidget {
             int.tryParse(storedIcon) ?? Icons.folder_outlined.codePoint,
             fontFamily: 'MaterialIcons',
           );
+    _iconSize = (data[1] == esSystem) ? null : double.tryParse(data[1]);
 
-    _buttonType = BTConfig.lookup(data[1]);
-    _labelType = LTConfig.lookup(data[2]);
+    _buttonType = BTConfig.lookup(data[2]);
+    _labelType = LTConfig.lookup(data[3]);
 
     _appList = items.length > 2 ? items.sublist(2) : <String>[];
   }
@@ -164,6 +166,7 @@ class _AppFolderState extends State<FolderTile> {
                           widget.config,
                           name: widget._name,
                           icon: widget._icon,
+                          iconSize: widget._iconSize ?? widget.config.iconSize,
                           buttonType: widget._buttonType ?? folderBT(widget.config),
                           labelType: widget._labelType ?? folderLabels(widget.config),
                           onPressed: () => showApps(),
@@ -175,6 +178,7 @@ class _AppFolderState extends State<FolderTile> {
                       widget.config,
                       name: widget._name,
                       icon: widget._icon,
+                      iconSize: widget._iconSize ?? widget.config.iconSize,
                       buttonType: widget._buttonType ?? folderBT(widget.config),
                       labelType: widget._labelType ?? folderLabels(widget.config),
                       onPressed: () => showApps(),
@@ -190,6 +194,7 @@ class _AppFolderState extends State<FolderTile> {
                 initConfig: FolderConfig(
                   name: widget._name,
                   icon: widget._icon,
+                  iconSize: widget._iconSize,
                   buttonType: widget._buttonType,
                   labelType: widget._labelType,
                   appList: widget._appList,
@@ -210,6 +215,7 @@ class _AppFolderState extends State<FolderTile> {
                 initConfig: FolderConfig(
                   name: widget._name,
                   icon: widget._icon,
+                  iconSize: widget._iconSize ?? widget.config.iconSize,
                   buttonType: widget._buttonType,
                   labelType: widget._labelType,
                   appList: widget._appList,
@@ -290,6 +296,7 @@ class FolderButton extends StatelessWidget {
   final EzCP config;
   final String name;
   final IconData icon;
+  final double iconSize;
   final ButtonType buttonType;
   final LabelType labelType;
   final void Function()? onPressed;
@@ -300,6 +307,7 @@ class FolderButton extends StatelessWidget {
     super.key,
     required this.name,
     required this.icon,
+    required this.iconSize,
     required this.buttonType,
     required this.labelType,
     this.onPressed,
@@ -313,7 +321,7 @@ class FolderButton extends StatelessWidget {
             child: GestureDetector(
               onTap: onPressed,
               onLongPress: onLongPress,
-              child: EzIcon(config, icon),
+              child: Icon(icon, size: iconSize),
             ),
           ),
         ButtonType.eIcon => EzIconButton(
@@ -321,7 +329,7 @@ class FolderButton extends StatelessWidget {
             tooltip: name,
             onPressed: onPressed,
             onLongPress: onLongPress,
-            icon: EzIcon(config, icon),
+            icon: Icon(icon, size: iconSize),
           ),
         ButtonType.text => EzTextButton(
             config,
@@ -344,7 +352,7 @@ class FolderButton extends StatelessWidget {
         ButtonType.textIcon => EzTextIconButton(
             config,
             label: buildLabel(name, labelType),
-            icon: EzIcon(config, icon),
+            icon: Icon(icon, size: iconSize),
             style: TextButton.styleFrom(
               padding: config.textBackgroundOpacity < oneP
                   ? EdgeInsets.zero
@@ -356,7 +364,7 @@ class FolderButton extends StatelessWidget {
         ButtonType.eTextIcon => EzElevatedIconButton(
             config,
             label: buildLabel(name, labelType),
-            icon: EzIcon(config, icon),
+            icon: Icon(icon, size: iconSize),
             style: TextButton.styleFrom(padding: EdgeInsets.all(config.padding)),
             onPressed: onPressed,
             onLongPress: onLongPress,
@@ -364,10 +372,13 @@ class FolderButton extends StatelessWidget {
       };
 }
 
-String defaultFolderEntry() => _folderEntry(Icons.folder_outlined, null, null);
+String defaultFolderEntry() => _folderEntry(Icons.folder_outlined, null, null, null);
 
-String _folderEntry(IconData icon, ButtonType? buttonType, LabelType? labelType) => <String>[
+String _folderEntry(
+        IconData icon, double? iconSize, ButtonType? buttonType, LabelType? labelType) =>
+    <String>[
       icon.codePoint.toString(),
+      (iconSize == null ? esSystem : iconSize.toString()),
       (buttonType == null ? esSystem : buttonType.value),
       (labelType == null ? esSystem : labelType.value),
     ].join(configSplit);
@@ -377,6 +388,7 @@ String _folderEntry(IconData icon, ButtonType? buttonType, LabelType? labelType)
 class FolderConfig {
   final String name;
   final IconData icon;
+  final double? iconSize;
   final ButtonType? buttonType;
   final LabelType? labelType;
   final List<String> appList;
@@ -384,6 +396,7 @@ class FolderConfig {
   FolderConfig({
     required this.name,
     required this.icon,
+    required this.iconSize,
     required this.buttonType,
     required this.labelType,
     required this.appList,
@@ -404,10 +417,13 @@ Future<void> editFolder(
   final TextEditingController renameCon = TextEditingController(text: initConfig.name);
   IconData icon = initConfig.icon;
 
+  double? iconSize = initConfig.iconSize;
   LabelType? labelType = initConfig.labelType;
   bool showIcon = iconBTs.contains(initConfig.buttonType ?? folderBT(config));
   bool elevated = elevatedBTs.contains(initConfig.buttonType ?? folderBT(config));
-  bool shapeEdits = false;
+
+  bool shapeEdits =
+      initConfig.iconSize != null || initConfig.labelType != null || initConfig.buttonType != null;
 
   final ValueNotifier<List<String>> appsNotif = ValueNotifier<List<String>>(initConfig.appList);
 
@@ -436,6 +452,7 @@ Future<void> editFolder(
                   config,
                   name: validateName(renameCon.text) == null ? renameCon.text : initConfig.name,
                   icon: icon,
+                  iconSize: iconSize ?? config.iconSize,
                   buttonType: BTConfig.build(
                     labelType ?? folderLabels(config),
                     icons: showIcon,
@@ -772,11 +789,17 @@ Future<void> editFolder(
           extra: shapeEdits
               ? _folderEntry(
                   icon,
+                  iconSize,
                   BTConfig.build(labelType ?? folderLabels(config),
                       icons: showIcon, elevated: elevated),
                   labelType,
                 )
-              : _folderEntry(icon, null, null),
+              : _folderEntry(
+                  icon,
+                  null,
+                  null,
+                  null,
+                ),
           ids: appsNotif.value,
         ),
       );
@@ -789,7 +812,7 @@ Future<void> editFolder(
           lane: lane,
           index: index,
           name: initConfig.name,
-          extra: _folderEntry(Icons.folder_outlined, null, null),
+          extra: _folderEntry(Icons.folder_outlined, null, null, null),
           ids: appsNotif.value,
         ),
       );

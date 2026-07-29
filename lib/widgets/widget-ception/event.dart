@@ -554,6 +554,7 @@ We recommend using a task app, but it's not required. Results may vary.
           name: shareDest.label,
           image: shareDest.icon,
           icon: null,
+          iconSize: null,
           labelType: listLabels(config),
           buttonType: listBT(config),
           onPressed: () => pContext.pushNamed(

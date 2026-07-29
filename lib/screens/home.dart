@@ -117,6 +117,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                             app: app,
                             name: app.label,
                             icon: null,
+                            iconSize: null,
                             buttonType: null,
                             labelType: null,
                           ),
@@ -153,6 +154,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       initConfig: FolderConfig(
                         name: 'Folder',
                         icon: Icons.folder_outlined,
+                        iconSize: null,
                         buttonType: null,
                         labelType: null,
                         appList: <String>[],

@@ -34,6 +34,7 @@ class AppTile extends StatefulWidget {
 
   late final String? _name;
   late final IconData? _icon;
+  late final double? _iconSize;
   late final ButtonType? _buttonType;
   late final LabelType? _labelType;
 
@@ -69,12 +70,14 @@ class AppTile extends StatefulWidget {
               ? null
               // ignore: non_const_argument_for_const_parameter
               : IconData(int.tryParse(storedIcon)!, fontFamily: 'MaterialIcons');
+      _iconSize = (data[2] == esSystem) ? null : double.tryParse(data[2]);
 
-      _buttonType = BTConfig.lookup(data[2]);
-      _labelType = LTConfig.lookup(data[3]);
+      _buttonType = BTConfig.lookup(data[3]);
+      _labelType = LTConfig.lookup(data[4]);
     } else {
       _name = null;
       _icon = null;
+      _iconSize = null;
       _buttonType = null;
       _labelType = null;
     }
@@ -183,6 +186,7 @@ class _AppTileState extends State<AppTile> {
                     name: widget.app.label,
                     image: widget.app.icon,
                     icon: widget._icon,
+                    iconSize: widget._iconSize,
                     buttonType: listBT(widget.config),
                     labelType: listLabels(widget.config),
                     onPressed: () => widget.onSelected(widget.app),
@@ -202,6 +206,7 @@ class _AppTileState extends State<AppTile> {
                             name: widget._name ?? widget.app.label,
                             image: widget.app.icon,
                             icon: widget._icon,
+                            iconSize: widget._iconSize,
                             buttonType: widget._buttonType ?? listBT(widget.config),
                             labelType: widget._labelType ?? listLabels(widget.config),
                             onPressed: () => widget.onSelected(widget.app),
@@ -214,6 +219,7 @@ class _AppTileState extends State<AppTile> {
                         name: widget._name ?? widget.app.label,
                         image: widget.app.icon,
                         icon: widget._icon,
+                        iconSize: widget._iconSize,
                         buttonType: widget._buttonType ?? listBT(widget.config),
                         labelType: widget._labelType ?? listLabels(widget.config),
                         onPressed: () => widget.onSelected(widget.app),
@@ -234,6 +240,7 @@ class _AppTileState extends State<AppTile> {
                       app: widget.app,
                       name: widget._name,
                       icon: widget._icon,
+                      iconSize: widget._iconSize,
                       buttonType: widget._buttonType,
                       labelType: widget._labelType,
                     )
@@ -257,6 +264,7 @@ class _AppTileState extends State<AppTile> {
                         name: widget.app.label,
                         image: widget.app.icon,
                         icon: null,
+                        iconSize: null,
                         buttonType: listBT(widget.config),
                         labelType: listLabels(widget.config),
                         onPressed: () => widget.onSelected(widget.app),
@@ -310,6 +318,7 @@ class _AppTileState extends State<AppTile> {
                 app: widget.app,
                 name: widget._name,
                 icon: widget._icon,
+                iconSize: widget._iconSize,
                 buttonType: widget._buttonType,
                 labelType: widget._labelType,
               ),
@@ -458,6 +467,7 @@ class AppButton extends StatelessWidget {
   final String name;
   final Uint8List? image;
   final IconData? icon;
+  final double? iconSize;
   final ButtonType buttonType;
   final LabelType labelType;
   final void Function()? onPressed;
@@ -469,6 +479,7 @@ class AppButton extends StatelessWidget {
     required this.name,
     required this.image,
     required this.icon,
+    required this.iconSize,
     required this.buttonType,
     required this.labelType,
     this.onPressed,
@@ -477,14 +488,22 @@ class AppButton extends StatelessWidget {
 
   Widget appIcon() => (icon == null)
       ? (image == null)
-          ? EzIcon(config, Icons.question_mark, semanticLabel: name)
+          ? Icon(
+              Icons.question_mark,
+              semanticLabel: name,
+              size: iconSize ?? config.iconSize,
+            )
           : Image.memory(
               image!,
               semanticLabel: name,
               width: appIconSize(config),
               height: appIconSize(config),
             )
-      : EzIcon(config, icon!);
+      : Icon(
+          icon!,
+          semanticLabel: name,
+          size: iconSize ?? config.iconSize,
+        );
 
   @override
   Widget build(BuildContext context) => switch (buttonType) {
@@ -540,12 +559,14 @@ class AppButton extends StatelessWidget {
       };
 }
 
-String defaultAppEntry(String name) => _appEntry(name, null, null, null);
+String defaultAppEntry(String name) => _appEntry(name, null, null, null, null);
 
-String _appEntry(String name, IconData? icon, ButtonType? buttonType, LabelType? labelType) =>
+String _appEntry(String name, IconData? icon, double? iconSize, ButtonType? buttonType,
+        LabelType? labelType) =>
     <String>[
       name,
       (icon == null ? esSystem : icon.codePoint.toString()),
+      (iconSize == null ? esSystem : iconSize.toString()),
       (buttonType == null ? esSystem : buttonType.value),
       (labelType == null ? esSystem : labelType.value),
     ].join(configSplit);
@@ -558,6 +579,7 @@ class AppConfig {
   final AppInfo app;
   final String? name;
   final IconData? icon;
+  final double? iconSize;
   final ButtonType? buttonType;
   final LabelType? labelType;
 
@@ -565,6 +587,7 @@ class AppConfig {
     required this.app,
     required this.name,
     required this.icon,
+    required this.iconSize,
     required this.buttonType,
     required this.labelType,
   });
@@ -583,10 +606,13 @@ Future<void> editApp(
   );
   IconData? icon = initConfig.icon;
 
+  double? iconSize = initConfig.iconSize;
   LabelType? labelType = initConfig.labelType;
   bool showIcon = iconBTs.contains(initConfig.buttonType ?? listBT(config));
   bool elevated = elevatedBTs.contains(initConfig.buttonType ?? listBT(config));
-  bool shapeEdits = false;
+
+  bool shapeEdits =
+      initConfig.iconSize != null || initConfig.labelType != null || initConfig.buttonType != null;
 
   final bool? update = await ezModal(
     config,
@@ -609,6 +635,7 @@ Future<void> editApp(
               name: validateName(renameCon.text) == null ? renameCon.text : initConfig.app.label,
               image: initConfig.app.icon,
               icon: icon,
+              iconSize: iconSize,
               buttonType: BTConfig.build(
                 labelType ?? listLabels(config),
                 icons: showIcon,
@@ -773,6 +800,7 @@ Future<void> editApp(
                     ? renameCon.text
                     : (initConfig.name ?? initConfig.app.label),
                 icon,
+                iconSize,
                 BTConfig.build(labelType ?? listLabels(config),
                     icons: showIcon, elevated: elevated),
                 labelType,
@@ -782,6 +810,7 @@ Future<void> editApp(
                     ? renameCon.text
                     : (initConfig.name ?? initConfig.app.label),
                 icon,
+                null,
                 null,
                 null,
               ),
@@ -794,7 +823,7 @@ Future<void> editApp(
         lane: lane,
         index: index,
         id: initConfig.app.id,
-        extra: _appEntry(initConfig.app.label, null, null, null),
+        extra: _appEntry(initConfig.app.label, null, null, null, null),
       );
       return;
 
