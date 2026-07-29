@@ -125,6 +125,8 @@ class AppInfoProvider extends ChangeNotifier {
   Timer? _addedTimer;
   OverlayEntry? _addedEntry;
 
+  // TODO: restore flipped
+
   Future<void> _added(EzCP config, {required Future<void> Function()? editNew}) async {
     if (_addedTimer?.isActive ?? false) _clearAdded();
 
