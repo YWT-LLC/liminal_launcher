@@ -490,25 +490,29 @@ class AppButton extends StatelessWidget {
           ? Icon(
               Icons.question_mark,
               semanticLabel: name,
-              size: iconSize ?? config.iconSize,
+              size: iconSize ?? appIconSize(config),
             )
           : Image.memory(
               image!,
               semanticLabel: name,
-              width: appIconSize(config),
-              height: appIconSize(config),
+              width: iconSize ?? appIconSize(config),
+              height: iconSize ?? appIconSize(config),
             )
       : Icon(
           icon!,
           semanticLabel: name,
-          size: iconSize ?? config.iconSize,
+          size: iconSize ?? appIconSize(config),
         );
 
   @override
   Widget build(BuildContext context) => switch (buttonType) {
         ButtonType.icon => Tooltip(
             message: name,
-            child: GestureDetector(onTap: onPressed, onLongPress: onLongPress, child: appIcon()),
+            child: GestureDetector(
+              onTap: onPressed,
+              onLongPress: onLongPress,
+              child: appIcon(),
+            ),
           ),
         ButtonType.eIcon => EzIconButton(
             config,
@@ -679,28 +683,50 @@ Future<void> editApp(
                   enabled: showIcon && (iconSize == null || iconSize! > minIconSize),
                   icon: const Icon(Icons.remove),
                   onPressed: () {
-                    iconSize = (iconSize == null) ? (config.iconSize - 1) : (iconSize! - 1);
+                    iconSize = (iconSize == null) ? (appIconSize(config) - 1) : (iconSize! - 1);
                     setModal(() => iconSize = max(iconSize!, minIconSize));
                   },
                 ),
                 config.rowMargin,
-                EzIconButton(
-                  config,
-                  enabled: showIcon,
-                  icon: Icon(icon, size: iconSize ?? config.iconSize),
-                  onPressed: () async {
-                    final IconData? choice = await chooseIcon(config, pContext);
-                    if (choice != null) setModal(() => icon = choice);
-                  },
-                  onLongPress: () => setModal(() => iconSize = null),
-                ),
+                (icon == null && initConfig.app.icon != null)
+                    ? GestureDetector(
+                        onTap: showIcon
+                            ? () async {
+                                final IconData? choice = await chooseIcon(config, pContext);
+                                if (choice != null) setModal(() => icon = choice);
+                              }
+                            : null,
+                        onLongPress: showIcon ? () => setModal(() => iconSize = null) : null,
+                        child: Image.memory(
+                          initConfig.app.icon!,
+                          semanticLabel: initConfig.app.label,
+                          width: iconSize ?? appIconSize(config),
+                          height: iconSize ?? appIconSize(config),
+                        ),
+                      )
+                    : EzIconButton(
+                        config,
+                        icon: Icon(icon ?? Icons.settings, size: iconSize ?? appIconSize(config)),
+                        onPressed: showIcon
+                            ? () async {
+                                final IconData? choice = await chooseIcon(config, pContext);
+                                if (choice != null) setModal(() => icon = choice);
+                              }
+                            : null,
+                        onLongPress: showIcon
+                            ? () => setModal(() {
+                                  iconSize = null;
+                                  icon = null;
+                                })
+                            : null,
+                      ),
                 config.rowMargin,
                 EzIconButton(
                   config,
                   enabled: showIcon && (iconSize == null || iconSize! < maxIconSize),
                   icon: const Icon(Icons.add),
                   onPressed: () {
-                    iconSize = (iconSize == null) ? (config.iconSize + 1) : (iconSize! + 1);
+                    iconSize = (iconSize == null) ? (appIconSize(config) + 1) : (iconSize! + 1);
                     setModal(() => iconSize = min(iconSize!, maxIconSize));
                   },
                 ),
