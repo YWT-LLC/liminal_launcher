@@ -253,7 +253,7 @@ class SettingsScreen extends StatelessWidget {
                         context: context,
                         builder: (_) => ezModalScroll(
                           config,
-                          children: <Widget>[AlignmentSelectors(config), config.separator],
+                          children: <Widget>[AlignmentSelectors(config), config.spacer],
                         ),
                       );
 

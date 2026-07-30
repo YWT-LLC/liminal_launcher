@@ -474,33 +474,35 @@ Future<void> _editLane(
                 ],
               ),
             ),
-            config.separator,
+            config.spacer,
 
             // Controls
             EzWrap(
               children: <Widget>[
-                // Horizontal
-                SegmentedButton<ListAlignment>(
-                  segments: alignmentSegments,
-                  selected: <ListAlignment>{hA},
-                  showSelectedIcon: false,
-                  onSelectionChanged: (Set<ListAlignment>? choice) {
-                    if (choice?.first == null) return;
-                    setModal(() => hA = choice!.first);
-                  },
+                Padding(
+                  padding: EzInsets.wrap(config.spacing),
+                  child: SegmentedButton<ListAlignment>(
+                    segments: alignmentSegments,
+                    selected: <ListAlignment>{hA},
+                    showSelectedIcon: false,
+                    onSelectionChanged: (Set<ListAlignment>? choice) {
+                      if (choice?.first == null) return;
+                      setModal(() => hA = choice!.first);
+                    },
+                  ),
                 ),
-                config.spacer,
-
-                // Vertical
-                SegmentedButton<ListAlignment>(
-                  segments: alignmentSegments,
-                  direction: Axis.vertical,
-                  selected: <ListAlignment>{vA},
-                  showSelectedIcon: false,
-                  onSelectionChanged: (Set<ListAlignment>? choice) {
-                    if (choice?.first == null) return;
-                    setModal(() => vA = choice!.first);
-                  },
+                Padding(
+                  padding: EzInsets.wrap(config.spacing),
+                  child: SegmentedButton<ListAlignment>(
+                    segments: alignmentSegments,
+                    direction: Axis.vertical,
+                    selected: <ListAlignment>{vA},
+                    showSelectedIcon: false,
+                    onSelectionChanged: (Set<ListAlignment>? choice) {
+                      if (choice?.first == null) return;
+                      setModal(() => vA = choice!.first);
+                    },
+                  ),
                 ),
               ],
             ),

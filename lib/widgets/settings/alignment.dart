@@ -79,13 +79,13 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
               ],
             ),
           ),
-          widget.config.separator,
+          widget.config.spacer,
 
           // Controls
-          EzWrap(
-            children: <Widget>[
-              // Horizontal
-              SegmentedButton<ListAlignment>(
+          EzWrap(children: <Widget>[
+            Padding(
+              padding: EzInsets.wrap(widget.config.spacing),
+              child: SegmentedButton<ListAlignment>(
                 segments: alignmentSegments,
                 selected: <ListAlignment>{h},
                 showSelectedIcon: false,
@@ -103,10 +103,10 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
                   setState(() => h = selected);
                 },
               ),
-              widget.config.spacer,
-
-              // Vertical
-              SegmentedButton<ListAlignment>(
+            ),
+            Padding(
+              padding: EzInsets.wrap(widget.config.spacing),
+              child: SegmentedButton<ListAlignment>(
                 segments: alignmentSegments,
                 direction: Axis.vertical,
                 selected: <ListAlignment>{v},
@@ -125,8 +125,8 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
                   setState(() => v = selected);
                 },
               ),
-            ],
-          ),
+            ),
+          ]),
         ],
       );
 }
