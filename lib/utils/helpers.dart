@@ -60,34 +60,19 @@ Future<IconData?> chooseIcon(EzCP config, BuildContext context) => ezModal(
               config.spacer,
 
               // Icons
-              GestureDetector(
-                onHorizontalDragEnd: (DragEndDetails details) {
-                  if (details.primaryVelocity == null) return;
-
-                  if (details.primaryVelocity! < -ezSwipeV) {
-                    // RTL -> nav right
-                    if (outlined) return;
-                    setModal(() => outlined = true);
-                  }
-
-                  if (details.primaryVelocity! > ezSwipeV) {
-                    // LTR -> nav left
-                    if (!outlined) return;
-                    setModal(() => outlined = false);
-                  }
-                },
+              EzSwipeDetector(
+                rtl: () => setModal(() => outlined = true),
+                ltr: () => setModal(() => outlined = false),
                 child: EzWrap(
                   children: (outlined ? outlinedIconChoices : solidIconChoices)
-                      .map(
-                        (IconData icon) => Padding(
-                          padding: EzInsets.wrap(config.spacing),
-                          child: EzIconButton(
-                            config,
-                            icon: Icon(icon),
-                            onPressed: () => Navigator.of(mCon).pop(icon),
-                          ),
-                        ),
-                      )
+                      .map((IconData icon) => Padding(
+                            padding: EzInsets.wrap(config.spacing),
+                            child: EzIconButton(
+                              config,
+                              icon: Icon(icon),
+                              onPressed: () => Navigator.of(mCon).pop(icon),
+                            ),
+                          ))
                       .toList(),
                 ),
               ),
