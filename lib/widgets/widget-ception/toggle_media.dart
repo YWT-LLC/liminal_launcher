@@ -113,42 +113,28 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
 
                         // Backwards
                         if (widget._bigSkips) ...<Widget>[
-                          GestureDetector(
-                            onTap: skipPrev,
-                            child: const Icon(Icons.skip_previous),
-                          ),
+                          GestureDetector(onTap: skipPrev, child: const Icon(Icons.skip_previous)),
                           widget.config.rowSpacer,
                         ],
 
                         if (widget._lilSkips) ...<Widget>[
-                          GestureDetector(
-                            onTap: rewind,
-                            child: const Icon(Icons.fast_rewind),
-                          ),
+                          GestureDetector(onTap: rewind, child: const Icon(Icons.fast_rewind)),
                           widget.config.rowSpacer,
                         ],
 
                         // Play/pause
-                        GestureDetector(
-                          onTap: toggleMedia,
-                          child: const Icon(Icons.headphones),
-                        ),
+                        GestureDetector(onTap: toggleMedia, child: const Icon(Icons.headphones)),
 
                         // Forwards
                         if (widget._lilSkips) ...<Widget>[
                           widget.config.rowSpacer,
                           GestureDetector(
-                            onTap: fastForward,
-                            child: const Icon(Icons.fast_forward),
-                          ),
+                              onTap: fastForward, child: const Icon(Icons.fast_forward)),
                         ],
 
                         if (widget._bigSkips) ...<Widget>[
                           widget.config.rowSpacer,
-                          GestureDetector(
-                            onTap: skipNext,
-                            child: const Icon(Icons.skip_next),
-                          ),
+                          GestureDetector(onTap: skipNext, child: const Icon(Icons.skip_next)),
                         ],
                         widget.config.rowMargin,
                       ],
@@ -282,11 +268,7 @@ class AddToggleMedia extends StatelessWidget {
           config,
           appInfo: appInfo,
           pContext: pContext,
-          initConfig: _MediaConfig(
-            size: size,
-            bigSkips: true,
-            lilSkips: false,
-          ),
+          initConfig: _MediaConfig(size: size, bigSkips: true, lilSkips: false),
           lane: lane,
           index: appInfo.homeLane(config, lane).length - 1,
         ),
@@ -314,22 +296,10 @@ class AddToggleMedia extends StatelessWidget {
       );
 }
 
-String defaultMediaEntry() => _mediaEntry(
-      WidgetSize.tile,
-      bigSkips: true,
-      lilSkips: false,
-    );
+String defaultMediaEntry() => _mediaEntry(WidgetSize.tile, bigSkips: true, lilSkips: false);
 
-String _mediaEntry(
-  WidgetSize size, {
-  required bool bigSkips,
-  required bool lilSkips,
-}) =>
-    <String>[
-      size.value,
-      bigSkips.toString(),
-      lilSkips.toString(),
-    ].join(configSplit);
+String _mediaEntry(WidgetSize size, {required bool bigSkips, required bool lilSkips}) =>
+    <String>[size.value, bigSkips.toString(), lilSkips.toString()].join(configSplit);
 
 //* Edit Widget *//
 
@@ -338,11 +308,7 @@ class _MediaConfig {
   final bool bigSkips;
   final bool lilSkips;
 
-  _MediaConfig({
-    required this.size,
-    required this.bigSkips,
-    required this.lilSkips,
-  });
+  _MediaConfig({required this.size, required this.bigSkips, required this.lilSkips});
 }
 
 Future<void> _openEdits(
@@ -363,28 +329,20 @@ Future<void> _openEdits(
     builder: (_) => StatefulBuilder(
       builder: (_, StateSetter setModal) => ezModalScroll(config, children: <Widget>[
         // Size
-        SegmentedButton<WidgetSize>(
-          segments: const <ButtonSegment<WidgetSize>>[
-            ButtonSegment<WidgetSize>(
-              value: WidgetSize.button,
-              label: Text('Button', textAlign: TextAlign.center),
-            ),
-            ButtonSegment<WidgetSize>(
-              value: WidgetSize.tile,
-              label: Text('Tile', textAlign: TextAlign.center),
-            ),
-          ],
-          selected: <WidgetSize>{size},
-          showSelectedIcon: false,
-          onSelectionChanged: (Set<WidgetSize> selected) {
-            if (selected.first == WidgetSize.button) {
+        EzFlipFlop(
+          config,
+          onLabel: 'Tile',
+          offLabel: 'Button',
+          init: initConfig.size == WidgetSize.tile,
+          onChanged: (bool tile) {
+            if (!tile) {
               bigSkips = false;
               lilSkips = false;
             } else {
               if (!bigSkips && !lilSkips) bigSkips = true;
             }
 
-            setModal(() => size = selected.first);
+            setModal(() => size = tile ? WidgetSize.tile : WidgetSize.button);
           },
         ),
         config.margin,
@@ -400,29 +358,17 @@ Future<void> _openEdits(
                     config.rowMargin,
 
                     // Backwards
-                    if (bigSkips) ...<Widget>[
-                      const Icon(Icons.skip_previous),
-                      config.rowSpacer,
-                    ],
+                    if (bigSkips) ...<Widget>[const Icon(Icons.skip_previous), config.rowSpacer],
 
-                    if (lilSkips) ...<Widget>[
-                      const Icon(Icons.fast_rewind),
-                      config.rowSpacer,
-                    ],
+                    if (lilSkips) ...<Widget>[const Icon(Icons.fast_rewind), config.rowSpacer],
 
                     // Play/pause
                     const Icon(Icons.headphones),
 
                     // Forwards
-                    if (lilSkips) ...<Widget>[
-                      config.rowSpacer,
-                      const Icon(Icons.fast_forward),
-                    ],
+                    if (lilSkips) ...<Widget>[config.rowSpacer, const Icon(Icons.fast_forward)],
 
-                    if (bigSkips) ...<Widget>[
-                      config.rowSpacer,
-                      const Icon(Icons.skip_next),
-                    ],
+                    if (bigSkips) ...<Widget>[config.rowSpacer, const Icon(Icons.skip_next)],
                     config.rowMargin,
                   ],
                 ),

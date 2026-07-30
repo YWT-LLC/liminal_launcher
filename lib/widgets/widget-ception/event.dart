@@ -496,42 +496,25 @@ Future<void> _openEdits(
           // Size
           Padding(
             padding: wrapPadding,
-            child: SegmentedButton<WidgetSize>(
-              segments: const <ButtonSegment<WidgetSize>>[
-                ButtonSegment<WidgetSize>(
-                  value: WidgetSize.button,
-                  label: Text('Button', textAlign: TextAlign.center),
-                ),
-                ButtonSegment<WidgetSize>(
-                  value: WidgetSize.tile,
-                  label: Text('Tile', textAlign: TextAlign.center),
-                ),
-              ],
-              selected: <WidgetSize>{size},
-              showSelectedIcon: false,
-              onSelectionChanged: (Set<WidgetSize> selected) =>
-                  setModal(() => size = selected.first),
+            child: EzFlipFlop(
+              config,
+              onLabel: 'Tile',
+              offLabel: 'Button',
+              init: initConfig.size == WidgetSize.tile,
+              onChanged: (bool tile) =>
+                  setModal(() => size = tile ? WidgetSize.tile : WidgetSize.button),
             ),
           ),
 
           // Type
           Padding(
             padding: wrapPadding,
-            child: SegmentedButton<bool>(
-              segments: const <ButtonSegment<bool>>[
-                ButtonSegment<bool>(
-                  value: true,
-                  label: Text('Calendar', textAlign: TextAlign.center),
-                ),
-                ButtonSegment<bool>(
-                  value: false,
-                  label: Text('Task', textAlign: TextAlign.center),
-                ),
-              ],
-              selected: <bool>{isCalendar},
-              showSelectedIcon: false,
-              onSelectionChanged: (Set<bool> selected) =>
-                  setModal(() => isCalendar = selected.first),
+            child: EzFlipFlop(
+              config,
+              onLabel: 'Calendar',
+              offLabel: 'Task',
+              init: initConfig.isCalendar,
+              onChanged: (bool choice) => setModal(() => isCalendar = choice),
             ),
           ),
         ]),

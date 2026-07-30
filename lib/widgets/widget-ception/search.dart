@@ -465,20 +465,13 @@ Future<void> _openEdits(
         config,
         children: <Widget>[
           // Size
-          SegmentedButton<WidgetSize>(
-            segments: const <ButtonSegment<WidgetSize>>[
-              ButtonSegment<WidgetSize>(
-                value: WidgetSize.button,
-                label: Text('Button', textAlign: TextAlign.center),
-              ),
-              ButtonSegment<WidgetSize>(
-                value: WidgetSize.tile,
-                label: Text('Tile', textAlign: TextAlign.center),
-              ),
-            ],
-            selected: <WidgetSize>{size},
-            showSelectedIcon: false,
-            onSelectionChanged: (Set<WidgetSize> selected) => setModal(() => size = selected.first),
+          EzFlipFlop(
+            config,
+            onLabel: 'Tile',
+            offLabel: 'Button',
+            init: initConfig.size == WidgetSize.tile,
+            onChanged: (bool tile) =>
+                setModal(() => size = tile ? WidgetSize.tile : WidgetSize.button),
           ),
           config.separator,
 

@@ -196,24 +196,16 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                             // Divider (con size selector)
                             EzTitledDivider(
                               config,
-                              title: SegmentedButton<WidgetSize>(
-                                segments: const <ButtonSegment<WidgetSize>>[
-                                  ButtonSegment<WidgetSize>(
-                                    value: WidgetSize.button,
-                                    label: Text('Button', textAlign: TextAlign.center),
-                                  ),
-                                  ButtonSegment<WidgetSize>(
-                                    value: WidgetSize.tile,
-                                    label: Text('Tile', textAlign: TextAlign.center),
-                                  ),
-                                ],
-                                selected: <WidgetSize>{size},
-                                showSelectedIcon: false,
-                                onSelectionChanged: (Set<WidgetSize> selected) =>
-                                    setModal(() => size = selected.first),
+                              title: EzFlipFlop(
+                                config,
+                                onLabel: 'Tile',
+                                offLabel: 'Button',
+                                init: true,
+                                onChanged: (bool tile) => setModal(
+                                    () => size = tile ? WidgetSize.tile : WidgetSize.button),
                               ),
                               height: config.spacing * 2,
-                              width: widthOf(wmCon) * 0.5,
+                              width: widthOf(wmCon) * 0.75,
                             ),
                             config.spacer,
 
