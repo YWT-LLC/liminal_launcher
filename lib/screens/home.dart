@@ -432,24 +432,20 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     );
   }
 
-  Future<void> swipeUp(EzCP config, AppInfoProvider appInfo) async {
-    if (marked.value.$1 != null || marked.value.$2 != null) return;
-
-    (editing)
-        ? await _navToHidden(config, appInfo)
-        : context.goNamed(
-            appListPath,
-            extra: ListConfig(
-              listContent: <ListContent>{ListContent.hidden, ListContent.banished},
-              include: false,
-              onSelected: (AppInfo app) async {
-                if (ezRootIsMounted) Navigator.of(ezRootContext).pop();
-                await launchApp(app);
-              },
-              title: null,
-            ),
-          );
-  }
+  Future<void> swipeUp(EzCP config, AppInfoProvider appInfo) async => (editing)
+      ? await _navToHidden(config, appInfo)
+      : context.goNamed(
+          appListPath,
+          extra: ListConfig(
+            listContent: <ListContent>{ListContent.hidden, ListContent.banished},
+            include: false,
+            onSelected: (AppInfo app) async {
+              if (ezRootIsMounted) Navigator.of(ezRootContext).pop();
+              await launchApp(app);
+            },
+            title: null,
+          ),
+        );
 
   Future<void> _navToHidden(EzCP config, AppInfoProvider appInfo) async {
     if (authForHidden(config)) {
@@ -768,6 +764,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                   : await canEdit(config, () => ripple(config, details)),
               onVerticalDragEnd: (DragEndDetails details) async {
                 if (details.primaryVelocity != null) {
+                  if (editingSpacer) return;
                   if (details.primaryVelocity! < 0) await swipeUp(config, appInfo);
                 }
               },
@@ -788,9 +785,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       return;
                     }
                   }
-
-                  // Don't open swipe apps while editing TODO: fix
-                  if (editing || marked.value.$1 != null || marked.value.$2 != null) return;
+                  if (editing || editingSpacer) return;
 
                   final AppInfo? toLaunch = ((details.primaryVelocity! < 0)
                       ? appInfo.appMap[leftSwipeID]
@@ -805,6 +800,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                   switch (notification.runtimeType) {
                     case const (OverscrollNotification):
                       if (notification.metrics.axis == Axis.vertical) {
+                        if (editingSpacer) return true;
+
                         // Vertical overscroll
                         if ((notification as OverscrollNotification).overscroll > 0) {
                           if (atBottom) {
@@ -818,6 +815,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       } else {
                         // Horizontal overscroll
                         AppInfo? toLaunch;
+                        if (editing || editingSpacer) return true;
 
                         if ((notification as OverscrollNotification).overscroll < 0) {
                           if (atLeft) {
