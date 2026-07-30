@@ -412,6 +412,11 @@ Future<void> editFolder(
   required int lane,
   required int index,
 }) async {
+  final ButtonStyle textButtonStyle = TextButton.styleFrom(
+    backgroundColor: config.colors.surfaceContainer,
+    padding: EdgeInsets.zero,
+  );
+
   bool showUI = false;
   int delta = 0;
 
@@ -444,11 +449,6 @@ Future<void> editFolder(
         }
 
         // Define the builds //
-
-        final ButtonStyle textButtonStyle = TextButton.styleFrom(
-          backgroundColor: config.colors.surfaceContainer,
-          padding: EdgeInsets.zero,
-        );
 
         Widget appearanceSettings() => EzScrollView(
               config,
