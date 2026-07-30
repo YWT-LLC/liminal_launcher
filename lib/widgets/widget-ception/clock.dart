@@ -740,12 +740,10 @@ Future<void> _openEdits(
             // Switcher
             SegmentedButton<_Edits>(
               segments: _Edits.values
-                  .map(
-                    (_Edits et) => ButtonSegment<_Edits>(
-                      value: et,
-                      label: Text(et.name, textAlign: TextAlign.center),
-                    ),
-                  )
+                  .map((_Edits et) => ButtonSegment<_Edits>(
+                        value: et,
+                        label: Text(et.name, textAlign: TextAlign.center),
+                      ))
                   .toList(),
               selected: <_Edits>{curr},
               showSelectedIcon: false,
