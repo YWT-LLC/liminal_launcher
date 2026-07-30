@@ -331,9 +331,10 @@ Future<void> _openEdits(
         // Size
         EzFlipFlop(
           config,
+          key: UniqueKey(),
           onLabel: 'Tile',
           offLabel: 'Button',
-          init: initConfig.size == WidgetSize.tile,
+          init: size == WidgetSize.tile,
           onChanged: (bool tile) {
             if (!tile) {
               bigSkips = false;
@@ -420,7 +421,7 @@ Future<void> _openEdits(
 
         // Note
         Text(
-          "Note:\nThese buttons only work if the current player supports them. Some music players don't have FF/Rewind, for example",
+          "Note:\nThese buttons only work if the active player supports them. Some music players don't have FF/Rewind, for example",
           textAlign: TextAlign.center,
           style: config.labelStyle,
         ),
