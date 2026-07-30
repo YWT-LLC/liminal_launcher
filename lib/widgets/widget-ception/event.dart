@@ -12,8 +12,6 @@ import 'package:open_ui/open_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-// TODO: add toggle (default on) for using the dest app's icon in task mode
-
 //* Core Widget *//
 
 class EventWidget extends StatefulWidget {
@@ -26,6 +24,7 @@ class EventWidget extends StatefulWidget {
   late final WidgetSize _size;
   late final bool _isCalendar;
   late final AppInfo? _shareDest;
+  late final bool? _useAppIcon;
 
   EventWidget(
     this.config,
@@ -43,6 +42,7 @@ class EventWidget extends StatefulWidget {
     _size = WSConfig.safeLookup(data[0]);
     _isCalendar = bool.tryParse(data[1]) ?? true;
     _shareDest = appInfo.appMap[data[2]];
+    _useAppIcon = bool.tryParse(data[3]);
   }
 
   @override
@@ -152,7 +152,12 @@ Results may vary.""",
                 await widget.appInfo.updateWidget(
                   widget.config,
                   WidWidGetGet.event,
-                  _eventEntry(widget._size, !widget._isCalendar, widget._shareDest),
+                  _eventEntry(
+                    widget._size,
+                    false,
+                    widget._shareDest,
+                    widget._useAppIcon,
+                  ),
                   lane: widget.pos.lane,
                   index: widget.pos.index,
                 );
@@ -194,12 +199,35 @@ Results may vary.""",
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
+    final ButtonStyle alwaysOn = IconButton.styleFrom(
+      foregroundColor: widget.config.colors.primary,
+      backgroundColor: widget.config.colors.surface,
+      disabledForegroundColor: widget.config.colors.primary,
+      disabledBackgroundColor: widget.config.colors.surface,
+    );
     late final double textWidth = ezTextSize(
       'Create event',
       context: context,
       style: widget.config.bodyStyle,
     ).width;
-    final IconData icon = widget._isCalendar ? Icons.edit_calendar : Icons.task_alt;
+    final Widget icon = widget._isCalendar
+        ? EzIconButton(
+            widget.config,
+            icon: const Icon(Icons.edit_calendar),
+            style: alwaysOn,
+          )
+        : (widget._useAppIcon == true && widget._shareDest?.icon != null)
+            ? Image.memory(
+                widget._shareDest!.icon!,
+                semanticLabel: widget._shareDest!.label,
+                width: appIconSize(widget.config),
+                height: appIconSize(widget.config),
+              )
+            : EzIconButton(
+                widget.config,
+                icon: const Icon(Icons.edit_calendar),
+                style: alwaysOn,
+              );
 
     return EzAnimSwitch(
       widget.config,
@@ -209,10 +237,9 @@ Results may vary.""",
       child: switch (state) {
         TileState.standard => MenuAnchor(
             builder: (_, MenuController controller, __) => (widget._size == WidgetSize.button)
-                ? EzIconButton(
-                    widget.config,
-                    icon: Icon(icon),
-                    onPressed: () async {
+                ? GestureDetector(
+                    child: icon,
+                    onTap: () async {
                       if (widget._isCalendar) {
                         final bool success = await createCalendarEvent(null);
                         if (!success && context.mounted) await selfDestruct();
@@ -228,6 +255,7 @@ Results may vary.""",
                                 size: widget._size,
                                 isCalendar: widget._isCalendar,
                                 shareDest: widget._shareDest,
+                                useAppIcon: widget._useAppIcon,
                               ),
                               lane: widget.pos.lane,
                               index: widget.pos.index,
@@ -265,10 +293,8 @@ Results may vary.""",
                         validator: null,
                       ),
                       widget.config.rowMargin,
-                      EzIconButton(
-                        widget.config,
-                        icon: Icon(icon),
-                        onPressed: () async {
+                      GestureDetector(
+                        onTap: () async {
                           final bool success = widget._isCalendar
                               ? await createCalendarEvent(eventCon.text)
                               : await createTask(eventCon.text, widget._shareDest);
@@ -279,6 +305,7 @@ Results may vary.""",
                           if (!success && context.mounted) await selfDestruct();
                         },
                         onLongPress: () async => await canToggleMenu(widget.config, controller),
+                        child: icon,
                       ),
                     ],
                   )),
@@ -293,6 +320,7 @@ Results may vary.""",
                 size: widget._size,
                 isCalendar: widget._isCalendar,
                 shareDest: widget._shareDest,
+                useAppIcon: widget._useAppIcon,
               ),
             ),
           ),
@@ -311,12 +339,12 @@ Results may vary.""",
                 size: widget._size,
                 isCalendar: widget._isCalendar,
                 shareDest: widget._shareDest,
+                useAppIcon: widget._useAppIcon,
               ),
             ),
-            child: EzIconButton(
-              widget.config,
-              icon: Icon(icon),
-              onPressed: () => toggleMenu(menuControl),
+            child: GestureDetector(
+              child: icon,
+              onTap: () => toggleMenu(menuControl),
             ),
           ),
       },
@@ -413,6 +441,7 @@ class AddEvent extends StatelessWidget {
             size: size,
             isCalendar: true,
             shareDest: null,
+            useAppIcon: null,
           ),
           lane: lane,
           index: appInfo.homeLane(config, lane).length - 1,
@@ -449,12 +478,19 @@ class AddEvent extends StatelessWidget {
         );
 }
 
-String defaultEventEntry() => _eventEntry(WidgetSize.tile, true, null);
+String defaultEventEntry() => _eventEntry(WidgetSize.tile, true, null, null);
 
-String _eventEntry(WidgetSize size, bool isCalendar, AppInfo? shareDest) => <String>[
+String _eventEntry(
+  WidgetSize size,
+  bool isCalendar,
+  AppInfo? shareDest,
+  bool? useAppIcon,
+) =>
+    <String>[
       size.value,
       isCalendar.toString(),
       shareDest?.id ?? 'null',
+      useAppIcon?.toString() ?? 'null'
     ].join(configSplit);
 
 //* Edit Widget *//
@@ -463,11 +499,13 @@ class _EventConfig {
   final WidgetSize size;
   final bool isCalendar;
   final AppInfo? shareDest;
+  final bool? useAppIcon;
 
   _EventConfig({
     required this.size,
     required this.isCalendar,
     required this.shareDest,
+    required this.useAppIcon,
   });
 }
 
@@ -479,46 +517,36 @@ Future<void> _openEdits(
   required int lane,
   required int index,
 }) async {
-  final EdgeInsets wrapPadding = EzInsets.wrap(config.spacing);
-
   WidgetSize size = initConfig.size;
   bool isCalendar = initConfig.isCalendar;
   AppInfo shareDest = initConfig.shareDest ?? nullApp;
+  bool? useAppIcon;
 
   await ezModal(
     config,
     context: pContext,
     builder: (_) => StatefulBuilder(
       builder: (_, StateSetter setModal) => ezModalScroll(config, children: <Widget>[
-        // Size  && Type //
-
-        EzWrap(children: <Widget>[
-          // Size
-          Padding(
-            padding: wrapPadding,
-            child: EzFlipFlop(
-              config,
-              onLabel: 'Tile',
-              offLabel: 'Button',
-              init: initConfig.size == WidgetSize.tile,
-              onChanged: (bool tile) =>
-                  setModal(() => size = tile ? WidgetSize.tile : WidgetSize.button),
-            ),
-          ),
-
-          // Type
-          Padding(
-            padding: wrapPadding,
-            child: EzFlipFlop(
-              config,
-              onLabel: 'Calendar',
-              offLabel: 'Task',
-              init: initConfig.isCalendar,
-              onChanged: (bool choice) => setModal(() => isCalendar = choice),
-            ),
-          ),
-        ]),
+        // Size
+        EzFlipFlop(
+          config,
+          onLabel: 'Tile',
+          offLabel: 'Button',
+          init: initConfig.size == WidgetSize.tile,
+          onChanged: (bool tile) =>
+              setModal(() => size = tile ? WidgetSize.tile : WidgetSize.button),
+        ),
         config.spacer,
+
+        // Type
+        EzFlipFlop(
+          config,
+          onLabel: 'Calendar',
+          offLabel: 'Task',
+          init: initConfig.isCalendar,
+          onChanged: (bool choice) => setModal(() => isCalendar = choice),
+        ),
+        config.separator,
 
         // Share Dest //
 
@@ -547,7 +575,10 @@ We recommend using a task app, but it's not required. Results may vary.
               include: false,
               onSelected: (AppInfo choice) async {
                 if (pContext.mounted) Navigator.of(pContext).pop();
-                setModal(() => shareDest = choice);
+                setModal(() {
+                  shareDest = choice;
+                  useAppIcon = (useAppIcon ?? true);
+                });
               },
               title: EzTextButton(
                 config,
@@ -557,18 +588,39 @@ We recommend using a task app, but it's not required. Results may vary.
               ),
             ),
           ),
-          onLongPress: () => setModal(() => shareDest = nullApp),
+          onLongPress: () => setModal(() {
+            shareDest = nullApp;
+            useAppIcon = null;
+          }),
         ),
 
         // Conditional clear (reminder)
-        if (shareDest != nullApp) ...<Widget>[
-          config.margin,
-          Text(
-            'Long press to clear',
-            textAlign: TextAlign.center,
-            style: config.labelStyle,
-          ),
-        ],
+        EzAnimVis(
+          config,
+          mod: 0.667,
+          forceFade: true,
+          forceType: EzTransitionType.zoom,
+          visible: (shareDest != nullApp),
+          kid: EzCol(children: <Widget>[
+            // Clear reminder
+            config.margin,
+            Text(
+              'Long press to clear',
+              textAlign: TextAlign.center,
+              style: config.labelStyle,
+            ),
+            config.spacer,
+
+            // Use icon switch
+            EzSwitchPair(
+              config,
+              key: ValueKey<bool?>(useAppIcon),
+              value: useAppIcon ?? true,
+              text: 'Use app icon',
+              onChanged: (bool? choice) => setModal(() => useAppIcon = choice),
+            ),
+          ]),
+        ),
         config.separator,
       ]),
     ),
@@ -577,7 +629,12 @@ We recommend using a task app, but it's not required. Results may vary.
   await appInfo.updateWidget(
     config,
     WidWidGetGet.event,
-    _eventEntry(size, isCalendar, shareDest == nullApp ? null : shareDest),
+    _eventEntry(
+      size,
+      isCalendar,
+      shareDest == nullApp ? null : shareDest,
+      useAppIcon,
+    ),
     lane: lane,
     index: index,
   );
