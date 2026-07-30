@@ -7,14 +7,13 @@ import '../../screens/export.dart';
 import '../../utils/export.dart';
 import '../export.dart';
 
+import 'dart:math';
 import 'dart:async';
 import 'package:open_ui/open_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:line_icons/line_icons.dart';
-
-// TODO: add local icon size setting
 
 //* Core Widget *//
 
@@ -601,6 +600,11 @@ Future<void> editApp(
   required int lane,
   required int index,
 }) async {
+  final ButtonStyle textButtonStyle = TextButton.styleFrom(
+    backgroundColor: config.colors.surfaceContainer,
+    padding: EdgeInsets.zero,
+  );
+
   final TextEditingController renameCon = TextEditingController(
     text: initConfig.name ?? initConfig.app.label,
   );
@@ -647,31 +651,62 @@ Future<void> editApp(
             ),
             config.divider,
 
-            // Name && icon
-            EzRow(config, children: <Widget>[
-              EzTextField(
-                controller: renameCon,
-                constraints: BoxConstraints.tightFor(
-                  height: appIconSize(config),
-                  width: widthOf(mCon) / 3,
+            EzScrollView(
+              config,
+              reverseHands: true,
+              startCentered: true,
+              thumbVisibility: false,
+              scrollDirection: Axis.horizontal,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                // Name
+                EzTextField(
+                  controller: renameCon,
+                  constraints: BoxConstraints.tightFor(
+                    height: appIconSize(config),
+                    width: widthOf(mCon) / 3,
+                  ),
+                  errorConstraints: BoxConstraints.tightFor(width: widthOf(mCon) / 3),
+                  hintText: 'App',
+                  autofillHints: const <String>[AutofillHints.name],
+                  validator: validateName,
                 ),
-                errorConstraints: BoxConstraints.tightFor(width: widthOf(mCon) / 3),
-                hintText: 'App',
-                autofillHints: const <String>[AutofillHints.name],
-                validator: validateName,
-              ),
-              config.rowMargin,
-              EzIconButton(
-                config,
-                icon: Icon(icon ?? Icons.settings),
-                onPressed: () async {
-                  final IconData? choice = await chooseIcon(config, pContext);
-                  setModal(() => icon = choice);
-                },
-                onLongPress: () => setModal(() => icon = null),
-              ),
-            ]),
-            config.spacer,
+                config.rowSpacer,
+
+                // IconData && size
+                EzIconButton(
+                  config,
+                  enabled: showIcon && (iconSize == null || iconSize! > minIconSize),
+                  icon: const Icon(Icons.remove),
+                  onPressed: () {
+                    iconSize = (iconSize == null) ? (config.iconSize - 1) : (iconSize! - 1);
+                    setModal(() => iconSize = max(iconSize!, minIconSize));
+                  },
+                ),
+                config.rowMargin,
+                EzIconButton(
+                  config,
+                  enabled: showIcon,
+                  icon: Icon(icon, size: iconSize ?? config.iconSize),
+                  onPressed: () async {
+                    final IconData? choice = await chooseIcon(config, pContext);
+                    if (choice != null) setModal(() => icon = choice);
+                  },
+                  onLongPress: () => setModal(() => iconSize = null),
+                ),
+                config.rowMargin,
+                EzIconButton(
+                  config,
+                  enabled: showIcon && (iconSize == null || iconSize! < maxIconSize),
+                  icon: const Icon(Icons.add),
+                  onPressed: () {
+                    iconSize = (iconSize == null) ? (config.iconSize + 1) : (iconSize! + 1);
+                    setModal(() => iconSize = min(iconSize!, maxIconSize));
+                  },
+                ),
+              ],
+            ),
+            config.separator,
 
             // Label type
             EzScrollView(
@@ -736,26 +771,32 @@ Future<void> editApp(
             ),
             config.divider,
 
-            // Reset
-            EzTextIconButton(
+            EzRow(
               config,
-              label: 'Reset to default',
-              style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
-              icon: EzIcon(config, Icons.refresh),
-              onPressed: () => Navigator.of(mCon).pop(false),
-            ),
-            config.spacer,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                // Reset
+                EzTextIconButton(
+                  config,
+                  label: 'Reset',
+                  style: textButtonStyle,
+                  icon: EzIcon(config, Icons.refresh),
+                  onPressed: () => Navigator.of(mCon).pop(false),
+                ),
+                config.rowSpacer,
 
-            // GoTo settings
-            EzTextIconButton(
-              config,
-              label: 'Edit defaults',
-              style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
-              icon: EzIcon(config, Icons.launch),
-              onPressed: () {
-                Navigator.of(mCon).pop();
-                pContext.goNamed(settingsPath, extra: (2, false));
-              },
+                // GoTo settings
+                EzTextIconButton(
+                  config,
+                  label: 'Edit defaults',
+                  style: textButtonStyle,
+                  icon: EzIcon(config, Icons.launch),
+                  onPressed: () {
+                    Navigator.of(mCon).pop();
+                    pContext.goNamed(settingsPath, extra: (2, false));
+                  },
+                ),
+              ],
             ),
             config.spacer,
 
