@@ -262,8 +262,7 @@ class AddLane extends StatelessWidget {
                   style: usePage ? hidden : (useWide ? hidden : focussed),
                 ),
                 EzPlainText(
-                  text:
-                      'apps and folders can/will be activated only by their button(s). This affects scrolling as well.\n', // TODO: add scroll setting (with good name)
+                  text: 'apps and folders can/will be activated only by their button(s).\n',
                   style: useWide ? hidden : focussed,
                 ),
               ],

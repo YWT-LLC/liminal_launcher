@@ -21,6 +21,8 @@ class AppListScreen extends StatefulWidget {
   State<AppListScreen> createState() => _AppListScreenState();
 }
 
+// TODO: always wide scrolling
+
 class _AppListScreenState extends State<AppListScreen> {
   // Define the build data //
 
