@@ -128,13 +128,13 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       title: EzTextIconButton(
                         config,
                         onPressed: doNothing,
-                        label: 'Home',
+                        label: l10n(config).hsHome,
                         icon: EzIcon(config, Icons.add, color: config.colors.onSurface),
                         textStyle: config.labelStyle,
                       ),
                     ),
                   ),
-                  label: 'Apps',
+                  label: l10n(config).hsApp,
                   icon: EzIcon(config, Icons.apps),
                 ),
               ),
@@ -152,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       appInfo: appInfo,
                       pContext: context,
                       initConfig: FolderConfig(
-                        name: 'Folder',
+                        name: l10n(config).hsFolder,
                         icon: Icons.folder_outlined,
                         iconSize: null,
                         buttonType: null,
@@ -163,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       index: appInfo.homeLane(config, lane).length - 1,
                     ),
                   ),
-                  label: 'Folder',
+                  label: l10n(config).hsFolder,
                   icon: EzIcon(config, Icons.folder_outlined),
                 ),
               ),
@@ -198,8 +198,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                               config,
                               title: EzFlipFlop(
                                 config,
-                                onLabel: 'Tile',
-                                offLabel: 'Button',
+                                onLabel: l10n(config).gTile,
+                                offLabel: l10n(config).gButton,
                                 init: true,
                                 onChanged: (bool tile) => setModal(
                                     () => size = tile ? WidgetSize.tile : WidgetSize.button),
@@ -257,7 +257,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       );
                     },
                   ),
-                  label: 'Widgets',
+                  label: l10n(config).hsWidget,
                   icon: EzIcon(config, Icons.widgets),
                 ),
               ),
@@ -282,7 +282,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       );
                     }
                   },
-                  label: 'Spacer',
+                  label: l10n(config).hsSpacer,
                   icon: EzIcon(config, Icons.space_bar),
                 ),
               ),
@@ -300,7 +300,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           EzRow(config, children: <Widget>[
             Flexible(
               child: Text(
-                '${(screenWidth / (config.iconSize + config.padding + config.spacing)).toStringAsFixed(2)} lanes on screen',
+                '${(screenWidth / (config.iconSize + config.padding + config.spacing)).toStringAsFixed(2)}${l10n(config).hsScreenLanes}',
                 textAlign: TextAlign.center,
                 style: config.labelStyle,
               ),
@@ -451,7 +451,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     if (authForHidden(config)) {
       bool authed = false;
       try {
-        authed = await liminalAuth(config, 'Authenticate to see hidden apps');
+        authed = await liminalAuth(config, l10n(config).hsHiddenAuth);
       } catch (e) {
         ezLog(e.toString());
       }
@@ -472,7 +472,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           title: EzTextIconButton(
             config,
             onPressed: doNothing,
-            label: 'Hidden',
+            label: l10n(config).gHidden,
             icon: EzIcon(config, Icons.visibility_off, color: config.colors.onSurface),
             textStyle: config.labelStyle,
           ),
@@ -927,7 +927,7 @@ Future<void> _welcome(EzCP config, BuildContext context) => ezModal(
         children: <Widget>[
           // Welcome
           Text(
-            'Welcome to Liminal Launcher',
+            l10n(config).hsWelcome,
             textAlign: TextAlign.center,
             style: config.titleStyle,
           ),
@@ -935,7 +935,7 @@ Future<void> _welcome(EzCP config, BuildContext context) => ezModal(
 
           // Minimal-ish
           Text(
-            "It's geared toward minimalism,\nbut has limitless customization.",
+            l10n(config).hsDescription,
             textAlign: TextAlign.center,
             style: config.bodyStyle,
           ),
@@ -945,30 +945,22 @@ Future<void> _welcome(EzCP config, BuildContext context) => ezModal(
           EzRichText(
             config,
             children: <InlineSpan>[
-              EzPlainText(
-                text:
-                    '''Personalization is easy, and everything that needs explanation will have it. 
-
-As a general rule: Liminal's appearance can be completely separate based on theme mode!
-
-While in the relevant settings, you will see a toggle-able icon that indicates whether you're editing the dark ''',
-                style: config.bodyStyle,
-              ),
+              EzPlainText(text: l10n(config).hsUserSettings, style: config.bodyStyle),
               WidgetSpan(
                 alignment: PlaceholderAlignment.middle,
                 child: EzIcon(config, Icons.dark_mode),
               ),
-              EzPlainText(text: ', light ', style: config.bodyStyle),
+              EzPlainText(text: l10n(config).hsLight, style: config.bodyStyle),
               WidgetSpan(
                 alignment: PlaceholderAlignment.middle,
                 child: EzIcon(config, Icons.light_mode),
               ),
-              EzPlainText(text: ', or both ', style: config.bodyStyle),
+              EzPlainText(text: l10n(config).hsBoth, style: config.bodyStyle),
               WidgetSpan(
                 alignment: PlaceholderAlignment.middle,
                 child: FaIcon(FontAwesomeIcons.yinYang, size: config.iconSize),
               ),
-              EzPlainText(text: ' themes.', style: config.bodyStyle),
+              EzPlainText(text: l10n(config).hsThemes, style: config.bodyStyle),
             ],
             textAlign: TextAlign.center,
             style: config.bodyStyle,
@@ -977,7 +969,7 @@ While in the relevant settings, you will see a toggle-able icon that indicates w
 
           // Have fun!
           Text(
-            'Long press the home screen to get started.\nThank you, and enjoy!',
+            l10n(config).hsGetStarted,
             textAlign: TextAlign.center,
             style: config.bodyStyle,
           ),
@@ -987,13 +979,9 @@ While in the relevant settings, you will see a toggle-able icon that indicates w
     );
 
 Future<void> _free99(EzCP config, BuildContext context) async {
-  const String m1 = '''This version is not from the Play Store, so it should have been free.
-Rest assured, the free version of Liminal will always be identical to the Google Play version.
-
-If you want to support Liminal's development, or the development of more cool software, please consider ''';
-  const String m2 = 'contributing';
-  const String m3 =
-      '.\n\nThis is the only non-tutorial pop-up, and its only appearance this install.';
+  final String m1 = l10n(config).hsFree;
+  final String m2 = l10n(config).hsContribute;
+  final String m3 = l10n(config).hsPopUp;
 
   bool read = false;
 
@@ -1021,7 +1009,7 @@ If you want to support Liminal's development, or the development of more cool so
 
             // Title
             Text(
-              'One more thing...',
+              l10n(config).hsOneMore,
               textAlign: TextAlign.center,
               style: config.titleStyle,
             ),
@@ -1031,16 +1019,16 @@ If you want to support Liminal's development, or the development of more cool so
             EzRichText(
               config,
               children: <InlineSpan>[
-                const EzPlainText(text: m1),
+                EzPlainText(text: m1),
                 EzInlineLink(
                   config,
                   text: m2,
                   style: config.bodyStyle,
                   textAlign: TextAlign.center,
-                  url: Uri.parse('https://www.ywt.llc/#/contribute'),
-                  hint: 'Open a link to contribution options.',
+                  url: Uri.parse(ywtContributePage),
+                  hint: l10n(config).hsContributeHint,
                 ),
-                const EzPlainText(text: m3),
+                EzPlainText(text: m3),
               ],
               style: config.bodyStyle,
               textBackground: false,
@@ -1051,7 +1039,7 @@ If you want to support Liminal's development, or the development of more cool so
             // Leave after (half) read
             EzTextIconButton(
               config,
-              label: 'Okay',
+              label: l10n(config).hsOkay,
               style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
               icon:
                   read ? EzIcon(config, Icons.done) : EzCountdownTimer(config, duration: readTime),
