@@ -1,7 +1,37 @@
 {
   "@@locale": "en_US",
 
+  "gHidden": "Hidden",
+
+  "gButton": "Button",
+  "gTile": "Tile",
 
 
-  "hsCaw": "Caw!"
+
+  "hsHome": "Home",
+
+  "hsWelcome": "Welcome to Liminal Launcher",
+  "hsDescription": "It's geared toward minimalism,\nbut has limitless customization.",
+  "hsUserSettings": "Personalization is easy, and everything that needs explanation will have it.\n\nAs a general rule: Liminal's appearance can be completely separate based on theme mode!\n\nWhile in the relevant settings, you will see a toggle-able icon that indicates whether you're editing the dark ",
+  "hsLight": ", light ",
+  "hsBoth": ", or both ",
+  "hsThemes": " themes.",
+  "hsGetStarted": "Long press the home screen to get started.\nThank you, and enjoy!",
+
+  "hsOneMore": "One more thing...",
+  "hsFree": "This version is not from the Play Store, so it should have been free.\nRest assured, the free version of Liminal will always be identical to the Google Play version.\n\nIf you want to support Liminal's development, or the development of more cool software, please consider ",
+  "hsContribute": "contributing",
+  "hsContributeHint": "Open a link to contribution options",
+  "hsPopUp": ".\n\nThis is the only non-tutorial pop-up, and its only appearance this install.",
+  "hsOkay": "Okay",
+
+  "hsApp": "App",
+  "hsFolder": "Folder",
+  "hsWidget": "Widget",
+  "hsSpacer": "Spacer",
+  "hsLane": "Lane",
+
+  "hsScreenLanes": " lanes on screen",
+
+  "hsHiddenAuth": "Authenticate to see hidden apps"
 }

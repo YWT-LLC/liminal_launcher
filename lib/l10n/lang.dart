@@ -123,11 +123,149 @@ abstract class Lang {
     Locale('zh', 'CN')
   ];
 
-  /// No description provided for @hsCaw.
+  /// No description provided for @gHidden.
   ///
   /// In en, this message translates to:
-  /// **'Caw!'**
-  String get hsCaw;
+  /// **'Hidden'**
+  String get gHidden;
+
+  /// No description provided for @gButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Button'**
+  String get gButton;
+
+  /// No description provided for @gTile.
+  ///
+  /// In en, this message translates to:
+  /// **'Tile'**
+  String get gTile;
+
+  /// No description provided for @hsHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get hsHome;
+
+  /// No description provided for @hsWelcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Liminal Launcher'**
+  String get hsWelcome;
+
+  /// No description provided for @hsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s geared toward minimalism,\nbut has limitless customization.'**
+  String get hsDescription;
+
+  /// No description provided for @hsUserSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Personalization is easy, and everything that needs explanation will have it.\n\nAs a general rule: Liminal\'s appearance can be completely separate based on theme mode!\n\nWhile in the relevant settings, you will see a toggle-able icon that indicates whether you\'re editing the dark '**
+  String get hsUserSettings;
+
+  /// No description provided for @hsLight.
+  ///
+  /// In en, this message translates to:
+  /// **', light '**
+  String get hsLight;
+
+  /// No description provided for @hsBoth.
+  ///
+  /// In en, this message translates to:
+  /// **', or both '**
+  String get hsBoth;
+
+  /// No description provided for @hsThemes.
+  ///
+  /// In en, this message translates to:
+  /// **' themes.'**
+  String get hsThemes;
+
+  /// No description provided for @hsGetStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Long press the home screen to get started.\nThank you, and enjoy!'**
+  String get hsGetStarted;
+
+  /// No description provided for @hsOneMore.
+  ///
+  /// In en, this message translates to:
+  /// **'One more thing...'**
+  String get hsOneMore;
+
+  /// No description provided for @hsFree.
+  ///
+  /// In en, this message translates to:
+  /// **'This version is not from the Play Store, so it should have been free.\nRest assured, the free version of Liminal will always be identical to the Google Play version.\n\nIf you want to support Liminal\'s development, or the development of more cool software, please consider '**
+  String get hsFree;
+
+  /// No description provided for @hsContribute.
+  ///
+  /// In en, this message translates to:
+  /// **'contributing'**
+  String get hsContribute;
+
+  /// No description provided for @hsContributeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Open a link to contribution options'**
+  String get hsContributeHint;
+
+  /// No description provided for @hsPopUp.
+  ///
+  /// In en, this message translates to:
+  /// **'.\n\nThis is the only non-tutorial pop-up, and its only appearance this install.'**
+  String get hsPopUp;
+
+  /// No description provided for @hsOkay.
+  ///
+  /// In en, this message translates to:
+  /// **'Okay'**
+  String get hsOkay;
+
+  /// No description provided for @hsApp.
+  ///
+  /// In en, this message translates to:
+  /// **'App'**
+  String get hsApp;
+
+  /// No description provided for @hsFolder.
+  ///
+  /// In en, this message translates to:
+  /// **'Folder'**
+  String get hsFolder;
+
+  /// No description provided for @hsWidget.
+  ///
+  /// In en, this message translates to:
+  /// **'Widget'**
+  String get hsWidget;
+
+  /// No description provided for @hsSpacer.
+  ///
+  /// In en, this message translates to:
+  /// **'Spacer'**
+  String get hsSpacer;
+
+  /// No description provided for @hsLane.
+  ///
+  /// In en, this message translates to:
+  /// **'Lane'**
+  String get hsLane;
+
+  /// No description provided for @hsScreenLanes.
+  ///
+  /// In en, this message translates to:
+  /// **' lanes on screen'**
+  String get hsScreenLanes;
+
+  /// No description provided for @hsHiddenAuth.
+  ///
+  /// In en, this message translates to:
+  /// **'Authenticate to see hidden apps'**
+  String get hsHiddenAuth;
 }
 
 class _LangDelegate extends LocalizationsDelegate<Lang> {
