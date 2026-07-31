@@ -21,8 +21,6 @@ class AppListScreen extends StatefulWidget {
   State<AppListScreen> createState() => _AppListScreenState();
 }
 
-// TODO: always wide scrolling
-
 class _AppListScreenState extends State<AppListScreen> {
   // Define the build data //
 
@@ -261,34 +259,31 @@ class _AppListScreenState extends State<AppListScreen> {
                       crossAxisAlignment: hAlign.crossAxis,
                       physics: const ClampingScrollPhysics(),
                       children: appInfo.apps
-                          .where(
-                            (AppInfo app) =>
-                                (appInfo.hybridIDs(config, widget.listConfig).contains(app.id) ==
-                                    widget.listConfig.include) &&
-                                (searching
-                                    ? app.label
-                                        .toLowerCase()
-                                        .contains(searchControl.text.toLowerCase())
-                                    : true),
-                          )
-                          .map(
-                            (AppInfo app) => Padding(
-                              key: ValueKey<String>(app.id),
-                              padding: EdgeInsets.symmetric(vertical: config.spacing / 2),
-                              child: AppTile(
-                                config,
-                                appInfo: appInfo,
-                                state: verbose ? TileState.verbose : TileState.standard,
-                                rippleProgress: rippleProgress,
-                                app: app,
-                                location: AppLocation.list,
-                                onSelected: widget.listConfig.onSelected,
-                                hAlign: hAlign,
-                                vAlign: vAlign,
-                                verbStart: listSort,
-                              ),
-                            ),
-                          )
+                          .where((AppInfo app) =>
+                              (appInfo.hybridIDs(config, widget.listConfig).contains(app.id) ==
+                                  widget.listConfig.include) &&
+                              (searching
+                                  ? app.label
+                                      .toLowerCase()
+                                      .contains(searchControl.text.toLowerCase())
+                                  : true))
+                          .map((AppInfo app) => Container(
+                                key: ValueKey<String>(app.id),
+                                padding: EdgeInsets.symmetric(vertical: config.spacing / 2),
+                                width: wideTiles(config) ? null : double.infinity,
+                                child: AppTile(
+                                  config,
+                                  appInfo: appInfo,
+                                  state: verbose ? TileState.verbose : TileState.standard,
+                                  rippleProgress: rippleProgress,
+                                  app: app,
+                                  location: AppLocation.list,
+                                  onSelected: widget.listConfig.onSelected,
+                                  hAlign: hAlign,
+                                  vAlign: vAlign,
+                                  verbStart: listSort,
+                                ),
+                              ))
                           .toList(),
                     ),
                   ),
