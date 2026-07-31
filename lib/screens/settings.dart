@@ -269,7 +269,7 @@ class SettingsScreen extends StatelessWidget {
                                   config.isDark ? darkVerticalAlignKey : lightVerticalAlignKey,
                                 ),
                               )) {
-                        await config.rebuildUI(<EzCacheType>{EzCacheType.design});
+                        await config.rebuildUI();
                       }
                     },
                     label: 'List alignment',
@@ -317,8 +317,7 @@ class SettingsScreen extends StatelessWidget {
                       if (EzCM.updateBoth) {
                         await EzCM.setBool(config.isDark ? lightPagesKey : darkPagesKey, choice);
                       }
-
-                      await config.rebuildUI(<EzCacheType>{EzCacheType.design});
+                      await config.rebuildUI();
                     },
                   ),
                   config.divider,

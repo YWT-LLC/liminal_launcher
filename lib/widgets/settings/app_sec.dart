@@ -128,7 +128,7 @@ class AppSecSettings extends StatelessWidget {
             if (_timeoutText.text != authTimeout(config).inMinutes.toString() ||
                 forEdit != authToEdit(config) ||
                 forHide != authForHidden(config)) {
-              await config.rebuildUI(noECT);
+              await config.rebuildUI();
             }
           }
         },

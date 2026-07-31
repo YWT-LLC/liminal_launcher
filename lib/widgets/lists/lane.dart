@@ -274,7 +274,7 @@ class AddLane extends StatelessWidget {
     );
 
     if (rebuild && (usePage != pages(config) || useWide != wideTiles(config))) {
-      await config.rebuildUI(allECT);
+      await config.rebuildUI();
     }
   }
 
@@ -287,7 +287,7 @@ class AddLane extends StatelessWidget {
 
           if (EzCM.get(config.isDark ? darkPagesKey : lightPagesKey) != pages(config) ||
               EzCM.get(config.isDark ? darkWideTilesKey : lightWideTilesKey) != wideTiles(config)) {
-            await config.rebuildUI(allECT);
+            await config.rebuildUI();
           }
         },
         onLongPress: () async => (appInfo.numLanes(config) == 1)
