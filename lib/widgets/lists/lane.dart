@@ -335,10 +335,8 @@ Future<void> _editLane(
                 ),
                 decoration: BoxDecoration(
                   color: i == pos
-                      ? config.colors.secondary
-                      : i == lane // this order is important
-                          ? config.colors.tertiary
-                          : config.colors.surface,
+                      ? (i == lane ? config.colors.tertiary : config.colors.secondary)
+                      : config.colors.surface,
                   shape: BoxShape.circle,
                 ),
                 child: Center(
