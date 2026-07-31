@@ -735,32 +735,24 @@ Future<void> editApp(
             config.separator,
 
             // Label type
-            EzScrollView(
+            EzDropdownMenu<LabelType?>(
               config,
-              reverseHands: true,
-              scrollDirection: Axis.horizontal,
-              children: <Widget>[
-                Text('Label type', style: config.bodyStyle),
-                config.rowMargin,
-                EzDropdownMenu<LabelType?>(
-                  config,
-                  widthEntry: 'Full name',
-                  dropdownMenuEntries: <DropdownMenuEntry<LabelType?>>[
-                    const DropdownMenuEntry<LabelType?>(value: null, label: 'Default'),
-                    ...LabelType.values.map((LabelType lt) =>
-                        DropdownMenuEntry<LabelType?>(value: lt, label: ezCamelToTitle(lt.value))),
-                  ],
-                  enableSearch: false,
-                  initialSelection: labelType,
-                  onSelected: (LabelType? choice) {
-                    if (choice == null) return;
-                    shapeEdits = true;
-
-                    if (choice == LabelType.none) showIcon = true;
-                    setModal(() => labelType = choice);
-                  },
-                ),
+              label: 'Label type',
+              widthEntry: 'Full name',
+              dropdownMenuEntries: <DropdownMenuEntry<LabelType?>>[
+                const DropdownMenuEntry<LabelType?>(value: null, label: 'Default'),
+                ...LabelType.values.map((LabelType lt) =>
+                    DropdownMenuEntry<LabelType?>(value: lt, label: ezCamelToTitle(lt.value))),
               ],
+              enableSearch: false,
+              initialSelection: labelType,
+              onSelected: (LabelType? choice) {
+                if (choice == null) return;
+                shapeEdits = true;
+
+                if (choice == LabelType.none) showIcon = true;
+                setModal(() => labelType = choice);
+              },
             ),
             config.spacer,
 

@@ -217,22 +217,15 @@ class AddThemeMode extends StatelessWidget {
         )
       : GestureDetector(
           onTap: onTap,
-          child: EzRow(
+          child: EzDropdownMenu<bool>(
             config,
-            children: <Widget>[
-              Flexible(
-                  child: Text('Theme mode', textAlign: TextAlign.center, style: config.labelStyle)),
-              config.rowMargin,
-              EzDropdownMenu<bool>(
-                config,
-                dropdownMenuEntries: <DropdownMenuEntry<bool>>[
-                  const DropdownMenuEntry<bool>(label: 'selector', value: true),
-                ],
-                enabled: false,
-                widthEntry: 'Widget',
-                initialSelection: true,
-              ),
+            label: 'Theme mode',
+            dropdownMenuEntries: <DropdownMenuEntry<bool>>[
+              const DropdownMenuEntry<bool>(label: 'selector', value: true),
             ],
+            enabled: false,
+            widthEntry: 'Widget',
+            initialSelection: true,
           ),
         );
 }

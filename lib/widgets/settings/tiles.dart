@@ -92,49 +92,41 @@ class AppTileSetting extends StatelessWidget {
                   config.separator,
 
                   // Label type
-                  EzScrollView(
+                  EzDropdownMenu<LabelType>(
                     config,
-                    reverseHands: true,
-                    scrollDirection: Axis.horizontal,
-                    children: <Widget>[
-                      Text('Label type', style: config.bodyStyle),
-                      config.rowMargin,
-                      EzDropdownMenu<LabelType>(
-                        config,
-                        widthEntry: 'Full name',
-                        dropdownMenuEntries: LabelType.values
-                            .map(
-                              (LabelType lt) => DropdownMenuEntry<LabelType>(
-                                value: lt,
-                                label: ezCamelToTitle(lt.value),
-                              ),
-                            )
-                            .toList(),
-                        enableSearch: false,
-                        initialSelection: labelType,
-                        onSelected: (LabelType? choice) async {
-                          if (choice == null) return;
+                    label: 'Label type',
+                    widthEntry: 'Full name',
+                    dropdownMenuEntries: LabelType.values
+                        .map(
+                          (LabelType lt) => DropdownMenuEntry<LabelType>(
+                            value: lt,
+                            label: ezCamelToTitle(lt.value),
+                          ),
+                        )
+                        .toList(),
+                    enableSearch: false,
+                    initialSelection: labelType,
+                    onSelected: (LabelType? choice) async {
+                      if (choice == null) return;
 
-                          if (EzCM.updateBoth || config.isDark) {
-                            await EzCM.setString(darkLabelKey, choice.value);
-                            if (choice == LabelType.none) {
-                              showIcon = true;
-                              await EzCM.setBool(darkIconKey, true);
-                            }
-                          }
+                      if (EzCM.updateBoth || config.isDark) {
+                        await EzCM.setString(darkLabelKey, choice.value);
+                        if (choice == LabelType.none) {
+                          showIcon = true;
+                          await EzCM.setBool(darkIconKey, true);
+                        }
+                      }
 
-                          if (EzCM.updateBoth || !config.isDark) {
-                            await EzCM.setString(lightLabelKey, choice.value);
-                            if (choice == LabelType.none) {
-                              showIcon = true;
-                              await EzCM.setBool(lightIconKey, true);
-                            }
-                          }
+                      if (EzCM.updateBoth || !config.isDark) {
+                        await EzCM.setString(lightLabelKey, choice.value);
+                        if (choice == LabelType.none) {
+                          showIcon = true;
+                          await EzCM.setBool(lightIconKey, true);
+                        }
+                      }
 
-                          setModal(() => labelType = choice);
-                        },
-                      ),
-                    ],
+                      setModal(() => labelType = choice);
+                    },
                   ),
                   config.spacer,
 
