@@ -124,11 +124,10 @@ class AppInfoProvider extends ChangeNotifier {
 
   Timer? _addedTimer;
   OverlayEntry? _addedEntry;
-
-  // TODO: restore flipped
+  final ValueNotifier<bool> _flipped = ValueNotifier<bool>(false);
 
   Future<void> _added(EzCP config, {required Future<void> Function()? editNew}) async {
-    if (_addedTimer?.isActive ?? false) _clearAdded();
+    if (_addedTimer?.isActive ?? false) _clearAdded(setFlipped: !_flipped.value);
 
     final double size = appIconSize(config) + config.marginVal;
     _addedEntry = OverlayEntry(
@@ -139,28 +138,38 @@ class AppInfoProvider extends ChangeNotifier {
         child: Material(
           type: MaterialType.transparency,
           child: Center(
-            child: TweenAnimationBuilder<double>(
-              tween: Tween<double>(begin: 1.0, end: 0.0),
-              duration: breatheTime,
-              builder: (_, double progress, __) => Stack(
-                alignment: Alignment.center,
-                children: <Widget>[
-                  CustomPaint(
-                    size: Size(size, size),
-                    painter: EzCountdownPainter(progress, config.colors.secondaryContainer),
-                  ),
-                  (editNew != null)
-                      ? EzIconButton(
-                          config,
-                          icon: Icon(progress > 0.667 ? Icons.check : Icons.edit),
-                          onPressed: () async {
-                            _clearAdded();
-                            ezCloseAll();
-                            await editNew();
-                          },
-                        )
-                      : EzIconButton(config, icon: const Icon(Icons.check), onPressed: _clearAdded),
-                ],
+            child: ValueListenableBuilder<bool>(
+              valueListenable: _flipped,
+              builder: (_, bool flipped, __) => TweenAnimationBuilder<double>(
+                tween: Tween<double>(begin: 1.0, end: 0.0),
+                duration: breatheTime,
+                builder: (_, double progress, __) => Stack(
+                  alignment: Alignment.center,
+                  children: <Widget>[
+                    CustomPaint(
+                      size: Size(size, size),
+                      painter: EzCountdownPainter(progress, config.colors.secondaryContainer),
+                    ),
+                    (editNew != null)
+                        ? EzIconButton(
+                            config,
+                            icon: Icon(progress > 0.667 ? Icons.check : Icons.edit),
+                            style: IconButton.styleFrom(
+                              backgroundColor:
+                                  flipped ? config.colors.primary : config.colors.surface,
+                              foregroundColor:
+                                  flipped ? config.colors.surface : config.colors.primary,
+                            ),
+                            onPressed: () async {
+                              _clearAdded();
+                              ezCloseAll();
+                              await editNew();
+                            },
+                          )
+                        : EzIconButton(config,
+                            icon: const Icon(Icons.check), onPressed: _clearAdded),
+                  ],
+                ),
               ),
             ),
           ),
@@ -172,13 +181,15 @@ class AppInfoProvider extends ChangeNotifier {
     _addedTimer = Timer(breatheTime, _clearAdded);
   }
 
-  void _clearAdded() {
+  void _clearAdded({bool setFlipped = false}) {
     _addedTimer?.cancel();
 
     if (_addedEntry?.mounted ?? false) {
       _addedEntry!.remove();
       _addedEntry = null;
     }
+
+    _flipped.value = setFlipped;
   }
 
   // Core //
