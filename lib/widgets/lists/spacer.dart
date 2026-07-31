@@ -20,7 +20,7 @@ import 'package:flutter/material.dart';
 //  7. chose default side based on hAlign; always horizontal to start, if LTR && end then left, etc.
 //  8. the horizontal/vertical toggle becomes a 4 side picker
 //  9. add position or something the editMC for everything. don't add padder edits to the existing modals, would be cluttered/confusing
-//  10. I think that's it? don't worry about highlighting padders where they exist. just highlight the active side
+//  10. I think that's it? don't worry about highlighting padding everywhere it exists. just highlight the active side
 
 //* Core Widget *//
 
@@ -325,11 +325,6 @@ Future<void> editSpacer(
         }
 
         // Return the build //
-        // TODO: first time (and only time) use tutorials:
-        //  1. explain top widgets
-        //  2. explain bottom widgets
-        //  3. explain spacers vs padding
-        //  4. have fun!
 
         return Material(
           type: MaterialType.transparency,
