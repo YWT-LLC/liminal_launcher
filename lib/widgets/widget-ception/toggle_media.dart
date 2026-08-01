@@ -332,8 +332,8 @@ Future<void> _openEdits(
         EzFlipFlop(
           config,
           key: UniqueKey(),
-          onLabel: 'Tile',
-          offLabel: 'Button',
+          onLabel: l10n(config).gTile,
+          offLabel: l10n(config).gButton,
           init: size == WidgetSize.tile,
           onChanged: (bool tile) {
             if (!tile) {

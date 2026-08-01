@@ -467,8 +467,8 @@ Future<void> _openEdits(
           // Size
           EzFlipFlop(
             config,
-            onLabel: 'Tile',
-            offLabel: 'Button',
+            onLabel: l10n(config).gTile,
+            offLabel: l10n(config).gButton,
             init: initConfig.size == WidgetSize.tile,
             onChanged: (bool tile) =>
                 setModal(() => size = tile ? WidgetSize.tile : WidgetSize.button),
@@ -698,7 +698,8 @@ Future<void> _openEdits(
           ),
           EzTitledDivider(
             config,
-            title: Text('Hidden', textAlign: TextAlign.center, style: config.labelStyle),
+            title:
+                Text(l10n(config).gHidden, textAlign: TextAlign.center, style: config.labelStyle),
             height: config.spacing * 2,
           ),
 
