@@ -9,6 +9,9 @@ class LangHi extends Lang {
   LangHi([String locale = 'hi']) : super(locale);
 
   @override
+  String get gDupe => 'Duplicate';
+
+  @override
   String get gHidden => 'Hidden';
 
   @override
@@ -83,7 +86,7 @@ class LangHi extends Lang {
   String get hsScreenLanes => ' lanes on screen.';
 
   @override
-  String get hsWithCurr => 'With your current...\n\nicon size(';
+  String get hsWithCurr => 'With your current...\n\nicon size (';
 
   @override
   String get hsPadding => '),\npadding (';

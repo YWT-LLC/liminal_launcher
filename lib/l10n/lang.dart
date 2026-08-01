@@ -123,6 +123,12 @@ abstract class Lang {
     Locale('zh', 'CN')
   ];
 
+  /// No description provided for @gDupe.
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicate'**
+  String get gDupe;
+
   /// No description provided for @gHidden.
   ///
   /// In en, this message translates to:
@@ -264,7 +270,7 @@ abstract class Lang {
   /// No description provided for @hsWithCurr.
   ///
   /// In en, this message translates to:
-  /// **'With your current...\n\nicon size('**
+  /// **'With your current...\n\nicon size ('**
   String get hsWithCurr;
 
   /// No description provided for @hsPadding.

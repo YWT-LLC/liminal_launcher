@@ -1,6 +1,7 @@
 {
   "@@locale": "en",
 
+  "gDupe": "Duplicate",
   "gHidden": "Hidden",
 
   "gButton": "Button",
@@ -32,7 +33,7 @@
   "hsLane": "Lane",
 
   "hsScreenLanes": " lanes on screen.",
-  "hsWithCurr": "With your current...\n\nicon size(",
+  "hsWithCurr": "With your current...\n\nicon size (",
   "hsPadding": "),\npadding (",
   "hsSpacing": "),\n& spacing (",
   "hsCanFit": "...values, you can fit up to ",

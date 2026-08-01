@@ -7,8 +7,8 @@ import '../../utils/export.dart';
 import '../export.dart';
 
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:open_ui/open_ui.dart';
+import 'package:flutter/material.dart';
 
 //* Core Widget *//
 
@@ -240,7 +240,7 @@ List<Widget> _menuChildren(
       // Dupe
       EzMenuButton(
         config,
-        label: 'Duplicate',
+        label: l10n(config).gDupe,
         icon: EzIcon(config, Icons.copy),
         onPressed: () => appInfo.dupeItem(
           config,

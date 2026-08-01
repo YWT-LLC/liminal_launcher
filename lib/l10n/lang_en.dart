@@ -9,6 +9,9 @@ class LangEn extends Lang {
   LangEn([String locale = 'en']) : super(locale);
 
   @override
+  String get gDupe => 'Duplicate';
+
+  @override
   String get gHidden => 'Hidden';
 
   @override
@@ -83,7 +86,7 @@ class LangEn extends Lang {
   String get hsScreenLanes => ' lanes on screen.';
 
   @override
-  String get hsWithCurr => 'With your current...\n\nicon size(';
+  String get hsWithCurr => 'With your current...\n\nicon size (';
 
   @override
   String get hsPadding => '),\npadding (';
@@ -130,6 +133,9 @@ class LangEnUs extends LangEn {
   LangEnUs() : super('en_US');
 
   @override
+  String get gDupe => 'Duplicate';
+
+  @override
   String get gHidden => 'Hidden';
 
   @override
@@ -204,7 +210,7 @@ class LangEnUs extends LangEn {
   String get hsScreenLanes => ' lanes on screen.';
 
   @override
-  String get hsWithCurr => 'With your current...\n\nicon size(';
+  String get hsWithCurr => 'With your current...\n\nicon size (';
 
   @override
   String get hsPadding => '),\npadding (';

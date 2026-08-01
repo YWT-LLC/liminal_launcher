@@ -333,7 +333,7 @@ List<Widget> _menuChildren(
       // Dupe
       EzMenuButton(
         config,
-        label: 'Duplicate',
+        label: l10n(config).gDupe,
         icon: EzIcon(config, Icons.copy),
         onPressed: () => appInfo.dupeItem(
           config,
