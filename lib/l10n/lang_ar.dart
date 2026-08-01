@@ -80,10 +80,49 @@ class LangAr extends Lang {
   String get hsLane => 'Lane';
 
   @override
-  String get hsScreenLanes => ' lanes on screen';
+  String get hsScreenLanes => ' lanes on screen.';
+
+  @override
+  String get hsWithCurr => 'With your current...\n\nicon size(';
+
+  @override
+  String get hsPadding => '),\npadding (';
+
+  @override
+  String get hsSpacing => '),\n& spacing (';
+
+  @override
+  String get hsCanFit => '...values, you can fit up to ';
+
+  @override
+  String get hsWithMin => ' With the minimum values, you can fit up to ';
+
+  @override
+  String get hsLanes => ' lanes.';
 
   @override
   String get hsHiddenAuth => 'Authenticate to see hidden apps';
+
+  @override
+  String get alSearch => 'Search';
+
+  @override
+  String get ssElevated => 'Elevated style';
+
+  @override
+  String get ssWallpaper => 'Wallpaper';
+
+  @override
+  String get ssUseOS => 'Use OS';
+
+  @override
+  String get ssListAlign => 'List alignment';
+
+  @override
+  String get ssHideStatus => 'Hide status bar';
+
+  @override
+  String get ssPages => 'Home screen pages';
 }
 
 /// The translations for Arabic, as used in Egypt (`ar_EG`).

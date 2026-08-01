@@ -258,14 +258,92 @@ abstract class Lang {
   /// No description provided for @hsScreenLanes.
   ///
   /// In en, this message translates to:
-  /// **' lanes on screen'**
+  /// **' lanes on screen.'**
   String get hsScreenLanes;
+
+  /// No description provided for @hsWithCurr.
+  ///
+  /// In en, this message translates to:
+  /// **'With your current...\n\nicon size('**
+  String get hsWithCurr;
+
+  /// No description provided for @hsPadding.
+  ///
+  /// In en, this message translates to:
+  /// **'),\npadding ('**
+  String get hsPadding;
+
+  /// No description provided for @hsSpacing.
+  ///
+  /// In en, this message translates to:
+  /// **'),\n& spacing ('**
+  String get hsSpacing;
+
+  /// No description provided for @hsCanFit.
+  ///
+  /// In en, this message translates to:
+  /// **'...values, you can fit up to '**
+  String get hsCanFit;
+
+  /// No description provided for @hsWithMin.
+  ///
+  /// In en, this message translates to:
+  /// **' With the minimum values, you can fit up to '**
+  String get hsWithMin;
+
+  /// No description provided for @hsLanes.
+  ///
+  /// In en, this message translates to:
+  /// **' lanes.'**
+  String get hsLanes;
 
   /// No description provided for @hsHiddenAuth.
   ///
   /// In en, this message translates to:
   /// **'Authenticate to see hidden apps'**
   String get hsHiddenAuth;
+
+  /// No description provided for @alSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get alSearch;
+
+  /// No description provided for @ssElevated.
+  ///
+  /// In en, this message translates to:
+  /// **'Elevated style'**
+  String get ssElevated;
+
+  /// No description provided for @ssWallpaper.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallpaper'**
+  String get ssWallpaper;
+
+  /// No description provided for @ssUseOS.
+  ///
+  /// In en, this message translates to:
+  /// **'Use OS'**
+  String get ssUseOS;
+
+  /// No description provided for @ssListAlign.
+  ///
+  /// In en, this message translates to:
+  /// **'List alignment'**
+  String get ssListAlign;
+
+  /// No description provided for @ssHideStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide status bar'**
+  String get ssHideStatus;
+
+  /// No description provided for @ssPages.
+  ///
+  /// In en, this message translates to:
+  /// **'Home screen pages'**
+  String get ssPages;
 }
 
 class _LangDelegate extends LocalizationsDelegate<Lang> {

@@ -31,7 +31,27 @@
   "hsSpacer": "Spacer",
   "hsLane": "Lane",
 
-  "hsScreenLanes": " lanes on screen",
+  "hsScreenLanes": " lanes on screen.",
+  "hsWithCurr": "With your current...\n\nicon size(",
+  "hsPadding": "),\npadding (",
+  "hsSpacing": "),\n& spacing (",
+  "hsCanFit": "...values, you can fit up to ",
+  "hsWithMin": " With the minimum values, you can fit up to ",
+  "hsLanes": " lanes.",
 
-  "hsHiddenAuth": "Authenticate to see hidden apps"
+  "hsHiddenAuth": "Authenticate to see hidden apps",
+
+
+
+  "alSearch": "Search",
+
+
+
+  "ssElevated": "Elevated style",
+
+  "ssWallpaper": "Wallpaper",
+  "ssUseOS": "Use OS",
+  "ssListAlign": "List alignment",
+  "ssHideStatus": "Hide status bar",
+  "ssPages": "Home screen pages"
 }
