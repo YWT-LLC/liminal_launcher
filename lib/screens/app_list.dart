@@ -186,8 +186,8 @@ class _AppListScreenState extends State<AppListScreen> {
                               child: TextField(
                                 controller: searchControl,
                                 autofocus: autoSearch,
-                                decoration: const InputDecoration(
-                                  hintText: 'Search',
+                                decoration: InputDecoration(
+                                  hintText: l10n(config).alSearch,
                                   border: InputBorder.none,
                                   isDense: true,
                                 ),

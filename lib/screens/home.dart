@@ -309,9 +309,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
             EzToolTipper(
               config,
               message:
-                  '''With your current...\n\nicon size (${config.iconSize.toStringAsFixed(1)}),\npadding (${config.padding.toStringAsFixed(0)}),\n& spacing (${config.spacing.toStringAsFixed(1)})
-
-...values, you can fit up to ${(screenWidth / (config.iconSize + config.padding + config.spacing)).toStringAsFixed(2)} lanes on your screen.${(config.iconSize != minIconSize && config.padding != minPadding && config.spacing != minSpacing) ? ' With the minimum values, you can fit up to ${(screenWidth / (minIconSize + minPadding + minSpacing)).toStringAsFixed(2)} lanes.' : ''}''',
+                  '${l10n(config).hsWithCurr}${config.iconSize.toStringAsFixed(1)}${l10n(config).hsPadding}${config.padding.toStringAsFixed(0)}${l10n(config).hsSpacing}${config.spacing.toStringAsFixed(1)})\n\n${l10n(config).hsCanFit}${(screenWidth / (config.iconSize + config.padding + config.spacing)).toStringAsFixed(2)}${l10n(config).hsScreenLanes}${(config.iconSize != minIconSize && config.padding != minPadding && config.spacing != minSpacing) ? '${l10n(config).hsWithMin}${(screenWidth / (minIconSize + minPadding + minSpacing)).toStringAsFixed(2)}${l10n(config).hsLanes}' : ''}',
             ),
           ]),
           config.separator,
