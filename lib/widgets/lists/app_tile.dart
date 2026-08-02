@@ -609,8 +609,10 @@ Future<void> editApp(
     padding: EdgeInsets.zero,
   );
 
+  AppInfo app = initConfig.app;
+
   final TextEditingController renameCon = TextEditingController(
-    text: initConfig.name ?? initConfig.app.label,
+    text: initConfig.name ?? app.label,
   );
   IconData? icon = initConfig.icon;
 
@@ -640,10 +642,8 @@ Future<void> editApp(
             // Preview
             AppButton(
               config,
-              name: validateName(config, renameCon.text) == null
-                  ? renameCon.text
-                  : initConfig.app.label,
-              image: initConfig.app.icon,
+              name: validateName(config, renameCon.text) == null ? renameCon.text : app.label,
+              image: app.icon,
               icon: icon,
               iconSize: iconSize,
               buttonType: BTConfig.build(
@@ -653,7 +653,30 @@ Future<void> editApp(
               ),
               labelType: labelType ?? listLabels(config),
               onPressed: doNothing,
-              onLongPress: doNothing,
+              onLongPress: () => pContext.pushNamed(
+                appListPath,
+                extra: ListConfig(
+                  listContent: <ListContent>{ListContent.banished, ListContent.hidden},
+                  include: false,
+                  onSelected: (AppInfo newApp) async {
+                    if (newApp == app) {
+                      if (pContext.mounted) Navigator.of(pContext).pop();
+                      return;
+                    }
+                    if (renameCon.text == app.label) renameCon.text = newApp.label;
+                    setModal(() => app = newApp);
+
+                    if (pContext.mounted) Navigator.of(pContext).pop();
+                  },
+                  title: EzTextIconButton(
+                    config,
+                    onPressed: doNothing,
+                    label: renameCon.text,
+                    icon: EzIcon(config, Icons.edit),
+                    textStyle: config.labelStyle,
+                  ),
+                ),
+              ), // TODO: test new edits (mess with something, dupe it, change app)
             ),
             config.divider,
 
@@ -690,7 +713,7 @@ Future<void> editApp(
                   },
                 ),
                 config.rowMargin,
-                (icon == null && initConfig.app.icon != null)
+                (icon == null && app.icon != null)
                     ? GestureDetector(
                         onTap: showIcon
                             ? () async {
@@ -700,8 +723,8 @@ Future<void> editApp(
                             : null,
                         onLongPress: showIcon ? () => setModal(() => iconSize = null) : null,
                         child: Image.memory(
-                          initConfig.app.icon!,
-                          semanticLabel: initConfig.app.label,
+                          app.icon!,
+                          semanticLabel: app.label,
                           width: iconSize ?? appIconSize(config),
                           height: iconSize ?? appIconSize(config),
                         ),
@@ -854,12 +877,12 @@ Future<void> editApp(
         config,
         lane: lane,
         index: index,
-        id: initConfig.app.id,
+        id: app.id,
         extra: shapeEdits
             ? _appEntry(
                 validateName(config, renameCon.text) == null
                     ? renameCon.text
-                    : (initConfig.name ?? initConfig.app.label),
+                    : (initConfig.name ?? app.label),
                 icon,
                 iconSize,
                 BTConfig.build(labelType ?? listLabels(config),
@@ -869,7 +892,7 @@ Future<void> editApp(
             : _appEntry(
                 validateName(config, renameCon.text) == null
                     ? renameCon.text
-                    : (initConfig.name ?? initConfig.app.label),
+                    : (initConfig.name ?? app.label),
                 icon,
                 null,
                 null,
@@ -883,8 +906,8 @@ Future<void> editApp(
         config,
         lane: lane,
         index: index,
-        id: initConfig.app.id,
-        extra: _appEntry(initConfig.app.label, null, null, null, null),
+        id: app.id,
+        extra: _appEntry(app.label, null, null, null, null),
       );
       return;
 
