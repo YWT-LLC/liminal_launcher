@@ -68,7 +68,7 @@ class AppTile extends StatefulWidget {
           : (int.tryParse(storedIcon) == null)
               ? null
               // ignore: non_const_argument_for_const_parameter
-              : IconData(int.tryParse(storedIcon)!, fontFamily: 'MaterialIcons');
+              : IconData(int.tryParse(storedIcon)!, fontFamily: matIcons);
       _iconSize = (data[2] == esSystem) ? null : double.tryParse(data[2]);
 
       _buttonType = BTConfig.lookup(data[3]);
@@ -911,7 +911,7 @@ class _EditApp extends StatelessWidget {
   @override
   Widget build(_) => EzMenuButton(
         config,
-        label: 'Edit',
+        label: l10n(config).gEdit,
         icon: EzIcon(config, Icons.edit),
         onPressed: () => editApp(
           config,

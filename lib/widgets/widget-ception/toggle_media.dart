@@ -382,7 +382,7 @@ Future<void> _openEdits(
           config,
           key: ValueKey<String>('big-$bigSkips'),
           value: bigSkips,
-          text: 'Skip/Prev',
+          text: l10n(config).wsSkip,
           onChanged: (bool? value) {
             if (value == null) return;
 
@@ -402,7 +402,7 @@ Future<void> _openEdits(
           config,
           key: ValueKey<String>('lil-$lilSkips'),
           value: lilSkips,
-          text: 'FF/Rewind',
+          text: l10n(config).wsFF,
           onChanged: (bool? value) {
             if (value == null) return;
 
@@ -421,7 +421,7 @@ Future<void> _openEdits(
 
         // Note
         Text(
-          "Note:\nThese buttons only work if the active player supports them. Some music players don't have FF/Rewind, for example",
+          l10n(config).wsSomePlayers,
           textAlign: TextAlign.center,
           style: config.labelStyle,
         ),
@@ -459,7 +459,7 @@ class _EditTM extends StatelessWidget {
   @override
   Widget build(_) => EzMenuButton(
         config,
-        label: 'Edit',
+        label: l10n(config).gEdit,
         icon: EzIcon(config, Icons.edit),
         onPressed: () => _openEdits(
           config,

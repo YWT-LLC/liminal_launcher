@@ -123,17 +123,29 @@ abstract class Lang {
     Locale('zh', 'CN')
   ];
 
+  /// No description provided for @gAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get gAdd;
+
   /// No description provided for @gDupe.
   ///
   /// In en, this message translates to:
   /// **'Duplicate'**
   String get gDupe;
 
-  /// No description provided for @gHidden.
+  /// No description provided for @gEdit.
   ///
   /// In en, this message translates to:
-  /// **'Hidden'**
-  String get gHidden;
+  /// **'Edit'**
+  String get gEdit;
+
+  /// No description provided for @gResize.
+  ///
+  /// In en, this message translates to:
+  /// **'Resize'**
+  String get gResize;
 
   /// No description provided for @gButton.
   ///
@@ -146,6 +158,78 @@ abstract class Lang {
   /// In en, this message translates to:
   /// **'Tile'**
   String get gTile;
+
+  /// No description provided for @gWideTiles.
+  ///
+  /// In en, this message translates to:
+  /// **'Wide tiles'**
+  String get gWideTiles;
+
+  /// No description provided for @gSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get gSearch;
+
+  /// No description provided for @gSearchBar.
+  ///
+  /// In en, this message translates to:
+  /// **'Search bar'**
+  String get gSearchBar;
+
+  /// No description provided for @gEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get gEnd;
+
+  /// No description provided for @gCenter.
+  ///
+  /// In en, this message translates to:
+  /// **'Center'**
+  String get gCenter;
+
+  /// No description provided for @gStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get gStart;
+
+  /// No description provided for @gHidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Hidden'**
+  String get gHidden;
+
+  /// No description provided for @gShared.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared'**
+  String get gShared;
+
+  /// No description provided for @gShown.
+  ///
+  /// In en, this message translates to:
+  /// **'Shown'**
+  String get gShown;
+
+  /// No description provided for @gFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get gFailed;
+
+  /// No description provided for @gNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing'**
+  String get gNothing;
+
+  /// No description provided for @gSelfDestruct.
+  ///
+  /// In en, this message translates to:
+  /// **'Self-destruct'**
+  String get gSelfDestruct;
 
   /// No description provided for @hsHome.
   ///
@@ -243,11 +327,11 @@ abstract class Lang {
   /// **'Folder'**
   String get hsFolder;
 
-  /// No description provided for @hsWidget.
+  /// No description provided for @hsLane.
   ///
   /// In en, this message translates to:
-  /// **'Widget'**
-  String get hsWidget;
+  /// **'Lane'**
+  String get hsLane;
 
   /// No description provided for @hsSpacer.
   ///
@@ -255,11 +339,11 @@ abstract class Lang {
   /// **'Spacer'**
   String get hsSpacer;
 
-  /// No description provided for @hsLane.
+  /// No description provided for @hsWidget.
   ///
   /// In en, this message translates to:
-  /// **'Lane'**
-  String get hsLane;
+  /// **'Widget'**
+  String get hsWidget;
 
   /// No description provided for @hsScreenLanes.
   ///
@@ -309,17 +393,383 @@ abstract class Lang {
   /// **'Authenticate to see hidden apps'**
   String get hsHiddenAuth;
 
-  /// No description provided for @alSearch.
+  /// No description provided for @wsBackground.
   ///
   /// In en, this message translates to:
-  /// **'Search'**
-  String get alSearch;
+  /// **'Background'**
+  String get wsBackground;
 
-  /// No description provided for @ssElevated.
+  /// No description provided for @wsBackgroundColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Background color'**
+  String get wsBackgroundColor;
+
+  /// No description provided for @wsBackgroundShape.
+  ///
+  /// In en, this message translates to:
+  /// **'Background shape'**
+  String get wsBackgroundShape;
+
+  /// No description provided for @wsDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get wsDate;
+
+  /// No description provided for @wsDateColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Date color'**
+  String get wsDateColor;
+
+  /// No description provided for @wsDateStyle.
+  ///
+  /// In en, this message translates to:
+  /// **'Date style'**
+  String get wsDateStyle;
+
+  /// No description provided for @wsDateType.
+  ///
+  /// In en, this message translates to:
+  /// **'Date type'**
+  String get wsDateType;
+
+  /// No description provided for @wsTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get wsTime;
+
+  /// No description provided for @wsTimeBool.
+  ///
+  /// In en, this message translates to:
+  /// **'Show time'**
+  String get wsTimeBool;
+
+  /// No description provided for @wsTimeColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Time color'**
+  String get wsTimeColor;
+
+  /// No description provided for @wsTimeStyle.
+  ///
+  /// In en, this message translates to:
+  /// **'Time style'**
+  String get wsTimeStyle;
+
+  /// No description provided for @wsAppIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Use app icon'**
+  String get wsAppIcon;
+
+  /// No description provided for @wsCalendar.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar'**
+  String get wsCalendar;
+
+  /// No description provided for @wsClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Long press to clear'**
+  String get wsClear;
+
+  /// No description provided for @wsNewEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'New event'**
+  String get wsNewEvent;
+
+  /// No description provided for @wsNewTask.
+  ///
+  /// In en, this message translates to:
+  /// **'New task'**
+  String get wsNewTask;
+
+  /// No description provided for @wsNoCalendar.
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t find a default calendar app.\nWhat shall I do?\n\n\'Task\' is just share underneath. You\'ll choose a default app to share with.\nWe recommend using a task app, but don\'t require.\nResults may vary.'**
+  String get wsNoCalendar;
+
+  /// No description provided for @wsShare.
+  ///
+  /// In en, this message translates to:
+  /// **'\'Task\' is just share underneath.\nChoose a destination app below.\n\nWe recommend using a task app, but it\'s not required. Results may vary.'**
+  String get wsShare;
+
+  /// No description provided for @wsShareDest.
+  ///
+  /// In en, this message translates to:
+  /// **'Selecting share destination'**
+  String get wsShareDest;
+
+  /// No description provided for @wsTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Task'**
+  String get wsTask;
+
+  /// No description provided for @wsUseTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to tasks'**
+  String get wsUseTasks;
+
+  /// No description provided for @wsBadTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid time'**
+  String get wsBadTime;
+
+  /// No description provided for @wsSelector.
+  ///
+  /// In en, this message translates to:
+  /// **'selector'**
+  String get wsSelector;
+
+  /// No description provided for @wsCustom.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get wsCustom;
+
+  /// No description provided for @wsName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name '**
+  String get wsName;
+
+  /// No description provided for @wsBase.
+  ///
+  /// In en, this message translates to:
+  /// **'Base site '**
+  String get wsBase;
+
+  /// No description provided for @wsPath.
+  ///
+  /// In en, this message translates to:
+  /// **'Path '**
+  String get wsPath;
+
+  /// No description provided for @wsParameter.
+  ///
+  /// In en, this message translates to:
+  /// **'Parameter '**
+  String get wsParameter;
+
+  /// No description provided for @wsPlayResponsibly.
+  ///
+  /// In en, this message translates to:
+  /// **'Liminal does minimal validation of these custom inputs.\nPlay at your own risk.'**
+  String get wsPlayResponsibly;
+
+  /// No description provided for @wsNonEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Need a non-empty name.'**
+  String get wsNonEmpty;
+
+  /// No description provided for @wsSameName.
+  ///
+  /// In en, this message translates to:
+  /// **'A custom entry with that name already exists.\nPlease change the name and try again.'**
+  String get wsSameName;
+
+  /// No description provided for @wsFF.
+  ///
+  /// In en, this message translates to:
+  /// **'FF/Rewind'**
+  String get wsFF;
+
+  /// No description provided for @wsSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip/Prev'**
+  String get wsSkip;
+
+  /// No description provided for @wsSomePlayers.
+  ///
+  /// In en, this message translates to:
+  /// **'Note:\nThese buttons only work if the active player supports them. Some music players don\'t have FF/Rewind, for example'**
+  String get wsSomePlayers;
+
+  /// No description provided for @ssAppList.
+  ///
+  /// In en, this message translates to:
+  /// **'App list'**
+  String get ssAppList;
+
+  /// No description provided for @ssLinkedList.
+  ///
+  /// In en, this message translates to:
+  /// **'Linked home lists'**
+  String get ssLinkedList;
+
+  /// No description provided for @ssThemedHome.
+  ///
+  /// In en, this message translates to:
+  /// **'The home list can be theme based too!'**
+  String get ssThemedHome;
+
+  /// No description provided for @ssNoBothHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Note: the home ages have no update both system ('**
+  String get ssNoBothHome;
+
+  /// No description provided for @ssIndependent.
+  ///
+  /// In en, this message translates to:
+  /// **').\nThe lists will be fully independent.'**
+  String get ssIndependent;
+
+  /// No description provided for @ssRelinked.
+  ///
+  /// In en, this message translates to:
+  /// **'If/when re-linked, you will be asked which version to keep.'**
+  String get ssRelinked;
+
+  /// No description provided for @ssKeepWhich.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep which layout?'**
+  String get ssKeepWhich;
+
+  /// No description provided for @ssHomeRipple.
+  ///
+  /// In en, this message translates to:
+  /// **'Home ripple animation'**
+  String get ssHomeRipple;
+
+  /// No description provided for @ssListRipple.
+  ///
+  /// In en, this message translates to:
+  /// **'List ripple animation'**
+  String get ssListRipple;
+
+  /// No description provided for @ssAutoSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-search the apps list'**
+  String get ssAutoSearch;
+
+  /// No description provided for @ssQuickLaunch.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick launch'**
+  String get ssQuickLaunch;
+
+  /// No description provided for @ssQLDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe left/right on the home screen (except when editing) to open the selected app.\nLong press to clear your selection.'**
+  String get ssQLDescription;
+
+  /// No description provided for @ssSwipe.
+  ///
+  /// In en, this message translates to:
+  /// **'{direction} swipe'**
+  String ssSwipe(Object direction);
+
+  /// No description provided for @ssSwipeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a quick access app that will open when you swipe {direction} on the home screen. swipe'**
+  String ssSwipeDesc(Object direction);
+
+  /// No description provided for @ssSwipeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose app that opens on {direction} swipe'**
+  String ssSwipeHint(Object direction);
+
+  /// No description provided for @ssSwipeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Selecting {direction} swipe'**
+  String ssSwipeLabel(Object direction);
+
+  /// No description provided for @ssSecurity.
+  ///
+  /// In en, this message translates to:
+  /// **'Security'**
+  String get ssSecurity;
+
+  /// No description provided for @ssAuthToEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Auth to edit lists/settings'**
+  String get ssAuthToEdit;
+
+  /// No description provided for @ssAuthForHidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Auth to see hidden apps'**
+  String get ssAuthForHidden;
+
+  /// No description provided for @ssAuthTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Auth timeout (mins)'**
+  String get ssAuthTimeout;
+
+  /// No description provided for @ssPositiveOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Positive integers only'**
+  String get ssPositiveOnly;
+
+  /// No description provided for @ssApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Liminal App'**
+  String get ssApp;
+
+  /// No description provided for @ssElevatedStyle.
   ///
   /// In en, this message translates to:
   /// **'Elevated style'**
-  String get ssElevated;
+  String get ssElevatedStyle;
+
+  /// No description provided for @ssFolder.
+  ///
+  /// In en, this message translates to:
+  /// **'Liminal Folder'**
+  String get ssFolder;
+
+  /// No description provided for @ssLabelType.
+  ///
+  /// In en, this message translates to:
+  /// **'Label type'**
+  String get ssLabelType;
+
+  /// No description provided for @ssFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full name'**
+  String get ssFullName;
+
+  /// No description provided for @ssShowIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Show icon'**
+  String get ssShowIcon;
+
+  /// No description provided for @ssElevatedButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Elevated button'**
+  String get ssElevatedButton;
+
+  /// No description provided for @ssTileType.
+  ///
+  /// In en, this message translates to:
+  /// **'{type} tile'**
+  String ssTileType(Object type);
 
   /// No description provided for @ssWallpaper.
   ///
@@ -338,6 +788,12 @@ abstract class Lang {
   /// In en, this message translates to:
   /// **'List alignment'**
   String get ssListAlign;
+
+  /// No description provided for @ssAlignHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Liminal Launcher icon used for alignment preview'**
+  String get ssAlignHint;
 
   /// No description provided for @ssHideStatus.
   ///

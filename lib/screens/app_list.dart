@@ -187,7 +187,7 @@ class _AppListScreenState extends State<AppListScreen> {
                                 controller: searchControl,
                                 autofocus: autoSearch,
                                 decoration: InputDecoration(
-                                  hintText: l10n(config).alSearch,
+                                  hintText: l10n(config).gSearch,
                                   border: InputBorder.none,
                                   isDense: true,
                                 ),

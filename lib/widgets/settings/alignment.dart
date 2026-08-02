@@ -5,8 +5,8 @@
 
 import '../../utils/export.dart';
 
-import 'package:flutter/material.dart';
 import 'package:open_ui/open_ui.dart';
+import 'package:flutter/material.dart';
 
 class AlignmentSelectors extends StatefulWidget {
   final EzCP config;
@@ -21,24 +21,24 @@ class AlignmentSelectors extends StatefulWidget {
 
 const double _sizeMod = 0.333;
 
-const List<ButtonSegment<ListAlignment>> alignmentSegments = <ButtonSegment<ListAlignment>>[
-  ButtonSegment<ListAlignment>(
-    value: ListAlignment.start,
-    label: Text('Start', textAlign: TextAlign.center),
-  ),
-  ButtonSegment<ListAlignment>(
-    value: ListAlignment.center,
-    label: Text('Center', textAlign: TextAlign.center),
-  ),
-  ButtonSegment<ListAlignment>(
-    value: ListAlignment.end,
-    label: Text('End', textAlign: TextAlign.center),
-  ),
-];
-
 class _AlignmentSelectorsState extends State<AlignmentSelectors> {
   late ListAlignment h = horizontalAlign(widget.config);
   late ListAlignment v = verticalAlign(widget.config);
+
+  late final List<ButtonSegment<ListAlignment>> alignmentSegments = <ButtonSegment<ListAlignment>>[
+    ButtonSegment<ListAlignment>(
+      value: ListAlignment.start,
+      label: Text(l10n(widget.config).gStart, textAlign: TextAlign.center),
+    ),
+    ButtonSegment<ListAlignment>(
+      value: ListAlignment.center,
+      label: Text(l10n(widget.config).gCenter, textAlign: TextAlign.center),
+    ),
+    ButtonSegment<ListAlignment>(
+      value: ListAlignment.end,
+      label: Text(l10n(widget.config).gEnd, textAlign: TextAlign.center),
+    ),
+  ];
 
   // Return the build //
 
@@ -69,7 +69,7 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
                   child: ClipOval(
                     child: Image.asset(
                       appIconPath,
-                      semanticLabel: 'Liminal Launcher icon used for alignment preview',
+                      semanticLabel: l10n(widget.config).ssAlignHint,
                       width: appIconSize(widget.config),
                       height: appIconSize(widget.config),
                       fit: BoxFit.cover,

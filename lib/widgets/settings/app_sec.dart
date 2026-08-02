@@ -6,8 +6,8 @@
 import '../../utils/export.dart';
 
 import 'dart:math';
-import 'package:flutter/material.dart';
 import 'package:open_ui/open_ui.dart';
+import 'package:flutter/material.dart';
 
 class AppSecSettings extends StatelessWidget {
   final EzCP config;
@@ -18,7 +18,7 @@ class AppSecSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) => EzElevatedIconButton(
         config,
-        label: 'Security',
+        label: l10n(config).ssSecurity,
         icon: EzIcon(config, Icons.security),
         onPressed: () async {
           bool forEdit = authToEdit(config);
@@ -43,7 +43,7 @@ class AppSecSettings extends StatelessWidget {
                       config,
                       key: ValueKey<String>('fes-$forEdit'),
                       value: forEdit,
-                      text: 'Auth to edit lists/settings',
+                      text: l10n(config).ssAuthToEdit,
                       onChanged: (bool? value) async {
                         if (value == null) return;
 
@@ -58,7 +58,7 @@ class AppSecSettings extends StatelessWidget {
                       config,
                       key: ValueKey<String>('fas-$forHide'),
                       value: forHide,
-                      text: 'Auth to see hidden apps',
+                      text: l10n(config).ssAuthForHidden,
                       onChanged: (bool? value) async {
                         if (value == null) return;
 
@@ -76,7 +76,7 @@ class AppSecSettings extends StatelessWidget {
                         // Label
                         Flexible(
                           child: Text(
-                            'Auth timeout (mins)',
+                            l10n(config).ssAuthTimeout,
                             textAlign: TextAlign.start,
                             style: config.bodyStyle,
                           ),
@@ -112,7 +112,7 @@ class AppSecSettings extends StatelessWidget {
                           validator: (String? value) {
                             if (value == null) return null;
                             final int? intVal = int.tryParse(value);
-                            if (intVal == null || intVal < 0) return 'Positive integers only';
+                            if (intVal == null || intVal < 0) return l10n(config).ssPositiveOnly;
 
                             return null;
                           },

@@ -7,8 +7,8 @@ import '../../utils/export.dart';
 import '../export.dart';
 
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:open_ui/open_ui.dart';
+import 'package:flutter/material.dart';
 
 //* Core Widget *//
 
@@ -219,12 +219,12 @@ class AddThemeMode extends StatelessWidget {
           onTap: onTap,
           child: EzDropdownMenu<bool>(
             config,
-            label: 'Theme mode',
+            label: config.ezL10n.ssThemeMode,
+            widthEntry: config.ezL10n.ssThemeMode,
             dropdownMenuEntries: <DropdownMenuEntry<bool>>[
-              const DropdownMenuEntry<bool>(label: 'selector', value: true),
+              DropdownMenuEntry<bool>(label: l10n(config).wsSelector, value: true),
             ],
             enabled: false,
-            widthEntry: 'Widget',
             initialSelection: true,
           ),
         );
@@ -269,7 +269,7 @@ class _EditTM extends StatelessWidget {
   @override
   Widget build(_) => EzMenuButton(
         config,
-        label: 'Resize',
+        label: l10n(config).gResize,
         icon: EzIcon(config, Icons.edit),
         onPressed: () =>
             _quickResize(config, appInfo: appInfo, initSize: initSize, lane: lane, index: index),

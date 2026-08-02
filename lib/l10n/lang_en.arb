@@ -1,13 +1,31 @@
 {
   "@@locale": "en",
 
+  "gAdd": "Add",
   "gDupe": "Duplicate",
-  "gHidden": "Hidden",
+  "gEdit": "Edit",
+  "gResize": "Resize",
 
   "gButton": "Button",
   "gTile": "Tile",
+  "gWideTiles": "Wide tiles",
 
+  "gSearch": "Search",
+  "gSearchBar": "Search bar",
 
+  "gEnd": "End",
+  "gCenter": "Center",
+  "gStart": "Start",
+  
+  "gHidden": "Hidden",
+  "gShared": "Shared",
+  "gShown": "Shown",
+
+  "gFailed": "Failed",
+  "gNothing": "Nothing",
+  "gSelfDestruct": "Self-destruct",
+
+  
 
   "hsHome": "Home",
 
@@ -28,9 +46,9 @@
 
   "hsApp": "App",
   "hsFolder": "Folder",
-  "hsWidget": "Widget",
-  "hsSpacer": "Spacer",
   "hsLane": "Lane",
+  "hsSpacer": "Spacer",
+  "hsWidget": "Widget",
 
   "hsScreenLanes": " lanes on screen.",
   "hsWithCurr": "With your current...\n\nicon size (",
@@ -44,15 +62,90 @@
 
 
 
-  "alSearch": "Search",
+  "wsBackground": "Background",
+  "wsBackgroundColor": "Background color",
+  "wsBackgroundShape": "Background shape",
+  "wsDate": "Date",
+  "wsDateColor": "Date color",
+  "wsDateStyle": "Date style",
+  "wsDateType": "Date type",
+  "wsTime": "Time",
+  "wsTimeBool": "Show time",
+  "wsTimeColor": "Time color",
+  "wsTimeStyle": "Time style",
+  
+  "wsAppIcon": "Use app icon",
+  "wsCalendar": "Calendar",
+  "wsClear": "Long press to clear",
+  "wsNewEvent": "New event",
+  "wsNewTask": "New task",
+  "wsNoCalendar": "Can't find a default calendar app.\nWhat shall I do?\n\n'Task' is just share underneath. You'll choose a default app to share with.\nWe recommend using a task app, but don't require.\nResults may vary.",
+  "wsShare": "'Task' is just share underneath.\nChoose a destination app below.\n\nWe recommend using a task app, but it's not required. Results may vary.",
+  "wsShareDest": "Selecting share destination",
+  "wsTask": "Task",
+  "wsUseTasks": "Switch to tasks",
+
+  "wsBadTime": "Invalid time",
+  "wsSelector": "selector",
+
+  "wsCustom": "Custom",
+  "wsName": "Name ",
+  "wsBase": "Base site ",
+  "wsPath": "Path ",
+  "wsParameter": "Parameter ",
+  "wsPlayResponsibly": "Liminal does minimal validation of these custom inputs.\nPlay at your own risk.",
+  
+  "wsNonEmpty": "Need a non-empty name.",
+  "wsSameName": "A custom entry with that name already exists.\nPlease change the name and try again.",
+
+  "wsFF": "FF/Rewind",
+  "wsSkip": "Skip/Prev",
+  "wsSomePlayers": "Note:\nThese buttons only work if the active player supports them. Some music players don't have FF/Rewind, for example",
 
 
 
-  "ssElevated": "Elevated style",
+  "ssAppList": "App list",
+
+  "ssLinkedList": "Linked home lists",
+  "ssThemedHome": "The home list can be theme based too!",
+  "ssNoBothHome": "Note: the home ages have no update both system (",
+  "ssIndependent": ").\nThe lists will be fully independent.",
+  "ssRelinked": "If/when re-linked, you will be asked which version to keep.",
+  "ssKeepWhich": "Keep which layout?",
+
+  "ssHomeRipple": "Home ripple animation",
+  "ssListRipple": "List ripple animation",
+
+  "ssAutoSearch": "Auto-search the apps list",
+  
+  "ssQuickLaunch": "Quick launch",
+  "ssQLDescription": "Swipe left/right on the home screen (except when editing) to open the selected app.\nLong press to clear your selection.",
+  "ssSwipe": "{direction} swipe",
+  "ssSwipeDesc": "Choose a quick access app that will open when you swipe {direction} on the home screen. swipe",
+  "ssSwipeHint": "Choose app that opens on {direction} swipe",
+  "ssSwipeLabel": "Selecting {direction} swipe",
+
+  "ssSecurity": "Security",
+  "ssAuthToEdit": "Auth to edit lists/settings",
+  "ssAuthForHidden": "Auth to see hidden apps",
+  "ssAuthTimeout": "Auth timeout (mins)",
+  "ssPositiveOnly": "Positive integers only",
+
+  "ssApp": "Liminal App",
+  "ssElevatedStyle": "Elevated style",
+  "ssFolder": "Liminal Folder",
+  "ssLabelType": "Label type",
+  "ssFullName": "Full name",
+  "ssShowIcon": "Show icon",
+  "ssElevatedButton": "Elevated button",
+  "ssTileType": "{type} tile",
 
   "ssWallpaper": "Wallpaper",
   "ssUseOS": "Use OS",
+
   "ssListAlign": "List alignment",
+  "ssAlignHint": "Liminal Launcher icon used for alignment preview",
+
   "ssHideStatus": "Hide status bar",
   "ssPages": "Home screen pages"
 }

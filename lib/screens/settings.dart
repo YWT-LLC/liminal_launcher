@@ -221,7 +221,7 @@ class SettingsScreen extends StatelessWidget {
                   AppTileSetting(config, folder: true),
                   config.divider,
                 ],
-                styleLabel: l10n(config).ssElevated,
+                styleLabel: l10n(config).ssElevatedStyle,
                 includeBackgroundImage: false,
                 prependPage: <Widget>[
                   // Wallpaper

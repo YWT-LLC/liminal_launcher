@@ -7,10 +7,9 @@ import '../../../screens/export.dart';
 import '../../../utils/export.dart';
 import '../../../widgets/export.dart';
 
-import 'package:flutter/material.dart';
-
-import 'package:go_router/go_router.dart';
 import 'package:open_ui/open_ui.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SwipeSelector extends StatefulWidget {
   final EzCP config;
@@ -30,7 +29,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
   Widget build(BuildContext context) {
     // Define the build data //
 
-    final String dir = widget.left ? 'Left' : 'Right';
+    late final String dir = widget.left ? widget.config.ezL10n.gLeft : widget.config.ezL10n.gRight;
     final String lowDir = dir.toLowerCase();
 
     String? appID = EzCM.get(widget._key);
@@ -46,7 +45,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
       children: <Widget>[
         EzLink(
           widget.config,
-          text: '$dir swipe',
+          text: l10n(widget.config).ssSwipe(lowDir),
           textColor: widget.config.colors.onSurface,
           backgroundColor: widget.config.colors.surfaceContainer,
           onTap: () => showDialog(
@@ -54,13 +53,13 @@ class _SwipeSelectorState extends State<SwipeSelector> {
             builder: (_) => EzAlertDialog(
               widget.config,
               content: Text(
-                'Choose a quick access app that will open when you swipe $lowDir on the home screen.',
+                l10n(widget.config).ssSwipeDesc(lowDir),
                 style: widget.config.bodyStyle,
                 textAlign: TextAlign.center,
               ),
             ),
           ),
-          hint: 'Choose app that opens on $lowDir swipe',
+          hint: l10n(widget.config).ssSwipeHint(lowDir),
           style: widget.config.bodyStyle,
         ),
         widget.config.rowMargin,
@@ -91,7 +90,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
               title: EzTextButton(
                 widget.config,
                 onPressed: doNothing,
-                text: 'Selecting $lowDir swipe',
+                text: l10n(widget.config).ssSwipeLabel(lowDir),
                 textStyle: widget.config.labelStyle,
               ),
             ),

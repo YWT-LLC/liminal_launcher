@@ -412,10 +412,10 @@ enum _Edits { background, time, date }
 
 /// background, time, date
 extension _Title on _Edits {
-  String get name => switch (this) {
-        _Edits.background => 'Background',
-        _Edits.time => 'Time',
-        _Edits.date => 'Date',
+  String name(EzCP config) => switch (this) {
+        _Edits.background => l10n(config).wsBackground,
+        _Edits.time => l10n(config).wsTime,
+        _Edits.date => l10n(config).wsDate,
       };
 }
 
@@ -455,7 +455,11 @@ Future<void> _openEdits(
 
         Widget backgroundSettings() => EzScrollView(config, children: <Widget>[
               // Shape
-              Text('Background shape', textAlign: TextAlign.center, style: config.labelStyle),
+              Text(
+                l10n(config).wsBackgroundShape,
+                textAlign: TextAlign.center,
+                style: config.labelStyle,
+              ),
               EzWrap(
                 children: <EzButtonShape>[
                   EzButtonShape.pill,
@@ -530,7 +534,7 @@ Future<void> _openEdits(
                           radius: iconRadius + config.padding,
                         ),
                 ),
-                label: 'Background\ncolor',
+                label: l10n(config).wsBackgroundColor,
                 textAlign: TextAlign.center,
               ),
             ]);
@@ -539,7 +543,7 @@ Future<void> _openEdits(
               // Time style
               EzDropdownMenu<TxtStile>(
                 config,
-                label: 'Time style',
+                label: l10n(config).wsTimeStyle,
                 labelStyle: timeStyle.style(config),
                 enabled: showTime,
                 enableSearch: false,
@@ -597,7 +601,7 @@ Future<void> _openEdits(
                           radius: iconRadius + config.padding,
                         ),
                 ),
-                label: 'Time color',
+                label: l10n(config).wsTimeColor,
                 textAlign: TextAlign.center,
               ),
               config.spacer,
@@ -607,7 +611,7 @@ Future<void> _openEdits(
                 key: ValueKey<bool>(showTime),
                 config,
                 value: showTime,
-                text: 'Show time',
+                text: l10n(config).wsTimeBool,
                 onChanged: (bool? choice) {
                   if (choice == null) return;
                   setModal(() => showTime = choice);
@@ -619,7 +623,7 @@ Future<void> _openEdits(
               // Date type
               EzDropdownMenu<DateType>(
                 config,
-                label: 'Date type',
+                label: l10n(config).wsDateType,
                 enableSearch: false,
                 initialSelection: dateType,
                 widthEntry: DateType.compact.value,
@@ -637,7 +641,7 @@ Future<void> _openEdits(
               // Date style
               EzDropdownMenu<TxtStile>(
                 config,
-                label: 'Date style',
+                label: l10n(config).wsDateStyle,
                 labelStyle: dateStyle.style(config),
                 enabled: dateType != DateType.none,
                 enableSearch: false,
@@ -695,7 +699,7 @@ Future<void> _openEdits(
                           radius: iconRadius + config.padding,
                         ),
                 ),
-                label: 'Date color',
+                label: l10n(config).wsDateColor,
                 textAlign: TextAlign.center,
               ),
             ]);
@@ -708,7 +712,7 @@ Future<void> _openEdits(
               segments: _Edits.values
                   .map((_Edits et) => ButtonSegment<_Edits>(
                         value: et,
-                        label: Text(et.name, textAlign: TextAlign.center),
+                        label: Text(et.name(config), textAlign: TextAlign.center),
                       ))
                   .toList(),
               selected: <_Edits>{curr},
@@ -801,7 +805,7 @@ class _EditClock extends StatelessWidget {
   @override
   Widget build(_) => EzMenuButton(
         config,
-        label: 'Edit',
+        label: l10n(config).gEdit,
         icon: EzIcon(config, Icons.edit),
         onPressed: () => _openEdits(
           config,

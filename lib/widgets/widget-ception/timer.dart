@@ -7,8 +7,8 @@ import '../../utils/export.dart';
 import '../export.dart';
 
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:open_ui/open_ui.dart';
+import 'package:flutter/material.dart';
 
 //* Core Widget *//
 
@@ -163,7 +163,11 @@ class _TimerWidgetState extends State<TimerWidget> {
 
                       ((ours + mins + secs) > 0)
                           ? await setTimer(<int>[ours, mins, secs])
-                          : ezSnackBar(widget.config, context: context, message: 'Invalid time');
+                          : ezSnackBar(
+                              widget.config,
+                              context: context,
+                              message: l10n(widget.config).wsBadTime,
+                            );
                     },
                     onLongPress: () async => await canToggleMenu(widget.config, controller),
                   )
@@ -640,7 +644,7 @@ class _EditTimer extends StatelessWidget {
   @override
   Widget build(_) => EzMenuButton(
         config,
-        label: 'Edit',
+        label: l10n(config).gEdit,
         icon: EzIcon(config, Icons.edit),
         onPressed: () => _openEdits(
           config,

@@ -46,7 +46,7 @@ class AppTileSetting extends StatelessWidget {
           Widget core() => folder
               ? FolderButton(
                   config,
-                  name: 'Liminal Folder',
+                  name: l10n(config).ssFolder,
                   icon: Icons.folder_outlined,
                   iconSize: config.iconSize,
                   buttonType: BTConfig.build(labelType, icons: showIcon, elevated: elevated),
@@ -56,7 +56,7 @@ class AppTileSetting extends StatelessWidget {
                 )
               : AppButton(
                   config,
-                  name: 'Liminal App',
+                  name: l10n(config).ssApp,
                   image: limIcon,
                   icon: null,
                   iconSize: null,
@@ -94,15 +94,13 @@ class AppTileSetting extends StatelessWidget {
                   // Label type
                   EzDropdownMenu<LabelType>(
                     config,
-                    label: 'Label type',
-                    widthEntry: 'Full name',
+                    label: l10n(config).ssLabelType,
+                    widthEntry: l10n(config).ssFullName,
                     dropdownMenuEntries: LabelType.values
-                        .map(
-                          (LabelType lt) => DropdownMenuEntry<LabelType>(
-                            value: lt,
-                            label: ezCamelToTitle(lt.value),
-                          ),
-                        )
+                        .map((LabelType lt) => DropdownMenuEntry<LabelType>(
+                              value: lt,
+                              label: ezCamelToTitle(lt.value),
+                            ))
                         .toList(),
                     enableSearch: false,
                     initialSelection: labelType,
@@ -133,7 +131,7 @@ class AppTileSetting extends StatelessWidget {
                   // Show icon
                   EzSwitchPair(
                     config,
-                    text: 'Show icon',
+                    text: l10n(config).ssShowIcon,
                     valueKey: config.isDark ? darkIconKey : lightIconKey,
                     afterChanged: (bool? value) async {
                       if (value == null) return;
@@ -160,7 +158,7 @@ class AppTileSetting extends StatelessWidget {
                   // Elevated
                   EzSwitchPair(
                     config,
-                    text: 'Elevated button',
+                    text: l10n(config).ssElevatedButton,
                     valueKey: config.isDark ? darkElevatedKey : lightElevatedKey,
                     afterChanged: (bool? choice) async {
                       if (choice == null) return;
@@ -174,14 +172,18 @@ class AppTileSetting extends StatelessWidget {
                   ),
                   EzTitledDivider(
                     config,
-                    title: Text('Shared', textAlign: TextAlign.center, style: config.labelStyle),
+                    title: Text(
+                      l10n(config).gShared,
+                      textAlign: TextAlign.center,
+                      style: config.labelStyle,
+                    ),
                     height: config.spacing * 3,
                   ),
 
                   // Wide tiles
                   EzSwitchPair(
                     config,
-                    text: 'Wide tiles',
+                    text: l10n(config).gWideTiles,
                     valueKey: config.isDark ? darkWideTilesKey : lightWideTilesKey,
                     afterChanged: (bool? choice) async {
                       if (choice == null) return;
@@ -209,6 +211,6 @@ class AppTileSetting extends StatelessWidget {
           }
         },
         icon: EzIcon(config, Icons.settings),
-        label: '${folder ? 'Folder' : 'App'} tile',
+        label: l10n(config).ssTileType(folder ? l10n(config).ssFolder : l10n(config).ssApp),
       );
 }

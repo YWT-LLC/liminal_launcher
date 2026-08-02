@@ -5,7 +5,6 @@
 
 import '../../screens/export.dart';
 import '../../utils/export.dart';
-import '../export.dart';
 
 import 'dart:async';
 import 'package:open_ui/open_ui.dart';
@@ -309,11 +308,26 @@ Future<void> _editLane(
   required ListAlignment hAlign,
   required ListAlignment vAlign,
 }) async {
+  late final List<ButtonSegment<ListAlignment>> alignmentSegments = <ButtonSegment<ListAlignment>>[
+    ButtonSegment<ListAlignment>(
+      value: ListAlignment.start,
+      label: Text(l10n(config).gStart, textAlign: TextAlign.center),
+    ),
+    ButtonSegment<ListAlignment>(
+      value: ListAlignment.center,
+      label: Text(l10n(config).gCenter, textAlign: TextAlign.center),
+    ),
+    ButtonSegment<ListAlignment>(
+      value: ListAlignment.end,
+      label: Text(l10n(config).gEnd, textAlign: TextAlign.center),
+    ),
+  ];
+  const double sizeMod = 0.333;
+
   final ListAlignment hDef = horizontalAlign(config);
   final ListAlignment vDef = verticalAlign(config);
   ListAlignment hA = hAlign;
   ListAlignment vA = vAlign;
-  const double sizeMod = 0.333;
 
   int pos = lane;
 

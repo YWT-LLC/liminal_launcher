@@ -19,7 +19,7 @@ class AppListSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) => EzElevatedIconButton(
         config,
-        label: 'App list',
+        label: l10n(config).ssAppList,
         icon: EzIcon(config, Icons.list),
         onPressed: () => ezModal(
           config,
@@ -33,30 +33,19 @@ class AppListSettings extends StatelessWidget {
                 // Interlinked
                 EzSwitchPair(
                   config,
-                  text: 'Linked home lists',
+                  text: l10n(config).ssLinkedList,
                   bigTipper: TextSpan(
                     children: <InlineSpan>[
-                      EzPlainText(
-                        text: 'The home list can be theme based too!',
-                        style: config.bodyStyle,
-                      ),
+                      EzPlainText(text: l10n(config).ssThemedHome, style: config.bodyStyle),
                       EzPlainText(text: '\n\n', style: config.bodyStyle),
-                      EzPlainText(
-                        text: 'Note: the home pages have no update both system (',
-                        style: config.bodyStyle,
-                      ),
+                      EzPlainText(text: l10n(config).ssNoBothHome, style: config.bodyStyle),
                       WidgetSpan(
                         alignment: PlaceholderAlignment.middle,
                         child: FaIcon(FontAwesomeIcons.yinYang, size: config.iconSize),
                       ),
-                      EzPlainText(
-                          text: ').\nThe lists will be fully independent.',
-                          style: config.bodyStyle),
+                      EzPlainText(text: l10n(config).ssIndependent, style: config.bodyStyle),
                       EzPlainText(text: '\n\n', style: config.bodyStyle),
-                      EzPlainText(
-                        text: 'If/when re-linked, you will be asked which version to keep.',
-                        style: config.bodyStyle,
-                      ),
+                      EzPlainText(text: l10n(config).ssRelinked, style: config.bodyStyle),
                     ],
                     style: config.bodyStyle,
                   ),
@@ -68,17 +57,23 @@ class AppListSettings extends StatelessWidget {
                       context: context,
                       builder: (BuildContext dCon) => EzAlertDialog(
                         config,
-                        title: const Text('Keep which layout?', textAlign: TextAlign.center),
+                        title: Text(l10n(config).ssKeepWhich, textAlign: TextAlign.center),
                         actions: <Widget>[
-                          EzAction(config,
-                              text: 'Dark', onPressed: () => Navigator.of(dCon).pop(true)),
                           EzAction(
                             config,
-                            text: 'Light',
+                            text: config.ezL10n.gDark,
+                            onPressed: () => Navigator.of(dCon).pop(true),
+                          ),
+                          EzAction(
+                            config,
+                            text: config.ezL10n.gLight,
                             onPressed: () => Navigator.of(dCon).pop(false),
                           ),
-                          EzAction(config,
-                              text: 'Cancel', onPressed: () => Navigator.of(dCon).pop()),
+                          EzAction(
+                            config,
+                            text: config.ezL10n.gCancel,
+                            onPressed: () => Navigator.of(dCon).pop(),
+                          ),
                         ],
                         needsClose: false,
                       ),
@@ -95,27 +90,42 @@ class AppListSettings extends StatelessWidget {
                 config.spacer,
 
                 // Home ripple
-                EzSwitchPair(config, text: 'Home ripple animation', valueKey: homeRippleKey),
+                EzSwitchPair(
+                  config,
+                  text: l10n(config).ssHomeRipple,
+                  valueKey: homeRippleKey,
+                ),
                 config.spacer,
 
                 // List ripple
-                EzSwitchPair(config, text: 'List ripple animation', valueKey: listRippleKey),
+                EzSwitchPair(
+                  config,
+                  text: l10n(config).ssListRipple,
+                  valueKey: listRippleKey,
+                ),
                 config.spacer,
 
                 // Auto search
-                EzSwitchPair(config, text: 'Auto-search the apps list', valueKey: autoSearchKey),
+                EzSwitchPair(
+                  config,
+                  text: l10n(config).ssAutoSearch,
+                  valueKey: autoSearchKey,
+                ),
                 config.separator,
 
                 // Swipe selectors
                 EzTitledDivider(
                   config,
-                  title:
-                      Text('Quick launch', textAlign: TextAlign.center, style: config.titleStyle),
+                  title: Text(
+                    l10n(config).ssQuickLaunch,
+                    textAlign: TextAlign.center,
+                    style: config.titleStyle,
+                  ),
                   height: 0,
                 ),
                 EzNewLine(config.labelStyle),
                 Text(
-                  'Swipe left/right on the home screen (except when editing) to open the selected app.\nLong press to clear your selection.',
+                  l10n(config).ssQLDescription,
                   textAlign: TextAlign.center,
                   style: config.labelStyle,
                 ),

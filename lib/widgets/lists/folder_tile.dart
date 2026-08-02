@@ -49,7 +49,7 @@ class FolderTile extends StatefulWidget {
         : IconData(
             // ignore: non_const_argument_for_const_parameter
             int.tryParse(storedIcon) ?? Icons.folder_outlined.codePoint,
-            fontFamily: 'MaterialIcons',
+            fontFamily: matIcons,
           );
     _iconSize = (data[1] == esSystem) ? null : double.tryParse(data[1]);
 
@@ -898,7 +898,7 @@ class _EditFolder extends StatelessWidget {
           lane: lane,
           index: index,
         ),
-        label: 'Edit',
+        label: l10n(config).gEdit,
         icon: EzIcon(config, Icons.edit),
       );
 }

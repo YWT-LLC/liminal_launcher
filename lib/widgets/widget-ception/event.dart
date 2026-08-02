@@ -133,20 +133,12 @@ class _EventWidgetState extends State<EventWidget> {
         context: context,
         builder: (_) => EzAlertDialog(
           widget.config,
-          title: const Text('Failed', textAlign: TextAlign.center),
-          content: const Text(
-            """Can't find a default calendar app.
-What shall I do?
-
-'Task' is just share underneath. You'll choose a default app to share with.
-We recommend using a task app, but don't require.
-Results may vary.""",
-            textAlign: TextAlign.center,
-          ),
+          title: Text(l10n(widget.config).gFailed, textAlign: TextAlign.center),
+          content: Text(l10n(widget.config).wsNoCalendar, textAlign: TextAlign.center),
           actions: <Widget>[
             EzAction(
               widget.config,
-              text: 'Switch to tasks',
+              text: l10n(widget.config).wsUseTasks,
               onPressed: () async {
                 Navigator.of(context).pop();
                 await widget.appInfo.updateWidget(
@@ -164,10 +156,14 @@ Results may vary.""",
               },
               isDefaultAction: true,
             ),
-            EzAction(widget.config, text: 'Nothing', onPressed: () => Navigator.of(context).pop()),
             EzAction(
               widget.config,
-              text: 'Self-destruct',
+              text: l10n(widget.config).gNothing,
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            EzAction(
+              widget.config,
+              text: l10n(widget.config).gSelfDestruct,
               onPressed: () async {
                 Navigator.of(context).pop();
                 await ezNoTouch(
@@ -206,7 +202,7 @@ Results may vary.""",
       disabledBackgroundColor: widget.config.colors.surface,
     );
     late final double textWidth = ezTextSize(
-      'Create event',
+      '\t${widget._isCalendar ? l10n(widget.config).wsNewEvent : l10n(widget.config).wsNewTask}\t',
       context: context,
       style: widget.config.bodyStyle,
     ).width;
@@ -278,7 +274,9 @@ Results may vary.""",
                         errorConstraints: BoxConstraints(
                           maxWidth: (textWidth * 2) + widget.config.padding,
                         ),
-                        hintText: widget._isCalendar ? 'New event' : 'New task',
+                        hintText: widget._isCalendar
+                            ? l10n(widget.config).wsNewEvent
+                            : l10n(widget.config).wsNewTask,
                         onChanged: onChanged,
                         onFieldSubmitted: (String entry) async {
                           final bool success = widget._isCalendar
@@ -462,11 +460,14 @@ class AddEvent extends StatelessWidget {
               EzTextField(
                 constraints: BoxConstraints(
                   maxHeight: appIconSize(config),
-                  maxWidth:
-                      ezTextSize('Create event', context: context, style: config.bodyStyle).width +
-                          config.padding,
+                  maxWidth: ezTextSize(
+                        '\t${l10n(config).wsNewEvent}\t',
+                        context: context,
+                        style: config.bodyStyle,
+                      ).width +
+                      config.padding,
                 ),
-                hintText: 'New event',
+                hintText: l10n(config).wsNewEvent,
                 onTap: onTap,
                 readOnly: true,
                 validator: null,
@@ -541,8 +542,8 @@ Future<void> _openEdits(
         // Type
         EzFlipFlop(
           config,
-          onLabel: 'Calendar',
-          offLabel: 'Task',
+          onLabel: l10n(config).wsCalendar,
+          offLabel: l10n(config).wsTask,
           init: initConfig.isCalendar,
           onChanged: (bool choice) => setModal(() => isCalendar = choice),
         ),
@@ -551,11 +552,7 @@ Future<void> _openEdits(
         // Share Dest //
 
         Text(
-          """'Task' is just share underneath.
-Choose a destination app below.
-
-We recommend using a task app, but it's not required. Results may vary.
-""",
+          l10n(config).wsShare,
           textAlign: TextAlign.center,
           style: config.bodyStyle,
         ),
@@ -583,7 +580,7 @@ We recommend using a task app, but it's not required. Results may vary.
               title: EzTextButton(
                 config,
                 onPressed: doNothing,
-                text: 'Selecting share destination',
+                text: l10n(config).wsShareDest,
                 textStyle: config.labelStyle,
               ),
             ),
@@ -605,7 +602,7 @@ We recommend using a task app, but it's not required. Results may vary.
             // Clear reminder
             config.margin,
             Text(
-              'Long press to clear',
+              l10n(config).wsClear,
               textAlign: TextAlign.center,
               style: config.labelStyle,
             ),
@@ -616,7 +613,7 @@ We recommend using a task app, but it's not required. Results may vary.
               config,
               key: ValueKey<bool?>(useAppIcon),
               value: useAppIcon ?? true,
-              text: 'Use app icon',
+              text: l10n(config).wsAppIcon,
               onChanged: (bool? choice) => setModal(() => useAppIcon = choice),
             ),
           ]),
@@ -660,7 +657,7 @@ class _EditEvent extends StatelessWidget {
   @override
   Widget build(_) => EzMenuButton(
         config,
-        label: 'Edit',
+        label: l10n(config).gEdit,
         icon: EzIcon(config, Icons.edit),
         onPressed: () => _openEdits(
           config,

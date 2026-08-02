@@ -7,10 +7,10 @@ import '../../utils/export.dart';
 import '../export.dart';
 
 import 'dart:async';
+import 'package:open_ui/open_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:open_ui/open_ui.dart';
 
 //* Core Widget *//
 
@@ -42,7 +42,7 @@ class SearchWidget extends StatefulWidget {
         icon: IconData(
           // ignore: non_const_argument_for_const_parameter
           int.tryParse(details[1]) ?? Icons.search.codePoint,
-          fontFamily: 'MaterialIcons',
+          fontFamily: matIcons,
         ),
         id: details[2],
         base: details[3],
@@ -64,7 +64,7 @@ class SearchWidget extends StatefulWidget {
               icon: IconData(
                 // ignore: non_const_argument_for_const_parameter
                 int.tryParse(details[1]) ?? Icons.search.codePoint,
-                fontFamily: 'MaterialIcons',
+                fontFamily: matIcons,
               ),
               id: details[2],
               base: details[3],
@@ -159,13 +159,11 @@ class _SearchWidgetState extends State<SearchWidget> {
   }
 
   Future<void> search(String text) async {
-    await launchUrl(
-      Uri.https(
-        widget._engine.base,
-        widget._engine.path,
-        text.trim().isEmpty ? null : <String, dynamic>{widget._engine.query: text.trim()},
-      ),
-    );
+    await launchUrl(Uri.https(
+      widget._engine.base,
+      widget._engine.path,
+      text.trim().isEmpty ? null : <String, dynamic>{widget._engine.query: text.trim()},
+    ));
 
     queryCon.clear();
     removeOverlay();
@@ -177,19 +175,17 @@ class _SearchWidgetState extends State<SearchWidget> {
   }
 
   List<Widget> get engineChoices => widget._choices
-      .map(
-        (Engine e) => EzMenuButton(
-          widget.config,
-          label: e.name,
-          onPressed: () => widget.appInfo.updateWidget(
+      .map((Engine e) => EzMenuButton(
             widget.config,
-            WidWidGetGet.search,
-            _searchEntry(widget._size, e, widget._choices.map((Engine e) => e.value)),
-            lane: widget.pos.lane,
-            index: widget.pos.index,
-          ),
-        ),
-      )
+            label: e.name,
+            onPressed: () => widget.appInfo.updateWidget(
+              widget.config,
+              WidWidGetGet.search,
+              _searchEntry(widget._size, e, widget._choices.map((Engine e) => e.value)),
+              lane: widget.pos.lane,
+              index: widget.pos.index,
+            ),
+          ))
       .toList();
 
   // Init //
@@ -207,7 +203,7 @@ class _SearchWidgetState extends State<SearchWidget> {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
     late final double textWidth = ezTextSize(
-      'Search bar',
+      l10n(widget.config).gSearchBar,
       context: context,
       style: widget.config.bodyStyle,
     ).width;
@@ -409,10 +405,11 @@ class AddSearch extends StatelessWidget {
                 constraints: BoxConstraints(
                   maxHeight: appIconSize(config),
                   maxWidth:
-                      ezTextSize('Search bar', context: context, style: config.bodyStyle).width +
+                      ezTextSize(l10n(config).gSearchBar, context: context, style: config.bodyStyle)
+                              .width +
                           config.padding,
                 ),
-                hintText: 'Search',
+                hintText: l10n(config).gSearch,
                 onTap: onTap,
                 readOnly: true,
                 validator: null,
@@ -476,7 +473,7 @@ Future<void> _openEdits(
           config.separator,
 
           // Shown
-          Text('Shown', textAlign: TextAlign.center, style: config.labelStyle),
+          Text(l10n(config).gShown, textAlign: TextAlign.center, style: config.labelStyle),
           EzWrap(
             children: <Widget>[
               ...shown.map(
@@ -510,7 +507,7 @@ Future<void> _openEdits(
                   key: const ValueKey<String>('addNew'),
                   config,
                   icon: EzIcon(config, Icons.add),
-                  label: 'Custom',
+                  label: l10n(config).wsCustom,
                   onPressed: () async {
                     final TextEditingController nameCon = TextEditingController();
                     IconData icon = Icons.search;
@@ -552,7 +549,7 @@ Future<void> _openEdits(
                                       width: fieldWidth,
                                     ),
                                     errorConstraints: BoxConstraints.tightFor(width: fieldWidth),
-                                    hintText: 'Name (Ecosia)',
+                                    hintText: '${l10n(config).wsName}(Ecosia)',
                                     onFieldSubmitted: shrink,
                                     onTap: grow,
                                     validator: validateName,
@@ -578,7 +575,7 @@ Future<void> _openEdits(
                                   width: fieldWidth,
                                 ),
                                 errorConstraints: BoxConstraints.tightFor(width: fieldWidth),
-                                hintText: 'Base site (ecosia.org)',
+                                hintText: '${l10n(config).wsBase}(ecosia.org)',
                                 onFieldSubmitted: shrink,
                                 onTap: grow,
                                 validator: validateName,
@@ -593,7 +590,7 @@ Future<void> _openEdits(
                                   width: fieldWidth,
                                 ),
                                 errorConstraints: BoxConstraints.tightFor(width: fieldWidth),
-                                hintText: 'Path (/search)',
+                                hintText: '${l10n(config).wsPath}(/search)',
                                 onFieldSubmitted: shrink,
                                 onTap: grow,
                                 validator: validateName,
@@ -608,7 +605,7 @@ Future<void> _openEdits(
                                   width: fieldWidth,
                                 ),
                                 errorConstraints: BoxConstraints.tightFor(width: fieldWidth),
-                                hintText: 'Parameter (q)',
+                                hintText: '${l10n(config).wsParameter}(q)',
                                 onFieldSubmitted: shrink,
                                 onTap: grow,
                                 validator: validateName,
@@ -622,7 +619,7 @@ Future<void> _openEdits(
                                   EzTextIconButton(
                                     config,
                                     icon: EzIcon(config, Icons.cancel_outlined),
-                                    label: 'Cancel',
+                                    label: config.ezL10n.gCancel,
                                     style: TextButton.styleFrom(
                                       padding: EdgeInsets.zero,
                                       backgroundColor: config.colors.surfaceContainer,
@@ -633,7 +630,7 @@ Future<void> _openEdits(
                                   EzTextIconButton(
                                     config,
                                     icon: EzIcon(config, Icons.done),
-                                    label: 'Add',
+                                    label: l10n(config).gAdd,
                                     style: TextButton.styleFrom(
                                       padding: EdgeInsets.zero,
                                       backgroundColor: config.colors.surfaceContainer,
@@ -643,7 +640,7 @@ Future<void> _openEdits(
                                         ezSnackBar(
                                           config,
                                           context: customCon,
-                                          message: 'Need a non-empty name.',
+                                          message: l10n(config).wsNonEmpty,
                                         );
                                         return;
                                       }
@@ -655,8 +652,7 @@ Future<void> _openEdits(
                                         ezSnackBar(
                                           config,
                                           context: customCon,
-                                          message:
-                                              'A custom entry with that name already exists.\nPlease change the name and try again.',
+                                          message: l10n(config).wsSameName,
                                         );
                                         return;
                                       }
@@ -679,7 +675,7 @@ Future<void> _openEdits(
 
                               // Warning
                               Text(
-                                'Liminal does minimal validation of these custom inputs.\nPlay at your own risk.',
+                                l10n(config).wsPlayResponsibly,
                                 textAlign: TextAlign.center,
                                 style: config.labelStyle,
                               ),
@@ -706,30 +702,28 @@ Future<void> _openEdits(
           // Hidden
           EzWrap(
             children: hidden
-                .map(
-                  (Engine e) => Padding(
-                    padding: wrapPadding,
-                    child: EzElevatedIconButton(
-                      key: ValueKey<Engine>(e),
-                      config,
-                      icon: EzIcon(config, e.icon),
-                      label: e.name,
-                      onPressed: () {
-                        hidden.remove(e);
-                        shown.add(e);
-                        shown.sort();
-                        setModal(() {});
-                      },
-                      onLongPress: Engine.defaultSet.contains(e)
-                          ? null
-                          : () {
-                              shown.remove(e);
-                              if (initConfig.engine == e) curr = shown.first;
-                              setModal(() {});
-                            },
-                    ),
-                  ),
-                )
+                .map((Engine e) => Padding(
+                      padding: wrapPadding,
+                      child: EzElevatedIconButton(
+                        key: ValueKey<Engine>(e),
+                        config,
+                        icon: EzIcon(config, e.icon),
+                        label: e.name,
+                        onPressed: () {
+                          hidden.remove(e);
+                          shown.add(e);
+                          shown.sort();
+                          setModal(() {});
+                        },
+                        onLongPress: Engine.defaultSet.contains(e)
+                            ? null
+                            : () {
+                                shown.remove(e);
+                                if (initConfig.engine == e) curr = shown.first;
+                                setModal(() {});
+                              },
+                      ),
+                    ))
                 .toList(),
           ),
           hidden.isEmpty ? config.separator : config.spacer,
@@ -767,7 +761,7 @@ class _EditSearch extends StatelessWidget {
   @override
   Widget build(_) => EzMenuButton(
         config,
-        label: 'Edit',
+        label: l10n(config).gEdit,
         icon: EzIcon(config, Icons.edit),
         onPressed: () => _openEdits(
           config,
