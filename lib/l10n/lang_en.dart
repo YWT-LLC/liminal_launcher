@@ -373,6 +373,9 @@ class LangEn extends Lang {
   }
 
   @override
+  String get dbsChangeApp => 'Long press to change the app.';
+
+  @override
   String get dbsApp => 'Liminal App';
 
   @override
@@ -785,6 +788,9 @@ class LangEnUs extends LangEn {
   String dbsTileType(Object type) {
     return '$type tile';
   }
+
+  @override
+  String get dbsChangeApp => 'Long press to change the app.';
 
   @override
   String get dbsApp => 'Liminal App';

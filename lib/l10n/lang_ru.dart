@@ -373,6 +373,9 @@ class LangRu extends Lang {
   }
 
   @override
+  String get dbsChangeApp => 'Long press to change the app.';
+
+  @override
   String get dbsApp => 'Liminal App';
 
   @override

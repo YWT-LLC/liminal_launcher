@@ -807,6 +807,12 @@ abstract class Lang {
   /// **'{type} tile'**
   String dbsTileType(Object type);
 
+  /// No description provided for @dbsChangeApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Long press to change the app.'**
+  String get dbsChangeApp;
+
   /// No description provided for @dbsApp.
   ///
   /// In en, this message translates to:

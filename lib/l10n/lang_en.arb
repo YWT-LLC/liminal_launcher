@@ -165,6 +165,7 @@
 
 
   "dbsTileType": "{type} tile",
+  "dbsChangeApp": "Long press to change the app.",
 
   "dbsApp": "Liminal App",
   "dbsFolder": "Liminal Folder",
