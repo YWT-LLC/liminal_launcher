@@ -5,7 +5,7 @@
 
 import '../utils/export.dart';
 import '../widgets/export.dart';
-import 'package:ywt_private/ywt_private.dart';
+import 'package:ywt_private/ywt_private.dart' as ywt;
 
 import 'dart:async';
 import 'package:open_ui/open_ui.dart';
@@ -56,7 +56,7 @@ class _AppListScreenState extends State<AppListScreen> {
     );
     rippleController.addListener(() => rippleProgress.value = rippleController.value);
 
-    final OverlayEntry ripple = ezRipple(
+    final OverlayEntry ripple = ywt.ezRipple(
       controller: rippleController,
       width: widthOf(context),
       height: heightOf(context),

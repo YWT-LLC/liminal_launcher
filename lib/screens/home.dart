@@ -6,7 +6,7 @@
 import '../screens/export.dart';
 import '../utils/export.dart';
 import '../widgets/export.dart';
-import 'package:ywt_private/ywt_private.dart';
+import 'package:ywt_private/ywt_private.dart' as ywt;
 
 import 'dart:async';
 import 'package:open_ui/open_ui.dart';
@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     );
     rippleController.addListener(() => rippleProgress.value = rippleController.value);
 
-    final OverlayEntry ripple = ezRipple(
+    final OverlayEntry ripple = ywt.ezRipple(
       controller: rippleController,
       width: widthOf(context),
       height: heightOf(context),
@@ -1023,7 +1023,7 @@ Future<void> _free99(EzCP config, BuildContext context) async {
                   text: m2,
                   style: config.bodyStyle,
                   textAlign: TextAlign.center,
-                  url: Uri.parse(ywtContributePage),
+                  url: Uri.parse(ywt.ywtContributePage),
                   hint: l10n(config).hsContributeHint,
                 ),
                 EzPlainText(text: m3),
