@@ -678,7 +678,16 @@ Future<void> editApp(
                 ),
               ), // TODO: test new edits (mess with something, dupe it, change app)
             ),
-            config.divider,
+            EzTitledDivider(
+              config,
+              header: true,
+              title: Text(
+                l10n(config).dbsChangeApp,
+                textAlign: TextAlign.center,
+                style: config.labelStyle,
+              ),
+              height: config.spacing * 3,
+            ),
 
             EzScrollView(
               config,
