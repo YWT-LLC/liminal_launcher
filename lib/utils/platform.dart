@@ -5,8 +5,8 @@
 
 import './export.dart';
 
-import 'package:flutter/services.dart';
 import 'package:open_ui/open_ui.dart';
+import 'package:flutter/services.dart';
 
 const MethodChannel platform = MethodChannel('$androidPackage/query');
 

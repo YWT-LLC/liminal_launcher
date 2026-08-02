@@ -6,9 +6,9 @@
 import './export.dart';
 import '../widgets/export.dart';
 
+import 'package:open_ui/open_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:open_ui/open_ui.dart';
 
 Future<void> canEdit(EzCP config, Future<void> Function() onSuccess) async {
   if (!authToEdit(config)) {
@@ -18,7 +18,7 @@ Future<void> canEdit(EzCP config, Future<void> Function() onSuccess) async {
 
   bool authed = false;
   try {
-    authed = await liminalAuth(config, 'Authenticate to edit the launcher');
+    authed = await liminalAuth(config, l10n(config).hsEditAuth);
   } catch (e) {
     ezLog(e.toString());
   }
@@ -43,13 +43,13 @@ Future<IconData?> chooseIcon(EzCP config, BuildContext context) => ezModal(
               // Switcher
               SegmentedButton<bool>(
                 segments: <ButtonSegment<bool>>[
-                  const ButtonSegment<bool>(
+                  ButtonSegment<bool>(
                     value: false,
-                    label: Text('Solid', textAlign: TextAlign.center),
+                    label: Text(l10n(config).gSolid, textAlign: TextAlign.center),
                   ),
-                  const ButtonSegment<bool>(
+                  ButtonSegment<bool>(
                     value: true,
-                    label: Text('Outlined', textAlign: TextAlign.center),
+                    label: Text(l10n(config).gOutlined, textAlign: TextAlign.center),
                   ),
                 ],
                 selected: <bool>{outlined},
@@ -144,11 +144,11 @@ Widget renderWidget(
 bool standardFlow(EzCP config) => config.isLTR && horizontalAlign(config) != ListAlignment.end;
 
 const String _pattern = r'^(?!.*:[01]{8}:)[^/\\\x00]{1,50}$';
-String? validateName(String? name) {
-  if (name == null || name.trim().isEmpty) return 'Cannot be empty';
+String? validateName(EzCP config, String? name) {
+  if (name == null || name.trim().isEmpty) return l10n(config).wsNoEmpty;
 
   final RegExp regex = RegExp(_pattern);
-  if (!regex.hasMatch(name)) return 'Invalid; $_pattern';
+  if (!regex.hasMatch(name)) return '${l10n(config).gInvalid}; $_pattern';
 
   return null;
 }

@@ -21,6 +21,10 @@
   "gShared": "Shared",
   "gShown": "Shown",
 
+  "gSolid": "Solid",
+  "gOutlined": "Outlined",
+
+  "gInvalid": "Invalid",
   "gFailed": "Failed",
   "gNothing": "Nothing",
   "gSelfDestruct": "Self-destruct",
@@ -58,6 +62,7 @@
   "hsWithMin": " With the minimum values, you can fit up to ",
   "hsLanes": " lanes.",
 
+  "hsEditAuth": "Authenticate to edit the launcher",
   "hsHiddenAuth": "Authenticate to see hidden apps",
 
 
@@ -86,6 +91,7 @@
   "wsUseTasks": "Switch to tasks",
 
   "wsBadTime": "Invalid time",
+  "wsNoEmpty": "Cannot be empty",
   "wsSelector": "selector",
 
   "wsCustom": "Custom",
@@ -101,6 +107,26 @@
   "wsFF": "FF/Rewind",
   "wsSkip": "Skip/Prev",
   "wsSomePlayers": "Note:\nThese buttons only work if the active player supports them. Some music players don't have FF/Rewind, for example",
+
+
+
+  "edtCompact": "Compact",
+  "edtShort": "Short",
+  "edtMedium": "Medium",
+  "edtLong": "Long",
+
+  "eltInitials": "Initials",
+  "eltFull": "Full",
+  "eltWingding": "Wingding",
+
+  "elaCenter": "Center",
+  "elaEnd": "End",
+  "elaStart": "Start",
+
+  "elsDate": "Date",
+  "elsName": "Name",
+  "elsPublisher": "Publisher",
+  "elsSize": "Size",
 
 
 

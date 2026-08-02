@@ -54,6 +54,15 @@ class LangFil extends Lang {
   String get gShown => 'Shown';
 
   @override
+  String get gSolid => 'Solid';
+
+  @override
+  String get gOutlined => 'Outlined';
+
+  @override
+  String get gInvalid => 'Invalid';
+
+  @override
   String get gFailed => 'Failed';
 
   @override
@@ -146,6 +155,9 @@ class LangFil extends Lang {
   String get hsLanes => ' lanes.';
 
   @override
+  String get hsEditAuth => 'Authenticate to edit the launcher';
+
+  @override
   String get hsHiddenAuth => 'Authenticate to see hidden apps';
 
   @override
@@ -217,6 +229,9 @@ class LangFil extends Lang {
   String get wsBadTime => 'Invalid time';
 
   @override
+  String get wsNoEmpty => 'Cannot be empty';
+
+  @override
   String get wsSelector => 'selector';
 
   @override
@@ -254,6 +269,48 @@ class LangFil extends Lang {
   @override
   String get wsSomePlayers =>
       'Note:\nThese buttons only work if the active player supports them. Some music players don\'t have FF/Rewind, for example';
+
+  @override
+  String get edtCompact => 'Compact';
+
+  @override
+  String get edtShort => 'Short';
+
+  @override
+  String get edtMedium => 'Medium';
+
+  @override
+  String get edtLong => 'Long';
+
+  @override
+  String get eltInitials => 'Initials';
+
+  @override
+  String get eltFull => 'Full';
+
+  @override
+  String get eltWingding => 'Wingding';
+
+  @override
+  String get elaCenter => 'Center';
+
+  @override
+  String get elaEnd => 'End';
+
+  @override
+  String get elaStart => 'Start';
+
+  @override
+  String get elsDate => 'Date';
+
+  @override
+  String get elsName => 'Name';
+
+  @override
+  String get elsPublisher => 'Publisher';
+
+  @override
+  String get elsSize => 'Size';
 
   @override
   String get ssAppList => 'App list';

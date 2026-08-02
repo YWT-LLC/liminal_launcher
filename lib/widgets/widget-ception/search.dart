@@ -552,7 +552,7 @@ Future<void> _openEdits(
                                     hintText: '${l10n(config).wsName}(Ecosia)',
                                     onFieldSubmitted: shrink,
                                     onTap: grow,
-                                    validator: validateName,
+                                    validator: (String? check) => validateName(config, check),
                                   ),
                                   config.rowMargin,
                                   EzIconButton(
@@ -578,7 +578,7 @@ Future<void> _openEdits(
                                 hintText: '${l10n(config).wsBase}(ecosia.org)',
                                 onFieldSubmitted: shrink,
                                 onTap: grow,
-                                validator: validateName,
+                                validator: (String? check) => validateName(config, check),
                               ),
                               config.spacer,
 
@@ -593,7 +593,7 @@ Future<void> _openEdits(
                                 hintText: '${l10n(config).wsPath}(/search)',
                                 onFieldSubmitted: shrink,
                                 onTap: grow,
-                                validator: validateName,
+                                validator: (String? check) => validateName(config, check),
                               ),
                               config.spacer,
 
@@ -608,7 +608,7 @@ Future<void> _openEdits(
                                 hintText: '${l10n(config).wsParameter}(q)',
                                 onFieldSubmitted: shrink,
                                 onTap: grow,
-                                validator: validateName,
+                                validator: (String? check) => validateName(config, check),
                               ),
                               config.separator,
 

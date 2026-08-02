@@ -640,7 +640,9 @@ Future<void> editApp(
             // Preview
             AppButton(
               config,
-              name: validateName(renameCon.text) == null ? renameCon.text : initConfig.app.label,
+              name: validateName(config, renameCon.text) == null
+                  ? renameCon.text
+                  : initConfig.app.label,
               image: initConfig.app.icon,
               icon: icon,
               iconSize: iconSize,
@@ -673,7 +675,7 @@ Future<void> editApp(
                   errorConstraints: BoxConstraints.tightFor(width: widthOf(mCon) / 3),
                   hintText: 'App',
                   autofillHints: const <String>[AutofillHints.name],
-                  validator: validateName,
+                  validator: (String? check) => validateName(config, check),
                 ),
                 config.rowSpacer,
 
@@ -855,7 +857,7 @@ Future<void> editApp(
         id: initConfig.app.id,
         extra: shapeEdits
             ? _appEntry(
-                validateName(renameCon.text) == null
+                validateName(config, renameCon.text) == null
                     ? renameCon.text
                     : (initConfig.name ?? initConfig.app.label),
                 icon,
@@ -865,7 +867,7 @@ Future<void> editApp(
                 labelType,
               )
             : _appEntry(
-                validateName(renameCon.text) == null
+                validateName(config, renameCon.text) == null
                     ? renameCon.text
                     : (initConfig.name ?? initConfig.app.label),
                 icon,

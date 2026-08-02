@@ -456,7 +456,9 @@ Future<void> editFolder(
                 // Preview
                 FolderButton(
                   config,
-                  name: validateName(renameCon.text) == null ? renameCon.text : initConfig.name,
+                  name: validateName(config, renameCon.text) == null
+                      ? renameCon.text
+                      : initConfig.name,
                   icon: icon,
                   iconSize: iconSize ?? config.iconSize,
                   buttonType: BTConfig.build(
@@ -488,7 +490,7 @@ Future<void> editFolder(
                       errorConstraints: BoxConstraints.tightFor(width: widthOf(mCon) / 3),
                       hintText: 'Folder',
                       autofillHints: const <String>[AutofillHints.name],
-                      validator: validateName,
+                      validator: (String? check) => validateName(config, check),
                     ),
                     config.rowSpacer,
 
@@ -663,7 +665,7 @@ Future<void> editFolder(
                                 config,
                                 onPressed: doNothing,
                                 text:
-                                    "Add to '${validateName(renameCon.text) == null ? renameCon.text : initConfig.name}'",
+                                    "Add to '${validateName(config, renameCon.text) == null ? renameCon.text : initConfig.name}'",
                                 textStyle: config.labelStyle,
                               ),
                             ),
@@ -765,7 +767,7 @@ Future<void> editFolder(
                                       config,
                                       onPressed: doNothing,
                                       text:
-                                          "Add to '${validateName(renameCon.text) == null ? renameCon.text : initConfig.name}'",
+                                          "Add to '${validateName(config, renameCon.text) == null ? renameCon.text : initConfig.name}'",
                                       textStyle: config.labelStyle,
                                     ),
                                   ),
@@ -832,7 +834,7 @@ Future<void> editFolder(
           config,
           lane: lane,
           index: index,
-          name: validateName(renameCon.text) == null ? renameCon.text : initConfig.name,
+          name: validateName(config, renameCon.text) == null ? renameCon.text : initConfig.name,
           extra: shapeEdits
               ? _folderEntry(
                   icon,

@@ -5,8 +5,8 @@
 
 import './export.dart';
 
-import 'package:flutter/material.dart';
 import 'package:open_ui/open_ui.dart';
+import 'package:flutter/material.dart';
 
 // App Location //
 
@@ -98,6 +98,14 @@ extension DTConfig on DateType {
         DateType.long => esLong,
       };
 
+  String name(EzCP config) => switch (this) {
+        DateType.none => config.ezL10n.dsNone,
+        DateType.compact => l10n(config).edtCompact,
+        DateType.short => l10n(config).edtShort,
+        DateType.medium => l10n(config).edtMedium,
+        DateType.long => l10n(config).edtLong,
+      };
+
   static String buildDate(BuildContext context, DateTime time, DateType type) => switch (type) {
         DateType.compact => MaterialLocalizations.of(context).formatCompactDate(time),
         DateType.short => MaterialLocalizations.of(context).formatShortDate(time),
@@ -141,6 +149,13 @@ extension LTConfig on LabelType {
         LabelType.wingding => esWingding,
       };
 
+  String name(EzCP config) => switch (this) {
+        LabelType.none => config.ezL10n.dsNone,
+        LabelType.initials => l10n(config).eltInitials,
+        LabelType.full => l10n(config).eltFull,
+        LabelType.wingding => l10n(config).eltWingding,
+      };
+
   static LabelType? lookup(String? value) => switch (value) {
         esNone => LabelType.none,
         esInitials => LabelType.initials,
@@ -180,6 +195,12 @@ extension LAConfig on ListAlignment {
         ListAlignment.center => esCenter,
         ListAlignment.start => esStart,
         ListAlignment.end => esEnd,
+      };
+
+  String name(EzCP config) => switch (this) {
+        ListAlignment.center => l10n(config).elaCenter,
+        ListAlignment.start => l10n(config).elaStart,
+        ListAlignment.end => l10n(config).elaEnd,
       };
 
   MainAxisAlignment get mainAxis => switch (this) {
@@ -255,6 +276,13 @@ extension LSConfig on ListSort {
         ListSort.size => esSize,
       };
 
+  String name(EzCP config) => switch (this) {
+        ListSort.name => l10n(config).elsName,
+        ListSort.publisher => l10n(config).elsPublisher,
+        ListSort.date => l10n(config).elsDate,
+        ListSort.size => l10n(config).elsSize,
+      };
+
   static List<ListSort> verbOrder(ListSort verbStart) => switch (verbStart) {
         ListSort.name => <ListSort>[
             ListSort.name,
@@ -316,6 +344,14 @@ extension TSConfig on TxtStile {
         TxtStile.title => _title,
         TxtStile.body => _body,
         TxtStile.label => _label,
+      };
+
+  String name(EzCP config) => switch (this) {
+        TxtStile.display => config.ezL10n.tsDisplay,
+        TxtStile.headline => config.ezL10n.tsHeadline,
+        TxtStile.title => config.ezL10n.tsTitle,
+        TxtStile.body => config.ezL10n.tsBody,
+        TxtStile.label => config.ezL10n.tsLabel,
       };
 
   TextStyle? style(EzCP config) => switch (this) {

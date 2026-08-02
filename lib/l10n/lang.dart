@@ -213,6 +213,24 @@ abstract class Lang {
   /// **'Shown'**
   String get gShown;
 
+  /// No description provided for @gSolid.
+  ///
+  /// In en, this message translates to:
+  /// **'Solid'**
+  String get gSolid;
+
+  /// No description provided for @gOutlined.
+  ///
+  /// In en, this message translates to:
+  /// **'Outlined'**
+  String get gOutlined;
+
+  /// No description provided for @gInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid'**
+  String get gInvalid;
+
   /// No description provided for @gFailed.
   ///
   /// In en, this message translates to:
@@ -387,6 +405,12 @@ abstract class Lang {
   /// **' lanes.'**
   String get hsLanes;
 
+  /// No description provided for @hsEditAuth.
+  ///
+  /// In en, this message translates to:
+  /// **'Authenticate to edit the launcher'**
+  String get hsEditAuth;
+
   /// No description provided for @hsHiddenAuth.
   ///
   /// In en, this message translates to:
@@ -525,6 +549,12 @@ abstract class Lang {
   /// **'Invalid time'**
   String get wsBadTime;
 
+  /// No description provided for @wsNoEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot be empty'**
+  String get wsNoEmpty;
+
   /// No description provided for @wsSelector.
   ///
   /// In en, this message translates to:
@@ -596,6 +626,90 @@ abstract class Lang {
   /// In en, this message translates to:
   /// **'Note:\nThese buttons only work if the active player supports them. Some music players don\'t have FF/Rewind, for example'**
   String get wsSomePlayers;
+
+  /// No description provided for @edtCompact.
+  ///
+  /// In en, this message translates to:
+  /// **'Compact'**
+  String get edtCompact;
+
+  /// No description provided for @edtShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Short'**
+  String get edtShort;
+
+  /// No description provided for @edtMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get edtMedium;
+
+  /// No description provided for @edtLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Long'**
+  String get edtLong;
+
+  /// No description provided for @eltInitials.
+  ///
+  /// In en, this message translates to:
+  /// **'Initials'**
+  String get eltInitials;
+
+  /// No description provided for @eltFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Full'**
+  String get eltFull;
+
+  /// No description provided for @eltWingding.
+  ///
+  /// In en, this message translates to:
+  /// **'Wingding'**
+  String get eltWingding;
+
+  /// No description provided for @elaCenter.
+  ///
+  /// In en, this message translates to:
+  /// **'Center'**
+  String get elaCenter;
+
+  /// No description provided for @elaEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get elaEnd;
+
+  /// No description provided for @elaStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get elaStart;
+
+  /// No description provided for @elsDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get elsDate;
+
+  /// No description provided for @elsName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get elsName;
+
+  /// No description provided for @elsPublisher.
+  ///
+  /// In en, this message translates to:
+  /// **'Publisher'**
+  String get elsPublisher;
+
+  /// No description provided for @elsSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Size'**
+  String get elsSize;
 
   /// No description provided for @ssAppList.
   ///
