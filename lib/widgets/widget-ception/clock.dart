@@ -413,9 +413,9 @@ enum _Edits { background, time, date }
 /// background, time, date
 extension _Title on _Edits {
   String name(EzCP config) => switch (this) {
-        _Edits.background => l10n(config).wsBackground,
-        _Edits.time => l10n(config).wsTime,
-        _Edits.date => l10n(config).wsDate,
+        _Edits.background => l10n(config).clkBackground,
+        _Edits.time => l10n(config).clkTime,
+        _Edits.date => l10n(config).clkDate,
       };
 }
 
@@ -456,7 +456,7 @@ Future<void> _openEdits(
         Widget backgroundSettings() => EzScrollView(config, children: <Widget>[
               // Shape
               Text(
-                l10n(config).wsBackgroundShape,
+                l10n(config).clkBackgroundShape,
                 textAlign: TextAlign.center,
                 style: config.labelStyle,
               ),
@@ -534,7 +534,7 @@ Future<void> _openEdits(
                           radius: iconRadius + config.padding,
                         ),
                 ),
-                label: l10n(config).wsBackgroundColor,
+                label: l10n(config).clkBackgroundColor,
                 textAlign: TextAlign.center,
               ),
             ]);
@@ -543,7 +543,7 @@ Future<void> _openEdits(
               // Time style
               EzDropdownMenu<TxtStile>(
                 config,
-                label: l10n(config).wsTimeStyle,
+                label: l10n(config).clkTimeStyle,
                 labelStyle: timeStyle.style(config),
                 enabled: showTime,
                 enableSearch: false,
@@ -601,7 +601,7 @@ Future<void> _openEdits(
                           radius: iconRadius + config.padding,
                         ),
                 ),
-                label: l10n(config).wsTimeColor,
+                label: l10n(config).clkTimeColor,
                 textAlign: TextAlign.center,
               ),
               config.spacer,
@@ -611,7 +611,7 @@ Future<void> _openEdits(
                 key: ValueKey<bool>(showTime),
                 config,
                 value: showTime,
-                text: l10n(config).wsTimeBool,
+                text: l10n(config).clkTimeBool,
                 onChanged: (bool? choice) {
                   if (choice == null) return;
                   setModal(() => showTime = choice);
@@ -623,7 +623,7 @@ Future<void> _openEdits(
               // Date type
               EzDropdownMenu<DateType>(
                 config,
-                label: l10n(config).wsDateType,
+                label: l10n(config).clkDateType,
                 enableSearch: false,
                 initialSelection: dateType,
                 widthEntry: DateType.compact.value,
@@ -641,7 +641,7 @@ Future<void> _openEdits(
               // Date style
               EzDropdownMenu<TxtStile>(
                 config,
-                label: l10n(config).wsDateStyle,
+                label: l10n(config).clkDateStyle,
                 labelStyle: dateStyle.style(config),
                 enabled: dateType != DateType.none,
                 enableSearch: false,
@@ -699,7 +699,7 @@ Future<void> _openEdits(
                           radius: iconRadius + config.padding,
                         ),
                 ),
-                label: l10n(config).wsDateColor,
+                label: l10n(config).clkDateColor,
                 textAlign: TextAlign.center,
               ),
             ]);

@@ -134,11 +134,11 @@ class _EventWidgetState extends State<EventWidget> {
         builder: (_) => EzAlertDialog(
           widget.config,
           title: Text(l10n(widget.config).gFailed, textAlign: TextAlign.center),
-          content: Text(l10n(widget.config).wsNoCalendar, textAlign: TextAlign.center),
+          content: Text(l10n(widget.config).evtNoCalendar, textAlign: TextAlign.center),
           actions: <Widget>[
             EzAction(
               widget.config,
-              text: l10n(widget.config).wsUseTasks,
+              text: l10n(widget.config).evtUseTasks,
               onPressed: () async {
                 Navigator.of(context).pop();
                 await widget.appInfo.updateWidget(
@@ -202,7 +202,7 @@ class _EventWidgetState extends State<EventWidget> {
       disabledBackgroundColor: widget.config.colors.surface,
     );
     late final double textWidth = ezTextSize(
-      '\t${widget._isCalendar ? l10n(widget.config).wsNewEvent : l10n(widget.config).wsNewTask}\t',
+      '\t${widget._isCalendar ? l10n(widget.config).evtNewEvent : l10n(widget.config).evtNewTask}\t',
       context: context,
       style: widget.config.bodyStyle,
     ).width;
@@ -275,8 +275,8 @@ class _EventWidgetState extends State<EventWidget> {
                           maxWidth: (textWidth * 2) + widget.config.padding,
                         ),
                         hintText: widget._isCalendar
-                            ? l10n(widget.config).wsNewEvent
-                            : l10n(widget.config).wsNewTask,
+                            ? l10n(widget.config).evtNewEvent
+                            : l10n(widget.config).evtNewTask,
                         onChanged: onChanged,
                         onFieldSubmitted: (String entry) async {
                           final bool success = widget._isCalendar
@@ -461,13 +461,13 @@ class AddEvent extends StatelessWidget {
                 constraints: BoxConstraints(
                   maxHeight: appIconSize(config),
                   maxWidth: ezTextSize(
-                        '\t${l10n(config).wsNewEvent}\t',
+                        '\t${l10n(config).evtNewEvent}\t',
                         context: context,
                         style: config.bodyStyle,
                       ).width +
                       config.padding,
                 ),
-                hintText: l10n(config).wsNewEvent,
+                hintText: l10n(config).evtNewEvent,
                 onTap: onTap,
                 readOnly: true,
                 validator: null,
@@ -542,8 +542,8 @@ Future<void> _openEdits(
         // Type
         EzFlipFlop(
           config,
-          onLabel: l10n(config).wsCalendar,
-          offLabel: l10n(config).wsTask,
+          onLabel: l10n(config).evtCalendar,
+          offLabel: l10n(config).evtTask,
           init: initConfig.isCalendar,
           onChanged: (bool choice) => setModal(() => isCalendar = choice),
         ),
@@ -552,7 +552,7 @@ Future<void> _openEdits(
         // Share Dest //
 
         Text(
-          l10n(config).wsShare,
+          l10n(config).evtShare,
           textAlign: TextAlign.center,
           style: config.bodyStyle,
         ),
@@ -580,7 +580,7 @@ Future<void> _openEdits(
               title: EzTextButton(
                 config,
                 onPressed: doNothing,
-                text: l10n(config).wsShareDest,
+                text: l10n(config).evtShareDest,
                 textStyle: config.labelStyle,
               ),
             ),
@@ -602,7 +602,7 @@ Future<void> _openEdits(
             // Clear reminder
             config.margin,
             Text(
-              l10n(config).wsClear,
+              l10n(config).evtClear,
               textAlign: TextAlign.center,
               style: config.labelStyle,
             ),
@@ -613,7 +613,7 @@ Future<void> _openEdits(
               config,
               key: ValueKey<bool?>(useAppIcon),
               value: useAppIcon ?? true,
-              text: l10n(config).wsAppIcon,
+              text: l10n(config).evtAppIcon,
               onChanged: (bool? choice) => setModal(() => useAppIcon = choice),
             ),
           ]),

@@ -19,7 +19,7 @@ class AppListSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) => EzElevatedIconButton(
         config,
-        label: l10n(config).ssAppList,
+        label: l10n(config).gsAppList,
         icon: EzIcon(config, Icons.list),
         onPressed: () => ezModal(
           config,
@@ -33,19 +33,19 @@ class AppListSettings extends StatelessWidget {
                 // Interlinked
                 EzSwitchPair(
                   config,
-                  text: l10n(config).ssLinkedList,
+                  text: l10n(config).gsLinkedList,
                   bigTipper: TextSpan(
                     children: <InlineSpan>[
-                      EzPlainText(text: l10n(config).ssThemedHome, style: config.bodyStyle),
+                      EzPlainText(text: l10n(config).gsThemedHome, style: config.bodyStyle),
                       EzPlainText(text: '\n\n', style: config.bodyStyle),
-                      EzPlainText(text: l10n(config).ssNoBothHome, style: config.bodyStyle),
+                      EzPlainText(text: l10n(config).gsNoBothHome, style: config.bodyStyle),
                       WidgetSpan(
                         alignment: PlaceholderAlignment.middle,
                         child: FaIcon(FontAwesomeIcons.yinYang, size: config.iconSize),
                       ),
-                      EzPlainText(text: l10n(config).ssIndependent, style: config.bodyStyle),
+                      EzPlainText(text: l10n(config).gsIndependent, style: config.bodyStyle),
                       EzPlainText(text: '\n\n', style: config.bodyStyle),
-                      EzPlainText(text: l10n(config).ssRelinked, style: config.bodyStyle),
+                      EzPlainText(text: l10n(config).gsRelinked, style: config.bodyStyle),
                     ],
                     style: config.bodyStyle,
                   ),
@@ -57,7 +57,7 @@ class AppListSettings extends StatelessWidget {
                       context: context,
                       builder: (BuildContext dCon) => EzAlertDialog(
                         config,
-                        title: Text(l10n(config).ssKeepWhich, textAlign: TextAlign.center),
+                        title: Text(l10n(config).gsKeepWhich, textAlign: TextAlign.center),
                         actions: <Widget>[
                           EzAction(
                             config,
@@ -92,7 +92,7 @@ class AppListSettings extends StatelessWidget {
                 // Home ripple
                 EzSwitchPair(
                   config,
-                  text: l10n(config).ssHomeRipple,
+                  text: l10n(config).gsHomeRipple,
                   valueKey: homeRippleKey,
                 ),
                 config.spacer,
@@ -100,7 +100,7 @@ class AppListSettings extends StatelessWidget {
                 // List ripple
                 EzSwitchPair(
                   config,
-                  text: l10n(config).ssListRipple,
+                  text: l10n(config).gsListRipple,
                   valueKey: listRippleKey,
                 ),
                 config.spacer,
@@ -108,7 +108,7 @@ class AppListSettings extends StatelessWidget {
                 // Auto search
                 EzSwitchPair(
                   config,
-                  text: l10n(config).ssAutoSearch,
+                  text: l10n(config).gsAutoSearch,
                   valueKey: autoSearchKey,
                 ),
                 config.separator,
@@ -117,7 +117,7 @@ class AppListSettings extends StatelessWidget {
                 EzTitledDivider(
                   config,
                   title: Text(
-                    l10n(config).ssQuickLaunch,
+                    l10n(config).gsQuickLaunch,
                     textAlign: TextAlign.center,
                     style: config.titleStyle,
                   ),
@@ -125,7 +125,7 @@ class AppListSettings extends StatelessWidget {
                 ),
                 EzNewLine(config.labelStyle),
                 Text(
-                  l10n(config).ssQLDescription,
+                  l10n(config).gsQLDescription,
                   textAlign: TextAlign.center,
                   style: config.labelStyle,
                 ),

@@ -145,7 +145,7 @@ bool standardFlow(EzCP config) => config.isLTR && horizontalAlign(config) != Lis
 
 const String _pattern = r'^(?!.*:[01]{8}:)[^/\\\x00]{1,50}$';
 String? validateName(EzCP config, String? name) {
-  if (name == null || name.trim().isEmpty) return l10n(config).wsNoEmpty;
+  if (name == null || name.trim().isEmpty) return l10n(config).gNoEmpty;
 
   final RegExp regex = RegExp(_pattern);
   if (!regex.hasMatch(name)) return '${l10n(config).gInvalid}; $_pattern';

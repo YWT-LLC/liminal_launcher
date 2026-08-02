@@ -69,7 +69,7 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
                   child: ClipOval(
                     child: Image.asset(
                       appIconPath,
-                      semanticLabel: l10n(widget.config).ssAlignHint,
+                      semanticLabel: l10n(widget.config).dpsAlignHint,
                       width: appIconSize(widget.config),
                       height: appIconSize(widget.config),
                       fit: BoxFit.cover,

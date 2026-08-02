@@ -100,10 +100,10 @@ extension DTConfig on DateType {
 
   String name(EzCP config) => switch (this) {
         DateType.none => config.ezL10n.dsNone,
-        DateType.compact => l10n(config).edtCompact,
-        DateType.short => l10n(config).edtShort,
-        DateType.medium => l10n(config).edtMedium,
-        DateType.long => l10n(config).edtLong,
+        DateType.compact => l10n(config).clkCompact,
+        DateType.short => l10n(config).clkShort,
+        DateType.medium => l10n(config).clkMedium,
+        DateType.long => l10n(config).clkLong,
       };
 
   static String buildDate(BuildContext context, DateTime time, DateType type) => switch (type) {
@@ -151,9 +151,9 @@ extension LTConfig on LabelType {
 
   String name(EzCP config) => switch (this) {
         LabelType.none => config.ezL10n.dsNone,
-        LabelType.initials => l10n(config).eltInitials,
-        LabelType.full => l10n(config).eltFull,
-        LabelType.wingding => l10n(config).eltWingding,
+        LabelType.initials => l10n(config).dbsInitials,
+        LabelType.full => l10n(config).dbsFull,
+        LabelType.wingding => l10n(config).dbsWingding,
       };
 
   static LabelType? lookup(String? value) => switch (value) {
@@ -198,9 +198,9 @@ extension LAConfig on ListAlignment {
       };
 
   String name(EzCP config) => switch (this) {
-        ListAlignment.center => l10n(config).elaCenter,
-        ListAlignment.start => l10n(config).elaStart,
-        ListAlignment.end => l10n(config).elaEnd,
+        ListAlignment.center => l10n(config).gCenter,
+        ListAlignment.start => l10n(config).gStart,
+        ListAlignment.end => l10n(config).gEnd,
       };
 
   MainAxisAlignment get mainAxis => switch (this) {
@@ -277,10 +277,10 @@ extension LSConfig on ListSort {
       };
 
   String name(EzCP config) => switch (this) {
-        ListSort.name => l10n(config).elsName,
-        ListSort.publisher => l10n(config).elsPublisher,
-        ListSort.date => l10n(config).elsDate,
-        ListSort.size => l10n(config).elsSize,
+        ListSort.name => l10n(config).aplName,
+        ListSort.publisher => l10n(config).aplPublisher,
+        ListSort.date => l10n(config).aplDate,
+        ListSort.size => l10n(config).aplSize,
       };
 
   static List<ListSort> verbOrder(ListSort verbStart) => switch (verbStart) {

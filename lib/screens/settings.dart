@@ -221,7 +221,7 @@ class SettingsScreen extends StatelessWidget {
                   AppTileSetting(config, folder: true),
                   config.divider,
                 ],
-                styleLabel: l10n(config).ssElevatedStyle,
+                styleLabel: l10n(config).dbsElevatedStyle,
                 includeBackgroundImage: false,
                 prependPage: <Widget>[
                   // Wallpaper
@@ -230,17 +230,17 @@ class SettingsScreen extends StatelessWidget {
                           config,
                           pathKey: darkBackgroundImageKey,
                           fitKey: darkBackgroundFitKey,
-                          label: l10n(config).ssWallpaper,
+                          label: l10n(config).dpsWallpaper,
                           allowSolidColor: true,
-                          clearLabel: l10n(config).ssUseOS,
+                          clearLabel: l10n(config).dpsUseOS,
                         )
                       : EzImageSetting(
                           config,
                           pathKey: lightBackgroundImageKey,
                           fitKey: lightBackgroundFitKey,
-                          label: l10n(config).ssWallpaper,
+                          label: l10n(config).dpsWallpaper,
                           allowSolidColor: true,
-                          clearLabel: l10n(config).ssUseOS,
+                          clearLabel: l10n(config).dpsUseOS,
                         ),
                   config.spacer,
 
@@ -272,7 +272,7 @@ class SettingsScreen extends StatelessWidget {
                         await config.rebuildUI();
                       }
                     },
-                    label: l10n(config).ssListAlign,
+                    label: l10n(config).dpsListAlign,
                     icon: EzIcon(config, Icons.grid_3x3),
                   ),
                   config.separator,
@@ -280,7 +280,7 @@ class SettingsScreen extends StatelessWidget {
                   // Hide status bar
                   EzSwitchPair(
                     config,
-                    text: l10n(config).ssHideStatus,
+                    text: l10n(config).dpsHideStatus,
                     valueKey: config.isDark ? darkHideStatusKey : lightHideStatusKey,
                     afterChanged: (bool? choice) async {
                       if (choice == null) return;
@@ -309,7 +309,7 @@ class SettingsScreen extends StatelessWidget {
                   // Pages
                   EzSwitchPair(
                     config,
-                    text: l10n(config).ssPages,
+                    text: l10n(config).dpsPages,
                     valueKey: config.isDark ? darkPagesKey : lightPagesKey,
                     afterChanged: (bool? choice) async {
                       if (choice == null) return;

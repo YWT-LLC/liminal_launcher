@@ -18,7 +18,7 @@ class AppSecSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) => EzElevatedIconButton(
         config,
-        label: l10n(config).ssSecurity,
+        label: l10n(config).gsSecurity,
         icon: EzIcon(config, Icons.security),
         onPressed: () async {
           bool forEdit = authToEdit(config);
@@ -43,7 +43,7 @@ class AppSecSettings extends StatelessWidget {
                       config,
                       key: ValueKey<String>('fes-$forEdit'),
                       value: forEdit,
-                      text: l10n(config).ssAuthToEdit,
+                      text: l10n(config).gsAuthToEdit,
                       onChanged: (bool? value) async {
                         if (value == null) return;
 
@@ -58,7 +58,7 @@ class AppSecSettings extends StatelessWidget {
                       config,
                       key: ValueKey<String>('fas-$forHide'),
                       value: forHide,
-                      text: l10n(config).ssAuthForHidden,
+                      text: l10n(config).gsAuthForHidden,
                       onChanged: (bool? value) async {
                         if (value == null) return;
 
@@ -76,7 +76,7 @@ class AppSecSettings extends StatelessWidget {
                         // Label
                         Flexible(
                           child: Text(
-                            l10n(config).ssAuthTimeout,
+                            l10n(config).gsAuthTimeout,
                             textAlign: TextAlign.start,
                             style: config.bodyStyle,
                           ),
@@ -112,7 +112,7 @@ class AppSecSettings extends StatelessWidget {
                           validator: (String? value) {
                             if (value == null) return null;
                             final int? intVal = int.tryParse(value);
-                            if (intVal == null || intVal < 0) return l10n(config).ssPositiveOnly;
+                            if (intVal == null || intVal < 0) return l10n(config).gsPositiveOnly;
 
                             return null;
                           },

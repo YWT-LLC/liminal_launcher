@@ -166,7 +166,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                           : ezSnackBar(
                               widget.config,
                               context: context,
-                              message: l10n(widget.config).wsBadTime,
+                              message: l10n(widget.config).timBadTime,
                             );
                     },
                     onLongPress: () async => await canToggleMenu(widget.config, controller),

@@ -46,7 +46,7 @@ class AppTileSetting extends StatelessWidget {
           Widget core() => folder
               ? FolderButton(
                   config,
-                  name: l10n(config).ssFolder,
+                  name: l10n(config).dbsFolder,
                   icon: Icons.folder_outlined,
                   iconSize: config.iconSize,
                   buttonType: BTConfig.build(labelType, icons: showIcon, elevated: elevated),
@@ -56,7 +56,7 @@ class AppTileSetting extends StatelessWidget {
                 )
               : AppButton(
                   config,
-                  name: l10n(config).ssApp,
+                  name: l10n(config).dbsApp,
                   image: limIcon,
                   icon: null,
                   iconSize: null,
@@ -94,8 +94,8 @@ class AppTileSetting extends StatelessWidget {
                   // Label type
                   EzDropdownMenu<LabelType>(
                     config,
-                    label: l10n(config).ssLabelType,
-                    widthEntry: l10n(config).ssFullName,
+                    label: l10n(config).dbsLabelType,
+                    widthEntry: l10n(config).dbsInitials,
                     dropdownMenuEntries: LabelType.values
                         .map((LabelType lt) => DropdownMenuEntry<LabelType>(
                               value: lt,
@@ -131,7 +131,7 @@ class AppTileSetting extends StatelessWidget {
                   // Show icon
                   EzSwitchPair(
                     config,
-                    text: l10n(config).ssShowIcon,
+                    text: l10n(config).dbsShowIcon,
                     valueKey: config.isDark ? darkIconKey : lightIconKey,
                     afterChanged: (bool? value) async {
                       if (value == null) return;
@@ -158,7 +158,7 @@ class AppTileSetting extends StatelessWidget {
                   // Elevated
                   EzSwitchPair(
                     config,
-                    text: l10n(config).ssElevatedButton,
+                    text: l10n(config).dbsElevatedButton,
                     valueKey: config.isDark ? darkElevatedKey : lightElevatedKey,
                     afterChanged: (bool? choice) async {
                       if (choice == null) return;
@@ -211,6 +211,6 @@ class AppTileSetting extends StatelessWidget {
           }
         },
         icon: EzIcon(config, Icons.settings),
-        label: l10n(config).ssTileType(folder ? l10n(config).ssFolder : l10n(config).ssApp),
+        label: l10n(config).dbsTileType(folder ? l10n(config).hsFolder : l10n(config).hsApp),
       );
 }

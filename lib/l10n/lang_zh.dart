@@ -54,16 +54,19 @@ class LangZh extends Lang {
   String get gShown => 'Shown';
 
   @override
+  String get gOutlined => 'Outlined';
+
+  @override
   String get gSolid => 'Solid';
 
   @override
-  String get gOutlined => 'Outlined';
+  String get gFailed => 'Failed';
 
   @override
   String get gInvalid => 'Invalid';
 
   @override
-  String get gFailed => 'Failed';
+  String get gNoEmpty => 'Cannot be empty';
 
   @override
   String get gNothing => 'Nothing';
@@ -161,273 +164,258 @@ class LangZh extends Lang {
   String get hsHiddenAuth => 'Authenticate to see hidden apps';
 
   @override
-  String get wsBackground => 'Background';
+  String get aplDate => 'Date';
 
   @override
-  String get wsBackgroundColor => 'Background color';
+  String get aplName => 'Name';
 
   @override
-  String get wsBackgroundShape => 'Background shape';
+  String get aplPublisher => 'Publisher';
 
   @override
-  String get wsDate => 'Date';
+  String get aplSize => 'Size';
 
   @override
-  String get wsDateColor => 'Date color';
+  String get clkBackground => 'Background';
 
   @override
-  String get wsDateStyle => 'Date style';
+  String get clkBackgroundColor => 'Background color';
 
   @override
-  String get wsDateType => 'Date type';
+  String get clkBackgroundShape => 'Background shape';
 
   @override
-  String get wsTime => 'Time';
+  String get clkDate => 'Date';
 
   @override
-  String get wsTimeBool => 'Show time';
+  String get clkDateColor => 'Date color';
 
   @override
-  String get wsTimeColor => 'Time color';
+  String get clkDateStyle => 'Date style';
 
   @override
-  String get wsTimeStyle => 'Time style';
+  String get clkDateType => 'Date type';
 
   @override
-  String get wsAppIcon => 'Use app icon';
+  String get clkCompact => 'Compact';
 
   @override
-  String get wsCalendar => 'Calendar';
+  String get clkLong => 'Long';
 
   @override
-  String get wsClear => 'Long press to clear';
+  String get clkMedium => 'Medium';
 
   @override
-  String get wsNewEvent => 'New event';
+  String get clkShort => 'Short';
 
   @override
-  String get wsNewTask => 'New task';
+  String get clkTime => 'Time';
 
   @override
-  String get wsNoCalendar =>
+  String get clkTimeBool => 'Show time';
+
+  @override
+  String get clkTimeColor => 'Time color';
+
+  @override
+  String get clkTimeStyle => 'Time style';
+
+  @override
+  String get evtAppIcon => 'Use app icon';
+
+  @override
+  String get evtCalendar => 'Calendar';
+
+  @override
+  String get evtClear => 'Long press to clear';
+
+  @override
+  String get evtNewEvent => 'New event';
+
+  @override
+  String get evtNewTask => 'New task';
+
+  @override
+  String get evtNoCalendar =>
       'Can\'t find a default calendar app.\nWhat shall I do?\n\n\'Task\' is just share underneath. You\'ll choose a default app to share with.\nWe recommend using a task app, but don\'t require.\nResults may vary.';
 
   @override
-  String get wsShare =>
+  String get evtShare =>
       '\'Task\' is just share underneath.\nChoose a destination app below.\n\nWe recommend using a task app, but it\'s not required. Results may vary.';
 
   @override
-  String get wsShareDest => 'Selecting share destination';
+  String get evtShareDest => 'Selecting share destination';
 
   @override
-  String get wsTask => 'Task';
+  String get evtTask => 'Task';
 
   @override
-  String get wsUseTasks => 'Switch to tasks';
+  String get evtUseTasks => 'Switch to tasks';
 
   @override
-  String get wsBadTime => 'Invalid time';
+  String get srcCustom => 'Custom';
 
   @override
-  String get wsNoEmpty => 'Cannot be empty';
+  String get srcName => 'Name ';
 
   @override
-  String get wsSelector => 'selector';
+  String get srcBase => 'Base site ';
 
   @override
-  String get wsCustom => 'Custom';
+  String get srcPath => 'Path ';
 
   @override
-  String get wsName => 'Name ';
+  String get srcParameter => 'Parameter ';
 
   @override
-  String get wsBase => 'Base site ';
+  String get srcNonEmpty => 'Need a non-empty name.';
 
   @override
-  String get wsPath => 'Path ';
-
-  @override
-  String get wsParameter => 'Parameter ';
-
-  @override
-  String get wsPlayResponsibly =>
+  String get srcPlayResponsibly =>
       'Liminal does minimal validation of these custom inputs.\nPlay at your own risk.';
 
   @override
-  String get wsNonEmpty => 'Need a non-empty name.';
-
-  @override
-  String get wsSameName =>
+  String get srcSameName =>
       'A custom entry with that name already exists.\nPlease change the name and try again.';
 
   @override
-  String get wsFF => 'FF/Rewind';
+  String get thmSelector => 'selector';
 
   @override
-  String get wsSkip => 'Skip/Prev';
+  String get timBadTime => 'Invalid time';
 
   @override
-  String get wsSomePlayers =>
+  String get togFF => 'FF/Rewind';
+
+  @override
+  String get togSkip => 'Skip/Prev';
+
+  @override
+  String get togSomePlayers =>
       'Note:\nThese buttons only work if the active player supports them. Some music players don\'t have FF/Rewind, for example';
 
   @override
-  String get edtCompact => 'Compact';
+  String get gsAppList => 'App list';
 
   @override
-  String get edtShort => 'Short';
+  String get gsLinkedList => 'Linked home lists';
 
   @override
-  String get edtMedium => 'Medium';
+  String get gsThemedHome => 'The home list can be theme based too!';
 
   @override
-  String get edtLong => 'Long';
+  String get gsNoBothHome => 'Note: the home ages have no update both system (';
 
   @override
-  String get eltInitials => 'Initials';
+  String get gsIndependent => ').\nThe lists will be fully independent.';
 
   @override
-  String get eltFull => 'Full';
-
-  @override
-  String get eltWingding => 'Wingding';
-
-  @override
-  String get elaCenter => 'Center';
-
-  @override
-  String get elaEnd => 'End';
-
-  @override
-  String get elaStart => 'Start';
-
-  @override
-  String get elsDate => 'Date';
-
-  @override
-  String get elsName => 'Name';
-
-  @override
-  String get elsPublisher => 'Publisher';
-
-  @override
-  String get elsSize => 'Size';
-
-  @override
-  String get ssAppList => 'App list';
-
-  @override
-  String get ssLinkedList => 'Linked home lists';
-
-  @override
-  String get ssThemedHome => 'The home list can be theme based too!';
-
-  @override
-  String get ssNoBothHome => 'Note: the home ages have no update both system (';
-
-  @override
-  String get ssIndependent => ').\nThe lists will be fully independent.';
-
-  @override
-  String get ssRelinked =>
+  String get gsRelinked =>
       'If/when re-linked, you will be asked which version to keep.';
 
   @override
-  String get ssKeepWhich => 'Keep which layout?';
+  String get gsKeepWhich => 'Keep which layout?';
 
   @override
-  String get ssHomeRipple => 'Home ripple animation';
+  String get gsAutoSearch => 'Auto-search the apps list';
 
   @override
-  String get ssListRipple => 'List ripple animation';
+  String get gsHomeRipple => 'Home ripple animation';
 
   @override
-  String get ssAutoSearch => 'Auto-search the apps list';
+  String get gsListRipple => 'List ripple animation';
 
   @override
-  String get ssQuickLaunch => 'Quick launch';
+  String get gsQuickLaunch => 'Quick launch';
 
   @override
-  String get ssQLDescription =>
+  String get gsQLDescription =>
       'Swipe left/right on the home screen (except when editing) to open the selected app.\nLong press to clear your selection.';
 
   @override
-  String ssSwipe(Object direction) {
+  String gsSwipe(Object direction) {
     return '$direction swipe';
   }
 
   @override
-  String ssSwipeDesc(Object direction) {
+  String gsSwipeDesc(Object direction) {
     return 'Choose a quick access app that will open when you swipe $direction on the home screen. swipe';
   }
 
   @override
-  String ssSwipeHint(Object direction) {
+  String gsSwipeHint(Object direction) {
     return 'Choose app that opens on $direction swipe';
   }
 
   @override
-  String ssSwipeLabel(Object direction) {
+  String gsSwipeLabel(Object direction) {
     return 'Selecting $direction swipe';
   }
 
   @override
-  String get ssSecurity => 'Security';
+  String get gsSecurity => 'Security';
 
   @override
-  String get ssAuthToEdit => 'Auth to edit lists/settings';
+  String get gsAuthToEdit => 'Auth to edit lists/settings';
 
   @override
-  String get ssAuthForHidden => 'Auth to see hidden apps';
+  String get gsAuthForHidden => 'Auth to see hidden apps';
 
   @override
-  String get ssAuthTimeout => 'Auth timeout (mins)';
+  String get gsAuthTimeout => 'Auth timeout (mins)';
 
   @override
-  String get ssPositiveOnly => 'Positive integers only';
+  String get gsPositiveOnly => 'Positive integers only';
 
   @override
-  String get ssApp => 'Liminal App';
-
-  @override
-  String get ssElevatedStyle => 'Elevated style';
-
-  @override
-  String get ssFolder => 'Liminal Folder';
-
-  @override
-  String get ssLabelType => 'Label type';
-
-  @override
-  String get ssFullName => 'Full name';
-
-  @override
-  String get ssShowIcon => 'Show icon';
-
-  @override
-  String get ssElevatedButton => 'Elevated button';
-
-  @override
-  String ssTileType(Object type) {
+  String dbsTileType(Object type) {
     return '$type tile';
   }
 
   @override
-  String get ssWallpaper => 'Wallpaper';
+  String get dbsApp => 'Liminal App';
 
   @override
-  String get ssUseOS => 'Use OS';
+  String get dbsFolder => 'Liminal Folder';
 
   @override
-  String get ssListAlign => 'List alignment';
+  String get dbsLabelType => 'Label type';
 
   @override
-  String get ssAlignHint => 'Liminal Launcher icon used for alignment preview';
+  String get dbsInitials => 'Initials';
 
   @override
-  String get ssHideStatus => 'Hide status bar';
+  String get dbsFull => 'Full';
 
   @override
-  String get ssPages => 'Home screen pages';
+  String get dbsWingding => 'Wingding';
+
+  @override
+  String get dbsElevatedButton => 'Elevated button';
+
+  @override
+  String get dbsShowIcon => 'Show icon';
+
+  @override
+  String get dbsElevatedStyle => 'Elevated style';
+
+  @override
+  String get dpsWallpaper => 'Wallpaper';
+
+  @override
+  String get dpsUseOS => 'Use OS';
+
+  @override
+  String get dpsListAlign => 'List alignment';
+
+  @override
+  String get dpsAlignHint => 'Liminal Launcher icon used for alignment preview';
+
+  @override
+  String get dpsHideStatus => 'Hide status bar';
+
+  @override
+  String get dpsPages => 'Home screen pages';
 }
 
 /// The translations for Chinese, as used in China (`zh_CN`).

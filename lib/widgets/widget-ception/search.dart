@@ -507,7 +507,7 @@ Future<void> _openEdits(
                   key: const ValueKey<String>('addNew'),
                   config,
                   icon: EzIcon(config, Icons.add),
-                  label: l10n(config).wsCustom,
+                  label: l10n(config).srcCustom,
                   onPressed: () async {
                     final TextEditingController nameCon = TextEditingController();
                     IconData icon = Icons.search;
@@ -549,7 +549,7 @@ Future<void> _openEdits(
                                       width: fieldWidth,
                                     ),
                                     errorConstraints: BoxConstraints.tightFor(width: fieldWidth),
-                                    hintText: '${l10n(config).wsName}(Ecosia)',
+                                    hintText: '${l10n(config).srcName}(Ecosia)',
                                     onFieldSubmitted: shrink,
                                     onTap: grow,
                                     validator: (String? check) => validateName(config, check),
@@ -575,7 +575,7 @@ Future<void> _openEdits(
                                   width: fieldWidth,
                                 ),
                                 errorConstraints: BoxConstraints.tightFor(width: fieldWidth),
-                                hintText: '${l10n(config).wsBase}(ecosia.org)',
+                                hintText: '${l10n(config).srcBase}(ecosia.org)',
                                 onFieldSubmitted: shrink,
                                 onTap: grow,
                                 validator: (String? check) => validateName(config, check),
@@ -590,7 +590,7 @@ Future<void> _openEdits(
                                   width: fieldWidth,
                                 ),
                                 errorConstraints: BoxConstraints.tightFor(width: fieldWidth),
-                                hintText: '${l10n(config).wsPath}(/search)',
+                                hintText: '${l10n(config).srcPath}(/search)',
                                 onFieldSubmitted: shrink,
                                 onTap: grow,
                                 validator: (String? check) => validateName(config, check),
@@ -605,7 +605,7 @@ Future<void> _openEdits(
                                   width: fieldWidth,
                                 ),
                                 errorConstraints: BoxConstraints.tightFor(width: fieldWidth),
-                                hintText: '${l10n(config).wsParameter}(q)',
+                                hintText: '${l10n(config).srcParameter}(q)',
                                 onFieldSubmitted: shrink,
                                 onTap: grow,
                                 validator: (String? check) => validateName(config, check),
@@ -640,7 +640,7 @@ Future<void> _openEdits(
                                         ezSnackBar(
                                           config,
                                           context: customCon,
-                                          message: l10n(config).wsNonEmpty,
+                                          message: l10n(config).srcNonEmpty,
                                         );
                                         return;
                                       }
@@ -652,7 +652,7 @@ Future<void> _openEdits(
                                         ezSnackBar(
                                           config,
                                           context: customCon,
-                                          message: l10n(config).wsSameName,
+                                          message: l10n(config).srcSameName,
                                         );
                                         return;
                                       }
@@ -675,7 +675,7 @@ Future<void> _openEdits(
 
                               // Warning
                               Text(
-                                l10n(config).wsPlayResponsibly,
+                                l10n(config).srcPlayResponsibly,
                                 textAlign: TextAlign.center,
                                 style: config.labelStyle,
                               ),

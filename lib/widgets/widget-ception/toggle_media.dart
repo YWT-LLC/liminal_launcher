@@ -382,7 +382,7 @@ Future<void> _openEdits(
           config,
           key: ValueKey<String>('big-$bigSkips'),
           value: bigSkips,
-          text: l10n(config).wsSkip,
+          text: l10n(config).togSkip,
           onChanged: (bool? value) {
             if (value == null) return;
 
@@ -402,7 +402,7 @@ Future<void> _openEdits(
           config,
           key: ValueKey<String>('lil-$lilSkips'),
           value: lilSkips,
-          text: l10n(config).wsFF,
+          text: l10n(config).togFF,
           onChanged: (bool? value) {
             if (value == null) return;
 
@@ -421,7 +421,7 @@ Future<void> _openEdits(
 
         // Note
         Text(
-          l10n(config).wsSomePlayers,
+          l10n(config).togSomePlayers,
           textAlign: TextAlign.center,
           style: config.labelStyle,
         ),

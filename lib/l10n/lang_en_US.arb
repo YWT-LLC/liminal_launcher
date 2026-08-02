@@ -21,11 +21,12 @@
   "gShared": "Shared",
   "gShown": "Shown",
 
-  "gSolid": "Solid",
   "gOutlined": "Outlined",
+  "gSolid": "Solid",
 
-  "gInvalid": "Invalid",
   "gFailed": "Failed",
+  "gInvalid": "Invalid",
+  "gNoEmpty": "Cannot be empty",
   "gNothing": "Nothing",
   "gSelfDestruct": "Self-destruct",
 
@@ -67,111 +68,126 @@
 
 
 
-  "wsBackground": "Background",
-  "wsBackgroundColor": "Background color",
-  "wsBackgroundShape": "Background shape",
-  "wsDate": "Date",
-  "wsDateColor": "Date color",
-  "wsDateStyle": "Date style",
-  "wsDateType": "Date type",
-  "wsTime": "Time",
-  "wsTimeBool": "Show time",
-  "wsTimeColor": "Time color",
-  "wsTimeStyle": "Time style",
+  "aplDate": "Date",
+  "aplName": "Name",
+  "aplPublisher": "Publisher",
+  "aplSize": "Size",
+
   
-  "wsAppIcon": "Use app icon",
-  "wsCalendar": "Calendar",
-  "wsClear": "Long press to clear",
-  "wsNewEvent": "New event",
-  "wsNewTask": "New task",
-  "wsNoCalendar": "Can't find a default calendar app.\nWhat shall I do?\n\n'Task' is just share underneath. You'll choose a default app to share with.\nWe recommend using a task app, but don't require.\nResults may vary.",
-  "wsShare": "'Task' is just share underneath.\nChoose a destination app below.\n\nWe recommend using a task app, but it's not required. Results may vary.",
-  "wsShareDest": "Selecting share destination",
-  "wsTask": "Task",
-  "wsUseTasks": "Switch to tasks",
+    
+  "clkBackground": "Background",
+  "clkBackgroundColor": "Background color",
+  "clkBackgroundShape": "Background shape",
 
-  "wsBadTime": "Invalid time",
-  "wsNoEmpty": "Cannot be empty",
-  "wsSelector": "selector",
+  "clkDate": "Date",
+  "clkDateColor": "Date color",
+  "clkDateStyle": "Date style",
+  "clkDateType": "Date type",
 
-  "wsCustom": "Custom",
-  "wsName": "Name ",
-  "wsBase": "Base site ",
-  "wsPath": "Path ",
-  "wsParameter": "Parameter ",
-  "wsPlayResponsibly": "Liminal does minimal validation of these custom inputs.\nPlay at your own risk.",
+  "clkCompact": "Compact",
+  "clkLong": "Long",
+  "clkMedium": "Medium",
+  "clkShort": "Short",
+
+  "clkTime": "Time",
+  "clkTimeBool": "Show time",
+  "clkTimeColor": "Time color",
+  "clkTimeStyle": "Time style",
+
   
-  "wsNonEmpty": "Need a non-empty name.",
-  "wsSameName": "A custom entry with that name already exists.\nPlease change the name and try again.",
 
-  "wsFF": "FF/Rewind",
-  "wsSkip": "Skip/Prev",
-  "wsSomePlayers": "Note:\nThese buttons only work if the active player supports them. Some music players don't have FF/Rewind, for example",
-
-
-
-  "edtCompact": "Compact",
-  "edtShort": "Short",
-  "edtMedium": "Medium",
-  "edtLong": "Long",
-
-  "eltInitials": "Initials",
-  "eltFull": "Full",
-  "eltWingding": "Wingding",
-
-  "elaCenter": "Center",
-  "elaEnd": "End",
-  "elaStart": "Start",
-
-  "elsDate": "Date",
-  "elsName": "Name",
-  "elsPublisher": "Publisher",
-  "elsSize": "Size",
+  "evtAppIcon": "Use app icon",
+  "evtCalendar": "Calendar",
+  "evtClear": "Long press to clear",
+  "evtNewEvent": "New event",
+  "evtNewTask": "New task",
+  "evtNoCalendar": "Can't find a default calendar app.\nWhat shall I do?\n\n'Task' is just share underneath. You'll choose a default app to share with.\nWe recommend using a task app, but don't require.\nResults may vary.",
+  "evtShare": "'Task' is just share underneath.\nChoose a destination app below.\n\nWe recommend using a task app, but it's not required. Results may vary.",
+  "evtShareDest": "Selecting share destination",
+  "evtTask": "Task",
+  "evtUseTasks": "Switch to tasks",
 
 
 
-  "ssAppList": "App list",
+  "srcCustom": "Custom",
+  "srcName": "Name ",
+  "srcBase": "Base site ",
+  "srcPath": "Path ",
+  "srcParameter": "Parameter ",
 
-  "ssLinkedList": "Linked home lists",
-  "ssThemedHome": "The home list can be theme based too!",
-  "ssNoBothHome": "Note: the home ages have no update both system (",
-  "ssIndependent": ").\nThe lists will be fully independent.",
-  "ssRelinked": "If/when re-linked, you will be asked which version to keep.",
-  "ssKeepWhich": "Keep which layout?",
+  "srcNonEmpty": "Need a non-empty name.",
+  "srcPlayResponsibly": "Liminal does minimal validation of these custom inputs.\nPlay at your own risk.",
+  "srcSameName": "A custom entry with that name already exists.\nPlease change the name and try again.",
 
-  "ssHomeRipple": "Home ripple animation",
-  "ssListRipple": "List ripple animation",
 
-  "ssAutoSearch": "Auto-search the apps list",
+
+  "thmSelector": "selector",
+
+
+
+  "timBadTime": "Invalid time",
+
+
+
+  "togFF": "FF/Rewind",
+  "togSkip": "Skip/Prev",
+  "togSomePlayers": "Note:\nThese buttons only work if the active player supports them. Some music players don't have FF/Rewind, for example",
+
   
-  "ssQuickLaunch": "Quick launch",
-  "ssQLDescription": "Swipe left/right on the home screen (except when editing) to open the selected app.\nLong press to clear your selection.",
-  "ssSwipe": "{direction} swipe",
-  "ssSwipeDesc": "Choose a quick access app that will open when you swipe {direction} on the home screen. swipe",
-  "ssSwipeHint": "Choose app that opens on {direction} swipe",
-  "ssSwipeLabel": "Selecting {direction} swipe",
 
-  "ssSecurity": "Security",
-  "ssAuthToEdit": "Auth to edit lists/settings",
-  "ssAuthForHidden": "Auth to see hidden apps",
-  "ssAuthTimeout": "Auth timeout (mins)",
-  "ssPositiveOnly": "Positive integers only",
+  "gsAppList": "App list",
 
-  "ssApp": "Liminal App",
-  "ssElevatedStyle": "Elevated style",
-  "ssFolder": "Liminal Folder",
-  "ssLabelType": "Label type",
-  "ssFullName": "Full name",
-  "ssShowIcon": "Show icon",
-  "ssElevatedButton": "Elevated button",
-  "ssTileType": "{type} tile",
+  "gsLinkedList": "Linked home lists",
+  "gsThemedHome": "The home list can be theme based too!",
+  "gsNoBothHome": "Note: the home ages have no update both system (",
+  "gsIndependent": ").\nThe lists will be fully independent.",
+  "gsRelinked": "If/when re-linked, you will be asked which version to keep.",
+  "gsKeepWhich": "Keep which layout?",
 
-  "ssWallpaper": "Wallpaper",
-  "ssUseOS": "Use OS",
+  "gsAutoSearch": "Auto-search the apps list",
 
-  "ssListAlign": "List alignment",
-  "ssAlignHint": "Liminal Launcher icon used for alignment preview",
+  "gsHomeRipple": "Home ripple animation",
+  "gsListRipple": "List ripple animation",
 
-  "ssHideStatus": "Hide status bar",
-  "ssPages": "Home screen pages"
+  "gsQuickLaunch": "Quick launch",
+  "gsQLDescription": "Swipe left/right on the home screen (except when editing) to open the selected app.\nLong press to clear your selection.",
+  "gsSwipe": "{direction} swipe",
+  "gsSwipeDesc": "Choose a quick access app that will open when you swipe {direction} on the home screen. swipe",
+  "gsSwipeHint": "Choose app that opens on {direction} swipe",
+  "gsSwipeLabel": "Selecting {direction} swipe",
+
+  "gsSecurity": "Security",
+  "gsAuthToEdit": "Auth to edit lists/settings",
+  "gsAuthForHidden": "Auth to see hidden apps",
+  "gsAuthTimeout": "Auth timeout (mins)",
+  "gsPositiveOnly": "Positive integers only",
+
+
+
+  "dbsTileType": "{type} tile",
+
+  "dbsApp": "Liminal App",
+  "dbsFolder": "Liminal Folder",
+
+  "dbsLabelType": "Label type",
+
+  "dbsInitials": "Initials",
+  "dbsFull": "Full",
+  "dbsWingding": "Wingding",
+  
+  "dbsElevatedButton": "Elevated button",
+  "dbsShowIcon": "Show icon",
+
+  "dbsElevatedStyle": "Elevated style",
+
+
+
+  "dpsWallpaper": "Wallpaper",
+  "dpsUseOS": "Use OS",
+
+  "dpsListAlign": "List alignment",
+  "dpsAlignHint": "Liminal Launcher icon used for alignment preview",
+  
+  "dpsHideStatus": "Hide status bar",
+  "dpsPages": "Home screen pages"
 }

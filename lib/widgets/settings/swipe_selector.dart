@@ -45,7 +45,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
       children: <Widget>[
         EzLink(
           widget.config,
-          text: l10n(widget.config).ssSwipe(lowDir),
+          text: l10n(widget.config).gsSwipe(lowDir),
           textColor: widget.config.colors.onSurface,
           backgroundColor: widget.config.colors.surfaceContainer,
           onTap: () => showDialog(
@@ -53,13 +53,13 @@ class _SwipeSelectorState extends State<SwipeSelector> {
             builder: (_) => EzAlertDialog(
               widget.config,
               content: Text(
-                l10n(widget.config).ssSwipeDesc(lowDir),
+                l10n(widget.config).gsSwipeDesc(lowDir),
                 style: widget.config.bodyStyle,
                 textAlign: TextAlign.center,
               ),
             ),
           ),
-          hint: l10n(widget.config).ssSwipeHint(lowDir),
+          hint: l10n(widget.config).gsSwipeHint(lowDir),
           style: widget.config.bodyStyle,
         ),
         widget.config.rowMargin,
@@ -90,7 +90,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
               title: EzTextButton(
                 widget.config,
                 onPressed: doNothing,
-                text: l10n(widget.config).ssSwipeLabel(lowDir),
+                text: l10n(widget.config).gsSwipeLabel(lowDir),
                 textStyle: widget.config.labelStyle,
               ),
             ),
