@@ -970,7 +970,7 @@ Future<void> _welcome(EzCP config, BuildContext context) => ezModal(
             textAlign: TextAlign.center,
             style: config.bodyStyle,
           ),
-          config.separator,
+          liminalFooter(config, textBackground: false),
         ],
       ),
     );
