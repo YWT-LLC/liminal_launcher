@@ -10,6 +10,7 @@ import 'package:ywt_private/ywt_private.dart' as ywt;
 import 'package:open_ui/open_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 Future<void> canEdit(EzCP config, Future<void> Function() onSuccess) async {
   if (!authToEdit(config)) {
@@ -108,11 +109,14 @@ Future<bool> liminalAuth(EzCP config, String reason) async {
       : Future<bool>.value(true);
 }
 
+/// When [options] is true, [context] is required
 Widget liminalFooter(
   EzCP config, {
   required bool textBackground,
-  bool human = false,
   TextAlign textAlign = TextAlign.center,
+  bool options = false,
+  BuildContext? context,
+  bool human = false,
   double? spacing,
 }) =>
     EzFooter(
@@ -127,7 +131,38 @@ Widget liminalFooter(
           EzInlineLink(
             config,
             text: l10n(config).gTranslations,
-            url: Uri.parse('${ywt.ywtGitHub}/liminal_launcher/tree/main/lib/l10n'),
+            url: options ? null : Uri.parse('${ywt.ywtGitHub}/liminal_launcher/tree/main/lib/l10n'),
+            onTap: options
+                ? () => showDialog(
+                      context: context!,
+                      builder: (_) => EzAlertDialog(
+                        config,
+                        title: Text(l10n(config).gFix, textAlign: TextAlign.center),
+                        actions: <Widget>[
+                          EzAction(
+                            config,
+                            text: l10n(config).gLauncherEntries,
+                            onPressed: () => launchUrl(
+                                Uri.parse('${ywt.ywtGitHub}/liminal_launcher/tree/main/lib/l10n')),
+                            semantics: config.ezL10n.gOpenLink,
+                          ),
+                          EzAction(
+                            config,
+                            text: l10n(config).gSettingsEntries,
+                            onPressed: () => launchUrl(
+                                Uri.parse('${ywt.ywtGitHub}/open_ui/tree/main/lib/src/l10n')),
+                            semantics: config.ezL10n.gOpenLink,
+                          ),
+                          EzAction(
+                            config,
+                            text: config.ezL10n.gCancel,
+                            onPressed: () => Navigator.of(context).pop(),
+                            semantics: config.ezL10n.gOpenLink,
+                          ),
+                        ],
+                      ),
+                    )
+                : null,
             hint: config.ezL10n.gOpenLink,
             style: config.labelStyle,
             textAlign: textAlign,
