@@ -284,19 +284,16 @@ Future<void> editSpacer(
               config.ezL10n.dsPadding: config.padding,
               config.ezL10n.dsSpacing: config.spacing,
               config.ezL10n.tsIconSize: config.iconSize,
-              'Icon button size': appIS,
+              l10n(config).mcIconButton: appIS,
             }
                 .entries
-                .map(
-                  (MapEntry<String, double> entry) => EzMenuButton(
-                    config,
-                    label: '${entry.key}: ${entry.value.toStringAsFixed(2)}',
-                    icon: step == entry.value ? EzIcon(config, Icons.circle) : null,
-                    textAlign: TextAlign.center,
-                    textStyle: config.bodyStyle,
-                    onPressed: () => setOverlay(() => step = entry.value),
-                  ),
-                )
+                .map((MapEntry<String, double> entry) => EzMenuButton(
+                      config,
+                      label: '${entry.key}: ${entry.value.toStringAsFixed(2)}',
+                      icon: step == entry.value ? EzIcon(config, Icons.circle) : null,
+                      textStyle: config.bodyStyle,
+                      onPressed: () => setOverlay(() => step = entry.value),
+                    ))
                 .toList();
 
         late final List<Widget> stepOptions = staticSteps() + dynamicSteps();
@@ -376,63 +373,29 @@ Future<void> editSpacer(
                               icon: const Icon(Icons.key),
                               onPressed: () => toggleMenu(c),
                             ),
-                            menuChildren: <Widget>[
-                              EzMenuButton(
-                                config,
-                                label: 'Margin: ${config.marginVal}',
-                                onPressed: () => quickValue(config.marginVal),
-                              ),
-                              EzMenuButton(
-                                config,
-                                label: 'Padding: ${config.padding}',
-                                onPressed: () => quickValue(config.padding),
-                              ),
-                              EzMenuButton(
-                                config,
-                                label: 'Spacing: ${config.spacing}',
-                                onPressed: () => quickValue(config.spacing),
-                              ),
-                              EzMenuButton(
-                                config,
-                                label: 'Icon size: ${config.iconSize}',
-                                onPressed: () => quickValue(config.iconSize),
-                              ),
-                              EzMenuButton(
-                                config,
-                                label: '1/4',
-                                icon: EzIcon(config, Icons.phone_android),
-                                onPressed: () => quickValue(
-                                    (axis == Axis.vertical ? fullHeight : fullWidth) * 0.250),
-                              ),
-                              EzMenuButton(
-                                config,
-                                label: '1/3',
-                                icon: EzIcon(config, Icons.phone_android),
-                                onPressed: () => quickValue(
-                                    (axis == Axis.vertical ? fullHeight : fullWidth) * 0.333),
-                              ),
-                              EzMenuButton(
-                                config,
-                                label: '1/2',
-                                icon: EzIcon(config, Icons.phone_android),
-                                onPressed: () => quickValue(
-                                    (axis == Axis.vertical ? fullHeight : fullWidth) * 0.500),
-                              ),
-                              EzMenuButton(
-                                config,
-                                label: '2/3',
-                                icon: EzIcon(config, Icons.phone_android),
-                                onPressed: () => quickValue(
-                                    (axis == Axis.vertical ? fullHeight : fullWidth) * 0.667),
-                              ),
-                              EzMenuButton(
-                                config,
-                                label: '3/4',
-                                icon: EzIcon(config, Icons.phone_android),
-                                onPressed: () => quickValue(
-                                    (axis == Axis.vertical ? fullHeight : fullWidth) * 0.750),
-                              ),
-                            ],
+                            menuChildren: <String, double>{
+                              config.ezL10n.dsMargin: config.marginVal,
+                              config.ezL10n.dsPadding: config.padding,
+                              config.ezL10n.dsSpacing: config.spacing,
+                              config.ezL10n.tsIconSize: config.iconSize,
+                              l10n(config).mcIconButton: appIS,
+                              '1/4': (axis == Axis.horizontal ? fullHeight : fullWidth) * 0.250,
+                              '1/3': (axis == Axis.horizontal ? fullHeight : fullWidth) * 0.333,
+                              '1/2': (axis == Axis.horizontal ? fullHeight : fullWidth) * 0.500,
+                              '2/3': (axis == Axis.horizontal ? fullHeight : fullWidth) * 0.667,
+                              '3/4': (axis == Axis.horizontal ? fullHeight : fullWidth) * 0.750,
+                            }
+                                .entries
+                                .map((MapEntry<String, double> entry) => EzMenuButton(
+                                      config,
+                                      icon: entry.key.contains('/')
+                                          ? EzIcon(config, Icons.phone_android)
+                                          : null,
+                                      label: '${entry.key}: ${entry.value.toStringAsFixed(2)}',
+                                      textStyle: config.bodyStyle,
+                                      onPressed: () => quickValue(entry.value),
+                                    ))
+                                .toList(),
                           ),
                           rowSpacer,
 
@@ -446,7 +409,7 @@ Future<void> editSpacer(
                             menuChildren: <Widget>[
                               EzMenuButton(
                                 config,
-                                label: 'Done',
+                                label: l10n(config).mcDone,
                                 icon: EzIcon(config, Icons.done),
                                 onPressed: () {
                                   overlayEntry.remove();
@@ -479,7 +442,7 @@ Future<void> editSpacer(
                               ),
                               EzMenuButton(
                                 config,
-                                label: 'Reset',
+                                label: l10n(config).mcReset,
                                 icon: EzIcon(config, Icons.refresh),
                                 onPressed: () {
                                   height = hBack;
@@ -493,7 +456,7 @@ Future<void> editSpacer(
                               ),
                               EzMenuButton(
                                 config,
-                                label: 'Delete',
+                                label: l10n(config).mcDelete,
                                 icon: EzIcon(config, Icons.delete),
                                 onPressed: () {
                                   overlayEntry.remove();
