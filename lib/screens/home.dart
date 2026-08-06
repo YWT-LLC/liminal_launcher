@@ -205,7 +205,6 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                                     () => size = tile ? WidgetSize.tile : WidgetSize.button),
                               ),
                               height: config.spacing * 2,
-                              width: widthOf(wmCon) * 0.75,
                             ),
                             config.spacer,
 
