@@ -248,6 +248,15 @@ class LangDe extends Lang {
   String get gTranslations => 'Translations link.';
 
   @override
+  String get gFix => 'Fix...';
+
+  @override
+  String get gLauncherEntries => 'Launcher entries';
+
+  @override
+  String get gSettingsEntries => 'Settings entries';
+
+  @override
   String get gsAppList => 'App list';
 
   @override

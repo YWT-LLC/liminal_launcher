@@ -591,6 +591,24 @@ abstract class Lang {
   /// **'Translations link.'**
   String get gTranslations;
 
+  /// No description provided for @gFix.
+  ///
+  /// In en, this message translates to:
+  /// **'Fix...'**
+  String get gFix;
+
+  /// No description provided for @gLauncherEntries.
+  ///
+  /// In en, this message translates to:
+  /// **'Launcher entries'**
+  String get gLauncherEntries;
+
+  /// No description provided for @gSettingsEntries.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings entries'**
+  String get gSettingsEntries;
+
   /// No description provided for @gsAppList.
   ///
   /// In en, this message translates to:
