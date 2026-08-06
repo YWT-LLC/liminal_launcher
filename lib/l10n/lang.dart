@@ -579,6 +579,18 @@ abstract class Lang {
   /// **'Self-destruct'**
   String get gSelfDestruct;
 
+  /// No description provided for @gMachineTranslated.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything is machine translated. If you see something wrong, please submit a fix!\n'**
+  String get gMachineTranslated;
+
+  /// No description provided for @gTranslations.
+  ///
+  /// In en, this message translates to:
+  /// **'Translations link.'**
+  String get gTranslations;
+
   /// No description provided for @gsAppList.
   ///
   /// In en, this message translates to:

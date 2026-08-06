@@ -114,6 +114,9 @@
   "gRemoving": "Removing",
   "gSelfDestruct": "Self-destruct",
 
+  "gMachineTranslated": "Everything is machine translated. If you see something wrong, please submit a fix!\n",
+  "gTranslations": "Translations link.",
+
 
 
   "gsAppList": "App list",

@@ -241,6 +241,13 @@ class LangEn extends Lang {
   String get gSelfDestruct => 'Self-destruct';
 
   @override
+  String get gMachineTranslated =>
+      'Everything is machine translated. If you see something wrong, please submit a fix!\n';
+
+  @override
+  String get gTranslations => 'Translations link.';
+
+  @override
   String get gsAppList => 'App list';
 
   @override
@@ -788,6 +795,13 @@ class LangEnUs extends LangEn {
 
   @override
   String get gSelfDestruct => 'Self-destruct';
+
+  @override
+  String get gMachineTranslated =>
+      'Everything is machine translated. If you see something wrong, please submit a fix!\n';
+
+  @override
+  String get gTranslations => 'Translations link.';
 
   @override
   String get gsAppList => 'App list';

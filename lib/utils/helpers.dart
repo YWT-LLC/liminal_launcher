@@ -5,6 +5,7 @@
 
 import './export.dart';
 import '../widgets/export.dart';
+import 'package:ywt_private/ywt_private.dart' as ywt;
 
 import 'package:open_ui/open_ui.dart';
 import 'package:flutter/material.dart';
@@ -106,6 +107,39 @@ Future<bool> liminalAuth(EzCP config, String reason) async {
       ? _externalAuth(reason)
       : Future<bool>.value(true);
 }
+
+Widget liminalFooter(
+  EzCP config, {
+  required bool textBackground,
+  bool human = false,
+  TextAlign textAlign = TextAlign.center,
+  double? spacing,
+}) =>
+    EzFooter(
+      config,
+      message: EzRichText(
+        config,
+        children: <InlineSpan>[
+          EzPlainText(
+            text: l10n(config).gMachineTranslated,
+            style: config.labelStyle,
+          ),
+          EzInlineLink(
+            config,
+            text: l10n(config).gTranslations,
+            url: Uri.parse('${ywt.ywtGitHub}/liminal_launcher/tree/main/lib/l10n'),
+            hint: config.ezL10n.gOpenLink,
+            style: config.labelStyle,
+            textAlign: textAlign,
+          ),
+        ],
+        textAlign: textAlign,
+        textBackground: textBackground,
+        style: config.labelStyle,
+      ),
+      human: human,
+      spacing: spacing,
+    );
 
 Widget renderWidget(
   EzCP config, {
