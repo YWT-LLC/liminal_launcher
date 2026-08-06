@@ -166,8 +166,11 @@ class AppInfoProvider extends ChangeNotifier {
                               await editNew();
                             },
                           )
-                        : EzIconButton(config,
-                            icon: const Icon(Icons.check), onPressed: _clearAdded),
+                        : EzIconButton(
+                            config,
+                            icon: const Icon(Icons.check),
+                            onPressed: _clearAdded,
+                          ),
                   ],
                 ),
               ),
@@ -259,12 +262,14 @@ class AppInfoProvider extends ChangeNotifier {
     required Future<void> Function() editNew,
   }) async {
     if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane].add(<String>['Folder', defaultFolderEntry()].join(folderSplit));
+      _darkHomeMatrix[lane]
+          .add(<String>[l10n(config).hsFolder, defaultFolderEntry()].join(folderSplit));
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane].add(<String>['Folder', defaultFolderEntry()].join(folderSplit));
+      _lightHomeMatrix[lane]
+          .add(<String>[l10n(config).hsFolder, defaultFolderEntry()].join(folderSplit));
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
@@ -618,14 +623,14 @@ class AppInfoProvider extends ChangeNotifier {
           builder: (BuildContext dCon) => EzAlertDialog(
             config,
             title: Text(
-              _darkHidden.isEmpty ? 'Reminder' : 'Want to...',
+              _darkHidden.isEmpty ? l10n(config).pReminder : l10n(config).pWantTo,
               textAlign: TextAlign.center,
             ),
             content: Text(
               <String>[
-                _darkHidden.isEmpty ? 'Swipe up while editing to open the hidden apps list.' : '',
+                _darkHidden.isEmpty ? l10n(config).pHiddenReminder : '',
                 (_darkHidden.isEmpty && worthAsk) ? '\n\n' : '',
-                worthAsk ? 'Hide for light mode too?' : '',
+                worthAsk ? l10n(config).pHideLightToo : '',
               ].join(),
               textAlign: TextAlign.center,
             ),
@@ -666,15 +671,14 @@ class AppInfoProvider extends ChangeNotifier {
           builder: (BuildContext dCon) => EzAlertDialog(
             config,
             title: Text(
-              _lightHidden.isEmpty ? 'Reminder' : 'Want to...',
+              _lightHidden.isEmpty ? l10n(config).pReminder : l10n(config).pWantTo,
               textAlign: TextAlign.center,
             ),
             content: Text(
               <String>[
-                _lightHidden.isEmpty
-                    ? 'Swipe up while editing to open the hidden apps list.\n\n'
-                    : '',
-                'Hide for dark mode too?',
+                _lightHidden.isEmpty ? l10n(config).pHiddenReminder : '',
+                (_lightHidden.isEmpty && worthAsk) ? '\n\n' : '',
+                worthAsk ? l10n(config).pHideDarkToo : '',
               ].join(),
               textAlign: TextAlign.center,
             ),
@@ -717,8 +721,8 @@ class AppInfoProvider extends ChangeNotifier {
           context: ezRootContext,
           builder: (BuildContext dCon) => EzAlertDialog(
             config,
-            title: const Text('Want to...', textAlign: TextAlign.center),
-            content: const Text('show for light mode too?', textAlign: TextAlign.center),
+            title: Text(l10n(config).pWantTo, textAlign: TextAlign.center),
+            content: Text(l10n(config).pShowLightToo, textAlign: TextAlign.center),
             actions: <Widget>[
               EzAction(
                 config,
@@ -748,8 +752,8 @@ class AppInfoProvider extends ChangeNotifier {
           context: ezRootContext,
           builder: (BuildContext dCon) => EzAlertDialog(
             config,
-            title: const Text('Want to...', textAlign: TextAlign.center),
-            content: const Text('show for dark mode too?', textAlign: TextAlign.center),
+            title: Text(l10n(config).pWantTo, textAlign: TextAlign.center),
+            content: Text(l10n(config).pShowDarkToo, textAlign: TextAlign.center),
             actions: <Widget>[
               EzAction(
                 config,
@@ -777,32 +781,20 @@ class AppInfoProvider extends ChangeNotifier {
   /// Does notify
   /// Calls [ezNoTouch] when saving changes
   Future<bool> banishApp(EzCP config, BuildContext context, AppInfo app) async {
-    const String curr = 'curr';
+    const String curr = 'curr'; // not for user, don't translate
     const String both = 'both';
 
     final String? choice = await showDialog(
       context: context,
       builder: (BuildContext dCon) => EzAlertDialog(
         config,
-        title: Text('Banish ${app.label}?', textAlign: TextAlign.center),
+        title: Text(l10n(config).pBanishApp(app.label), textAlign: TextAlign.center),
         content: _darkBanished.isEmpty
             ? Text(
-                '''When you banish an app, it will still be installed but not appear in Liminal at all.
-Banished apps can only be opened from the system settings, or via app link.
-
-The simplest way to restore/un-banish ${app.label} is to uninstall it from the system settings, then reinstall.
-
-Banishing is useful for utility apps that also waste time. For example, you may want to banish your web browser(s).
-That way, you can use online menus when you go out, and reduce doom scrolling when you stay in.
-
-Reminder: banishing is just for UX, not for security.
-For example: if an app has always on location permissions, banishing it will not affect that.''',
+                l10n(config).pWhatBanish(l10n(config).pUnBanish(app.label)),
                 textAlign: TextAlign.center,
               )
-            : Text(
-                'The simplest way to restore/un-banish ${app.label} is to uninstall it from the system settings, then reinstall.',
-                textAlign: TextAlign.center,
-              ),
+            : Text(l10n(config).pUnBanish(app.label), textAlign: TextAlign.center),
         actions: interlinked
             ? ezActionPair(
                 config,
@@ -819,7 +811,7 @@ For example: if an app has always on location permissions, banishing it will not
                 ),
                 EzAction(
                   config,
-                  text: 'Current (${config.isDark ? 'dark' : 'light'}) theme',
+                  text: config.isDark ? config.ezL10n.gDarkTheme : config.ezL10n.gLightTheme,
                   onPressed: () => Navigator.of(dCon).pop(curr),
                 ),
                 EzAction(
@@ -1046,7 +1038,7 @@ For example: if an app has always on location permissions, banishing it will not
         context: context,
         builder: (BuildContext dCon) => EzAlertDialog(
           config,
-          title: Text('Delete lane $lane?', textAlign: TextAlign.center),
+          title: Text(l10n(config).pRemoveLane(lane), textAlign: TextAlign.center),
           actions: ezActionPair(
             config,
             onConfirm: () => Navigator.of(dCon).pop(true),

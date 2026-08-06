@@ -72,7 +72,52 @@ class LangHi extends Lang {
   String get gNothing => 'Nothing';
 
   @override
+  String get gRemoving => 'Removing';
+
+  @override
   String get gSelfDestruct => 'Self-destruct';
+
+  @override
+  String get pHiddenReminder =>
+      'Swipe up while editing to open the hidden apps list.';
+
+  @override
+  String get pReminder => 'Reminder';
+
+  @override
+  String pBanishApp(Object app) {
+    return 'Banish $app?';
+  }
+
+  @override
+  String pRemoveLane(Object lane) {
+    return 'Remove $lane?';
+  }
+
+  @override
+  String get pWantTo => 'Want to...';
+
+  @override
+  String get pHideDarkToo => 'Hide for dark mode too?';
+
+  @override
+  String get pHideLightToo => 'Hide for light mode too?';
+
+  @override
+  String get pShowDarkToo => 'Show for dark mode too?';
+
+  @override
+  String get pShowLightToo => 'Show for light mode too?';
+
+  @override
+  String pWhatBanish(Object undo) {
+    return 'When you banish an app, it will still be installed but not appear in Liminal at all.\nBanished apps can only be opened from the system settings, or via app link.\n\nBanishing is useful for utility apps that also waste time. For example, you may want to banish your web browser(s).\nThat way, you can use online menus when you go out, and reduce doom scrolling when you stay in.\n\n$undo\n\nReminder: banishing is just for UX, not for security.\nFor example: if an app has always on location permissions, banishing it will not affect that.';
+  }
+
+  @override
+  String pUnBanish(Object app) {
+    return 'The simplest wat to restore/un-banish $app is to uninstall it from the system settings, then reinstall.';
+  }
 
   @override
   String get hsHome => 'Home';

@@ -249,11 +249,83 @@ abstract class Lang {
   /// **'Nothing'**
   String get gNothing;
 
+  /// No description provided for @gRemoving.
+  ///
+  /// In en, this message translates to:
+  /// **'Removing'**
+  String get gRemoving;
+
   /// No description provided for @gSelfDestruct.
   ///
   /// In en, this message translates to:
   /// **'Self-destruct'**
   String get gSelfDestruct;
+
+  /// No description provided for @pHiddenReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe up while editing to open the hidden apps list.'**
+  String get pHiddenReminder;
+
+  /// No description provided for @pReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder'**
+  String get pReminder;
+
+  /// No description provided for @pBanishApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Banish {app}?'**
+  String pBanishApp(Object app);
+
+  /// No description provided for @pRemoveLane.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {lane}?'**
+  String pRemoveLane(Object lane);
+
+  /// No description provided for @pWantTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Want to...'**
+  String get pWantTo;
+
+  /// No description provided for @pHideDarkToo.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide for dark mode too?'**
+  String get pHideDarkToo;
+
+  /// No description provided for @pHideLightToo.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide for light mode too?'**
+  String get pHideLightToo;
+
+  /// No description provided for @pShowDarkToo.
+  ///
+  /// In en, this message translates to:
+  /// **'Show for dark mode too?'**
+  String get pShowDarkToo;
+
+  /// No description provided for @pShowLightToo.
+  ///
+  /// In en, this message translates to:
+  /// **'Show for light mode too?'**
+  String get pShowLightToo;
+
+  /// No description provided for @pWhatBanish.
+  ///
+  /// In en, this message translates to:
+  /// **'When you banish an app, it will still be installed but not appear in Liminal at all.\nBanished apps can only be opened from the system settings, or via app link.\n\nBanishing is useful for utility apps that also waste time. For example, you may want to banish your web browser(s).\nThat way, you can use online menus when you go out, and reduce doom scrolling when you stay in.\n\n{undo}\n\nReminder: banishing is just for UX, not for security.\nFor example: if an app has always on location permissions, banishing it will not affect that.'**
+  String pWhatBanish(Object undo);
+
+  /// No description provided for @pUnBanish.
+  ///
+  /// In en, this message translates to:
+  /// **'The simplest wat to restore/un-banish {app} is to uninstall it from the system settings, then reinstall.'**
+  String pUnBanish(Object app);
 
   /// No description provided for @hsHome.
   ///
