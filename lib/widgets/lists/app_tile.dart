@@ -676,7 +676,7 @@ Future<void> editApp(
                     textStyle: config.labelStyle,
                   ),
                 ),
-              ), // TODO: test new edits (mess with something, dupe it, change app)
+              ),
             ),
             EzTitledDivider(
               config,
