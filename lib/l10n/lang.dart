@@ -123,11 +123,317 @@ abstract class Lang {
     Locale('zh', 'CN')
   ];
 
+  /// No description provided for @aplDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get aplDate;
+
+  /// No description provided for @aplName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get aplName;
+
+  /// No description provided for @aplPublisher.
+  ///
+  /// In en, this message translates to:
+  /// **'Publisher'**
+  String get aplPublisher;
+
+  /// No description provided for @aplSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Size'**
+  String get aplSize;
+
+  /// No description provided for @clkBackground.
+  ///
+  /// In en, this message translates to:
+  /// **'Background'**
+  String get clkBackground;
+
+  /// No description provided for @clkBackgroundColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Background color'**
+  String get clkBackgroundColor;
+
+  /// No description provided for @clkBackgroundShape.
+  ///
+  /// In en, this message translates to:
+  /// **'Background shape'**
+  String get clkBackgroundShape;
+
+  /// No description provided for @clkDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get clkDate;
+
+  /// No description provided for @clkDateColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Date color'**
+  String get clkDateColor;
+
+  /// No description provided for @clkDateStyle.
+  ///
+  /// In en, this message translates to:
+  /// **'Date style'**
+  String get clkDateStyle;
+
+  /// No description provided for @clkDateType.
+  ///
+  /// In en, this message translates to:
+  /// **'Date type'**
+  String get clkDateType;
+
+  /// No description provided for @clkCompact.
+  ///
+  /// In en, this message translates to:
+  /// **'Compact'**
+  String get clkCompact;
+
+  /// No description provided for @clkLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Long'**
+  String get clkLong;
+
+  /// No description provided for @clkMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get clkMedium;
+
+  /// No description provided for @clkShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Short'**
+  String get clkShort;
+
+  /// No description provided for @clkTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get clkTime;
+
+  /// No description provided for @clkTimeBool.
+  ///
+  /// In en, this message translates to:
+  /// **'Show time'**
+  String get clkTimeBool;
+
+  /// No description provided for @clkTimeColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Time color'**
+  String get clkTimeColor;
+
+  /// No description provided for @clkTimeStyle.
+  ///
+  /// In en, this message translates to:
+  /// **'Time style'**
+  String get clkTimeStyle;
+
+  /// No description provided for @dbsTileType.
+  ///
+  /// In en, this message translates to:
+  /// **'{type} tile'**
+  String dbsTileType(Object type);
+
+  /// No description provided for @dbsChangeApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Long press to change the app.'**
+  String get dbsChangeApp;
+
+  /// No description provided for @dbsApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Liminal App'**
+  String get dbsApp;
+
+  /// No description provided for @dbsFolder.
+  ///
+  /// In en, this message translates to:
+  /// **'Liminal Folder'**
+  String get dbsFolder;
+
+  /// No description provided for @dbsLabelType.
+  ///
+  /// In en, this message translates to:
+  /// **'Label type'**
+  String get dbsLabelType;
+
+  /// No description provided for @dbsInitials.
+  ///
+  /// In en, this message translates to:
+  /// **'Initials'**
+  String get dbsInitials;
+
+  /// No description provided for @dbsFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Full'**
+  String get dbsFull;
+
+  /// No description provided for @dbsWingding.
+  ///
+  /// In en, this message translates to:
+  /// **'Wingding'**
+  String get dbsWingding;
+
+  /// No description provided for @dbsElevatedButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Elevated button'**
+  String get dbsElevatedButton;
+
+  /// No description provided for @dbsShowIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Show icon'**
+  String get dbsShowIcon;
+
+  /// No description provided for @dbsElevatedStyle.
+  ///
+  /// In en, this message translates to:
+  /// **'Elevated style'**
+  String get dbsElevatedStyle;
+
+  /// No description provided for @dpsPageSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Page settings'**
+  String get dpsPageSettings;
+
+  /// No description provided for @dpsWallpaper.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallpaper'**
+  String get dpsWallpaper;
+
+  /// No description provided for @dpsUseOS.
+  ///
+  /// In en, this message translates to:
+  /// **'Use OS'**
+  String get dpsUseOS;
+
+  /// No description provided for @dpsAlign.
+  ///
+  /// In en, this message translates to:
+  /// **'Align'**
+  String get dpsAlign;
+
+  /// No description provided for @dpsListAlign.
+  ///
+  /// In en, this message translates to:
+  /// **'List alignment'**
+  String get dpsListAlign;
+
+  /// No description provided for @dpsAlignHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Liminal Launcher icon used for alignment preview'**
+  String get dpsAlignHint;
+
+  /// No description provided for @dpsHideStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide status bar'**
+  String get dpsHideStatus;
+
+  /// No description provided for @dpsPages.
+  ///
+  /// In en, this message translates to:
+  /// **'Home screen pages'**
+  String get dpsPages;
+
+  /// No description provided for @evtAppIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Use app icon'**
+  String get evtAppIcon;
+
+  /// No description provided for @evtCalendar.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar'**
+  String get evtCalendar;
+
+  /// No description provided for @evtClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Long press to clear'**
+  String get evtClear;
+
+  /// No description provided for @evtNewEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'New event'**
+  String get evtNewEvent;
+
+  /// No description provided for @evtNewTask.
+  ///
+  /// In en, this message translates to:
+  /// **'New task'**
+  String get evtNewTask;
+
+  /// No description provided for @evtNoCalendar.
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t find a default calendar app.\nWhat shall I do?\n\n\'Task\' is just share underneath. You\'ll choose a default app to share with.\nWe recommend using a task app, but don\'t require.\nResults may vary.'**
+  String get evtNoCalendar;
+
+  /// No description provided for @evtShare.
+  ///
+  /// In en, this message translates to:
+  /// **'\'Task\' is just share underneath.\nChoose a destination app below.\n\nWe recommend using a task app, but it\'s not required. Results may vary.'**
+  String get evtShare;
+
+  /// No description provided for @evtShareDest.
+  ///
+  /// In en, this message translates to:
+  /// **'Selecting share destination'**
+  String get evtShareDest;
+
+  /// No description provided for @evtTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Task'**
+  String get evtTask;
+
+  /// No description provided for @evtUseTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to tasks'**
+  String get evtUseTasks;
+
+  /// No description provided for @fldAppearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get fldAppearance;
+
+  /// No description provided for @fldApps.
+  ///
+  /// In en, this message translates to:
+  /// **'Apps'**
+  String get fldApps;
+
   /// No description provided for @gAdd.
   ///
   /// In en, this message translates to:
   /// **'Add'**
   String get gAdd;
+
+  /// No description provided for @gDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get gDefault;
 
   /// No description provided for @gDupe.
   ///
@@ -141,11 +447,23 @@ abstract class Lang {
   /// **'Edit'**
   String get gEdit;
 
+  /// No description provided for @gEditDefaults.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit defaults'**
+  String get gEditDefaults;
+
   /// No description provided for @gResize.
   ///
   /// In en, this message translates to:
   /// **'Resize'**
   String get gResize;
+
+  /// No description provided for @gReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get gReset;
 
   /// No description provided for @gButton.
   ///
@@ -261,107 +579,131 @@ abstract class Lang {
   /// **'Self-destruct'**
   String get gSelfDestruct;
 
-  /// No description provided for @pHiddenReminder.
+  /// No description provided for @gsAppList.
   ///
   /// In en, this message translates to:
-  /// **'Swipe up while editing to open the hidden apps list.'**
-  String get pHiddenReminder;
+  /// **'App list'**
+  String get gsAppList;
 
-  /// No description provided for @pReminder.
+  /// No description provided for @gsLinkedList.
   ///
   /// In en, this message translates to:
-  /// **'Reminder'**
-  String get pReminder;
+  /// **'Linked home lists'**
+  String get gsLinkedList;
 
-  /// No description provided for @pBanishApp.
+  /// No description provided for @gsThemedHome.
   ///
   /// In en, this message translates to:
-  /// **'Banish {app}?'**
-  String pBanishApp(Object app);
+  /// **'The home list can be theme based too!'**
+  String get gsThemedHome;
 
-  /// No description provided for @pRemoveLane.
+  /// No description provided for @gsNoBothHome.
   ///
   /// In en, this message translates to:
-  /// **'Remove {lane}?'**
-  String pRemoveLane(Object lane);
+  /// **'Note: the home ages have no update both system ('**
+  String get gsNoBothHome;
 
-  /// No description provided for @pWantTo.
+  /// No description provided for @gsIndependent.
   ///
   /// In en, this message translates to:
-  /// **'Want to...'**
-  String get pWantTo;
+  /// **').\nThe lists will be fully independent.'**
+  String get gsIndependent;
 
-  /// No description provided for @pHideDarkToo.
+  /// No description provided for @gsRelinked.
   ///
   /// In en, this message translates to:
-  /// **'Hide for dark mode too?'**
-  String get pHideDarkToo;
+  /// **'If/when re-linked, you will be asked which version to keep.'**
+  String get gsRelinked;
 
-  /// No description provided for @pHideLightToo.
+  /// No description provided for @gsKeepWhich.
   ///
   /// In en, this message translates to:
-  /// **'Hide for light mode too?'**
-  String get pHideLightToo;
+  /// **'Keep which layout?'**
+  String get gsKeepWhich;
 
-  /// No description provided for @pShowDarkToo.
+  /// No description provided for @gsAutoSearch.
   ///
   /// In en, this message translates to:
-  /// **'Show for dark mode too?'**
-  String get pShowDarkToo;
+  /// **'Auto-search the apps list'**
+  String get gsAutoSearch;
 
-  /// No description provided for @pShowLightToo.
+  /// No description provided for @gsHomeRipple.
   ///
   /// In en, this message translates to:
-  /// **'Show for light mode too?'**
-  String get pShowLightToo;
+  /// **'Home ripple animation'**
+  String get gsHomeRipple;
 
-  /// No description provided for @pWhatBanish.
+  /// No description provided for @gsListRipple.
   ///
   /// In en, this message translates to:
-  /// **'When you banish an app, it will still be installed but not appear in Liminal at all.\nBanished apps can only be opened from the system settings, or via app link.\n\nBanishing is useful for utility apps that also waste time. For example, you may want to banish your web browser(s).\nThat way, you can use online menus when you go out, and reduce doom scrolling when you stay in.\n\n{undo}\n\nReminder: banishing is just for UX, not for security.\nFor example: if an app has always on location permissions, banishing it will not affect that.'**
-  String pWhatBanish(Object undo);
+  /// **'List ripple animation'**
+  String get gsListRipple;
 
-  /// No description provided for @pUnBanish.
+  /// No description provided for @gsQuickLaunch.
   ///
   /// In en, this message translates to:
-  /// **'The simplest wat to restore/un-banish {app} is to uninstall it from the system settings, then reinstall.'**
-  String pUnBanish(Object app);
+  /// **'Quick launch'**
+  String get gsQuickLaunch;
 
-  /// No description provided for @mcIconButton.
+  /// No description provided for @gsQLDescription.
   ///
   /// In en, this message translates to:
-  /// **'Icon button size'**
-  String get mcIconButton;
+  /// **'Swipe left/right on the home screen (except when editing) to open the selected app.\nLong press to clear your selection.'**
+  String get gsQLDescription;
 
-  /// No description provided for @mcDelete.
+  /// No description provided for @gsSwipe.
   ///
   /// In en, this message translates to:
-  /// **'Delete'**
-  String get mcDelete;
+  /// **'{direction} swipe'**
+  String gsSwipe(Object direction);
 
-  /// No description provided for @mcDone.
+  /// No description provided for @gsSwipeDesc.
   ///
   /// In en, this message translates to:
-  /// **'Done'**
-  String get mcDone;
+  /// **'Choose a quick access app that will open when you swipe {direction} on the home screen. swipe'**
+  String gsSwipeDesc(Object direction);
 
-  /// No description provided for @mcMove.
+  /// No description provided for @gsSwipeHint.
   ///
   /// In en, this message translates to:
-  /// **'Move'**
-  String get mcMove;
+  /// **'Choose app that opens on {direction} swipe'**
+  String gsSwipeHint(Object direction);
 
-  /// No description provided for @mcRemove.
+  /// No description provided for @gsSwipeLabel.
   ///
   /// In en, this message translates to:
-  /// **'Remove'**
-  String get mcRemove;
+  /// **'Selecting {direction} swipe'**
+  String gsSwipeLabel(Object direction);
 
-  /// No description provided for @mcReset.
+  /// No description provided for @gsSecurity.
   ///
   /// In en, this message translates to:
-  /// **'Reset'**
-  String get mcReset;
+  /// **'Security'**
+  String get gsSecurity;
+
+  /// No description provided for @gsAuthToEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Auth to edit lists/settings'**
+  String get gsAuthToEdit;
+
+  /// No description provided for @gsAuthForHidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Auth to see hidden apps'**
+  String get gsAuthForHidden;
+
+  /// No description provided for @gsAuthTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Auth timeout (mins)'**
+  String get gsAuthTimeout;
+
+  /// No description provided for @gsPositiveOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Positive integers only'**
+  String get gsPositiveOnly;
 
   /// No description provided for @hsHome.
   ///
@@ -531,179 +873,191 @@ abstract class Lang {
   /// **'Authenticate to see hidden apps'**
   String get hsHiddenAuth;
 
-  /// No description provided for @aplDate.
+  /// No description provided for @mcIconButton.
   ///
   /// In en, this message translates to:
-  /// **'Date'**
-  String get aplDate;
+  /// **'Icon button size'**
+  String get mcIconButton;
 
-  /// No description provided for @aplName.
+  /// No description provided for @mcBanish.
   ///
   /// In en, this message translates to:
-  /// **'Name'**
-  String get aplName;
+  /// **'Banish'**
+  String get mcBanish;
 
-  /// No description provided for @aplPublisher.
+  /// No description provided for @mcDelete.
   ///
   /// In en, this message translates to:
-  /// **'Publisher'**
-  String get aplPublisher;
+  /// **'Delete'**
+  String get mcDelete;
 
-  /// No description provided for @aplSize.
+  /// No description provided for @mcDone.
   ///
   /// In en, this message translates to:
-  /// **'Size'**
-  String get aplSize;
+  /// **'Done'**
+  String get mcDone;
 
-  /// No description provided for @clkBackground.
+  /// No description provided for @mcHide.
   ///
   /// In en, this message translates to:
-  /// **'Background'**
-  String get clkBackground;
+  /// **'Hide'**
+  String get mcHide;
 
-  /// No description provided for @clkBackgroundColor.
+  /// No description provided for @mcInfo.
   ///
   /// In en, this message translates to:
-  /// **'Background color'**
-  String get clkBackgroundColor;
+  /// **'Info'**
+  String get mcInfo;
 
-  /// No description provided for @clkBackgroundShape.
+  /// No description provided for @mcMove.
   ///
   /// In en, this message translates to:
-  /// **'Background shape'**
-  String get clkBackgroundShape;
+  /// **'Move'**
+  String get mcMove;
 
-  /// No description provided for @clkDate.
+  /// No description provided for @mcRemove.
   ///
   /// In en, this message translates to:
-  /// **'Date'**
-  String get clkDate;
+  /// **'Remove'**
+  String get mcRemove;
 
-  /// No description provided for @clkDateColor.
+  /// No description provided for @mcSave.
   ///
   /// In en, this message translates to:
-  /// **'Date color'**
-  String get clkDateColor;
+  /// **'Save'**
+  String get mcSave;
 
-  /// No description provided for @clkDateStyle.
+  /// No description provided for @mcShow.
   ///
   /// In en, this message translates to:
-  /// **'Date style'**
-  String get clkDateStyle;
+  /// **'Show'**
+  String get mcShow;
 
-  /// No description provided for @clkDateType.
+  /// No description provided for @mcUninstall.
   ///
   /// In en, this message translates to:
-  /// **'Date type'**
-  String get clkDateType;
+  /// **'Uninstall'**
+  String get mcUninstall;
 
-  /// No description provided for @clkCompact.
+  /// No description provided for @mltLaneConfig.
   ///
   /// In en, this message translates to:
-  /// **'Compact'**
-  String get clkCompact;
+  /// **'Multi-lane configuration'**
+  String get mltLaneConfig;
 
-  /// No description provided for @clkLong.
+  /// No description provided for @mltPagesEnabled.
   ///
   /// In en, this message translates to:
-  /// **'Long'**
-  String get clkLong;
+  /// **'With pages enabled, lanes behave like pages on a traditional launcher.\n'**
+  String get mltPagesEnabled;
 
-  /// No description provided for @clkMedium.
+  /// No description provided for @mltPagesDisabled.
   ///
   /// In en, this message translates to:
-  /// **'Medium'**
-  String get clkMedium;
+  /// **'With pages disabled, all lanes share one horizontal scroll.\n'**
+  String get mltPagesDisabled;
 
-  /// No description provided for @clkShort.
+  /// No description provided for @mltWideEnabled.
   ///
   /// In en, this message translates to:
-  /// **'Short'**
-  String get clkShort;
+  /// **'With wide tiles enabled...\n'**
+  String get mltWideEnabled;
 
-  /// No description provided for @clkTime.
+  /// No description provided for @mltWideWidth.
   ///
   /// In en, this message translates to:
-  /// **'Time'**
-  String get clkTime;
+  /// **'each lane (with an item) will be the width of one screen.\n'**
+  String get mltWideWidth;
 
-  /// No description provided for @clkTimeBool.
+  /// No description provided for @mltAnywhere.
   ///
   /// In en, this message translates to:
-  /// **'Show time'**
-  String get clkTimeBool;
+  /// **'apps and folders can/will be activated anywhere in their horizontal space.\n'**
+  String get mltAnywhere;
 
-  /// No description provided for @clkTimeColor.
+  /// No description provided for @mltWideDisabled.
   ///
   /// In en, this message translates to:
-  /// **'Time color'**
-  String get clkTimeColor;
+  /// **'With wide tiles disabled...\n'**
+  String get mltWideDisabled;
 
-  /// No description provided for @clkTimeStyle.
+  /// No description provided for @mltAutoWidth.
   ///
   /// In en, this message translates to:
-  /// **'Time style'**
-  String get clkTimeStyle;
+  /// **'lanes will be sized by their widest item & your spacing setting.\n'**
+  String get mltAutoWidth;
 
-  /// No description provided for @evtAppIcon.
+  /// No description provided for @mltOnlyButton.
   ///
   /// In en, this message translates to:
-  /// **'Use app icon'**
-  String get evtAppIcon;
+  /// **'apps and folders can/will be activated only by their button(s).\n'**
+  String get mltOnlyButton;
 
-  /// No description provided for @evtCalendar.
+  /// No description provided for @pHiddenReminder.
   ///
   /// In en, this message translates to:
-  /// **'Calendar'**
-  String get evtCalendar;
+  /// **'Swipe up while editing to open the hidden apps list.'**
+  String get pHiddenReminder;
 
-  /// No description provided for @evtClear.
+  /// No description provided for @pReminder.
   ///
   /// In en, this message translates to:
-  /// **'Long press to clear'**
-  String get evtClear;
+  /// **'Reminder'**
+  String get pReminder;
 
-  /// No description provided for @evtNewEvent.
+  /// No description provided for @pBanishApp.
   ///
   /// In en, this message translates to:
-  /// **'New event'**
-  String get evtNewEvent;
+  /// **'Banish {app}?'**
+  String pBanishApp(Object app);
 
-  /// No description provided for @evtNewTask.
+  /// No description provided for @pRemoveLane.
   ///
   /// In en, this message translates to:
-  /// **'New task'**
-  String get evtNewTask;
+  /// **'Remove {lane}?'**
+  String pRemoveLane(Object lane);
 
-  /// No description provided for @evtNoCalendar.
+  /// No description provided for @pWantTo.
   ///
   /// In en, this message translates to:
-  /// **'Can\'t find a default calendar app.\nWhat shall I do?\n\n\'Task\' is just share underneath. You\'ll choose a default app to share with.\nWe recommend using a task app, but don\'t require.\nResults may vary.'**
-  String get evtNoCalendar;
+  /// **'Want to...'**
+  String get pWantTo;
 
-  /// No description provided for @evtShare.
+  /// No description provided for @pHideDarkToo.
   ///
   /// In en, this message translates to:
-  /// **'\'Task\' is just share underneath.\nChoose a destination app below.\n\nWe recommend using a task app, but it\'s not required. Results may vary.'**
-  String get evtShare;
+  /// **'Hide for dark mode too?'**
+  String get pHideDarkToo;
 
-  /// No description provided for @evtShareDest.
+  /// No description provided for @pHideLightToo.
   ///
   /// In en, this message translates to:
-  /// **'Selecting share destination'**
-  String get evtShareDest;
+  /// **'Hide for light mode too?'**
+  String get pHideLightToo;
 
-  /// No description provided for @evtTask.
+  /// No description provided for @pShowDarkToo.
   ///
   /// In en, this message translates to:
-  /// **'Task'**
-  String get evtTask;
+  /// **'Show for dark mode too?'**
+  String get pShowDarkToo;
 
-  /// No description provided for @evtUseTasks.
+  /// No description provided for @pShowLightToo.
   ///
   /// In en, this message translates to:
-  /// **'Switch to tasks'**
-  String get evtUseTasks;
+  /// **'Show for light mode too?'**
+  String get pShowLightToo;
+
+  /// No description provided for @pWhatBanish.
+  ///
+  /// In en, this message translates to:
+  /// **'When you banish an app, it will still be installed but not appear in Liminal at all.\nBanished apps can only be opened from the system settings, or via app link.\n\nBanishing is useful for utility apps that also waste time. For example, you may want to banish your web browser(s).\nThat way, you can use online menus when you go out, and reduce doom scrolling when you stay in.\n\n{undo}\n\nReminder: banishing is just for UX, not for security.\nFor example: if an app has always on location permissions, banishing it will not affect that.'**
+  String pWhatBanish(Object undo);
+
+  /// No description provided for @pUnBanish.
+  ///
+  /// In en, this message translates to:
+  /// **'The simplest wat to restore/un-banish {app} is to uninstall it from the system settings, then reinstall.'**
+  String pUnBanish(Object app);
 
   /// No description provided for @srcCustom.
   ///
@@ -782,234 +1136,6 @@ abstract class Lang {
   /// In en, this message translates to:
   /// **'Note:\nThese buttons only work if the active player supports them. Some music players don\'t have FF/Rewind, for example'**
   String get togSomePlayers;
-
-  /// No description provided for @gsAppList.
-  ///
-  /// In en, this message translates to:
-  /// **'App list'**
-  String get gsAppList;
-
-  /// No description provided for @gsLinkedList.
-  ///
-  /// In en, this message translates to:
-  /// **'Linked home lists'**
-  String get gsLinkedList;
-
-  /// No description provided for @gsThemedHome.
-  ///
-  /// In en, this message translates to:
-  /// **'The home list can be theme based too!'**
-  String get gsThemedHome;
-
-  /// No description provided for @gsNoBothHome.
-  ///
-  /// In en, this message translates to:
-  /// **'Note: the home ages have no update both system ('**
-  String get gsNoBothHome;
-
-  /// No description provided for @gsIndependent.
-  ///
-  /// In en, this message translates to:
-  /// **').\nThe lists will be fully independent.'**
-  String get gsIndependent;
-
-  /// No description provided for @gsRelinked.
-  ///
-  /// In en, this message translates to:
-  /// **'If/when re-linked, you will be asked which version to keep.'**
-  String get gsRelinked;
-
-  /// No description provided for @gsKeepWhich.
-  ///
-  /// In en, this message translates to:
-  /// **'Keep which layout?'**
-  String get gsKeepWhich;
-
-  /// No description provided for @gsAutoSearch.
-  ///
-  /// In en, this message translates to:
-  /// **'Auto-search the apps list'**
-  String get gsAutoSearch;
-
-  /// No description provided for @gsHomeRipple.
-  ///
-  /// In en, this message translates to:
-  /// **'Home ripple animation'**
-  String get gsHomeRipple;
-
-  /// No description provided for @gsListRipple.
-  ///
-  /// In en, this message translates to:
-  /// **'List ripple animation'**
-  String get gsListRipple;
-
-  /// No description provided for @gsQuickLaunch.
-  ///
-  /// In en, this message translates to:
-  /// **'Quick launch'**
-  String get gsQuickLaunch;
-
-  /// No description provided for @gsQLDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'Swipe left/right on the home screen (except when editing) to open the selected app.\nLong press to clear your selection.'**
-  String get gsQLDescription;
-
-  /// No description provided for @gsSwipe.
-  ///
-  /// In en, this message translates to:
-  /// **'{direction} swipe'**
-  String gsSwipe(Object direction);
-
-  /// No description provided for @gsSwipeDesc.
-  ///
-  /// In en, this message translates to:
-  /// **'Choose a quick access app that will open when you swipe {direction} on the home screen. swipe'**
-  String gsSwipeDesc(Object direction);
-
-  /// No description provided for @gsSwipeHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Choose app that opens on {direction} swipe'**
-  String gsSwipeHint(Object direction);
-
-  /// No description provided for @gsSwipeLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Selecting {direction} swipe'**
-  String gsSwipeLabel(Object direction);
-
-  /// No description provided for @gsSecurity.
-  ///
-  /// In en, this message translates to:
-  /// **'Security'**
-  String get gsSecurity;
-
-  /// No description provided for @gsAuthToEdit.
-  ///
-  /// In en, this message translates to:
-  /// **'Auth to edit lists/settings'**
-  String get gsAuthToEdit;
-
-  /// No description provided for @gsAuthForHidden.
-  ///
-  /// In en, this message translates to:
-  /// **'Auth to see hidden apps'**
-  String get gsAuthForHidden;
-
-  /// No description provided for @gsAuthTimeout.
-  ///
-  /// In en, this message translates to:
-  /// **'Auth timeout (mins)'**
-  String get gsAuthTimeout;
-
-  /// No description provided for @gsPositiveOnly.
-  ///
-  /// In en, this message translates to:
-  /// **'Positive integers only'**
-  String get gsPositiveOnly;
-
-  /// No description provided for @dbsTileType.
-  ///
-  /// In en, this message translates to:
-  /// **'{type} tile'**
-  String dbsTileType(Object type);
-
-  /// No description provided for @dbsChangeApp.
-  ///
-  /// In en, this message translates to:
-  /// **'Long press to change the app.'**
-  String get dbsChangeApp;
-
-  /// No description provided for @dbsApp.
-  ///
-  /// In en, this message translates to:
-  /// **'Liminal App'**
-  String get dbsApp;
-
-  /// No description provided for @dbsFolder.
-  ///
-  /// In en, this message translates to:
-  /// **'Liminal Folder'**
-  String get dbsFolder;
-
-  /// No description provided for @dbsLabelType.
-  ///
-  /// In en, this message translates to:
-  /// **'Label type'**
-  String get dbsLabelType;
-
-  /// No description provided for @dbsInitials.
-  ///
-  /// In en, this message translates to:
-  /// **'Initials'**
-  String get dbsInitials;
-
-  /// No description provided for @dbsFull.
-  ///
-  /// In en, this message translates to:
-  /// **'Full'**
-  String get dbsFull;
-
-  /// No description provided for @dbsWingding.
-  ///
-  /// In en, this message translates to:
-  /// **'Wingding'**
-  String get dbsWingding;
-
-  /// No description provided for @dbsElevatedButton.
-  ///
-  /// In en, this message translates to:
-  /// **'Elevated button'**
-  String get dbsElevatedButton;
-
-  /// No description provided for @dbsShowIcon.
-  ///
-  /// In en, this message translates to:
-  /// **'Show icon'**
-  String get dbsShowIcon;
-
-  /// No description provided for @dbsElevatedStyle.
-  ///
-  /// In en, this message translates to:
-  /// **'Elevated style'**
-  String get dbsElevatedStyle;
-
-  /// No description provided for @dpsWallpaper.
-  ///
-  /// In en, this message translates to:
-  /// **'Wallpaper'**
-  String get dpsWallpaper;
-
-  /// No description provided for @dpsUseOS.
-  ///
-  /// In en, this message translates to:
-  /// **'Use OS'**
-  String get dpsUseOS;
-
-  /// No description provided for @dpsListAlign.
-  ///
-  /// In en, this message translates to:
-  /// **'List alignment'**
-  String get dpsListAlign;
-
-  /// No description provided for @dpsAlignHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Liminal Launcher icon used for alignment preview'**
-  String get dpsAlignHint;
-
-  /// No description provided for @dpsHideStatus.
-  ///
-  /// In en, this message translates to:
-  /// **'Hide status bar'**
-  String get dpsHideStatus;
-
-  /// No description provided for @dpsPages.
-  ///
-  /// In en, this message translates to:
-  /// **'Home screen pages'**
-  String get dpsPages;
 }
 
 class _LangDelegate extends LocalizationsDelegate<Lang> {

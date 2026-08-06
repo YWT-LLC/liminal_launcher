@@ -183,7 +183,7 @@ class AddLane extends StatelessWidget {
           children: <Widget>[
             // Title
             Text(
-              'Multi-lane configuration',
+              l10n(config).mltLaneConfig,
               textAlign: TextAlign.center,
               style: config.titleStyle,
             ),
@@ -193,7 +193,7 @@ class AddLane extends StatelessWidget {
             EzSwitchPair(
               config,
               valueKey: config.isDark ? darkPagesKey : lightPagesKey,
-              text: 'Pages',
+              text: l10n(config).dpsPages,
               afterChanged: (bool? value) async {
                 if (value == null) return;
 
@@ -210,7 +210,7 @@ class AddLane extends StatelessWidget {
             EzSwitchPair(
               config,
               valueKey: config.isDark ? darkWideTilesKey : lightWideTilesKey,
-              text: 'Wide tiles',
+              text: l10n(config).gWideTiles,
               afterChanged: (bool? value) async {
                 if (value == null) return;
 
@@ -230,38 +230,37 @@ class AddLane extends StatelessWidget {
               config,
               children: <InlineSpan>[
                 EzPlainText(
-                  text: 'With pages enabled, lanes behave like pages on a traditional launcher.\n',
+                  text: l10n(config).mltPagesEnabled,
                   style: usePage ? focussed : hidden,
                 ),
                 EzPlainText(
-                  text: 'With pages disabled, all lanes share one horizontal scroll.\n',
+                  text: l10n(config).mltPagesDisabled,
                   style: usePage ? hidden : focussed,
                 ),
                 config.richLine,
                 EzPlainText(
-                  text: 'With wide tiles enabled...\n',
+                  text: l10n(config).mltWideEnabled,
                   style: useWide ? focussed : hidden,
                 ),
                 EzPlainText(
-                  text: 'each lane (with an item) will be the width of one screen.\n',
+                  text: l10n(config).mltWideWidth,
                   style: usePage ? hidden : (useWide ? focussed : hidden),
                 ),
                 EzPlainText(
-                  text:
-                      'apps and folders can/will be activated anywhere in their horizontal space.\n',
+                  text: l10n(config).mltAnywhere,
                   style: useWide ? focussed : hidden,
                 ),
                 config.richLine,
                 EzPlainText(
-                  text: 'With wide tiles disabled...\n',
+                  text: l10n(config).mltWideDisabled,
                   style: useWide ? hidden : focussed,
                 ),
                 EzPlainText(
-                  text: 'lanes will be sized by their widest item & your spacing setting.\n',
+                  text: l10n(config).mltAutoWidth,
                   style: usePage ? hidden : (useWide ? hidden : focussed),
                 ),
                 EzPlainText(
-                  text: 'apps and folders can/will be activated only by their button(s).\n',
+                  text: l10n(config).mltOnlyButton,
                   style: useWide ? hidden : focussed,
                 ),
               ],
@@ -292,7 +291,7 @@ class AddLane extends StatelessWidget {
         onLongPress: () async => (appInfo.numLanes(config) == 1)
             ? doNothing()
             : await configMultiLane(context, rebuild: true),
-        label: 'Lane',
+        label: l10n(config).hsLane,
         icon: EzIcon(config, Icons.view_column_outlined),
       );
 }
@@ -381,7 +380,7 @@ Future<void> _editLane(
           config,
           children: <Widget>[
             // Move
-            Text('Move', textAlign: TextAlign.center, style: config.labelStyle),
+            Text(l10n(config).mcMove, textAlign: TextAlign.center, style: config.labelStyle),
             config.margin,
             EzRow(
               config,
@@ -425,7 +424,11 @@ Future<void> _editLane(
             // Divider
             EzTitledDivider(
               config,
-              title: Text('Align', textAlign: TextAlign.center, style: config.labelStyle),
+              title: Text(
+                l10n(config).dpsAlign,
+                textAlign: TextAlign.center,
+                style: config.labelStyle,
+              ),
               height: config.spacing * 3,
             ),
 
@@ -475,7 +478,7 @@ Future<void> _editLane(
                     child: ClipOval(
                       child: Image.asset(
                         appIconPath,
-                        semanticLabel: 'Default list alignment',
+                        semanticLabel: l10n(config).gDefault,
                         width: appIconSize(config),
                         height: appIconSize(config),
                         fit: BoxFit.cover,
@@ -522,7 +525,7 @@ Future<void> _editLane(
             // GoTo settings
             EzTextIconButton(
               config,
-              label: 'Page settings',
+              label: l10n(config).dpsPageSettings,
               style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
               icon: EzIcon(config, Icons.launch),
               onPressed: () {

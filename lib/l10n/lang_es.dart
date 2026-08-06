@@ -9,7 +9,164 @@ class LangEs extends Lang {
   LangEs([String locale = 'es']) : super(locale);
 
   @override
+  String get aplDate => 'Date';
+
+  @override
+  String get aplName => 'Name';
+
+  @override
+  String get aplPublisher => 'Publisher';
+
+  @override
+  String get aplSize => 'Size';
+
+  @override
+  String get clkBackground => 'Background';
+
+  @override
+  String get clkBackgroundColor => 'Background color';
+
+  @override
+  String get clkBackgroundShape => 'Background shape';
+
+  @override
+  String get clkDate => 'Date';
+
+  @override
+  String get clkDateColor => 'Date color';
+
+  @override
+  String get clkDateStyle => 'Date style';
+
+  @override
+  String get clkDateType => 'Date type';
+
+  @override
+  String get clkCompact => 'Compact';
+
+  @override
+  String get clkLong => 'Long';
+
+  @override
+  String get clkMedium => 'Medium';
+
+  @override
+  String get clkShort => 'Short';
+
+  @override
+  String get clkTime => 'Time';
+
+  @override
+  String get clkTimeBool => 'Show time';
+
+  @override
+  String get clkTimeColor => 'Time color';
+
+  @override
+  String get clkTimeStyle => 'Time style';
+
+  @override
+  String dbsTileType(Object type) {
+    return '$type tile';
+  }
+
+  @override
+  String get dbsChangeApp => 'Long press to change the app.';
+
+  @override
+  String get dbsApp => 'Liminal App';
+
+  @override
+  String get dbsFolder => 'Liminal Folder';
+
+  @override
+  String get dbsLabelType => 'Label type';
+
+  @override
+  String get dbsInitials => 'Initials';
+
+  @override
+  String get dbsFull => 'Full';
+
+  @override
+  String get dbsWingding => 'Wingding';
+
+  @override
+  String get dbsElevatedButton => 'Elevated button';
+
+  @override
+  String get dbsShowIcon => 'Show icon';
+
+  @override
+  String get dbsElevatedStyle => 'Elevated style';
+
+  @override
+  String get dpsPageSettings => 'Page settings';
+
+  @override
+  String get dpsWallpaper => 'Wallpaper';
+
+  @override
+  String get dpsUseOS => 'Use OS';
+
+  @override
+  String get dpsAlign => 'Align';
+
+  @override
+  String get dpsListAlign => 'List alignment';
+
+  @override
+  String get dpsAlignHint => 'Liminal Launcher icon used for alignment preview';
+
+  @override
+  String get dpsHideStatus => 'Hide status bar';
+
+  @override
+  String get dpsPages => 'Home screen pages';
+
+  @override
+  String get evtAppIcon => 'Use app icon';
+
+  @override
+  String get evtCalendar => 'Calendar';
+
+  @override
+  String get evtClear => 'Long press to clear';
+
+  @override
+  String get evtNewEvent => 'New event';
+
+  @override
+  String get evtNewTask => 'New task';
+
+  @override
+  String get evtNoCalendar =>
+      'Can\'t find a default calendar app.\nWhat shall I do?\n\n\'Task\' is just share underneath. You\'ll choose a default app to share with.\nWe recommend using a task app, but don\'t require.\nResults may vary.';
+
+  @override
+  String get evtShare =>
+      '\'Task\' is just share underneath.\nChoose a destination app below.\n\nWe recommend using a task app, but it\'s not required. Results may vary.';
+
+  @override
+  String get evtShareDest => 'Selecting share destination';
+
+  @override
+  String get evtTask => 'Task';
+
+  @override
+  String get evtUseTasks => 'Switch to tasks';
+
+  @override
+  String get fldAppearance => 'Appearance';
+
+  @override
+  String get fldApps => 'Apps';
+
+  @override
   String get gAdd => 'Add';
+
+  @override
+  String get gDefault => 'Default';
 
   @override
   String get gDupe => 'Duplicate';
@@ -18,7 +175,13 @@ class LangEs extends Lang {
   String get gEdit => 'Edit';
 
   @override
+  String get gEditDefaults => 'Edit defaults';
+
+  @override
   String get gResize => 'Resize';
+
+  @override
+  String get gReset => 'Reset';
 
   @override
   String get gButton => 'Button';
@@ -78,64 +241,77 @@ class LangEs extends Lang {
   String get gSelfDestruct => 'Self-destruct';
 
   @override
-  String get pHiddenReminder =>
-      'Swipe up while editing to open the hidden apps list.';
+  String get gsAppList => 'App list';
 
   @override
-  String get pReminder => 'Reminder';
+  String get gsLinkedList => 'Linked home lists';
 
   @override
-  String pBanishApp(Object app) {
-    return 'Banish $app?';
+  String get gsThemedHome => 'The home list can be theme based too!';
+
+  @override
+  String get gsNoBothHome => 'Note: the home ages have no update both system (';
+
+  @override
+  String get gsIndependent => ').\nThe lists will be fully independent.';
+
+  @override
+  String get gsRelinked =>
+      'If/when re-linked, you will be asked which version to keep.';
+
+  @override
+  String get gsKeepWhich => 'Keep which layout?';
+
+  @override
+  String get gsAutoSearch => 'Auto-search the apps list';
+
+  @override
+  String get gsHomeRipple => 'Home ripple animation';
+
+  @override
+  String get gsListRipple => 'List ripple animation';
+
+  @override
+  String get gsQuickLaunch => 'Quick launch';
+
+  @override
+  String get gsQLDescription =>
+      'Swipe left/right on the home screen (except when editing) to open the selected app.\nLong press to clear your selection.';
+
+  @override
+  String gsSwipe(Object direction) {
+    return '$direction swipe';
   }
 
   @override
-  String pRemoveLane(Object lane) {
-    return 'Remove $lane?';
+  String gsSwipeDesc(Object direction) {
+    return 'Choose a quick access app that will open when you swipe $direction on the home screen. swipe';
   }
 
   @override
-  String get pWantTo => 'Want to...';
-
-  @override
-  String get pHideDarkToo => 'Hide for dark mode too?';
-
-  @override
-  String get pHideLightToo => 'Hide for light mode too?';
-
-  @override
-  String get pShowDarkToo => 'Show for dark mode too?';
-
-  @override
-  String get pShowLightToo => 'Show for light mode too?';
-
-  @override
-  String pWhatBanish(Object undo) {
-    return 'When you banish an app, it will still be installed but not appear in Liminal at all.\nBanished apps can only be opened from the system settings, or via app link.\n\nBanishing is useful for utility apps that also waste time. For example, you may want to banish your web browser(s).\nThat way, you can use online menus when you go out, and reduce doom scrolling when you stay in.\n\n$undo\n\nReminder: banishing is just for UX, not for security.\nFor example: if an app has always on location permissions, banishing it will not affect that.';
+  String gsSwipeHint(Object direction) {
+    return 'Choose app that opens on $direction swipe';
   }
 
   @override
-  String pUnBanish(Object app) {
-    return 'The simplest wat to restore/un-banish $app is to uninstall it from the system settings, then reinstall.';
+  String gsSwipeLabel(Object direction) {
+    return 'Selecting $direction swipe';
   }
 
   @override
-  String get mcIconButton => 'Icon button size';
+  String get gsSecurity => 'Security';
 
   @override
-  String get mcDelete => 'Delete';
+  String get gsAuthToEdit => 'Auth to edit lists/settings';
 
   @override
-  String get mcDone => 'Done';
+  String get gsAuthForHidden => 'Auth to see hidden apps';
 
   @override
-  String get mcMove => 'Move';
+  String get gsAuthTimeout => 'Auth timeout (mins)';
 
   @override
-  String get mcRemove => 'Remove';
-
-  @override
-  String get mcReset => 'Reset';
+  String get gsPositiveOnly => 'Positive integers only';
 
   @override
   String get hsHome => 'Home';
@@ -227,93 +403,112 @@ class LangEs extends Lang {
   String get hsHiddenAuth => 'Authenticate to see hidden apps';
 
   @override
-  String get aplDate => 'Date';
+  String get mcIconButton => 'Icon button size';
 
   @override
-  String get aplName => 'Name';
+  String get mcBanish => 'Banish';
 
   @override
-  String get aplPublisher => 'Publisher';
+  String get mcDelete => 'Delete';
 
   @override
-  String get aplSize => 'Size';
+  String get mcDone => 'Done';
 
   @override
-  String get clkBackground => 'Background';
+  String get mcHide => 'Hide';
 
   @override
-  String get clkBackgroundColor => 'Background color';
+  String get mcInfo => 'Info';
 
   @override
-  String get clkBackgroundShape => 'Background shape';
+  String get mcMove => 'Move';
 
   @override
-  String get clkDate => 'Date';
+  String get mcRemove => 'Remove';
 
   @override
-  String get clkDateColor => 'Date color';
+  String get mcSave => 'Save';
 
   @override
-  String get clkDateStyle => 'Date style';
+  String get mcShow => 'Show';
 
   @override
-  String get clkDateType => 'Date type';
+  String get mcUninstall => 'Uninstall';
 
   @override
-  String get clkCompact => 'Compact';
+  String get mltLaneConfig => 'Multi-lane configuration';
 
   @override
-  String get clkLong => 'Long';
+  String get mltPagesEnabled =>
+      'With pages enabled, lanes behave like pages on a traditional launcher.\n';
 
   @override
-  String get clkMedium => 'Medium';
+  String get mltPagesDisabled =>
+      'With pages disabled, all lanes share one horizontal scroll.\n';
 
   @override
-  String get clkShort => 'Short';
+  String get mltWideEnabled => 'With wide tiles enabled...\n';
 
   @override
-  String get clkTime => 'Time';
+  String get mltWideWidth =>
+      'each lane (with an item) will be the width of one screen.\n';
 
   @override
-  String get clkTimeBool => 'Show time';
+  String get mltAnywhere =>
+      'apps and folders can/will be activated anywhere in their horizontal space.\n';
 
   @override
-  String get clkTimeColor => 'Time color';
+  String get mltWideDisabled => 'With wide tiles disabled...\n';
 
   @override
-  String get clkTimeStyle => 'Time style';
+  String get mltAutoWidth =>
+      'lanes will be sized by their widest item & your spacing setting.\n';
 
   @override
-  String get evtAppIcon => 'Use app icon';
+  String get mltOnlyButton =>
+      'apps and folders can/will be activated only by their button(s).\n';
 
   @override
-  String get evtCalendar => 'Calendar';
+  String get pHiddenReminder =>
+      'Swipe up while editing to open the hidden apps list.';
 
   @override
-  String get evtClear => 'Long press to clear';
+  String get pReminder => 'Reminder';
 
   @override
-  String get evtNewEvent => 'New event';
+  String pBanishApp(Object app) {
+    return 'Banish $app?';
+  }
 
   @override
-  String get evtNewTask => 'New task';
+  String pRemoveLane(Object lane) {
+    return 'Remove $lane?';
+  }
 
   @override
-  String get evtNoCalendar =>
-      'Can\'t find a default calendar app.\nWhat shall I do?\n\n\'Task\' is just share underneath. You\'ll choose a default app to share with.\nWe recommend using a task app, but don\'t require.\nResults may vary.';
+  String get pWantTo => 'Want to...';
 
   @override
-  String get evtShare =>
-      '\'Task\' is just share underneath.\nChoose a destination app below.\n\nWe recommend using a task app, but it\'s not required. Results may vary.';
+  String get pHideDarkToo => 'Hide for dark mode too?';
 
   @override
-  String get evtShareDest => 'Selecting share destination';
+  String get pHideLightToo => 'Hide for light mode too?';
 
   @override
-  String get evtTask => 'Task';
+  String get pShowDarkToo => 'Show for dark mode too?';
 
   @override
-  String get evtUseTasks => 'Switch to tasks';
+  String get pShowLightToo => 'Show for light mode too?';
+
+  @override
+  String pWhatBanish(Object undo) {
+    return 'When you banish an app, it will still be installed but not appear in Liminal at all.\nBanished apps can only be opened from the system settings, or via app link.\n\nBanishing is useful for utility apps that also waste time. For example, you may want to banish your web browser(s).\nThat way, you can use online menus when you go out, and reduce doom scrolling when you stay in.\n\n$undo\n\nReminder: banishing is just for UX, not for security.\nFor example: if an app has always on location permissions, banishing it will not affect that.';
+  }
+
+  @override
+  String pUnBanish(Object app) {
+    return 'The simplest wat to restore/un-banish $app is to uninstall it from the system settings, then reinstall.';
+  }
 
   @override
   String get srcCustom => 'Custom';
@@ -356,130 +551,4 @@ class LangEs extends Lang {
   @override
   String get togSomePlayers =>
       'Note:\nThese buttons only work if the active player supports them. Some music players don\'t have FF/Rewind, for example';
-
-  @override
-  String get gsAppList => 'App list';
-
-  @override
-  String get gsLinkedList => 'Linked home lists';
-
-  @override
-  String get gsThemedHome => 'The home list can be theme based too!';
-
-  @override
-  String get gsNoBothHome => 'Note: the home ages have no update both system (';
-
-  @override
-  String get gsIndependent => ').\nThe lists will be fully independent.';
-
-  @override
-  String get gsRelinked =>
-      'If/when re-linked, you will be asked which version to keep.';
-
-  @override
-  String get gsKeepWhich => 'Keep which layout?';
-
-  @override
-  String get gsAutoSearch => 'Auto-search the apps list';
-
-  @override
-  String get gsHomeRipple => 'Home ripple animation';
-
-  @override
-  String get gsListRipple => 'List ripple animation';
-
-  @override
-  String get gsQuickLaunch => 'Quick launch';
-
-  @override
-  String get gsQLDescription =>
-      'Swipe left/right on the home screen (except when editing) to open the selected app.\nLong press to clear your selection.';
-
-  @override
-  String gsSwipe(Object direction) {
-    return '$direction swipe';
-  }
-
-  @override
-  String gsSwipeDesc(Object direction) {
-    return 'Choose a quick access app that will open when you swipe $direction on the home screen. swipe';
-  }
-
-  @override
-  String gsSwipeHint(Object direction) {
-    return 'Choose app that opens on $direction swipe';
-  }
-
-  @override
-  String gsSwipeLabel(Object direction) {
-    return 'Selecting $direction swipe';
-  }
-
-  @override
-  String get gsSecurity => 'Security';
-
-  @override
-  String get gsAuthToEdit => 'Auth to edit lists/settings';
-
-  @override
-  String get gsAuthForHidden => 'Auth to see hidden apps';
-
-  @override
-  String get gsAuthTimeout => 'Auth timeout (mins)';
-
-  @override
-  String get gsPositiveOnly => 'Positive integers only';
-
-  @override
-  String dbsTileType(Object type) {
-    return '$type tile';
-  }
-
-  @override
-  String get dbsChangeApp => 'Long press to change the app.';
-
-  @override
-  String get dbsApp => 'Liminal App';
-
-  @override
-  String get dbsFolder => 'Liminal Folder';
-
-  @override
-  String get dbsLabelType => 'Label type';
-
-  @override
-  String get dbsInitials => 'Initials';
-
-  @override
-  String get dbsFull => 'Full';
-
-  @override
-  String get dbsWingding => 'Wingding';
-
-  @override
-  String get dbsElevatedButton => 'Elevated button';
-
-  @override
-  String get dbsShowIcon => 'Show icon';
-
-  @override
-  String get dbsElevatedStyle => 'Elevated style';
-
-  @override
-  String get dpsWallpaper => 'Wallpaper';
-
-  @override
-  String get dpsUseOS => 'Use OS';
-
-  @override
-  String get dpsListAlign => 'List alignment';
-
-  @override
-  String get dpsAlignHint => 'Liminal Launcher icon used for alignment preview';
-
-  @override
-  String get dpsHideStatus => 'Hide status bar';
-
-  @override
-  String get dpsPages => 'Home screen pages';
 }

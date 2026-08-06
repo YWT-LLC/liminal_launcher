@@ -442,7 +442,7 @@ Future<void> editSpacer(
                               ),
                               EzMenuButton(
                                 config,
-                                label: l10n(config).mcReset,
+                                label: l10n(config).gReset,
                                 icon: EzIcon(config, Icons.refresh),
                                 onPressed: () {
                                   height = hBack;

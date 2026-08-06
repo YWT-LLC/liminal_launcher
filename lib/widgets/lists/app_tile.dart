@@ -421,7 +421,7 @@ List<Widget> _baseMC(
       // Info
       EzMenuButton(
         config,
-        label: 'Info',
+        label: l10n(config).mcInfo,
         icon: EzIcon(config, Icons.info),
         onPressed: () => openAppSettings(app),
       ),
@@ -430,13 +430,13 @@ List<Widget> _baseMC(
       appInfo.hidden(config).contains(app.id)
           ? EzMenuButton(
               config,
-              label: 'Show',
+              label: l10n(config).mcShow,
               icon: EzIcon(config, Icons.visibility),
               onPressed: () => appInfo.showApp(config, app.id),
             )
           : EzMenuButton(
               config,
-              label: 'Hide',
+              label: l10n(config).mcHide,
               icon: EzIcon(config, Icons.visibility_off),
               onPressed: () => appInfo.hideApp(config, context, app.id),
             ),
@@ -444,7 +444,7 @@ List<Widget> _baseMC(
       // Banish
       EzMenuButton(
         config,
-        label: 'Banish',
+        label: l10n(config).mcBanish,
         icon: EzIcon(config, LineIcons.ghost),
         onPressed: () => appInfo.banishApp(config, context, app),
       ),
@@ -453,7 +453,7 @@ List<Widget> _baseMC(
       if (app.removable)
         EzMenuButton(
           config,
-          label: 'Uninstall',
+          label: l10n(config).mcUninstall,
           icon: EzIcon(config, Icons.delete),
           onPressed: () => openDelete(app),
         ),
@@ -705,7 +705,7 @@ Future<void> editApp(
                     width: widthOf(mCon) / 3,
                   ),
                   errorConstraints: BoxConstraints.tightFor(width: widthOf(mCon) / 3),
-                  hintText: 'App',
+                  hintText: l10n(config).hsApp,
                   autofillHints: const <String>[AutofillHints.name],
                   validator: (String? check) => validateName(config, check),
                 ),
@@ -771,10 +771,10 @@ Future<void> editApp(
             // Label type
             EzDropdownMenu<LabelType?>(
               config,
-              label: 'Label type',
-              widthEntry: 'Full name',
+              label: l10n(config).dbsLabelType,
+              widthEntry: l10n(config).dbsInitials,
               dropdownMenuEntries: <DropdownMenuEntry<LabelType?>>[
-                const DropdownMenuEntry<LabelType?>(value: null, label: 'Default'),
+                DropdownMenuEntry<LabelType?>(value: null, label: l10n(config).gDefault),
                 ...LabelType.values.map((LabelType lt) =>
                     DropdownMenuEntry<LabelType?>(value: lt, label: ezCamelToTitle(lt.value))),
               ],
@@ -794,7 +794,7 @@ Future<void> editApp(
             EzSwitchPair(
               config,
               key: ValueKey<String>('icon-$showIcon'),
-              text: 'Show icon',
+              text: l10n(config).dbsShowIcon,
               value: showIcon,
               onChanged: (bool? choice) {
                 if (choice == null) return;
@@ -812,7 +812,7 @@ Future<void> editApp(
             EzSwitchPair(
               config,
               key: ValueKey<String>('elevated-$elevated'),
-              text: 'Elevated button',
+              text: l10n(config).dbsElevatedButton,
               value: elevated,
               onChanged: (bool? choice) {
                 if (choice == null) return;
@@ -830,7 +830,7 @@ Future<void> editApp(
                 // Reset
                 EzTextIconButton(
                   config,
-                  label: 'Reset',
+                  label: l10n(config).gReset,
                   style: textButtonStyle,
                   icon: EzIcon(config, Icons.refresh),
                   onPressed: () => Navigator.of(mCon).pop(false),
@@ -840,7 +840,7 @@ Future<void> editApp(
                 // GoTo settings
                 EzTextIconButton(
                   config,
-                  label: 'Edit defaults',
+                  label: l10n(config).gEditDefaults,
                   style: textButtonStyle,
                   icon: EzIcon(config, Icons.launch),
                   onPressed: () {
@@ -858,7 +858,7 @@ Future<void> editApp(
               children: <Widget>[
                 EzTextIconButton(
                   config,
-                  label: 'Cancel',
+                  label: config.ezL10n.gCancel,
                   style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
                   icon: EzIcon(config, Icons.cancel),
                   onPressed: () => Navigator.of(mCon).pop(),
@@ -866,7 +866,7 @@ Future<void> editApp(
                 config.rowSpacer,
                 EzTextIconButton(
                   config,
-                  label: 'Save',
+                  label: l10n(config).mcSave,
                   style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
                   icon: EzIcon(config, Icons.done),
                   onPressed: () => Navigator.of(mCon).pop(true),

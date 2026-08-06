@@ -9,9 +9,9 @@ import '../export.dart';
 
 import 'dart:math';
 import 'dart:async';
+import 'package:open_ui/open_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:open_ui/open_ui.dart';
 
 //* Core Widget *//
 
@@ -488,7 +488,7 @@ Future<void> editFolder(
                         width: widthOf(mCon) / 3,
                       ),
                       errorConstraints: BoxConstraints.tightFor(width: widthOf(mCon) / 3),
-                      hintText: 'Folder',
+                      hintText: l10n(config).hsFolder,
                       autofillHints: const <String>[AutofillHints.name],
                       validator: (String? check) => validateName(config, check),
                     ),
@@ -532,10 +532,10 @@ Future<void> editFolder(
                 // Label type
                 EzDropdownMenu<LabelType?>(
                   config,
-                  label: 'Label type',
-                  widthEntry: 'Full name',
+                  label: l10n(config).dbsLabelType,
+                  widthEntry: l10n(config).dbsInitials,
                   dropdownMenuEntries: <DropdownMenuEntry<LabelType?>>[
-                    const DropdownMenuEntry<LabelType?>(value: null, label: 'Default'),
+                    DropdownMenuEntry<LabelType?>(value: null, label: l10n(config).gDefault),
                     ...LabelType.values.map((LabelType lt) =>
                         DropdownMenuEntry<LabelType?>(value: lt, label: ezCamelToTitle(lt.value))),
                   ],
@@ -555,7 +555,7 @@ Future<void> editFolder(
                 EzSwitchPair(
                   config,
                   key: ValueKey<String>('icon-$showIcon'),
-                  text: 'Show icon',
+                  text: l10n(config).dbsShowIcon,
                   value: showIcon,
                   onChanged: (bool? choice) {
                     if (choice == null) return;
@@ -573,7 +573,7 @@ Future<void> editFolder(
                 EzSwitchPair(
                   config,
                   key: ValueKey<String>('elevated-$elevated'),
-                  text: 'Elevated button',
+                  text: l10n(config).dbsElevatedButton,
                   value: elevated,
                   onChanged: (bool? choice) {
                     if (choice == null) return;
@@ -591,7 +591,7 @@ Future<void> editFolder(
                     // Reset
                     EzTextIconButton(
                       config,
-                      label: 'Reset',
+                      label: l10n(config).gReset,
                       style: textButtonStyle,
                       icon: EzIcon(config, Icons.refresh),
                       onPressed: () => Navigator.of(mCon).pop(false),
@@ -601,7 +601,7 @@ Future<void> editFolder(
                     // GoTo settings
                     EzTextIconButton(
                       config,
-                      label: 'Edit defaults',
+                      label: l10n(config).gEditDefaults,
                       style: textButtonStyle,
                       icon: EzIcon(config, Icons.launch),
                       onPressed: () {
@@ -620,7 +620,7 @@ Future<void> editFolder(
                     // Cancel
                     EzTextIconButton(
                       config,
-                      label: 'Cancel',
+                      label: config.ezL10n.gCancel,
                       style: textButtonStyle,
                       icon: EzIcon(config, Icons.cancel),
                       onPressed: () => Navigator.of(mCon).pop(),
@@ -630,7 +630,7 @@ Future<void> editFolder(
                     // Save
                     EzTextIconButton(
                       config,
-                      label: 'Save',
+                      label: l10n(config).mcSave,
                       style: textButtonStyle,
                       icon: EzIcon(config, Icons.done),
                       onPressed: () => Navigator.of(mCon).pop(true),
@@ -650,7 +650,7 @@ Future<void> editFolder(
                         child: EzTextIconButton(
                           config,
                           icon: EzIcon(config, Icons.add),
-                          label: 'Apps',
+                          label: l10n(config).hsApp,
                           style:
                               TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
                           onPressed: () => mCon.goNamed(
@@ -796,12 +796,15 @@ Future<void> editFolder(
           children: <Widget>[
             EzHeader(config),
             SegmentedButton<bool>(
-              segments: const <ButtonSegment<bool>>[
+              segments: <ButtonSegment<bool>>[
                 ButtonSegment<bool>(
                   value: true,
-                  label: Text('Appearance', textAlign: TextAlign.center),
+                  label: Text(l10n(config).fldAppearance, textAlign: TextAlign.center),
                 ),
-                ButtonSegment<bool>(value: false, label: Text('Apps', textAlign: TextAlign.center)),
+                ButtonSegment<bool>(
+                  value: false,
+                  label: Text(l10n(config).fldApps, textAlign: TextAlign.center),
+                ),
               ],
               selected: <bool>{showUI},
               showSelectedIcon: false,

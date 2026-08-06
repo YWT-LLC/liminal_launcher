@@ -1,10 +1,92 @@
 {
   "@@locale": "en",
 
+  "aplDate": "Date",
+  "aplName": "Name",
+  "aplPublisher": "Publisher",
+  "aplSize": "Size",
+
+
+
+  "clkBackground": "Background",
+  "clkBackgroundColor": "Background color",
+  "clkBackgroundShape": "Background shape",
+
+  "clkDate": "Date",
+  "clkDateColor": "Date color",
+  "clkDateStyle": "Date style",
+  "clkDateType": "Date type",
+
+  "clkCompact": "Compact",
+  "clkLong": "Long",
+  "clkMedium": "Medium",
+  "clkShort": "Short",
+
+  "clkTime": "Time",
+  "clkTimeBool": "Show time",
+  "clkTimeColor": "Time color",
+  "clkTimeStyle": "Time style",
+
+
+
+  "dbsTileType": "{type} tile",
+  "dbsChangeApp": "Long press to change the app.",
+
+  "dbsApp": "Liminal App",
+  "dbsFolder": "Liminal Folder",
+
+  "dbsLabelType": "Label type",
+
+  "dbsInitials": "Initials",
+  "dbsFull": "Full",
+  "dbsWingding": "Wingding",
+  
+  "dbsElevatedButton": "Elevated button",
+  "dbsShowIcon": "Show icon",
+
+  "dbsElevatedStyle": "Elevated style",
+
+
+
+  "dpsPageSettings": "Page settings",
+
+  "dpsWallpaper": "Wallpaper",
+  "dpsUseOS": "Use OS",
+
+  "dpsAlign": "Align",
+  "dpsListAlign": "List alignment",
+  "dpsAlignHint": "Liminal Launcher icon used for alignment preview",
+  
+  "dpsHideStatus": "Hide status bar",
+  "dpsPages": "Home screen pages",
+
+
+
+  "evtAppIcon": "Use app icon",
+  "evtCalendar": "Calendar",
+  "evtClear": "Long press to clear",
+  "evtNewEvent": "New event",
+  "evtNewTask": "New task",
+  "evtNoCalendar": "Can't find a default calendar app.\nWhat shall I do?\n\n'Task' is just share underneath. You'll choose a default app to share with.\nWe recommend using a task app, but don't require.\nResults may vary.",
+  "evtShare": "'Task' is just share underneath.\nChoose a destination app below.\n\nWe recommend using a task app, but it's not required. Results may vary.",
+  "evtShareDest": "Selecting share destination",
+  "evtTask": "Task",
+  "evtUseTasks": "Switch to tasks",
+
+
+
+  "fldAppearance": "Appearance",
+  "fldApps": "Apps",
+
+
+
   "gAdd": "Add",
+  "gDefault": "Default",
   "gDupe": "Duplicate",
   "gEdit": "Edit",
+  "gEditDefaults": "Edit defaults",
   "gResize": "Resize",
+  "gReset": "Reset",
 
   "gButton": "Button",
   "gTile": "Tile",
@@ -34,34 +116,35 @@
 
 
 
-  "pHiddenReminder": "Swipe up while editing to open the hidden apps list.",
+  "gsAppList": "App list",
 
-  "pReminder": "Reminder",
+  "gsLinkedList": "Linked home lists",
+  "gsThemedHome": "The home list can be theme based too!",
+  "gsNoBothHome": "Note: the home ages have no update both system (",
+  "gsIndependent": ").\nThe lists will be fully independent.",
+  "gsRelinked": "If/when re-linked, you will be asked which version to keep.",
+  "gsKeepWhich": "Keep which layout?",
 
-  "pBanishApp": "Banish {app}?",
-  "pRemoveLane": "Remove {lane}?",
+  "gsAutoSearch": "Auto-search the apps list",
 
-  "pWantTo": "Want to...",
-  "pHideDarkToo": "Hide for dark mode too?",
-  "pHideLightToo": "Hide for light mode too?",
-  "pShowDarkToo": "Show for dark mode too?",
-  "pShowLightToo": "Show for light mode too?",
-  
-  "pWhatBanish": "When you banish an app, it will still be installed but not appear in Liminal at all.\nBanished apps can only be opened from the system settings, or via app link.\n\nBanishing is useful for utility apps that also waste time. For example, you may want to banish your web browser(s).\nThat way, you can use online menus when you go out, and reduce doom scrolling when you stay in.\n\n{undo}\n\nReminder: banishing is just for UX, not for security.\nFor example: if an app has always on location permissions, banishing it will not affect that.",
-  "pUnBanish": "The simplest wat to restore/un-banish {app} is to uninstall it from the system settings, then reinstall.",
+  "gsHomeRipple": "Home ripple animation",
+  "gsListRipple": "List ripple animation",
+
+  "gsQuickLaunch": "Quick launch",
+  "gsQLDescription": "Swipe left/right on the home screen (except when editing) to open the selected app.\nLong press to clear your selection.",
+  "gsSwipe": "{direction} swipe",
+  "gsSwipeDesc": "Choose a quick access app that will open when you swipe {direction} on the home screen. swipe",
+  "gsSwipeHint": "Choose app that opens on {direction} swipe",
+  "gsSwipeLabel": "Selecting {direction} swipe",
+
+  "gsSecurity": "Security",
+  "gsAuthToEdit": "Auth to edit lists/settings",
+  "gsAuthForHidden": "Auth to see hidden apps",
+  "gsAuthTimeout": "Auth timeout (mins)",
+  "gsPositiveOnly": "Positive integers only",
 
 
 
-  "mcIconButton": "Icon button size",
-
-  "mcDelete": "Delete",
-  "mcDone": "Done",
-  "mcMove": "Move",
-  "mcRemove": "Remove",
-  "mcReset": "Reset",
-  
-  
-  
   "hsHome": "Home",
 
   "hsWelcome": "Welcome to Liminal Launcher",
@@ -98,44 +181,48 @@
 
 
 
-  "aplDate": "Date",
-  "aplName": "Name",
-  "aplPublisher": "Publisher",
-  "aplSize": "Size",
+  "mcIconButton": "Icon button size",
 
+  "mcBanish": "Banish",
+  "mcDelete": "Delete",
+  "mcDone": "Done",
+  "mcHide": "Hide",
+  "mcInfo": "Info",
+  "mcMove": "Move",
+  "mcRemove": "Remove",
+  "mcSave": "Save",
+  "mcShow": "Show",
+  "mcUninstall": "Uninstall",
+
+
+
+  "mltLaneConfig": "Multi-lane configuration",
+  "mltPagesEnabled": "With pages enabled, lanes behave like pages on a traditional launcher.\n",
+  "mltPagesDisabled": "With pages disabled, all lanes share one horizontal scroll.\n",
+  "mltWideEnabled": "With wide tiles enabled...\n",
+  "mltWideWidth": "each lane (with an item) will be the width of one screen.\n",
+  "mltAnywhere": "apps and folders can/will be activated anywhere in their horizontal space.\n",
+  "mltWideDisabled": "With wide tiles disabled...\n",
+  "mltAutoWidth": "lanes will be sized by their widest item & your spacing setting.\n",
+  "mltOnlyButton": "apps and folders can/will be activated only by their button(s).\n",
+
+
+
+  "pHiddenReminder": "Swipe up while editing to open the hidden apps list.",
+
+  "pReminder": "Reminder",
+
+  "pBanishApp": "Banish {app}?",
+  "pRemoveLane": "Remove {lane}?",
+
+  "pWantTo": "Want to...",
+  "pHideDarkToo": "Hide for dark mode too?",
+  "pHideLightToo": "Hide for light mode too?",
+  "pShowDarkToo": "Show for dark mode too?",
+  "pShowLightToo": "Show for light mode too?",
   
-    
-  "clkBackground": "Background",
-  "clkBackgroundColor": "Background color",
-  "clkBackgroundShape": "Background shape",
-
-  "clkDate": "Date",
-  "clkDateColor": "Date color",
-  "clkDateStyle": "Date style",
-  "clkDateType": "Date type",
-
-  "clkCompact": "Compact",
-  "clkLong": "Long",
-  "clkMedium": "Medium",
-  "clkShort": "Short",
-
-  "clkTime": "Time",
-  "clkTimeBool": "Show time",
-  "clkTimeColor": "Time color",
-  "clkTimeStyle": "Time style",
-
-  
-
-  "evtAppIcon": "Use app icon",
-  "evtCalendar": "Calendar",
-  "evtClear": "Long press to clear",
-  "evtNewEvent": "New event",
-  "evtNewTask": "New task",
-  "evtNoCalendar": "Can't find a default calendar app.\nWhat shall I do?\n\n'Task' is just share underneath. You'll choose a default app to share with.\nWe recommend using a task app, but don't require.\nResults may vary.",
-  "evtShare": "'Task' is just share underneath.\nChoose a destination app below.\n\nWe recommend using a task app, but it's not required. Results may vary.",
-  "evtShareDest": "Selecting share destination",
-  "evtTask": "Task",
-  "evtUseTasks": "Switch to tasks",
+  "pWhatBanish": "When you banish an app, it will still be installed but not appear in Liminal at all.\nBanished apps can only be opened from the system settings, or via app link.\n\nBanishing is useful for utility apps that also waste time. For example, you may want to banish your web browser(s).\nThat way, you can use online menus when you go out, and reduce doom scrolling when you stay in.\n\n{undo}\n\nReminder: banishing is just for UX, not for security.\nFor example: if an app has always on location permissions, banishing it will not affect that.",
+  "pUnBanish": "The simplest wat to restore/un-banish {app} is to uninstall it from the system settings, then reinstall.",
 
 
 
@@ -161,64 +248,5 @@
 
   "togFF": "FF/Rewind",
   "togSkip": "Skip/Prev",
-  "togSomePlayers": "Note:\nThese buttons only work if the active player supports them. Some music players don't have FF/Rewind, for example",
-
-  
-
-  "gsAppList": "App list",
-
-  "gsLinkedList": "Linked home lists",
-  "gsThemedHome": "The home list can be theme based too!",
-  "gsNoBothHome": "Note: the home ages have no update both system (",
-  "gsIndependent": ").\nThe lists will be fully independent.",
-  "gsRelinked": "If/when re-linked, you will be asked which version to keep.",
-  "gsKeepWhich": "Keep which layout?",
-
-  "gsAutoSearch": "Auto-search the apps list",
-
-  "gsHomeRipple": "Home ripple animation",
-  "gsListRipple": "List ripple animation",
-
-  "gsQuickLaunch": "Quick launch",
-  "gsQLDescription": "Swipe left/right on the home screen (except when editing) to open the selected app.\nLong press to clear your selection.",
-  "gsSwipe": "{direction} swipe",
-  "gsSwipeDesc": "Choose a quick access app that will open when you swipe {direction} on the home screen. swipe",
-  "gsSwipeHint": "Choose app that opens on {direction} swipe",
-  "gsSwipeLabel": "Selecting {direction} swipe",
-
-  "gsSecurity": "Security",
-  "gsAuthToEdit": "Auth to edit lists/settings",
-  "gsAuthForHidden": "Auth to see hidden apps",
-  "gsAuthTimeout": "Auth timeout (mins)",
-  "gsPositiveOnly": "Positive integers only",
-
-
-
-  "dbsTileType": "{type} tile",
-  "dbsChangeApp": "Long press to change the app.",
-
-  "dbsApp": "Liminal App",
-  "dbsFolder": "Liminal Folder",
-
-  "dbsLabelType": "Label type",
-
-  "dbsInitials": "Initials",
-  "dbsFull": "Full",
-  "dbsWingding": "Wingding",
-  
-  "dbsElevatedButton": "Elevated button",
-  "dbsShowIcon": "Show icon",
-
-  "dbsElevatedStyle": "Elevated style",
-
-
-
-  "dpsWallpaper": "Wallpaper",
-  "dpsUseOS": "Use OS",
-
-  "dpsListAlign": "List alignment",
-  "dpsAlignHint": "Liminal Launcher icon used for alignment preview",
-  
-  "dpsHideStatus": "Hide status bar",
-  "dpsPages": "Home screen pages"
+  "togSomePlayers": "Note:\nThese buttons only work if the active player supports them. Some music players don't have FF/Rewind, for example"  
 }
