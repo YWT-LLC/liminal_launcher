@@ -120,6 +120,24 @@ class LangEn extends Lang {
   }
 
   @override
+  String get mcIconButton => 'Icon button size';
+
+  @override
+  String get mcDelete => 'Delete';
+
+  @override
+  String get mcDone => 'Done';
+
+  @override
+  String get mcMove => 'Move';
+
+  @override
+  String get mcRemove => 'Remove';
+
+  @override
+  String get mcReset => 'Reset';
+
+  @override
   String get hsHome => 'Home';
 
   @override
@@ -580,6 +598,24 @@ class LangEnUs extends LangEn {
   String pUnBanish(Object app) {
     return 'The simplest wat to restore/un-banish $app is to uninstall it from the system settings, then reinstall.';
   }
+
+  @override
+  String get mcIconButton => 'Icon button size';
+
+  @override
+  String get mcDelete => 'Delete';
+
+  @override
+  String get mcDone => 'Done';
+
+  @override
+  String get mcMove => 'Move';
+
+  @override
+  String get mcRemove => 'Remove';
+
+  @override
+  String get mcReset => 'Reset';
 
   @override
   String get hsHome => 'Home';

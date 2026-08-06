@@ -120,6 +120,24 @@ class LangHi extends Lang {
   }
 
   @override
+  String get mcIconButton => 'Icon button size';
+
+  @override
+  String get mcDelete => 'Delete';
+
+  @override
+  String get mcDone => 'Done';
+
+  @override
+  String get mcMove => 'Move';
+
+  @override
+  String get mcRemove => 'Remove';
+
+  @override
+  String get mcReset => 'Reset';
+
+  @override
   String get hsHome => 'Home';
 
   @override

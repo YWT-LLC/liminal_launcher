@@ -52,6 +52,16 @@
 
 
 
+  "mcIconButton": "Icon button size",
+
+  "mcDelete": "Delete",
+  "mcDone": "Done",
+  "mcMove": "Move",
+  "mcRemove": "Remove",
+  "mcReset": "Reset",
+  
+  
+  
   "hsHome": "Home",
 
   "hsWelcome": "Welcome to Liminal Launcher",

@@ -327,6 +327,42 @@ abstract class Lang {
   /// **'The simplest wat to restore/un-banish {app} is to uninstall it from the system settings, then reinstall.'**
   String pUnBanish(Object app);
 
+  /// No description provided for @mcIconButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Icon button size'**
+  String get mcIconButton;
+
+  /// No description provided for @mcDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get mcDelete;
+
+  /// No description provided for @mcDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get mcDone;
+
+  /// No description provided for @mcMove.
+  ///
+  /// In en, this message translates to:
+  /// **'Move'**
+  String get mcMove;
+
+  /// No description provided for @mcRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get mcRemove;
+
+  /// No description provided for @mcReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get mcReset;
+
   /// No description provided for @hsHome.
   ///
   /// In en, this message translates to:
