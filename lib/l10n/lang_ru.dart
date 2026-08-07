@@ -341,7 +341,7 @@ class LangRu extends Lang {
 
   @override
   String get hsUserSettings =>
-      'Personalization is easy, and everything that needs explanation will have it.\n\nAs a general rule: Liminal\'s appearance can be completely separate based on theme mode!\n\nWhile in the relevant settings, you will see a toggle-able icon that indicates whether you\'re editing the dark ';
+      'As a general rule: Liminal\'s appearance can be completely separate based on theme mode!\n\nWhile in the relevant settings, you will see a toggle-able icon that indicates whether you\'re editing the dark ';
 
   @override
   String get hsLight => ', light ';

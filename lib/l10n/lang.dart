@@ -756,7 +756,7 @@ abstract class Lang {
   /// No description provided for @hsUserSettings.
   ///
   /// In en, this message translates to:
-  /// **'Personalization is easy, and everything that needs explanation will have it.\n\nAs a general rule: Liminal\'s appearance can be completely separate based on theme mode!\n\nWhile in the relevant settings, you will see a toggle-able icon that indicates whether you\'re editing the dark '**
+  /// **'As a general rule: Liminal\'s appearance can be completely separate based on theme mode!\n\nWhile in the relevant settings, you will see a toggle-able icon that indicates whether you\'re editing the dark '**
   String get hsUserSettings;
 
   /// No description provided for @hsLight.
