@@ -19,6 +19,7 @@ class ClockWidget extends StatefulWidget {
   final TileState state;
   final ValueNotifier<double>? rippleProgress;
 
+  late final String _tp;
   late final EzButtonShape _shape;
   late final Color? _background;
   late final bool _showTime;
@@ -34,21 +35,22 @@ class ClockWidget extends StatefulWidget {
         .split(widgetSplit)[1]
         .split(configSplit);
 
-    _shape = EBSConfig.safeLookup(data[0]);
+    _tp = data[0]; // Not used here; tracked so local updates don't clobber it
+    _shape = EBSConfig.safeLookup(data[1]);
 
-    late final int? bCV = int.tryParse(data[1]);
+    late final int? bCV = int.tryParse(data[2]);
     _background = bCV == null ? null : Color(bCV);
 
-    _showTime = bool.tryParse(data[2]) ?? true;
-    _timeStyle = TSConfig.lookup(data[3]) ?? TxtStile.headline;
+    _showTime = bool.tryParse(data[3]) ?? true;
+    _timeStyle = TSConfig.lookup(data[4]) ?? TxtStile.headline;
 
-    late final int? tCV = int.tryParse(data[4]);
+    late final int? tCV = int.tryParse(data[5]);
     _timeColor = tCV == null ? null : Color(tCV);
 
-    _dateType = DTConfig.safeLookup(data[5]);
-    _dateStyle = TSConfig.lookup(data[6]) ?? TxtStile.label;
+    _dateType = DTConfig.safeLookup(data[6]);
+    _dateStyle = TSConfig.lookup(data[7]) ?? TxtStile.label;
 
-    late final int? dCV = int.tryParse(data[7]);
+    late final int? dCV = int.tryParse(data[8]);
     _dateColor = dCV == null ? null : Color(dCV);
   }
 
@@ -162,6 +164,7 @@ class _ClockWidgetState extends State<ClockWidget> {
               numLanes: numLanes,
               pos: widget.pos,
               initConfig: _ClockConfig(
+                tp: widget._tp,
                 hAlign: widget.pos.hAlign,
                 vAlign: widget.pos.vAlign,
                 shape: widget._shape,
@@ -187,6 +190,7 @@ class _ClockWidgetState extends State<ClockWidget> {
               numLanes: numLanes,
               pos: widget.pos,
               initConfig: _ClockConfig(
+                tp: widget._tp,
                 hAlign: widget.pos.hAlign,
                 vAlign: widget.pos.vAlign,
                 shape: widget._shape,
@@ -298,6 +302,7 @@ class AddClock extends StatelessWidget {
           appInfo: appInfo,
           pContext: pContext,
           initConfig: _ClockConfig(
+            tp: nullTPS,
             hAlign: hAlign,
             vAlign: vAlign,
             shape: EzButtonShape.roundRect,
@@ -345,33 +350,36 @@ class AddClock extends StatelessWidget {
 }
 
 String defaultClockEntry() => _clockEntry(
-      EzButtonShape.roundRect,
-      null,
-      true,
-      TxtStile.headline,
-      null,
-      DateType.compact,
-      TxtStile.label,
-      null,
+      tp: nullTPS,
+      shape: EzButtonShape.roundRect,
+      backColor: null,
+      showTime: true,
+      timeStyle: TxtStile.headline,
+      timeColor: null,
+      dateType: DateType.compact,
+      dateStyle: TxtStile.label,
+      dateColor: null,
     );
 
-String _clockEntry(
-  EzButtonShape shape,
-  Color? background,
-  bool time,
-  TxtStile timeStyle,
-  Color? timeColor,
-  DateType date,
-  TxtStile dateStyle,
-  Color? dateColor,
-) =>
+String _clockEntry({
+  required String tp,
+  required EzButtonShape shape,
+  required Color? backColor,
+  required bool showTime,
+  required TxtStile timeStyle,
+  required Color? timeColor,
+  required DateType dateType,
+  required TxtStile dateStyle,
+  required Color? dateColor,
+}) =>
     <String>[
+      tp,
       shape.value,
-      background == null ? esSystem : background.toARGB32().toString(),
-      time.toString(),
+      backColor == null ? esSystem : backColor.toARGB32().toString(),
+      showTime.toString(),
       timeStyle.value,
       timeColor == null ? esSystem : timeColor.toARGB32().toString(),
-      date.value,
+      dateType.value,
       dateStyle.value,
       dateColor == null ? esSystem : dateColor.toARGB32().toString(),
     ].join(configSplit);
@@ -379,6 +387,7 @@ String _clockEntry(
 //* Edit Widget *//
 
 class _ClockConfig {
+  final String tp;
   final ListAlignment hAlign;
   final ListAlignment vAlign;
 
@@ -394,6 +403,7 @@ class _ClockConfig {
   final Color? dateColor;
 
   const _ClockConfig({
+    required this.tp,
     required this.hAlign,
     required this.vAlign,
     required this.shape,
@@ -779,7 +789,17 @@ Future<void> _openEdits(
   await appInfo.updateWidget(
     config,
     WWGG.clock,
-    _clockEntry(shape, background, showTime, timeStyle, timeColor, dateType, dateStyle, dateColor),
+    _clockEntry(
+      tp: initConfig.tp,
+      shape: shape,
+      backColor: background,
+      showTime: showTime,
+      timeStyle: timeStyle,
+      timeColor: timeColor,
+      dateType: dateType,
+      dateStyle: dateStyle,
+      dateColor: dateColor,
+    ),
     lane: lane,
     index: index,
   );

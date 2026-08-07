@@ -21,7 +21,8 @@ class SearchWidget extends StatefulWidget {
   final TileState state;
   final ValueNotifier<double>? rippleProgress;
 
-  late final WidgetSize _size;
+  late final String _tp;
+  late final WWGGSize _size;
   late final Engine _engine;
   late final List<Engine> _choices;
 
@@ -31,9 +32,10 @@ class SearchWidget extends StatefulWidget {
         .split(widgetSplit)[1]
         .split(configSplit);
 
-    _size = WSConfig.safeLookup(data[0]);
+    _tp = data[0]; // Not used here; tracked so local updates don't clobber it
+    _size = WSConfig.safeLookup(data[1]);
 
-    final String storedCurr = data[1];
+    final String storedCurr = data[2];
     if (storedCurr.contains(engineSplit)) {
       final List<String> details = storedCurr.split(engineSplit);
 
@@ -181,7 +183,12 @@ class _SearchWidgetState extends State<SearchWidget> {
             onPressed: () => widget.appInfo.updateWidget(
               widget.config,
               WWGG.search,
-              _searchEntry(widget._size, e, widget._choices.map((Engine e) => e.value)),
+              _searchEntry(
+                tp: widget._tp,
+                size: widget._size,
+                engine: e,
+                choices: widget._choices.map((Engine e) => e.value),
+              ),
               lane: widget.pos.lane,
               index: widget.pos.index,
             ),
@@ -215,7 +222,7 @@ class _SearchWidgetState extends State<SearchWidget> {
       forceType: EzTransitionType.none,
       child: switch (state) {
         TileState.standard => MenuAnchor(
-            builder: (_, MenuController controller, __) => (widget._size == WidgetSize.button)
+            builder: (_, MenuController controller, __) => (widget._size == WWGGSize.button)
                 ? EzIconButton(
                     widget.config,
                     icon: Icon(widget._engine.icon),
@@ -260,6 +267,7 @@ class _SearchWidgetState extends State<SearchWidget> {
               pos: widget.pos,
               engineChoices: engineChoices,
               initConfig: _SearchConfig(
+                tp: widget._tp,
                 size: widget._size,
                 engine: widget._engine,
                 choices: widget._choices,
@@ -279,6 +287,7 @@ class _SearchWidgetState extends State<SearchWidget> {
               pos: widget.pos,
               engineChoices: <Widget>[],
               initConfig: _SearchConfig(
+                tp: widget._tp,
                 size: widget._size,
                 engine: widget._engine,
                 choices: widget._choices,
@@ -366,7 +375,7 @@ class AddSearch extends StatelessWidget {
   final AppInfoProvider appInfo;
   final BuildContext pContext;
   final int lane;
-  final WidgetSize size;
+  final WWGGSize size;
 
   const AddSearch(
     this.config, {
@@ -384,7 +393,12 @@ class AddSearch extends StatelessWidget {
           config,
           appInfo: appInfo,
           pContext: pContext,
-          initConfig: _SearchConfig(size: size, engine: ecosia, choices: Engine.defaultOrder),
+          initConfig: _SearchConfig(
+            tp: nullTPS,
+            size: size,
+            engine: ecosia,
+            choices: Engine.defaultOrder,
+          ),
           lane: lane,
           index: appInfo.homeLane(config, lane).length - 1,
         ),
@@ -392,7 +406,7 @@ class AddSearch extends StatelessWidget {
       );
 
   @override
-  Widget build(BuildContext context) => (size == WidgetSize.button)
+  Widget build(BuildContext context) => (size == WWGGSize.button)
       ? EzIconButton(config, onPressed: onTap, icon: const Icon(Icons.search))
       : GestureDetector(
           onTap: onTap,
@@ -421,20 +435,40 @@ class AddSearch extends StatelessWidget {
         );
 }
 
-String defaultSearchEntry() =>
-    _searchEntry(WidgetSize.tile, ecosia, Engine.defaultOrder.map((Engine e) => e.value));
+String defaultSearchEntry() => _searchEntry(
+      tp: nullTPS,
+      size: WWGGSize.tile,
+      engine: ecosia,
+      choices: Engine.defaultOrder.map((Engine e) => e.value),
+    );
 
-String _searchEntry(WidgetSize size, Engine engine, Iterable<String> choices) =>
-    <String>[size.value, engine.value, ...choices].join(configSplit);
+String _searchEntry({
+  required String tp,
+  required WWGGSize size,
+  required Engine engine,
+  required Iterable<String> choices,
+}) =>
+    <String>[
+      tp,
+      size.value,
+      engine.value,
+      ...choices,
+    ].join(configSplit);
 
 //* Edit Widget *//
 
 class _SearchConfig {
-  final WidgetSize size;
+  final String tp;
+  final WWGGSize size;
   final Engine engine;
   final List<Engine> choices;
 
-  _SearchConfig({required this.size, required this.engine, required this.choices});
+  _SearchConfig({
+    required this.tp,
+    required this.size,
+    required this.engine,
+    required this.choices,
+  });
 }
 
 Future<void> _openEdits(
@@ -447,7 +481,7 @@ Future<void> _openEdits(
 }) async {
   final EdgeInsets wrapPadding = EzInsets.wrap(config.spacing);
 
-  WidgetSize size = initConfig.size;
+  WWGGSize size = initConfig.size;
   Engine curr = initConfig.engine;
 
   final List<Engine> shown = List<Engine>.from(initConfig.choices);
@@ -466,9 +500,8 @@ Future<void> _openEdits(
             config,
             onLabel: l10n(config).gTile,
             offLabel: l10n(config).gButton,
-            init: initConfig.size == WidgetSize.tile,
-            onChanged: (bool tile) =>
-                setModal(() => size = tile ? WidgetSize.tile : WidgetSize.button),
+            init: initConfig.size == WWGGSize.tile,
+            onChanged: (bool tile) => setModal(() => size = tile ? WWGGSize.tile : WWGGSize.button),
           ),
           config.separator,
 
@@ -735,7 +768,12 @@ Future<void> _openEdits(
   await appInfo.updateWidget(
     config,
     WWGG.search,
-    _searchEntry(size, curr, shown.map((Engine e) => e.value)),
+    _searchEntry(
+      tp: initConfig.tp,
+      size: size,
+      engine: curr,
+      choices: shown.map((Engine e) => e.value),
+    ),
     lane: lane,
     index: index,
   );

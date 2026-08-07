@@ -1014,7 +1014,7 @@ abstract class Lang {
   /// No description provided for @mltAutoWidth.
   ///
   /// In en, this message translates to:
-  /// **'lanes will be sized by their widest item & your spacing setting.\n'**
+  /// **'lanes will be sized by their widest item & your spacing setting(s).\n'**
   String get mltAutoWidth;
 
   /// No description provided for @mltOnlyButton.

@@ -19,7 +19,8 @@ class TimerWidget extends StatefulWidget {
   final TileState state;
   final ValueNotifier<double>? rippleProgress;
 
-  late final WidgetSize _size;
+  late final String _tp;
+  late final WWGGSize _size;
   late final List<String> _times;
 
   TimerWidget(this.config, this.appInfo, this.pos, this.state, this.rippleProgress, {super.key}) {
@@ -28,9 +29,10 @@ class TimerWidget extends StatefulWidget {
         .split(widgetSplit)[1]
         .split(configSplit);
 
-    _size = WSConfig.safeLookup(data[0]);
+    _tp = data[0]; // Not used here; tracked so local updates don't clobber it
+    _size = WSConfig.safeLookup(data[1]);
 
-    final List<String> storedTs = data[1].split(':');
+    final List<String> storedTs = data[2].split(':');
     _times = storedTs.length == 3 ? storedTs : <String>['00', '00', '00'];
   }
 
@@ -152,7 +154,7 @@ class _TimerWidgetState extends State<TimerWidget> {
       forceType: EzTransitionType.none,
       child: switch (state) {
         TileState.standard => MenuAnchor(
-            builder: (_, MenuController controller, __) => (widget._size == WidgetSize.button)
+            builder: (_, MenuController controller, __) => (widget._size == WWGGSize.button)
                 ? EzIconButton(
                     widget.config,
                     icon: const Icon(Icons.timer_outlined),
@@ -250,6 +252,7 @@ class _TimerWidgetState extends State<TimerWidget> {
               numLanes: numLanes,
               pos: widget.pos,
               initConfig: _TimerConfig(
+                tp: widget._tp,
                 size: widget._size,
                 fieldCon: numConstraints,
                 ours: _validateTime(ourCon.text),
@@ -270,6 +273,7 @@ class _TimerWidgetState extends State<TimerWidget> {
               numLanes: numLanes,
               pos: widget.pos,
               initConfig: _TimerConfig(
+                tp: widget._tp,
                 size: widget._size,
                 fieldCon: numConstraints,
                 ours: _validateTime(ourCon.text),
@@ -413,7 +417,7 @@ class AddTimer extends StatelessWidget {
   final AppInfoProvider appInfo;
   final BuildContext pContext;
   final int lane;
-  final WidgetSize size;
+  final WWGGSize size;
 
   const AddTimer(
     this.config, {
@@ -432,6 +436,7 @@ class AddTimer extends StatelessWidget {
           appInfo: appInfo,
           pContext: pContext,
           initConfig: _TimerConfig(
+            tp: nullTPS,
             size: size,
             fieldCon: BoxConstraints.tightFor(
               height: appIconSize(config),
@@ -462,7 +467,7 @@ class AddTimer extends StatelessWidget {
       validator: null,
     );
 
-    return (size == WidgetSize.button)
+    return (size == WWGGSize.button)
         ? EzIconButton(config, onPressed: onTap, icon: const Icon(Icons.timer))
         : GestureDetector(
             onTap: onTap,
@@ -483,21 +488,35 @@ class AddTimer extends StatelessWidget {
   }
 }
 
-String defaultTimerEntry() => _timerEntry(WidgetSize.tile, '00:00:00');
+String defaultTimerEntry() => _timerEntry(
+      tp: nullTPS,
+      size: WWGGSize.tile,
+      auto: '00:00:00',
+    );
 
-String _timerEntry(WidgetSize size, String autoTime) =>
-    <String>[size.value, autoTime].join(configSplit);
+String _timerEntry({
+  required String tp,
+  required WWGGSize size,
+  required String auto,
+}) =>
+    <String>[
+      tp,
+      size.value,
+      auto,
+    ].join(configSplit);
 
 //* Edit Widget *//
 
 class _TimerConfig {
-  final WidgetSize size;
+  final String tp;
+  final WWGGSize size;
   final BoxConstraints fieldCon;
   final String ours;
   final String mins;
   final String secs;
 
   _TimerConfig({
+    required this.tp,
     required this.size,
     required this.fieldCon,
     required this.ours,
@@ -522,7 +541,7 @@ Future<void> _openEdits(
   final FocusNode minNode = FocusNode();
   final FocusNode secNode = FocusNode();
 
-  WidgetSize size = initConfig.size;
+  WWGGSize size = initConfig.size;
   double bottomSpace = config.spacing * 2;
 
   await ezModal(
@@ -546,9 +565,8 @@ Future<void> _openEdits(
             config,
             onLabel: l10n(config).gTile,
             offLabel: l10n(config).gButton,
-            init: initConfig.size == WidgetSize.tile,
-            onChanged: (bool tile) =>
-                setModal(() => size = tile ? WidgetSize.tile : WidgetSize.button),
+            init: initConfig.size == WWGGSize.tile,
+            onChanged: (bool tile) => setModal(() => size = tile ? WWGGSize.tile : WWGGSize.button),
           ),
           config.spacer,
 
@@ -612,8 +630,9 @@ Future<void> _openEdits(
     config,
     WWGG.timer,
     _timerEntry(
-      size,
-      <String>[
+      tp: initConfig.tp,
+      size: size,
+      auto: <String>[
         _validateTime(ourCon.text),
         _validateTime(minCon.text),
         _validateTime(secCon.text),

@@ -109,6 +109,21 @@ Future<bool> liminalAuth(EzCP config, String reason) async {
 /// [EzCP.isLTR] && [horizontalAlign] != [ListAlignment.end]
 bool standardFlow(EzCP config) => config.isLTR && horizontalAlign(config) != ListAlignment.end;
 
+EdgeInsets tilePadding(EzCP config, String datum) {
+  final List<String> data = datum.split(':');
+  final double halfSpace = config.spacing / 2;
+
+  return EdgeInsets.only(
+    left: data[0] == esSystem ? halfSpace : (double.tryParse(data[0]) ?? halfSpace),
+    right: data[1] == esSystem ? halfSpace : (double.tryParse(data[1]) ?? halfSpace),
+    top: data[2] == esSystem ? halfSpace : (double.tryParse(data[2]) ?? halfSpace),
+    bottom: data[3] == esSystem ? halfSpace : (double.tryParse(data[3]) ?? halfSpace),
+  );
+}
+
+String tpMap(List<double?> tp) =>
+    tp.map((double? entry) => entry == null ? esSystem : entry.toString()).join(':');
+
 const String _pattern = r'^(?!.*:[01]{8}:)[^/\\\x00]{1,50}$';
 String? validateName(EzCP config, String? name) {
   if (name == null || name.trim().isEmpty) return l10n(config).gNoEmpty;

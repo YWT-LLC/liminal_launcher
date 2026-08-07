@@ -19,7 +19,8 @@ class ToggleMediaWidget extends StatefulWidget {
   final TileState state;
   final ValueNotifier<double>? rippleProgress;
 
-  late final WidgetSize _size;
+  late final String _tp;
+  late final WWGGSize _size;
   late final bool _bigSkips;
   late final bool _lilSkips;
 
@@ -36,9 +37,10 @@ class ToggleMediaWidget extends StatefulWidget {
         .split(widgetSplit)[1]
         .split(configSplit);
 
-    _size = WSConfig.safeLookup(data[0]);
-    _bigSkips = bool.tryParse(data[1]) ?? true;
-    _lilSkips = bool.tryParse(data[2]) ?? false;
+    _tp = data[0]; // Not used here; tracked so local updates don't clobber it
+    _size = WSConfig.safeLookup(data[1]);
+    _bigSkips = bool.tryParse(data[2]) ?? true;
+    _lilSkips = bool.tryParse(data[3]) ?? false;
   }
 
   @override
@@ -104,7 +106,7 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
         TileState.standard => MenuAnchor(
             builder: (_, MenuController controller, __) => EzIconButton(
               widget.config,
-              icon: (widget._size == WidgetSize.button)
+              icon: (widget._size == WWGGSize.button)
                   ? const Icon(Icons.headphones)
                   : EzRow(
                       widget.config,
@@ -139,7 +141,7 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
                         widget.config.rowMargin,
                       ],
                     ),
-              onPressed: (widget._size == WidgetSize.button) ? toggleMedia : doNothing,
+              onPressed: (widget._size == WWGGSize.button) ? toggleMedia : doNothing,
               onLongPress: () async => await canToggleMenu(widget.config, controller),
             ),
             menuChildren: _menuChildren(
@@ -150,6 +152,7 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
               numLanes: numLanes,
               pos: widget.pos,
               initConfig: _MediaConfig(
+                tp: widget._tp,
                 size: widget._size,
                 bigSkips: widget._bigSkips,
                 lilSkips: widget._lilSkips,
@@ -168,6 +171,7 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
               numLanes: numLanes,
               pos: widget.pos,
               initConfig: _MediaConfig(
+                tp: widget._tp,
                 size: widget._size,
                 bigSkips: widget._bigSkips,
                 lilSkips: widget._lilSkips,
@@ -250,7 +254,7 @@ class AddToggleMedia extends StatelessWidget {
   final AppInfoProvider appInfo;
   final BuildContext pContext;
   final int lane;
-  final WidgetSize size;
+  final WWGGSize size;
 
   const AddToggleMedia(
     this.config, {
@@ -268,7 +272,12 @@ class AddToggleMedia extends StatelessWidget {
           config,
           appInfo: appInfo,
           pContext: pContext,
-          initConfig: _MediaConfig(size: size, bigSkips: true, lilSkips: false),
+          initConfig: _MediaConfig(
+            tp: nullTPS,
+            size: size,
+            bigSkips: true,
+            lilSkips: false,
+          ),
           lane: lane,
           index: appInfo.homeLane(config, lane).length - 1,
         ),
@@ -279,7 +288,7 @@ class AddToggleMedia extends StatelessWidget {
   Widget build(BuildContext context) => EzIconButton(
         config,
         onPressed: onTap,
-        icon: (size == WidgetSize.button)
+        icon: (size == WWGGSize.button)
             ? const Icon(Icons.headphones)
             : EzRow(
                 config,
@@ -296,19 +305,40 @@ class AddToggleMedia extends StatelessWidget {
       );
 }
 
-String defaultMediaEntry() => _mediaEntry(WidgetSize.tile, bigSkips: true, lilSkips: false);
+String defaultMediaEntry() => _mediaEntry(
+      tp: nullTPS,
+      size: WWGGSize.tile,
+      bigSkips: true,
+      lilSkips: false,
+    );
 
-String _mediaEntry(WidgetSize size, {required bool bigSkips, required bool lilSkips}) =>
-    <String>[size.value, bigSkips.toString(), lilSkips.toString()].join(configSplit);
+String _mediaEntry({
+  required String tp,
+  required WWGGSize size,
+  required bool bigSkips,
+  required bool lilSkips,
+}) =>
+    <String>[
+      tp,
+      size.value,
+      bigSkips.toString(),
+      lilSkips.toString(),
+    ].join(configSplit);
 
 //* Edit Widget *//
 
 class _MediaConfig {
-  final WidgetSize size;
+  final String tp;
+  final WWGGSize size;
   final bool bigSkips;
   final bool lilSkips;
 
-  _MediaConfig({required this.size, required this.bigSkips, required this.lilSkips});
+  _MediaConfig({
+    required this.tp,
+    required this.size,
+    required this.bigSkips,
+    required this.lilSkips,
+  });
 }
 
 Future<void> _openEdits(
@@ -319,7 +349,7 @@ Future<void> _openEdits(
   required int lane,
   required int index,
 }) async {
-  WidgetSize size = initConfig.size;
+  WWGGSize size = initConfig.size;
   bool bigSkips = initConfig.bigSkips;
   bool lilSkips = initConfig.lilSkips;
 
@@ -334,7 +364,7 @@ Future<void> _openEdits(
           key: UniqueKey(),
           onLabel: l10n(config).gTile,
           offLabel: l10n(config).gButton,
-          init: size == WidgetSize.tile,
+          init: size == WWGGSize.tile,
           onChanged: (bool tile) {
             if (!tile) {
               bigSkips = false;
@@ -343,7 +373,7 @@ Future<void> _openEdits(
               if (!bigSkips && !lilSkips) bigSkips = true;
             }
 
-            setModal(() => size = tile ? WidgetSize.tile : WidgetSize.button);
+            setModal(() => size = tile ? WWGGSize.tile : WWGGSize.button);
           },
         ),
         config.margin,
@@ -351,7 +381,7 @@ Future<void> _openEdits(
         // Preview
         EzIconButton(
           config,
-          icon: (size == WidgetSize.button)
+          icon: (size == WWGGSize.button)
               ? const Icon(Icons.headphones)
               : EzRow(
                   config,
@@ -388,11 +418,11 @@ Future<void> _openEdits(
 
             if (value) {
               bigSkips = true;
-              if (!lilSkips && (size == WidgetSize.button)) size = WidgetSize.tile;
+              if (!lilSkips && (size == WWGGSize.button)) size = WWGGSize.tile;
               setModal(() {});
             } else {
               bigSkips = false;
-              if (!lilSkips && (size == WidgetSize.tile)) size = WidgetSize.button;
+              if (!lilSkips && (size == WWGGSize.tile)) size = WWGGSize.button;
               setModal(() {});
             }
           },
@@ -408,11 +438,11 @@ Future<void> _openEdits(
 
             if (value) {
               lilSkips = true;
-              if (!bigSkips && (size == WidgetSize.button)) size = WidgetSize.tile;
+              if (!bigSkips && (size == WWGGSize.button)) size = WWGGSize.tile;
               setModal(() {});
             } else {
               lilSkips = false;
-              if (!bigSkips && (size == WidgetSize.tile)) size = WidgetSize.button;
+              if (!bigSkips && (size == WWGGSize.tile)) size = WWGGSize.button;
               setModal(() {});
             }
           },
@@ -433,7 +463,12 @@ Future<void> _openEdits(
   await appInfo.updateWidget(
     config,
     WWGG.toggleMedia,
-    _mediaEntry(size, bigSkips: bigSkips, lilSkips: lilSkips),
+    _mediaEntry(
+      tp: initConfig.tp,
+      size: size,
+      bigSkips: bigSkips,
+      lilSkips: lilSkips,
+    ),
     lane: lane,
     index: index,
   );

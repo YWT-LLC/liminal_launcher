@@ -209,7 +209,7 @@
   "mltWideWidth": "each lane (with an item) will be the width of one screen.\n",
   "mltAnywhere": "apps and folders can/will be activated anywhere in their horizontal space.\n",
   "mltWideDisabled": "With wide tiles disabled...\n",
-  "mltAutoWidth": "lanes will be sized by their widest item & your spacing setting.\n",
+  "mltAutoWidth": "lanes will be sized by their widest item & your spacing setting(s).\n",
   "mltOnlyButton": "apps and folders can/will be activated only by their button(s).\n",
 
 

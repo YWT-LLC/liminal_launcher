@@ -400,26 +400,28 @@ extension WWGGConfig on WWGG {
       };
 }
 
-enum WidgetSize { button, tile }
+/// [WWGG]Size
+/// WidWidGetGet Size
+enum WWGGSize { button, tile }
 
 const String esButton = 'button';
 const String esTile = 'tile';
 
-extension WSConfig on WidgetSize {
+extension WSConfig on WWGGSize {
   String get value => switch (this) {
-        WidgetSize.button => esButton,
-        WidgetSize.tile => esTile,
+        WWGGSize.button => esButton,
+        WWGGSize.tile => esTile,
       };
 
-  static WidgetSize? lookup(String? value) => switch (value) {
-        esButton => WidgetSize.button,
-        esTile => WidgetSize.tile,
+  static WWGGSize? lookup(String? value) => switch (value) {
+        esButton => WWGGSize.button,
+        esTile => WWGGSize.tile,
         _ => null,
       };
 
-  /// Defaults to [WidgetSize.tile]
-  static WidgetSize safeLookup(String? value) => switch (value) {
-        esButton => WidgetSize.button,
-        _ => WidgetSize.tile,
+  /// Defaults to [WWGGSize.tile]
+  static WWGGSize safeLookup(String? value) => switch (value) {
+        esButton => WWGGSize.button,
+        _ => WWGGSize.tile,
       };
 }

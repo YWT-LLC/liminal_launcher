@@ -21,7 +21,8 @@ class EventWidget extends StatefulWidget {
   final TileState state;
   final ValueNotifier<double>? rippleProgress;
 
-  late final WidgetSize _size;
+  late final String _tp;
+  late final WWGGSize _size;
   late final bool _isCalendar;
   late final AppInfo? _shareDest;
   late final bool? _useAppIcon;
@@ -39,10 +40,11 @@ class EventWidget extends StatefulWidget {
         .split(widgetSplit)[1]
         .split(configSplit);
 
-    _size = WSConfig.safeLookup(data[0]);
-    _isCalendar = bool.tryParse(data[1]) ?? true;
-    _shareDest = appInfo.appMap[data[2]];
-    _useAppIcon = bool.tryParse(data[3]);
+    _tp = data[0]; // Not used here; tracked so local updates don't clobber it
+    _size = WSConfig.safeLookup(data[1]);
+    _isCalendar = bool.tryParse(data[2]) ?? true;
+    _shareDest = appInfo.appMap[data[3]];
+    _useAppIcon = bool.tryParse(data[4]);
   }
 
   @override
@@ -145,10 +147,11 @@ class _EventWidgetState extends State<EventWidget> {
                   widget.config,
                   WWGG.event,
                   _eventEntry(
-                    widget._size,
-                    false,
-                    widget._shareDest,
-                    widget._useAppIcon,
+                    tp: widget._tp,
+                    size: widget._size,
+                    isCalendar: false,
+                    shareDest: widget._shareDest,
+                    useAppIcon: widget._useAppIcon,
                   ),
                   lane: widget.pos.lane,
                   index: widget.pos.index,
@@ -232,7 +235,7 @@ class _EventWidgetState extends State<EventWidget> {
       forceType: EzTransitionType.none,
       child: switch (state) {
         TileState.standard => MenuAnchor(
-            builder: (_, MenuController controller, __) => (widget._size == WidgetSize.button)
+            builder: (_, MenuController controller, __) => (widget._size == WWGGSize.button)
                 ? GestureDetector(
                     child: icon,
                     onTap: () async {
@@ -248,6 +251,7 @@ class _EventWidgetState extends State<EventWidget> {
                               appInfo: widget.appInfo,
                               pContext: context,
                               initConfig: _EventConfig(
+                                tp: widget._tp,
                                 size: widget._size,
                                 isCalendar: widget._isCalendar,
                                 shareDest: widget._shareDest,
@@ -315,6 +319,7 @@ class _EventWidgetState extends State<EventWidget> {
               numLanes: numLanes,
               pos: widget.pos,
               initConfig: _EventConfig(
+                tp: widget._tp,
                 size: widget._size,
                 isCalendar: widget._isCalendar,
                 shareDest: widget._shareDest,
@@ -334,6 +339,7 @@ class _EventWidgetState extends State<EventWidget> {
               numLanes: numLanes,
               pos: widget.pos,
               initConfig: _EventConfig(
+                tp: widget._tp,
                 size: widget._size,
                 isCalendar: widget._isCalendar,
                 shareDest: widget._shareDest,
@@ -417,7 +423,7 @@ class AddEvent extends StatelessWidget {
   final AppInfoProvider appInfo;
   final BuildContext pContext;
   final int lane;
-  final WidgetSize size;
+  final WWGGSize size;
 
   const AddEvent(
     this.config, {
@@ -436,6 +442,7 @@ class AddEvent extends StatelessWidget {
           appInfo: appInfo,
           pContext: pContext,
           initConfig: _EventConfig(
+            tp: nullTPS,
             size: size,
             isCalendar: true,
             shareDest: null,
@@ -448,7 +455,7 @@ class AddEvent extends StatelessWidget {
       );
 
   @override
-  Widget build(BuildContext context) => (size == WidgetSize.button)
+  Widget build(BuildContext context) => (size == WWGGSize.button)
       ? EzIconButton(config, onPressed: onTap, icon: const Icon(Icons.edit_calendar))
       : GestureDetector(
           onTap: onTap,
@@ -479,15 +486,23 @@ class AddEvent extends StatelessWidget {
         );
 }
 
-String defaultEventEntry() => _eventEntry(WidgetSize.tile, true, null, null);
+String defaultEventEntry() => _eventEntry(
+      tp: nullTPS,
+      size: WWGGSize.tile,
+      isCalendar: true,
+      shareDest: null,
+      useAppIcon: null,
+    );
 
-String _eventEntry(
-  WidgetSize size,
-  bool isCalendar,
-  AppInfo? shareDest,
-  bool? useAppIcon,
-) =>
+String _eventEntry({
+  required String tp,
+  required WWGGSize size,
+  required bool isCalendar,
+  required AppInfo? shareDest,
+  required bool? useAppIcon,
+}) =>
     <String>[
+      tp,
       size.value,
       isCalendar.toString(),
       shareDest?.id ?? 'null',
@@ -497,12 +512,14 @@ String _eventEntry(
 //* Edit Widget *//
 
 class _EventConfig {
-  final WidgetSize size;
+  final String tp;
+  final WWGGSize size;
   final bool isCalendar;
   final AppInfo? shareDest;
   final bool? useAppIcon;
 
   _EventConfig({
+    required this.tp,
     required this.size,
     required this.isCalendar,
     required this.shareDest,
@@ -518,7 +535,7 @@ Future<void> _openEdits(
   required int lane,
   required int index,
 }) async {
-  WidgetSize size = initConfig.size;
+  WWGGSize size = initConfig.size;
   bool isCalendar = initConfig.isCalendar;
   AppInfo shareDest = initConfig.shareDest ?? nullApp;
   bool? useAppIcon;
@@ -533,9 +550,8 @@ Future<void> _openEdits(
           config,
           onLabel: l10n(config).gTile,
           offLabel: l10n(config).gButton,
-          init: initConfig.size == WidgetSize.tile,
-          onChanged: (bool tile) =>
-              setModal(() => size = tile ? WidgetSize.tile : WidgetSize.button),
+          init: initConfig.size == WWGGSize.tile,
+          onChanged: (bool tile) => setModal(() => size = tile ? WWGGSize.tile : WWGGSize.button),
         ),
         config.spacer,
 
@@ -627,10 +643,11 @@ Future<void> _openEdits(
     config,
     WWGG.event,
     _eventEntry(
-      size,
-      isCalendar,
-      shareDest == nullApp ? null : shareDest,
-      useAppIcon,
+      tp: initConfig.tp,
+      size: size,
+      isCalendar: isCalendar,
+      shareDest: shareDest == nullApp ? null : shareDest,
+      useAppIcon: useAppIcon,
     ),
     lane: lane,
     index: index,

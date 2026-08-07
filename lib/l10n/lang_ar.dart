@@ -478,7 +478,7 @@ class LangAr extends Lang {
 
   @override
   String get mltAutoWidth =>
-      'lanes will be sized by their widest item & your spacing setting.\n';
+      'lanes will be sized by their widest item & your spacing setting(s).\n';
 
   @override
   String get mltOnlyButton =>

@@ -19,7 +19,8 @@ class ThemeModeWidget extends StatefulWidget {
   final TileState state;
   final ValueNotifier<double>? rippleProgress;
 
-  late final WidgetSize _size;
+  late final String _tp;
+  late final WWGGSize _size;
 
   ThemeModeWidget(
     this.config,
@@ -34,7 +35,8 @@ class ThemeModeWidget extends StatefulWidget {
         .split(widgetSplit)[1]
         .split(configSplit);
 
-    _size = WSConfig.safeLookup(data[0]);
+    _tp = data[0]; // Not used here; tracked so local updates don't clobber it
+    _size = WSConfig.safeLookup(data[1]);
   }
 
   @override
@@ -98,7 +100,7 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
       forceType: EzTransitionType.none,
       child: switch (state) {
         TileState.standard => MenuAnchor(
-            builder: (_, MenuController controller, __) => (widget._size == WidgetSize.button)
+            builder: (_, MenuController controller, __) => (widget._size == WWGGSize.button)
                 ? GestureDetector(
                     onDoubleTap: () async {
                       await EzCM.remove(isDarkThemeKey);
@@ -125,7 +127,10 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
               state: state,
               numLanes: numLanes,
               pos: widget.pos,
-              initSize: widget._size,
+              initConfig: _TMConfig(
+                tp: widget._tp,
+                size: widget._size,
+              ),
             ),
           ),
         _ => EditContainer(
@@ -139,7 +144,10 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
               state: state,
               numLanes: numLanes,
               pos: widget.pos,
-              initSize: widget._size,
+              initConfig: _TMConfig(
+                tp: widget._tp,
+                size: widget._size,
+              ),
             ),
             child: EzIconButton(
               widget.config,
@@ -165,11 +173,17 @@ List<Widget> _menuChildren(
   required TileState state,
   required int numLanes,
   required LimPos pos,
-  required WidgetSize initSize,
+  required _TMConfig initConfig,
 }) =>
     <Widget>[
       // Edit
-      _EditTM(config, appInfo, initSize: initSize, lane: pos.lane, index: pos.index),
+      _EditTM(
+        config,
+        appInfo,
+        initConfig: initConfig,
+        lane: pos.lane,
+        index: pos.index,
+      ),
 
       // Dupe
       EzMenuButton(
@@ -195,7 +209,7 @@ class AddThemeMode extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
   final int lane;
-  final WidgetSize size;
+  final WWGGSize size;
 
   const AddThemeMode(
     this.config, {
@@ -208,7 +222,7 @@ class AddThemeMode extends StatelessWidget {
   void onTap() => appInfo.addWidget(config, type: WWGG.themeMode, editNew: null, lane: lane);
 
   @override
-  Widget build(BuildContext context) => (size == WidgetSize.button)
+  Widget build(BuildContext context) => (size == WWGGSize.button)
       ? EzIconButton(
           config,
           onPressed: onTap,
@@ -229,23 +243,46 @@ class AddThemeMode extends StatelessWidget {
         );
 }
 
-String defaultThemeWidgetEntry() => _themeModeEntry(WidgetSize.button);
+String defaultThemeWidgetEntry() => _themeModeEntry(
+      tp: nullTPS,
+      size: WWGGSize.button,
+    );
 
-String _themeModeEntry(WidgetSize size) => <String>[size.value].join(configSplit);
+String _themeModeEntry({
+  required String tp,
+  required WWGGSize size,
+}) =>
+    <String>[
+      tp,
+      size.value,
+    ].join(configSplit);
 
 //* Edit Widget *//
+
+class _TMConfig {
+  final String tp;
+  final WWGGSize size;
+
+  _TMConfig({
+    required this.tp,
+    required this.size,
+  });
+}
 
 Future<void> _quickResize(
   EzCP config, {
   required AppInfoProvider appInfo,
-  required WidgetSize initSize,
+  required _TMConfig initConfig,
   required int lane,
   required int index,
 }) async =>
     await appInfo.updateWidget(
       config,
       WWGG.themeMode,
-      _themeModeEntry(initSize == WidgetSize.tile ? WidgetSize.button : WidgetSize.tile),
+      _themeModeEntry(
+        tp: initConfig.tp,
+        size: initConfig.size == WWGGSize.tile ? WWGGSize.button : WWGGSize.tile,
+      ),
       lane: lane,
       index: index,
     );
@@ -253,14 +290,14 @@ Future<void> _quickResize(
 class _EditTM extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
-  final WidgetSize initSize;
+  final _TMConfig initConfig;
   final int lane;
   final int index;
 
   const _EditTM(
     this.config,
     this.appInfo, {
-    required this.initSize,
+    required this.initConfig,
     required this.lane,
     required this.index,
   });
@@ -270,7 +307,12 @@ class _EditTM extends StatelessWidget {
         config,
         label: l10n(config).gResize,
         icon: EzIcon(config, Icons.edit),
-        onPressed: () =>
-            _quickResize(config, appInfo: appInfo, initSize: initSize, lane: lane, index: index),
+        onPressed: () => _quickResize(
+          config,
+          appInfo: appInfo,
+          initConfig: initConfig,
+          lane: lane,
+          index: index,
+        ),
       );
 }

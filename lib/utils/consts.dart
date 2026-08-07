@@ -325,6 +325,12 @@ const String nullAppLabel = '---';
 /// empty [String]
 const String nullAppPackage = '';
 
+/// null tile padding [List]double?
+const List<double?> nullTPL = <double?>[null, null, null, null];
+
+/// null tile padding [String]
+final String nullTPS = <String>[esSystem, esSystem, esSystem, esSystem].join(':');
+
 const List<IconData> solidIconChoices = <IconData>[
   Icons.account_balance_wallet,
   Icons.alarm,
