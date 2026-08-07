@@ -22,6 +22,7 @@ class FolderTile extends StatefulWidget {
   final TileState state;
   final ValueNotifier<double>? rippleProgress;
 
+  late final String _tp;
   late final String _name;
   late final IconData _icon;
   late final double? _iconSize;
@@ -42,8 +43,9 @@ class FolderTile extends StatefulWidget {
     _name = items[0];
 
     final List<String> data = items[1].split(configSplit);
+    _tp = data[0]; // Not used here; tracked so local updates don't clobber it
 
-    final String storedIcon = data[0];
+    final String storedIcon = data[1];
     _icon = (storedIcon == esSystem)
         ? Icons.folder_outlined
         : IconData(
@@ -51,10 +53,10 @@ class FolderTile extends StatefulWidget {
             int.tryParse(storedIcon) ?? Icons.folder_outlined.codePoint,
             fontFamily: matIcons,
           );
-    _iconSize = (data[1] == esSystem) ? null : double.tryParse(data[1]);
+    _iconSize = (data[2] == esSystem) ? null : double.tryParse(data[2]);
 
-    _buttonType = BTConfig.lookup(data[2]);
-    _labelType = LTConfig.lookup(data[3]);
+    _buttonType = BTConfig.lookup(data[3]);
+    _labelType = LTConfig.lookup(data[4]);
 
     _appList = items.length > 2 ? items.sublist(2) : <String>[];
   }
@@ -193,6 +195,7 @@ class _AppFolderState extends State<FolderTile> {
                 numLanes: numLanes,
                 pos: widget.pos,
                 initConfig: FolderConfig(
+                  tp: widget._tp,
                   name: widget._name,
                   icon: widget._icon,
                   iconSize: widget._iconSize,
@@ -214,6 +217,7 @@ class _AppFolderState extends State<FolderTile> {
                 numLanes: numLanes,
                 pos: widget.pos,
                 initConfig: FolderConfig(
+                  tp: widget._tp,
                   name: widget._name,
                   icon: widget._icon,
                   iconSize: widget._iconSize ?? widget.config.iconSize,
@@ -373,11 +377,23 @@ class FolderButton extends StatelessWidget {
       };
 }
 
-String defaultFolderEntry() => _folderEntry(Icons.folder_outlined, null, null, null);
+String defaultFolderEntry() => _folderEntry(
+      tp: nullTPS,
+      icon: Icons.folder_outlined,
+      iconSize: null,
+      buttonType: null,
+      labelType: null,
+    );
 
-String _folderEntry(
-        IconData icon, double? iconSize, ButtonType? buttonType, LabelType? labelType) =>
+String _folderEntry({
+  required String tp,
+  required IconData icon,
+  required double? iconSize,
+  required ButtonType? buttonType,
+  required LabelType? labelType,
+}) =>
     <String>[
+      tp,
       icon.codePoint.toString(),
       (iconSize == null ? esSystem : iconSize.toString()),
       (buttonType == null ? esSystem : buttonType.value),
@@ -387,6 +403,7 @@ String _folderEntry(
 //* Edit Widget *//
 
 class FolderConfig {
+  final String tp;
   final String name;
   final IconData icon;
   final double? iconSize;
@@ -395,6 +412,7 @@ class FolderConfig {
   final List<String> appList;
 
   FolderConfig({
+    required this.tp,
     required this.name,
     required this.icon,
     required this.iconSize,
@@ -840,17 +858,19 @@ Future<void> editFolder(
           name: validateName(config, renameCon.text) == null ? renameCon.text : initConfig.name,
           extra: shapeEdits
               ? _folderEntry(
-                  icon,
-                  iconSize,
-                  BTConfig.build(labelType ?? folderLabels(config),
+                  tp: initConfig.tp,
+                  icon: icon,
+                  iconSize: iconSize,
+                  buttonType: BTConfig.build(labelType ?? folderLabels(config),
                       icons: showIcon, elevated: elevated),
-                  labelType,
+                  labelType: labelType,
                 )
               : _folderEntry(
-                  icon,
-                  null,
-                  null,
-                  null,
+                  tp: initConfig.tp,
+                  icon: icon,
+                  iconSize: null,
+                  buttonType: null,
+                  labelType: null,
                 ),
           ids: appsNotif.value,
         ),
@@ -864,7 +884,13 @@ Future<void> editFolder(
           lane: lane,
           index: index,
           name: initConfig.name,
-          extra: _folderEntry(Icons.folder_outlined, null, null, null),
+          extra: _folderEntry(
+            tp: initConfig.tp,
+            icon: Icons.folder_outlined,
+            iconSize: null,
+            buttonType: null,
+            labelType: null,
+          ),
           ids: appsNotif.value,
         ),
       );

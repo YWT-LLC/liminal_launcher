@@ -31,6 +31,7 @@ class AppTile extends StatefulWidget {
   final ListAlignment? vAlign;
   final ListSort? verbStart;
 
+  late final String _tp;
   late final String? _name;
   late final IconData? _icon;
   late final double? _iconSize;
@@ -60,19 +61,20 @@ class AppTile extends StatefulWidget {
           .split(idSplit)[2]
           .split(configSplit);
 
-      _name = data[0];
+      _tp = data[0]; // Not used here; tracked so local updates don't clobber it
+      _name = data[1];
 
-      final String storedIcon = data[1];
+      final String storedIcon = data[2];
       _icon = (storedIcon == esSystem)
           ? null
           : (int.tryParse(storedIcon) == null)
               ? null
               // ignore: non_const_argument_for_const_parameter
               : IconData(int.tryParse(storedIcon)!, fontFamily: matIcons);
-      _iconSize = (data[2] == esSystem) ? null : double.tryParse(data[2]);
+      _iconSize = (data[3] == esSystem) ? null : double.tryParse(data[3]);
 
-      _buttonType = BTConfig.lookup(data[3]);
-      _labelType = LTConfig.lookup(data[4]);
+      _buttonType = BTConfig.lookup(data[4]);
+      _labelType = LTConfig.lookup(data[5]);
     } else {
       _name = null;
       _icon = null;
@@ -236,6 +238,7 @@ class _AppTileState extends State<AppTile> {
               index: widget.pos?.index,
               initConfig: (widget.location == AppLocation.home)
                   ? AppConfig(
+                      tp: widget._tp,
                       app: widget.app,
                       name: widget._name,
                       icon: widget._icon,
@@ -314,6 +317,7 @@ class _AppTileState extends State<AppTile> {
               lane: widget.pos?.lane,
               index: widget.pos?.index,
               initConfig: AppConfig(
+                tp: widget._tp,
                 app: widget.app,
                 name: widget._name,
                 icon: widget._icon,
@@ -562,11 +566,25 @@ class AppButton extends StatelessWidget {
       };
 }
 
-String defaultAppEntry(String name) => _appEntry(name, null, null, null, null);
+String defaultAppEntry(String name) => _appEntry(
+      tp: nullTPS,
+      name: name,
+      icon: null,
+      iconSize: null,
+      buttonType: null,
+      labelType: null,
+    );
 
-String _appEntry(String name, IconData? icon, double? iconSize, ButtonType? buttonType,
-        LabelType? labelType) =>
+String _appEntry({
+  required String tp,
+  required String name,
+  required IconData? icon,
+  required double? iconSize,
+  required ButtonType? buttonType,
+  required LabelType? labelType,
+}) =>
     <String>[
+      tp,
       name,
       (icon == null ? esSystem : icon.codePoint.toString()),
       (iconSize == null ? esSystem : iconSize.toString()),
@@ -579,6 +597,7 @@ const int _toMB = 1048576;
 //* Edit Widget *//
 
 class AppConfig {
+  final String tp;
   final AppInfo app;
   final String? name;
   final IconData? icon;
@@ -587,6 +606,7 @@ class AppConfig {
   final LabelType? labelType;
 
   AppConfig({
+    required this.tp,
     required this.app,
     required this.name,
     required this.icon,
@@ -889,23 +909,25 @@ Future<void> editApp(
         id: app.id,
         extra: shapeEdits
             ? _appEntry(
-                validateName(config, renameCon.text) == null
+                tp: initConfig.tp,
+                name: validateName(config, renameCon.text) == null
                     ? renameCon.text
                     : (initConfig.name ?? app.label),
-                icon,
-                iconSize,
-                BTConfig.build(labelType ?? listLabels(config),
+                icon: icon,
+                iconSize: iconSize,
+                buttonType: BTConfig.build(labelType ?? listLabels(config),
                     icons: showIcon, elevated: elevated),
-                labelType,
+                labelType: labelType,
               )
             : _appEntry(
-                validateName(config, renameCon.text) == null
+                tp: initConfig.tp,
+                name: validateName(config, renameCon.text) == null
                     ? renameCon.text
                     : (initConfig.name ?? app.label),
-                icon,
-                null,
-                null,
-                null,
+                icon: icon,
+                iconSize: null,
+                buttonType: null,
+                labelType: null,
               ),
       );
       return;
@@ -916,7 +938,14 @@ Future<void> editApp(
         lane: lane,
         index: index,
         id: app.id,
-        extra: _appEntry(app.label, null, null, null, null),
+        extra: _appEntry(
+          tp: initConfig.tp,
+          name: app.label,
+          icon: null,
+          iconSize: null,
+          buttonType: null,
+          labelType: null,
+        ),
       );
       return;
 
