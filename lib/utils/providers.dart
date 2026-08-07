@@ -223,7 +223,7 @@ class AppInfoProvider extends ChangeNotifier {
   /// Shows added overlay
   Future<void> addWidget(
     EzCP config, {
-    required WidWidGetGet type,
+    required WWGG type,
     required Future<void> Function()? editNew,
     required int lane,
   }) async {
@@ -231,12 +231,12 @@ class AppInfoProvider extends ChangeNotifier {
     String entry() => <String>[
           type.value,
           switch (type) {
-            WidWidGetGet.clock => defaultClockEntry(),
-            WidWidGetGet.event => defaultEventEntry(),
-            WidWidGetGet.search => defaultSearchEntry(),
-            WidWidGetGet.timer => defaultTimerEntry(),
-            WidWidGetGet.themeMode => defaultThemeWidgetEntry(),
-            WidWidGetGet.toggleMedia => defaultMediaEntry(),
+            WWGG.clock => defaultClockEntry(),
+            WWGG.event => defaultEventEntry(),
+            WWGG.search => defaultSearchEntry(),
+            WWGG.timer => defaultTimerEntry(),
+            WWGG.themeMode => defaultThemeWidgetEntry(),
+            WWGG.toggleMedia => defaultMediaEntry(),
           },
         ].join(widgetSplit);
 
@@ -462,7 +462,7 @@ class AppInfoProvider extends ChangeNotifier {
   /// Does notify
   Future<void> updateWidget(
     EzCP config,
-    WidWidGetGet type,
+    WWGG type,
     String extra, {
     required int lane,
     required int index,

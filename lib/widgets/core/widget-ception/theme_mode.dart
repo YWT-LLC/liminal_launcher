@@ -3,8 +3,8 @@
  * See LICENSE for distribution and usage details.
  */
 
-import '../../utils/export.dart';
-import '../export.dart';
+import '../../../utils/export.dart';
+import '../../export.dart';
 
 import 'dart:async';
 import 'package:open_ui/open_ui.dart';
@@ -205,8 +205,7 @@ class AddThemeMode extends StatelessWidget {
     required this.size,
   });
 
-  void onTap() =>
-      appInfo.addWidget(config, type: WidWidGetGet.themeMode, editNew: null, lane: lane);
+  void onTap() => appInfo.addWidget(config, type: WWGG.themeMode, editNew: null, lane: lane);
 
   @override
   Widget build(BuildContext context) => (size == WidgetSize.button)
@@ -245,7 +244,7 @@ Future<void> _quickResize(
 }) async =>
     await appInfo.updateWidget(
       config,
-      WidWidGetGet.themeMode,
+      WWGG.themeMode,
       _themeModeEntry(initSize == WidgetSize.tile ? WidgetSize.button : WidgetSize.tile),
       lane: lane,
       index: index,

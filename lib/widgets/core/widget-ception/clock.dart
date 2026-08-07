@@ -3,8 +3,8 @@
  * See LICENSE for distribution and usage details.
  */
 
-import '../../utils/export.dart';
-import '../export.dart';
+import '../../../utils/export.dart';
+import '../../export.dart';
 
 import 'dart:async';
 import 'package:open_ui/open_ui.dart';
@@ -292,7 +292,7 @@ class AddClock extends StatelessWidget {
 
   void onTap() => appInfo.addWidget(
         config,
-        type: WidWidGetGet.clock,
+        type: WWGG.clock,
         editNew: () => _openEdits(
           config,
           appInfo: appInfo,
@@ -778,7 +778,7 @@ Future<void> _openEdits(
 
   await appInfo.updateWidget(
     config,
-    WidWidGetGet.clock,
+    WWGG.clock,
     _clockEntry(shape, background, showTime, timeStyle, timeColor, dateType, dateStyle, dateColor),
     lane: lane,
     index: index,

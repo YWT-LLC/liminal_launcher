@@ -3,8 +3,8 @@
  * See LICENSE for distribution and usage details.
  */
 
-import '../../utils/export.dart';
-import '../export.dart';
+import '../../../utils/export.dart';
+import '../../export.dart';
 
 import 'dart:async';
 import 'package:open_ui/open_ui.dart';
@@ -426,7 +426,7 @@ class AddTimer extends StatelessWidget {
 
   void onTap() => appInfo.addWidget(
         config,
-        type: WidWidGetGet.timer,
+        type: WWGG.timer,
         editNew: () => _openEdits(
           config,
           appInfo: appInfo,
@@ -610,7 +610,7 @@ Future<void> _openEdits(
 
   await appInfo.updateWidget(
     config,
-    WidWidGetGet.timer,
+    WWGG.timer,
     _timerEntry(
       size,
       <String>[

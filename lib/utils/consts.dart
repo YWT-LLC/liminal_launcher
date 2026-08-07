@@ -198,8 +198,8 @@ final Map<String, Object> liminalDefault = <String, Object>{
   darkHomeDataKey: <String>[
     <String>[
       defaultLaneEntry(),
-      <String>[WidWidGetGet.clock.value, defaultClockEntry()].join(widgetSplit),
-      <String>[WidWidGetGet.search.value, defaultSearchEntry()].join(widgetSplit),
+      <String>[WWGG.clock.value, defaultClockEntry()].join(widgetSplit),
+      <String>[WWGG.search.value, defaultSearchEntry()].join(widgetSplit),
     ].join(listSplit),
   ],
   darkHiddenIDsKey: <String>[],
@@ -208,8 +208,8 @@ final Map<String, Object> liminalDefault = <String, Object>{
   lightHomeDataKey: <String>[
     <String>[
       defaultLaneEntry(),
-      <String>[WidWidGetGet.clock.value, defaultClockEntry()].join(widgetSplit),
-      <String>[WidWidGetGet.search.value, defaultSearchEntry()].join(widgetSplit),
+      <String>[WWGG.clock.value, defaultClockEntry()].join(widgetSplit),
+      <String>[WWGG.search.value, defaultSearchEntry()].join(widgetSplit),
     ].join(listSplit),
   ],
   lightHiddenIDsKey: <String>[],

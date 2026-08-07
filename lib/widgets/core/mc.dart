@@ -8,7 +8,7 @@ import '../../utils/export.dart';
 import 'package:open_ui/open_ui.dart';
 import 'package:flutter/material.dart';
 
-Widget moveDownLane(
+EzMenuButton moveDownLane(
   EzCP config,
   AppInfoProvider appInfo, {
   required int numLanes,
@@ -26,7 +26,7 @@ Widget moveDownLane(
       onPressed: () => appInfo.moveItemDownLane(config, lane: lane, index: index),
     );
 
-Widget moveUpLane(
+EzMenuButton moveUpLane(
   EzCP config,
   AppInfoProvider appInfo, {
   required int numLanes,
@@ -44,7 +44,12 @@ Widget moveUpLane(
       onPressed: () => appInfo.moveItemUpLane(config, lane: lane, index: index),
     );
 
-Widget removeItem(EzCP config, AppInfoProvider appInfo, {required int lane, required int index}) =>
+EzMenuButton removeItem(
+  EzCP config,
+  AppInfoProvider appInfo, {
+  required int lane,
+  required int index,
+}) =>
     EzMenuButton(
       config,
       label: l10n(config).mcRemove,

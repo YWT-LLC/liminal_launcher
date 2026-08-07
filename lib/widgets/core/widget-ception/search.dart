@@ -3,8 +3,8 @@
  * See LICENSE for distribution and usage details.
  */
 
-import '../../utils/export.dart';
-import '../export.dart';
+import '../../../utils/export.dart';
+import '../../export.dart';
 
 import 'dart:async';
 import 'package:open_ui/open_ui.dart';
@@ -180,7 +180,7 @@ class _SearchWidgetState extends State<SearchWidget> {
             label: e.name,
             onPressed: () => widget.appInfo.updateWidget(
               widget.config,
-              WidWidGetGet.search,
+              WWGG.search,
               _searchEntry(widget._size, e, widget._choices.map((Engine e) => e.value)),
               lane: widget.pos.lane,
               index: widget.pos.index,
@@ -379,7 +379,7 @@ class AddSearch extends StatelessWidget {
 
   void onTap() => appInfo.addWidget(
         config,
-        type: WidWidGetGet.search,
+        type: WWGG.search,
         editNew: () => _openEdits(
           config,
           appInfo: appInfo,
@@ -734,7 +734,7 @@ Future<void> _openEdits(
 
   await appInfo.updateWidget(
     config,
-    WidWidGetGet.search,
+    WWGG.search,
     _searchEntry(size, curr, shown.map((Engine e) => e.value)),
     lane: lane,
     index: index,

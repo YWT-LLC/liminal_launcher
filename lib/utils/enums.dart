@@ -378,7 +378,9 @@ enum TileState { standard, groupEdit, verbose }
 
 // Widget-ception //
 
-enum WidWidGetGet { clock, event, search, timer, toggleMedia, themeMode }
+/// WidWidGetGet
+/// TurTurkeyKey
+enum WWGG { clock, event, search, timer, toggleMedia, themeMode }
 
 const String esClock = 'clock';
 const String esEvent = 'event';
@@ -387,14 +389,14 @@ const String esTimer = 'timer';
 const String esToggleMedia = 'toggleMedia';
 const String esThemeMode = 'themeMode';
 
-extension WWGGConfig on WidWidGetGet {
+extension WWGGConfig on WWGG {
   String get value => switch (this) {
-        WidWidGetGet.clock => esClock,
-        WidWidGetGet.event => esEvent,
-        WidWidGetGet.search => esSearch,
-        WidWidGetGet.timer => esTimer,
-        WidWidGetGet.toggleMedia => esToggleMedia,
-        WidWidGetGet.themeMode => esThemeMode,
+        WWGG.clock => esClock,
+        WWGG.event => esEvent,
+        WWGG.search => esSearch,
+        WWGG.timer => esTimer,
+        WWGG.toggleMedia => esToggleMedia,
+        WWGG.themeMode => esThemeMode,
       };
 }
 

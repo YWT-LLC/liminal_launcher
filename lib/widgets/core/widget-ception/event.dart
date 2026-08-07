@@ -3,9 +3,9 @@
  * See LICENSE for distribution and usage details.
  */
 
-import '../../screens/export.dart';
-import '../../utils/export.dart';
-import '../export.dart';
+import '../../../screens/export.dart';
+import '../../../utils/export.dart';
+import '../../export.dart';
 
 import 'dart:async';
 import 'package:open_ui/open_ui.dart';
@@ -143,7 +143,7 @@ class _EventWidgetState extends State<EventWidget> {
                 Navigator.of(context).pop();
                 await widget.appInfo.updateWidget(
                   widget.config,
-                  WidWidGetGet.event,
+                  WWGG.event,
                   _eventEntry(
                     widget._size,
                     false,
@@ -430,7 +430,7 @@ class AddEvent extends StatelessWidget {
 
   void onTap() => appInfo.addWidget(
         config,
-        type: WidWidGetGet.event,
+        type: WWGG.event,
         editNew: () => _openEdits(
           config,
           appInfo: appInfo,
@@ -625,7 +625,7 @@ Future<void> _openEdits(
 
   await appInfo.updateWidget(
     config,
-    WidWidGetGet.event,
+    WWGG.event,
     _eventEntry(
       size,
       isCalendar,

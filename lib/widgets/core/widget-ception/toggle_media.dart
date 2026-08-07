@@ -3,8 +3,8 @@
  * See LICENSE for distribution and usage details.
  */
 
-import '../../utils/export.dart';
-import '../export.dart';
+import '../../../utils/export.dart';
+import '../../export.dart';
 
 import 'dart:async';
 import 'package:open_ui/open_ui.dart';
@@ -263,7 +263,7 @@ class AddToggleMedia extends StatelessWidget {
 
   void onTap() => appInfo.addWidget(
         config,
-        type: WidWidGetGet.toggleMedia,
+        type: WWGG.toggleMedia,
         editNew: () => _openEdits(
           config,
           appInfo: appInfo,
@@ -432,7 +432,7 @@ Future<void> _openEdits(
 
   await appInfo.updateWidget(
     config,
-    WidWidGetGet.toggleMedia,
+    WWGG.toggleMedia,
     _mediaEntry(size, bigSkips: bigSkips, lilSkips: lilSkips),
     lane: lane,
     index: index,
