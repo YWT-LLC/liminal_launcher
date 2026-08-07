@@ -647,7 +647,7 @@ Future<void> editSpacer(
                     Expanded(
                       child: EzTextBackground(
                         config,
-                        shape: config.buttonShape,
+                        borderRadius: config.buttonShape.radius,
                         text: (axis == Axis.vertical)
                             ? Slider(
                                 value: height,
