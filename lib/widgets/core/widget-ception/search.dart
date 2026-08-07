@@ -17,21 +17,25 @@ import 'package:url_launcher/url_launcher.dart';
 class SearchWidget extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
-  final LimPos pos;
   final TileState state;
   final ValueNotifier<double>? rippleProgress;
+  final LimPos pos;
 
+  final List<String> data;
   late final String _tp;
   late final WWGGSize _size;
   late final Engine _engine;
   late final List<Engine> _choices;
 
-  SearchWidget(this.config, this.appInfo, this.pos, this.state, this.rippleProgress, {super.key}) {
-    final List<String> data = appInfo
-        .homeItem(config, lane: pos.lane, index: pos.index)
-        .split(widgetSplit)[1]
-        .split(configSplit);
-
+  SearchWidget(
+    this.config,
+    this.appInfo,
+    this.state,
+    this.rippleProgress,
+    this.pos,
+    this.data, {
+    super.key,
+  }) {
     _tp = data[0]; // Not used here; tracked so local updates don't clobber it
     _size = WSConfig.safeLookup(data[1]);
 

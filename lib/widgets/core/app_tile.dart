@@ -20,17 +20,22 @@ import 'package:line_icons/line_icons.dart';
 class AppTile extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
-  final LimPos? pos;
+  final AppInfo app;
+  final Future<void> Function(AppInfo app) onSelected;
+  final AppLocation location;
   final TileState state;
   final ValueNotifier<double>? rippleProgress;
 
-  final AppInfo app;
-  final AppLocation location;
-  final Future<void> Function(AppInfo app) onSelected;
+  // For home
+  final LimPos? pos;
+
+  // For app list
   final ListAlignment? hAlign;
   final ListAlignment? vAlign;
   final ListSort? verbStart;
 
+  // Local
+  late final List<String>? data;
   late final String _tp;
   late final String? _name;
   late final IconData? _icon;
@@ -41,40 +46,36 @@ class AppTile extends StatefulWidget {
   AppTile(
     this.config, {
     required this.appInfo,
-    this.pos,
+    required this.app,
+    required this.onSelected,
+    required this.location,
     required this.state,
     this.rippleProgress,
-    required this.app,
-    required this.location,
-    required this.onSelected,
+    this.pos,
     this.hAlign,
     this.vAlign,
     this.verbStart,
+    this.data,
   })  : assert(
           ((pos == null) != (hAlign == null)) && (hAlign == null) == (vAlign == null),
           'Provide pos OR (hAlign AND vAlign)',
         ),
         super(key: ValueKey<String>('${app.id}-${state.index}')) {
-    if (pos != null) {
-      final List<String> data = appInfo
-          .homeItem(config, lane: pos!.lane, index: pos!.index)
-          .split(idSplit)[2]
-          .split(configSplit);
+    if (data != null) {
+      _tp = data![0]; // Not used here; tracked so local updates don't clobber it
+      _name = data![1];
 
-      _tp = data[0]; // Not used here; tracked so local updates don't clobber it
-      _name = data[1];
-
-      final String storedIcon = data[2];
+      final String storedIcon = data![2];
       _icon = (storedIcon == esSystem)
           ? null
           : (int.tryParse(storedIcon) == null)
               ? null
               // ignore: non_const_argument_for_const_parameter
               : IconData(int.tryParse(storedIcon)!, fontFamily: matIcons);
-      _iconSize = (data[3] == esSystem) ? null : double.tryParse(data[3]);
+      _iconSize = (data![3] == esSystem) ? null : double.tryParse(data![3]);
 
-      _buttonType = BTConfig.lookup(data[4]);
-      _labelType = LTConfig.lookup(data[5]);
+      _buttonType = BTConfig.lookup(data![4]);
+      _labelType = LTConfig.lookup(data![5]);
     } else {
       _name = null;
       _icon = null;

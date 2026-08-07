@@ -110,6 +110,8 @@ Future<bool> liminalAuth(EzCP config, String reason) async {
 bool standardFlow(EzCP config) => config.isLTR && horizontalAlign(config) != ListAlignment.end;
 
 EdgeInsets tilePadding(EzCP config, String datum) {
+  if (datum == nullTPS) return EzInsets.wrap(config.spacing);
+
   final List<String> data = datum.split(':');
   final double halfSpace = config.spacing / 2;
 

@@ -15,10 +15,11 @@ import 'package:flutter/material.dart';
 class ClockWidget extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
-  final LimPos pos;
   final TileState state;
   final ValueNotifier<double>? rippleProgress;
+  final LimPos pos;
 
+  final List<String> data;
   late final String _tp;
   late final EzButtonShape _shape;
   late final Color? _background;
@@ -29,12 +30,15 @@ class ClockWidget extends StatefulWidget {
   late final TxtStile _dateStyle;
   late final Color? _dateColor;
 
-  ClockWidget(this.config, this.appInfo, this.pos, this.state, this.rippleProgress, {super.key}) {
-    final List<String> data = appInfo
-        .homeItem(config, lane: pos.lane, index: pos.index)
-        .split(widgetSplit)[1]
-        .split(configSplit);
-
+  ClockWidget(
+    this.config,
+    this.appInfo,
+    this.state,
+    this.rippleProgress,
+    this.pos,
+    this.data, {
+    super.key,
+  }) {
     _tp = data[0]; // Not used here; tracked so local updates don't clobber it
     _shape = EBSConfig.safeLookup(data[1]);
 

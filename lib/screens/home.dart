@@ -114,6 +114,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                           appInfo: appInfo,
                           pContext: context,
                           initConfig: AppConfig(
+                            tp: nullTPS,
                             app: app,
                             name: app.label,
                             icon: null,
@@ -152,6 +153,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       appInfo: appInfo,
                       pContext: context,
                       initConfig: FolderConfig(
+                        tp: nullTPS,
                         name: l10n(config).hsFolder,
                         icon: Icons.folder_outlined,
                         iconSize: null,
@@ -177,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                     config,
                     context: context,
                     builder: (_) {
-                      WidgetSize size = WidgetSize.tile;
+                      WWGGSize size = WWGGSize.tile;
 
                       return StatefulBuilder(
                         builder: (BuildContext wmCon, StateSetter setModal) => ezModalScroll(
@@ -201,8 +203,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                                 onLabel: l10n(config).gTile,
                                 offLabel: l10n(config).gButton,
                                 init: true,
-                                onChanged: (bool tile) => setModal(
-                                    () => size = tile ? WidgetSize.tile : WidgetSize.button),
+                                onChanged: (bool tile) =>
+                                    setModal(() => size = tile ? WWGGSize.tile : WWGGSize.button),
                               ),
                               height: config.spacing * 2,
                             ),
@@ -490,7 +492,6 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     final List<String> entries = appInfo.homeLane(config, lane);
 
     final List<Widget> tiles = <Widget>[];
-    final EdgeInsets tilePadding = EzInsets.wrap(config.spacing);
 
     for (int index = 1; index < entries.length; index++) {
       final String entry = entries[index];
@@ -501,56 +502,70 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
       switch (delim) {
         case idSplit:
-          final List<String> parts = entry.split(idSplit);
+          final List<String> items = entry.split(idSplit);
 
-          final AppInfo? app = appInfo.appMap[<String>[parts[0], parts[1]].join(idSplit)];
+          final AppInfo? app = appInfo.appMap[<String>[items[0], items[1]].join(idSplit)];
           if (app == null) continue;
+
+          final List<String> data = items[2].split(configSplit);
 
           tiles.add(
             Padding(
               key: ValueKey<String>('$lane-$index-${app.id}'),
-              padding: tilePadding,
+              padding: tilePadding(config, data[0]),
               child: AppTile(
                 config,
                 appInfo: appInfo,
-                pos: pos,
+                app: app,
+                onSelected: (AppInfo app) => launchApp(app),
+                location: AppLocation.home,
                 state: editing ? TileState.groupEdit : TileState.standard,
                 rippleProgress: rippleProgress,
-                app: app,
-                location: AppLocation.home,
-                onSelected: (AppInfo app) => launchApp(app),
+                pos: pos,
+                data: data,
               ),
             ),
           );
           break;
 
         case folderSplit:
+          final List<String> items = entry.split(folderSplit);
+          final List<String> data = items[1].split(configSplit);
+
           tiles.add(
             Padding(
               key: ValueKey<String>('$index-${entry.split(folderSplit)[0]}'),
-              padding: tilePadding,
+              padding: tilePadding(config, data[0]),
               child: FolderTile(
                 config,
                 appInfo: appInfo,
-                pos: pos,
                 state: editing ? TileState.groupEdit : TileState.standard,
                 rippleProgress: rippleProgress,
+                name: items[0],
+                appList: items.length > 2 ? items.sublist(2) : <String>[],
+                pos: pos,
+                data: data,
               ),
             ),
           );
           break;
 
         case widgetSplit:
+          final List<String> items = entry.split(widgetSplit);
+          final List<String> data = items[1].split(configSplit);
+
           tiles.add(
             Padding(
               key: ValueKey<String>('$index-${entry.split(widgetSplit)[0]}'),
-              padding: tilePadding,
+              padding: tilePadding(config, data[0]),
               child: drawWidget(
                 config,
                 appInfo: appInfo,
-                pos: pos,
+                typeString: items[0],
                 state: editing ? TileState.groupEdit : TileState.standard,
                 rippleProgress: rippleProgress,
+                pos: pos,
+                data: data,
               ),
             ),
           );
@@ -560,7 +575,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           tiles.add(
             Padding(
               key: ValueKey<String>('$index-spacer-$editing'),
-              padding: editing ? tilePadding : EdgeInsets.zero,
+              padding: editing ? tilePadding(config, nullTPS) : EdgeInsets.zero,
               child: LimSpacer(
                 config,
                 appInfo: appInfo,

@@ -16,33 +16,33 @@ import 'package:url_launcher/url_launcher.dart';
 Widget drawWidget(
   EzCP config, {
   required AppInfoProvider appInfo,
-  required LimPos pos,
+  required String typeString,
   required TileState state,
-  ValueNotifier<double>? rippleProgress,
+  required ValueNotifier<double>? rippleProgress,
+  required LimPos pos,
+  required List<String> data,
 }) =>
     wideTiles(config)
         ? Container(
             width: double.infinity,
             alignment: pos.subAlign,
-            child: switch (
-                appInfo.homeItem(config, lane: pos.lane, index: pos.index).split(widgetSplit)[0]) {
-              esClock => ClockWidget(config, appInfo, pos, state, rippleProgress),
-              esEvent => EventWidget(config, appInfo, pos, state, rippleProgress),
-              esSearch => SearchWidget(config, appInfo, pos, state, rippleProgress),
-              esTimer => TimerWidget(config, appInfo, pos, state, rippleProgress),
-              esToggleMedia => ToggleMediaWidget(config, appInfo, pos, state, rippleProgress),
-              esThemeMode => ThemeModeWidget(config, appInfo, pos, state, rippleProgress),
+            child: switch (typeString) {
+              esClock => ClockWidget(config, appInfo, state, rippleProgress, pos, data),
+              esEvent => EventWidget(config, appInfo, state, rippleProgress, pos, data),
+              esSearch => SearchWidget(config, appInfo, state, rippleProgress, pos, data),
+              esTimer => TimerWidget(config, appInfo, state, rippleProgress, pos, data),
+              esToggleMedia => ToggleMediaWidget(config, appInfo, state, rippleProgress, pos, data),
+              esThemeMode => ThemeModeWidget(config, appInfo, state, rippleProgress, pos, data),
               _ => const SizedBox.shrink(),
             },
           )
-        : switch (
-            appInfo.homeItem(config, lane: pos.lane, index: pos.index).split(widgetSplit)[0]) {
-            esClock => ClockWidget(config, appInfo, pos, state, rippleProgress),
-            esEvent => EventWidget(config, appInfo, pos, state, rippleProgress),
-            esSearch => SearchWidget(config, appInfo, pos, state, rippleProgress),
-            esTimer => TimerWidget(config, appInfo, pos, state, rippleProgress),
-            esToggleMedia => ToggleMediaWidget(config, appInfo, pos, state, rippleProgress),
-            esThemeMode => ThemeModeWidget(config, appInfo, pos, state, rippleProgress),
+        : switch (typeString) {
+            esClock => ClockWidget(config, appInfo, state, rippleProgress, pos, data),
+            esEvent => EventWidget(config, appInfo, state, rippleProgress, pos, data),
+            esSearch => SearchWidget(config, appInfo, state, rippleProgress, pos, data),
+            esTimer => TimerWidget(config, appInfo, state, rippleProgress, pos, data),
+            esToggleMedia => ToggleMediaWidget(config, appInfo, state, rippleProgress, pos, data),
+            esThemeMode => ThemeModeWidget(config, appInfo, state, rippleProgress, pos, data),
             _ => const SizedBox.shrink(),
           };
 

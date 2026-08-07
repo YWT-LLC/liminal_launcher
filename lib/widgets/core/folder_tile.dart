@@ -18,31 +18,30 @@ import 'package:go_router/go_router.dart';
 class FolderTile extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
-  final LimPos pos;
   final TileState state;
   final ValueNotifier<double>? rippleProgress;
+  final LimPos pos;
+
+  late final String name;
+  late final List<String> appList;
+  final List<String> data;
 
   late final String _tp;
-  late final String _name;
   late final IconData _icon;
   late final double? _iconSize;
   late final ButtonType? _buttonType;
   late final LabelType? _labelType;
-  late final List<String> _appList;
 
   FolderTile(
     this.config, {
     required this.appInfo,
-    required this.pos,
     required this.state,
-    this.rippleProgress,
+    required this.rippleProgress,
+    required this.pos,
+    required this.name,
+    required this.appList,
+    required this.data,
   }) : super(key: ValueKey<String>('${pos.lane}-${pos.index}-${state.index}')) {
-    final List<String> items =
-        appInfo.homeItem(config, lane: pos.lane, index: pos.index).split(folderSplit);
-
-    _name = items[0];
-
-    final List<String> data = items[1].split(configSplit);
     _tp = data[0]; // Not used here; tracked so local updates don't clobber it
 
     final String storedIcon = data[1];
@@ -57,8 +56,6 @@ class FolderTile extends StatefulWidget {
 
     _buttonType = BTConfig.lookup(data[3]);
     _labelType = LTConfig.lookup(data[4]);
-
-    _appList = items.length > 2 ? items.sublist(2) : <String>[];
   }
 
   @override
@@ -108,7 +105,7 @@ class _AppFolderState extends State<FolderTile> {
           widget.config,
           children: <Widget>[
             EzWrap(
-              children: widget._appList
+              children: widget.appList
                   .map(
                     (String id) => widget.appInfo.appMap.containsKey(id)
                         ? Padding(
@@ -167,7 +164,7 @@ class _AppFolderState extends State<FolderTile> {
                         alignment: widget.pos.subAlign,
                         child: FolderButton(
                           widget.config,
-                          name: widget._name,
+                          name: widget.name,
                           icon: widget._icon,
                           iconSize: widget._iconSize ?? widget.config.iconSize,
                           buttonType: widget._buttonType ?? folderBT(widget.config),
@@ -179,7 +176,7 @@ class _AppFolderState extends State<FolderTile> {
                     )
                   : FolderButton(
                       widget.config,
-                      name: widget._name,
+                      name: widget.name,
                       icon: widget._icon,
                       iconSize: widget._iconSize ?? widget.config.iconSize,
                       buttonType: widget._buttonType ?? folderBT(widget.config),
@@ -196,12 +193,12 @@ class _AppFolderState extends State<FolderTile> {
                 pos: widget.pos,
                 initConfig: FolderConfig(
                   tp: widget._tp,
-                  name: widget._name,
+                  name: widget.name,
                   icon: widget._icon,
                   iconSize: widget._iconSize,
                   buttonType: widget._buttonType,
                   labelType: widget._labelType,
-                  appList: widget._appList,
+                  appList: widget.appList,
                 ),
               ),
             )
@@ -218,12 +215,12 @@ class _AppFolderState extends State<FolderTile> {
                 pos: widget.pos,
                 initConfig: FolderConfig(
                   tp: widget._tp,
-                  name: widget._name,
+                  name: widget.name,
                   icon: widget._icon,
                   iconSize: widget._iconSize ?? widget.config.iconSize,
                   buttonType: widget._buttonType,
                   labelType: widget._labelType,
-                  appList: widget._appList,
+                  appList: widget.appList,
                 ),
               ),
               child: EzIconButton(

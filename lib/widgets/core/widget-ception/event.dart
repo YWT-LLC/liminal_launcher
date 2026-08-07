@@ -17,10 +17,11 @@ import 'package:go_router/go_router.dart';
 class EventWidget extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
-  final LimPos pos;
   final TileState state;
   final ValueNotifier<double>? rippleProgress;
+  final LimPos pos;
 
+  final List<String> data;
   late final String _tp;
   late final WWGGSize _size;
   late final bool _isCalendar;
@@ -30,16 +31,12 @@ class EventWidget extends StatefulWidget {
   EventWidget(
     this.config,
     this.appInfo,
-    this.pos,
     this.state,
-    this.rippleProgress, {
+    this.rippleProgress,
+    this.pos,
+    this.data, {
     super.key,
   }) {
-    final List<String> data = appInfo
-        .homeItem(config, lane: pos.lane, index: pos.index)
-        .split(widgetSplit)[1]
-        .split(configSplit);
-
     _tp = data[0]; // Not used here; tracked so local updates don't clobber it
     _size = WSConfig.safeLookup(data[1]);
     _isCalendar = bool.tryParse(data[2]) ?? true;
