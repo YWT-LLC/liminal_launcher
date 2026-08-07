@@ -109,7 +109,21 @@ class _LimSpacerState extends State<LimSpacer> {
                           builder: (_, MenuController controller, __) => GestureDetector(
                             behavior: HitTestBehavior.opaque,
                             onLongPress: () async => await canToggleMenu(widget.config, controller),
-                            child: SizedBox(height: widget._height, width: widget._width),
+                            child: Container(
+                              decoration: (pos.$1 == null || pos.$2 == null)
+                                  ? null
+                                  : BoxDecoration(
+                                      border: Border.all(
+                                        color: widget.config.colors.tertiaryContainer,
+                                        width: widget.config.borderWidth,
+                                      ),
+                                      borderRadius: EzButtonShape.roundRect.radius,
+                                      color: widget.config.colors.tertiary
+                                          .withValues(alpha: focusOpacity),
+                                    ),
+                              height: widget._height,
+                              width: widget._width,
+                            ),
                           ),
                           menuChildren: _menuChildren(
                             widget.config,
@@ -207,9 +221,9 @@ class _LiveSpacer extends StatelessWidget {
           valueListenable: editSpacerWidth,
           builder: (_, double width, __) => Container(
             decoration: BoxDecoration(
-              color: config.colors.secondary.withValues(alpha: focusOpacity),
-              borderRadius: EzButtonShape.roundRect.radius,
               border: Border.all(color: config.colors.secondary, width: config.borderWidth),
+              borderRadius: EzButtonShape.roundRect.radius,
+              color: config.colors.secondary.withValues(alpha: focusOpacity),
             ),
             height: height,
             width: width,
