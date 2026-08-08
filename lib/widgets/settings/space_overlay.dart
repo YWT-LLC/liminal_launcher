@@ -4,7 +4,6 @@
  */
 
 import '../../utils/export.dart';
-import '../export.dart';
 
 import 'dart:async';
 import 'package:open_ui/open_ui.dart';
@@ -13,60 +12,49 @@ import 'package:flutter/material.dart';
 class _SpacingOverlay extends OverlayEntry {
   final EzCP config;
   final AppInfoProvider appInfo;
-  final LimPos pos;
+  final LimPos startPos;
   final Completer<_ExitData?> completer;
 
   _SpacingOverlay(
     this.config, {
     required this.appInfo,
-    required this.pos,
+    required this.startPos,
     required this.completer,
   }) : super(builder: (BuildContext context) {
           //* Define build data *//
           // Final //
 
-          // Edit-ee location
           final int numLanes = appInfo.numLanes(config);
-          final int lane = pos.lane;
-          final int index = pos.index;
 
-          // Values
           final double appIS = appIconSize(config);
-
-          final List<String> data =
-              appInfo.homeItem(config, lane: lane, index: index).split(spacerSplit);
+          final Widget rowSpacer = EzSpacer(appIS, vertical: false);
 
           final double fullHeight = heightOf(context);
           final double maxHeight = fullHeight * 0.75;
-          final double hBack = double.tryParse(data[0]) ?? config.spacing;
 
           final double fullWidth = widthOf(context);
           final double maxWidth = fullWidth * 0.75;
-          final double wBack = double.tryParse(data[1]) ?? appIS;
 
-          // Widgets
-          final Widget rowSpacer = EzSpacer(appIS, vertical: false);
+          final List<String> startData = appInfo
+              .homeItem(config, lane: startPos.lane, index: startPos.index)
+              .split(spacerSplit);
 
           // Stateful //
 
-          // Location
-          int currLane = lane;
-          int currIndex = index;
-
-          marked.value = (lane, index);
-          ListAlignment vAlign = LAConfig.buildLookup(
-            appInfo.homeItem(config, lane: lane, index: 0),
-            Axis.vertical,
-            config,
-          );
-
-          // Values
+          double hBack = double.tryParse(startData[0]) ?? config.spacing;
           double height = hBack;
           editSpacerHeight.value = height;
+
+          double wBack = double.tryParse(startData[1]) ?? appIS;
           double width = wBack;
           editSpacerWidth.value = width;
 
-          // User
+          marked.value = startPos;
+          int currLane = startPos.lane;
+          int currIndex = startPos.index;
+
+          ListAlignment vAlign = startPos.vAlign;
+
           Axis axis = Axis.vertical;
           double step = 1.0;
 
@@ -116,7 +104,9 @@ class _SpacingOverlay extends OverlayEntry {
               setOverlay(() {});
             }
 
-            // Return the build //
+            //* Return the build *//
+
+            marked.addListener(() => setOverlay(() {}));
 
             return Material(
               type: MaterialType.transparency,
@@ -218,8 +208,8 @@ class _SpacingOverlay extends OverlayEntry {
                                   label: l10n(config).mcDone,
                                   icon: EzIcon(config, Icons.done),
                                   onPressed: () => completer.complete(_ExitData(
-                                    lane: lane,
-                                    index: index,
+                                    lane: currLane,
+                                    index: currIndex,
                                     height: height,
                                     width: width,
                                     delete: false,
@@ -268,8 +258,8 @@ class _SpacingOverlay extends OverlayEntry {
                                   label: l10n(config).mcDelete,
                                   icon: EzIcon(config, Icons.delete),
                                   onPressed: () => completer.complete(_ExitData(
-                                    lane: lane,
-                                    index: index,
+                                    lane: currLane,
+                                    index: currIndex,
                                     height: height,
                                     width: width,
                                     delete: true,
@@ -529,7 +519,7 @@ Future<void> editSpacing(
   final OverlayEntry overlayEntry = _SpacingOverlay(
     config,
     appInfo: appInfo,
-    pos: startPos,
+    startPos: startPos,
     completer: completer,
   );
 
