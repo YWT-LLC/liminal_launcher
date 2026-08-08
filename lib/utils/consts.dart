@@ -503,6 +503,7 @@ const Duration breatheTime = Duration(seconds: 2);
 Offset lastRipple = Offset.zero;
 
 final ValueNotifier<LimPos?> marked = ValueNotifier<LimPos?>(null);
+bool get editingMarked => marked.value != null;
 
 final ValueNotifier<double> editSpacerHeight = ValueNotifier<double>(defaultMobileSpacing);
 final ValueNotifier<double> editSpacerWidth = ValueNotifier<double>(defaultMobileSpacing);

@@ -274,12 +274,11 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                     setState(() => editing = false);
 
                     if (mounted) {
-                      await editSpacer(
+                      await editSpacing(
                         config,
                         appInfo: appInfo,
                         context: context,
-                        lane: lane,
-                        index: index,
+                        startPos: LimPos(lane: lane, index: index, hAlign: hAlign, vAlign: vAlign),
                       );
                     }
                   },
@@ -776,7 +775,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                   : await canEdit(config, () => ripple(config, details)),
               onVerticalDragEnd: (DragEndDetails details) async {
                 if (details.primaryVelocity != null) {
-                  if (editingSpacer) return;
+                  if (editingMarked) return;
                   if (details.primaryVelocity! < 0) await swipeUp(config, appInfo);
                 }
               },
@@ -797,7 +796,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       return;
                     }
                   }
-                  if (editing || editingSpacer) return;
+                  if (editing || editingMarked) return;
 
                   final AppInfo? toLaunch = ((details.primaryVelocity! < 0)
                       ? appInfo.appMap[leftSwipeID]
@@ -812,7 +811,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                   switch (notification.runtimeType) {
                     case const (OverscrollNotification):
                       if (notification.metrics.axis == Axis.vertical) {
-                        if (editingSpacer) return true;
+                        if (editingMarked) return true;
 
                         // Vertical overscroll
                         if ((notification as OverscrollNotification).overscroll > 0) {
@@ -827,7 +826,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       } else {
                         // Horizontal overscroll
                         AppInfo? toLaunch;
-                        if (editing || editingSpacer) return true;
+                        if (editing || editingMarked) return true;
 
                         if ((notification as OverscrollNotification).overscroll < 0) {
                           if (atLeft) {
