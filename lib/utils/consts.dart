@@ -505,8 +505,8 @@ Offset lastRipple = Offset.zero;
 final ValueNotifier<LimPos?> marked = ValueNotifier<LimPos?>(null);
 bool get editingMarked => marked.value != null;
 
-final ValueNotifier<double> editSpacerHeight = ValueNotifier<double>(defaultMobileSpacing);
-final ValueNotifier<double> editSpacerWidth = ValueNotifier<double>(defaultMobileSpacing);
+final ValueNotifier<Size> editSpacerSize =
+    ValueNotifier<Size>(const Size.square(defaultMobileSpacing));
 
 final ValueNotifier<EdgeInsets> editTilePadding =
     ValueNotifier<EdgeInsets>(const EzInsets.wrap(defaultMobileSpacing));
