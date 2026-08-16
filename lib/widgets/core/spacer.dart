@@ -189,13 +189,9 @@ List<Widget> _menuChildren(
           config,
           editNew: () async {
             if (!ezRootIsMounted) return;
+            marked.value = pos;
 
-            await editSpacing(
-              config,
-              appInfo: appInfo,
-              context: ezRootContext,
-              startPos: pos,
-            );
+            await editSpacing(config, appInfo: appInfo, context: ezRootContext);
           },
           lane: pos.lane,
           index: pos.index,
@@ -253,14 +249,10 @@ class _EditSpacer extends StatelessWidget {
         config,
         onPressed: () async {
           if (!ezRootIsMounted) return;
-          stateCheck.call();
+          marked.value = pos;
 
-          await editSpacing(
-            config,
-            appInfo: appInfo,
-            context: ezRootContext,
-            startPos: pos,
-          );
+          stateCheck.call();
+          await editSpacing(config, appInfo: appInfo, context: ezRootContext);
         },
         label: l10n(config).gEdit,
         icon: EzIcon(config, Icons.edit),

@@ -270,16 +270,18 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                   config,
                   onPressed: () async {
                     if (mCon.mounted) Navigator.of(mCon).pop();
+
                     final int index = await appInfo.addSpacer(config, lane: lane);
                     setState(() => editing = false);
 
                     if (mounted) {
-                      await editSpacing(
-                        config,
-                        appInfo: appInfo,
-                        context: context,
-                        startPos: LimPos(lane: lane, index: index, hAlign: hAlign, vAlign: vAlign),
-                      );
+                      setState(() => marked.value = LimPos(
+                            lane: lane,
+                            index: index,
+                            hAlign: hAlign,
+                            vAlign: vAlign,
+                          ));
+                      await editSpacing(config, appInfo: appInfo, context: context);
                     }
                   },
                   label: l10n(config).hsSpacer,
@@ -516,7 +518,9 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                 config,
                 appInfo: appInfo,
                 app: app,
-                onSelected: (AppInfo app) => launchApp(app),
+                onSelected: (AppInfo app) async {
+                  editingMarked ? setState(() => marked.value = pos) : await launchApp(app);
+                },
                 location: AppLocation.home,
                 state: editing ? TileState.groupEdit : TileState.standard,
                 rippleProgress: rippleProgress,
@@ -554,17 +558,20 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           final List<String> data = items[1].split(configSplit);
 
           tiles.add(
-            Padding(
-              key: ValueKey<String>('$index-${entry.split(widgetSplit)[0]}'),
-              padding: tilePadding(config, data[0]),
-              child: drawWidget(
-                config,
-                appInfo: appInfo,
-                typeString: items[0],
-                state: editing ? TileState.groupEdit : TileState.standard,
-                rippleProgress: rippleProgress,
-                pos: pos,
-                data: data,
+            GestureDetector(
+              onTap: editingMarked ? () => setState(() => marked.value = pos) : null,
+              child: Padding(
+                key: ValueKey<String>('$index-${entry.split(widgetSplit)[0]}'),
+                padding: tilePadding(config, data[0]),
+                child: drawWidget(
+                  config,
+                  appInfo: appInfo,
+                  typeString: items[0],
+                  state: editing ? TileState.groupEdit : TileState.standard,
+                  rippleProgress: rippleProgress,
+                  pos: pos,
+                  data: data,
+                ),
               ),
             ),
           );

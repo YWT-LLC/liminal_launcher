@@ -98,41 +98,45 @@ class _AppFolderState extends State<FolderTile> {
     }
   }
 
-  Future<void> showApps() => ezModal(
-        widget.config,
-        context: context,
-        builder: (BuildContext mCon) => ezModalScroll(
-          widget.config,
-          children: <Widget>[
-            EzWrap(
-              children: widget.appList
-                  .map(
-                    (String id) => widget.appInfo.appMap.containsKey(id)
-                        ? Padding(
-                            padding: EzInsets.wrap(widget.config.spacing),
-                            child: AppTile(
-                              widget.config,
-                              appInfo: widget.appInfo,
-                              state: state,
-                              app: widget.appInfo.appMap[id]!,
-                              location: AppLocation.folder,
-                              onSelected: (AppInfo app) async {
-                                Navigator.of(mCon).pop();
-                                await launchApp(app);
-                              },
-                              hAlign: widget.pos.hAlign,
-                              vAlign: widget.pos.vAlign,
-                            ),
-                          )
-                        : const SizedBox.shrink(),
-                  )
-                  .where((Widget entry) => entry.runtimeType != SizedBox)
-                  .toList(),
+  Future<void> showApps() async {
+    editingMarked
+        ? setState(() => marked.value = widget.pos)
+        : await ezModal(
+            widget.config,
+            context: context,
+            builder: (BuildContext mCon) => ezModalScroll(
+              widget.config,
+              children: <Widget>[
+                EzWrap(
+                  children: widget.appList
+                      .map(
+                        (String id) => widget.appInfo.appMap.containsKey(id)
+                            ? Padding(
+                                padding: EzInsets.wrap(widget.config.spacing),
+                                child: AppTile(
+                                  widget.config,
+                                  appInfo: widget.appInfo,
+                                  state: state,
+                                  app: widget.appInfo.appMap[id]!,
+                                  location: AppLocation.folder,
+                                  onSelected: (AppInfo app) async {
+                                    Navigator.of(mCon).pop();
+                                    await launchApp(app);
+                                  },
+                                  hAlign: widget.pos.hAlign,
+                                  vAlign: widget.pos.vAlign,
+                                ),
+                              )
+                            : const SizedBox.shrink(),
+                      )
+                      .where((Widget entry) => entry.runtimeType != SizedBox)
+                      .toList(),
+                ),
+                widget.config.spacer,
+              ],
             ),
-            widget.config.spacer,
-          ],
-        ),
-      );
+          );
+  }
 
   // Init //
 
@@ -157,7 +161,7 @@ class _AppFolderState extends State<FolderTile> {
           ? MenuAnchor(
               builder: (_, MenuController controller, __) => wideTiles(widget.config)
                   ? InkWell(
-                      onTap: () => showApps(),
+                      onTap: showApps,
                       onLongPress: () async => await canToggleMenu(widget.config, controller),
                       child: Container(
                         width: double.infinity,
@@ -169,7 +173,7 @@ class _AppFolderState extends State<FolderTile> {
                           iconSize: widget._iconSize ?? widget.config.iconSize,
                           buttonType: widget._buttonType ?? folderBT(widget.config),
                           labelType: widget._labelType ?? folderLabels(widget.config),
-                          onPressed: () => showApps(),
+                          onPressed: showApps,
                           onLongPress: () async => await canToggleMenu(widget.config, controller),
                         ),
                       ),
@@ -181,7 +185,7 @@ class _AppFolderState extends State<FolderTile> {
                       iconSize: widget._iconSize ?? widget.config.iconSize,
                       buttonType: widget._buttonType ?? folderBT(widget.config),
                       labelType: widget._labelType ?? folderLabels(widget.config),
-                      onPressed: () => showApps(),
+                      onPressed: showApps,
                       onLongPress: () async => await canToggleMenu(widget.config, controller),
                     ),
               menuChildren: _menuChildren(
