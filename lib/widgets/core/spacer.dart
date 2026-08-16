@@ -94,71 +94,80 @@ class _LimSpacerState extends State<LimSpacer> {
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
-    return ValueListenableBuilder<LimPos?>(
-      valueListenable: marked,
-      builder: (_, LimPos? markedPos, __) =>
-          (markedPos?.lane == widget.pos.lane && markedPos?.index == widget.pos.index)
-              ? _LiveSpacer(widget.config)
-              : EzAnimSwitch(
-                  widget.config,
-                  mod: 0.667,
-                  forceFade: true,
-                  forceType: EzTransitionType.none,
-                  child: (state == TileState.standard)
-                      ? MenuAnchor(
-                          builder: (_, MenuController controller, __) => (markedPos == null)
-                              ? GestureDetector(
-                                  behavior: HitTestBehavior.opaque,
-                                  onLongPress: () async =>
-                                      await canToggleMenu(widget.config, controller),
-                                  child: SizedBox(height: widget._height, width: widget._width),
-                                )
-                              : GestureDetector(
-                                  behavior: HitTestBehavior.opaque,
-                                  onTap: () => setState(() => marked.value = widget.pos),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: widget.config.colors.tertiaryContainer,
-                                        width: widget.config.borderWidth,
-                                      ),
-                                      borderRadius: EzButtonShape.roundRect.radius,
-                                      color: widget.config.colors.tertiary
-                                          .withValues(alpha: focusOpacity),
-                                    ),
-                                    height: widget._height,
-                                    width: widget._width,
-                                  ),
-                                ),
-                          menuChildren: _menuChildren(
-                            widget.config,
-                            appInfo: widget.appInfo,
-                            state: state,
-                            stateCheck: doNothing,
-                            numLanes: numLanes,
-                            pos: widget.pos,
-                          ),
-                        )
-                      : EditContainer(
-                          widget.config,
-                          subAlign: widget.pos.subAlign,
-                          menuControl: menuControl,
-                          menuChildren: _menuChildren(
-                            widget.config,
-                            appInfo: widget.appInfo,
-                            state: state,
-                            stateCheck: widget.resizeCallback,
-                            numLanes: numLanes,
-                            pos: widget.pos,
-                          ),
-                          child: EzIconButton(
-                            widget.config,
-                            icon: const Icon(Icons.space_bar),
-                            onPressed: () => toggleMenu(menuControl),
-                          ),
-                        ),
+    return marked.value == widget.pos
+        ? ValueListenableBuilder<Size>(
+            valueListenable: editSpacerSize,
+            builder: (_, Size size, __) => Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: widget.config.colors.secondary,
+                  width: widget.config.borderWidth,
                 ),
-    );
+                borderRadius: EzButtonShape.roundRect.radius,
+                color: widget.config.colors.secondary.withValues(alpha: focusOpacity),
+              ),
+              height: size.height,
+              width: size.width,
+            ),
+          )
+        : EzAnimSwitch(
+            widget.config,
+            mod: 0.667,
+            forceFade: true,
+            forceType: EzTransitionType.none,
+            child: (state == TileState.standard)
+                ? MenuAnchor(
+                    builder: (_, MenuController controller, __) => (marked.value == null)
+                        ? GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onLongPress: () async => await canToggleMenu(widget.config, controller),
+                            child: SizedBox(height: widget._height, width: widget._width),
+                          )
+                        : GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () => setState(() => marked.value = widget.pos),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: widget.config.colors.tertiaryContainer,
+                                  width: widget.config.borderWidth,
+                                ),
+                                borderRadius: EzButtonShape.roundRect.radius,
+                                color:
+                                    widget.config.colors.tertiary.withValues(alpha: focusOpacity),
+                              ),
+                              height: widget._height,
+                              width: widget._width,
+                            ),
+                          ),
+                    menuChildren: _menuChildren(
+                      widget.config,
+                      appInfo: widget.appInfo,
+                      state: state,
+                      stateCheck: doNothing,
+                      numLanes: numLanes,
+                      pos: widget.pos,
+                    ),
+                  )
+                : EditContainer(
+                    widget.config,
+                    subAlign: widget.pos.subAlign,
+                    menuControl: menuControl,
+                    menuChildren: _menuChildren(
+                      widget.config,
+                      appInfo: widget.appInfo,
+                      state: state,
+                      stateCheck: widget.resizeCallback,
+                      numLanes: numLanes,
+                      pos: widget.pos,
+                    ),
+                    child: EzIconButton(
+                      widget.config,
+                      icon: const Icon(Icons.space_bar),
+                      onPressed: () => toggleMenu(menuControl),
+                    ),
+                  ),
+          );
   }
 
   @override
@@ -207,31 +216,6 @@ List<Widget> _menuChildren(
       // Remove
       removeItem(config, appInfo, lane: pos.lane, index: pos.index),
     ];
-
-//* Add Widget *//
-
-class _LiveSpacer extends StatelessWidget {
-  final EzCP config;
-
-  const _LiveSpacer(this.config);
-
-  @override
-  Widget build(_) => ValueListenableBuilder<double>(
-        valueListenable: editSpacerHeight,
-        builder: (_, double height, __) => ValueListenableBuilder<double>(
-          valueListenable: editSpacerWidth,
-          builder: (_, double width, __) => Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: config.colors.secondary, width: config.borderWidth),
-              borderRadius: EzButtonShape.roundRect.radius,
-              color: config.colors.secondary.withValues(alpha: focusOpacity),
-            ),
-            height: height,
-            width: width,
-          ),
-        ),
-      );
-}
 
 //* Edit Widget *//
 
