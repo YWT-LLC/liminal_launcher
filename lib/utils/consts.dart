@@ -317,6 +317,12 @@ class LimPos {
   });
 
   Alignment get subAlign => LAConfig.merge(h: hAlign, v: vAlign);
+
+  @override
+  int get hashCode => lane.hashCode + index.hashCode;
+
+  @override
+  bool operator ==(Object other) => other is LimPos && other.lane == lane && other.index == index;
 }
 
 /// ---
