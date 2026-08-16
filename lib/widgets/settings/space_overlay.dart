@@ -21,17 +21,17 @@ class _SpacingOverlay extends OverlayEntry {
           //* Define build data *//
           // Init //
 
-          final RegExpMatch? splitMatch = tileRegex.firstMatch(appInfo.homeItem(
+          final RegExpMatch? initSplit = tileRegex.firstMatch(appInfo.homeItem(
             config,
             lane: marked.value!.lane,
             index: marked.value!.index,
           ));
-          final String? delim = splitMatch?.group(0);
-          if (delim == null) return const SizedBox.shrink();
+          final String? initDelim = initSplit?.group(0);
+          if (initDelim == null) return const SizedBox.shrink();
 
           final List<String> initData = appInfo
               .homeItem(config, lane: marked.value!.lane, index: marked.value!.index)
-              .split(delim);
+              .split(initDelim);
 
           // Final //
 
@@ -58,7 +58,7 @@ class _SpacingOverlay extends OverlayEntry {
           ListAlignment hAlign = marked.value!.hAlign;
           ListAlignment vAlign = marked.value!.vAlign;
 
-          bool tile = (delim != spacerSplit);
+          bool tile = (initDelim != spacerSplit);
 
           // Spacer
           late Axis axis = Axis.vertical;
@@ -69,12 +69,12 @@ class _SpacingOverlay extends OverlayEntry {
           late double wBack = double.tryParse(initData[1]) ?? appIS;
           late double width = wBack;
 
-          if (!tile) editSpacerSize.value = Size(height, width);
+          if (!tile) editSpacerSize.value = Size(width, height);
 
           // Tile
           late AxisDirection side = AxisDirection.up;
 
-          late final List<String> paddingEntries = (switch (delim) {
+          late final List<String> paddingEntries = (switch (initDelim) {
             idSplit => initData[2],
             _ => initData[1],
           })
@@ -122,17 +122,17 @@ class _SpacingOverlay extends OverlayEntry {
                       : <String>[height.toString(), width.toString()].join(':'),
                 );
 
-                final RegExpMatch? splitMatch = tileRegex.firstMatch(appInfo.homeItem(
+                final RegExpMatch? newSplit = tileRegex.firstMatch(appInfo.homeItem(
                   config,
                   lane: marked.value!.lane,
                   index: marked.value!.index,
                 ));
-                final String? delim = splitMatch?.group(0);
-                if (delim == null) return;
+                final String? newDelim = newSplit?.group(0);
+                if (newDelim == null) return;
 
                 final List<String> newData = appInfo
                     .homeItem(config, lane: marked.value!.lane, index: marked.value!.index)
-                    .split(delim);
+                    .split(newDelim);
 
                 currLane = marked.value!.lane;
                 currIndex = marked.value!.index;
@@ -140,7 +140,7 @@ class _SpacingOverlay extends OverlayEntry {
                 hAlign = marked.value!.hAlign;
                 vAlign = marked.value!.vAlign;
 
-                if (delim == spacerSplit) {
+                if (newDelim == spacerSplit) {
                   tile = false;
 
                   hBack = double.tryParse(newData[0]) ?? config.spacing;
@@ -149,13 +149,13 @@ class _SpacingOverlay extends OverlayEntry {
                   wBack = double.tryParse(newData[1]) ?? appIS;
                   width = wBack;
 
-                  editSpacerSize.value = Size(height, width);
+                  editSpacerSize.value = Size(width, height);
                 } else {
                   tile = true;
 
-                  final List<String> paddingEntries = (switch (delim) {
-                    idSplit => initData[2],
-                    _ => initData[1],
+                  final List<String> paddingEntries = (switch (newDelim) {
+                    idSplit => newData[2],
+                    _ => newData[1],
                   })
                       .split(configSplit)[0]
                       .split(':');
@@ -245,7 +245,7 @@ class _SpacingOverlay extends OverlayEntry {
                 } else {
                   width = value;
                 }
-                editSpacerSize.value = Size(height, width);
+                editSpacerSize.value = Size(width, height);
               }
 
               setOverlay(() {});
@@ -444,7 +444,7 @@ class _SpacingOverlay extends OverlayEntry {
                                       height = hBack;
                                       width = wBack;
 
-                                      editSpacerSize.value = Size(height, width);
+                                      editSpacerSize.value = Size(width, height);
                                     }
 
                                     setOverlay(() {});
