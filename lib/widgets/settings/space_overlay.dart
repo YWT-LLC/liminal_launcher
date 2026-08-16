@@ -65,11 +65,11 @@ class _SpacingOverlay extends OverlayEntry {
 
           late double hBack = double.tryParse(initData[0]) ?? config.spacing;
           late double height = hBack;
-          if (!tile) editSpacerHeight.value = height;
 
           late double wBack = double.tryParse(initData[1]) ?? appIS;
           late double width = wBack;
-          if (!tile) editSpacerWidth.value = width;
+
+          if (!tile) editSpacerSize.value = Size(height, width);
 
           // Tile
           late AxisDirection side = AxisDirection.up;
@@ -145,11 +145,11 @@ class _SpacingOverlay extends OverlayEntry {
 
                   hBack = double.tryParse(newData[0]) ?? config.spacing;
                   height = hBack;
-                  editSpacerHeight.value = height;
 
                   wBack = double.tryParse(newData[1]) ?? appIS;
                   width = wBack;
-                  editSpacerWidth.value = width;
+
+                  editSpacerSize.value = Size(height, width);
                 } else {
                   tile = true;
 
@@ -242,11 +242,10 @@ class _SpacingOverlay extends OverlayEntry {
               } else {
                 if (axis == Axis.vertical) {
                   height = value;
-                  editSpacerHeight.value = value;
                 } else {
                   width = value;
-                  editSpacerWidth.value = value;
                 }
+                editSpacerSize.value = Size(height, width);
               }
 
               setOverlay(() {});
@@ -445,8 +444,7 @@ class _SpacingOverlay extends OverlayEntry {
                                       height = hBack;
                                       width = wBack;
 
-                                      editSpacerHeight.value = hBack;
-                                      editSpacerWidth.value = wBack;
+                                      editSpacerSize.value = Size(height, width);
                                     }
 
                                     setOverlay(() {});
