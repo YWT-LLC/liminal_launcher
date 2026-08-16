@@ -3,6 +3,8 @@
  * See LICENSE for distribution and usage details.
  */
 
+// TODO: fix tap behind controls
+
 import '../../utils/export.dart';
 
 import 'dart:async';
@@ -98,7 +100,7 @@ class _SpacingOverlay extends OverlayEntry {
                 EdgeInsets.only(top: top, bottom: bottom, left: left, right: right);
           }
 
-          return StatefulBuilder(builder: (_, StateSetter setOverlay) {
+          return StatefulBuilder(builder: (BuildContext oCon, StateSetter setOverlay) {
             //* Define custom functions *//
 
             marked.addListener(() async {
@@ -181,7 +183,7 @@ class _SpacingOverlay extends OverlayEntry {
                 }
               });
 
-              setOverlay(() {});
+              if (oCon.mounted) setOverlay(() {});
             });
 
             List<Widget> staticSteps() => <int>[1, 5, 10]
@@ -287,7 +289,16 @@ class _SpacingOverlay extends OverlayEntry {
                               builder: (_, MenuController c, __) => EzIconButton(
                                 config,
                                 icon: Icon(
-                                  (axis == Axis.vertical) ? Icons.height : Icons.horizontal_rule,
+                                  tile
+                                      ? switch (side) {
+                                          AxisDirection.up => Icons.north,
+                                          AxisDirection.down => Icons.south,
+                                          AxisDirection.left => Icons.west,
+                                          AxisDirection.right => Icons.east,
+                                        }
+                                      : ((axis == Axis.vertical)
+                                          ? Icons.height
+                                          : Icons.horizontal_rule),
                                 ),
                                 onPressed: () => toggleMenu(c),
                               ),
