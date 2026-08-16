@@ -579,9 +579,9 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
           tiles.add(
             GestureDetector(
+              key: ValueKey<String>('$index-${entry.split(widgetSplit)[0]}'),
               onTap: editingMarked ? () => setState(() => marked.value = pos) : null,
               child: Container(
-                key: ValueKey<String>('$index-${entry.split(widgetSplit)[0]}'),
                 padding: tilePadding(config, data[0]),
                 decoration: marked.value == pos
                     ? BoxDecoration(
