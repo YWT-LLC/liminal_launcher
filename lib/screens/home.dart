@@ -511,9 +511,19 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           final List<String> data = items[2].split(configSplit);
 
           tiles.add(
-            Padding(
+            Container(
               key: ValueKey<String>('$lane-$index-${app.id}'),
               padding: tilePadding(config, data[0]),
+              decoration: marked.value == pos
+                  ? BoxDecoration(
+                      border: Border.all(
+                        color: config.colors.secondaryContainer,
+                        width: config.borderWidth,
+                      ),
+                      borderRadius: EzButtonShape.roundRect.radius,
+                      color: config.colors.secondary.withValues(alpha: focusOpacity),
+                    )
+                  : null,
               child: AppTile(
                 config,
                 appInfo: appInfo,
@@ -536,9 +546,19 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           final List<String> data = items[1].split(configSplit);
 
           tiles.add(
-            Padding(
+            Container(
               key: ValueKey<String>('$index-${entry.split(folderSplit)[0]}'),
               padding: tilePadding(config, data[0]),
+              decoration: marked.value == pos
+                  ? BoxDecoration(
+                      border: Border.all(
+                        color: config.colors.secondaryContainer,
+                        width: config.borderWidth,
+                      ),
+                      borderRadius: EzButtonShape.roundRect.radius,
+                      color: config.colors.secondary.withValues(alpha: focusOpacity),
+                    )
+                  : null,
               child: FolderTile(
                 config,
                 appInfo: appInfo,
@@ -560,9 +580,19 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           tiles.add(
             GestureDetector(
               onTap: editingMarked ? () => setState(() => marked.value = pos) : null,
-              child: Padding(
+              child: Container(
                 key: ValueKey<String>('$index-${entry.split(widgetSplit)[0]}'),
                 padding: tilePadding(config, data[0]),
+                decoration: marked.value == pos
+                    ? BoxDecoration(
+                        border: Border.all(
+                          color: config.colors.secondaryContainer,
+                          width: config.borderWidth,
+                        ),
+                        borderRadius: EzButtonShape.roundRect.radius,
+                        color: config.colors.secondary.withValues(alpha: focusOpacity),
+                      )
+                    : null,
                 child: drawWidget(
                   config,
                   appInfo: appInfo,
