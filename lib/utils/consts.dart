@@ -507,3 +507,6 @@ bool get editingMarked => marked.value != null;
 
 final ValueNotifier<double> editSpacerHeight = ValueNotifier<double>(defaultMobileSpacing);
 final ValueNotifier<double> editSpacerWidth = ValueNotifier<double>(defaultMobileSpacing);
+
+final ValueNotifier<EdgeInsets> editTilePadding =
+    ValueNotifier<EdgeInsets>(const EzInsets.wrap(defaultMobileSpacing));
