@@ -409,6 +409,108 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   /// Does notify
+  Future<void> updateSpacing(
+    EzCP config, {
+    required int lane,
+    required int index,
+    required String entry,
+  }) async {
+    if (interlinked || config.isDark) {
+      final RegExpMatch? splitMatch = tileRegex.firstMatch(_darkHomeMatrix[lane][index]);
+      final String? delim = splitMatch?.group(0);
+
+      switch (delim) {
+        case idSplit:
+          final List<String> bigParts = _darkHomeMatrix[lane][index].split(idSplit);
+          final List<String> lilParts = bigParts[2].split(configSplit);
+
+          lilParts[0] = entry;
+          bigParts[2] = lilParts.join(configSplit);
+          _darkHomeMatrix[lane][index] = bigParts.join(idSplit);
+          break;
+
+        case folderSplit:
+          final List<String> bigParts = _darkHomeMatrix[lane][index].split(folderSplit);
+          final List<String> lilParts = bigParts[1].split(configSplit);
+
+          lilParts[0] = entry;
+          bigParts[1] = lilParts.join(configSplit);
+          _darkHomeMatrix[lane][index] = bigParts.join(folderSplit);
+          break;
+
+        case widgetSplit:
+          final List<String> bigParts = _darkHomeMatrix[lane][index].split(widgetSplit);
+          final List<String> lilParts = bigParts[1].split(configSplit);
+
+          lilParts[0] = entry;
+          bigParts[1] = lilParts.join(configSplit);
+          _darkHomeMatrix[lane][index] = bigParts.join(widgetSplit);
+          break;
+
+        case spacerSplit:
+          final List<String> parts = _darkHomeMatrix[lane][index].split(spacerSplit);
+          final List<String> values = entry.split(':');
+
+          parts[0] = values[0];
+          parts[1] = values[1];
+          _darkHomeMatrix[lane][index] = parts.join(spacerSplit);
+          break;
+
+        default:
+          break;
+      }
+    }
+
+    if (interlinked || !config.isDark) {
+      final RegExpMatch? splitMatch = tileRegex.firstMatch(_lightHomeMatrix[lane][index]);
+      final String? delim = splitMatch?.group(0);
+
+      switch (delim) {
+        case idSplit:
+          final List<String> bigParts = _lightHomeMatrix[lane][index].split(idSplit);
+          final List<String> lilParts = bigParts[2].split(configSplit);
+
+          lilParts[0] = entry;
+          bigParts[0] = lilParts.join(configSplit);
+          _lightHomeMatrix[lane][index] = bigParts.join(idSplit);
+          break;
+
+        case folderSplit:
+          final List<String> bigParts = _lightHomeMatrix[lane][index].split(folderSplit);
+          final List<String> lilParts = bigParts[1].split(configSplit);
+
+          lilParts[0] = entry;
+          bigParts[0] = lilParts.join(configSplit);
+          _lightHomeMatrix[lane][index] = bigParts.join(folderSplit);
+          break;
+
+        case widgetSplit:
+          final List<String> bigParts = _lightHomeMatrix[lane][index].split(widgetSplit);
+          final List<String> lilParts = bigParts[1].split(configSplit);
+
+          lilParts[0] = entry;
+          bigParts[0] = lilParts.join(configSplit);
+          _lightHomeMatrix[lane][index] = bigParts.join(widgetSplit);
+          break;
+
+        case spacerSplit:
+          final List<String> parts = _lightHomeMatrix[lane][index].split(spacerSplit);
+          final List<String> values = entry.split(':');
+
+          parts[0] = values[0];
+          parts[1] = values[1];
+          _lightHomeMatrix[lane][index] = parts.join(spacerSplit);
+          break;
+
+        default:
+          break;
+      }
+    }
+
+    notifyListeners();
+  }
+
+  /// Does notify
   Future<void> updateApp(
     EzCP config, {
     required int lane,
