@@ -459,6 +459,7 @@ class AppInfoProvider extends ChangeNotifier {
         default:
           break;
       }
+      unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
     }
 
     if (interlinked || !config.isDark) {
@@ -505,6 +506,7 @@ class AppInfoProvider extends ChangeNotifier {
         default:
           break;
       }
+      unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
     notifyListeners();
@@ -576,35 +578,6 @@ class AppInfoProvider extends ChangeNotifier {
 
     if (interlinked || !config.isDark) {
       _lightHomeMatrix[lane][index] = <String>[type.value, extra].join(widgetSplit);
-      unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
-    }
-
-    notifyListeners();
-  }
-
-  /// Does notify
-  Future<void> updateSpacer(
-    EzCP config, {
-    required double height,
-    required double width,
-    required int lane,
-    required int index,
-  }) async {
-    if (interlinked || config.isDark) {
-      _darkHomeMatrix[lane][index] = <String>[
-        height.toString(),
-        width.toString(),
-      ].join(spacerSplit);
-
-      unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
-    }
-
-    if (interlinked || !config.isDark) {
-      _lightHomeMatrix[lane][index] = <String>[
-        height.toString(),
-        width.toString(),
-      ].join(spacerSplit);
-
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
