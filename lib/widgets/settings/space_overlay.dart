@@ -3,6 +3,8 @@
  * See LICENSE for distribution and usage details.
  */
 
+// TODO: on update listener stuff
+
 import '../../utils/export.dart';
 
 import 'dart:async';
@@ -12,15 +14,12 @@ import 'package:flutter/material.dart';
 class _SpacingOverlay extends OverlayEntry {
   final EzCP config;
   final AppInfoProvider appInfo;
-  final LimPos startPos;
   final Completer<_ExitData?> completer;
 
-  _SpacingOverlay(
-    this.config, {
-    required this.appInfo,
-    required this.startPos,
-    required this.completer,
-  }) : super(builder: (BuildContext context) {
+  _SpacingOverlay(this.config, {required this.appInfo, required this.completer})
+      : super(builder: (BuildContext context) {
+          if (marked.value == null) return const SizedBox.shrink();
+
           //* Define build data *//
           // Final //
 
@@ -36,7 +35,7 @@ class _SpacingOverlay extends OverlayEntry {
           final double maxWidth = fullWidth * 0.75;
 
           final List<String> startData = appInfo
-              .homeItem(config, lane: startPos.lane, index: startPos.index)
+              .homeItem(config, lane: marked.value!.lane, index: marked.value!.index)
               .split(spacerSplit);
 
           // Stateful //
@@ -49,11 +48,11 @@ class _SpacingOverlay extends OverlayEntry {
           double width = wBack;
           editSpacerWidth.value = width;
 
-          marked.value = startPos;
-          int currLane = startPos.lane;
-          int currIndex = startPos.index;
+          int currLane = marked.value!.lane;
+          int currIndex = marked.value!.index;
 
-          ListAlignment vAlign = startPos.vAlign;
+          ListAlignment hAlign = marked.value!.hAlign;
+          ListAlignment vAlign = marked.value!.vAlign;
 
           Axis axis = Axis.vertical;
           double step = 1.0;
@@ -115,7 +114,6 @@ class _SpacingOverlay extends OverlayEntry {
                 Positioned.fill(
                   child: GestureDetector(
                     behavior: HitTestBehavior.translucent,
-                    onTap: doNothing,
                     onLongPress: doNothing,
                     child: const SizedBox.expand(),
                   ),
@@ -235,7 +233,12 @@ class _SpacingOverlay extends OverlayEntry {
                                       index: currIndex,
                                     );
 
-                                    marked.value = (currLane, currIndex + 1);
+                                    marked.value = LimPos(
+                                      lane: currLane,
+                                      index: currIndex + 1,
+                                      hAlign: hAlign, // TODO: default?
+                                      vAlign: vAlign,
+                                    );
                                     setOverlay(() => currIndex += 1);
                                   },
                                 ),
@@ -291,7 +294,12 @@ class _SpacingOverlay extends OverlayEntry {
                                   final int nextLane = currLane - 1;
                                   final int nextIndex = appInfo.homeLane(config, nextLane).length;
 
-                                  marked.value = (nextLane, nextIndex);
+                                  marked.value = LimPos(
+                                    lane: nextLane,
+                                    index: nextIndex,
+                                    hAlign: hAlign,
+                                    vAlign: vAlign,
+                                  );
                                   await appInfo.moveItemDownLane(
                                     config,
                                     lane: currLane,
@@ -319,7 +327,12 @@ class _SpacingOverlay extends OverlayEntry {
                               onPressed: () async {
                                 final int nextIndex = currIndex + 1;
 
-                                marked.value = (currLane, nextIndex);
+                                marked.value = LimPos(
+                                  lane: currLane,
+                                  index: nextIndex,
+                                  hAlign: hAlign,
+                                  vAlign: vAlign,
+                                );
                                 await appInfo.reorderLane(
                                   config,
                                   lane: currLane,
@@ -345,7 +358,12 @@ class _SpacingOverlay extends OverlayEntry {
                               onPressed: () async {
                                 final int nextIndex = currIndex - 1;
 
-                                marked.value = (currLane, nextIndex);
+                                marked.value = LimPos(
+                                  lane: currLane,
+                                  index: nextIndex,
+                                  hAlign: hAlign,
+                                  vAlign: vAlign,
+                                );
                                 await appInfo.reorderLane(
                                   config,
                                   lane: currLane,
@@ -373,7 +391,12 @@ class _SpacingOverlay extends OverlayEntry {
                                   final int nextLane = currLane + 1;
                                   final int nextIndex = appInfo.homeLane(config, nextLane).length;
 
-                                  marked.value = (nextLane, nextIndex);
+                                  marked.value = LimPos(
+                                    lane: nextLane,
+                                    index: nextIndex,
+                                    hAlign: hAlign,
+                                    vAlign: vAlign,
+                                  );
                                   await appInfo.moveItemUpLane(
                                     config,
                                     lane: currLane,
@@ -513,15 +536,9 @@ Future<void> editSpacing(
   EzCP config, {
   required AppInfoProvider appInfo,
   required BuildContext context,
-  required LimPos startPos,
 }) async {
   final Completer<_ExitData?> completer = Completer<_ExitData?>();
-  final OverlayEntry overlayEntry = _SpacingOverlay(
-    config,
-    appInfo: appInfo,
-    startPos: startPos,
-    completer: completer,
-  );
+  final OverlayEntry overlayEntry = _SpacingOverlay(config, appInfo: appInfo, completer: completer);
 
   ezRootOverlay?.insert(overlayEntry);
   final _ExitData? data = await completer.future;
