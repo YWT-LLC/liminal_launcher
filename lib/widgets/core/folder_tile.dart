@@ -100,7 +100,7 @@ class _AppFolderState extends State<FolderTile> {
 
   Future<void> showApps() async {
     editingMarked
-        ? setState(() => marked.value = widget.pos)
+        ? (marked.value == widget.pos ? doNothing() : setState(() => marked.value = widget.pos))
         : await ezModal(
             widget.config,
             context: context,
