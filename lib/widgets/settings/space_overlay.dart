@@ -83,19 +83,20 @@ class _SpacingOverlay extends OverlayEntry {
 
           late double tBack = double.tryParse(paddingEntries[0]) ?? halfSpace;
           late double top = tBack;
-          // ??
 
           late double bBack = double.tryParse(paddingEntries[1]) ?? halfSpace;
           late double bottom = bBack;
-          // ??
 
           late double lBack = double.tryParse(paddingEntries[2]) ?? halfSpace;
           late double left = lBack;
-          // ??
 
           late double rBack = double.tryParse(paddingEntries[3]) ?? halfSpace;
           late double right = rBack;
-          // ??
+
+          if (tile) {
+            editTilePadding.value =
+                EdgeInsets.only(top: top, bottom: bottom, left: left, right: right);
+          }
 
           return StatefulBuilder(builder: (_, StateSetter setOverlay) {
             //* Define custom functions *//
@@ -161,19 +162,22 @@ class _SpacingOverlay extends OverlayEntry {
 
                   tBack = double.tryParse(paddingEntries[0]) ?? halfSpace;
                   top = tBack;
-                  // ??
 
                   bBack = double.tryParse(paddingEntries[1]) ?? halfSpace;
                   bottom = bBack;
-                  // ??
 
                   lBack = double.tryParse(paddingEntries[2]) ?? halfSpace;
                   left = lBack;
-                  // ??
 
                   rBack = double.tryParse(paddingEntries[3]) ?? halfSpace;
                   right = rBack;
-                  // ??
+
+                  editTilePadding.value = EdgeInsets.only(
+                    top: top,
+                    bottom: bottom,
+                    left: left,
+                    right: right,
+                  );
                 }
               });
 
@@ -217,24 +221,24 @@ class _SpacingOverlay extends OverlayEntry {
                 switch (side) {
                   case AxisDirection.up:
                     top = value;
-                    // ??
                     break;
-
                   case AxisDirection.down:
                     bottom = value;
-                    // ??
                     break;
-
                   case AxisDirection.left:
                     left = value;
-                    // ??
                     break;
-
                   case AxisDirection.right:
                     right = value;
-                    // ??
                     break;
                 }
+
+                editTilePadding.value = EdgeInsets.only(
+                  top: top,
+                  bottom: bottom,
+                  left: left,
+                  right: right,
+                );
               } else {
                 if (axis == Axis.vertical) {
                   height = value;
@@ -364,15 +368,24 @@ class _SpacingOverlay extends OverlayEntry {
                               menuChildren: <Widget>[
                                 // Done
                                 EzMenuButton(
-                                  // TODO: tile aware
                                   config,
                                   label: l10n(config).mcDone,
                                   icon: EzIcon(config, Icons.done),
                                   onPressed: () => completer.complete(_ExitData(
                                     lane: currLane,
                                     index: currIndex,
-                                    height: height,
-                                    width: width,
+                                    entry: (tile
+                                            ? <String>[
+                                                top.toString(),
+                                                bottom.toString(),
+                                                left.toString(),
+                                                right.toString(),
+                                              ]
+                                            : <String>[
+                                                height.toString(),
+                                                width.toString(),
+                                              ])
+                                        .join(':'),
                                     delete: false,
                                   )),
                                 ),
@@ -384,13 +397,14 @@ class _SpacingOverlay extends OverlayEntry {
                                     label: l10n(config).gDupe,
                                     icon: EzIcon(config, Icons.copy),
                                     onPressed: () async {
-                                      await appInfo.updateSpacer(
+                                      await appInfo.updateSpacing(
                                         config,
-                                        height: height,
-                                        width: width,
                                         lane: currLane,
                                         index: currIndex,
+                                        entry:
+                                            <String>[height.toString(), width.toString()].join(':'),
                                       );
+
                                       await appInfo.addSpacer(
                                         config,
                                         height: height,
@@ -411,16 +425,29 @@ class _SpacingOverlay extends OverlayEntry {
 
                                 // Reset
                                 EzMenuButton(
-                                  // TODO: tile aware
                                   config,
                                   label: l10n(config).gReset,
                                   icon: EzIcon(config, Icons.refresh),
                                   onPressed: () {
-                                    height = hBack;
-                                    editSpacerHeight.value = hBack;
+                                    if (tile) {
+                                      top = tBack;
+                                      bottom = bBack;
+                                      left = lBack;
+                                      right = rBack;
 
-                                    width = wBack;
-                                    editSpacerWidth.value = wBack;
+                                      editTilePadding.value = EdgeInsets.only(
+                                        top: tBack,
+                                        bottom: bBack,
+                                        left: lBack,
+                                        right: rBack,
+                                      );
+                                    } else {
+                                      height = hBack;
+                                      width = wBack;
+
+                                      editSpacerHeight.value = hBack;
+                                      editSpacerWidth.value = wBack;
+                                    }
 
                                     setOverlay(() {});
                                   },
@@ -435,8 +462,8 @@ class _SpacingOverlay extends OverlayEntry {
                                     onPressed: () => completer.complete(_ExitData(
                                       lane: currLane,
                                       index: currIndex,
-                                      height: height,
-                                      width: width,
+                                      entry:
+                                          <String>[height.toString(), width.toString()].join(':'),
                                       delete: true,
                                     )),
                                   ),
@@ -684,15 +711,13 @@ class _SpacingOverlay extends OverlayEntry {
 class _ExitData {
   final int lane;
   final int index;
-  final double height;
-  final double width;
+  final String entry;
   final bool delete;
 
   _ExitData({
     required this.lane,
     required this.index,
-    required this.height,
-    required this.width,
+    required this.entry,
     required this.delete,
   });
 }
@@ -715,12 +740,11 @@ Future<void> editSpacing(
 
     (data.delete)
         ? await appInfo.removeItem(config, lane: data.lane, index: data.index)
-        : await appInfo.updateSpacer(
+        : await appInfo.updateSpacing(
             config,
-            height: data.height,
-            width: data.width,
             lane: data.lane,
             index: data.index,
+            entry: data.entry,
           );
   });
 }
