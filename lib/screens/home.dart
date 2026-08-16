@@ -511,33 +511,50 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           final List<String> data = items[2].split(configSplit);
 
           tiles.add(
-            Container(
-              key: ValueKey<String>('$lane-$index-${app.id}'),
-              padding: tilePadding(config, data[0]),
-              decoration: marked.value == pos
-                  ? BoxDecoration(
-                      border: Border.all(
-                        color: config.colors.secondaryContainer,
-                        width: config.borderWidth,
+            marked.value == pos
+                ? ValueListenableBuilder<EdgeInsets>(
+                    key: ValueKey<String>('$lane-$index-${app.id}'),
+                    valueListenable: editTilePadding,
+                    builder: (_, EdgeInsets padding, __) => Container(
+                      padding: padding,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: config.colors.secondaryContainer,
+                          width: config.borderWidth,
+                        ),
+                        borderRadius: EzButtonShape.roundRect.radius,
+                        color: config.colors.secondary.withValues(alpha: focusOpacity),
                       ),
-                      borderRadius: EzButtonShape.roundRect.radius,
-                      color: config.colors.secondary.withValues(alpha: focusOpacity),
-                    )
-                  : null,
-              child: AppTile(
-                config,
-                appInfo: appInfo,
-                app: app,
-                onSelected: (AppInfo app) async {
-                  editingMarked ? setState(() => marked.value = pos) : await launchApp(app);
-                },
-                location: AppLocation.home,
-                state: editing ? TileState.groupEdit : TileState.standard,
-                rippleProgress: rippleProgress,
-                pos: pos,
-                data: data,
-              ),
-            ),
+                      child: AppTile(
+                        config,
+                        appInfo: appInfo,
+                        app: app,
+                        onSelected: (_) async => doNothing,
+                        location: AppLocation.home,
+                        state: editing ? TileState.groupEdit : TileState.standard,
+                        rippleProgress: rippleProgress,
+                        pos: pos,
+                        data: data,
+                      ),
+                    ),
+                  )
+                : Padding(
+                    key: ValueKey<String>('$lane-$index-${app.id}'),
+                    padding: tilePadding(config, data[0]),
+                    child: AppTile(
+                      config,
+                      appInfo: appInfo,
+                      app: app,
+                      onSelected: (AppInfo app) async {
+                        editingMarked ? setState(() => marked.value = pos) : await launchApp(app);
+                      },
+                      location: AppLocation.home,
+                      state: editing ? TileState.groupEdit : TileState.standard,
+                      rippleProgress: rippleProgress,
+                      pos: pos,
+                      data: data,
+                    ),
+                  ),
           );
           break;
 
@@ -546,30 +563,46 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           final List<String> data = items[1].split(configSplit);
 
           tiles.add(
-            Container(
-              key: ValueKey<String>('$index-${entry.split(folderSplit)[0]}'),
-              padding: tilePadding(config, data[0]),
-              decoration: marked.value == pos
-                  ? BoxDecoration(
-                      border: Border.all(
-                        color: config.colors.secondaryContainer,
-                        width: config.borderWidth,
+            marked.value == pos
+                ? ValueListenableBuilder<EdgeInsets>(
+                    key: ValueKey<String>('$index-${entry.split(folderSplit)[0]}'),
+                    valueListenable: editTilePadding,
+                    builder: (_, EdgeInsets padding, __) => Container(
+                      padding: padding,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: config.colors.secondaryContainer,
+                          width: config.borderWidth,
+                        ),
+                        borderRadius: EzButtonShape.roundRect.radius,
+                        color: config.colors.secondary.withValues(alpha: focusOpacity),
                       ),
-                      borderRadius: EzButtonShape.roundRect.radius,
-                      color: config.colors.secondary.withValues(alpha: focusOpacity),
-                    )
-                  : null,
-              child: FolderTile(
-                config,
-                appInfo: appInfo,
-                state: editing ? TileState.groupEdit : TileState.standard,
-                rippleProgress: rippleProgress,
-                name: items[0],
-                appList: items.length > 2 ? items.sublist(2) : <String>[],
-                pos: pos,
-                data: data,
-              ),
-            ),
+                      child: FolderTile(
+                        config,
+                        appInfo: appInfo,
+                        state: editing ? TileState.groupEdit : TileState.standard,
+                        rippleProgress: rippleProgress,
+                        name: items[0],
+                        appList: items.length > 2 ? items.sublist(2) : <String>[],
+                        pos: pos,
+                        data: data,
+                      ),
+                    ),
+                  )
+                : Padding(
+                    key: ValueKey<String>('$index-${entry.split(folderSplit)[0]}'),
+                    padding: tilePadding(config, data[0]),
+                    child: FolderTile(
+                      config,
+                      appInfo: appInfo,
+                      state: editing ? TileState.groupEdit : TileState.standard,
+                      rippleProgress: rippleProgress,
+                      name: items[0],
+                      appList: items.length > 2 ? items.sublist(2) : <String>[],
+                      pos: pos,
+                      data: data,
+                    ),
+                  ),
           );
           break;
 
@@ -578,32 +611,50 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           final List<String> data = items[1].split(configSplit);
 
           tiles.add(
-            GestureDetector(
-              key: ValueKey<String>('$index-${entry.split(widgetSplit)[0]}'),
-              onTap: editingMarked ? () => setState(() => marked.value = pos) : null,
-              child: Container(
-                padding: tilePadding(config, data[0]),
-                decoration: marked.value == pos
-                    ? BoxDecoration(
-                        border: Border.all(
-                          color: config.colors.secondaryContainer,
-                          width: config.borderWidth,
+            marked.value == pos
+                ? ValueListenableBuilder<EdgeInsets>(
+                    key: ValueKey<String>('$index-${entry.split(widgetSplit)[0]}'),
+                    valueListenable: editTilePadding,
+                    builder: (_, EdgeInsets padding, __) => GestureDetector(
+                      onTap: doNothing,
+                      child: Container(
+                        padding: padding,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: config.colors.secondaryContainer,
+                            width: config.borderWidth,
+                          ),
+                          borderRadius: EzButtonShape.roundRect.radius,
+                          color: config.colors.secondary.withValues(alpha: focusOpacity),
                         ),
-                        borderRadius: EzButtonShape.roundRect.radius,
-                        color: config.colors.secondary.withValues(alpha: focusOpacity),
-                      )
-                    : null,
-                child: drawWidget(
-                  config,
-                  appInfo: appInfo,
-                  typeString: items[0],
-                  state: editing ? TileState.groupEdit : TileState.standard,
-                  rippleProgress: rippleProgress,
-                  pos: pos,
-                  data: data,
-                ),
-              ),
-            ),
+                        child: drawWidget(
+                          config,
+                          appInfo: appInfo,
+                          typeString: items[0],
+                          state: editing ? TileState.groupEdit : TileState.standard,
+                          rippleProgress: rippleProgress,
+                          pos: pos,
+                          data: data,
+                        ),
+                      ),
+                    ),
+                  )
+                : GestureDetector(
+                    key: ValueKey<String>('$index-${entry.split(widgetSplit)[0]}'),
+                    onTap: editingMarked ? () => setState(() => marked.value = pos) : null,
+                    child: Padding(
+                      padding: tilePadding(config, data[0]),
+                      child: drawWidget(
+                        config,
+                        appInfo: appInfo,
+                        typeString: items[0],
+                        state: editing ? TileState.groupEdit : TileState.standard,
+                        rippleProgress: rippleProgress,
+                        pos: pos,
+                        data: data,
+                      ),
+                    ),
+                  ),
           );
           break;
 
