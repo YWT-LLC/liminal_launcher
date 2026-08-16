@@ -3,8 +3,6 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: on update listener stuff
-
 import '../../utils/export.dart';
 
 import 'dart:async';
@@ -21,12 +19,27 @@ class _SpacingOverlay extends OverlayEntry {
           if (marked.value == null) return const SizedBox.shrink();
 
           //* Define build data *//
+          // Init //
+
+          final RegExpMatch? splitMatch = tileRegex.firstMatch(appInfo.homeItem(
+            config,
+            lane: marked.value!.lane,
+            index: marked.value!.index,
+          ));
+          final String? delim = splitMatch?.group(0);
+          if (delim == null) return const SizedBox.shrink();
+
+          final List<String> initData = appInfo
+              .homeItem(config, lane: marked.value!.lane, index: marked.value!.index)
+              .split(delim);
+
           // Final //
 
           final int numLanes = appInfo.numLanes(config);
 
           final double appIS = appIconSize(config);
           final Widget rowSpacer = EzSpacer(appIS, vertical: false);
+          final double halfSpace = config.spacing / 2;
 
           final double fullHeight = heightOf(context);
           final double maxHeight = fullHeight * 0.75;
@@ -34,19 +47,10 @@ class _SpacingOverlay extends OverlayEntry {
           final double fullWidth = widthOf(context);
           final double maxWidth = fullWidth * 0.75;
 
-          final List<String> startData = appInfo
-              .homeItem(config, lane: marked.value!.lane, index: marked.value!.index)
-              .split(spacerSplit);
-
           // Stateful //
 
-          double hBack = double.tryParse(startData[0]) ?? config.spacing;
-          double height = hBack;
-          editSpacerHeight.value = height;
-
-          double wBack = double.tryParse(startData[1]) ?? appIS;
-          double width = wBack;
-          editSpacerWidth.value = width;
+          // Shared
+          double step = 1.0;
 
           int currLane = marked.value!.lane;
           int currIndex = marked.value!.index;
@@ -54,11 +58,127 @@ class _SpacingOverlay extends OverlayEntry {
           ListAlignment hAlign = marked.value!.hAlign;
           ListAlignment vAlign = marked.value!.vAlign;
 
-          Axis axis = Axis.vertical;
-          double step = 1.0;
+          bool tile = (delim != spacerSplit);
+
+          // Spacer
+          late Axis axis = Axis.vertical;
+
+          late double hBack = double.tryParse(initData[0]) ?? config.spacing;
+          late double height = hBack;
+          if (!tile) editSpacerHeight.value = height;
+
+          late double wBack = double.tryParse(initData[1]) ?? appIS;
+          late double width = wBack;
+          if (!tile) editSpacerWidth.value = width;
+
+          // Tile
+          late AxisDirection side = AxisDirection.up;
+
+          late final List<String> paddingEntries = (switch (delim) {
+            idSplit => initData[2],
+            _ => initData[1],
+          })
+              .split(configSplit)[0]
+              .split(':');
+
+          late double tBack = double.tryParse(paddingEntries[0]) ?? halfSpace;
+          late double top = tBack;
+          // ??
+
+          late double bBack = double.tryParse(paddingEntries[1]) ?? halfSpace;
+          late double bottom = bBack;
+          // ??
+
+          late double lBack = double.tryParse(paddingEntries[2]) ?? halfSpace;
+          late double left = lBack;
+          // ??
+
+          late double rBack = double.tryParse(paddingEntries[3]) ?? halfSpace;
+          late double right = rBack;
+          // ??
 
           return StatefulBuilder(builder: (_, StateSetter setOverlay) {
             //* Define custom functions *//
+
+            marked.addListener(() async {
+              if (marked.value == null ||
+                  (currLane == marked.value!.lane && currIndex == marked.value!.index)) {
+                return;
+              }
+
+              await ezNoTouch(() async {
+                await appInfo.updateSpacing(
+                  config,
+                  lane: currLane,
+                  index: currIndex,
+                  entry: tile
+                      ? <String>[
+                          top.toString(),
+                          bottom.toString(),
+                          left.toString(),
+                          right.toString(),
+                        ].join(':')
+                      : <String>[height.toString(), width.toString()].join(':'),
+                );
+
+                final RegExpMatch? splitMatch = tileRegex.firstMatch(appInfo.homeItem(
+                  config,
+                  lane: marked.value!.lane,
+                  index: marked.value!.index,
+                ));
+                final String? delim = splitMatch?.group(0);
+                if (delim == null) return;
+
+                final List<String> newData = appInfo
+                    .homeItem(config, lane: marked.value!.lane, index: marked.value!.index)
+                    .split(delim);
+
+                currLane = marked.value!.lane;
+                currIndex = marked.value!.index;
+
+                hAlign = marked.value!.hAlign;
+                vAlign = marked.value!.vAlign;
+
+                if (delim == spacerSplit) {
+                  tile = false;
+
+                  hBack = double.tryParse(newData[0]) ?? config.spacing;
+                  height = hBack;
+                  editSpacerHeight.value = height;
+
+                  wBack = double.tryParse(newData[1]) ?? appIS;
+                  width = wBack;
+                  editSpacerWidth.value = width;
+                } else {
+                  tile = true;
+
+                  final List<String> paddingEntries = (switch (delim) {
+                    idSplit => initData[2],
+                    _ => initData[1],
+                  })
+                      .split(configSplit)[0]
+                      .split(':');
+
+                  tBack = double.tryParse(paddingEntries[0]) ?? halfSpace;
+                  top = tBack;
+                  // ??
+
+                  bBack = double.tryParse(paddingEntries[1]) ?? halfSpace;
+                  bottom = bBack;
+                  // ??
+
+                  lBack = double.tryParse(paddingEntries[2]) ?? halfSpace;
+                  left = lBack;
+                  // ??
+
+                  rBack = double.tryParse(paddingEntries[3]) ?? halfSpace;
+                  right = rBack;
+                  // ??
+                }
+              });
+
+              setOverlay(() {});
+            });
 
             List<Widget> staticSteps() => <int>[1, 5, 10]
                 .map(
@@ -92,20 +212,43 @@ class _SpacingOverlay extends OverlayEntry {
 
             late final List<Widget> stepOptions = staticSteps() + dynamicSteps();
 
-            void quickValue(double value) {
-              if (axis == Axis.vertical) {
-                height = value;
-                editSpacerHeight.value = value;
+            void setValue(double value) {
+              if (tile) {
+                switch (side) {
+                  case AxisDirection.up:
+                    top = value;
+                    // ??
+                    break;
+
+                  case AxisDirection.down:
+                    bottom = value;
+                    // ??
+                    break;
+
+                  case AxisDirection.left:
+                    left = value;
+                    // ??
+                    break;
+
+                  case AxisDirection.right:
+                    right = value;
+                    // ??
+                    break;
+                }
               } else {
-                width = value;
-                editSpacerWidth.value = value;
+                if (axis == Axis.vertical) {
+                  height = value;
+                  editSpacerHeight.value = value;
+                } else {
+                  width = value;
+                  editSpacerWidth.value = value;
+                }
               }
+
               setOverlay(() {});
             }
 
             //* Return the build *//
-
-            marked.addListener(() => setOverlay(() {}));
 
             return Material(
               type: MaterialType.transparency,
@@ -127,6 +270,7 @@ class _SpacingOverlay extends OverlayEntry {
                   child: Center(
                     child: EzCol(
                       children: <Widget>[
+                        // Double top (const)
                         EzScrollView(
                           config,
                           startCentered: true,
@@ -144,19 +288,36 @@ class _SpacingOverlay extends OverlayEntry {
                                 ),
                                 onPressed: () => toggleMenu(c),
                               ),
-                              menuChildren: Axis.values
-                                  .map((Axis a) => EzMenuButton(
-                                        config,
-                                        label: a.name,
-                                        icon: EzIcon(
-                                          config,
-                                          (a == Axis.vertical)
-                                              ? Icons.height
-                                              : Icons.horizontal_rule,
-                                        ),
-                                        onPressed: () => setOverlay(() => axis = a),
-                                      ))
-                                  .toList(),
+                              menuChildren: tile
+                                  ? AxisDirection.values
+                                      .map((AxisDirection dir) => EzMenuButton(
+                                            config,
+                                            label: dir.name,
+                                            icon: EzIcon(
+                                              config,
+                                              switch (dir) {
+                                                AxisDirection.up => Icons.north,
+                                                AxisDirection.down => Icons.south,
+                                                AxisDirection.left => Icons.west,
+                                                AxisDirection.right => Icons.east,
+                                              },
+                                            ),
+                                            onPressed: () => setOverlay(() => side = dir),
+                                          ))
+                                      .toList()
+                                  : Axis.values
+                                      .map((Axis a) => EzMenuButton(
+                                            config,
+                                            label: a.name,
+                                            icon: EzIcon(
+                                              config,
+                                              (a == Axis.vertical)
+                                                  ? Icons.height
+                                                  : Icons.horizontal_rule,
+                                            ),
+                                            onPressed: () => setOverlay(() => axis = a),
+                                          ))
+                                      .toList(),
                             ),
                             rowSpacer,
 
@@ -187,7 +348,7 @@ class _SpacingOverlay extends OverlayEntry {
                                             : null,
                                         label: '${entry.key}: ${entry.value.toStringAsFixed(2)}',
                                         textStyle: config.bodyStyle,
-                                        onPressed: () => quickValue(entry.value),
+                                        onPressed: () => setValue(entry.value),
                                       ))
                                   .toList(),
                             ),
@@ -201,7 +362,9 @@ class _SpacingOverlay extends OverlayEntry {
                                 onPressed: () => toggleMenu(controller),
                               ),
                               menuChildren: <Widget>[
+                                // Done
                                 EzMenuButton(
+                                  // TODO: tile aware
                                   config,
                                   label: l10n(config).mcDone,
                                   icon: EzIcon(config, Icons.done),
@@ -213,36 +376,42 @@ class _SpacingOverlay extends OverlayEntry {
                                     delete: false,
                                   )),
                                 ),
-                                EzMenuButton(
-                                  config,
-                                  label: l10n(config).gDupe,
-                                  icon: EzIcon(config, Icons.copy),
-                                  onPressed: () async {
-                                    await appInfo.updateSpacer(
-                                      config,
-                                      height: height,
-                                      width: width,
-                                      lane: currLane,
-                                      index: currIndex,
-                                    );
-                                    await appInfo.addSpacer(
-                                      config,
-                                      height: height,
-                                      width: width,
-                                      lane: currLane,
-                                      index: currIndex,
-                                    );
 
-                                    marked.value = LimPos(
-                                      lane: currLane,
-                                      index: currIndex + 1,
-                                      hAlign: hAlign, // TODO: default?
-                                      vAlign: vAlign,
-                                    );
-                                    setOverlay(() => currIndex += 1);
-                                  },
-                                ),
+                                // Dupe (conditional)
+                                if (!tile)
+                                  EzMenuButton(
+                                    config,
+                                    label: l10n(config).gDupe,
+                                    icon: EzIcon(config, Icons.copy),
+                                    onPressed: () async {
+                                      await appInfo.updateSpacer(
+                                        config,
+                                        height: height,
+                                        width: width,
+                                        lane: currLane,
+                                        index: currIndex,
+                                      );
+                                      await appInfo.addSpacer(
+                                        config,
+                                        height: height,
+                                        width: width,
+                                        lane: currLane,
+                                        index: currIndex,
+                                      );
+
+                                      marked.value = LimPos(
+                                        lane: currLane,
+                                        index: currIndex + 1,
+                                        hAlign: hAlign,
+                                        vAlign: vAlign,
+                                      );
+                                      setOverlay(() => currIndex += 1);
+                                    },
+                                  ),
+
+                                // Reset
                                 EzMenuButton(
+                                  // TODO: tile aware
                                   config,
                                   label: l10n(config).gReset,
                                   icon: EzIcon(config, Icons.refresh),
@@ -256,162 +425,169 @@ class _SpacingOverlay extends OverlayEntry {
                                     setOverlay(() {});
                                   },
                                 ),
-                                EzMenuButton(
-                                  config,
-                                  label: l10n(config).mcDelete,
-                                  icon: EzIcon(config, Icons.delete),
-                                  onPressed: () => completer.complete(_ExitData(
-                                    lane: currLane,
-                                    index: currIndex,
-                                    height: height,
-                                    width: width,
-                                    delete: true,
-                                  )),
-                                ),
+
+                                // Delete (conditional)
+                                if (!tile)
+                                  EzMenuButton(
+                                    config,
+                                    label: l10n(config).mcDelete,
+                                    icon: EzIcon(config, Icons.delete),
+                                    onPressed: () => completer.complete(_ExitData(
+                                      lane: currLane,
+                                      index: currIndex,
+                                      height: height,
+                                      width: width,
+                                      delete: true,
+                                    )),
+                                  ),
                               ],
                             ),
                           ],
                         ),
-                        EzScrollView(
-                          config,
-                          startCentered: true,
-                          showScrollHint: true,
-                          mainAxisSize: MainAxisSize.max,
-                          scrollDirection: Axis.horizontal,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            // Move (lane) down
-                            if (numLanes > 1) ...<Widget>[
+
+                        // Top-bottom (conditional)
+                        if (!tile)
+                          EzScrollView(
+                            config,
+                            startCentered: true,
+                            showScrollHint: true,
+                            mainAxisSize: MainAxisSize.max,
+                            scrollDirection: Axis.horizontal,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              // Move (lane) down
+                              if (numLanes > 1) ...<Widget>[
+                                EzIconButton(
+                                  config,
+                                  enabled: currLane > 0,
+                                  icon: Icon(
+                                    standardFlow(config)
+                                        ? Icons.keyboard_arrow_left
+                                        : Icons.keyboard_arrow_right,
+                                  ),
+                                  onPressed: () async {
+                                    final int nextLane = currLane - 1;
+                                    final int nextIndex = appInfo.homeLane(config, nextLane).length;
+
+                                    marked.value = LimPos(
+                                      lane: nextLane,
+                                      index: nextIndex,
+                                      hAlign: hAlign,
+                                      vAlign: vAlign,
+                                    );
+                                    await appInfo.moveItemDownLane(
+                                      config,
+                                      lane: currLane,
+                                      index: currIndex,
+                                    );
+
+                                    currLane = nextLane;
+                                    currIndex = nextIndex;
+
+                                    setOverlay(() {});
+                                  },
+                                ),
+                                rowSpacer,
+                              ],
+
+                              // Move (item) up
                               EzIconButton(
                                 config,
-                                enabled: currLane > 0,
                                 icon: Icon(
-                                  standardFlow(config)
-                                      ? Icons.keyboard_arrow_left
-                                      : Icons.keyboard_arrow_right,
+                                  vAlign == ListAlignment.end
+                                      ? Icons.keyboard_arrow_up
+                                      : Icons.keyboard_arrow_down,
                                 ),
+                                enabled:
+                                    currIndex < (appInfo.homeLane(config, currLane).length - 1),
                                 onPressed: () async {
-                                  final int nextLane = currLane - 1;
-                                  final int nextIndex = appInfo.homeLane(config, nextLane).length;
+                                  final int nextIndex = currIndex + 1;
 
                                   marked.value = LimPos(
-                                    lane: nextLane,
+                                    lane: currLane,
                                     index: nextIndex,
                                     hAlign: hAlign,
                                     vAlign: vAlign,
                                   );
-                                  await appInfo.moveItemDownLane(
+                                  await appInfo.reorderLane(
                                     config,
                                     lane: currLane,
-                                    index: currIndex,
+                                    oldIndex: currIndex,
+                                    newIndex: nextIndex,
+                                    notify: true,
                                   );
 
-                                  currLane = nextLane;
-                                  currIndex = nextIndex;
-
-                                  setOverlay(() {});
+                                  setOverlay(() => currIndex = nextIndex);
                                 },
                               ),
                               rowSpacer,
-                            ],
 
-                            // Move (item) up
-                            EzIconButton(
-                              config,
-                              icon: Icon(
-                                vAlign == ListAlignment.end
-                                    ? Icons.keyboard_arrow_up
-                                    : Icons.keyboard_arrow_down,
-                              ),
-                              enabled: currIndex < (appInfo.homeLane(config, currLane).length - 1),
-                              onPressed: () async {
-                                final int nextIndex = currIndex + 1;
-
-                                marked.value = LimPos(
-                                  lane: currLane,
-                                  index: nextIndex,
-                                  hAlign: hAlign,
-                                  vAlign: vAlign,
-                                );
-                                await appInfo.reorderLane(
-                                  config,
-                                  lane: currLane,
-                                  oldIndex: currIndex,
-                                  newIndex: nextIndex,
-                                  notify: true,
-                                );
-
-                                setOverlay(() => currIndex = nextIndex);
-                              },
-                            ),
-                            rowSpacer,
-
-                            // Moved (item) down
-                            EzIconButton(
-                              config,
-                              icon: Icon(
-                                vAlign == ListAlignment.end
-                                    ? Icons.keyboard_arrow_down
-                                    : Icons.keyboard_arrow_up,
-                              ),
-                              enabled: currIndex > 1, // 0 == config entry
-                              onPressed: () async {
-                                final int nextIndex = currIndex - 1;
-
-                                marked.value = LimPos(
-                                  lane: currLane,
-                                  index: nextIndex,
-                                  hAlign: hAlign,
-                                  vAlign: vAlign,
-                                );
-                                await appInfo.reorderLane(
-                                  config,
-                                  lane: currLane,
-                                  oldIndex: currIndex,
-                                  newIndex: nextIndex,
-                                  notify: true,
-                                );
-
-                                setOverlay(() => currIndex = nextIndex);
-                              },
-                            ),
-
-                            // Move (lane) up
-                            if (numLanes > 1) ...<Widget>[
-                              rowSpacer,
+                              // Moved (item) down
                               EzIconButton(
                                 config,
-                                enabled: currLane < (numLanes - 1),
                                 icon: Icon(
-                                  standardFlow(config)
-                                      ? Icons.keyboard_arrow_right
-                                      : Icons.keyboard_arrow_left,
+                                  vAlign == ListAlignment.end
+                                      ? Icons.keyboard_arrow_down
+                                      : Icons.keyboard_arrow_up,
                                 ),
+                                enabled: currIndex > 1, // 0 == config entry
                                 onPressed: () async {
-                                  final int nextLane = currLane + 1;
-                                  final int nextIndex = appInfo.homeLane(config, nextLane).length;
+                                  final int nextIndex = currIndex - 1;
 
                                   marked.value = LimPos(
-                                    lane: nextLane,
+                                    lane: currLane,
                                     index: nextIndex,
                                     hAlign: hAlign,
                                     vAlign: vAlign,
                                   );
-                                  await appInfo.moveItemUpLane(
+                                  await appInfo.reorderLane(
                                     config,
                                     lane: currLane,
-                                    index: currIndex,
+                                    oldIndex: currIndex,
+                                    newIndex: nextIndex,
+                                    notify: true,
                                   );
 
-                                  currLane = nextLane;
-                                  currIndex = nextIndex;
-
-                                  setOverlay(() {});
+                                  setOverlay(() => currIndex = nextIndex);
                                 },
                               ),
+
+                              // Move (lane) up
+                              if (numLanes > 1) ...<Widget>[
+                                rowSpacer,
+                                EzIconButton(
+                                  config,
+                                  enabled: currLane < (numLanes - 1),
+                                  icon: Icon(
+                                    standardFlow(config)
+                                        ? Icons.keyboard_arrow_right
+                                        : Icons.keyboard_arrow_left,
+                                  ),
+                                  onPressed: () async {
+                                    final int nextLane = currLane + 1;
+                                    final int nextIndex = appInfo.homeLane(config, nextLane).length;
+
+                                    marked.value = LimPos(
+                                      lane: nextLane,
+                                      index: nextIndex,
+                                      hAlign: hAlign,
+                                      vAlign: vAlign,
+                                    );
+                                    await appInfo.moveItemUpLane(
+                                      config,
+                                      lane: currLane,
+                                      index: currIndex,
+                                    );
+
+                                    currLane = nextLane;
+                                    currIndex = nextIndex;
+
+                                    setOverlay(() {});
+                                  },
+                                ),
+                              ],
                             ],
-                          ],
-                        ),
+                          ),
                       ],
                     ),
                   ),
@@ -433,21 +609,18 @@ class _SpacingOverlay extends OverlayEntry {
                           config,
                           enabled: (axis == Axis.vertical ? height : width) != 0,
                           icon: const Icon(Icons.keyboard_arrow_left),
-                          onPressed: (axis == Axis.vertical)
-                              ? () {
-                                  height -= step;
-                                  if (height < 0) height = 0;
+                          onPressed: () {
+                            final double base = tile
+                                ? switch (side) {
+                                    AxisDirection.up => top,
+                                    AxisDirection.down => bottom,
+                                    AxisDirection.left => left,
+                                    AxisDirection.right => right,
+                                  }
+                                : (axis == Axis.vertical ? height : width);
 
-                                  editSpacerHeight.value = height;
-                                  setOverlay(() {});
-                                }
-                              : () {
-                                  width -= step;
-                                  if (width < 0) width = 0;
-
-                                  editSpacerWidth.value = width;
-                                  setOverlay(() {});
-                                },
+                            setValue(base - step);
+                          },
                           onLongPress: () => toggleMenu(c),
                         ),
                         menuChildren: stepOptions,
@@ -459,22 +632,17 @@ class _SpacingOverlay extends OverlayEntry {
                         child: EzTextBackground(
                           config,
                           borderRadius: config.buttonShape.radius,
-                          text: (axis == Axis.vertical)
+                          text: (tile && (side == AxisDirection.up || side == AxisDirection.down) ||
+                                  (!tile && axis == Axis.vertical))
                               ? Slider(
-                                  value: height,
+                                  value: tile ? (side == AxisDirection.up ? top : bottom) : height,
                                   max: maxHeight,
-                                  onChanged: (double value) {
-                                    editSpacerHeight.value = value;
-                                    setOverlay(() => height = value);
-                                  },
+                                  onChanged: setValue,
                                 )
                               : Slider(
-                                  value: width,
+                                  value: tile ? (side == AxisDirection.left ? left : right) : width,
                                   max: maxWidth,
-                                  onChanged: (double value) {
-                                    editSpacerWidth.value = value;
-                                    setOverlay(() => width = value);
-                                  },
+                                  onChanged: setValue,
                                 ),
                           backgroundColor: config.colors.surface,
                         ),
@@ -488,21 +656,18 @@ class _SpacingOverlay extends OverlayEntry {
                           enabled:
                               (axis == Axis.vertical) ? (height != maxHeight) : (width != maxWidth),
                           icon: const Icon(Icons.keyboard_arrow_right),
-                          onPressed: (axis == Axis.vertical)
-                              ? () {
-                                  height += step;
-                                  if (height > maxHeight) height = maxHeight;
+                          onPressed: () {
+                            final double base = tile
+                                ? switch (side) {
+                                    AxisDirection.up => top,
+                                    AxisDirection.down => bottom,
+                                    AxisDirection.left => left,
+                                    AxisDirection.right => right,
+                                  }
+                                : (axis == Axis.vertical ? height : width);
 
-                                  editSpacerHeight.value = height;
-                                  setOverlay(() {});
-                                }
-                              : () {
-                                  width += step;
-                                  if (width > maxWidth) width = maxWidth;
-
-                                  editSpacerWidth.value = width;
-                                  setOverlay(() {});
-                                },
+                            setValue(base + step);
+                          },
                           onLongPress: () => toggleMenu(c),
                         ),
                         menuChildren: stepOptions,
