@@ -116,10 +116,10 @@ EdgeInsets tilePadding(EzCP config, String datum) {
   final double halfSpace = config.spacing / 2;
 
   return EdgeInsets.only(
-    left: data[0] == esSystem ? halfSpace : (double.tryParse(data[0]) ?? halfSpace),
-    right: data[1] == esSystem ? halfSpace : (double.tryParse(data[1]) ?? halfSpace),
-    top: data[2] == esSystem ? halfSpace : (double.tryParse(data[2]) ?? halfSpace),
-    bottom: data[3] == esSystem ? halfSpace : (double.tryParse(data[3]) ?? halfSpace),
+    top: data[0] == esSystem ? halfSpace : (double.tryParse(data[0]) ?? halfSpace),
+    bottom: data[1] == esSystem ? halfSpace : (double.tryParse(data[1]) ?? halfSpace),
+    left: data[2] == esSystem ? halfSpace : (double.tryParse(data[2]) ?? halfSpace),
+    right: data[3] == esSystem ? halfSpace : (double.tryParse(data[3]) ?? halfSpace),
   );
 }
 
