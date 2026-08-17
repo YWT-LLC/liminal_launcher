@@ -540,7 +540,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                   )
                 : Padding(
                     key: ValueKey<String>('$lane-$index-${app.id}'),
-                    padding: tilePadding(config, data[0]),
+                    padding: tilePadding(config, data[0], editing),
                     child: AppTile(
                       config,
                       appInfo: appInfo,
@@ -591,7 +591,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                   )
                 : Padding(
                     key: ValueKey<String>('$index-${entry.split(folderSplit)[0]}'),
-                    padding: tilePadding(config, data[0]),
+                    padding: tilePadding(config, data[0], editing),
                     child: FolderTile(
                       config,
                       appInfo: appInfo,
@@ -643,7 +643,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                     key: ValueKey<String>('$index-${entry.split(widgetSplit)[0]}'),
                     onTap: editingMarked ? () => setState(() => marked.value = pos) : null,
                     child: Padding(
-                      padding: tilePadding(config, data[0]),
+                      padding: tilePadding(config, data[0], editing),
                       child: drawWidget(
                         config,
                         appInfo: appInfo,
@@ -662,7 +662,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           tiles.add(
             Padding(
               key: ValueKey<String>('$index-spacer-$editing'),
-              padding: editing ? tilePadding(config, nullTPS) : EdgeInsets.zero,
+              padding: tilePadding(config, zeroTPS, editing),
               child: LimSpacer(
                 config,
                 appInfo: appInfo,
