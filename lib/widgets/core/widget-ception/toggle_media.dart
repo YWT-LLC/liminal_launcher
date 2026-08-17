@@ -234,14 +234,17 @@ List<Widget> _menuChildren(
         ),
       ),
 
+      // Reposition
+      reposition(config, appInfo, pos, context: context),
+
       // Move
       if (state == TileState.groupEdit && numLanes > 1) ...<Widget>[
-        moveDownLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
-        moveUpLane(config, appInfo, numLanes: numLanes, lane: pos.lane, index: pos.index),
+        moveDownLane(config, appInfo, pos, numLanes: numLanes),
+        moveUpLane(config, appInfo, pos, numLanes: numLanes),
       ],
 
       // Remove
-      removeItem(config, appInfo, lane: pos.lane, index: pos.index),
+      removeItem(config, appInfo, pos),
     ];
 
 //* Add Widget *//

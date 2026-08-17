@@ -235,8 +235,7 @@ class _AppTileState extends State<AppTile> {
               location: widget.location,
               state: state,
               numLanes: numLanes,
-              lane: widget.pos?.lane,
-              index: widget.pos?.index,
+              pos: widget.pos,
               initConfig: (widget.location == AppLocation.home)
                   ? AppConfig(
                       tp: widget._tp,
@@ -315,8 +314,7 @@ class _AppTileState extends State<AppTile> {
               location: widget.location,
               state: state,
               numLanes: numLanes,
-              lane: widget.pos?.lane,
-              index: widget.pos?.index,
+              pos: widget.pos,
               initConfig: AppConfig(
                 tp: widget._tp,
                 app: widget.app,
@@ -362,8 +360,7 @@ List<Widget> _menuChildren(
   required AppLocation location,
   required TileState state,
   required int numLanes,
-  required int? lane,
-  required int? index,
+  required LimPos? pos,
   AppConfig? initConfig,
 }) =>
     switch (location) {
@@ -374,8 +371,8 @@ List<Widget> _menuChildren(
             appInfo,
             pContext: context,
             initConfig: initConfig!,
-            lane: lane!,
-            index: index!,
+            lane: pos!.lane,
+            index: pos.index,
           ),
 
           // Dupe
@@ -392,33 +389,36 @@ List<Widget> _menuChildren(
                   appInfo: appInfo,
                   pContext: ezRootContext,
                   initConfig: initConfig,
-                  lane: lane,
-                  index: index,
+                  lane: pos.lane,
+                  index: pos.index,
                 );
               },
-              lane: lane,
-              index: index,
+              lane: pos.lane,
+              index: pos.index,
             ),
           ),
 
+          // Reposition
+          reposition(config, appInfo, pos, context: context),
+
           // Move
           if (state == TileState.groupEdit && numLanes > 1) ...<Widget>[
-            moveDownLane(config, appInfo, numLanes: numLanes, lane: lane, index: index),
-            moveUpLane(config, appInfo, numLanes: numLanes, lane: lane, index: index),
+            moveDownLane(config, appInfo, pos, numLanes: numLanes),
+            moveUpLane(config, appInfo, pos, numLanes: numLanes),
           ],
 
           // Remove
-          removeItem(config, appInfo, lane: lane, index: index),
+          removeItem(config, appInfo, pos),
 
           // Base
-          ..._baseMC(config, appInfo: appInfo, context: context, app: app),
+          ..._baseMC(config, appInfo, context: context, app: app),
         ],
-      _ => _baseMC(config, appInfo: appInfo, context: context, app: app),
+      _ => _baseMC(config, appInfo, context: context, app: app),
     };
 
 List<Widget> _baseMC(
-  EzCP config, {
-  required AppInfoProvider appInfo,
+  EzCP config,
+  AppInfoProvider appInfo, {
   required BuildContext context,
   required AppInfo app,
 }) =>
