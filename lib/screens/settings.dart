@@ -26,6 +26,7 @@ class SettingsScreen extends StatelessWidget {
           config,
           pages: <EzSettingsSection>[
             // Global //
+
             EzSettingsSection(
               position: 0,
               title: config.ezL10n.gGlobal,
@@ -43,6 +44,21 @@ class SettingsScreen extends StatelessWidget {
               build: (_) => EzGlobalSettings(
                 config,
                 resetTitle: () => config.ezL10n.ssResetAppearance,
+                skipLocales: <Locale>{
+                  arabic,
+                  egyptianArabic,
+                  english, // Dupe
+                  filipino,
+                  chinese,
+                  hindi,
+                  creole,
+                  japanese,
+                  korean,
+                  russian,
+                  swahili,
+                  ukrainian,
+                  simplifiedChinese,
+                }, // Will hopefully catch up soon
                 additionalSettings: <Widget>[
                   config.separator,
                   AppListSettings(config),
@@ -191,6 +207,7 @@ class SettingsScreen extends StatelessWidget {
             ),
 
             // Color //
+
             EzSettingsSection(
               position: 1,
               title: config.ezL10n.gColor,
@@ -203,6 +220,7 @@ class SettingsScreen extends StatelessWidget {
             ),
 
             // Design //
+
             EzSettingsSection(
               position: 2,
               title: config.ezL10n.gDesign,
@@ -326,6 +344,7 @@ class SettingsScreen extends StatelessWidget {
             ),
 
             // Text //
+
             EzSettingsSection(
               position: 3,
               title: config.ezL10n.gText,
