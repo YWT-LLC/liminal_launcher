@@ -282,6 +282,8 @@ const Map<String, Object> limSecDef = <String, Object>{
 
 //* Runtime *//
 
+// Splits //
+
 /// :
 const String colon = ':';
 
@@ -306,6 +308,12 @@ final RegExp tileRegex = RegExp(r':(01001001|01010111|01000110|01010011):');
 /// :01000011: == :C:
 const String configSplit = ':01000011:';
 
+// Split indexes //
+
+// t-o-d-o
+
+// Position && padding //
+
 class LimPos {
   final int lane;
   final int index;
@@ -328,12 +336,6 @@ class LimPos {
   bool operator ==(Object other) => other is LimPos && other.lane == lane && other.index == index;
 }
 
-/// ---
-const String nullAppLabel = '---';
-
-/// empty [String]
-const String nullAppPackage = '';
-
 /// null tile padding [List]double?
 const List<double?> nullTPL = <double?>[null, null, null, null];
 
@@ -342,6 +344,16 @@ final String nullTPS = <String>[esSystem, esSystem, esSystem, esSystem].join(col
 
 /// zero tile padding [String]
 final String zeroTPS = <String>['0.0', '0.0', '0.0', '0.0'].join(colon);
+
+// App values //
+
+/// ---
+const String nullAppLabel = '---';
+
+/// empty [String]
+const String nullAppPackage = '';
+
+// Icons //
 
 const List<IconData> solidIconChoices = <IconData>[
   Icons.account_balance_wallet,
@@ -449,6 +461,8 @@ const List<IconData> outlinedIconChoices = <IconData>[
   Icons.work_outline_outlined,
 ];
 
+// Wingding //
+
 const Map<String, String> wingdingMap = <String, String>{
   // Lowercase
   'a': '\u{264B}',
@@ -506,6 +520,8 @@ const Map<String, String> wingdingMap = <String, String>{
   'Y': '\u{2721}',
   'Z': '\u{262A}',
 };
+
+// Misc //
 
 /// 2 seconds
 const Duration breatheTime = Duration(seconds: 2);
