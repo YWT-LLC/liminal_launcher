@@ -615,9 +615,9 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                 ? ValueListenableBuilder<EdgeInsets>(
                     key: ValueKey<String>('$index-${entry.split(widgetSplit)[0]}'),
                     valueListenable: editTilePadding,
-                    builder: (_, EdgeInsets padding, __) => GestureDetector(
+                    builder: (_, EdgeInsets padding, __) => EzOpaqueGD(
                       onTap: doNothing,
-                      child: Container(
+                      kid: Container(
                         padding: padding,
                         decoration: BoxDecoration(
                           border: Border.all(
@@ -639,10 +639,11 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       ),
                     ),
                   )
-                : GestureDetector(
+                : EzOpaqueGD(
                     key: ValueKey<String>('$index-${entry.split(widgetSplit)[0]}'),
                     onTap: editingMarked ? () => setState(() => marked.value = pos) : null,
-                    child: Padding(
+                    absorb: editingMarked,
+                    kid: Padding(
                       padding: tilePadding(config, data[0], editing),
                       child: drawWidget(
                         config,
