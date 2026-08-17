@@ -694,12 +694,12 @@ class _SpacingOverlay extends OverlayEntry {
                                   (!tile && axis == Axis.vertical))
                               ? Slider(
                                   value: tile ? (side == AxisDirection.up ? top : bottom) : height,
-                                  max: maxHeight,
+                                  max: maxHeight * (tile ? 0.5 : 1),
                                   onChanged: setValue,
                                 )
                               : Slider(
                                   value: tile ? (side == AxisDirection.left ? left : right) : width,
-                                  max: maxWidth,
+                                  max: maxWidth * (tile ? 0.5 : 1),
                                   onChanged: setValue,
                                 ),
                           backgroundColor: config.colors.surface,
