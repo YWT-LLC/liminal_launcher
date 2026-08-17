@@ -282,6 +282,9 @@ const Map<String, Object> limSecDef = <String, Object>{
 
 //* Runtime *//
 
+/// :
+const String colon = ':';
+
 /// :01001100: == :L:
 const String listSplit = ':01001100:';
 
@@ -335,7 +338,10 @@ const String nullAppPackage = '';
 const List<double?> nullTPL = <double?>[null, null, null, null];
 
 /// null tile padding [String]
-final String nullTPS = <String>[esSystem, esSystem, esSystem, esSystem].join(':');
+final String nullTPS = <String>[esSystem, esSystem, esSystem, esSystem].join(colon);
+
+/// zero tile padding [String]
+final String zeroTPS = <String>['0.0', '0.0', '0.0', '0.0'].join(colon);
 
 const List<IconData> solidIconChoices = <IconData>[
   Icons.account_balance_wallet,

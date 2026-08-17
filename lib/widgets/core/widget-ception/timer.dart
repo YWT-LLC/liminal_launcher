@@ -36,7 +36,7 @@ class TimerWidget extends StatefulWidget {
     _tp = data[0]; // Not used here; tracked so local updates don't clobber it
     _size = WSConfig.safeLookup(data[1]);
 
-    final List<String> storedTs = data[2].split(':');
+    final List<String> storedTs = data[2].split(colon);
     _times = storedTs.length == 3 ? storedTs : <String>['00', '00', '00'];
   }
 
@@ -640,7 +640,7 @@ Future<void> _openEdits(
         _validateTime(ourCon.text),
         _validateTime(minCon.text),
         _validateTime(secCon.text),
-      ].join(':'),
+      ].join(colon),
     ),
     lane: lane,
     index: index,

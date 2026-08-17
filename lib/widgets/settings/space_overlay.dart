@@ -81,7 +81,7 @@ class _SpacingOverlay extends OverlayEntry {
             _ => initData[1],
           })
               .split(configSplit)[0]
-              .split(':');
+              .split(colon);
 
           late double tBack = double.tryParse(paddingEntries[0]) ?? halfSpace;
           late double top = tBack;
@@ -120,8 +120,8 @@ class _SpacingOverlay extends OverlayEntry {
                           bottom.toString(),
                           left.toString(),
                           right.toString(),
-                        ].join(':')
-                      : <String>[height.toString(), width.toString()].join(':'),
+                        ].join(colon)
+                      : <String>[height.toString(), width.toString()].join(colon),
                 );
 
                 final RegExpMatch? newSplit = tileRegex.firstMatch(appInfo.homeItem(
@@ -160,7 +160,7 @@ class _SpacingOverlay extends OverlayEntry {
                     _ => newData[1],
                   })
                       .split(configSplit)[0]
-                      .split(':');
+                      .split(colon);
 
                   tBack = double.tryParse(paddingEntries[0]) ?? halfSpace;
                   top = tBack;
@@ -395,7 +395,7 @@ class _SpacingOverlay extends OverlayEntry {
                                                 height.toString(),
                                                 width.toString(),
                                               ])
-                                        .join(':'),
+                                        .join(colon),
                                     delete: false,
                                   )),
                                 ),
@@ -411,8 +411,8 @@ class _SpacingOverlay extends OverlayEntry {
                                         config,
                                         lane: currLane,
                                         index: currIndex,
-                                        entry:
-                                            <String>[height.toString(), width.toString()].join(':'),
+                                        entry: <String>[height.toString(), width.toString()]
+                                            .join(colon),
                                       );
 
                                       await appInfo.addSpacer(
@@ -472,7 +472,7 @@ class _SpacingOverlay extends OverlayEntry {
                                       lane: currLane,
                                       index: currIndex,
                                       entry:
-                                          <String>[height.toString(), width.toString()].join(':'),
+                                          <String>[height.toString(), width.toString()].join(colon),
                                       delete: true,
                                     )),
                                   ),

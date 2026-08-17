@@ -449,7 +449,7 @@ class AppInfoProvider extends ChangeNotifier {
 
         case spacerSplit:
           final List<String> parts = _darkHomeMatrix[lane][index].split(spacerSplit);
-          final List<String> values = entry.split(':');
+          final List<String> values = entry.split(colon);
 
           parts[0] = values[0];
           parts[1] = values[1];
@@ -496,7 +496,7 @@ class AppInfoProvider extends ChangeNotifier {
 
         case spacerSplit:
           final List<String> parts = _lightHomeMatrix[lane][index].split(spacerSplit);
-          final List<String> values = entry.split(':');
+          final List<String> values = entry.split(colon);
 
           parts[0] = values[0];
           parts[1] = values[1];
