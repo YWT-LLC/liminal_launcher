@@ -5,6 +5,7 @@
 
 import '../../utils/export.dart';
 
+import 'dart:math';
 import 'dart:async';
 import 'package:open_ui/open_ui.dart';
 import 'package:flutter/material.dart';
@@ -21,12 +22,13 @@ class _SpacingOverlay extends OverlayEntry {
           //* Define build data *//
           // Init //
 
-          final RegExpMatch? initSplit = tileRegex.firstMatch(appInfo.homeItem(
-            config,
-            lane: marked.value!.lane,
-            index: marked.value!.index,
-          ));
-          final String? initDelim = initSplit?.group(0);
+          final String? initDelim = tileRegex
+              .firstMatch(appInfo.homeItem(
+                config,
+                lane: marked.value!.lane,
+                index: marked.value!.index,
+              ))
+              ?.group(0);
           if (initDelim == null) return const SizedBox.shrink();
 
           final List<String> initData = appInfo
@@ -221,16 +223,16 @@ class _SpacingOverlay extends OverlayEntry {
               if (tile) {
                 switch (side) {
                   case AxisDirection.up:
-                    top = value;
+                    top = max(0, min(value, maxHeight * 0.5));
                     break;
                   case AxisDirection.down:
-                    bottom = value;
+                    bottom = max(0, min(value, maxHeight * 0.5));
                     break;
                   case AxisDirection.left:
-                    left = value;
+                    left = max(0, min(value, maxWidth * 0.5));
                     break;
                   case AxisDirection.right:
-                    right = value;
+                    right = max(0, min(value, maxWidth * 0.5));
                     break;
                 }
 
@@ -242,9 +244,9 @@ class _SpacingOverlay extends OverlayEntry {
                 );
               } else {
                 if (axis == Axis.vertical) {
-                  height = value;
+                  height = max(0, min(value, maxHeight));
                 } else {
-                  width = value;
+                  width = max(0, min(value, maxWidth));
                 }
                 editSpacerSize.value = Size(width, height);
               }
@@ -665,7 +667,6 @@ class _SpacingOverlay extends OverlayEntry {
                       MenuAnchor(
                         builder: (_, MenuController c, __) => EzIconButton(
                           config,
-                          enabled: (axis == Axis.vertical ? height : width) != 0,
                           icon: const Icon(Icons.keyboard_arrow_left),
                           onPressed: () {
                             final double base = tile
@@ -711,8 +712,6 @@ class _SpacingOverlay extends OverlayEntry {
                       MenuAnchor(
                         builder: (_, MenuController c, __) => EzIconButton(
                           config,
-                          enabled:
-                              (axis == Axis.vertical) ? (height != maxHeight) : (width != maxWidth),
                           icon: const Icon(Icons.keyboard_arrow_right),
                           onPressed: () {
                             final double base = tile
