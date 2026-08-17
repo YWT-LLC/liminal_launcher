@@ -437,6 +437,9 @@ class LangEn extends Lang {
   String get mcInfo => 'Info';
 
   @override
+  String get mcReposition => 'Reposition';
+
+  @override
   String get mcMove => 'Move';
 
   @override
@@ -1000,6 +1003,9 @@ class LangEnUs extends LangEn {
 
   @override
   String get mcInfo => 'Info';
+
+  @override
+  String get mcReposition => 'Reposition';
 
   @override
   String get mcMove => 'Move';

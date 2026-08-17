@@ -437,6 +437,9 @@ class LangEs extends Lang {
   String get mcInfo => 'Info';
 
   @override
+  String get mcReposition => 'Reposition';
+
+  @override
   String get mcMove => 'Move';
 
   @override
