@@ -13,15 +13,18 @@ EzMenuButton reposition(
   EzCP config,
   AppInfoProvider appInfo,
   LimPos pos, {
-  required BuildContext context,
+  required void Function() stateCheck,
 }) =>
     EzMenuButton(
       config,
-      label: 'Reposition', // TODO: l10n
+      label: l10n(config).mcReposition,
       icon: EzIcon(config, Icons.control_camera),
       onPressed: () async {
+        if (!ezRootIsMounted) return;
         marked.value = pos;
-        await editSpacing(config, appInfo: appInfo, context: context);
+
+        stateCheck.call();
+        await editSpacing(config, appInfo: appInfo, context: ezRootContext);
       },
     );
 
