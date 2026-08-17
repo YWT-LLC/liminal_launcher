@@ -416,8 +416,7 @@ class AppInfoProvider extends ChangeNotifier {
     required String entry,
   }) async {
     if (interlinked || config.isDark) {
-      final RegExpMatch? splitMatch = tileRegex.firstMatch(_darkHomeMatrix[lane][index]);
-      final String? delim = splitMatch?.group(0);
+      final String? delim = tileRegex.firstMatch(_darkHomeMatrix[lane][index])?.group(0);
 
       switch (delim) {
         case idSplit:
@@ -463,8 +462,7 @@ class AppInfoProvider extends ChangeNotifier {
     }
 
     if (interlinked || !config.isDark) {
-      final RegExpMatch? splitMatch = tileRegex.firstMatch(_lightHomeMatrix[lane][index]);
-      final String? delim = splitMatch?.group(0);
+      final String? delim = tileRegex.firstMatch(_lightHomeMatrix[lane][index])?.group(0);
 
       switch (delim) {
         case idSplit:
@@ -472,7 +470,7 @@ class AppInfoProvider extends ChangeNotifier {
           final List<String> lilParts = bigParts[2].split(configSplit);
 
           lilParts[0] = entry;
-          bigParts[0] = lilParts.join(configSplit);
+          bigParts[2] = lilParts.join(configSplit);
           _lightHomeMatrix[lane][index] = bigParts.join(idSplit);
           break;
 
@@ -481,7 +479,7 @@ class AppInfoProvider extends ChangeNotifier {
           final List<String> lilParts = bigParts[1].split(configSplit);
 
           lilParts[0] = entry;
-          bigParts[0] = lilParts.join(configSplit);
+          bigParts[1] = lilParts.join(configSplit);
           _lightHomeMatrix[lane][index] = bigParts.join(folderSplit);
           break;
 
@@ -490,7 +488,7 @@ class AppInfoProvider extends ChangeNotifier {
           final List<String> lilParts = bigParts[1].split(configSplit);
 
           lilParts[0] = entry;
-          bigParts[0] = lilParts.join(configSplit);
+          bigParts[1] = lilParts.join(configSplit);
           _lightHomeMatrix[lane][index] = bigParts.join(widgetSplit);
           break;
 
