@@ -493,6 +493,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     final List<String> entries = appInfo.homeLane(config, lane);
 
     final List<Widget> tiles = <Widget>[];
+    void editReset() => editing ? setState(() => editing = false) : doNothing();
 
     for (int index = 1; index < entries.length; index++) {
       final String entry = entries[index];
@@ -534,6 +535,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                         state: editing ? TileState.groupEdit : TileState.standard,
                         rippleProgress: rippleProgress,
                         pos: pos,
+                        editReset: editReset,
                         data: data,
                       ),
                     ),
@@ -552,6 +554,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       state: editing ? TileState.groupEdit : TileState.standard,
                       rippleProgress: rippleProgress,
                       pos: pos,
+                      editReset: editReset,
                       data: data,
                     ),
                   ),
@@ -582,6 +585,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                         appInfo: appInfo,
                         state: editing ? TileState.groupEdit : TileState.standard,
                         rippleProgress: rippleProgress,
+                        editReset: editReset,
                         name: items[0],
                         appList: items.length > 2 ? items.sublist(2) : <String>[],
                         pos: pos,
@@ -597,6 +601,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       appInfo: appInfo,
                       state: editing ? TileState.groupEdit : TileState.standard,
                       rippleProgress: rippleProgress,
+                      editReset: editReset,
                       name: items[0],
                       appList: items.length > 2 ? items.sublist(2) : <String>[],
                       pos: pos,
@@ -633,6 +638,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                           typeString: items[0],
                           state: editing ? TileState.groupEdit : TileState.standard,
                           rippleProgress: rippleProgress,
+                          editReset: editReset,
                           pos: pos,
                           data: data,
                         ),
@@ -651,6 +657,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                         typeString: items[0],
                         state: editing ? TileState.groupEdit : TileState.standard,
                         rippleProgress: rippleProgress,
+                        editReset: editReset,
                         pos: pos,
                         data: data,
                       ),

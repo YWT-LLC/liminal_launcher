@@ -28,6 +28,7 @@ class AppTile extends StatefulWidget {
 
   // For home
   final LimPos? pos;
+  final void Function()? editReset;
 
   // For app list
   final ListAlignment? hAlign;
@@ -52,6 +53,7 @@ class AppTile extends StatefulWidget {
     required this.state,
     this.rippleProgress,
     this.pos,
+    this.editReset,
     this.hAlign,
     this.vAlign,
     this.verbStart,
@@ -234,6 +236,7 @@ class _AppTileState extends State<AppTile> {
               app: widget.app,
               location: widget.location,
               state: state,
+              editReset: widget.editReset,
               numLanes: numLanes,
               pos: widget.pos,
               initConfig: (widget.location == AppLocation.home)
@@ -313,6 +316,7 @@ class _AppTileState extends State<AppTile> {
               app: widget.app,
               location: widget.location,
               state: state,
+              editReset: widget.editReset,
               numLanes: numLanes,
               pos: widget.pos,
               initConfig: AppConfig(
@@ -359,9 +363,10 @@ List<Widget> _menuChildren(
   required AppInfo app,
   required AppLocation location,
   required TileState state,
+  required void Function()? editReset,
   required int numLanes,
   required LimPos? pos,
-  AppConfig? initConfig,
+  required AppConfig? initConfig,
 }) =>
     switch (location) {
       AppLocation.home => <Widget>[
@@ -399,7 +404,7 @@ List<Widget> _menuChildren(
           ),
 
           // Reposition
-          reposition(config, appInfo, pos, context: context),
+          reposition(config, appInfo, pos, stateCheck: editReset!),
 
           // Move
           if (state == TileState.groupEdit && numLanes > 1) ...<Widget>[

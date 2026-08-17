@@ -19,6 +19,7 @@ Widget drawWidget(
   required String typeString,
   required TileState state,
   required ValueNotifier<double>? rippleProgress,
+  required void Function() editReset,
   required LimPos pos,
   required List<String> data,
 }) =>
@@ -27,22 +28,27 @@ Widget drawWidget(
             width: double.infinity,
             alignment: pos.subAlign,
             child: switch (typeString) {
-              esClock => ClockWidget(config, appInfo, state, rippleProgress, pos, data),
-              esEvent => EventWidget(config, appInfo, state, rippleProgress, pos, data),
-              esSearch => SearchWidget(config, appInfo, state, rippleProgress, pos, data),
-              esTimer => TimerWidget(config, appInfo, state, rippleProgress, pos, data),
-              esToggleMedia => ToggleMediaWidget(config, appInfo, state, rippleProgress, pos, data),
-              esThemeMode => ThemeModeWidget(config, appInfo, state, rippleProgress, pos, data),
+              esClock => ClockWidget(config, appInfo, state, pos, rippleProgress, editReset, data),
+              esEvent => EventWidget(config, appInfo, state, pos, rippleProgress, editReset, data),
+              esSearch =>
+                SearchWidget(config, appInfo, state, pos, rippleProgress, editReset, data),
+              esTimer => TimerWidget(config, appInfo, state, pos, rippleProgress, editReset, data),
+              esToggleMedia =>
+                ToggleMediaWidget(config, appInfo, state, pos, rippleProgress, editReset, data),
+              esThemeMode =>
+                ThemeModeWidget(config, appInfo, state, pos, rippleProgress, editReset, data),
               _ => const SizedBox.shrink(),
             },
           )
         : switch (typeString) {
-            esClock => ClockWidget(config, appInfo, state, rippleProgress, pos, data),
-            esEvent => EventWidget(config, appInfo, state, rippleProgress, pos, data),
-            esSearch => SearchWidget(config, appInfo, state, rippleProgress, pos, data),
-            esTimer => TimerWidget(config, appInfo, state, rippleProgress, pos, data),
-            esToggleMedia => ToggleMediaWidget(config, appInfo, state, rippleProgress, pos, data),
-            esThemeMode => ThemeModeWidget(config, appInfo, state, rippleProgress, pos, data),
+            esClock => ClockWidget(config, appInfo, state, pos, rippleProgress, editReset, data),
+            esEvent => EventWidget(config, appInfo, state, pos, rippleProgress, editReset, data),
+            esSearch => SearchWidget(config, appInfo, state, pos, rippleProgress, editReset, data),
+            esTimer => TimerWidget(config, appInfo, state, pos, rippleProgress, editReset, data),
+            esToggleMedia =>
+              ToggleMediaWidget(config, appInfo, state, pos, rippleProgress, editReset, data),
+            esThemeMode =>
+              ThemeModeWidget(config, appInfo, state, pos, rippleProgress, editReset, data),
             _ => const SizedBox.shrink(),
           };
 

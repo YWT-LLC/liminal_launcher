@@ -16,8 +16,9 @@ class ThemeModeWidget extends StatefulWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
   final TileState state;
-  final ValueNotifier<double>? rippleProgress;
   final LimPos pos;
+  final ValueNotifier<double>? rippleProgress;
+  final void Function() editReset;
 
   final List<String> data;
   late final String _tp;
@@ -27,8 +28,9 @@ class ThemeModeWidget extends StatefulWidget {
     this.config,
     this.appInfo,
     this.state,
-    this.rippleProgress,
     this.pos,
+    this.rippleProgress,
+    this.editReset,
     this.data, {
     super.key,
   }) {
@@ -122,6 +124,7 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
               appInfo: widget.appInfo,
               context: context,
               state: state,
+              editReset: widget.editReset,
               numLanes: numLanes,
               pos: widget.pos,
               initConfig: _TMConfig(
@@ -139,6 +142,7 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
               appInfo: widget.appInfo,
               context: context,
               state: state,
+              editReset: widget.editReset,
               numLanes: numLanes,
               pos: widget.pos,
               initConfig: _TMConfig(
@@ -168,6 +172,7 @@ List<Widget> _menuChildren(
   required AppInfoProvider appInfo,
   required BuildContext context,
   required TileState state,
+  required void Function() editReset,
   required int numLanes,
   required LimPos pos,
   required _TMConfig initConfig,
@@ -191,7 +196,7 @@ List<Widget> _menuChildren(
       ),
 
       // Reposition
-      reposition(config, appInfo, pos, context: context),
+      reposition(config, appInfo, pos, stateCheck: editReset),
 
       // Move
       if (state == TileState.groupEdit && numLanes > 1) ...<Widget>[

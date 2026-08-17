@@ -20,6 +20,7 @@ class FolderTile extends StatefulWidget {
   final AppInfoProvider appInfo;
   final TileState state;
   final ValueNotifier<double>? rippleProgress;
+  final void Function() editReset;
   final LimPos pos;
 
   late final String name;
@@ -37,6 +38,7 @@ class FolderTile extends StatefulWidget {
     required this.appInfo,
     required this.state,
     required this.rippleProgress,
+    required this.editReset,
     required this.pos,
     required this.name,
     required this.appList,
@@ -193,6 +195,7 @@ class _AppFolderState extends State<FolderTile> {
                 appInfo: widget.appInfo,
                 context: context,
                 state: state,
+                editReset: widget.editReset,
                 numLanes: numLanes,
                 pos: widget.pos,
                 initConfig: FolderConfig(
@@ -215,6 +218,7 @@ class _AppFolderState extends State<FolderTile> {
                 appInfo: widget.appInfo,
                 context: context,
                 state: state,
+                editReset: widget.editReset,
                 numLanes: numLanes,
                 pos: widget.pos,
                 initConfig: FolderConfig(
@@ -248,6 +252,7 @@ List<Widget> _menuChildren(
   required AppInfoProvider appInfo,
   required BuildContext context,
   required TileState state,
+  required void Function() editReset,
   required int numLanes,
   required LimPos pos,
   required FolderConfig initConfig,
@@ -287,7 +292,7 @@ List<Widget> _menuChildren(
       ),
 
       // Reposition
-      reposition(config, appInfo, pos, context: context),
+      reposition(config, appInfo, pos, stateCheck: editReset),
 
       // Move
       if (state == TileState.groupEdit && numLanes > 1) ...<Widget>[
