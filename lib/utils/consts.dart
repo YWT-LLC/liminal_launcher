@@ -310,7 +310,7 @@ const String configSplit = ':01000011:';
 
 // Split indexes //
 
-// t-o-d-o
+// t-o-d-o (appPaddingIndex, widgetPaddingIndex, etc.)
 
 // Position && padding //
 
