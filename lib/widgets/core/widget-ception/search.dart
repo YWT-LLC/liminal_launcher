@@ -61,7 +61,7 @@ class SearchWidget extends StatefulWidget {
       _engine = Engine.library[storedCurr] ?? ecosia;
     }
 
-    final List<String> storedChoices = data.sublist(2);
+    final List<String> storedChoices = data.sublist(3);
     _choices = storedChoices
         .map((String entry) {
           if (entry.contains(engineSplit)) {
@@ -507,7 +507,8 @@ Future<void> _openEdits(
       builder: (BuildContext mCon, StateSetter setModal) => ezModalScroll(
         config,
         children: <Widget>[
-          // Size
+          // Size //
+
           EzFlipFlop(
             config,
             onLabel: l10n(config).gTile,
@@ -517,7 +518,8 @@ Future<void> _openEdits(
           ),
           config.separator,
 
-          // Shown
+          // Shown //
+
           Text(l10n(config).gShown, textAlign: TextAlign.center, style: config.labelStyle),
           EzWrap(
             children: <Widget>[
@@ -744,14 +746,15 @@ Future<void> _openEdits(
             height: config.spacing * 2,
           ),
 
-          // Hidden
+          // Hidden //
+
           EzWrap(
             children: hidden
                 .map((Engine e) => Padding(
                       padding: wrapPadding,
                       child: EzElevatedIconButton(
-                        key: ValueKey<Engine>(e),
                         config,
+                        key: ValueKey<Engine>(e),
                         icon: EzIcon(config, e.icon),
                         label: e.name,
                         onPressed: () {
