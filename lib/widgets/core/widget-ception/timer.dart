@@ -331,6 +331,16 @@ List<Widget> _menuChildren(
   required _TimerConfig initConfig,
 }) =>
     <Widget>[
+      // Quick times
+      ...initConfig.quick.map((String time) => EzMenuButton(
+            config,
+            label: time,
+            onPressed: () async {
+              final List<String> parts = time.split(colon);
+              await setTimer(parts.map((String p) => _toInt(p)).toList());
+            },
+          )),
+
       // Edit
       _EditTimer(
         config,
@@ -602,6 +612,24 @@ Future<void> _openEdits(
             scrollDirection: Axis.horizontal,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              // Add (lefty)
+              if (config.isLefty) ...<Widget>[
+                EzIconButton(
+                  config,
+                  icon: EzIcon(config, Icons.add),
+                  onPressed: () {
+                    quick.add(<String>[
+                      _validateTime(ourCon.text),
+                      _validateTime(minCon.text),
+                      _validateTime(secCon.text),
+                    ].join(colon));
+                    quick.sort();
+                    setModal(() {});
+                  },
+                ),
+                config.rowMargin,
+              ],
+
               // Hours
               _timeField(
                 constraints: initConfig.constraints,
@@ -643,9 +671,36 @@ Future<void> _openEdits(
                 },
                 last: true,
               ),
+
+              // Add (righty)
+              if (!config.isLefty) ...<Widget>[
+                config.rowMargin,
+                EzIconButton(
+                  config,
+                  icon: EzIcon(config, Icons.add),
+                  onPressed: () {
+                    quick.add(<String>[
+                      _validateTime(ourCon.text),
+                      _validateTime(minCon.text),
+                      _validateTime(secCon.text),
+                    ].join(colon));
+                    quick.sort();
+                    setModal(() {});
+                  },
+                ),
+              ],
             ],
           ),
-          if (quick.isNotEmpty) config.spacer,
+          if (quick.isNotEmpty)
+            EzTitledDivider(
+              config,
+              title: Text(
+                l10n(config).timQuick,
+                textAlign: TextAlign.center,
+                style: config.labelStyle,
+              ),
+              height: config.spacing * 2,
+            ),
 
           // List
           EzWrap(
@@ -658,6 +713,7 @@ Future<void> _openEdits(
                         text: time,
                         onPressed: () {
                           quick.remove(time);
+                          quick.sort();
                           setModal(() {});
                         },
                       ),
