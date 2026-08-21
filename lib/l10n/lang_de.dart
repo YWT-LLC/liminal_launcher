@@ -562,6 +562,9 @@ class LangDe extends Lang {
   String get timBadTime => 'Invalid time';
 
   @override
+  String get timQuick => 'Quick times';
+
+  @override
   String get togFF => 'FF/Rewind';
 
   @override

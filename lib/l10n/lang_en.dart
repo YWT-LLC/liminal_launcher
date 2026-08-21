@@ -562,6 +562,9 @@ class LangEn extends Lang {
   String get timBadTime => 'Invalid time';
 
   @override
+  String get timQuick => 'Quick times';
+
+  @override
   String get togFF => 'FF/Rewind';
 
   @override
@@ -1128,6 +1131,9 @@ class LangEnUs extends LangEn {
 
   @override
   String get timBadTime => 'Invalid time';
+
+  @override
+  String get timQuick => 'Quick times';
 
   @override
   String get togFF => 'FF/Rewind';

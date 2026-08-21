@@ -1133,6 +1133,12 @@ abstract class Lang {
   /// **'Invalid time'**
   String get timBadTime;
 
+  /// No description provided for @timQuick.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick times'**
+  String get timQuick;
+
   /// No description provided for @togFF.
   ///
   /// In en, this message translates to:
