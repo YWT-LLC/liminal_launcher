@@ -68,6 +68,7 @@ class LaneHeader extends StatelessWidget {
               reverseHands: true,
               startCentered: true,
               showScrollHint: true,
+              thumbVisibility: false,
               mainAxisSize: MainAxisSize.max,
               scrollDirection: Axis.horizontal,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -401,6 +402,7 @@ Future<void> _editLane(
                 Expanded(
                   child: EzScrollView(
                     config,
+                    thumbVisibility: false,
                     scrollDirection: Axis.horizontal,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: standardFlow(config)
