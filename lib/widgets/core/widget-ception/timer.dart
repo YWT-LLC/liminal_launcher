@@ -23,6 +23,7 @@ class TimerWidget extends StatefulWidget {
   final List<String> data;
   late final String _tp;
   late final WWGGSize _size;
+  late final List<String> _prev;
   late final List<String> _times;
 
   TimerWidget(
@@ -38,8 +39,10 @@ class TimerWidget extends StatefulWidget {
     _tp = data[0]; // Not used here; tracked so local updates don't clobber it
     _size = WSConfig.safeLookup(data[1]);
 
-    final List<String> storedTs = data[2].split(colon);
-    _times = storedTs.length == 3 ? storedTs : <String>['00', '00', '00'];
+    final List<String> storedPrev = data[2].split(colon);
+    _prev = storedPrev.length == 3 ? storedPrev : <String>['00', '00', '00'];
+
+    _times = data.sublist(3);
   }
 
   @override
@@ -54,9 +57,9 @@ class _TimerWidgetState extends State<TimerWidget> {
 
   final MenuController menuControl = MenuController();
 
-  late final TextEditingController ourCon = TextEditingController(text: widget._times[0]);
-  late final TextEditingController minCon = TextEditingController(text: widget._times[1]);
-  late final TextEditingController secCon = TextEditingController(text: widget._times[2]);
+  late final TextEditingController ourCon = TextEditingController(text: widget._prev[0]);
+  late final TextEditingController minCon = TextEditingController(text: widget._prev[1]);
+  late final TextEditingController secCon = TextEditingController(text: widget._prev[2]);
 
   late final FocusNode ourNode = FocusNode();
   late final FocusNode minNode = FocusNode();
@@ -261,10 +264,13 @@ class _TimerWidgetState extends State<TimerWidget> {
               initConfig: _TimerConfig(
                 tp: widget._tp,
                 size: widget._size,
-                fieldCon: numConstraints,
-                ours: _validateTime(ourCon.text),
-                mins: _validateTime(minCon.text),
-                secs: _validateTime(secCon.text),
+                constraints: numConstraints,
+                auto: <String>[
+                  _validateTime(ourCon.text),
+                  _validateTime(minCon.text),
+                  _validateTime(secCon.text),
+                ].join(colon),
+                quick: widget._times,
               ),
             ),
           ),
@@ -283,10 +289,13 @@ class _TimerWidgetState extends State<TimerWidget> {
               initConfig: _TimerConfig(
                 tp: widget._tp,
                 size: widget._size,
-                fieldCon: numConstraints,
-                ours: _validateTime(ourCon.text),
-                mins: _validateTime(minCon.text),
-                secs: _validateTime(secCon.text),
+                constraints: numConstraints,
+                auto: <String>[
+                  _validateTime(ourCon.text),
+                  _validateTime(minCon.text),
+                  _validateTime(secCon.text),
+                ].join(colon),
+                quick: widget._times,
               ),
             ),
             child: EzIconButton(
@@ -450,14 +459,13 @@ class AddTimer extends StatelessWidget {
           initConfig: _TimerConfig(
             tp: nullTPS,
             size: size,
-            fieldCon: BoxConstraints.tightFor(
+            constraints: BoxConstraints.tightFor(
               height: appIconSize(config),
               width: ezTextSize('000', context: pContext, style: config.bodyStyle).width +
                   (2 * config.padding),
             ),
-            ours: '00',
-            mins: '00',
-            secs: '00',
+            auto: _noTime,
+            quick: _defaultQuick,
           ),
           lane: lane,
           index: appInfo.homeLane(config, lane).length - 1,
@@ -500,21 +508,23 @@ class AddTimer extends StatelessWidget {
   }
 }
 
-String defaultTimerEntry() => _timerEntry(
-      tp: nullTPS,
-      size: WWGGSize.tile,
-      auto: '00:00:00',
-    );
+const String _noTime = '00:00:00';
+const List<String> _defaultQuick = <String>['00:10:00', '00:30:00', '01:00:00'];
+
+String defaultTimerEntry() =>
+    _timerEntry(tp: nullTPS, size: WWGGSize.tile, auto: _noTime, quick: _defaultQuick);
 
 String _timerEntry({
   required String tp,
   required WWGGSize size,
   required String auto,
+  required Iterable<String> quick,
 }) =>
     <String>[
       tp,
       size.value,
       auto,
+      ...quick,
     ].join(configSplit);
 
 //* Edit Widget *//
@@ -522,18 +532,16 @@ String _timerEntry({
 class _TimerConfig {
   final String tp;
   final WWGGSize size;
-  final BoxConstraints fieldCon;
-  final String ours;
-  final String mins;
-  final String secs;
+  final BoxConstraints constraints;
+  final String auto;
+  final List<String> quick;
 
   _TimerConfig({
     required this.tp,
     required this.size,
-    required this.fieldCon,
-    required this.ours,
-    required this.mins,
-    required this.secs,
+    required this.constraints,
+    required this.auto,
+    required this.quick,
   });
 }
 
@@ -545,16 +553,20 @@ Future<void> _openEdits(
   required int lane,
   required int index,
 }) async {
-  final TextEditingController ourCon = TextEditingController(text: initConfig.ours);
-  final TextEditingController minCon = TextEditingController(text: initConfig.mins);
-  final TextEditingController secCon = TextEditingController(text: initConfig.secs);
+  final EdgeInsets wrapPadding = EzInsets.wrap(config.spacing);
+
+  WWGGSize size = initConfig.size;
+  double bottomSpace = config.spacing * 2;
+
+  final List<String> quick = List<String>.from(initConfig.quick);
+
+  final TextEditingController ourCon = TextEditingController();
+  final TextEditingController minCon = TextEditingController();
+  final TextEditingController secCon = TextEditingController();
 
   final FocusNode ourNode = FocusNode();
   final FocusNode minNode = FocusNode();
   final FocusNode secNode = FocusNode();
-
-  WWGGSize size = initConfig.size;
-  double bottomSpace = config.spacing * 2;
 
   await ezModal(
     config,
@@ -582,8 +594,9 @@ Future<void> _openEdits(
           ),
           config.spacer,
 
-          // Default time //
+          // Quick times //
 
+          // Add
           EzScrollView(
             config,
             scrollDirection: Axis.horizontal,
@@ -591,7 +604,7 @@ Future<void> _openEdits(
             children: <Widget>[
               // Hours
               _timeField(
-                constraints: initConfig.fieldCon,
+                constraints: initConfig.constraints,
                 tc: ourCon,
                 curr: ourNode,
                 onTap: () => grow(),
@@ -605,7 +618,7 @@ Future<void> _openEdits(
 
               // Minutes
               _timeField(
-                constraints: initConfig.fieldCon,
+                constraints: initConfig.constraints,
                 tc: minCon,
                 curr: minNode,
                 onTap: () => grow(),
@@ -619,7 +632,7 @@ Future<void> _openEdits(
 
               // Seconds
               _timeField(
-                constraints: initConfig.fieldCon,
+                constraints: initConfig.constraints,
                 tc: secCon,
                 curr: secNode,
                 onTap: () => grow(),
@@ -631,6 +644,25 @@ Future<void> _openEdits(
                 last: true,
               ),
             ],
+          ),
+          if (quick.isNotEmpty) config.spacer,
+
+          // List
+          EzWrap(
+            children: quick
+                .map((String time) => Padding(
+                      padding: wrapPadding,
+                      child: EzElevatedButton(
+                        config,
+                        key: ValueKey<String>(time),
+                        text: time,
+                        onPressed: () {
+                          quick.remove(time);
+                          setModal(() {});
+                        },
+                      ),
+                    ))
+                .toList(),
           ),
           EzSpacer(bottomSpace),
         ]);
@@ -649,6 +681,7 @@ Future<void> _openEdits(
         _validateTime(minCon.text),
         _validateTime(secCon.text),
       ].join(colon),
+      quick: quick,
     ),
     lane: lane,
     index: index,
