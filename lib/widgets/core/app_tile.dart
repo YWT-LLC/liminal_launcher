@@ -495,24 +495,27 @@ class AppButton extends StatelessWidget {
     this.onLongPress,
   });
 
-  Widget appIcon() => (icon == null)
-      ? (image == null)
-          ? Icon(
-              Icons.question_mark,
-              semanticLabel: name,
-              size: iconSize ?? appIconSize(config),
-            )
-          : Image.memory(
-              image!,
-              semanticLabel: name,
-              width: iconSize ?? appIconSize(config),
-              height: iconSize ?? appIconSize(config),
-            )
-      : Icon(
-          icon!,
-          semanticLabel: name,
-          size: iconSize ?? appIconSize(config),
-        );
+  Widget appIcon({bool excluding = true}) => ExcludeSemantics(
+        excluding: excluding,
+        child: (icon == null)
+            ? (image == null)
+                ? Icon(
+                    Icons.question_mark,
+                    semanticLabel: name,
+                    size: iconSize ?? appIconSize(config),
+                  )
+                : Image.memory(
+                    image!,
+                    semanticLabel: name,
+                    width: iconSize ?? appIconSize(config),
+                    height: iconSize ?? appIconSize(config),
+                  )
+            : Icon(
+                icon!,
+                semanticLabel: name,
+                size: iconSize ?? appIconSize(config),
+              ),
+      );
 
   @override
   Widget build(BuildContext context) => switch (buttonType) {
@@ -521,7 +524,7 @@ class AppButton extends StatelessWidget {
             child: GestureDetector(
               onTap: onPressed,
               onLongPress: onLongPress,
-              child: appIcon(),
+              child: appIcon(excluding: false),
             ),
           ),
         ButtonType.eIcon => EzIconButton(

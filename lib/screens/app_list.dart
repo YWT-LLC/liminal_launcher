@@ -127,8 +127,9 @@ class _AppListScreenState extends State<AppListScreen> {
                     MenuAnchor(
                       builder: (_, MenuController controller, __) => EzIconButton(
                         config,
-                        onPressed: () => toggleMenu(controller),
                         icon: const Icon(Icons.sort),
+                        tooltip: 'Sort: ${listSort.name(config)}', // TODO
+                        onPressed: () => toggleMenu(controller),
                       ),
                       menuChildren: ListSort.values
                           .map((ListSort type) => EzMenuButton(
@@ -150,6 +151,7 @@ class _AppListScreenState extends State<AppListScreen> {
                     EzIconButton(
                       config,
                       icon: Icon(ascList ? Icons.arrow_upward : Icons.arrow_downward),
+                      tooltip: ascList ? 'Order: ascending' : 'Order: descending', // TODO
                       onPressed: () async {
                         await EzCM.setBool(ascListKey, !ascList);
 
@@ -170,6 +172,7 @@ class _AppListScreenState extends State<AppListScreen> {
                           EzIconButton(
                             config,
                             icon: const Icon(Icons.search),
+                            tooltip: 'Search', // TODO
                             onPressed: () {
                               if (searching) {
                                 closeKeyboard(context);
