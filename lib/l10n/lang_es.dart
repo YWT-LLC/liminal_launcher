@@ -191,6 +191,9 @@ class LangEs extends Lang {
   String get gAdded => 'Added';
 
   @override
+  String get gClear => 'Clear';
+
+  @override
   String get gDefault => 'Default';
 
   @override

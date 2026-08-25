@@ -449,6 +449,12 @@ abstract class Lang {
   /// **'Added'**
   String get gAdded;
 
+  /// No description provided for @gClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get gClear;
+
   /// No description provided for @gDefault.
   ///
   /// In en, this message translates to:
