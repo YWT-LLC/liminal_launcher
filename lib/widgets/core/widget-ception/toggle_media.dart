@@ -109,6 +109,7 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
                   ? const Icon(Icons.headphones)
                   : EzRow(
                       widget.config,
+                      reverseHands: false,
                       children: <Widget>[
                         widget.config.rowMargin,
 
@@ -297,6 +298,7 @@ class AddToggleMedia extends StatelessWidget {
             ? const Icon(Icons.headphones)
             : EzRow(
                 config,
+                reverseHands: false,
                 children: <Widget>[
                   config.rowMargin,
                   const Icon(Icons.skip_previous),
@@ -390,6 +392,7 @@ Future<void> _openEdits(
               ? const Icon(Icons.headphones)
               : EzRow(
                   config,
+                  reverseHands: false,
                   children: <Widget>[
                     config.rowMargin,
 
