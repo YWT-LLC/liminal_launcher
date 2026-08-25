@@ -105,7 +105,7 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
         TileState.standard => MenuAnchor(
             builder: (_, MenuController controller, __) => EzIconButton(
               widget.config,
-              tooltip: l10n(widget.config).togTitle, // TODO: test
+              tooltip: l10n(widget.config).togTitle,
               icon: (widget._size == WWGGSize.button)
                   ? const Icon(Icons.headphones)
                   : EzRow(
