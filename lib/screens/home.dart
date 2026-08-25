@@ -866,7 +866,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           return LiminalScaffold(
             config,
             body: Semantics(
-              label: 'Home. Long press to edit.', // TODO
+              label: l10n(config).hsHomeHint,
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onLongPressStart: (LongPressStartDetails details) async => editing

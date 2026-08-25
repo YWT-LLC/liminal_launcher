@@ -78,11 +78,17 @@ class LaneHeader extends StatelessWidget {
                   config,
                   onPressed: () => _delete(context),
                   icon: const Icon(Icons.delete),
+                  tooltip: numLanes > 1 ? config.ezL10n.gRemove : l10n(config).gClear,
                 ),
                 config.rowSpacer,
 
                 // Dupe
-                EzIconButton(config, onPressed: _dupe, icon: const Icon(Icons.copy)),
+                EzIconButton(
+                  config,
+                  onPressed: _dupe,
+                  icon: const Icon(Icons.copy),
+                  tooltip: l10n(config).gDupe,
+                ),
                 config.rowSpacer,
 
                 // Edit
@@ -98,6 +104,7 @@ class LaneHeader extends StatelessWidget {
                     vAlign: pos.vAlign,
                   ),
                   icon: const Icon(Icons.edit),
+                  tooltip: l10n(config).gEdit,
                 ),
                 config.rowSpacer,
 
@@ -106,6 +113,7 @@ class LaneHeader extends StatelessWidget {
                   config,
                   onPressed: () => addModal(config, appInfo, pos.lane, pos.hAlign, pos.vAlign),
                   icon: const Icon(Icons.add),
+                  tooltip: l10n(config).gAdd,
                 ),
               ],
             ),
@@ -122,6 +130,7 @@ class LaneHeader extends StatelessWidget {
                   config,
                   onPressed: () => toggleMenu(controller),
                   icon: const Icon(Icons.more_vert),
+                  tooltip: config.ezL10n.gOptions,
                 ),
               ],
             ),
@@ -396,6 +405,7 @@ Future<void> _editLane(
                       config,
                       enabled: pos > 0,
                       icon: const Icon(Icons.keyboard_arrow_left),
+                      tooltip: l10n(config).mcMoveLeft,
                       onPressed: () => setModal(() => pos -= 1),
                     ),
                   ),
@@ -417,6 +427,7 @@ Future<void> _editLane(
                       config,
                       enabled: pos < (numLanes - 1),
                       icon: const Icon(Icons.keyboard_arrow_right),
+                      tooltip: l10n(config).mcMoveRight,
                       onPressed: () => setModal(() => pos += 1),
                     ),
                   ),

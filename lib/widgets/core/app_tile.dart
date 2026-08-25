@@ -772,7 +772,7 @@ Future<void> editApp(
                     : EzIconButton(
                         config,
                         icon: Icon(icon ?? Icons.settings, size: iconSize ?? appIconSize(config)),
-                        tooltip: 'Preview', // TODO
+                        tooltip: l10n(config).gPreview,
                         onPressed: showIcon
                             ? () async {
                                 final IconData? choice = await chooseIcon(config, pContext);

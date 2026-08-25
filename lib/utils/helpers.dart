@@ -69,7 +69,7 @@ Future<IconData?> chooseIcon(EzCP config, BuildContext context) => ezModal(
                             child: EzIconButton(
                               config,
                               icon: Icon(icon),
-                              tooltip: 'Preview', // TODO
+                              tooltip: l10n(config).gPreview,
                               onPressed: () => Navigator.of(mCon).pop(icon),
                             ),
                           ))
