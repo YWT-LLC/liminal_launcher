@@ -105,6 +105,7 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
         TileState.standard => MenuAnchor(
             builder: (_, MenuController controller, __) => EzIconButton(
               widget.config,
+              tooltip: l10n(widget.config).togTitle, // TODO: test
               icon: (widget._size == WWGGSize.button)
                   ? const Icon(Icons.headphones)
                   : EzRow(
@@ -182,6 +183,7 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
             child: EzIconButton(
               widget.config,
               icon: const Icon(Icons.headphones),
+              tooltip: l10n(widget.config).togTitle,
               onPressed: () => toggleMenu(menuControl),
             ),
           ),
@@ -309,6 +311,7 @@ class AddToggleMedia extends StatelessWidget {
                   config.rowMargin,
                 ],
               ),
+        tooltip: l10n(config).gAdd,
       );
 }
 
@@ -388,6 +391,7 @@ Future<void> _openEdits(
         // Preview
         EzIconButton(
           config,
+          tooltip: l10n(config).gPreview,
           icon: (size == WWGGSize.button)
               ? const Icon(Icons.headphones)
               : EzRow(

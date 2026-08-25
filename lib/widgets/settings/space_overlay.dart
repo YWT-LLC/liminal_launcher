@@ -317,10 +317,20 @@ class _SpacingOverlay extends OverlayEntry {
                                             AxisDirection.left => Icons.west,
                                             AxisDirection.right => Icons.east,
                                           }
-                                        : ((axis == Axis.vertical)
+                                        : (axis == Axis.vertical)
                                             ? Icons.height
-                                            : Icons.horizontal_rule),
+                                            : Icons.horizontal_rule,
                                   ),
+                                  tooltip: tile
+                                      ? switch (side) {
+                                          AxisDirection.up => l10n(config).gTop,
+                                          AxisDirection.down => l10n(config).gBottom,
+                                          AxisDirection.left => l10n(config).gLeft,
+                                          AxisDirection.right => l10n(config).gRight,
+                                        }
+                                      : (axis == Axis.vertical)
+                                          ? l10n(config).gVertical
+                                          : l10n(config).gHorizontal,
                                   onPressed: () => toggleMenu(c),
                                 ),
                                 menuChildren: tile
@@ -361,6 +371,7 @@ class _SpacingOverlay extends OverlayEntry {
                                 builder: (_, MenuController c, __) => EzIconButton(
                                   config,
                                   icon: const Icon(Icons.key),
+                                  tooltip: l10n(config).gKey,
                                   onPressed: () => toggleMenu(c),
                                 ),
                                 menuChildren: <String, double>{
@@ -394,6 +405,7 @@ class _SpacingOverlay extends OverlayEntry {
                                 builder: (_, MenuController controller, __) => EzIconButton(
                                   config,
                                   icon: const Icon(Icons.build),
+                                  tooltip: l10n(config).gEdits,
                                   onPressed: () => toggleMenu(controller),
                                 ),
                                 menuChildren: <Widget>[
@@ -522,6 +534,9 @@ class _SpacingOverlay extends OverlayEntry {
                                           ? Icons.keyboard_arrow_left
                                           : Icons.keyboard_arrow_right,
                                     ),
+                                    tooltip: standardFlow(config)
+                                        ? l10n(config).mcMoveLeft
+                                        : l10n(config).mcMoveRight,
                                     onPressed: () async {
                                       final int nextLane = currLane - 1;
                                       final int nextIndex =
@@ -556,6 +571,9 @@ class _SpacingOverlay extends OverlayEntry {
                                         ? Icons.keyboard_arrow_up
                                         : Icons.keyboard_arrow_down,
                                   ),
+                                  tooltip: standardFlow(config)
+                                      ? l10n(config).mcMoveUp
+                                      : l10n(config).mcMoveDown,
                                   enabled:
                                       currIndex < (appInfo.homeLane(config, currLane).length - 1),
                                   onPressed: () async {
@@ -588,6 +606,9 @@ class _SpacingOverlay extends OverlayEntry {
                                         ? Icons.keyboard_arrow_down
                                         : Icons.keyboard_arrow_up,
                                   ),
+                                  tooltip: standardFlow(config)
+                                      ? l10n(config).mcMoveDown
+                                      : l10n(config).mcMoveUp,
                                   enabled: currIndex > 1, // 0 == config entry
                                   onPressed: () async {
                                     final int nextIndex = currIndex - 1;
@@ -621,6 +642,9 @@ class _SpacingOverlay extends OverlayEntry {
                                           ? Icons.keyboard_arrow_right
                                           : Icons.keyboard_arrow_left,
                                     ),
+                                    tooltip: standardFlow(config)
+                                        ? l10n(config).mcMoveRight
+                                        : l10n(config).mcMoveLeft,
                                     onPressed: () async {
                                       final int nextLane = currLane + 1;
                                       final int nextIndex =
@@ -668,6 +692,7 @@ class _SpacingOverlay extends OverlayEntry {
                         builder: (_, MenuController c, __) => EzIconButton(
                           config,
                           icon: const Icon(Icons.keyboard_arrow_left),
+                          tooltip: config.ezL10n.gDecrease,
                           onPressed: () {
                             final double base = tile
                                 ? switch (side) {
@@ -713,6 +738,7 @@ class _SpacingOverlay extends OverlayEntry {
                         builder: (_, MenuController c, __) => EzIconButton(
                           config,
                           icon: const Icon(Icons.keyboard_arrow_right),
+                          tooltip: config.ezL10n.gIncrease,
                           onPressed: () {
                             final double base = tile
                                 ? switch (side) {

@@ -538,7 +538,7 @@ Future<void> editFolder(
                       config,
                       enabled: showIcon,
                       icon: Icon(icon, size: iconSize ?? config.iconSize),
-                      tooltip: 'Preview', // TODO
+                      tooltip: l10n(config).gPreview,
                       onPressed: () async {
                         final IconData? choice = await chooseIcon(config, pContext);
                         if (choice != null) setModal(() => icon = choice);
@@ -798,9 +798,11 @@ Future<void> editFolder(
                                     title: EzTextButton(
                                       config,
                                       onPressed: doNothing,
-                                      text:
-                                          "Add to '${validateName(config, renameCon.text) == null ? renameCon.text : initConfig.name}'",
-                                      textStyle: config.labelStyle, // TODO
+                                      text: l10n(config).fldAddTo(
+                                          validateName(config, renameCon.text) == null
+                                              ? renameCon.text
+                                              : initConfig.name),
+                                      textStyle: config.labelStyle,
                                     ),
                                   ),
                                 ),

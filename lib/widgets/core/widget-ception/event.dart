@@ -212,18 +212,24 @@ class _EventWidgetState extends State<EventWidget> {
         ? EzIconButton(
             widget.config,
             icon: const Icon(Icons.edit_calendar),
+            tooltip: l10n(widget.config).evtCreate,
             style: alwaysOn,
+            onPressed: doNothing, // TODO: test
           )
         : (widget._useAppIcon == true && widget._shareDest?.icon != null)
-            ? Image.memory(
-                widget._shareDest!.icon!,
-                semanticLabel: widget._shareDest!.label,
-                width: appIconSize(widget.config),
-                height: appIconSize(widget.config),
+            ? Tooltip(
+                message: l10n(widget.config).evtCreate, // TODO: test
+                child: Image.memory(
+                  widget._shareDest!.icon!,
+                  semanticLabel: widget._shareDest!.label,
+                  width: appIconSize(widget.config),
+                  height: appIconSize(widget.config),
+                ),
               )
             : EzIconButton(
                 widget.config,
                 icon: const Icon(Icons.edit_calendar),
+                tooltip: l10n(widget.config).evtCreate,
                 style: alwaysOn,
               );
 
@@ -461,7 +467,12 @@ class AddEvent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => (size == WWGGSize.button)
-      ? EzIconButton(config, onPressed: onTap, icon: const Icon(Icons.edit_calendar))
+      ? EzIconButton(
+          config,
+          onPressed: onTap,
+          icon: const Icon(Icons.edit_calendar),
+          tooltip: l10n(config).gAdd,
+        )
       : GestureDetector(
           onTap: onTap,
           child: EzScrollView(
@@ -485,7 +496,12 @@ class AddEvent extends StatelessWidget {
                 validator: null,
               ),
               config.rowMargin,
-              EzIconButton(config, icon: const Icon(Icons.edit_calendar), onPressed: onTap),
+              EzIconButton(
+                config,
+                icon: const Icon(Icons.edit_calendar),
+                onPressed: onTap,
+                tooltip: l10n(config).gAdd,
+              ),
             ],
           ),
         );

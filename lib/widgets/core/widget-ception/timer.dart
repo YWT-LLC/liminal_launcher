@@ -167,7 +167,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                 ? EzIconButton(
                     widget.config,
                     icon: const Icon(Icons.timer_outlined),
-                    tooltip: 'Start', // TODO
+                    tooltip: l10n(widget.config).gStart,
                     onPressed: () async {
                       final int ours = _toInt(ourCon.text);
                       final int mins = _toInt(minCon.text);
@@ -192,7 +192,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                         EzIconButton(
                           widget.config,
                           icon: const Icon(Icons.timer_outlined),
-                          tooltip: 'Start', // TODO
+                          tooltip: l10n(widget.config).gStart,
                           onPressed: () async {
                             removeOverlay();
                             await setTimer(<int>[
@@ -210,7 +210,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                         constraints: numConstraints,
                         tc: ourCon,
                         curr: ourNode,
-                        label: 'Hours', // TODO
+                        label: l10n(widget.config).timHours,
                         onChanged: (String s) => onChanged(s, ourCon),
                         onSubmit: () {
                           removeOverlay();
@@ -228,7 +228,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                         constraints: numConstraints,
                         tc: minCon,
                         curr: minNode,
-                        label: 'Minutes', // TODO
+                        label: l10n(widget.config).timMins,
                         onChanged: (String s) => onChanged(s, minCon),
                         onSubmit: () {
                           removeOverlay();
@@ -246,7 +246,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                         constraints: numConstraints,
                         tc: secCon,
                         curr: secNode,
-                        label: 'Seconds', // TODO
+                        label: l10n(widget.config).timSecs,
                         onChanged: (String s) => onChanged(s, secCon),
                         onSubmit: () async {
                           removeOverlay();
@@ -264,7 +264,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                         EzIconButton(
                           widget.config,
                           icon: const Icon(Icons.timer_outlined),
-                          tooltip: 'Start', // TODO
+                          tooltip: l10n(widget.config).gStart,
                           onPressed: () async {
                             removeOverlay();
                             await setTimer(<int>[
@@ -326,7 +326,7 @@ class _TimerWidgetState extends State<TimerWidget> {
             child: EzIconButton(
               widget.config,
               icon: const Icon(Icons.timer_outlined),
-              tooltip: 'Timer', // TODO
+              tooltip: l10n(widget.config).timTitle,
               onPressed: () => toggleMenu(menuControl),
             ),
           ),
@@ -684,7 +684,7 @@ Future<void> _openEdits(
                 constraints: initConfig.constraints,
                 tc: ourCon,
                 curr: ourNode,
-                label: 'Hours', // TODO
+                label: l10n(config).timHours,
                 onTap: () => grow(),
                 onTapOutside: shrink,
                 onSubmit: () {
@@ -699,7 +699,7 @@ Future<void> _openEdits(
                 constraints: initConfig.constraints,
                 tc: minCon,
                 curr: minNode,
-                label: 'Minutes', // TODO
+                label: l10n(config).timMins,
                 onTap: () => grow(),
                 onTapOutside: shrink,
                 onSubmit: () {
@@ -714,7 +714,7 @@ Future<void> _openEdits(
                 constraints: initConfig.constraints,
                 tc: secCon,
                 curr: secNode,
-                label: 'Seconds', // TODO
+                label: l10n(config).timSecs,
                 onTap: () => grow(),
                 onTapOutside: shrink,
                 onSubmit: () {

@@ -108,6 +108,7 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
                     child: EzIconButton(
                       widget.config,
                       icon: Icon(widget.config.isDark ? Icons.dark_mode : Icons.light_mode),
+                      tooltip: l10n(widget.config).thmToggle,
                       onPressed: () async {
                         await EzCM.setBool(isDarkThemeKey, !widget.config.isDark);
                         await widget.config.rebuildThemeMode();
@@ -153,6 +154,7 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
             child: EzIconButton(
               widget.config,
               icon: Icon(widget.config.isDark ? Icons.dark_mode : Icons.light_mode),
+              tooltip: l10n(widget.config).thmToggle,
               onPressed: () => toggleMenu(menuControl),
             ),
           ),
@@ -232,6 +234,7 @@ class AddThemeMode extends StatelessWidget {
           config,
           onPressed: onTap,
           icon: Icon(config.isDark ? Icons.dark_mode : Icons.light_mode),
+          tooltip: l10n(config).gAdd,
         )
       : GestureDetector(
           onTap: onTap,
