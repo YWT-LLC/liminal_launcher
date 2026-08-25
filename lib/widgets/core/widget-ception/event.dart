@@ -214,11 +214,11 @@ class _EventWidgetState extends State<EventWidget> {
             icon: const Icon(Icons.edit_calendar),
             tooltip: l10n(widget.config).evtCreate,
             style: alwaysOn,
-            onPressed: doNothing, // TODO: test
+            onPressed: doNothing, // TODO: fix doesn't work
           )
         : (widget._useAppIcon == true && widget._shareDest?.icon != null)
             ? Tooltip(
-                message: l10n(widget.config).evtCreate, // TODO: test
+                message: l10n(widget.config).evtCreate, // TODO: this too
                 child: Image.memory(
                   widget._shareDest!.icon!,
                   semanticLabel: widget._shareDest!.label,
