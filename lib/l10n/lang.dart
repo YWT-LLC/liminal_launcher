@@ -101,6 +101,12 @@ abstract class Lang {
     Locale('fr')
   ];
 
+  /// No description provided for @aplSort.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort: {type}'**
+  String aplSort(Object type);
+
   /// No description provided for @aplDate.
   ///
   /// In en, this message translates to:
@@ -124,6 +130,24 @@ abstract class Lang {
   /// In en, this message translates to:
   /// **'Size'**
   String get aplSize;
+
+  /// No description provided for @aplAsc.
+  ///
+  /// In en, this message translates to:
+  /// **'Order: ascending'**
+  String get aplAsc;
+
+  /// No description provided for @aplDsc.
+  ///
+  /// In en, this message translates to:
+  /// **'Order: descending'**
+  String get aplDsc;
+
+  /// No description provided for @clkTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Clock'**
+  String get clkTitle;
 
   /// No description provided for @clkBackground.
   ///
@@ -347,6 +371,12 @@ abstract class Lang {
   /// **'Long press to clear'**
   String get evtClear;
 
+  /// No description provided for @evtCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get evtCreate;
+
   /// No description provided for @evtNewEvent.
   ///
   /// In en, this message translates to:
@@ -389,6 +419,12 @@ abstract class Lang {
   /// **'Switch to tasks'**
   String get evtUseTasks;
 
+  /// No description provided for @fldAddTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to {name}'**
+  String fldAddTo(Object name);
+
   /// No description provided for @fldAppearance.
   ///
   /// In en, this message translates to:
@@ -406,6 +442,12 @@ abstract class Lang {
   /// In en, this message translates to:
   /// **'Add'**
   String get gAdd;
+
+  /// No description provided for @gAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Added'**
+  String get gAdded;
 
   /// No description provided for @gDefault.
   ///
@@ -425,11 +467,29 @@ abstract class Lang {
   /// **'Edit'**
   String get gEdit;
 
+  /// No description provided for @gEdits.
+  ///
+  /// In en, this message translates to:
+  /// **'Edits'**
+  String get gEdits;
+
   /// No description provided for @gEditDefaults.
   ///
   /// In en, this message translates to:
   /// **'Edit defaults'**
   String get gEditDefaults;
+
+  /// No description provided for @gKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Key'**
+  String get gKey;
+
+  /// No description provided for @gPreview.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get gPreview;
 
   /// No description provided for @gResize.
   ///
@@ -490,6 +550,42 @@ abstract class Lang {
   /// In en, this message translates to:
   /// **'Start'**
   String get gStart;
+
+  /// No description provided for @gBottom.
+  ///
+  /// In en, this message translates to:
+  /// **'Bottom'**
+  String get gBottom;
+
+  /// No description provided for @gLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Left'**
+  String get gLeft;
+
+  /// No description provided for @gRight.
+  ///
+  /// In en, this message translates to:
+  /// **'Right'**
+  String get gRight;
+
+  /// No description provided for @gTop.
+  ///
+  /// In en, this message translates to:
+  /// **'Top'**
+  String get gTop;
+
+  /// No description provided for @gHorizontal.
+  ///
+  /// In en, this message translates to:
+  /// **'Horizontal'**
+  String get gHorizontal;
+
+  /// No description provided for @gVertical.
+  ///
+  /// In en, this message translates to:
+  /// **'Vertical'**
+  String get gVertical;
 
   /// No description provided for @gHidden.
   ///
@@ -719,6 +815,12 @@ abstract class Lang {
   /// **'Home'**
   String get hsHome;
 
+  /// No description provided for @hsHomeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Home. Long press to edit.'**
+  String get hsHomeHint;
+
   /// No description provided for @hsWelcome.
   ///
   /// In en, this message translates to:
@@ -929,6 +1031,30 @@ abstract class Lang {
   /// **'Move'**
   String get mcMove;
 
+  /// No description provided for @mcMoveDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Move down'**
+  String get mcMoveDown;
+
+  /// No description provided for @mcMoveLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Move left'**
+  String get mcMoveLeft;
+
+  /// No description provided for @mcMoveRight.
+  ///
+  /// In en, this message translates to:
+  /// **'Move right'**
+  String get mcMoveRight;
+
+  /// No description provided for @mcMoveUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Move up'**
+  String get mcMoveUp;
+
   /// No description provided for @mcRemove.
   ///
   /// In en, this message translates to:
@@ -1127,6 +1253,36 @@ abstract class Lang {
   /// **'selector'**
   String get thmSelector;
 
+  /// No description provided for @thmToggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle theme'**
+  String get thmToggle;
+
+  /// No description provided for @timTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Timer'**
+  String get timTitle;
+
+  /// No description provided for @timHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Hours'**
+  String get timHours;
+
+  /// No description provided for @timMins.
+  ///
+  /// In en, this message translates to:
+  /// **'Minutes'**
+  String get timMins;
+
+  /// No description provided for @timSecs.
+  ///
+  /// In en, this message translates to:
+  /// **'Seconds'**
+  String get timSecs;
+
   /// No description provided for @timBadTime.
   ///
   /// In en, this message translates to:
@@ -1138,6 +1294,12 @@ abstract class Lang {
   /// In en, this message translates to:
   /// **'Quick times'**
   String get timQuick;
+
+  /// No description provided for @togTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Media playback'**
+  String get togTitle;
 
   /// No description provided for @togFF.
   ///
