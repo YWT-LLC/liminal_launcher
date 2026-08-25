@@ -1304,20 +1304,50 @@ abstract class Lang {
   /// No description provided for @togTitle.
   ///
   /// In en, this message translates to:
-  /// **'Media playback'**
+  /// **'Media controls'**
   String get togTitle;
 
   /// No description provided for @togFF.
   ///
   /// In en, this message translates to:
-  /// **'FF/Rewind'**
+  /// **'Fast forward'**
   String get togFF;
 
-  /// No description provided for @togSkip.
+  /// No description provided for @togNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get togNext;
+
+  /// No description provided for @togPlayPause.
+  ///
+  /// In en, this message translates to:
+  /// **'Play/pause'**
+  String get togPlayPause;
+
+  /// No description provided for @togPrevious.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous'**
+  String get togPrevious;
+
+  /// No description provided for @togRewind.
+  ///
+  /// In en, this message translates to:
+  /// **'Rewind'**
+  String get togRewind;
+
+  /// No description provided for @togFFTog.
+  ///
+  /// In en, this message translates to:
+  /// **'FF/Rewind'**
+  String get togFFTog;
+
+  /// No description provided for @togSkipTog.
   ///
   /// In en, this message translates to:
   /// **'Skip/Prev'**
-  String get togSkip;
+  String get togSkipTog;
 
   /// No description provided for @togSomePlayers.
   ///

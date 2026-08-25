@@ -287,9 +287,15 @@
 
 
 
-  "togTitle": "Media playback",
+  "togTitle": "Media controls",
+
+  "togFF": "Fast forward",
+  "togNext": "Next",
+  "togPlayPause": "Play/pause",
+  "togPrevious": "Previous",
+  "togRewind": "Rewind",
   
-  "togFF": "FF/Rewind",
-  "togSkip": "Skip/Prev",
+  "togFFTog": "FF/Rewind",
+  "togSkipTog": "Skip/Prev",
   "togSomePlayers": "Note:\nThese buttons only work if the active player supports them. Some music players don't have FF/Rewind, for example"  
 }

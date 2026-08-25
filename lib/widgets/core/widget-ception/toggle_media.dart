@@ -116,28 +116,57 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
 
                         // Backwards
                         if (widget._bigSkips) ...<Widget>[
-                          GestureDetector(onTap: skipPrev, child: const Icon(Icons.skip_previous)),
+                          GestureDetector(
+                            onTap: skipPrev,
+                            child: Icon(
+                              Icons.skip_previous,
+                              semanticLabel: l10n(widget.config).togPrevious,
+                            ),
+                          ),
                           widget.config.rowSpacer,
                         ],
 
                         if (widget._lilSkips) ...<Widget>[
-                          GestureDetector(onTap: rewind, child: const Icon(Icons.fast_rewind)),
+                          GestureDetector(
+                            onTap: rewind,
+                            child: Icon(
+                              Icons.fast_rewind,
+                              semanticLabel: l10n(widget.config).togRewind,
+                            ),
+                          ),
                           widget.config.rowSpacer,
                         ],
 
                         // Play/pause
-                        GestureDetector(onTap: toggleMedia, child: const Icon(Icons.headphones)),
+                        GestureDetector(
+                          onTap: toggleMedia,
+                          child: Icon(
+                            Icons.headphones,
+                            semanticLabel: l10n(widget.config).togPlayPause,
+                          ),
+                        ),
 
                         // Forwards
                         if (widget._lilSkips) ...<Widget>[
                           widget.config.rowSpacer,
                           GestureDetector(
-                              onTap: fastForward, child: const Icon(Icons.fast_forward)),
+                            onTap: fastForward,
+                            child: Icon(
+                              Icons.fast_forward,
+                              semanticLabel: l10n(widget.config).togFF,
+                            ),
+                          ),
                         ],
 
                         if (widget._bigSkips) ...<Widget>[
                           widget.config.rowSpacer,
-                          GestureDetector(onTap: skipNext, child: const Icon(Icons.skip_next)),
+                          GestureDetector(
+                            onTap: skipNext,
+                            child: Icon(
+                              Icons.skip_next,
+                              semanticLabel: l10n(widget.config).togNext,
+                            ),
+                          ),
                         ],
                         widget.config.rowMargin,
                       ],
@@ -424,7 +453,7 @@ Future<void> _openEdits(
           config,
           key: ValueKey<String>('big-$bigSkips'),
           value: bigSkips,
-          text: l10n(config).togSkip,
+          text: l10n(config).togSkipTog,
           onChanged: (bool? value) {
             if (value == null) return;
 
@@ -444,7 +473,7 @@ Future<void> _openEdits(
           config,
           key: ValueKey<String>('lil-$lilSkips'),
           value: lilSkips,
-          text: l10n(config).togFF,
+          text: l10n(config).togFFTog,
           onChanged: (bool? value) {
             if (value == null) return;
 

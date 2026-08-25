@@ -650,13 +650,28 @@ class LangDe extends Lang {
   String get timQuick => 'Quick times';
 
   @override
-  String get togTitle => 'Media playback';
+  String get togTitle => 'Media controls';
 
   @override
-  String get togFF => 'FF/Rewind';
+  String get togFF => 'Fast forward';
 
   @override
-  String get togSkip => 'Skip/Prev';
+  String get togNext => 'Next';
+
+  @override
+  String get togPlayPause => 'Play/pause';
+
+  @override
+  String get togPrevious => 'Previous';
+
+  @override
+  String get togRewind => 'Rewind';
+
+  @override
+  String get togFFTog => 'FF/Rewind';
+
+  @override
+  String get togSkipTog => 'Skip/Prev';
 
   @override
   String get togSomePlayers =>
