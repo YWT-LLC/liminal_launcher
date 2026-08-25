@@ -186,6 +186,23 @@ class _TimerWidgetState extends State<TimerWidget> {
                     widget.config,
                     scrollDirection: Axis.horizontal,
                     children: <Widget>[
+                      if (widget.config.isLefty) ...<Widget>[
+                        widget.config.rowMargin,
+                        EzIconButton(
+                          widget.config,
+                          icon: const Icon(Icons.timer_outlined),
+                          onPressed: () async {
+                            removeOverlay();
+                            await setTimer(<int>[
+                              _toInt(ourCon.text),
+                              _toInt(minCon.text),
+                              _toInt(secCon.text),
+                            ]);
+                          },
+                          onLongPress: () async => await canToggleMenu(widget.config, controller),
+                        ),
+                      ],
+
                       // Hours
                       _timeField(
                         constraints: numConstraints,
@@ -236,21 +253,23 @@ class _TimerWidgetState extends State<TimerWidget> {
                         },
                         last: true,
                       ),
-                      widget.config.rowMargin,
 
-                      EzIconButton(
-                        widget.config,
-                        icon: const Icon(Icons.timer_outlined),
-                        onPressed: () async {
-                          removeOverlay();
-                          await setTimer(<int>[
-                            _toInt(ourCon.text),
-                            _toInt(minCon.text),
-                            _toInt(secCon.text),
-                          ]);
-                        },
-                        onLongPress: () async => await canToggleMenu(widget.config, controller),
-                      ),
+                      if (!widget.config.isLefty) ...<Widget>[
+                        widget.config.rowMargin,
+                        EzIconButton(
+                          widget.config,
+                          icon: const Icon(Icons.timer_outlined),
+                          onPressed: () async {
+                            removeOverlay();
+                            await setTimer(<int>[
+                              _toInt(ourCon.text),
+                              _toInt(minCon.text),
+                              _toInt(secCon.text),
+                            ]);
+                          },
+                          onLongPress: () async => await canToggleMenu(widget.config, controller),
+                        ),
+                      ],
                     ],
                   )),
             menuChildren: _menuChildren(
@@ -505,13 +524,19 @@ class AddTimer extends StatelessWidget {
               config,
               scrollDirection: Axis.horizontal,
               children: <Widget>[
+                if (config.isLefty) ...<Widget>[
+                  config.rowMargin,
+                  EzIconButton(config, onPressed: onTap, icon: const Icon(Icons.timer)),
+                ],
                 fauxTimerField,
                 config.rowMargin,
                 fauxTimerField,
                 config.rowMargin,
                 fauxTimerField,
-                config.rowMargin,
-                EzIconButton(config, onPressed: onTap, icon: const Icon(Icons.timer)),
+                if (!config.isLefty) ...<Widget>[
+                  config.rowMargin,
+                  EzIconButton(config, onPressed: onTap, icon: const Icon(Icons.timer)),
+                ],
               ],
             ),
           );
@@ -612,7 +637,6 @@ Future<void> _openEdits(
             scrollDirection: Axis.horizontal,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              // Add (lefty)
               if (config.isLefty) ...<Widget>[
                 EzIconButton(
                   config,
@@ -672,7 +696,6 @@ Future<void> _openEdits(
                 last: true,
               ),
 
-              // Add (righty)
               if (!config.isLefty) ...<Widget>[
                 config.rowMargin,
                 EzIconButton(
