@@ -117,29 +117,33 @@ class _LimSpacerState extends State<LimSpacer> {
             forceType: EzTransitionType.none,
             child: (state == TileState.standard)
                 ? MenuAnchor(
-                    builder: (_, MenuController controller, __) => (marked.value == null)
-                        ? GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onLongPress: () async => await canToggleMenu(widget.config, controller),
-                            child: SizedBox(height: widget._height, width: widget._width),
-                          )
-                        : GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: () => setState(() => marked.value = widget.pos),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: widget.config.colors.tertiaryContainer,
-                                  width: widget.config.borderWidth,
+                    builder: (_, MenuController controller, __) => Semantics(
+                      hint: l10n(widget.config).hsSpacer,
+                      child: (marked.value == null)
+                          ? GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onLongPress: () async =>
+                                  await canToggleMenu(widget.config, controller),
+                              child: SizedBox(height: widget._height, width: widget._width),
+                            )
+                          : GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () => setState(() => marked.value = widget.pos),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: widget.config.colors.tertiaryContainer,
+                                    width: widget.config.borderWidth,
+                                  ),
+                                  borderRadius: EzButtonShape.roundRect.radius,
+                                  color:
+                                      widget.config.colors.tertiary.withValues(alpha: focusOpacity),
                                 ),
-                                borderRadius: EzButtonShape.roundRect.radius,
-                                color:
-                                    widget.config.colors.tertiary.withValues(alpha: focusOpacity),
+                                height: widget._height,
+                                width: widget._width,
                               ),
-                              height: widget._height,
-                              width: widget._width,
                             ),
-                          ),
+                    ),
                     menuChildren: _menuChildren(
                       widget.config,
                       appInfo: widget.appInfo,
@@ -164,6 +168,7 @@ class _LimSpacerState extends State<LimSpacer> {
                     child: EzIconButton(
                       widget.config,
                       icon: const Icon(Icons.space_bar),
+                      tooltip: l10n(widget.config).hsSpacer,
                       onPressed: () => toggleMenu(menuControl),
                     ),
                   ),

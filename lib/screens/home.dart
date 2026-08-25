@@ -11,6 +11,7 @@ import 'package:ywt_private/ywt_private.dart' as ywt;
 import 'dart:async';
 import 'package:open_ui/open_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
@@ -43,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
   // Define custom functions //
 
-  Future<void> ripple(EzCP config, LongPressStartDetails details) async {
+  Future<void> ripple(EzCP config, PositionedGestureDetails details) async {
     if (!context.mounted) return;
 
     final Duration animDur = homeRipple ? ezDuration(config.animDur) : Duration.zero;
@@ -864,150 +865,153 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
           return LiminalScaffold(
             config,
-            body: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onLongPressStart: (LongPressStartDetails details) async => editing
-                  ? await ripple(config, details)
-                  : await canEdit(config, () => ripple(config, details)),
-              onVerticalDragEnd: (DragEndDetails details) async {
-                if (details.primaryVelocity != null) {
-                  if (editingMarked) return;
-                  if (details.primaryVelocity! < 0) await swipeUp(config, appInfo);
-                }
-              },
-              onHorizontalDragEnd: (DragEndDetails details) {
-                if (details.primaryVelocity != null && details.primaryVelocity! != 0) {
-                  if (pages(config)) {
-                    if (details.primaryVelocity! < 0) {
-                      // Swipe right to left -> nav to right
-                      standardFlow(config)
-                          ? navPageUp(config, appInfo, numLanes)
-                          : navPageDown(config, appInfo, numLanes);
-                      return;
-                    } else {
-                      // Swipe left to right -> nav to left
-                      standardFlow(config)
-                          ? navPageDown(config, appInfo, numLanes)
-                          : navPageUp(config, appInfo, numLanes);
-                      return;
-                    }
+            body: Semantics(
+              label: 'Home. Long press to edit.', // TODO
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onLongPressStart: (LongPressStartDetails details) async => editing
+                    ? await ripple(config, details)
+                    : await canEdit(config, () => ripple(config, details)),
+                onVerticalDragEnd: (DragEndDetails details) async {
+                  if (details.primaryVelocity != null) {
+                    if (editingMarked) return;
+                    if (details.primaryVelocity! < 0) await swipeUp(config, appInfo);
                   }
-                  if (editing || editingMarked) return;
-
-                  final AppInfo? toLaunch = ((details.primaryVelocity! < 0)
-                      ? appInfo.appMap[leftSwipeID]
-                      : appInfo.appMap[rightSwipeID]);
-
-                  if (toLaunch != null) launchApp(toLaunch);
-                }
-              },
-              // App list
-              child: NotificationListener<ScrollNotification>(
-                onNotification: (ScrollNotification notification) {
-                  switch (notification.runtimeType) {
-                    case const (OverscrollNotification):
-                      if (notification.metrics.axis == Axis.vertical) {
-                        if (editingMarked) return true;
-
-                        // Vertical overscroll
-                        if ((notification as OverscrollNotification).overscroll > 0) {
-                          if (atBottom) {
-                            swipeUp(config, appInfo);
-                            return true;
-                          } else {
-                            overscrollPause = Timer(scrollDelay, () => atBottom = true);
-                            return true;
-                          }
-                        }
-                      } else {
-                        // Horizontal overscroll
-                        AppInfo? toLaunch;
-                        if (editing || editingMarked) return true;
-
-                        if ((notification as OverscrollNotification).overscroll < 0) {
-                          if (atLeft) {
-                            toLaunch = appInfo.appMap[rightSwipeID];
-                          } else {
-                            overscrollPause = Timer(scrollDelay, () => atLeft = true);
-                            return true;
-                          }
-                        }
-
-                        if (notification.overscroll > 0) {
-                          if (atRight) {
-                            toLaunch = appInfo.appMap[leftSwipeID];
-                          } else {
-                            overscrollPause = Timer(scrollDelay, () => atRight = true);
-                            return true;
-                          }
-                        }
-
-                        if (toLaunch != null) launchApp(toLaunch);
-                        return true;
-                      }
-                      break;
-
-                    case const (ScrollUpdateNotification):
-                      if (notification.metrics.axis == Axis.vertical) {
-                        // Vertical scroll
-                        if (atBottom && notification.metrics.pixels < 0) {
-                          atBottom = false;
-                        }
-                      } else {
-                        // Horizontal scroll
-                        if (atLeft && notification.metrics.pixels > 0) {
-                          atLeft = false;
-                        }
-                        if (atRight && notification.metrics.pixels < 0) {
-                          atRight = false;
-                        }
-                      }
-                      break;
-
-                    case const (ScrollEndNotification):
-                      if (notification.metrics.axis == Axis.vertical) {
-                        // Vertical end
-                        if (notification.metrics.pixels == notification.metrics.maxScrollExtent) {
-                          overscrollPause = Timer(scrollDelay, () => atBottom = true);
-                        } else {
-                          atBottom = false;
-                        }
-                      } else {
-                        // Horizontal end
-                        if (notification.metrics.pixels == notification.metrics.maxScrollExtent) {
-                          atLeft = false;
-                          overscrollPause = Timer(scrollDelay, () => atRight = true);
-                        } else {
-                          atRight = false;
-                          overscrollPause = Timer(scrollDelay, () => atLeft = true);
-                        }
-                      }
-                      break;
-                  }
-                  return false;
                 },
-                child: ValueListenableBuilder<double>(
-                  valueListenable: rippleProgress,
-                  builder: (_, double ripple, __) => Padding(
-                    padding: editing
-                        ? EdgeInsets.zero
-                        : EdgeInsets.only(top: headerSpacing * (ripple % 1.0)),
-                    child: pages(config)
-                        ? EzFauxCarousel(
-                            config,
-                            position: page,
-                            delta: delta,
-                            child: buildPage(config, appInfo, numLanes: numLanes, lane: page),
-                          )
-                        : EzScrollView(
-                            config,
-                            mainAxisSize: MainAxisSize.max,
-                            scrollDirection: Axis.horizontal,
-                            physics: const ClampingScrollPhysics(),
-                            mainAxisAlignment: horizontalAlign(config).mainAxis,
-                            crossAxisAlignment: verticalAlign(config).crossAxis,
-                            children: buildGrid(config, appInfo, numLanes),
-                          ),
+                onHorizontalDragEnd: (DragEndDetails details) {
+                  if (details.primaryVelocity != null && details.primaryVelocity! != 0) {
+                    if (pages(config)) {
+                      if (details.primaryVelocity! < 0) {
+                        // Swipe right to left -> nav to right
+                        standardFlow(config)
+                            ? navPageUp(config, appInfo, numLanes)
+                            : navPageDown(config, appInfo, numLanes);
+                        return;
+                      } else {
+                        // Swipe left to right -> nav to left
+                        standardFlow(config)
+                            ? navPageDown(config, appInfo, numLanes)
+                            : navPageUp(config, appInfo, numLanes);
+                        return;
+                      }
+                    }
+                    if (editing || editingMarked) return;
+
+                    final AppInfo? toLaunch = ((details.primaryVelocity! < 0)
+                        ? appInfo.appMap[leftSwipeID]
+                        : appInfo.appMap[rightSwipeID]);
+
+                    if (toLaunch != null) launchApp(toLaunch);
+                  }
+                },
+                // App list
+                child: NotificationListener<ScrollNotification>(
+                  onNotification: (ScrollNotification notification) {
+                    switch (notification.runtimeType) {
+                      case const (OverscrollNotification):
+                        if (notification.metrics.axis == Axis.vertical) {
+                          if (editingMarked) return true;
+
+                          // Vertical overscroll
+                          if ((notification as OverscrollNotification).overscroll > 0) {
+                            if (atBottom) {
+                              swipeUp(config, appInfo);
+                              return true;
+                            } else {
+                              overscrollPause = Timer(scrollDelay, () => atBottom = true);
+                              return true;
+                            }
+                          }
+                        } else {
+                          // Horizontal overscroll
+                          AppInfo? toLaunch;
+                          if (editing || editingMarked) return true;
+
+                          if ((notification as OverscrollNotification).overscroll < 0) {
+                            if (atLeft) {
+                              toLaunch = appInfo.appMap[rightSwipeID];
+                            } else {
+                              overscrollPause = Timer(scrollDelay, () => atLeft = true);
+                              return true;
+                            }
+                          }
+
+                          if (notification.overscroll > 0) {
+                            if (atRight) {
+                              toLaunch = appInfo.appMap[leftSwipeID];
+                            } else {
+                              overscrollPause = Timer(scrollDelay, () => atRight = true);
+                              return true;
+                            }
+                          }
+
+                          if (toLaunch != null) launchApp(toLaunch);
+                          return true;
+                        }
+                        break;
+
+                      case const (ScrollUpdateNotification):
+                        if (notification.metrics.axis == Axis.vertical) {
+                          // Vertical scroll
+                          if (atBottom && notification.metrics.pixels < 0) {
+                            atBottom = false;
+                          }
+                        } else {
+                          // Horizontal scroll
+                          if (atLeft && notification.metrics.pixels > 0) {
+                            atLeft = false;
+                          }
+                          if (atRight && notification.metrics.pixels < 0) {
+                            atRight = false;
+                          }
+                        }
+                        break;
+
+                      case const (ScrollEndNotification):
+                        if (notification.metrics.axis == Axis.vertical) {
+                          // Vertical end
+                          if (notification.metrics.pixels == notification.metrics.maxScrollExtent) {
+                            overscrollPause = Timer(scrollDelay, () => atBottom = true);
+                          } else {
+                            atBottom = false;
+                          }
+                        } else {
+                          // Horizontal end
+                          if (notification.metrics.pixels == notification.metrics.maxScrollExtent) {
+                            atLeft = false;
+                            overscrollPause = Timer(scrollDelay, () => atRight = true);
+                          } else {
+                            atRight = false;
+                            overscrollPause = Timer(scrollDelay, () => atLeft = true);
+                          }
+                        }
+                        break;
+                    }
+                    return false;
+                  },
+                  child: ValueListenableBuilder<double>(
+                    valueListenable: rippleProgress,
+                    builder: (_, double ripple, __) => Padding(
+                      padding: editing
+                          ? EdgeInsets.zero
+                          : EdgeInsets.only(top: headerSpacing * (ripple % 1.0)),
+                      child: pages(config)
+                          ? EzFauxCarousel(
+                              config,
+                              position: page,
+                              delta: delta,
+                              child: buildPage(config, appInfo, numLanes: numLanes, lane: page),
+                            )
+                          : EzScrollView(
+                              config,
+                              mainAxisSize: MainAxisSize.max,
+                              scrollDirection: Axis.horizontal,
+                              physics: const ClampingScrollPhysics(),
+                              mainAxisAlignment: horizontalAlign(config).mainAxis,
+                              crossAxisAlignment: verticalAlign(config).crossAxis,
+                              children: buildGrid(config, appInfo, numLanes),
+                            ),
+                    ),
                   ),
                 ),
               ),
