@@ -167,6 +167,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                 ? EzIconButton(
                     widget.config,
                     icon: const Icon(Icons.timer_outlined),
+                    tooltip: 'Start', // TODO
                     onPressed: () async {
                       final int ours = _toInt(ourCon.text);
                       final int mins = _toInt(minCon.text);
@@ -191,6 +192,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                         EzIconButton(
                           widget.config,
                           icon: const Icon(Icons.timer_outlined),
+                          tooltip: 'Start', // TODO
                           onPressed: () async {
                             removeOverlay();
                             await setTimer(<int>[
@@ -208,6 +210,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                         constraints: numConstraints,
                         tc: ourCon,
                         curr: ourNode,
+                        label: 'Hours', // TODO
                         onChanged: (String s) => onChanged(s, ourCon),
                         onSubmit: () {
                           removeOverlay();
@@ -225,6 +228,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                         constraints: numConstraints,
                         tc: minCon,
                         curr: minNode,
+                        label: 'Minutes', // TODO
                         onChanged: (String s) => onChanged(s, minCon),
                         onSubmit: () {
                           removeOverlay();
@@ -242,6 +246,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                         constraints: numConstraints,
                         tc: secCon,
                         curr: secNode,
+                        label: 'Seconds', // TODO
                         onChanged: (String s) => onChanged(s, secCon),
                         onSubmit: () async {
                           removeOverlay();
@@ -259,6 +264,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                         EzIconButton(
                           widget.config,
                           icon: const Icon(Icons.timer_outlined),
+                          tooltip: 'Start', // TODO
                           onPressed: () async {
                             removeOverlay();
                             await setTimer(<int>[
@@ -320,6 +326,7 @@ class _TimerWidgetState extends State<TimerWidget> {
             child: EzIconButton(
               widget.config,
               icon: const Icon(Icons.timer_outlined),
+              tooltip: 'Timer', // TODO
               onPressed: () => toggleMenu(menuControl),
             ),
           ),
@@ -410,6 +417,7 @@ Widget _timeField({
   required BoxConstraints constraints,
   required TextEditingController tc,
   required FocusNode curr,
+  required String label,
   void Function(String)? onChanged,
   void Function()? onTap,
   void Function()? onTapOutside,
@@ -422,6 +430,7 @@ Widget _timeField({
       errorConstraints: BoxConstraints.tightFor(width: constraints.maxWidth * 2),
       focusNode: curr,
       hintText: '00',
+      label: label,
       keyboardType: TextInputType.number,
       textInputAction: last ? TextInputAction.done : TextInputAction.next,
       onTap: () {
@@ -517,7 +526,12 @@ class AddTimer extends StatelessWidget {
     );
 
     return (size == WWGGSize.button)
-        ? EzIconButton(config, onPressed: onTap, icon: const Icon(Icons.timer))
+        ? EzIconButton(
+            config,
+            onPressed: onTap,
+            tooltip: l10n(config).gAdd,
+            icon: const Icon(Icons.timer),
+          )
         : GestureDetector(
             onTap: onTap,
             child: EzScrollView(
@@ -526,7 +540,12 @@ class AddTimer extends StatelessWidget {
               children: <Widget>[
                 if (config.isLefty) ...<Widget>[
                   config.rowMargin,
-                  EzIconButton(config, onPressed: onTap, icon: const Icon(Icons.timer)),
+                  EzIconButton(
+                    config,
+                    onPressed: onTap,
+                    tooltip: l10n(config).gAdd,
+                    icon: const Icon(Icons.timer),
+                  ),
                 ],
                 fauxTimerField,
                 config.rowMargin,
@@ -535,7 +554,12 @@ class AddTimer extends StatelessWidget {
                 fauxTimerField,
                 if (!config.isLefty) ...<Widget>[
                   config.rowMargin,
-                  EzIconButton(config, onPressed: onTap, icon: const Icon(Icons.timer)),
+                  EzIconButton(
+                    config,
+                    onPressed: onTap,
+                    tooltip: l10n(config).gAdd,
+                    icon: const Icon(Icons.timer),
+                  ),
                 ],
               ],
             ),
@@ -641,6 +665,7 @@ Future<void> _openEdits(
                 EzIconButton(
                   config,
                   icon: EzIcon(config, Icons.add),
+                  tooltip: l10n(config).gAdd,
                   onPressed: () {
                     quick.add(<String>[
                       _validateTime(ourCon.text),
@@ -659,6 +684,7 @@ Future<void> _openEdits(
                 constraints: initConfig.constraints,
                 tc: ourCon,
                 curr: ourNode,
+                label: 'Hours', // TODO
                 onTap: () => grow(),
                 onTapOutside: shrink,
                 onSubmit: () {
@@ -673,6 +699,7 @@ Future<void> _openEdits(
                 constraints: initConfig.constraints,
                 tc: minCon,
                 curr: minNode,
+                label: 'Minutes', // TODO
                 onTap: () => grow(),
                 onTapOutside: shrink,
                 onSubmit: () {
@@ -687,6 +714,7 @@ Future<void> _openEdits(
                 constraints: initConfig.constraints,
                 tc: secCon,
                 curr: secNode,
+                label: 'Seconds', // TODO
                 onTap: () => grow(),
                 onTapOutside: shrink,
                 onSubmit: () {
@@ -701,6 +729,7 @@ Future<void> _openEdits(
                 EzIconButton(
                   config,
                   icon: EzIcon(config, Icons.add),
+                  tooltip: l10n(config).gAdd,
                   onPressed: () {
                     quick.add(<String>[
                       _validateTime(ourCon.text),

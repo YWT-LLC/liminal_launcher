@@ -342,6 +342,7 @@ class _AppTileState extends State<AppTile> {
                 : EzIconButton(
                     widget.config,
                     icon: Icon(widget._icon),
+                    tooltip: widget._name ?? widget.app.label,
                     onPressed: () => toggleMenu(menuControl),
                   ),
           ),
@@ -745,6 +746,7 @@ Future<void> editApp(
                   config,
                   enabled: showIcon && (iconSize == null || iconSize! > minIconSize),
                   icon: const Icon(Icons.remove),
+                  tooltip: config.ezL10n.gDecrease,
                   onPressed: () {
                     iconSize = (iconSize == null) ? (appIconSize(config) - 1) : (iconSize! - 1);
                     setModal(() => iconSize = max(iconSize!, minIconSize));
@@ -770,6 +772,7 @@ Future<void> editApp(
                     : EzIconButton(
                         config,
                         icon: Icon(icon ?? Icons.settings, size: iconSize ?? appIconSize(config)),
+                        tooltip: 'Preview', // TODO
                         onPressed: showIcon
                             ? () async {
                                 final IconData? choice = await chooseIcon(config, pContext);
@@ -788,6 +791,7 @@ Future<void> editApp(
                   config,
                   enabled: showIcon && (iconSize == null || iconSize! < maxIconSize),
                   icon: const Icon(Icons.add),
+                  tooltip: config.ezL10n.gIncrease,
                   onPressed: () {
                     iconSize = (iconSize == null) ? (appIconSize(config) + 1) : (iconSize! + 1);
                     setModal(() => iconSize = min(iconSize!, maxIconSize));

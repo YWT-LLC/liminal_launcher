@@ -154,6 +154,7 @@ class AppInfoProvider extends ChangeNotifier {
                         ? EzIconButton(
                             config,
                             icon: Icon(progress > 0.667 ? Icons.check : Icons.edit),
+                            tooltip: l10n(config).gEdit,
                             style: IconButton.styleFrom(
                               backgroundColor:
                                   flipped ? config.colors.primary : config.colors.surface,
@@ -169,6 +170,7 @@ class AppInfoProvider extends ChangeNotifier {
                         : EzIconButton(
                             config,
                             icon: const Icon(Icons.check),
+                            tooltip: 'Added', // TODO
                             onPressed: _clearAdded,
                           ),
                   ],

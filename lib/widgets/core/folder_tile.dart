@@ -234,6 +234,7 @@ class _AppFolderState extends State<FolderTile> {
               child: EzIconButton(
                 widget.config,
                 icon: Icon(widget._icon),
+                tooltip: widget.name,
                 onPressed: () => toggleMenu(menuControl),
               ),
             ),
@@ -526,6 +527,7 @@ Future<void> editFolder(
                       config,
                       enabled: showIcon && (iconSize == null || iconSize! > minIconSize),
                       icon: const Icon(Icons.remove),
+                      tooltip: config.ezL10n.gDecrease,
                       onPressed: () {
                         iconSize = (iconSize == null) ? (config.iconSize - 1) : (iconSize! - 1);
                         setModal(() => iconSize = max(iconSize!, minIconSize));
@@ -536,6 +538,7 @@ Future<void> editFolder(
                       config,
                       enabled: showIcon,
                       icon: Icon(icon, size: iconSize ?? config.iconSize),
+                      tooltip: 'Preview', // TODO
                       onPressed: () async {
                         final IconData? choice = await chooseIcon(config, pContext);
                         if (choice != null) setModal(() => icon = choice);
@@ -547,6 +550,7 @@ Future<void> editFolder(
                       config,
                       enabled: showIcon && (iconSize == null || iconSize! < maxIconSize),
                       icon: const Icon(Icons.add),
+                      tooltip: config.ezL10n.gIncrease,
                       onPressed: () {
                         iconSize = (iconSize == null) ? (config.iconSize + 1) : (iconSize! + 1);
                         setModal(() => iconSize = min(iconSize!, maxIconSize));
@@ -750,6 +754,7 @@ Future<void> editFolder(
                                             EzIconButton(
                                               config,
                                               icon: const Icon(Icons.remove),
+                                              tooltip: config.ezL10n.gRemove,
                                               onPressed: () => appsNotif.value =
                                                   List<String>.from(apps)..remove(id),
                                             ),
@@ -795,7 +800,7 @@ Future<void> editFolder(
                                       onPressed: doNothing,
                                       text:
                                           "Add to '${validateName(config, renameCon.text) == null ? renameCon.text : initConfig.name}'",
-                                      textStyle: config.labelStyle,
+                                      textStyle: config.labelStyle, // TODO
                                     ),
                                   ),
                                 ),
