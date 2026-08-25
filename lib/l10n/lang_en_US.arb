@@ -1,12 +1,18 @@
 {
   "@@locale": "en_US",
 
+  "aplSort": "Sort: {type}",
   "aplDate": "Date",
   "aplName": "Name",
   "aplPublisher": "Publisher",
   "aplSize": "Size",
 
+  "aplAsc": "Order: ascending",
+  "aplDsc": "Order: descending",
 
+
+
+  "clkTitle": "Clock",
 
   "clkBackground": "Background",
   "clkBackgroundColor": "Background color",
@@ -65,6 +71,7 @@
   "evtAppIcon": "Use app icon",
   "evtCalendar": "Calendar",
   "evtClear": "Long press to clear",
+  "evtCreate": "Create",
   "evtNewEvent": "New event",
   "evtNewTask": "New task",
   "evtNoCalendar": "Can't find a default calendar app.\nWhat shall I do?\n\n'Task' is just share underneath. You'll choose a default app to share with.\nWe recommend using a task app, but don't require.\nResults may vary.",
@@ -75,16 +82,21 @@
 
 
 
+  "fldAddTo": "Add to {name}",
   "fldAppearance": "Appearance",
   "fldApps": "Apps",
 
 
 
   "gAdd": "Add",
+  "gAdded": "Added",
   "gDefault": "Default",
   "gDupe": "Duplicate",
   "gEdit": "Edit",
+  "gEdits": "Edits",
   "gEditDefaults": "Edit defaults",
+  "gKey": "Key",
+  "gPreview": "Preview",
   "gResize": "Resize",
   "gReset": "Reset",
 
@@ -98,6 +110,14 @@
   "gEnd": "End",
   "gCenter": "Center",
   "gStart": "Start",
+
+  "gBottom": "Bottom",
+  "gLeft": "Left",
+  "gRight": "Right",
+  "gTop": "Top",
+
+  "gHorizontal": "Horizontal",
+  "gVertical": "Vertical",
   
   "gHidden": "Hidden",
   "gShared": "Shared",
@@ -152,6 +172,7 @@
 
 
   "hsHome": "Home",
+  "hsHomeHint": "Home. Long press to edit.",
 
   "hsWelcome": "Welcome to Liminal Launcher",
   "hsDescription": "It's geared toward minimalism,\nbut has limitless customization.",
@@ -196,6 +217,10 @@
   "mcInfo": "Info",
   "mcReposition": "Reposition",
   "mcMove": "Move",
+  "mcMoveDown": "Move down",
+  "mcMoveLeft": "Move left",
+  "mcMoveRight": "Move right",
+  "mcMoveUp": "Move up",
   "mcRemove": "Remove",
   "mcSave": "Save",
   "mcShow": "Show",
@@ -246,14 +271,23 @@
 
 
   "thmSelector": "selector",
+  "thmToggle": "Toggle theme",
 
 
+  
+  "timTitle": "Timer",
+
+  "timHours": "Hours",
+  "timMins": "Minutes",
+  "timSecs": "Seconds",
 
   "timBadTime": "Invalid time",
   "timQuick": "Quick times",
 
 
 
+  "togTitle": "Media playback",
+  
   "togFF": "FF/Rewind",
   "togSkip": "Skip/Prev",
   "togSomePlayers": "Note:\nThese buttons only work if the active player supports them. Some music players don't have FF/Rewind, for example"  

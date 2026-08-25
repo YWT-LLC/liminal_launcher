@@ -9,6 +9,11 @@ class LangEn extends Lang {
   LangEn([String locale = 'en']) : super(locale);
 
   @override
+  String aplSort(Object type) {
+    return 'Sort: $type';
+  }
+
+  @override
   String get aplDate => 'Date';
 
   @override
@@ -19,6 +24,15 @@ class LangEn extends Lang {
 
   @override
   String get aplSize => 'Size';
+
+  @override
+  String get aplAsc => 'Order: ascending';
+
+  @override
+  String get aplDsc => 'Order: descending';
+
+  @override
+  String get clkTitle => 'Clock';
 
   @override
   String get clkBackground => 'Background';
@@ -134,6 +148,9 @@ class LangEn extends Lang {
   String get evtClear => 'Long press to clear';
 
   @override
+  String get evtCreate => 'Create';
+
+  @override
   String get evtNewEvent => 'New event';
 
   @override
@@ -157,6 +174,11 @@ class LangEn extends Lang {
   String get evtUseTasks => 'Switch to tasks';
 
   @override
+  String fldAddTo(Object name) {
+    return 'Add to $name';
+  }
+
+  @override
   String get fldAppearance => 'Appearance';
 
   @override
@@ -164,6 +186,9 @@ class LangEn extends Lang {
 
   @override
   String get gAdd => 'Add';
+
+  @override
+  String get gAdded => 'Added';
 
   @override
   String get gDefault => 'Default';
@@ -175,7 +200,16 @@ class LangEn extends Lang {
   String get gEdit => 'Edit';
 
   @override
+  String get gEdits => 'Edits';
+
+  @override
   String get gEditDefaults => 'Edit defaults';
+
+  @override
+  String get gKey => 'Key';
+
+  @override
+  String get gPreview => 'Preview';
 
   @override
   String get gResize => 'Resize';
@@ -206,6 +240,24 @@ class LangEn extends Lang {
 
   @override
   String get gStart => 'Start';
+
+  @override
+  String get gBottom => 'Bottom';
+
+  @override
+  String get gLeft => 'Left';
+
+  @override
+  String get gRight => 'Right';
+
+  @override
+  String get gTop => 'Top';
+
+  @override
+  String get gHorizontal => 'Horizontal';
+
+  @override
+  String get gVertical => 'Vertical';
 
   @override
   String get gHidden => 'Hidden';
@@ -333,6 +385,9 @@ class LangEn extends Lang {
   String get hsHome => 'Home';
 
   @override
+  String get hsHomeHint => 'Home. Long press to edit.';
+
+  @override
   String get hsWelcome => 'Welcome to Liminal Launcher';
 
   @override
@@ -441,6 +496,18 @@ class LangEn extends Lang {
 
   @override
   String get mcMove => 'Move';
+
+  @override
+  String get mcMoveDown => 'Move down';
+
+  @override
+  String get mcMoveLeft => 'Move left';
+
+  @override
+  String get mcMoveRight => 'Move right';
+
+  @override
+  String get mcMoveUp => 'Move up';
 
   @override
   String get mcRemove => 'Remove';
@@ -559,10 +626,28 @@ class LangEn extends Lang {
   String get thmSelector => 'selector';
 
   @override
+  String get thmToggle => 'Toggle theme';
+
+  @override
+  String get timTitle => 'Timer';
+
+  @override
+  String get timHours => 'Hours';
+
+  @override
+  String get timMins => 'Minutes';
+
+  @override
+  String get timSecs => 'Seconds';
+
+  @override
   String get timBadTime => 'Invalid time';
 
   @override
   String get timQuick => 'Quick times';
+
+  @override
+  String get togTitle => 'Media playback';
 
   @override
   String get togFF => 'FF/Rewind';
@@ -580,6 +665,11 @@ class LangEnUs extends LangEn {
   LangEnUs() : super('en_US');
 
   @override
+  String aplSort(Object type) {
+    return 'Sort: $type';
+  }
+
+  @override
   String get aplDate => 'Date';
 
   @override
@@ -590,6 +680,15 @@ class LangEnUs extends LangEn {
 
   @override
   String get aplSize => 'Size';
+
+  @override
+  String get aplAsc => 'Order: ascending';
+
+  @override
+  String get aplDsc => 'Order: descending';
+
+  @override
+  String get clkTitle => 'Clock';
 
   @override
   String get clkBackground => 'Background';
@@ -705,6 +804,9 @@ class LangEnUs extends LangEn {
   String get evtClear => 'Long press to clear';
 
   @override
+  String get evtCreate => 'Create';
+
+  @override
   String get evtNewEvent => 'New event';
 
   @override
@@ -728,6 +830,11 @@ class LangEnUs extends LangEn {
   String get evtUseTasks => 'Switch to tasks';
 
   @override
+  String fldAddTo(Object name) {
+    return 'Add to $name';
+  }
+
+  @override
   String get fldAppearance => 'Appearance';
 
   @override
@@ -735,6 +842,9 @@ class LangEnUs extends LangEn {
 
   @override
   String get gAdd => 'Add';
+
+  @override
+  String get gAdded => 'Added';
 
   @override
   String get gDefault => 'Default';
@@ -746,7 +856,16 @@ class LangEnUs extends LangEn {
   String get gEdit => 'Edit';
 
   @override
+  String get gEdits => 'Edits';
+
+  @override
   String get gEditDefaults => 'Edit defaults';
+
+  @override
+  String get gKey => 'Key';
+
+  @override
+  String get gPreview => 'Preview';
 
   @override
   String get gResize => 'Resize';
@@ -777,6 +896,24 @@ class LangEnUs extends LangEn {
 
   @override
   String get gStart => 'Start';
+
+  @override
+  String get gBottom => 'Bottom';
+
+  @override
+  String get gLeft => 'Left';
+
+  @override
+  String get gRight => 'Right';
+
+  @override
+  String get gTop => 'Top';
+
+  @override
+  String get gHorizontal => 'Horizontal';
+
+  @override
+  String get gVertical => 'Vertical';
 
   @override
   String get gHidden => 'Hidden';
@@ -904,6 +1041,9 @@ class LangEnUs extends LangEn {
   String get hsHome => 'Home';
 
   @override
+  String get hsHomeHint => 'Home. Long press to edit.';
+
+  @override
   String get hsWelcome => 'Welcome to Liminal Launcher';
 
   @override
@@ -1012,6 +1152,18 @@ class LangEnUs extends LangEn {
 
   @override
   String get mcMove => 'Move';
+
+  @override
+  String get mcMoveDown => 'Move down';
+
+  @override
+  String get mcMoveLeft => 'Move left';
+
+  @override
+  String get mcMoveRight => 'Move right';
+
+  @override
+  String get mcMoveUp => 'Move up';
 
   @override
   String get mcRemove => 'Remove';
@@ -1130,10 +1282,28 @@ class LangEnUs extends LangEn {
   String get thmSelector => 'selector';
 
   @override
+  String get thmToggle => 'Toggle theme';
+
+  @override
+  String get timTitle => 'Timer';
+
+  @override
+  String get timHours => 'Hours';
+
+  @override
+  String get timMins => 'Minutes';
+
+  @override
+  String get timSecs => 'Seconds';
+
+  @override
   String get timBadTime => 'Invalid time';
 
   @override
   String get timQuick => 'Quick times';
+
+  @override
+  String get togTitle => 'Media playback';
 
   @override
   String get togFF => 'FF/Rewind';
