@@ -196,39 +196,25 @@ class _AppTileState extends State<AppTile> {
                     onPressed: () => widget.onSelected(widget.app),
                     onLongPress: () async => await canToggleMenu(widget.config, controller),
                   )
-                : (wideTiles(widget.config)
-                    ? InkWell(
-                        onTap: () => widget.onSelected(widget.app),
-                        onLongPress: () async => await canToggleMenu(widget.config, controller),
-                        child: Container(
-                          width: double.infinity,
-                          alignment: widget.pos == null
-                              ? LAConfig.merge(h: widget.hAlign!, v: widget.vAlign!)
-                              : widget.pos!.subAlign,
-                          child: AppButton(
-                            widget.config,
-                            name: widget._name ?? widget.app.label,
-                            image: widget.app.icon,
-                            icon: widget._icon,
-                            iconSize: widget._iconSize,
-                            buttonType: widget._buttonType ?? listBT(widget.config),
-                            labelType: widget._labelType ?? listLabels(widget.config),
-                            onPressed: () => widget.onSelected(widget.app),
-                            onLongPress: () async => await canToggleMenu(widget.config, controller),
-                          ),
-                        ),
-                      )
-                    : AppButton(
-                        widget.config,
-                        name: widget._name ?? widget.app.label,
-                        image: widget.app.icon,
-                        icon: widget._icon,
-                        iconSize: widget._iconSize,
-                        buttonType: widget._buttonType ?? listBT(widget.config),
-                        labelType: widget._labelType ?? listLabels(widget.config),
-                        onPressed: () => widget.onSelected(widget.app),
-                        onLongPress: () async => await canToggleMenu(widget.config, controller),
-                      )),
+                : WideTile(
+                    widget.config,
+                    onTap: () => widget.onSelected(widget.app),
+                    onLongPress: () async => await canToggleMenu(widget.config, controller),
+                    alignment: widget.pos == null
+                        ? LAConfig.merge(h: widget.hAlign!, v: widget.vAlign!)
+                        : widget.pos!.subAlign,
+                    child: AppButton(
+                      widget.config,
+                      name: widget._name ?? widget.app.label,
+                      image: widget.app.icon,
+                      icon: widget._icon,
+                      iconSize: widget._iconSize,
+                      buttonType: widget._buttonType ?? listBT(widget.config),
+                      labelType: widget._labelType ?? listLabels(widget.config),
+                      onPressed: () => widget.onSelected(widget.app),
+                      onLongPress: () async => await canToggleMenu(widget.config, controller),
+                    ),
+                  ),
             menuChildren: _menuChildren(
               widget.config,
               appInfo: widget.appInfo,

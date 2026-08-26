@@ -161,35 +161,22 @@ class _AppFolderState extends State<FolderTile> {
       forceType: EzTransitionType.none,
       child: state == TileState.standard
           ? MenuAnchor(
-              builder: (_, MenuController controller, __) => wideTiles(widget.config)
-                  ? InkWell(
-                      onTap: showApps,
-                      onLongPress: () async => await canToggleMenu(widget.config, controller),
-                      child: Container(
-                        width: double.infinity,
-                        alignment: widget.pos.subAlign,
-                        child: FolderButton(
-                          widget.config,
-                          name: widget.name,
-                          icon: widget._icon,
-                          iconSize: widget._iconSize ?? widget.config.iconSize,
-                          buttonType: widget._buttonType ?? folderBT(widget.config),
-                          labelType: widget._labelType ?? folderLabels(widget.config),
-                          onPressed: showApps,
-                          onLongPress: () async => await canToggleMenu(widget.config, controller),
-                        ),
-                      ),
-                    )
-                  : FolderButton(
-                      widget.config,
-                      name: widget.name,
-                      icon: widget._icon,
-                      iconSize: widget._iconSize ?? widget.config.iconSize,
-                      buttonType: widget._buttonType ?? folderBT(widget.config),
-                      labelType: widget._labelType ?? folderLabels(widget.config),
-                      onPressed: showApps,
-                      onLongPress: () async => await canToggleMenu(widget.config, controller),
-                    ),
+              builder: (_, MenuController controller, __) => WideTile(
+                widget.config,
+                onTap: showApps,
+                onLongPress: () async => await canToggleMenu(widget.config, controller),
+                alignment: widget.pos.subAlign,
+                child: FolderButton(
+                  widget.config,
+                  name: widget.name,
+                  icon: widget._icon,
+                  iconSize: widget._iconSize ?? widget.config.iconSize,
+                  buttonType: widget._buttonType ?? folderBT(widget.config),
+                  labelType: widget._labelType ?? folderLabels(widget.config),
+                  onPressed: showApps,
+                  onLongPress: () async => await canToggleMenu(widget.config, controller),
+                ),
+              ),
               menuChildren: _menuChildren(
                 widget.config,
                 appInfo: widget.appInfo,
