@@ -430,32 +430,34 @@ class AddSearch extends StatelessWidget {
         )
       : GestureDetector(
           onTap: onTap,
-          child: EzScrollView(
-            config,
-            reverseHands: true,
-            scrollDirection: Axis.horizontal,
-            children: <Widget>[
-              EzTextField(
-                constraints: BoxConstraints(
-                  maxHeight: appIconSize(config),
-                  maxWidth:
-                      ezTextSize(l10n(config).gSearchBar, context: context, style: config.bodyStyle)
-                              .width +
-                          config.padding,
+          child: MergeSemantics(
+            child: EzScrollView(
+              config,
+              reverseHands: true,
+              scrollDirection: Axis.horizontal,
+              children: <Widget>[
+                EzTextField(
+                  constraints: BoxConstraints(
+                    maxHeight: appIconSize(config),
+                    maxWidth: ezTextSize(l10n(config).gSearchBar,
+                                context: context, style: config.bodyStyle)
+                            .width +
+                        config.padding,
+                  ),
+                  hintText: l10n(config).gSearch,
+                  onTap: onTap,
+                  readOnly: true,
+                  validator: null,
                 ),
-                hintText: l10n(config).gSearch,
-                onTap: onTap,
-                readOnly: true,
-                validator: null,
-              ),
-              config.rowMargin,
-              EzIconButton(
-                config,
-                icon: const Icon(Icons.search),
-                onPressed: onTap,
-                tooltip: l10n(config).gAdd,
-              ),
-            ],
+                config.rowMargin,
+                EzIconButton(
+                  config,
+                  icon: const Icon(Icons.search),
+                  onPressed: onTap,
+                  tooltip: l10n(config).gAdd,
+                ),
+              ],
+            ),
           ),
         );
 }

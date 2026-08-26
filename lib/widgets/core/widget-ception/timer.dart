@@ -513,16 +513,18 @@ class AddTimer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late final Widget fauxTimerField = EzTextField(
-      constraints: BoxConstraints(
-        maxHeight: appIconSize(config),
-        maxWidth:
-            ezTextSize('00', context: context, style: config.bodyStyle).width + config.padding,
+    late final Widget fauxTimerField = ExcludeSemantics(
+      child: EzTextField(
+        constraints: BoxConstraints(
+          maxHeight: appIconSize(config),
+          maxWidth:
+              ezTextSize('00', context: context, style: config.bodyStyle).width + config.padding,
+        ),
+        hintText: '00',
+        onTap: onTap,
+        readOnly: true,
+        validator: null,
       ),
-      hintText: '00',
-      onTap: onTap,
-      readOnly: true,
-      validator: null,
     );
 
     return (size == WWGGSize.button)
@@ -534,34 +536,36 @@ class AddTimer extends StatelessWidget {
           )
         : GestureDetector(
             onTap: onTap,
-            child: EzScrollView(
-              config,
-              scrollDirection: Axis.horizontal,
-              children: <Widget>[
-                if (config.isLefty) ...<Widget>[
+            child: MergeSemantics(
+              child: EzScrollView(
+                config,
+                scrollDirection: Axis.horizontal,
+                children: <Widget>[
+                  if (config.isLefty) ...<Widget>[
+                    config.rowMargin,
+                    EzIconButton(
+                      config,
+                      onPressed: onTap,
+                      tooltip: l10n(config).gAdd,
+                      icon: const Icon(Icons.timer),
+                    ),
+                  ],
+                  fauxTimerField,
                   config.rowMargin,
-                  EzIconButton(
-                    config,
-                    onPressed: onTap,
-                    tooltip: l10n(config).gAdd,
-                    icon: const Icon(Icons.timer),
-                  ),
-                ],
-                fauxTimerField,
-                config.rowMargin,
-                fauxTimerField,
-                config.rowMargin,
-                fauxTimerField,
-                if (!config.isLefty) ...<Widget>[
+                  fauxTimerField,
                   config.rowMargin,
-                  EzIconButton(
-                    config,
-                    onPressed: onTap,
-                    tooltip: l10n(config).gAdd,
-                    icon: const Icon(Icons.timer),
-                  ),
+                  fauxTimerField,
+                  if (!config.isLefty) ...<Widget>[
+                    config.rowMargin,
+                    EzIconButton(
+                      config,
+                      onPressed: onTap,
+                      tooltip: l10n(config).gAdd,
+                      icon: const Icon(Icons.timer),
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
           );
   }

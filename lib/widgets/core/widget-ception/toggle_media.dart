@@ -327,18 +327,20 @@ class AddToggleMedia extends StatelessWidget {
         onPressed: onTap,
         icon: (size == WWGGSize.button)
             ? const Icon(Icons.headphones)
-            : EzRow(
-                config,
-                reverseHands: false,
-                children: <Widget>[
-                  config.rowMargin,
-                  const Icon(Icons.skip_previous),
-                  config.rowSpacer,
-                  const Icon(Icons.headphones),
-                  config.rowSpacer,
-                  const Icon(Icons.skip_next),
-                  config.rowMargin,
-                ],
+            : MergeSemantics(
+                child: EzRow(
+                  config,
+                  reverseHands: false,
+                  children: <Widget>[
+                    config.rowMargin,
+                    const Icon(Icons.skip_previous),
+                    config.rowSpacer,
+                    const Icon(Icons.headphones),
+                    config.rowSpacer,
+                    const Icon(Icons.skip_next),
+                    config.rowMargin,
+                  ],
+                ),
               ),
         tooltip: l10n(config).gAdd,
       );
