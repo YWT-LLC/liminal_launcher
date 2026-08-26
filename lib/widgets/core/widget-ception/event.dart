@@ -600,6 +600,7 @@ Future<void> _openEdits(
           textAlign: TextAlign.center,
           style: config.bodyStyle,
         ),
+        config.spacer,
 
         AppButton(
           config,
