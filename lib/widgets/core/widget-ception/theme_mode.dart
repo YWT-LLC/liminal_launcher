@@ -94,7 +94,7 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
 
     return WideTile(
       widget.config,
-      pos: widget.pos,
+      alignment: widget.pos.subAlign,
       onLongPress: () async => await canToggleMenu(widget.config, menuControl),
       child: EzAnimSwitch(
         widget.config,
