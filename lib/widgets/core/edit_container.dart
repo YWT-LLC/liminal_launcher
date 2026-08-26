@@ -4,6 +4,7 @@
  */
 
 import '../../utils/export.dart';
+import '../export.dart';
 
 import 'package:open_ui/open_ui.dart';
 import 'package:flutter/material.dart';
@@ -50,39 +51,37 @@ class _EditContainerState extends State<EditContainer> with SingleTickerProvider
 
   // Return the build //
 
-  Widget core() => EzRow(
-        widget.config,
-        children: <Widget>[
-          EzIcon(widget.config, Icons.drag_handle, color: widget.config.colors.outline),
-          widget.config.rowMargin,
-          MenuAnchor(
-            controller: widget.menuControl,
-            builder: (_, __, ___) => AnimatedBuilder(
-              animation: _animation,
-              builder: (_, __) => Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: widget.config.colors.secondary.withValues(alpha: _animation.value),
-                    width: widget.config.borderWidth,
-                  ),
-                  borderRadius: widget.config.buttonShape.radius,
-                ),
-                child: widget.child,
-              ),
-            ),
-            menuChildren: widget.menuChildren,
-          ),
-          widget.config.rowMargin,
-          EzIcon(widget.config, Icons.drag_handle, color: widget.config.colors.outline),
-        ],
-      );
-
   @override
-  Widget build(_) => wideTiles(widget.config)
-      ? InkWell(
-          child: Container(width: double.infinity, alignment: widget.subAlign, child: core()),
-        )
-      : InkWell(child: core());
+  Widget build(_) => WideTile(
+        widget.config,
+        alignment: widget.subAlign,
+        child: EzRow(
+          widget.config,
+          children: <Widget>[
+            EzIcon(widget.config, Icons.drag_handle, color: widget.config.colors.outline),
+            widget.config.rowMargin,
+            MenuAnchor(
+              controller: widget.menuControl,
+              builder: (_, __, ___) => AnimatedBuilder(
+                animation: _animation,
+                builder: (_, __) => Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: widget.config.colors.secondary.withValues(alpha: _animation.value),
+                      width: widget.config.borderWidth,
+                    ),
+                    borderRadius: widget.config.buttonShape.radius,
+                  ),
+                  child: widget.child,
+                ),
+              ),
+              menuChildren: widget.menuChildren,
+            ),
+            widget.config.rowMargin,
+            EzIcon(widget.config, Icons.drag_handle, color: widget.config.colors.outline),
+          ],
+        ),
+      );
 
   @override
   void dispose() {
