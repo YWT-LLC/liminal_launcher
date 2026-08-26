@@ -192,7 +192,6 @@ final Set<String> neverResetKeys = <String>{...limBTSKeys.keys, ...limListKeys.k
 /// [ywtMobileConfig] with Liminal additions
 final Map<String, Object> liminalDefault = <String, Object>{
   ...ywtMobileConfig,
-  // TODO: quintuple check some of the background shapes now that you have the system down
 
   // BTS //
   // ID lists
