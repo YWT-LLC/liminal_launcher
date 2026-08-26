@@ -1,7 +1,301 @@
 {
   "@@locale": "de",
 
+  "aplSort": "Sortieren: {type}",
+  "aplDate": "Datum",
+  "aplName": "Name",
+  "aplPublisher": "Herausgeber",
+  "aplSize": "Größe",
+
+  "aplAsc": "Reihenfolge: aufsteigend",
+  "aplDsc": "Reihenfolge: absteigend",
 
 
-  "hsCaw": "Caw!"
+
+  "clkTitle": "Uhr",
+
+  "clkBackground": "Hintergrund",
+  "clkBackgroundColor": "Hintergrundfarbe",
+  "clkBackgroundShape": "Hintergrundform",
+
+  "clkDate": "Datum",
+  "clkDateColor": "Datumsfarbe",
+  "clkDateStyle": "Datumsstil",
+  "clkDateType": "Datumstyp",
+
+  "clkCompact": "Kompakt",
+  "clkLong": "Lang",
+  "clkMedium": "Mittel",
+  "clkShort": "Kurz",
+
+  "clkTime": "Zeit",
+  "clkTimeBool": "Zeit anzeigen",
+  "clkTimeColor": "Zeitfarbe",
+  "clkTimeStyle": "Zeitstil",
+
+
+
+  "dbsTileType": "{type}-Kachel",
+  "dbsChangeApp": "Lange drücken, um die App zu ändern.",
+
+  "dbsApp": "Liminal App",
+  "dbsFolder": "Liminal Ordner",
+
+  "dbsLabelType": "Label-Typ",
+
+  "dbsInitials": "Initialen",
+  "dbsFull": "Vollständig",
+  "dbsWingding": "Wingding",
+  
+  "dbsElevatedButton": "Hervorgehobener Button",
+  "dbsShowIcon": "Symbol anzeigen",
+
+  "dbsElevatedStyle": "Hervorgehobener Stil",
+
+
+
+  "dpsPageSettings": "Seiteneinstellungen",
+
+  "dpsWallpaper": "Hintergrundbild",
+  "dpsUseOS": "Vom System übernehmen",
+
+  "dpsAlign": "Ausrichten",
+  "dpsListAlign": "Listenausrichtung",
+  "dpsAlignHint": "Liminal Launcher-Symbol für Ausrichtungsvorschau verwendet",
+  
+  "dpsHideStatus": "Statusleiste ausblenden",
+  "dpsPages": "Startbildschirm-Seiten",
+
+
+
+  "evtAppIcon": "App-Symbol verwenden",
+  "evtCalendar": "Kalender",
+  "evtClear": "Lange drücken zum Löschen",
+  "evtCreate": "Erstellen",
+  "evtNewEvent": "Neues Ereignis",
+  "evtNewTask": "Neue Aufgabe",
+  "evtNoCalendar": "Es wurde keine Standard-Kalender-App gefunden.\nWas soll ich tun?\n\n'Aufgabe' ist hier nur eine Teilen-Funktion. Du wählst eine Standard-App zum Teilen aus.\nWir empfehlen eine Aufgaben-App, aber sie ist nicht zwingend erforderlich.\nErgebnisse können variieren.",
+  "evtShare": "'Aufgabe' ist hier nur eine Teilen-Funktion.\nWähle unten eine Ziel-App aus.\n\nWir empfehlen eine Aufgaben-App, aber sie ist nicht zwingend erforderlich. Ergebnisse können variieren.",
+  "evtShareDest": "Teilen-Ziel wird ausgewählt",
+  "evtTask": "Aufgabe",
+  "evtUseTasks": "Zu Aufgaben wechseln",
+
+
+
+  "fldAddTo": "Zu {name} hinzufügen",
+  "fldAppearance": "Aussehen",
+  "fldApps": "Apps",
+
+
+
+  "gAdd": "Hinzufügen",
+  "gAdded": "Hinzugefügt",
+  "gClear": "Löschen",
+  "gDefault": "Standard",
+  "gDupe": "Duplizieren",
+  "gEdit": "Bearbeiten",
+  "gEdits": "Änderungen",
+  "gEditDefaults": "Standardwerte bearbeiten",
+  "gKey": "Schlüssel",
+  "gPreview": "Vorschau",
+  "gResize": "Größe ändern",
+  "gReset": "Zurücksetzen",
+
+  "gButton": "Button",
+  "gTile": "Kachel",
+  "gWideTiles": "Breite Kacheln",
+
+  "gSearch": "Suchen",
+  "gSearchBar": "Suchleiste",
+
+  "gEnd": "Ende",
+  "gCenter": "Mitte",
+  "gStart": "Start",
+
+  "gBottom": "Unten",
+  "gLeft": "Links",
+  "gRight": "Rechts",
+  "gTop": "Oben",
+
+  "gHorizontal": "Horizontal",
+  "gVertical": "Vertikal",
+  
+  "gHidden": "Versteckt",
+  "gShared": "Geteilt",
+  "gShown": "Angezeigt",
+
+  "gOutlined": "Umrandet",
+  "gSolid": "Ausgefüllt",
+
+  "gFailed": "Fehlgeschlagen",
+  "gInvalid": "Ungültig",
+  "gNoEmpty": "Darf nicht leer sein",
+  "gNothing": "Nichts",
+
+  "gRemoving": "Wird entfernt",
+  "gSelfDestruct": "Selbstzerstörung",
+
+  "gMachineTranslated": "Alles ist maschinell übersetzt. Wenn du einen Fehler siehst, reiche bitte eine Korrektur ein!\n",
+  "gTranslations": "Übersetzungs-Link.",
+  "gFix": "Korrigieren...",
+  "gLauncherEntries": "Launcher-Einträge",
+  "gSettingsEntries": "Einstellungs-Einträge",
+
+
+
+  "gsAppList": "App-Liste",
+
+  "gsLinkedList": "Verknüpfte Startbildschirm-Listen",
+  "gsThemedHome": "Die Startbildschirm-Liste kann auch themenbezogen sein!",
+  "gsNoBothHome": "Hinweis: Die Startseiten aktualisieren nicht beide Systeme gleichzeitig (",
+  "gsIndependent": ").\nDie Listen sind völlig unabhängig voneinander.",
+  "gsRelinked": "Wenn sie (wieder) verknüpft werden, wirst du gefragt, welche Version du behalten möchtest.",
+  "gsKeepWhich": "Welches Layout behalten?",
+
+  "gsAutoSearch": "Automatische Suche in der App-Liste",
+
+  "gsHomeRipple": "Startbildschirm-Wellen-Animation",
+  "gsListRipple": "Listen-Wellen-Animation",
+
+  "gsQuickLaunch": "Schnellstart",
+  "gsQLDescription": "Auf dem Startbildschirm nach links/rechts wischen (außer beim Bearbeiten), um die ausgewählte App zu öffnen.\nLange drücken, um deine Auswahl zu löschen.",
+  "gsSwipe": "Nach {direction} wischen",
+  "gsSwipeDesc": "Wähle eine Schnellzugriffs-App, die geöffnet wird, wenn du auf dem Startbildschirm nach {direction} wischst.",
+  "gsSwipeHint": "Wähle die App, die sich beim Wischen nach {direction} öffnet",
+  "gsSwipeLabel": "Auswahl für das Wischen nach {direction}",
+
+  "gsSecurity": "Sicherheit",
+  "gsAuthToEdit": "Authentifizieren, um Listen/Einstellungen zu bearbeiten",
+  "gsAuthForHidden": "Authentifizieren, um versteckte Apps zu sehen",
+  "gsAuthTimeout": "Authentifizierungs-Timeout (Minuten)",
+  "gsPositiveOnly": "Nur positive ganze Zahlen",
+
+
+
+  "hsHome": "Start",
+  "hsHomeHint": "Start. Lange drücken zum Bearbeiten.",
+
+  "hsWelcome": "Willkommen beim Liminal Launcher",
+  "hsDescription": "Er ist auf Minimalismus ausgerichtet,\nbietet aber grenzenlose Anpassungsmöglichkeiten.",
+  "hsUserSettings": "Als allgemeine Regel gilt: Das Aussehen von Liminal kann je nach Theme-Modus völlig unterschiedlich sein!\n\nIn den entsprechenden Einstellungen siehst du ein umschaltbares Symbol, das anzeigt, ob du gerade das dunkle ",
+  "hsLight": ", das helle ",
+  "hsBoth": ", oder beide ",
+  "hsThemes": " Themes bearbeitest.",
+  "hsGetStarted": "Halte den Startbildschirm lange gedrückt, um loszulegen.\nVielen Dank und viel Spaß!",
+
+  "hsOneMore": "Noch eine Sache...",
+  "hsFree": "Diese Version stammt nicht aus dem Play Store, daher sollte sie kostenlos gewesen sein.\nSei versichert, die kostenlose Version von Liminal wird immer mit der Google Play-Version identisch sein.\n\nWenn du die Entwicklung von Liminal oder weiteren coolen Programmen unterstützen möchtest, ziehe bitte in Erwägung, etwas ",
+  "hsContribute": "beizutragen",
+  "hsContributeHint": "Öffnet einen Link zu Unterstützungsmöglichkeiten",
+  "hsPopUp": ".\n\nDies ist das einzige Pop-up, das kein Tutorial ist, und es wird in dieser Installation nur einmal angezeigt.",
+  "hsOkay": "Okay",
+
+  "hsApp": "App",
+  "hsFolder": "Ordner",
+  "hsLane": "Spur",
+  "hsSpacer": "Abstandshalter",
+  "hsWidget": "Widget",
+
+  "hsScreenLanes": " Spuren auf dem Bildschirm.",
+  "hsWithCurr": "Mit deiner aktuellen...\n\nSymbolgröße (",
+  "hsPadding": "),\nInnenabstand (",
+  "hsSpacing": "),\n& Außenabstand (",
+  "hsCanFit": "...Werten passen bis zu ",
+  "hsWithMin": " Mit den Minimalwerten passen bis zu ",
+  "hsLanes": " Spuren.",
+
+  "hsEditAuth": "Authentifizieren, um den Launcher zu bearbeiten",
+  "hsHiddenAuth": "Authentifizieren, um versteckte Apps zu sehen",
+
+
+
+  "mcIconButton": "Größe der Symbol-Schaltfläche",
+
+  "mcBanish": "Verbannen",
+  "mcDelete": "Löschen",
+  "mcDone": "Fertig",
+  "mcHide": "Ausblenden",
+  "mcInfo": "Info",
+  "mcReposition": "Neu positionieren",
+  "mcMove": "Verschieben",
+  "mcMoveDown": "Nach unten verschieben",
+  "mcMoveLeft": "Nach links verschieben",
+  "mcMoveRight": "Nach rechts verschieben",
+  "mcMoveUp": "Nach oben verschieben",
+  "mcRemove": "Entfernen",
+  "mcSave": "Speichern",
+  "mcShow": "Anzeigen",
+  "mcUninstall": "Deinstallieren",
+
+
+
+  "mltLaneConfig": "Multi-Spur-Konfiguration",
+  "mltPagesEnabled": "Wenn Seiten aktiviert sind, verhalten sich die Spuren wie Seiten bei einem herkömmlichen Launcher.\n",
+  "mltPagesDisabled": "Wenn Seiten deaktiviert sind, teilen sich alle Spuren eine horizontale Scrollfunktion.\n",
+  "mltWideEnabled": "Wenn breite Kacheln aktiviert sind...\n",
+  "mltWideWidth": "nimmt jede Spur (mit einem Element) die Breite eines Bildschirms ein.\n",
+  "mltAnywhere": "können Apps und Ordner überall in ihrem horizontalen Bereich aktiviert werden.\n",
+  "mltWideDisabled": "Wenn breite Kacheln deaktiviert sind...\n",
+  "mltAutoWidth": "werden die Spuren anhand ihres breitesten Elements & deiner Abstandseinstellungen dimensioniert.\n",
+  "mltOnlyButton": "können Apps und Ordner nur über ihre(n) Button(s) aktiviert werden.\n",
+
+
+
+  "pHiddenReminder": "Wische beim Bearbeiten nach oben, um die Liste der versteckten Apps zu öffnen.",
+
+  "pReminder": "Erinnerung",
+
+  "pBanishApp": "{app} verbannen?",
+  "pRemoveLane": "{lane} entfernen?",
+
+  "pWantTo": "Möchtest du...",
+  "pHideDarkToo": "Auch für den dunklen Modus ausblenden?",
+  "pHideLightToo": "Auch für den hellen Modus ausblenden?",
+  "pShowDarkToo": "Auch für den dunklen Modus anzeigen?",
+  "pShowLightToo": "Auch für den hellen Modus anzeigen?",
+  
+  "pWhatBanish": "Wenn du eine App verbannst, bleibt sie weiterhin installiert, wird aber in Liminal überhaupt nicht mehr angezeigt.\nVerbannte Apps können nur noch über die Systemeinstellungen oder über einen App-Link geöffnet werden.\n\nDas Verbannen ist nützlich für Dienstprogramm-Apps, die auch Zeit verschwenden. Zum Beispiel könntest du deinen Webbrowser verbannen.\nSo kannst du Online-Speisekarten nutzen, wenn du ausgehst, und das Doom-Scrolling reduzieren, wenn du zu Hause bleibst.\n\n{undo}\n\nErinnerung: Das Verbannen dient nur der Benutzererfahrung, nicht der Sicherheit.\nBeispiel: Wenn eine App dauerhaften Standortzugriff hat, ändert das Verbannen nichts daran.",
+  "pUnBanish": "Der einfachste Weg, {app} wiederherzustellen/zu entbannen, besteht darin, sie über die Systemeinstellungen zu deinstallieren und dann neu zu installieren.",
+
+
+
+  "srcCustom": "Benutzerdefiniert",
+  "srcName": "Name ",
+  "srcBase": "Basis-Seite ",
+  "srcPath": "Pfad ",
+  "srcParameter": "Parameter ",
+
+  "srcNonEmpty": "Ein nicht-leerer Name ist erforderlich.",
+  "srcPlayResponsibly": "Liminal führt nur eine minimale Überprüfung dieser benutzerdefinierten Eingaben durch.\nNutzung auf eigene Gefahr.",
+  "srcSameName": "Ein benutzerdefinierter Eintrag mit diesem Namen existiert bereits.\nBitte ändere den Namen und versuche es erneut.",
+
+
+
+  "thmSelector": "Auswahl",
+  "thmToggle": "Theme umschalten",
+
+
+  
+  "timTitle": "Timer",
+
+  "timHours": "Stunden",
+  "timMins": "Minuten",
+  "timSecs": "Sekunden",
+
+  "timBadTime": "Ungültige Zeit",
+  "timQuick": "Schnelle Zeiten",
+
+
+
+  "togTitle": "Mediensteuerung",
+
+  "togFF": "Schneller Vorlauf",
+  "togNext": "Weiter",
+  "togPlayPause": "Wiedergabe/Pause",
+  "togPrevious": "Zurück",
+  "togRewind": "Zurückspulen",
+  
+  "togFFTog": "Vor-/Zurückspulen",
+  "togSkipTog": "Überspringen/Zurück",
+  "togSomePlayers": "Hinweis:\nDiese Tasten funktionieren nur, wenn der aktive Player sie unterstützt. Einige Musik-Player verfügen beispielsweise nicht über Vor-/Zurückspulen."  
 }

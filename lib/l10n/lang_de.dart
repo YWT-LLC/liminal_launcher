@@ -10,426 +10,432 @@ class LangDe extends Lang {
 
   @override
   String aplSort(Object type) {
-    return 'Sort: $type';
+    return 'Sortieren: $type';
   }
 
   @override
-  String get aplDate => 'Date';
+  String get aplDate => 'Datum';
 
   @override
   String get aplName => 'Name';
 
   @override
-  String get aplPublisher => 'Publisher';
+  String get aplPublisher => 'Herausgeber';
 
   @override
-  String get aplSize => 'Size';
+  String get aplSize => 'Größe';
 
   @override
-  String get aplAsc => 'Order: ascending';
+  String get aplAsc => 'Reihenfolge: aufsteigend';
 
   @override
-  String get aplDsc => 'Order: descending';
+  String get aplDsc => 'Reihenfolge: absteigend';
 
   @override
-  String get clkTitle => 'Clock';
+  String get clkTitle => 'Uhr';
 
   @override
-  String get clkBackground => 'Background';
+  String get clkBackground => 'Hintergrund';
 
   @override
-  String get clkBackgroundColor => 'Background color';
+  String get clkBackgroundColor => 'Hintergrundfarbe';
 
   @override
-  String get clkBackgroundShape => 'Background shape';
+  String get clkBackgroundShape => 'Hintergrundform';
 
   @override
-  String get clkDate => 'Date';
+  String get clkDate => 'Datum';
 
   @override
-  String get clkDateColor => 'Date color';
+  String get clkDateColor => 'Datumsfarbe';
 
   @override
-  String get clkDateStyle => 'Date style';
+  String get clkDateStyle => 'Datumsstil';
 
   @override
-  String get clkDateType => 'Date type';
+  String get clkDateType => 'Datumstyp';
 
   @override
-  String get clkCompact => 'Compact';
+  String get clkCompact => 'Kompakt';
 
   @override
-  String get clkLong => 'Long';
+  String get clkLong => 'Lang';
 
   @override
-  String get clkMedium => 'Medium';
+  String get clkMedium => 'Mittel';
 
   @override
-  String get clkShort => 'Short';
+  String get clkShort => 'Kurz';
 
   @override
-  String get clkTime => 'Time';
+  String get clkTime => 'Zeit';
 
   @override
-  String get clkTimeBool => 'Show time';
+  String get clkTimeBool => 'Zeit anzeigen';
 
   @override
-  String get clkTimeColor => 'Time color';
+  String get clkTimeColor => 'Zeitfarbe';
 
   @override
-  String get clkTimeStyle => 'Time style';
+  String get clkTimeStyle => 'Zeitstil';
 
   @override
   String dbsTileType(Object type) {
-    return '$type tile';
+    return '$type-Kachel';
   }
 
   @override
-  String get dbsChangeApp => 'Long press to change the app.';
+  String get dbsChangeApp => 'Lange drücken, um die App zu ändern.';
 
   @override
   String get dbsApp => 'Liminal App';
 
   @override
-  String get dbsFolder => 'Liminal Folder';
+  String get dbsFolder => 'Liminal Ordner';
 
   @override
-  String get dbsLabelType => 'Label type';
+  String get dbsLabelType => 'Label-Typ';
 
   @override
-  String get dbsInitials => 'Initials';
+  String get dbsInitials => 'Initialen';
 
   @override
-  String get dbsFull => 'Full';
+  String get dbsFull => 'Vollständig';
 
   @override
   String get dbsWingding => 'Wingding';
 
   @override
-  String get dbsElevatedButton => 'Elevated button';
+  String get dbsElevatedButton => 'Hervorgehobener Button';
 
   @override
-  String get dbsShowIcon => 'Show icon';
+  String get dbsShowIcon => 'Symbol anzeigen';
 
   @override
-  String get dbsElevatedStyle => 'Elevated style';
+  String get dbsElevatedStyle => 'Hervorgehobener Stil';
 
   @override
-  String get dpsPageSettings => 'Page settings';
+  String get dpsPageSettings => 'Seiteneinstellungen';
 
   @override
-  String get dpsWallpaper => 'Wallpaper';
+  String get dpsWallpaper => 'Hintergrundbild';
 
   @override
-  String get dpsUseOS => 'Use OS';
+  String get dpsUseOS => 'Vom System übernehmen';
 
   @override
-  String get dpsAlign => 'Align';
+  String get dpsAlign => 'Ausrichten';
 
   @override
-  String get dpsListAlign => 'List alignment';
+  String get dpsListAlign => 'Listenausrichtung';
 
   @override
-  String get dpsAlignHint => 'Liminal Launcher icon used for alignment preview';
+  String get dpsAlignHint =>
+      'Liminal Launcher-Symbol für Ausrichtungsvorschau verwendet';
 
   @override
-  String get dpsHideStatus => 'Hide status bar';
+  String get dpsHideStatus => 'Statusleiste ausblenden';
 
   @override
-  String get dpsPages => 'Home screen pages';
+  String get dpsPages => 'Startbildschirm-Seiten';
 
   @override
-  String get evtAppIcon => 'Use app icon';
+  String get evtAppIcon => 'App-Symbol verwenden';
 
   @override
-  String get evtCalendar => 'Calendar';
+  String get evtCalendar => 'Kalender';
 
   @override
-  String get evtClear => 'Long press to clear';
+  String get evtClear => 'Lange drücken zum Löschen';
 
   @override
-  String get evtCreate => 'Create';
+  String get evtCreate => 'Erstellen';
 
   @override
-  String get evtNewEvent => 'New event';
+  String get evtNewEvent => 'Neues Ereignis';
 
   @override
-  String get evtNewTask => 'New task';
+  String get evtNewTask => 'Neue Aufgabe';
 
   @override
   String get evtNoCalendar =>
-      'Can\'t find a default calendar app.\nWhat shall I do?\n\n\'Task\' is just share underneath. You\'ll choose a default app to share with.\nWe recommend using a task app, but don\'t require.\nResults may vary.';
+      'Es wurde keine Standard-Kalender-App gefunden.\nWas soll ich tun?\n\n\'Aufgabe\' ist hier nur eine Teilen-Funktion. Du wählst eine Standard-App zum Teilen aus.\nWir empfehlen eine Aufgaben-App, aber sie ist nicht zwingend erforderlich.\nErgebnisse können variieren.';
 
   @override
   String get evtShare =>
-      '\'Task\' is just share underneath.\nChoose a destination app below.\n\nWe recommend using a task app, but it\'s not required. Results may vary.';
+      '\'Aufgabe\' ist hier nur eine Teilen-Funktion.\nWähle unten eine Ziel-App aus.\n\nWir empfehlen eine Aufgaben-App, aber sie ist nicht zwingend erforderlich. Ergebnisse können variieren.';
 
   @override
-  String get evtShareDest => 'Selecting share destination';
+  String get evtShareDest => 'Teilen-Ziel wird ausgewählt';
 
   @override
-  String get evtTask => 'Task';
+  String get evtTask => 'Aufgabe';
 
   @override
-  String get evtUseTasks => 'Switch to tasks';
+  String get evtUseTasks => 'Zu Aufgaben wechseln';
 
   @override
   String fldAddTo(Object name) {
-    return 'Add to $name';
+    return 'Zu $name hinzufügen';
   }
 
   @override
-  String get fldAppearance => 'Appearance';
+  String get fldAppearance => 'Aussehen';
 
   @override
   String get fldApps => 'Apps';
 
   @override
-  String get gAdd => 'Add';
+  String get gAdd => 'Hinzufügen';
 
   @override
-  String get gAdded => 'Added';
+  String get gAdded => 'Hinzugefügt';
 
   @override
-  String get gClear => 'Clear';
+  String get gClear => 'Löschen';
 
   @override
-  String get gDefault => 'Default';
+  String get gDefault => 'Standard';
 
   @override
-  String get gDupe => 'Duplicate';
+  String get gDupe => 'Duplizieren';
 
   @override
-  String get gEdit => 'Edit';
+  String get gEdit => 'Bearbeiten';
 
   @override
-  String get gEdits => 'Edits';
+  String get gEdits => 'Änderungen';
 
   @override
-  String get gEditDefaults => 'Edit defaults';
+  String get gEditDefaults => 'Standardwerte bearbeiten';
 
   @override
-  String get gKey => 'Key';
+  String get gKey => 'Schlüssel';
 
   @override
-  String get gPreview => 'Preview';
+  String get gPreview => 'Vorschau';
 
   @override
-  String get gResize => 'Resize';
+  String get gResize => 'Größe ändern';
 
   @override
-  String get gReset => 'Reset';
+  String get gReset => 'Zurücksetzen';
 
   @override
   String get gButton => 'Button';
 
   @override
-  String get gTile => 'Tile';
+  String get gTile => 'Kachel';
 
   @override
-  String get gWideTiles => 'Wide tiles';
+  String get gWideTiles => 'Breite Kacheln';
 
   @override
-  String get gSearch => 'Search';
+  String get gSearch => 'Suchen';
 
   @override
-  String get gSearchBar => 'Search bar';
+  String get gSearchBar => 'Suchleiste';
 
   @override
-  String get gEnd => 'End';
+  String get gEnd => 'Ende';
 
   @override
-  String get gCenter => 'Center';
+  String get gCenter => 'Mitte';
 
   @override
   String get gStart => 'Start';
 
   @override
-  String get gBottom => 'Bottom';
+  String get gBottom => 'Unten';
 
   @override
-  String get gLeft => 'Left';
+  String get gLeft => 'Links';
 
   @override
-  String get gRight => 'Right';
+  String get gRight => 'Rechts';
 
   @override
-  String get gTop => 'Top';
+  String get gTop => 'Oben';
 
   @override
   String get gHorizontal => 'Horizontal';
 
   @override
-  String get gVertical => 'Vertical';
+  String get gVertical => 'Vertikal';
 
   @override
-  String get gHidden => 'Hidden';
+  String get gHidden => 'Versteckt';
 
   @override
-  String get gShared => 'Shared';
+  String get gShared => 'Geteilt';
 
   @override
-  String get gShown => 'Shown';
+  String get gShown => 'Angezeigt';
 
   @override
-  String get gOutlined => 'Outlined';
+  String get gOutlined => 'Umrandet';
 
   @override
-  String get gSolid => 'Solid';
+  String get gSolid => 'Ausgefüllt';
 
   @override
-  String get gFailed => 'Failed';
+  String get gFailed => 'Fehlgeschlagen';
 
   @override
-  String get gInvalid => 'Invalid';
+  String get gInvalid => 'Ungültig';
 
   @override
-  String get gNoEmpty => 'Cannot be empty';
+  String get gNoEmpty => 'Darf nicht leer sein';
 
   @override
-  String get gNothing => 'Nothing';
+  String get gNothing => 'Nichts';
 
   @override
-  String get gRemoving => 'Removing';
+  String get gRemoving => 'Wird entfernt';
 
   @override
-  String get gSelfDestruct => 'Self-destruct';
+  String get gSelfDestruct => 'Selbstzerstörung';
 
   @override
   String get gMachineTranslated =>
-      'Everything is machine translated. If you see something wrong, please submit a fix!\n';
+      'Alles ist maschinell übersetzt. Wenn du einen Fehler siehst, reiche bitte eine Korrektur ein!\n';
 
   @override
-  String get gTranslations => 'Translations link.';
+  String get gTranslations => 'Übersetzungs-Link.';
 
   @override
-  String get gFix => 'Fix...';
+  String get gFix => 'Korrigieren...';
 
   @override
-  String get gLauncherEntries => 'Launcher entries';
+  String get gLauncherEntries => 'Launcher-Einträge';
 
   @override
-  String get gSettingsEntries => 'Settings entries';
+  String get gSettingsEntries => 'Einstellungs-Einträge';
 
   @override
-  String get gsAppList => 'App list';
+  String get gsAppList => 'App-Liste';
 
   @override
-  String get gsLinkedList => 'Linked home lists';
+  String get gsLinkedList => 'Verknüpfte Startbildschirm-Listen';
 
   @override
-  String get gsThemedHome => 'The home list can be theme based too!';
+  String get gsThemedHome =>
+      'Die Startbildschirm-Liste kann auch themenbezogen sein!';
 
   @override
-  String get gsNoBothHome => 'Note: the home ages have no update both system (';
+  String get gsNoBothHome =>
+      'Hinweis: Die Startseiten aktualisieren nicht beide Systeme gleichzeitig (';
 
   @override
-  String get gsIndependent => ').\nThe lists will be fully independent.';
+  String get gsIndependent =>
+      ').\nDie Listen sind völlig unabhängig voneinander.';
 
   @override
   String get gsRelinked =>
-      'If/when re-linked, you will be asked which version to keep.';
+      'Wenn sie (wieder) verknüpft werden, wirst du gefragt, welche Version du behalten möchtest.';
 
   @override
-  String get gsKeepWhich => 'Keep which layout?';
+  String get gsKeepWhich => 'Welches Layout behalten?';
 
   @override
-  String get gsAutoSearch => 'Auto-search the apps list';
+  String get gsAutoSearch => 'Automatische Suche in der App-Liste';
 
   @override
-  String get gsHomeRipple => 'Home ripple animation';
+  String get gsHomeRipple => 'Startbildschirm-Wellen-Animation';
 
   @override
-  String get gsListRipple => 'List ripple animation';
+  String get gsListRipple => 'Listen-Wellen-Animation';
 
   @override
-  String get gsQuickLaunch => 'Quick launch';
+  String get gsQuickLaunch => 'Schnellstart';
 
   @override
   String get gsQLDescription =>
-      'Swipe left/right on the home screen (except when editing) to open the selected app.\nLong press to clear your selection.';
+      'Auf dem Startbildschirm nach links/rechts wischen (außer beim Bearbeiten), um die ausgewählte App zu öffnen.\nLange drücken, um deine Auswahl zu löschen.';
 
   @override
   String gsSwipe(Object direction) {
-    return '$direction swipe';
+    return 'Nach $direction wischen';
   }
 
   @override
   String gsSwipeDesc(Object direction) {
-    return 'Choose a quick access app that will open when you swipe $direction on the home screen. swipe';
+    return 'Wähle eine Schnellzugriffs-App, die geöffnet wird, wenn du auf dem Startbildschirm nach $direction wischst.';
   }
 
   @override
   String gsSwipeHint(Object direction) {
-    return 'Choose app that opens on $direction swipe';
+    return 'Wähle die App, die sich beim Wischen nach $direction öffnet';
   }
 
   @override
   String gsSwipeLabel(Object direction) {
-    return 'Selecting $direction swipe';
+    return 'Auswahl für das Wischen nach $direction';
   }
 
   @override
-  String get gsSecurity => 'Security';
+  String get gsSecurity => 'Sicherheit';
 
   @override
-  String get gsAuthToEdit => 'Auth to edit lists/settings';
+  String get gsAuthToEdit =>
+      'Authentifizieren, um Listen/Einstellungen zu bearbeiten';
 
   @override
-  String get gsAuthForHidden => 'Auth to see hidden apps';
+  String get gsAuthForHidden => 'Authentifizieren, um versteckte Apps zu sehen';
 
   @override
-  String get gsAuthTimeout => 'Auth timeout (mins)';
+  String get gsAuthTimeout => 'Authentifizierungs-Timeout (Minuten)';
 
   @override
-  String get gsPositiveOnly => 'Positive integers only';
+  String get gsPositiveOnly => 'Nur positive ganze Zahlen';
 
   @override
-  String get hsHome => 'Home';
+  String get hsHome => 'Start';
 
   @override
-  String get hsHomeHint => 'Home. Long press to edit.';
+  String get hsHomeHint => 'Start. Lange drücken zum Bearbeiten.';
 
   @override
-  String get hsWelcome => 'Welcome to Liminal Launcher';
+  String get hsWelcome => 'Willkommen beim Liminal Launcher';
 
   @override
   String get hsDescription =>
-      'It\'s geared toward minimalism,\nbut has limitless customization.';
+      'Er ist auf Minimalismus ausgerichtet,\nbietet aber grenzenlose Anpassungsmöglichkeiten.';
 
   @override
   String get hsUserSettings =>
-      'As a general rule: Liminal\'s appearance can be completely separate based on theme mode!\n\nWhile in the relevant settings, you will see a toggle-able icon that indicates whether you\'re editing the dark ';
+      'Als allgemeine Regel gilt: Das Aussehen von Liminal kann je nach Theme-Modus völlig unterschiedlich sein!\n\nIn den entsprechenden Einstellungen siehst du ein umschaltbares Symbol, das anzeigt, ob du gerade das dunkle ';
 
   @override
-  String get hsLight => ', light ';
+  String get hsLight => ', das helle ';
 
   @override
-  String get hsBoth => ', or both ';
+  String get hsBoth => ', oder beide ';
 
   @override
-  String get hsThemes => ' themes.';
+  String get hsThemes => ' Themes bearbeitest.';
 
   @override
   String get hsGetStarted =>
-      'Long press the home screen to get started.\nThank you, and enjoy!';
+      'Halte den Startbildschirm lange gedrückt, um loszulegen.\nVielen Dank und viel Spaß!';
 
   @override
-  String get hsOneMore => 'One more thing...';
+  String get hsOneMore => 'Noch eine Sache...';
 
   @override
   String get hsFree =>
-      'This version is not from the Play Store, so it should have been free.\nRest assured, the free version of Liminal will always be identical to the Google Play version.\n\nIf you want to support Liminal\'s development, or the development of more cool software, please consider ';
+      'Diese Version stammt nicht aus dem Play Store, daher sollte sie kostenlos gewesen sein.\nSei versichert, die kostenlose Version von Liminal wird immer mit der Google Play-Version identisch sein.\n\nWenn du die Entwicklung von Liminal oder weiteren coolen Programmen unterstützen möchtest, ziehe bitte in Erwägung, etwas ';
 
   @override
-  String get hsContribute => 'contributing';
+  String get hsContribute => 'beizutragen';
 
   @override
-  String get hsContributeHint => 'Open a link to contribution options';
+  String get hsContributeHint =>
+      'Öffnet einen Link zu Unterstützungsmöglichkeiten';
 
   @override
   String get hsPopUp =>
-      '.\n\nThis is the only non-tutorial pop-up, and its only appearance this install.';
+      '.\n\nDies ist das einzige Pop-up, das kein Tutorial ist, und es wird in dieser Installation nur einmal angezeigt.';
 
   @override
   String get hsOkay => 'Okay';
@@ -438,242 +444,242 @@ class LangDe extends Lang {
   String get hsApp => 'App';
 
   @override
-  String get hsFolder => 'Folder';
+  String get hsFolder => 'Ordner';
 
   @override
-  String get hsLane => 'Lane';
+  String get hsLane => 'Spur';
 
   @override
-  String get hsSpacer => 'Spacer';
+  String get hsSpacer => 'Abstandshalter';
 
   @override
   String get hsWidget => 'Widget';
 
   @override
-  String get hsScreenLanes => ' lanes on screen.';
+  String get hsScreenLanes => ' Spuren auf dem Bildschirm.';
 
   @override
-  String get hsWithCurr => 'With your current...\n\nicon size (';
+  String get hsWithCurr => 'Mit deiner aktuellen...\n\nSymbolgröße (';
 
   @override
-  String get hsPadding => '),\npadding (';
+  String get hsPadding => '),\nInnenabstand (';
 
   @override
-  String get hsSpacing => '),\n& spacing (';
+  String get hsSpacing => '),\n& Außenabstand (';
 
   @override
-  String get hsCanFit => '...values, you can fit up to ';
+  String get hsCanFit => '...Werten passen bis zu ';
 
   @override
-  String get hsWithMin => ' With the minimum values, you can fit up to ';
+  String get hsWithMin => ' Mit den Minimalwerten passen bis zu ';
 
   @override
-  String get hsLanes => ' lanes.';
+  String get hsLanes => ' Spuren.';
 
   @override
-  String get hsEditAuth => 'Authenticate to edit the launcher';
+  String get hsEditAuth => 'Authentifizieren, um den Launcher zu bearbeiten';
 
   @override
-  String get hsHiddenAuth => 'Authenticate to see hidden apps';
+  String get hsHiddenAuth => 'Authentifizieren, um versteckte Apps zu sehen';
 
   @override
-  String get mcIconButton => 'Icon button size';
+  String get mcIconButton => 'Größe der Symbol-Schaltfläche';
 
   @override
-  String get mcBanish => 'Banish';
+  String get mcBanish => 'Verbannen';
 
   @override
-  String get mcDelete => 'Delete';
+  String get mcDelete => 'Löschen';
 
   @override
-  String get mcDone => 'Done';
+  String get mcDone => 'Fertig';
 
   @override
-  String get mcHide => 'Hide';
+  String get mcHide => 'Ausblenden';
 
   @override
   String get mcInfo => 'Info';
 
   @override
-  String get mcReposition => 'Reposition';
+  String get mcReposition => 'Neu positionieren';
 
   @override
-  String get mcMove => 'Move';
+  String get mcMove => 'Verschieben';
 
   @override
-  String get mcMoveDown => 'Move down';
+  String get mcMoveDown => 'Nach unten verschieben';
 
   @override
-  String get mcMoveLeft => 'Move left';
+  String get mcMoveLeft => 'Nach links verschieben';
 
   @override
-  String get mcMoveRight => 'Move right';
+  String get mcMoveRight => 'Nach rechts verschieben';
 
   @override
-  String get mcMoveUp => 'Move up';
+  String get mcMoveUp => 'Nach oben verschieben';
 
   @override
-  String get mcRemove => 'Remove';
+  String get mcRemove => 'Entfernen';
 
   @override
-  String get mcSave => 'Save';
+  String get mcSave => 'Speichern';
 
   @override
-  String get mcShow => 'Show';
+  String get mcShow => 'Anzeigen';
 
   @override
-  String get mcUninstall => 'Uninstall';
+  String get mcUninstall => 'Deinstallieren';
 
   @override
-  String get mltLaneConfig => 'Multi-lane configuration';
+  String get mltLaneConfig => 'Multi-Spur-Konfiguration';
 
   @override
   String get mltPagesEnabled =>
-      'With pages enabled, lanes behave like pages on a traditional launcher.\n';
+      'Wenn Seiten aktiviert sind, verhalten sich die Spuren wie Seiten bei einem herkömmlichen Launcher.\n';
 
   @override
   String get mltPagesDisabled =>
-      'With pages disabled, all lanes share one horizontal scroll.\n';
+      'Wenn Seiten deaktiviert sind, teilen sich alle Spuren eine horizontale Scrollfunktion.\n';
 
   @override
-  String get mltWideEnabled => 'With wide tiles enabled...\n';
+  String get mltWideEnabled => 'Wenn breite Kacheln aktiviert sind...\n';
 
   @override
   String get mltWideWidth =>
-      'each lane (with an item) will be the width of one screen.\n';
+      'nimmt jede Spur (mit einem Element) die Breite eines Bildschirms ein.\n';
 
   @override
   String get mltAnywhere =>
-      'apps and folders can/will be activated anywhere in their horizontal space.\n';
+      'können Apps und Ordner überall in ihrem horizontalen Bereich aktiviert werden.\n';
 
   @override
-  String get mltWideDisabled => 'With wide tiles disabled...\n';
+  String get mltWideDisabled => 'Wenn breite Kacheln deaktiviert sind...\n';
 
   @override
   String get mltAutoWidth =>
-      'lanes will be sized by their widest item & your spacing setting(s).\n';
+      'werden die Spuren anhand ihres breitesten Elements & deiner Abstandseinstellungen dimensioniert.\n';
 
   @override
   String get mltOnlyButton =>
-      'apps and folders can/will be activated only by their button(s).\n';
+      'können Apps und Ordner nur über ihre(n) Button(s) aktiviert werden.\n';
 
   @override
   String get pHiddenReminder =>
-      'Swipe up while editing to open the hidden apps list.';
+      'Wische beim Bearbeiten nach oben, um die Liste der versteckten Apps zu öffnen.';
 
   @override
-  String get pReminder => 'Reminder';
+  String get pReminder => 'Erinnerung';
 
   @override
   String pBanishApp(Object app) {
-    return 'Banish $app?';
+    return '$app verbannen?';
   }
 
   @override
   String pRemoveLane(Object lane) {
-    return 'Remove $lane?';
+    return '$lane entfernen?';
   }
 
   @override
-  String get pWantTo => 'Want to...';
+  String get pWantTo => 'Möchtest du...';
 
   @override
-  String get pHideDarkToo => 'Hide for dark mode too?';
+  String get pHideDarkToo => 'Auch für den dunklen Modus ausblenden?';
 
   @override
-  String get pHideLightToo => 'Hide for light mode too?';
+  String get pHideLightToo => 'Auch für den hellen Modus ausblenden?';
 
   @override
-  String get pShowDarkToo => 'Show for dark mode too?';
+  String get pShowDarkToo => 'Auch für den dunklen Modus anzeigen?';
 
   @override
-  String get pShowLightToo => 'Show for light mode too?';
+  String get pShowLightToo => 'Auch für den hellen Modus anzeigen?';
 
   @override
   String pWhatBanish(Object undo) {
-    return 'When you banish an app, it will still be installed but not appear in Liminal at all.\nBanished apps can only be opened from the system settings, or via app link.\n\nBanishing is useful for utility apps that also waste time. For example, you may want to banish your web browser(s).\nThat way, you can use online menus when you go out, and reduce doom scrolling when you stay in.\n\n$undo\n\nReminder: banishing is just for UX, not for security.\nFor example: if an app has always on location permissions, banishing it will not affect that.';
+    return 'Wenn du eine App verbannst, bleibt sie weiterhin installiert, wird aber in Liminal überhaupt nicht mehr angezeigt.\nVerbannte Apps können nur noch über die Systemeinstellungen oder über einen App-Link geöffnet werden.\n\nDas Verbannen ist nützlich für Dienstprogramm-Apps, die auch Zeit verschwenden. Zum Beispiel könntest du deinen Webbrowser verbannen.\nSo kannst du Online-Speisekarten nutzen, wenn du ausgehst, und das Doom-Scrolling reduzieren, wenn du zu Hause bleibst.\n\n$undo\n\nErinnerung: Das Verbannen dient nur der Benutzererfahrung, nicht der Sicherheit.\nBeispiel: Wenn eine App dauerhaften Standortzugriff hat, ändert das Verbannen nichts daran.';
   }
 
   @override
   String pUnBanish(Object app) {
-    return 'The simplest wat to restore/un-banish $app is to uninstall it from the system settings, then reinstall.';
+    return 'Der einfachste Weg, $app wiederherzustellen/zu entbannen, besteht darin, sie über die Systemeinstellungen zu deinstallieren und dann neu zu installieren.';
   }
 
   @override
-  String get srcCustom => 'Custom';
+  String get srcCustom => 'Benutzerdefiniert';
 
   @override
   String get srcName => 'Name ';
 
   @override
-  String get srcBase => 'Base site ';
+  String get srcBase => 'Basis-Seite ';
 
   @override
-  String get srcPath => 'Path ';
+  String get srcPath => 'Pfad ';
 
   @override
   String get srcParameter => 'Parameter ';
 
   @override
-  String get srcNonEmpty => 'Need a non-empty name.';
+  String get srcNonEmpty => 'Ein nicht-leerer Name ist erforderlich.';
 
   @override
   String get srcPlayResponsibly =>
-      'Liminal does minimal validation of these custom inputs.\nPlay at your own risk.';
+      'Liminal führt nur eine minimale Überprüfung dieser benutzerdefinierten Eingaben durch.\nNutzung auf eigene Gefahr.';
 
   @override
   String get srcSameName =>
-      'A custom entry with that name already exists.\nPlease change the name and try again.';
+      'Ein benutzerdefinierter Eintrag mit diesem Namen existiert bereits.\nBitte ändere den Namen und versuche es erneut.';
 
   @override
-  String get thmSelector => 'selector';
+  String get thmSelector => 'Auswahl';
 
   @override
-  String get thmToggle => 'Toggle theme';
+  String get thmToggle => 'Theme umschalten';
 
   @override
   String get timTitle => 'Timer';
 
   @override
-  String get timHours => 'Hours';
+  String get timHours => 'Stunden';
 
   @override
-  String get timMins => 'Minutes';
+  String get timMins => 'Minuten';
 
   @override
-  String get timSecs => 'Seconds';
+  String get timSecs => 'Sekunden';
 
   @override
-  String get timBadTime => 'Invalid time';
+  String get timBadTime => 'Ungültige Zeit';
 
   @override
-  String get timQuick => 'Quick times';
+  String get timQuick => 'Schnelle Zeiten';
 
   @override
-  String get togTitle => 'Media controls';
+  String get togTitle => 'Mediensteuerung';
 
   @override
-  String get togFF => 'Fast forward';
+  String get togFF => 'Schneller Vorlauf';
 
   @override
-  String get togNext => 'Next';
+  String get togNext => 'Weiter';
 
   @override
-  String get togPlayPause => 'Play/pause';
+  String get togPlayPause => 'Wiedergabe/Pause';
 
   @override
-  String get togPrevious => 'Previous';
+  String get togPrevious => 'Zurück';
 
   @override
-  String get togRewind => 'Rewind';
+  String get togRewind => 'Zurückspulen';
 
   @override
-  String get togFFTog => 'FF/Rewind';
+  String get togFFTog => 'Vor-/Zurückspulen';
 
   @override
-  String get togSkipTog => 'Skip/Prev';
+  String get togSkipTog => 'Überspringen/Zurück';
 
   @override
   String get togSomePlayers =>
-      'Note:\nThese buttons only work if the active player supports them. Some music players don\'t have FF/Rewind, for example';
+      'Hinweis:\nDiese Tasten funktionieren nur, wenn der aktive Player sie unterstützt. Einige Musik-Player verfügen beispielsweise nicht über Vor-/Zurückspulen.';
 }
