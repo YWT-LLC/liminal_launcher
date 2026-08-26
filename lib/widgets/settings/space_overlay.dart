@@ -337,7 +337,12 @@ class _SpacingOverlay extends OverlayEntry {
                                     ? AxisDirection.values
                                         .map((AxisDirection dir) => EzMenuButton(
                                               config,
-                                              label: dir.name,
+                                              label: switch (dir) {
+                                                AxisDirection.up => l10n(config).gTop,
+                                                AxisDirection.down => l10n(config).gBottom,
+                                                AxisDirection.left => l10n(config).gLeft,
+                                                AxisDirection.right => l10n(config).gRight,
+                                              },
                                               icon: EzIcon(
                                                 config,
                                                 switch (dir) {
