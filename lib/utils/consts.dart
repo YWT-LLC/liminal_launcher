@@ -193,6 +193,7 @@ final Set<String> neverResetKeys = <String>{...limBTSKeys.keys, ...limListKeys.k
 final Map<String, Object> liminalDefault = <String, Object>{
   ...ywtMobileConfig,
   // TODO: some icons, buttons, and (all?) switches aren't growing/shrink properly (same ones tho, which is good (and expected... still good))
+  // TODO: quintuple check some of the background shapes now that you have the system down
 
   // BTS //
   // ID lists
