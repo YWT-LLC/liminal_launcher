@@ -204,40 +204,42 @@ class _EventWidgetState extends State<EventWidget> {
       style: widget.config.bodyStyle,
       textScaler: MediaQuery.textScalerOf(context),
     ).width;
-    final Widget icon = Tooltip(
-      message: l10n(widget.config).evtCreate,
-      child: widget._isCalendar
-          ? Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: widget.config.colors.primaryContainer,
-                  width: widget.config.borderWidth,
-                ),
-                borderRadius: widget.config.buttonShape.radius,
-                color: widget.config.colors.surface,
-              ),
-              padding: EzInsets.wrap(widget.config.padding),
-              child: EzIcon(widget.config, Icons.edit_calendar),
-            )
-          : (widget._useAppIcon == true && widget._shareDest?.icon != null)
-              ? Image.memory(
-                  widget._shareDest!.icon!,
-                  semanticLabel: widget._shareDest!.label,
-                  width: appIconSize(widget.config),
-                  height: appIconSize(widget.config),
-                )
-              : Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: widget.config.colors.primaryContainer,
-                      width: widget.config.borderWidth,
-                    ),
-                    borderRadius: widget.config.buttonShape.radius,
-                    color: widget.config.colors.surface,
+    final Widget icon = Semantics(
+      button: true,
+      hint: l10n(widget.config).evtCreate,
+      child: ExcludeSemantics(
+        child: widget._isCalendar
+            ? Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: widget.config.colors.primaryContainer,
+                    width: widget.config.borderWidth,
                   ),
-                  padding: EzInsets.wrap(widget.config.padding),
-                  child: EzIcon(widget.config, Icons.add_task),
+                  borderRadius: widget.config.buttonShape.radius,
+                  color: widget.config.colors.surface,
                 ),
+                padding: EzInsets.wrap(widget.config.padding),
+                child: EzIcon(widget.config, Icons.edit_calendar),
+              )
+            : (widget._useAppIcon == true && widget._shareDest?.icon != null)
+                ? Image.memory(
+                    widget._shareDest!.icon!,
+                    width: appIconSize(widget.config),
+                    height: appIconSize(widget.config),
+                  )
+                : Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: widget.config.colors.primaryContainer,
+                        width: widget.config.borderWidth,
+                      ),
+                      borderRadius: widget.config.buttonShape.radius,
+                      color: widget.config.colors.surface,
+                    ),
+                    padding: EzInsets.wrap(widget.config.padding),
+                    child: EzIcon(widget.config, Icons.add_task),
+                  ),
+      ),
     );
 
     return WideTile(
