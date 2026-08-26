@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 class WideTile extends StatelessWidget {
   final EzCP config;
   final LimPos pos;
+  final AlignmentGeometry? alignment;
   final void Function()? onTap;
   final void Function()? onLongPress;
   final Widget child;
@@ -19,6 +20,7 @@ class WideTile extends StatelessWidget {
     this.config, {
     super.key,
     required this.pos,
+    this.alignment,
     this.onTap,
     this.onLongPress,
     required this.child,
@@ -31,7 +33,7 @@ class WideTile extends StatelessWidget {
           onLongPress: onLongPress,
           child: Container(
             width: double.infinity,
-            alignment: pos.subAlign,
+            alignment: alignment ?? pos.subAlign,
             child: child,
           ),
         )
