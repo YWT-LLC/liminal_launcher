@@ -161,18 +161,18 @@ class _TimerWidgetState extends State<TimerWidget> {
         ? removeOverlay()
         : ((overlayEntry == null) ? showOverlay(tc) : overlayEntry!.markNeedsBuild());
 
-    return WideTile(
+    return EzAnimSwitch(
       widget.config,
-      alignment: widget.pos.subAlign,
-      onLongPress: () async => await canToggleMenu(widget.config, menuControl),
-      child: EzAnimSwitch(
-        widget.config,
-        mod: 0.667,
-        forceFade: true,
-        forceType: EzTransitionType.none,
-        child: switch (state) {
-          TileState.standard => MenuAnchor(
-              builder: (_, MenuController controller, __) => (widget._size == WWGGSize.button)
+      mod: 0.667,
+      forceFade: true,
+      forceType: EzTransitionType.none,
+      child: switch (state) {
+        TileState.standard => MenuAnchor(
+            builder: (_, MenuController controller, __) => WideTile(
+              widget.config,
+              alignment: widget.pos.subAlign,
+              onLongPress: () async => await canToggleMenu(widget.config, menuControl),
+              child: (widget._size == WWGGSize.button)
                   ? EzIconButton(
                       widget.config,
                       icon: const Icon(Icons.timer_outlined),
@@ -287,60 +287,60 @@ class _TimerWidgetState extends State<TimerWidget> {
                         ],
                       ],
                     )),
-              menuChildren: _menuChildren(
-                widget.config,
-                appInfo: widget.appInfo,
-                context: context,
-                state: state,
-                editReset: widget.editReset,
-                numLanes: numLanes,
-                pos: widget.pos,
-                initConfig: _TimerConfig(
-                  tp: widget._tp,
-                  size: widget._size,
-                  constraints: numConstraints,
-                  auto: <String>[
-                    _validateTime(ourCon.text),
-                    _validateTime(minCon.text),
-                    _validateTime(secCon.text),
-                  ].join(colon),
-                  quick: widget._times,
-                ),
-              ),
             ),
-          _ => EditContainer(
+            menuChildren: _menuChildren(
               widget.config,
-              subAlign: widget.pos.subAlign,
-              menuControl: menuControl,
-              menuChildren: _menuChildren(
-                widget.config,
-                appInfo: widget.appInfo,
-                context: context,
-                state: state,
-                editReset: widget.editReset,
-                numLanes: numLanes,
-                pos: widget.pos,
-                initConfig: _TimerConfig(
-                  tp: widget._tp,
-                  size: widget._size,
-                  constraints: numConstraints,
-                  auto: <String>[
-                    _validateTime(ourCon.text),
-                    _validateTime(minCon.text),
-                    _validateTime(secCon.text),
-                  ].join(colon),
-                  quick: widget._times,
-                ),
-              ),
-              child: EzIconButton(
-                widget.config,
-                icon: const Icon(Icons.timer_outlined),
-                tooltip: l10n(widget.config).timTitle,
-                onPressed: () => toggleMenu(menuControl),
+              appInfo: widget.appInfo,
+              context: context,
+              state: state,
+              editReset: widget.editReset,
+              numLanes: numLanes,
+              pos: widget.pos,
+              initConfig: _TimerConfig(
+                tp: widget._tp,
+                size: widget._size,
+                constraints: numConstraints,
+                auto: <String>[
+                  _validateTime(ourCon.text),
+                  _validateTime(minCon.text),
+                  _validateTime(secCon.text),
+                ].join(colon),
+                quick: widget._times,
               ),
             ),
-        },
-      ),
+          ),
+        _ => EditContainer(
+            widget.config,
+            subAlign: widget.pos.subAlign,
+            menuControl: menuControl,
+            menuChildren: _menuChildren(
+              widget.config,
+              appInfo: widget.appInfo,
+              context: context,
+              state: state,
+              editReset: widget.editReset,
+              numLanes: numLanes,
+              pos: widget.pos,
+              initConfig: _TimerConfig(
+                tp: widget._tp,
+                size: widget._size,
+                constraints: numConstraints,
+                auto: <String>[
+                  _validateTime(ourCon.text),
+                  _validateTime(minCon.text),
+                  _validateTime(secCon.text),
+                ].join(colon),
+                quick: widget._times,
+              ),
+            ),
+            child: EzIconButton(
+              widget.config,
+              icon: const Icon(Icons.timer_outlined),
+              tooltip: l10n(widget.config).timTitle,
+              onPressed: () => toggleMenu(menuControl),
+            ),
+          ),
+      },
     );
   }
 

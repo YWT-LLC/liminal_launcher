@@ -242,18 +242,18 @@ class _EventWidgetState extends State<EventWidget> {
       ),
     );
 
-    return WideTile(
+    return EzAnimSwitch(
       widget.config,
-      alignment: widget.pos.subAlign,
-      onLongPress: () async => await canToggleMenu(widget.config, menuControl),
-      child: EzAnimSwitch(
-        widget.config,
-        mod: 0.667,
-        forceFade: true,
-        forceType: EzTransitionType.none,
-        child: switch (state) {
-          TileState.standard => MenuAnchor(
-              builder: (_, MenuController controller, __) => (widget._size == WWGGSize.button)
+      mod: 0.667,
+      forceFade: true,
+      forceType: EzTransitionType.none,
+      child: switch (state) {
+        TileState.standard => MenuAnchor(
+            builder: (_, MenuController controller, __) => WideTile(
+              widget.config,
+              alignment: widget.pos.subAlign,
+              onLongPress: () async => await canToggleMenu(widget.config, menuControl),
+              child: (widget._size == WWGGSize.button)
                   ? GestureDetector(
                       child: icon,
                       onTap: () async {
@@ -329,47 +329,47 @@ class _EventWidgetState extends State<EventWidget> {
                         ),
                       ],
                     )),
-              menuChildren: _menuChildren(
-                widget.config,
-                appInfo: widget.appInfo,
-                context: context,
-                state: state,
-                editReset: widget.editReset,
-                numLanes: numLanes,
-                pos: widget.pos,
-                initConfig: _EventConfig(
-                  tp: widget._tp,
-                  size: widget._size,
-                  isCalendar: widget._isCalendar,
-                  shareDest: widget._shareDest,
-                  useAppIcon: widget._useAppIcon,
-                ),
-              ),
             ),
-          _ => EditContainer(
+            menuChildren: _menuChildren(
               widget.config,
-              subAlign: widget.pos.subAlign,
-              menuControl: menuControl,
-              menuChildren: _menuChildren(
-                widget.config,
-                appInfo: widget.appInfo,
-                context: context,
-                state: state,
-                editReset: widget.editReset,
-                numLanes: numLanes,
-                pos: widget.pos,
-                initConfig: _EventConfig(
-                  tp: widget._tp,
-                  size: widget._size,
-                  isCalendar: widget._isCalendar,
-                  shareDest: widget._shareDest,
-                  useAppIcon: widget._useAppIcon,
-                ),
+              appInfo: widget.appInfo,
+              context: context,
+              state: state,
+              editReset: widget.editReset,
+              numLanes: numLanes,
+              pos: widget.pos,
+              initConfig: _EventConfig(
+                tp: widget._tp,
+                size: widget._size,
+                isCalendar: widget._isCalendar,
+                shareDest: widget._shareDest,
+                useAppIcon: widget._useAppIcon,
               ),
-              child: GestureDetector(child: icon, onTap: () => toggleMenu(menuControl)),
             ),
-        },
-      ),
+          ),
+        _ => EditContainer(
+            widget.config,
+            subAlign: widget.pos.subAlign,
+            menuControl: menuControl,
+            menuChildren: _menuChildren(
+              widget.config,
+              appInfo: widget.appInfo,
+              context: context,
+              state: state,
+              editReset: widget.editReset,
+              numLanes: numLanes,
+              pos: widget.pos,
+              initConfig: _EventConfig(
+                tp: widget._tp,
+                size: widget._size,
+                isCalendar: widget._isCalendar,
+                shareDest: widget._shareDest,
+                useAppIcon: widget._useAppIcon,
+              ),
+            ),
+            child: GestureDetector(child: icon, onTap: () => toggleMenu(menuControl)),
+          ),
+      },
     );
   }
 

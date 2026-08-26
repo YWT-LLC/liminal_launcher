@@ -3,6 +3,8 @@
  * See LICENSE for distribution and usage details.
  */
 
+// TODO: redo tile semantics check with new wide tile
+
 import '../../../utils/export.dart';
 import '../../export.dart';
 
@@ -96,18 +98,18 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
-    return WideTile(
+    return EzAnimSwitch(
       widget.config,
-      alignment: widget.pos.subAlign,
-      onLongPress: () async => await canToggleMenu(widget.config, menuControl),
-      child: EzAnimSwitch(
-        widget.config,
-        mod: 0.667,
-        forceFade: true,
-        forceType: EzTransitionType.none,
-        child: switch (state) {
-          TileState.standard => MenuAnchor(
-              builder: (_, MenuController controller, __) => EzIconButton(
+      mod: 0.667,
+      forceFade: true,
+      forceType: EzTransitionType.none,
+      child: switch (state) {
+        TileState.standard => MenuAnchor(
+            builder: (_, MenuController controller, __) => WideTile(
+              widget.config,
+              alignment: widget.pos.subAlign,
+              onLongPress: () async => await canToggleMenu(widget.config, menuControl),
+              child: EzIconButton(
                 widget.config,
                 tooltip: l10n(widget.config).togTitle,
                 icon: (widget._size == WWGGSize.button)
@@ -178,50 +180,50 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
                 onPressed: (widget._size == WWGGSize.button) ? toggleMedia : doNothing,
                 onLongPress: () async => await canToggleMenu(widget.config, controller),
               ),
-              menuChildren: _menuChildren(
-                widget.config,
-                appInfo: widget.appInfo,
-                context: context,
-                state: state,
-                editReset: widget.editReset,
-                numLanes: numLanes,
-                pos: widget.pos,
-                initConfig: _MediaConfig(
-                  tp: widget._tp,
-                  size: widget._size,
-                  bigSkips: widget._bigSkips,
-                  lilSkips: widget._lilSkips,
-                ),
-              ),
             ),
-          _ => EditContainer(
+            menuChildren: _menuChildren(
               widget.config,
-              subAlign: widget.pos.subAlign,
-              menuControl: menuControl,
-              menuChildren: _menuChildren(
-                widget.config,
-                appInfo: widget.appInfo,
-                context: context,
-                state: state,
-                editReset: widget.editReset,
-                numLanes: numLanes,
-                pos: widget.pos,
-                initConfig: _MediaConfig(
-                  tp: widget._tp,
-                  size: widget._size,
-                  bigSkips: widget._bigSkips,
-                  lilSkips: widget._lilSkips,
-                ),
-              ),
-              child: EzIconButton(
-                widget.config,
-                icon: const Icon(Icons.headphones),
-                tooltip: l10n(widget.config).togTitle,
-                onPressed: () => toggleMenu(menuControl),
+              appInfo: widget.appInfo,
+              context: context,
+              state: state,
+              editReset: widget.editReset,
+              numLanes: numLanes,
+              pos: widget.pos,
+              initConfig: _MediaConfig(
+                tp: widget._tp,
+                size: widget._size,
+                bigSkips: widget._bigSkips,
+                lilSkips: widget._lilSkips,
               ),
             ),
-        },
-      ),
+          ),
+        _ => EditContainer(
+            widget.config,
+            subAlign: widget.pos.subAlign,
+            menuControl: menuControl,
+            menuChildren: _menuChildren(
+              widget.config,
+              appInfo: widget.appInfo,
+              context: context,
+              state: state,
+              editReset: widget.editReset,
+              numLanes: numLanes,
+              pos: widget.pos,
+              initConfig: _MediaConfig(
+                tp: widget._tp,
+                size: widget._size,
+                bigSkips: widget._bigSkips,
+                lilSkips: widget._lilSkips,
+              ),
+            ),
+            child: EzIconButton(
+              widget.config,
+              icon: const Icon(Icons.headphones),
+              tooltip: l10n(widget.config).togTitle,
+              onPressed: () => toggleMenu(menuControl),
+            ),
+          ),
+      },
     );
   }
 
