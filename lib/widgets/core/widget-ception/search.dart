@@ -405,6 +405,7 @@ class AddSearch extends StatelessWidget {
   void onTap() => appInfo.addWidget(
         config,
         type: WWGG.search,
+        size: size,
         editNew: () => _openEdits(
           config,
           appInfo: appInfo,
@@ -466,9 +467,9 @@ class AddSearch extends StatelessWidget {
         );
 }
 
-String defaultSearchEntry() => _searchEntry(
+String defaultSearchEntry(WWGGSize size) => _searchEntry(
       tp: nullTPS,
-      size: WWGGSize.tile,
+      size: size,
       engine: ecosia,
       choices: Engine.defaultOrder.map((Engine e) => e.value),
     );

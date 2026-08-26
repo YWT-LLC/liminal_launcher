@@ -452,6 +452,7 @@ class AddEvent extends StatelessWidget {
   void onTap() => appInfo.addWidget(
         config,
         type: WWGG.event,
+        size: size,
         editNew: () => _openEdits(
           config,
           appInfo: appInfo,
@@ -514,9 +515,9 @@ class AddEvent extends StatelessWidget {
         );
 }
 
-String defaultEventEntry() => _eventEntry(
+String defaultEventEntry(WWGGSize size) => _eventEntry(
       tp: nullTPS,
-      size: WWGGSize.tile,
+      size: size,
       isCalendar: true,
       shareDest: null,
       useAppIcon: null,

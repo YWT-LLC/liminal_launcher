@@ -226,6 +226,7 @@ class AppInfoProvider extends ChangeNotifier {
   Future<void> addWidget(
     EzCP config, {
     required WWGG type,
+    required WWGGSize size,
     required Future<void> Function()? editNew,
     required int lane,
   }) async {
@@ -234,11 +235,11 @@ class AppInfoProvider extends ChangeNotifier {
           type.value,
           switch (type) {
             WWGG.clock => defaultClockEntry(),
-            WWGG.event => defaultEventEntry(),
-            WWGG.search => defaultSearchEntry(),
-            WWGG.timer => defaultTimerEntry(),
-            WWGG.themeMode => defaultThemeWidgetEntry(),
-            WWGG.toggleMedia => defaultMediaEntry(),
+            WWGG.event => defaultEventEntry(size),
+            WWGG.search => defaultSearchEntry(size),
+            WWGG.timer => defaultTimerEntry(size),
+            WWGG.themeMode => defaultThemeWidgetEntry(size),
+            WWGG.toggleMedia => defaultMediaEntry(size),
           },
         ].join(widgetSplit);
 

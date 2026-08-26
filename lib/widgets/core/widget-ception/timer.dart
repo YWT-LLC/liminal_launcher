@@ -495,6 +495,7 @@ class AddTimer extends StatelessWidget {
   void onTap() => appInfo.addWidget(
         config,
         type: WWGG.timer,
+        size: size,
         editNew: () => _openEdits(
           config,
           appInfo: appInfo,
@@ -589,8 +590,12 @@ class AddTimer extends StatelessWidget {
 const String _noTime = '00:00:00';
 const List<String> _defaultQuick = <String>['00:10:00', '00:30:00', '01:00:00'];
 
-String defaultTimerEntry() =>
-    _timerEntry(tp: nullTPS, size: WWGGSize.tile, auto: _noTime, quick: _defaultQuick);
+String defaultTimerEntry(WWGGSize size) => _timerEntry(
+      tp: nullTPS,
+      size: size,
+      auto: _noTime,
+      quick: _defaultQuick,
+    );
 
 String _timerEntry({
   required String tp,

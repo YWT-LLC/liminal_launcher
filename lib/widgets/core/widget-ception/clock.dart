@@ -310,6 +310,7 @@ class AddClock extends StatelessWidget {
   void onTap() => appInfo.addWidget(
         config,
         type: WWGG.clock,
+        size: WWGGSize.tile,
         editNew: () => _openEdits(
           config,
           appInfo: appInfo,

@@ -226,7 +226,13 @@ class AddThemeMode extends StatelessWidget {
     required this.size,
   });
 
-  void onTap() => appInfo.addWidget(config, type: WWGG.themeMode, editNew: null, lane: lane);
+  void onTap() => appInfo.addWidget(
+        config,
+        type: WWGG.themeMode,
+        size: size,
+        editNew: null,
+        lane: lane,
+      );
 
   @override
   Widget build(BuildContext context) => (size == WWGGSize.button)
@@ -253,9 +259,9 @@ class AddThemeMode extends StatelessWidget {
         );
 }
 
-String defaultThemeWidgetEntry() => _themeModeEntry(
+String defaultThemeWidgetEntry(WWGGSize size) => _themeModeEntry(
       tp: nullTPS,
-      size: WWGGSize.button,
+      size: size,
     );
 
 String _themeModeEntry({

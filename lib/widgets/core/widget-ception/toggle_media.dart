@@ -305,6 +305,7 @@ class AddToggleMedia extends StatelessWidget {
   void onTap() => appInfo.addWidget(
         config,
         type: WWGG.toggleMedia,
+        size: size,
         editNew: () => _openEdits(
           config,
           appInfo: appInfo,
@@ -346,9 +347,9 @@ class AddToggleMedia extends StatelessWidget {
       );
 }
 
-String defaultMediaEntry() => _mediaEntry(
+String defaultMediaEntry(WWGGSize size) => _mediaEntry(
       tp: nullTPS,
-      size: WWGGSize.tile,
+      size: size,
       bigSkips: true,
       lilSkips: false,
     );
