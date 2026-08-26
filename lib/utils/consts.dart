@@ -336,6 +336,10 @@ class LimPos {
   bool operator ==(Object other) => other is LimPos && other.lane == lane && other.index == index;
 }
 
+/// Placeholder value(s): (0,0) + (center, center)
+const LimPos nullPos =
+    LimPos(lane: 0, index: 0, hAlign: ListAlignment.center, vAlign: ListAlignment.center);
+
 /// null tile padding [List]double?
 const List<double?> nullTPL = <double?>[null, null, null, null];
 
