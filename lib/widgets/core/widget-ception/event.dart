@@ -197,41 +197,46 @@ class _EventWidgetState extends State<EventWidget> {
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
-    final ButtonStyle alwaysOn = IconButton.styleFrom(
-      foregroundColor: widget.config.colors.primary,
-      backgroundColor: widget.config.colors.surface,
-      disabledForegroundColor: widget.config.colors.primary,
-      disabledBackgroundColor: widget.config.colors.surface,
-    );
     late final double textWidth = ezTextSize(
       '\t${widget._isCalendar ? l10n(widget.config).evtNewEvent : l10n(widget.config).evtNewTask}\t',
       context: context,
       style: widget.config.bodyStyle,
     ).width;
-    final Widget icon = widget._isCalendar
-        ? EzIconButton(
-            widget.config,
-            icon: const Icon(Icons.edit_calendar),
-            tooltip: l10n(widget.config).evtCreate,
-            style: alwaysOn,
-            onPressed: doNothing, // TODO: fix doesn't work
-          )
-        : (widget._useAppIcon == true && widget._shareDest?.icon != null)
-            ? Tooltip(
-                message: l10n(widget.config).evtCreate, // TODO: this too
-                child: Image.memory(
+    final Widget icon = Tooltip(
+      message: l10n(widget.config).evtCreate,
+      child: widget._isCalendar
+          ? Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: widget.config.colors.primaryContainer,
+                  width: widget.config.borderWidth,
+                ),
+                borderRadius: widget.config.buttonShape.radius,
+                color: widget.config.colors.surface,
+              ),
+              padding: EzInsets.wrap(widget.config.padding),
+              child: EzIcon(widget.config, Icons.edit_calendar),
+            )
+          : (widget._useAppIcon == true && widget._shareDest?.icon != null)
+              ? Image.memory(
                   widget._shareDest!.icon!,
                   semanticLabel: widget._shareDest!.label,
                   width: appIconSize(widget.config),
                   height: appIconSize(widget.config),
+                )
+              : Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: widget.config.colors.primaryContainer,
+                      width: widget.config.borderWidth,
+                    ),
+                    borderRadius: widget.config.buttonShape.radius,
+                    color: widget.config.colors.surface,
+                  ),
+                  padding: EzInsets.wrap(widget.config.padding),
+                  child: EzIcon(widget.config, Icons.add_task),
                 ),
-              )
-            : EzIconButton(
-                widget.config,
-                icon: const Icon(Icons.edit_calendar),
-                tooltip: l10n(widget.config).evtCreate,
-                style: alwaysOn,
-              );
+    );
 
     return EzAnimSwitch(
       widget.config,
