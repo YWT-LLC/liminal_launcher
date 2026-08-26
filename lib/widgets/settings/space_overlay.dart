@@ -783,6 +783,8 @@ class _ExitData {
   });
 }
 
+// TODO: get semantics working on the overlay
+
 Future<void> editSpacing(
   EzCP config, {
   required AppInfoProvider appInfo,

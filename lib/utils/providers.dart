@@ -3,6 +3,8 @@
  * See LICENSE for distribution and usage details.
  */
 
+// TODO: track down which operations step on eachother's toes && why
+
 import './export.dart';
 import '../widgets/export.dart';
 
