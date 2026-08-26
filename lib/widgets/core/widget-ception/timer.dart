@@ -148,7 +148,12 @@ class _TimerWidgetState extends State<TimerWidget> {
 
     late final BoxConstraints numConstraints = BoxConstraints.tightFor(
       height: appIconSize(widget.config),
-      width: ezTextSize('000', context: context, style: widget.config.bodyStyle).width +
+      width: ezTextSize(
+            widget.config,
+            text: '000',
+            style: widget.config.bodyStyle,
+            textScaler: MediaQuery.textScalerOf(context),
+          ).width +
           (2 * widget.config.padding),
     );
 
@@ -499,7 +504,12 @@ class AddTimer extends StatelessWidget {
             size: size,
             constraints: BoxConstraints.tightFor(
               height: appIconSize(config),
-              width: ezTextSize('000', context: pContext, style: config.bodyStyle).width +
+              width: ezTextSize(
+                    config,
+                    text: '000',
+                    style: config.bodyStyle,
+                    textScaler: MediaQuery.textScalerOf(pContext),
+                  ).width +
                   (2 * config.padding),
             ),
             auto: _noTime,
@@ -517,8 +527,13 @@ class AddTimer extends StatelessWidget {
       child: EzTextField(
         constraints: BoxConstraints(
           maxHeight: appIconSize(config),
-          maxWidth:
-              ezTextSize('00', context: context, style: config.bodyStyle).width + config.padding,
+          maxWidth: ezTextSize(
+                config,
+                text: '00',
+                style: config.bodyStyle,
+                textScaler: MediaQuery.textScalerOf(context),
+              ).width +
+              config.padding,
         ),
         hintText: '00',
         onTap: onTap,

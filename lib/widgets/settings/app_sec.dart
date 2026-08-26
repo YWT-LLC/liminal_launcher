@@ -25,7 +25,12 @@ class AppSecSettings extends StatelessWidget {
           bool forHide = authForHidden(config);
 
           _timeoutText.text = authTimeout(config).inMinutes.toString();
-          final Size ttSize = ezTextSize('55', context: context, style: config.bodyStyle);
+          final Size ttSize = ezTextSize(
+            config,
+            text: '55',
+            style: config.bodyStyle,
+            textScaler: MediaQuery.textScalerOf(context),
+          );
           final double fieldWidth = max(ttSize.width + config.padding, kMinInteractiveDimension);
 
           double bottomSpace = config.spacing * 2;

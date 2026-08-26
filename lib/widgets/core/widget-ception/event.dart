@@ -198,9 +198,11 @@ class _EventWidgetState extends State<EventWidget> {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
     late final double textWidth = ezTextSize(
-      '\t${widget._isCalendar ? l10n(widget.config).evtNewEvent : l10n(widget.config).evtNewTask}\t',
-      context: context,
+      widget.config,
+      text:
+          '\t${widget._isCalendar ? l10n(widget.config).evtNewEvent : l10n(widget.config).evtNewTask}\t',
       style: widget.config.bodyStyle,
+      textScaler: MediaQuery.textScalerOf(context),
     ).width;
     final Widget icon = Tooltip(
       message: l10n(widget.config).evtCreate,
@@ -487,9 +489,10 @@ class AddEvent extends StatelessWidget {
                   constraints: BoxConstraints(
                     maxHeight: appIconSize(config),
                     maxWidth: ezTextSize(
-                          '\t${l10n(config).evtNewEvent}\t',
-                          context: context,
+                          config,
+                          text: '\t${l10n(config).evtNewEvent}\t',
                           style: config.bodyStyle,
+                          textScaler: MediaQuery.textScalerOf(context),
                         ).width +
                         config.padding,
                   ),

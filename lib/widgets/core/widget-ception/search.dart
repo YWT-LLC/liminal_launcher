@@ -216,9 +216,10 @@ class _SearchWidgetState extends State<SearchWidget> {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
     late final double textWidth = ezTextSize(
-      l10n(widget.config).gSearchBar,
-      context: context,
+      widget.config,
+      text: l10n(widget.config).gSearchBar,
       style: widget.config.bodyStyle,
+      textScaler: MediaQuery.textScalerOf(context),
     ).width;
 
     return EzAnimSwitch(
@@ -439,9 +440,12 @@ class AddSearch extends StatelessWidget {
                 EzTextField(
                   constraints: BoxConstraints(
                     maxHeight: appIconSize(config),
-                    maxWidth: ezTextSize(l10n(config).gSearchBar,
-                                context: context, style: config.bodyStyle)
-                            .width +
+                    maxWidth: ezTextSize(
+                          config,
+                          text: l10n(config).gSearchBar,
+                          style: config.bodyStyle,
+                          textScaler: MediaQuery.textScalerOf(context),
+                        ).width +
                         config.padding,
                   ),
                   hintText: l10n(config).gSearch,
