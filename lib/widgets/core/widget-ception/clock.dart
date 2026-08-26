@@ -125,100 +125,105 @@ class _ClockWidgetState extends State<ClockWidget> {
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
-    return EzAnimSwitch(
+    return WideTile(
       widget.config,
-      mod: 0.667,
-      forceFade: true,
-      forceType: EzTransitionType.none,
-      child: switch (state) {
-        TileState.standard => MenuAnchor(
-            builder: (_, MenuController controller, __) => GestureDetector(
-              onLongPress: () async => await canToggleMenu(widget.config, controller),
-              child: EzTextBackground(
+      pos: widget.pos,
+      onLongPress: () async => await canToggleMenu(widget.config, menuControl),
+      child: EzAnimSwitch(
+        widget.config,
+        mod: 0.667,
+        forceFade: true,
+        forceType: EzTransitionType.none,
+        child: switch (state) {
+          TileState.standard => MenuAnchor(
+              builder: (_, MenuController controller, __) => GestureDetector(
+                onLongPress: () async => await canToggleMenu(widget.config, controller),
+                child: EzTextBackground(
+                  widget.config,
+                  shape: widget._shape,
+                  backgroundColor: widget._background,
+                  text: EzCol(
+                    mainAxisAlignment: widget.pos.vAlign.mainAxis,
+                    crossAxisAlignment: widget.pos.hAlign.crossAxis,
+                    children: <Widget>[
+                      if (widget._showTime)
+                        Text(
+                          TimeOfDay.fromDateTime(now).format(context),
+                          style: widget._timeStyle
+                              .style(widget.config)
+                              ?.copyWith(color: widget._timeColor),
+                          textAlign: widget.pos.hAlign.textAlign,
+                        ),
+                      if (widget._dateType != DateType.none)
+                        Text(
+                          DTConfig.buildDate(context, now, widget._dateType),
+                          style: widget._dateStyle
+                              .style(widget.config)
+                              ?.copyWith(color: widget._dateColor),
+                          textAlign: widget.pos.hAlign.textAlign,
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+              menuChildren: _menuChildren(
                 widget.config,
-                shape: widget._shape,
-                backgroundColor: widget._background,
-                text: EzCol(
-                  mainAxisAlignment: widget.pos.vAlign.mainAxis,
-                  crossAxisAlignment: widget.pos.hAlign.crossAxis,
-                  children: <Widget>[
-                    if (widget._showTime)
-                      Text(
-                        TimeOfDay.fromDateTime(now).format(context),
-                        style: widget._timeStyle
-                            .style(widget.config)
-                            ?.copyWith(color: widget._timeColor),
-                        textAlign: widget.pos.hAlign.textAlign,
-                      ),
-                    if (widget._dateType != DateType.none)
-                      Text(
-                        DTConfig.buildDate(context, now, widget._dateType),
-                        style: widget._dateStyle
-                            .style(widget.config)
-                            ?.copyWith(color: widget._dateColor),
-                        textAlign: widget.pos.hAlign.textAlign,
-                      ),
-                  ],
+                appInfo: widget.appInfo,
+                context: context,
+                state: state,
+                editReset: widget.editReset,
+                numLanes: numLanes,
+                pos: widget.pos,
+                initConfig: _ClockConfig(
+                  tp: widget._tp,
+                  hAlign: widget.pos.hAlign,
+                  vAlign: widget.pos.vAlign,
+                  shape: widget._shape,
+                  background: widget._background,
+                  timeStyle: widget._timeStyle,
+                  timeColor: widget._timeColor,
+                  showTime: widget._showTime,
+                  dateType: widget._dateType,
+                  dateStyle: widget._dateStyle,
+                  dateColor: widget._dateColor,
                 ),
               ),
             ),
-            menuChildren: _menuChildren(
+          _ => EditContainer(
               widget.config,
-              appInfo: widget.appInfo,
-              context: context,
-              state: state,
-              editReset: widget.editReset,
-              numLanes: numLanes,
-              pos: widget.pos,
-              initConfig: _ClockConfig(
-                tp: widget._tp,
-                hAlign: widget.pos.hAlign,
-                vAlign: widget.pos.vAlign,
-                shape: widget._shape,
-                background: widget._background,
-                timeStyle: widget._timeStyle,
-                timeColor: widget._timeColor,
-                showTime: widget._showTime,
-                dateType: widget._dateType,
-                dateStyle: widget._dateStyle,
-                dateColor: widget._dateColor,
+              subAlign: widget.pos.subAlign,
+              menuControl: menuControl,
+              menuChildren: _menuChildren(
+                widget.config,
+                appInfo: widget.appInfo,
+                context: context,
+                state: state,
+                editReset: widget.editReset,
+                numLanes: numLanes,
+                pos: widget.pos,
+                initConfig: _ClockConfig(
+                  tp: widget._tp,
+                  hAlign: widget.pos.hAlign,
+                  vAlign: widget.pos.vAlign,
+                  shape: widget._shape,
+                  background: widget._background,
+                  timeStyle: widget._timeStyle,
+                  timeColor: widget._timeColor,
+                  showTime: widget._showTime,
+                  dateType: widget._dateType,
+                  dateStyle: widget._dateStyle,
+                  dateColor: widget._dateColor,
+                ),
+              ),
+              child: EzIconButton(
+                widget.config,
+                icon: const Icon(Icons.watch),
+                tooltip: l10n(widget.config).clkTitle,
+                onPressed: () => toggleMenu(menuControl),
               ),
             ),
-          ),
-        _ => EditContainer(
-            widget.config,
-            subAlign: widget.pos.subAlign,
-            menuControl: menuControl,
-            menuChildren: _menuChildren(
-              widget.config,
-              appInfo: widget.appInfo,
-              context: context,
-              state: state,
-              editReset: widget.editReset,
-              numLanes: numLanes,
-              pos: widget.pos,
-              initConfig: _ClockConfig(
-                tp: widget._tp,
-                hAlign: widget.pos.hAlign,
-                vAlign: widget.pos.vAlign,
-                shape: widget._shape,
-                background: widget._background,
-                timeStyle: widget._timeStyle,
-                timeColor: widget._timeColor,
-                showTime: widget._showTime,
-                dateType: widget._dateType,
-                dateStyle: widget._dateStyle,
-                dateColor: widget._dateColor,
-              ),
-            ),
-            child: EzIconButton(
-              widget.config,
-              icon: const Icon(Icons.watch),
-              tooltip: l10n(widget.config).clkTitle,
-              onPressed: () => toggleMenu(menuControl),
-            ),
-          ),
-      },
+        },
+      ),
     );
   }
 

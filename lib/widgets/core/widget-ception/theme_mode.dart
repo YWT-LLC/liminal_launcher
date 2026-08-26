@@ -92,73 +92,78 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
-    return EzAnimSwitch(
+    return WideTile(
       widget.config,
-      mod: 0.667,
-      forceFade: true,
-      forceType: EzTransitionType.none,
-      child: switch (state) {
-        TileState.standard => MenuAnchor(
-            builder: (_, MenuController controller, __) => (widget._size == WWGGSize.button)
-                ? GestureDetector(
-                    onDoubleTap: () async {
-                      await EzCM.remove(isDarkThemeKey);
-                      await widget.config.rebuildThemeMode();
-                    },
-                    child: EzIconButton(
-                      widget.config,
-                      icon: Icon(widget.config.isDark ? Icons.dark_mode : Icons.light_mode),
-                      tooltip: l10n(widget.config).thmToggle,
-                      onPressed: () async {
-                        await EzCM.setBool(isDarkThemeKey, !widget.config.isDark);
+      pos: widget.pos,
+      onLongPress: () async => await canToggleMenu(widget.config, menuControl),
+      child: EzAnimSwitch(
+        widget.config,
+        mod: 0.667,
+        forceFade: true,
+        forceType: EzTransitionType.none,
+        child: switch (state) {
+          TileState.standard => MenuAnchor(
+              builder: (_, MenuController controller, __) => (widget._size == WWGGSize.button)
+                  ? GestureDetector(
+                      onDoubleTap: () async {
+                        await EzCM.remove(isDarkThemeKey);
                         await widget.config.rebuildThemeMode();
                       },
+                      child: EzIconButton(
+                        widget.config,
+                        icon: Icon(widget.config.isDark ? Icons.dark_mode : Icons.light_mode),
+                        tooltip: l10n(widget.config).thmToggle,
+                        onPressed: () async {
+                          await EzCM.setBool(isDarkThemeKey, !widget.config.isDark);
+                          await widget.config.rebuildThemeMode();
+                        },
+                        onLongPress: () async => await canToggleMenu(widget.config, controller),
+                      ),
+                    )
+                  : GestureDetector(
                       onLongPress: () async => await canToggleMenu(widget.config, controller),
+                      child: EzThemeModeSwitch(widget.config),
                     ),
-                  )
-                : GestureDetector(
-                    onLongPress: () async => await canToggleMenu(widget.config, controller),
-                    child: EzThemeModeSwitch(widget.config),
-                  ),
-            menuChildren: _menuChildren(
-              widget.config,
-              appInfo: widget.appInfo,
-              context: context,
-              state: state,
-              editReset: widget.editReset,
-              numLanes: numLanes,
-              pos: widget.pos,
-              initConfig: _TMConfig(
-                tp: widget._tp,
-                size: widget._size,
+              menuChildren: _menuChildren(
+                widget.config,
+                appInfo: widget.appInfo,
+                context: context,
+                state: state,
+                editReset: widget.editReset,
+                numLanes: numLanes,
+                pos: widget.pos,
+                initConfig: _TMConfig(
+                  tp: widget._tp,
+                  size: widget._size,
+                ),
               ),
             ),
-          ),
-        _ => EditContainer(
-            widget.config,
-            subAlign: widget.pos.subAlign,
-            menuControl: menuControl,
-            menuChildren: _menuChildren(
+          _ => EditContainer(
               widget.config,
-              appInfo: widget.appInfo,
-              context: context,
-              state: state,
-              editReset: widget.editReset,
-              numLanes: numLanes,
-              pos: widget.pos,
-              initConfig: _TMConfig(
-                tp: widget._tp,
-                size: widget._size,
+              subAlign: widget.pos.subAlign,
+              menuControl: menuControl,
+              menuChildren: _menuChildren(
+                widget.config,
+                appInfo: widget.appInfo,
+                context: context,
+                state: state,
+                editReset: widget.editReset,
+                numLanes: numLanes,
+                pos: widget.pos,
+                initConfig: _TMConfig(
+                  tp: widget._tp,
+                  size: widget._size,
+                ),
+              ),
+              child: EzIconButton(
+                widget.config,
+                icon: Icon(widget.config.isDark ? Icons.dark_mode : Icons.light_mode),
+                tooltip: l10n(widget.config).thmToggle,
+                onPressed: () => toggleMenu(menuControl),
               ),
             ),
-            child: EzIconButton(
-              widget.config,
-              icon: Icon(widget.config.isDark ? Icons.dark_mode : Icons.light_mode),
-              tooltip: l10n(widget.config).thmToggle,
-              onPressed: () => toggleMenu(menuControl),
-            ),
-          ),
-      },
+        },
+      ),
     );
   }
 

@@ -222,96 +222,101 @@ class _SearchWidgetState extends State<SearchWidget> {
       textScaler: MediaQuery.textScalerOf(context),
     ).width;
 
-    return EzAnimSwitch(
+    return WideTile(
       widget.config,
-      mod: 0.667,
-      forceFade: true,
-      forceType: EzTransitionType.none,
-      child: switch (state) {
-        TileState.standard => MenuAnchor(
-            builder: (_, MenuController controller, __) => (widget._size == WWGGSize.button)
-                ? EzIconButton(
-                    widget.config,
-                    icon: Icon(widget._engine.icon),
-                    tooltip: l10n(widget.config).gSearch,
-                    onPressed: () => launchUrl(Uri.https(widget._engine.base, '/')),
-                    onLongPress: () async => await canToggleMenu(widget.config, controller),
-                  )
-                : EzScrollBlocker(EzScrollView(
-                    widget.config,
-                    reverseHands: true,
-                    scrollDirection: Axis.horizontal,
-                    children: <Widget>[
-                      EzTextField(
-                        controller: queryCon,
-                        constraints: BoxConstraints(
-                          maxHeight: appIconSize(widget.config),
-                          maxWidth: textWidth + widget.config.padding,
+      pos: widget.pos,
+      onLongPress: () async => await canToggleMenu(widget.config, menuControl),
+      child: EzAnimSwitch(
+        widget.config,
+        mod: 0.667,
+        forceFade: true,
+        forceType: EzTransitionType.none,
+        child: switch (state) {
+          TileState.standard => MenuAnchor(
+              builder: (_, MenuController controller, __) => (widget._size == WWGGSize.button)
+                  ? EzIconButton(
+                      widget.config,
+                      icon: Icon(widget._engine.icon),
+                      tooltip: l10n(widget.config).gSearch,
+                      onPressed: () => launchUrl(Uri.https(widget._engine.base, '/')),
+                      onLongPress: () async => await canToggleMenu(widget.config, controller),
+                    )
+                  : EzScrollBlocker(EzScrollView(
+                      widget.config,
+                      reverseHands: true,
+                      scrollDirection: Axis.horizontal,
+                      children: <Widget>[
+                        EzTextField(
+                          controller: queryCon,
+                          constraints: BoxConstraints(
+                            maxHeight: appIconSize(widget.config),
+                            maxWidth: textWidth + widget.config.padding,
+                          ),
+                          errorConstraints: BoxConstraints(
+                            maxWidth: (textWidth * 2) + widget.config.padding,
+                          ),
+                          hintText: widget._engine.name,
+                          keyboardType: TextInputType.webSearch,
+                          onChanged: onChanged,
+                          onFieldSubmitted: search,
+                          validator: null,
                         ),
-                        errorConstraints: BoxConstraints(
-                          maxWidth: (textWidth * 2) + widget.config.padding,
+                        widget.config.rowMargin,
+                        EzIconButton(
+                          widget.config,
+                          icon: Icon(widget._engine.icon),
+                          tooltip: l10n(widget.config).gSearch,
+                          onPressed: () => search(queryCon.text),
+                          onLongPress: () async => await canToggleMenu(widget.config, controller),
                         ),
-                        hintText: widget._engine.name,
-                        keyboardType: TextInputType.webSearch,
-                        onChanged: onChanged,
-                        onFieldSubmitted: search,
-                        validator: null,
-                      ),
-                      widget.config.rowMargin,
-                      EzIconButton(
-                        widget.config,
-                        icon: Icon(widget._engine.icon),
-                        tooltip: l10n(widget.config).gSearch,
-                        onPressed: () => search(queryCon.text),
-                        onLongPress: () async => await canToggleMenu(widget.config, controller),
-                      ),
-                    ],
-                  )),
-            menuChildren: _menuChildren(
-              widget.config,
-              appInfo: widget.appInfo,
-              context: context,
-              state: state,
-              editReset: widget.editReset,
-              numLanes: numLanes,
-              pos: widget.pos,
-              engineChoices: engineChoices,
-              initConfig: _SearchConfig(
-                tp: widget._tp,
-                size: widget._size,
-                engine: widget._engine,
-                choices: widget._choices,
+                      ],
+                    )),
+              menuChildren: _menuChildren(
+                widget.config,
+                appInfo: widget.appInfo,
+                context: context,
+                state: state,
+                editReset: widget.editReset,
+                numLanes: numLanes,
+                pos: widget.pos,
+                engineChoices: engineChoices,
+                initConfig: _SearchConfig(
+                  tp: widget._tp,
+                  size: widget._size,
+                  engine: widget._engine,
+                  choices: widget._choices,
+                ),
               ),
             ),
-          ),
-        _ => EditContainer(
-            widget.config,
-            subAlign: widget.pos.subAlign,
-            menuControl: menuControl,
-            menuChildren: _menuChildren(
+          _ => EditContainer(
               widget.config,
-              appInfo: widget.appInfo,
-              context: context,
-              state: state,
-              editReset: widget.editReset,
-              numLanes: numLanes,
-              pos: widget.pos,
-              engineChoices: <Widget>[],
-              initConfig: _SearchConfig(
-                tp: widget._tp,
-                size: widget._size,
-                engine: widget._engine,
-                choices: widget._choices,
+              subAlign: widget.pos.subAlign,
+              menuControl: menuControl,
+              menuChildren: _menuChildren(
+                widget.config,
+                appInfo: widget.appInfo,
+                context: context,
+                state: state,
+                editReset: widget.editReset,
+                numLanes: numLanes,
+                pos: widget.pos,
+                engineChoices: <Widget>[],
+                initConfig: _SearchConfig(
+                  tp: widget._tp,
+                  size: widget._size,
+                  engine: widget._engine,
+                  choices: widget._choices,
+                ),
+              ),
+              child: EzIconButton(
+                widget.config,
+                icon: const Icon(Icons.search),
+                tooltip: l10n(widget.config).gSearch,
+                onPressed: () => toggleMenu(menuControl),
               ),
             ),
-            child: EzIconButton(
-              widget.config,
-              icon: const Icon(Icons.search),
-              tooltip: l10n(widget.config).gSearch,
-              onPressed: () => toggleMenu(menuControl),
-            ),
-          ),
-      },
+        },
+      ),
     );
   }
 

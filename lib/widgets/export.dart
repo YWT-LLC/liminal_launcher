@@ -16,6 +16,7 @@ export 'core/folder_tile.dart';
 export 'core/lane.dart';
 export 'core/mc.dart';
 export 'core/spacer.dart';
+export 'core/wide_tile.dart';
 
 export 'settings/alignment.dart';
 export 'settings/app_list.dart';

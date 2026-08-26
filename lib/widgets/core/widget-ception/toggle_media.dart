@@ -96,127 +96,132 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
   Widget build(BuildContext context) {
     final int numLanes = widget.appInfo.numLanes(widget.config);
 
-    return EzAnimSwitch(
+    return WideTile(
       widget.config,
-      mod: 0.667,
-      forceFade: true,
-      forceType: EzTransitionType.none,
-      child: switch (state) {
-        TileState.standard => MenuAnchor(
-            builder: (_, MenuController controller, __) => EzIconButton(
-              widget.config,
-              tooltip: l10n(widget.config).togTitle,
-              icon: (widget._size == WWGGSize.button)
-                  ? const Icon(Icons.headphones)
-                  : EzRow(
-                      widget.config,
-                      reverseHands: false,
-                      children: <Widget>[
-                        widget.config.rowMargin,
+      pos: widget.pos,
+      onLongPress: () async => await canToggleMenu(widget.config, menuControl),
+      child: EzAnimSwitch(
+        widget.config,
+        mod: 0.667,
+        forceFade: true,
+        forceType: EzTransitionType.none,
+        child: switch (state) {
+          TileState.standard => MenuAnchor(
+              builder: (_, MenuController controller, __) => EzIconButton(
+                widget.config,
+                tooltip: l10n(widget.config).togTitle,
+                icon: (widget._size == WWGGSize.button)
+                    ? const Icon(Icons.headphones)
+                    : EzRow(
+                        widget.config,
+                        reverseHands: false,
+                        children: <Widget>[
+                          widget.config.rowMargin,
 
-                        // Backwards
-                        if (widget._bigSkips) ...<Widget>[
+                          // Backwards
+                          if (widget._bigSkips) ...<Widget>[
+                            GestureDetector(
+                              onTap: skipPrev,
+                              child: Icon(
+                                Icons.skip_previous,
+                                semanticLabel: l10n(widget.config).togPrevious,
+                              ),
+                            ),
+                            widget.config.rowSpacer,
+                          ],
+
+                          if (widget._lilSkips) ...<Widget>[
+                            GestureDetector(
+                              onTap: rewind,
+                              child: Icon(
+                                Icons.fast_rewind,
+                                semanticLabel: l10n(widget.config).togRewind,
+                              ),
+                            ),
+                            widget.config.rowSpacer,
+                          ],
+
+                          // Play/pause
                           GestureDetector(
-                            onTap: skipPrev,
+                            onTap: toggleMedia,
                             child: Icon(
-                              Icons.skip_previous,
-                              semanticLabel: l10n(widget.config).togPrevious,
+                              Icons.headphones,
+                              semanticLabel: l10n(widget.config).togPlayPause,
                             ),
                           ),
-                          widget.config.rowSpacer,
-                        ],
 
-                        if (widget._lilSkips) ...<Widget>[
-                          GestureDetector(
-                            onTap: rewind,
-                            child: Icon(
-                              Icons.fast_rewind,
-                              semanticLabel: l10n(widget.config).togRewind,
+                          // Forwards
+                          if (widget._lilSkips) ...<Widget>[
+                            widget.config.rowSpacer,
+                            GestureDetector(
+                              onTap: fastForward,
+                              child: Icon(
+                                Icons.fast_forward,
+                                semanticLabel: l10n(widget.config).togFF,
+                              ),
                             ),
-                          ),
-                          widget.config.rowSpacer,
-                        ],
+                          ],
 
-                        // Play/pause
-                        GestureDetector(
-                          onTap: toggleMedia,
-                          child: Icon(
-                            Icons.headphones,
-                            semanticLabel: l10n(widget.config).togPlayPause,
-                          ),
-                        ),
-
-                        // Forwards
-                        if (widget._lilSkips) ...<Widget>[
-                          widget.config.rowSpacer,
-                          GestureDetector(
-                            onTap: fastForward,
-                            child: Icon(
-                              Icons.fast_forward,
-                              semanticLabel: l10n(widget.config).togFF,
+                          if (widget._bigSkips) ...<Widget>[
+                            widget.config.rowSpacer,
+                            GestureDetector(
+                              onTap: skipNext,
+                              child: Icon(
+                                Icons.skip_next,
+                                semanticLabel: l10n(widget.config).togNext,
+                              ),
                             ),
-                          ),
+                          ],
+                          widget.config.rowMargin,
                         ],
-
-                        if (widget._bigSkips) ...<Widget>[
-                          widget.config.rowSpacer,
-                          GestureDetector(
-                            onTap: skipNext,
-                            child: Icon(
-                              Icons.skip_next,
-                              semanticLabel: l10n(widget.config).togNext,
-                            ),
-                          ),
-                        ],
-                        widget.config.rowMargin,
-                      ],
-                    ),
-              onPressed: (widget._size == WWGGSize.button) ? toggleMedia : doNothing,
-              onLongPress: () async => await canToggleMenu(widget.config, controller),
-            ),
-            menuChildren: _menuChildren(
-              widget.config,
-              appInfo: widget.appInfo,
-              context: context,
-              state: state,
-              editReset: widget.editReset,
-              numLanes: numLanes,
-              pos: widget.pos,
-              initConfig: _MediaConfig(
-                tp: widget._tp,
-                size: widget._size,
-                bigSkips: widget._bigSkips,
-                lilSkips: widget._lilSkips,
+                      ),
+                onPressed: (widget._size == WWGGSize.button) ? toggleMedia : doNothing,
+                onLongPress: () async => await canToggleMenu(widget.config, controller),
+              ),
+              menuChildren: _menuChildren(
+                widget.config,
+                appInfo: widget.appInfo,
+                context: context,
+                state: state,
+                editReset: widget.editReset,
+                numLanes: numLanes,
+                pos: widget.pos,
+                initConfig: _MediaConfig(
+                  tp: widget._tp,
+                  size: widget._size,
+                  bigSkips: widget._bigSkips,
+                  lilSkips: widget._lilSkips,
+                ),
               ),
             ),
-          ),
-        _ => EditContainer(
-            widget.config,
-            subAlign: widget.pos.subAlign,
-            menuControl: menuControl,
-            menuChildren: _menuChildren(
+          _ => EditContainer(
               widget.config,
-              appInfo: widget.appInfo,
-              context: context,
-              state: state,
-              editReset: widget.editReset,
-              numLanes: numLanes,
-              pos: widget.pos,
-              initConfig: _MediaConfig(
-                tp: widget._tp,
-                size: widget._size,
-                bigSkips: widget._bigSkips,
-                lilSkips: widget._lilSkips,
+              subAlign: widget.pos.subAlign,
+              menuControl: menuControl,
+              menuChildren: _menuChildren(
+                widget.config,
+                appInfo: widget.appInfo,
+                context: context,
+                state: state,
+                editReset: widget.editReset,
+                numLanes: numLanes,
+                pos: widget.pos,
+                initConfig: _MediaConfig(
+                  tp: widget._tp,
+                  size: widget._size,
+                  bigSkips: widget._bigSkips,
+                  lilSkips: widget._lilSkips,
+                ),
+              ),
+              child: EzIconButton(
+                widget.config,
+                icon: const Icon(Icons.headphones),
+                tooltip: l10n(widget.config).togTitle,
+                onPressed: () => toggleMenu(menuControl),
               ),
             ),
-            child: EzIconButton(
-              widget.config,
-              icon: const Icon(Icons.headphones),
-              tooltip: l10n(widget.config).togTitle,
-              onPressed: () => toggleMenu(menuControl),
-            ),
-          ),
-      },
+        },
+      ),
     );
   }
 

@@ -240,129 +240,134 @@ class _EventWidgetState extends State<EventWidget> {
                 ),
     );
 
-    return EzAnimSwitch(
+    return WideTile(
       widget.config,
-      mod: 0.667,
-      forceFade: true,
-      forceType: EzTransitionType.none,
-      child: switch (state) {
-        TileState.standard => MenuAnchor(
-            builder: (_, MenuController controller, __) => (widget._size == WWGGSize.button)
-                ? GestureDetector(
-                    child: icon,
-                    onTap: () async {
-                      if (widget._isCalendar) {
-                        final bool success = await createCalendarEvent(null);
-                        if (!success && context.mounted) await selfDestruct();
-                        return;
-                      }
-
-                      widget._shareDest == null
-                          ? await _openEdits(
-                              widget.config,
-                              appInfo: widget.appInfo,
-                              pContext: context,
-                              initConfig: _EventConfig(
-                                tp: widget._tp,
-                                size: widget._size,
-                                isCalendar: widget._isCalendar,
-                                shareDest: widget._shareDest,
-                                useAppIcon: widget._useAppIcon,
-                              ),
-                              lane: widget.pos.lane,
-                              index: widget.pos.index,
-                            )
-                          : await launchApp(widget._shareDest!);
-                    },
-                    onLongPress: () async => await canToggleMenu(widget.config, controller),
-                  )
-                : EzScrollBlocker(EzScrollView(
-                    widget.config,
-                    reverseHands: true,
-                    scrollDirection: Axis.horizontal,
-                    children: <Widget>[
-                      EzTextField(
-                        controller: eventCon,
-                        constraints: BoxConstraints(
-                          maxHeight: appIconSize(widget.config),
-                          maxWidth: textWidth + widget.config.padding,
-                        ),
-                        errorConstraints: BoxConstraints(
-                          maxWidth: (textWidth * 2) + widget.config.padding,
-                        ),
-                        hintText: widget._isCalendar
-                            ? l10n(widget.config).evtNewEvent
-                            : l10n(widget.config).evtNewTask,
-                        onChanged: onChanged,
-                        onFieldSubmitted: (String entry) async {
-                          final bool success = widget._isCalendar
-                              ? await createCalendarEvent(entry)
-                              : await createTask(entry, widget._shareDest);
-
-                          eventCon.clear();
-                          removeOverlay();
-
+      pos: widget.pos,
+      onLongPress: () async => await canToggleMenu(widget.config, menuControl),
+      child: EzAnimSwitch(
+        widget.config,
+        mod: 0.667,
+        forceFade: true,
+        forceType: EzTransitionType.none,
+        child: switch (state) {
+          TileState.standard => MenuAnchor(
+              builder: (_, MenuController controller, __) => (widget._size == WWGGSize.button)
+                  ? GestureDetector(
+                      child: icon,
+                      onTap: () async {
+                        if (widget._isCalendar) {
+                          final bool success = await createCalendarEvent(null);
                           if (!success && context.mounted) await selfDestruct();
-                        },
-                        validator: null,
-                      ),
-                      widget.config.rowMargin,
-                      GestureDetector(
-                        onTap: () async {
-                          final bool success = widget._isCalendar
-                              ? await createCalendarEvent(eventCon.text)
-                              : await createTask(eventCon.text, widget._shareDest);
+                          return;
+                        }
 
-                          eventCon.clear();
-                          removeOverlay();
+                        widget._shareDest == null
+                            ? await _openEdits(
+                                widget.config,
+                                appInfo: widget.appInfo,
+                                pContext: context,
+                                initConfig: _EventConfig(
+                                  tp: widget._tp,
+                                  size: widget._size,
+                                  isCalendar: widget._isCalendar,
+                                  shareDest: widget._shareDest,
+                                  useAppIcon: widget._useAppIcon,
+                                ),
+                                lane: widget.pos.lane,
+                                index: widget.pos.index,
+                              )
+                            : await launchApp(widget._shareDest!);
+                      },
+                      onLongPress: () async => await canToggleMenu(widget.config, controller),
+                    )
+                  : EzScrollBlocker(EzScrollView(
+                      widget.config,
+                      reverseHands: true,
+                      scrollDirection: Axis.horizontal,
+                      children: <Widget>[
+                        EzTextField(
+                          controller: eventCon,
+                          constraints: BoxConstraints(
+                            maxHeight: appIconSize(widget.config),
+                            maxWidth: textWidth + widget.config.padding,
+                          ),
+                          errorConstraints: BoxConstraints(
+                            maxWidth: (textWidth * 2) + widget.config.padding,
+                          ),
+                          hintText: widget._isCalendar
+                              ? l10n(widget.config).evtNewEvent
+                              : l10n(widget.config).evtNewTask,
+                          onChanged: onChanged,
+                          onFieldSubmitted: (String entry) async {
+                            final bool success = widget._isCalendar
+                                ? await createCalendarEvent(entry)
+                                : await createTask(entry, widget._shareDest);
 
-                          if (!success && context.mounted) await selfDestruct();
-                        },
-                        onLongPress: () async => await canToggleMenu(widget.config, controller),
-                        child: icon,
-                      ),
-                    ],
-                  )),
-            menuChildren: _menuChildren(
-              widget.config,
-              appInfo: widget.appInfo,
-              context: context,
-              state: state,
-              editReset: widget.editReset,
-              numLanes: numLanes,
-              pos: widget.pos,
-              initConfig: _EventConfig(
-                tp: widget._tp,
-                size: widget._size,
-                isCalendar: widget._isCalendar,
-                shareDest: widget._shareDest,
-                useAppIcon: widget._useAppIcon,
+                            eventCon.clear();
+                            removeOverlay();
+
+                            if (!success && context.mounted) await selfDestruct();
+                          },
+                          validator: null,
+                        ),
+                        widget.config.rowMargin,
+                        GestureDetector(
+                          onTap: () async {
+                            final bool success = widget._isCalendar
+                                ? await createCalendarEvent(eventCon.text)
+                                : await createTask(eventCon.text, widget._shareDest);
+
+                            eventCon.clear();
+                            removeOverlay();
+
+                            if (!success && context.mounted) await selfDestruct();
+                          },
+                          onLongPress: () async => await canToggleMenu(widget.config, controller),
+                          child: icon,
+                        ),
+                      ],
+                    )),
+              menuChildren: _menuChildren(
+                widget.config,
+                appInfo: widget.appInfo,
+                context: context,
+                state: state,
+                editReset: widget.editReset,
+                numLanes: numLanes,
+                pos: widget.pos,
+                initConfig: _EventConfig(
+                  tp: widget._tp,
+                  size: widget._size,
+                  isCalendar: widget._isCalendar,
+                  shareDest: widget._shareDest,
+                  useAppIcon: widget._useAppIcon,
+                ),
               ),
             ),
-          ),
-        _ => EditContainer(
-            widget.config,
-            subAlign: widget.pos.subAlign,
-            menuControl: menuControl,
-            menuChildren: _menuChildren(
+          _ => EditContainer(
               widget.config,
-              appInfo: widget.appInfo,
-              context: context,
-              state: state,
-              editReset: widget.editReset,
-              numLanes: numLanes,
-              pos: widget.pos,
-              initConfig: _EventConfig(
-                tp: widget._tp,
-                size: widget._size,
-                isCalendar: widget._isCalendar,
-                shareDest: widget._shareDest,
-                useAppIcon: widget._useAppIcon,
+              subAlign: widget.pos.subAlign,
+              menuControl: menuControl,
+              menuChildren: _menuChildren(
+                widget.config,
+                appInfo: widget.appInfo,
+                context: context,
+                state: state,
+                editReset: widget.editReset,
+                numLanes: numLanes,
+                pos: widget.pos,
+                initConfig: _EventConfig(
+                  tp: widget._tp,
+                  size: widget._size,
+                  isCalendar: widget._isCalendar,
+                  shareDest: widget._shareDest,
+                  useAppIcon: widget._useAppIcon,
+                ),
               ),
+              child: GestureDetector(child: icon, onTap: () => toggleMenu(menuControl)),
             ),
-            child: GestureDetector(child: icon, onTap: () => toggleMenu(menuControl)),
-          ),
-      },
+        },
+      ),
     );
   }
 

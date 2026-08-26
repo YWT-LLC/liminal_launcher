@@ -161,44 +161,103 @@ class _TimerWidgetState extends State<TimerWidget> {
         ? removeOverlay()
         : ((overlayEntry == null) ? showOverlay(tc) : overlayEntry!.markNeedsBuild());
 
-    return EzAnimSwitch(
+    return WideTile(
       widget.config,
-      mod: 0.667,
-      forceFade: true,
-      forceType: EzTransitionType.none,
-      child: switch (state) {
-        TileState.standard => MenuAnchor(
-            builder: (_, MenuController controller, __) => (widget._size == WWGGSize.button)
-                ? EzIconButton(
-                    widget.config,
-                    icon: const Icon(Icons.timer_outlined),
-                    tooltip: l10n(widget.config).gStart,
-                    onPressed: () async {
-                      final int ours = _toInt(ourCon.text);
-                      final int mins = _toInt(minCon.text);
-                      final int secs = _toInt(secCon.text);
+      pos: widget.pos,
+      onLongPress: () async => await canToggleMenu(widget.config, menuControl),
+      child: EzAnimSwitch(
+        widget.config,
+        mod: 0.667,
+        forceFade: true,
+        forceType: EzTransitionType.none,
+        child: switch (state) {
+          TileState.standard => MenuAnchor(
+              builder: (_, MenuController controller, __) => (widget._size == WWGGSize.button)
+                  ? EzIconButton(
+                      widget.config,
+                      icon: const Icon(Icons.timer_outlined),
+                      tooltip: l10n(widget.config).gStart,
+                      onPressed: () async {
+                        final int ours = _toInt(ourCon.text);
+                        final int mins = _toInt(minCon.text);
+                        final int secs = _toInt(secCon.text);
 
-                      ((ours + mins + secs) > 0)
-                          ? await setTimer(<int>[ours, mins, secs])
-                          : ezSnackBar(
-                              widget.config,
-                              context: context,
-                              message: l10n(widget.config).timBadTime,
+                        ((ours + mins + secs) > 0)
+                            ? await setTimer(<int>[ours, mins, secs])
+                            : ezSnackBar(
+                                widget.config,
+                                context: context,
+                                message: l10n(widget.config).timBadTime,
+                              );
+                      },
+                      onLongPress: () async => await canToggleMenu(widget.config, controller),
+                    )
+                  : EzScrollBlocker(EzScrollView(
+                      widget.config,
+                      scrollDirection: Axis.horizontal,
+                      children: <Widget>[
+                        if (widget.config.isLefty) ...<Widget>[
+                          widget.config.rowMargin,
+                          EzIconButton(
+                            widget.config,
+                            icon: const Icon(Icons.timer_outlined),
+                            tooltip: l10n(widget.config).gStart,
+                            onPressed: () async {
+                              removeOverlay();
+                              await setTimer(<int>[
+                                _toInt(ourCon.text),
+                                _toInt(minCon.text),
+                                _toInt(secCon.text),
+                              ]);
+                            },
+                            onLongPress: () async => await canToggleMenu(widget.config, controller),
+                          ),
+                        ],
+
+                        // Hours
+                        _timeField(
+                          constraints: numConstraints,
+                          tc: ourCon,
+                          curr: ourNode,
+                          label: l10n(widget.config).timHours,
+                          onChanged: (String s) => onChanged(s, ourCon),
+                          onSubmit: () {
+                            removeOverlay();
+                            minNode.requestFocus();
+                            minCon.selection = TextSelection(
+                              baseOffset: 0,
+                              extentOffset: minCon.text.length,
                             );
-                    },
-                    onLongPress: () async => await canToggleMenu(widget.config, controller),
-                  )
-                : EzScrollBlocker(EzScrollView(
-                    widget.config,
-                    scrollDirection: Axis.horizontal,
-                    children: <Widget>[
-                      if (widget.config.isLefty) ...<Widget>[
+                          },
+                        ),
                         widget.config.rowMargin,
-                        EzIconButton(
-                          widget.config,
-                          icon: const Icon(Icons.timer_outlined),
-                          tooltip: l10n(widget.config).gStart,
-                          onPressed: () async {
+
+                        // Minutes
+                        _timeField(
+                          constraints: numConstraints,
+                          tc: minCon,
+                          curr: minNode,
+                          label: l10n(widget.config).timMins,
+                          onChanged: (String s) => onChanged(s, minCon),
+                          onSubmit: () {
+                            removeOverlay();
+                            secNode.requestFocus();
+                            secCon.selection = TextSelection(
+                              baseOffset: 0,
+                              extentOffset: secCon.text.length,
+                            );
+                          },
+                        ),
+                        widget.config.rowMargin,
+
+                        // Seconds
+                        _timeField(
+                          constraints: numConstraints,
+                          tc: secCon,
+                          curr: secNode,
+                          label: l10n(widget.config).timSecs,
+                          onChanged: (String s) => onChanged(s, secCon),
+                          onSubmit: () async {
                             removeOverlay();
                             await setTimer(<int>[
                               _toInt(ourCon.text),
@@ -206,136 +265,82 @@ class _TimerWidgetState extends State<TimerWidget> {
                               _toInt(secCon.text),
                             ]);
                           },
-                          onLongPress: () async => await canToggleMenu(widget.config, controller),
+                          last: true,
                         ),
+
+                        if (!widget.config.isLefty) ...<Widget>[
+                          widget.config.rowMargin,
+                          EzIconButton(
+                            widget.config,
+                            icon: const Icon(Icons.timer_outlined),
+                            tooltip: l10n(widget.config).gStart,
+                            onPressed: () async {
+                              removeOverlay();
+                              await setTimer(<int>[
+                                _toInt(ourCon.text),
+                                _toInt(minCon.text),
+                                _toInt(secCon.text),
+                              ]);
+                            },
+                            onLongPress: () async => await canToggleMenu(widget.config, controller),
+                          ),
+                        ],
                       ],
-
-                      // Hours
-                      _timeField(
-                        constraints: numConstraints,
-                        tc: ourCon,
-                        curr: ourNode,
-                        label: l10n(widget.config).timHours,
-                        onChanged: (String s) => onChanged(s, ourCon),
-                        onSubmit: () {
-                          removeOverlay();
-                          minNode.requestFocus();
-                          minCon.selection = TextSelection(
-                            baseOffset: 0,
-                            extentOffset: minCon.text.length,
-                          );
-                        },
-                      ),
-                      widget.config.rowMargin,
-
-                      // Minutes
-                      _timeField(
-                        constraints: numConstraints,
-                        tc: minCon,
-                        curr: minNode,
-                        label: l10n(widget.config).timMins,
-                        onChanged: (String s) => onChanged(s, minCon),
-                        onSubmit: () {
-                          removeOverlay();
-                          secNode.requestFocus();
-                          secCon.selection = TextSelection(
-                            baseOffset: 0,
-                            extentOffset: secCon.text.length,
-                          );
-                        },
-                      ),
-                      widget.config.rowMargin,
-
-                      // Seconds
-                      _timeField(
-                        constraints: numConstraints,
-                        tc: secCon,
-                        curr: secNode,
-                        label: l10n(widget.config).timSecs,
-                        onChanged: (String s) => onChanged(s, secCon),
-                        onSubmit: () async {
-                          removeOverlay();
-                          await setTimer(<int>[
-                            _toInt(ourCon.text),
-                            _toInt(minCon.text),
-                            _toInt(secCon.text),
-                          ]);
-                        },
-                        last: true,
-                      ),
-
-                      if (!widget.config.isLefty) ...<Widget>[
-                        widget.config.rowMargin,
-                        EzIconButton(
-                          widget.config,
-                          icon: const Icon(Icons.timer_outlined),
-                          tooltip: l10n(widget.config).gStart,
-                          onPressed: () async {
-                            removeOverlay();
-                            await setTimer(<int>[
-                              _toInt(ourCon.text),
-                              _toInt(minCon.text),
-                              _toInt(secCon.text),
-                            ]);
-                          },
-                          onLongPress: () async => await canToggleMenu(widget.config, controller),
-                        ),
-                      ],
-                    ],
-                  )),
-            menuChildren: _menuChildren(
-              widget.config,
-              appInfo: widget.appInfo,
-              context: context,
-              state: state,
-              editReset: widget.editReset,
-              numLanes: numLanes,
-              pos: widget.pos,
-              initConfig: _TimerConfig(
-                tp: widget._tp,
-                size: widget._size,
-                constraints: numConstraints,
-                auto: <String>[
-                  _validateTime(ourCon.text),
-                  _validateTime(minCon.text),
-                  _validateTime(secCon.text),
-                ].join(colon),
-                quick: widget._times,
+                    )),
+              menuChildren: _menuChildren(
+                widget.config,
+                appInfo: widget.appInfo,
+                context: context,
+                state: state,
+                editReset: widget.editReset,
+                numLanes: numLanes,
+                pos: widget.pos,
+                initConfig: _TimerConfig(
+                  tp: widget._tp,
+                  size: widget._size,
+                  constraints: numConstraints,
+                  auto: <String>[
+                    _validateTime(ourCon.text),
+                    _validateTime(minCon.text),
+                    _validateTime(secCon.text),
+                  ].join(colon),
+                  quick: widget._times,
+                ),
               ),
             ),
-          ),
-        _ => EditContainer(
-            widget.config,
-            subAlign: widget.pos.subAlign,
-            menuControl: menuControl,
-            menuChildren: _menuChildren(
+          _ => EditContainer(
               widget.config,
-              appInfo: widget.appInfo,
-              context: context,
-              state: state,
-              editReset: widget.editReset,
-              numLanes: numLanes,
-              pos: widget.pos,
-              initConfig: _TimerConfig(
-                tp: widget._tp,
-                size: widget._size,
-                constraints: numConstraints,
-                auto: <String>[
-                  _validateTime(ourCon.text),
-                  _validateTime(minCon.text),
-                  _validateTime(secCon.text),
-                ].join(colon),
-                quick: widget._times,
+              subAlign: widget.pos.subAlign,
+              menuControl: menuControl,
+              menuChildren: _menuChildren(
+                widget.config,
+                appInfo: widget.appInfo,
+                context: context,
+                state: state,
+                editReset: widget.editReset,
+                numLanes: numLanes,
+                pos: widget.pos,
+                initConfig: _TimerConfig(
+                  tp: widget._tp,
+                  size: widget._size,
+                  constraints: numConstraints,
+                  auto: <String>[
+                    _validateTime(ourCon.text),
+                    _validateTime(minCon.text),
+                    _validateTime(secCon.text),
+                  ].join(colon),
+                  quick: widget._times,
+                ),
+              ),
+              child: EzIconButton(
+                widget.config,
+                icon: const Icon(Icons.timer_outlined),
+                tooltip: l10n(widget.config).timTitle,
+                onPressed: () => toggleMenu(menuControl),
               ),
             ),
-            child: EzIconButton(
-              widget.config,
-              icon: const Icon(Icons.timer_outlined),
-              tooltip: l10n(widget.config).timTitle,
-              onPressed: () => toggleMenu(menuControl),
-            ),
-          ),
-      },
+        },
+      ),
     );
   }
 
