@@ -574,7 +574,7 @@ Future<void> _openEdits(
                 widthEntry: TxtStile.display.value,
                 dropdownMenuEntries: TxtStile.values
                     .map((TxtStile ts) =>
-                        DropdownMenuEntry<TxtStile>(value: ts, label: ezCamelToTitle(ts.value)))
+                        DropdownMenuEntry<TxtStile>(value: ts, label: ts.name(config)))
                     .toList(),
                 menuStyle: timeStyle.style(config),
                 onSelected: (TxtStile? choice) {
@@ -652,7 +652,7 @@ Future<void> _openEdits(
                 widthEntry: DateType.compact.value,
                 dropdownMenuEntries: DateType.values
                     .map((DateType dt) =>
-                        DropdownMenuEntry<DateType>(value: dt, label: ezCamelToTitle(dt.value)))
+                        DropdownMenuEntry<DateType>(value: dt, label: dt.name(config)))
                     .toList(),
                 onSelected: (DateType? choice) {
                   if (choice == null) return;
@@ -672,7 +672,7 @@ Future<void> _openEdits(
                 widthEntry: TxtStile.display.value,
                 dropdownMenuEntries: TxtStile.values
                     .map((TxtStile ts) =>
-                        DropdownMenuEntry<TxtStile>(value: ts, label: ezCamelToTitle(ts.value)))
+                        DropdownMenuEntry<TxtStile>(value: ts, label: ts.name(config)))
                     .toList(),
                 menuStyle: dateStyle.style(config),
                 onSelected: (TxtStile? choice) {

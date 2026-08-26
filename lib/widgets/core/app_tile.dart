@@ -809,7 +809,7 @@ Future<void> editApp(
               dropdownMenuEntries: <DropdownMenuEntry<LabelType?>>[
                 DropdownMenuEntry<LabelType?>(value: null, label: l10n(config).gDefault),
                 ...LabelType.values.map((LabelType lt) =>
-                    DropdownMenuEntry<LabelType?>(value: lt, label: ezCamelToTitle(lt.value))),
+                    DropdownMenuEntry<LabelType?>(value: lt, label: lt.name(config))),
               ],
               enableSearch: false,
               initialSelection: labelType,

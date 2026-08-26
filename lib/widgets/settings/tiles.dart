@@ -97,10 +97,8 @@ class AppTileSetting extends StatelessWidget {
                     label: l10n(config).dbsLabelType,
                     widthEntry: l10n(config).dbsInitials,
                     dropdownMenuEntries: LabelType.values
-                        .map((LabelType lt) => DropdownMenuEntry<LabelType>(
-                              value: lt,
-                              label: ezCamelToTitle(lt.value),
-                            ))
+                        .map((LabelType lt) =>
+                            DropdownMenuEntry<LabelType>(value: lt, label: lt.name(config)))
                         .toList(),
                     enableSearch: false,
                     initialSelection: labelType,
