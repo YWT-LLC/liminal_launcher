@@ -3,8 +3,6 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: redo tile semantics check with new wide tile
-
 import '../../../utils/export.dart';
 import '../../export.dart';
 
