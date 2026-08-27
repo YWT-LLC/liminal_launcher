@@ -595,7 +595,6 @@ class _SpacingOverlay extends OverlayEntry {
                                       lane: currLane,
                                       oldIndex: currIndex,
                                       newIndex: nextIndex,
-                                      notify: true,
                                     );
 
                                     setOverlay(() => currIndex = nextIndex);
@@ -629,7 +628,6 @@ class _SpacingOverlay extends OverlayEntry {
                                       lane: currLane,
                                       oldIndex: currIndex,
                                       newIndex: nextIndex,
-                                      notify: true,
                                     );
 
                                     setOverlay(() => currIndex = nextIndex);

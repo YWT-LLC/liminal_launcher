@@ -3,8 +3,6 @@
  * See LICENSE for distribution and usage details.
  */
 
-// TODO: track down which operations step on eachother's toes && why
-
 import './export.dart';
 import '../widgets/export.dart';
 
@@ -81,7 +79,6 @@ class AppInfoProvider extends ChangeNotifier {
     }, onError: (dynamic error) => ezLog('Error listening to app events: $error'));
   }
 
-  /// Does notify
   Future<void> _handleAppInstalled(Map<String, dynamic> appInfoMap) async {
     final AppInfo installed = AppInfo.fromMap(appInfoMap);
 
@@ -201,8 +198,6 @@ class AppInfoProvider extends ChangeNotifier {
 
   // Core //
 
-  /// Does notify
-  /// Shows added overlay
   Future<void> addApp(
     EzCP config, {
     required int lane,
@@ -223,8 +218,6 @@ class AppInfoProvider extends ChangeNotifier {
     unawaited(_added(config, editNew: editNew));
   }
 
-  /// Does notify
-  /// Shows added overlay
   Future<void> addWidget(
     EzCP config, {
     required WWGG type,
@@ -259,8 +252,6 @@ class AppInfoProvider extends ChangeNotifier {
     unawaited(_added(config, editNew: editNew));
   }
 
-  /// Does notify
-  /// Shows added overlay
   Future<void> addFolder(
     EzCP config, {
     required int lane,
@@ -282,8 +273,6 @@ class AppInfoProvider extends ChangeNotifier {
     unawaited(_added(config, editNew: editNew));
   }
 
-  /// Does notify
-  /// Doesn't show added overlay (assumes the helper overlay will be or is already opened)
   Future<int> addSpacer(
     EzCP config, {
     double? height,
@@ -321,8 +310,6 @@ class AppInfoProvider extends ChangeNotifier {
     return pos;
   }
 
-  /// Does notify
-  /// Shows added overlay
   Future<void> addLane(EzCP config) async {
     if (interlinked || config.isDark) {
       _darkHomeMatrix.add(<String>[defaultLaneEntry()]);
@@ -338,8 +325,6 @@ class AppInfoProvider extends ChangeNotifier {
     unawaited(_added(config, editNew: null));
   }
 
-  /// Does notify
-  /// Shows added overlay
   Future<void> dupeItem(
     EzCP config, {
     required int lane,
@@ -360,8 +345,6 @@ class AppInfoProvider extends ChangeNotifier {
     unawaited(_added(config, editNew: editNew));
   }
 
-  /// Does notify
-  /// Shows added overlay
   Future<void> dupeLane(
     EzCP config, {
     required int lane,
@@ -413,7 +396,6 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Does notify
   Future<void> updateSpacing(
     EzCP config, {
     required int lane,
@@ -515,7 +497,6 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Does notify
   Future<void> updateApp(
     EzCP config, {
     required int lane,
@@ -536,7 +517,6 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Does notify
   Future<void> updateFolder(
     EzCP config, {
     required int lane,
@@ -566,7 +546,6 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Does notify
   Future<void> updateWidget(
     EzCP config,
     WWGG type,
@@ -587,13 +566,11 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Optionally [notify]s (default false)
   Future<void> reorderLane(
     EzCP config, {
     required int lane,
     required int oldIndex,
     required int newIndex,
-    bool notify = false,
   }) async {
     if (interlinked || config.isDark) {
       final String element = _darkHomeMatrix[lane].removeAt(oldIndex);
@@ -609,10 +586,9 @@ class AppInfoProvider extends ChangeNotifier {
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
 
-    if (notify) notifyListeners();
+    notifyListeners();
   }
 
-  /// Does notify
   Future<void> moveItemUpLane(EzCP config, {required int lane, required int index}) async {
     if (interlinked || config.isDark) {
       final String item = _darkHomeMatrix[lane].removeAt(index);
@@ -631,7 +607,6 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Does notify
   Future<void> moveItemDownLane(EzCP config, {required int lane, required int index}) async {
     if (interlinked || config.isDark) {
       final String item = _darkHomeMatrix[lane].removeAt(index);
@@ -664,6 +639,8 @@ class AppInfoProvider extends ChangeNotifier {
 
       unawaited(_saveLightMatrix(List<List<String>>.from(_lightHomeMatrix)));
     }
+
+    // Don't notify listeners, this is only called by [updateLane], which already notifies
   }
 
   Future<void> updateLane(
@@ -686,8 +663,6 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Does notify
-  /// Calls [ezNoTouch] when saving changes
   Future<void> hideApp(EzCP config, BuildContext context, String id) async {
     bool? both;
 
@@ -788,7 +763,6 @@ class AppInfoProvider extends ChangeNotifier {
     await _clearHomeOf(config, id, both ?? interlinked);
   }
 
-  /// Does notify, as long as not [batch]
   Future<bool> showApp(EzCP config, String id, {bool batch = false}) async {
     if (interlinked || config.isDark) {
       if (!_darkHidden.contains(id)) return false;
@@ -856,8 +830,6 @@ class AppInfoProvider extends ChangeNotifier {
     return true;
   }
 
-  /// Does notify
-  /// Calls [ezNoTouch] when saving changes
   Future<bool> banishApp(EzCP config, BuildContext context, AppInfo app) async {
     const String curr = 'curr'; // not for user, don't translate
     const String both = 'both';
@@ -965,7 +937,6 @@ class AppInfoProvider extends ChangeNotifier {
 
   // Delete //
 
-  /// Does notify, as long as not [batch]
   Future<void> removeItem(
     EzCP config, {
     required int lane,
@@ -985,7 +956,6 @@ class AppInfoProvider extends ChangeNotifier {
     if (!batch) notifyListeners();
   }
 
-  /// Full [ezNoTouch], then notifies
   Future<void> _clearHomeOf(EzCP? config, String id, bool both) async {
     await ezNoTouch(() async {
       if (config == null || both || config.isDark) {
@@ -1103,8 +1073,6 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Does notify
-  /// Includes optional confirm dialog
   Future<bool> removeLane(
     EzCP config,
     BuildContext context,
