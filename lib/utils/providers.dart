@@ -368,10 +368,12 @@ class AppInfoProvider extends ChangeNotifier {
 
   void sort(ListSort sort, bool asc) {
     _apps.sort(switch (sort) {
-      ListSort.name => (AppInfo a, AppInfo b) =>
-          asc ? a.label.compareTo(b.label) : b.label.compareTo(a.label),
-      ListSort.publisher => (AppInfo a, AppInfo b) =>
-          asc ? a.package.compareTo(b.package) : b.package.compareTo(a.package),
+      ListSort.name => (AppInfo a, AppInfo b) => asc
+          ? a.label.toLowerCase().compareTo(b.label.toLowerCase())
+          : b.label.toLowerCase().compareTo(a.label.toLowerCase()),
+      ListSort.publisher => (AppInfo a, AppInfo b) => asc
+          ? a.package.toLowerCase().compareTo(b.package.toLowerCase())
+          : b.package.toLowerCase().compareTo(a.package.toLowerCase()),
       ListSort.date => (AppInfo a, AppInfo b) =>
           asc ? a.installDate.compareTo(b.installDate) : b.installDate.compareTo(a.installDate),
       ListSort.size => (AppInfo a, AppInfo b) =>
