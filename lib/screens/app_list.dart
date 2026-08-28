@@ -188,7 +188,7 @@ class _AppListScreenState extends State<AppListScreen> {
                             Expanded(
                               child: TextField(
                                 controller: searchControl,
-                                autofocus: searching, // TODO: test
+                                autofocus: searching,
                                 decoration: InputDecoration(
                                   hintText: l10n(config).gSearch,
                                   border: InputBorder.none,
