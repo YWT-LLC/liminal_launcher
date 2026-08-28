@@ -349,14 +349,32 @@ class AppEventReceiver(private val eventSink: EventSink?) : BroadcastReceiver() 
     val packageManager = context.packageManager
 
     try {
-      val app = mutableMapOf<String, Any?>()
+      val launchIntent = packageManager.getLaunchIntentForPackage(packageName)
+      if (launchIntent == null) return null
+
+      val intent = Intent(Intent.ACTION_MAIN, null).apply {
+        addCategory(Intent.CATEGORY_LAUNCHER)
+        setPackage(packageName)
+      }
+
+      val resolveInfos = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        packageManager.queryIntentActivities(intent, PackageManager.ResolveInfoFlags.of(0L))
+      } else {
+        @Suppress("DEPRECATION")
+        packageManager.queryIntentActivities(intent, 0)
+      }
+
+      if (resolveInfos.isEmpty()) return null
+      val appInfo = resolveInfos[0]
 
       val packageInfo: PackageInfo = packageManager.getPackageInfo(packageName, 0)
       val applicationInfo: ApplicationInfo = packageManager.getApplicationInfo(packageName, 0)
+      
+      val app = mutableMapOf<String, Any?>()
 
       app["package"] = packageName
-      app["label"] = packageManager.getApplicationLabel(applicationInfo).toString()
-      app["icon"] = drawableToByteArray(packageManager.getApplicationIcon(applicationInfo))
+      app["label"] = appInfo.loadLabel(packageManager).toString()
+      app["icon"] = drawableToByteArray(appInfo.loadIcon(packageManager))
 
       val isSystemApp: Boolean = (applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
       app["removable"] = !isSystemApp
@@ -367,7 +385,7 @@ class AppEventReceiver(private val eventSink: EventSink?) : BroadcastReceiver() 
       app["packageSize"] = File(apkPath).length()
 
       return app
-    } catch (e: PackageManager.NameNotFoundException) {
+    } catch (e: Exception) {
       Log.e("AppDetails", "App with package $packageName not found.", e)
       return null
     }
@@ -390,7 +408,7 @@ class AppEventStreamHandler(private val context: Context) : EventChannel.StreamH
     }
     
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-      context.registerReceiver(appEventReceiver, intentFilter, Context.RECEIVER_EXPORTED)
+      context.registerReceiver(appEventReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED)
     } else {
       @Suppress("DEPRECATION")
       context.registerReceiver(appEventReceiver, intentFilter)
