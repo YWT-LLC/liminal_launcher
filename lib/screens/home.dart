@@ -18,8 +18,6 @@ import 'package:go_router/go_router.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-// TODO: fix animation
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -877,13 +875,13 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                 onVerticalDragEnd: (DragEndDetails details) async {
                   if (details.primaryVelocity != null) {
                     if (editingMarked) return;
-                    if (details.primaryVelocity! < 0) await swipeUp(config, appInfo);
+                    if (details.primaryVelocity! < -ezSwipeV) await swipeUp(config, appInfo);
                   }
                 },
                 onHorizontalDragEnd: (DragEndDetails details) {
                   if (details.primaryVelocity != null && details.primaryVelocity! != 0) {
                     if (pages(config)) {
-                      if (details.primaryVelocity! < 0) {
+                      if (details.primaryVelocity! < -ezSwipeV) {
                         // Swipe right to left -> nav to right
                         standardFlow(config)
                             ? navPageUp(config, appInfo, numLanes)
@@ -899,7 +897,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                     }
                     if (editing || editingMarked) return;
 
-                    final AppInfo? toLaunch = ((details.primaryVelocity! < 0)
+                    final AppInfo? toLaunch = ((details.primaryVelocity! < -ezSwipeV)
                         ? appInfo.appMap[leftSwipeID]
                         : appInfo.appMap[rightSwipeID]);
 

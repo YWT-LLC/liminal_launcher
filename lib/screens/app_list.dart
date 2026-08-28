@@ -107,7 +107,7 @@ class _AppListScreenState extends State<AppListScreen> {
             onLongPressStart: (LongPressStartDetails details) => ripple(config, details),
             onVerticalDragEnd: (DragEndDetails details) {
               if (details.primaryVelocity != null) {
-                if (details.primaryVelocity! > 0) {
+                if (details.primaryVelocity! > ezSwipeV) {
                   Navigator.of(context).pop();
                 }
               }
