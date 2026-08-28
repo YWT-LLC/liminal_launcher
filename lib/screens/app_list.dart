@@ -27,7 +27,7 @@ class _AppListScreenState extends State<AppListScreen> {
   final ScrollController scrollControl = ScrollController();
   final TextEditingController searchControl = TextEditingController();
 
-  bool searching = autoSearch;
+  bool searching = EzCM.get(autoSearchKey);
   ListSort listSort = LSConfig.safeLookup(EzCM.get(listSortKey));
   bool ascList = EzCM.get(ascListKey);
 
@@ -188,7 +188,7 @@ class _AppListScreenState extends State<AppListScreen> {
                             Expanded(
                               child: TextField(
                                 controller: searchControl,
-                                autofocus: autoSearch,
+                                autofocus: searching, // TODO: test
                                 decoration: InputDecoration(
                                   hintText: l10n(config).gSearch,
                                   border: InputBorder.none,
