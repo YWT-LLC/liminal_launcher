@@ -87,9 +87,6 @@ class _EditSpacingOverlayState extends State<_EditSpacingOverlay> {
   late double wBack = double.tryParse(initData[1]) ?? appIS;
   late double width = wBack;
 
-  // TODO
-  // if (!tile) editSpacerSize.value = Size(width, height);
-
   // Tile
   late AxisDirection side = AxisDirection.up;
 
@@ -111,12 +108,6 @@ class _EditSpacingOverlayState extends State<_EditSpacingOverlay> {
 
   late double rBack = double.tryParse(paddingEntries[3]) ?? halfSpace;
   late double right = rBack;
-
-  // TODO
-  // if (tile) {
-  //   editTilePadding.value =
-  //       EdgeInsets.only(top: top, bottom: bottom, left: left, right: right);
-  // }
 
   // Init //
 
@@ -206,6 +197,18 @@ class _EditSpacingOverlayState extends State<_EditSpacingOverlay> {
   @override
   void initState() {
     super.initState();
+
+    if (tile) {
+      editTilePadding.value = EdgeInsets.only(
+        top: top,
+        bottom: bottom,
+        left: left,
+        right: right,
+      );
+    } else {
+      editSpacerSize.value = Size(width, height);
+    }
+
     marked.addListener(_newMark);
   }
 
