@@ -67,10 +67,11 @@ class AppInfoProvider extends ChangeNotifier {
             if (uninstalled.isNotEmpty) {
               for (final AppInfo app in uninstalled) {
                 if (ezRootIsMounted && ezRootContext.mounted) {
+                  // Second is redundant, but Dart doesn't know that ¯\(ツ)/¯
                   await ezSnackBar(
                     configWatcher(ezRootContext),
                     context: ezRootContext,
-                    message: 'Removing ${app.label}', // TODO: l10n
+                    message: l10n(configWatcher(ezRootContext)).gRemoving(app.label),
                     showCloseIcon: false,
                   ).closed;
                 }
