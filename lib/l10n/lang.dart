@@ -650,8 +650,8 @@ abstract class Lang {
   /// No description provided for @gRemoving.
   ///
   /// In en, this message translates to:
-  /// **'Removing'**
-  String get gRemoving;
+  /// **'Removing {app}'**
+  String gRemoving(Object app);
 
   /// No description provided for @gSelfDestruct.
   ///

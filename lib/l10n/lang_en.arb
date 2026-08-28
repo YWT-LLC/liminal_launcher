@@ -132,7 +132,7 @@
   "gNoEmpty": "Cannot be empty",
   "gNothing": "Nothing",
 
-  "gRemoving": "Removing",
+  "gRemoving": "Removing {app}",
   "gSelfDestruct": "Self-destruct",
 
   "gMachineTranslated": "Everything is machine translated. If you see something wrong, please submit a fix!\n",

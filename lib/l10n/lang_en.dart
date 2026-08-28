@@ -290,7 +290,9 @@ class LangEn extends Lang {
   String get gNothing => 'Nothing';
 
   @override
-  String get gRemoving => 'Removing';
+  String gRemoving(Object app) {
+    return 'Removing $app';
+  }
 
   @override
   String get gSelfDestruct => 'Self-destruct';
@@ -964,7 +966,9 @@ class LangEnUs extends LangEn {
   String get gNothing => 'Nothing';
 
   @override
-  String get gRemoving => 'Removing';
+  String gRemoving(Object app) {
+    return 'Removing $app';
+  }
 
   @override
   String get gSelfDestruct => 'Self-destruct';

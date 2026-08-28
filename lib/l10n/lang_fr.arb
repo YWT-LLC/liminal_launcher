@@ -132,7 +132,7 @@
   "gNoEmpty": "Ne peut pas être vide",
   "gNothing": "Rien",
 
-  "gRemoving": "Suppression en cours",
+  "gRemoving": "Supprimer {app}",
   "gSelfDestruct": "Autodestruction",
 
   "gMachineTranslated": "Tout est traduit par une machine. Si vous voyez une erreur, merci de proposer une correction !\n",

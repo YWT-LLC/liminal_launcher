@@ -291,7 +291,9 @@ class LangDe extends Lang {
   String get gNothing => 'Nichts';
 
   @override
-  String get gRemoving => 'Wird entfernt';
+  String gRemoving(Object app) {
+    return '$app entfernen';
+  }
 
   @override
   String get gSelfDestruct => 'Selbstzerstörung';

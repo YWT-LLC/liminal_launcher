@@ -291,7 +291,9 @@ class LangEs extends Lang {
   String get gNothing => 'Nada';
 
   @override
-  String get gRemoving => 'Eliminando';
+  String gRemoving(Object app) {
+    return 'Eliminar $app';
+  }
 
   @override
   String get gSelfDestruct => 'Autodestrucción';

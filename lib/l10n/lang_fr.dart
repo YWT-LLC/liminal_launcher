@@ -291,7 +291,9 @@ class LangFr extends Lang {
   String get gNothing => 'Rien';
 
   @override
-  String get gRemoving => 'Suppression en cours';
+  String gRemoving(Object app) {
+    return 'Supprimer $app';
+  }
 
   @override
   String get gSelfDestruct => 'Autodestruction';
