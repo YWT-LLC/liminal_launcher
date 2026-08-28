@@ -166,8 +166,6 @@ bool get interlinked => EzCM.get(interlinkedKey);
 bool get homeRipple => EzCM.get(homeRippleKey);
 bool get listRipple => EzCM.get(listRippleKey);
 
-bool get autoSearch => EzCM.get(autoSearchKey);
-
 String get leftSwipeID => EzCM.get(leftSwipeIDKey);
 String get rightSwipeID => EzCM.get(rightSwipeIDKey);
 
