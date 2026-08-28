@@ -188,6 +188,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                                 widget.config,
                                 context: context,
                                 message: l10n(widget.config).timBadTime,
+                                showCloseIcon: false,
                               );
                       },
                       onLongPress: () async => await canToggleMenu(widget.config, controller),
