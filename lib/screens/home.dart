@@ -494,7 +494,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     final List<String> entries = appInfo.homeLane(config, lane);
 
     final List<Widget> tiles = <Widget>[];
-    void editReset() => editing ? setState(() => editing = false) : doNothing();
+    void editReset() => setState(() => editing = false);
 
     for (int index = 1; index < entries.length; index++) {
       final String entry = entries[index];
