@@ -50,8 +50,11 @@ class AppInfoProvider extends ChangeNotifier {
 
         switch (eventType) {
           case 'installed':
-            final Map<String, dynamic>? appInfoMap = event['appInfo'] as Map<String, dynamic>?;
-            if (appInfoMap != null) await _handleAppInstalled(appInfoMap);
+            final Map<dynamic, dynamic>? response = event['appInfo'] as Map<dynamic, dynamic>?;
+            if (response == null) return;
+
+            final Map<String, dynamic> appInfoMap = Map<String, dynamic>.from(response);
+            await _handleAppInstalled(appInfoMap);
 
             break;
           case 'uninstalled':
