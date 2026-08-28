@@ -735,6 +735,8 @@ Future<void> editApp(
                   tooltip: config.ezL10n.gDecrease,
                   onPressed: () {
                     iconSize = (iconSize == null) ? (appIconSize(config) - 1) : (iconSize! - 1);
+
+                    shapeEdits = true;
                     setModal(() => iconSize = max(iconSize!, minIconSize));
                   },
                 ),
@@ -780,6 +782,8 @@ Future<void> editApp(
                   tooltip: config.ezL10n.gIncrease,
                   onPressed: () {
                     iconSize = (iconSize == null) ? (appIconSize(config) + 1) : (iconSize! + 1);
+
+                    shapeEdits = true;
                     setModal(() => iconSize = min(iconSize!, maxIconSize));
                   },
                 ),

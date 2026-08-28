@@ -517,6 +517,8 @@ Future<void> editFolder(
                       tooltip: config.ezL10n.gDecrease,
                       onPressed: () {
                         iconSize = (iconSize == null) ? (config.iconSize - 1) : (iconSize! - 1);
+
+                        shapeEdits = true;
                         setModal(() => iconSize = max(iconSize!, minIconSize));
                       },
                     ),
@@ -540,6 +542,8 @@ Future<void> editFolder(
                       tooltip: config.ezL10n.gIncrease,
                       onPressed: () {
                         iconSize = (iconSize == null) ? (config.iconSize + 1) : (iconSize! + 1);
+
+                        shapeEdits = true;
                         setModal(() => iconSize = min(iconSize!, maxIconSize));
                       },
                     ),
