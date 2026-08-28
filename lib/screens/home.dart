@@ -18,6 +18,8 @@ import 'package:go_router/go_router.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+// TODO: fix animation
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
