@@ -168,7 +168,8 @@ class _TimerWidgetState extends State<TimerWidget> {
       forceType: EzTransitionType.none,
       child: switch (state) {
         TileState.standard => MenuAnchor(
-            builder: (_, MenuController controller, __) => WideTile(
+            controller: menuControl,
+            builder: (_, __, ___) => WideTile(
               widget.config,
               alignment: widget.pos.subAlign,
               onLongPress: () async => await canToggleMenu(widget.config, menuControl),
@@ -191,7 +192,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                                 showCloseIcon: false,
                               );
                       },
-                      onLongPress: () async => await canToggleMenu(widget.config, controller),
+                      onLongPress: () async => await canToggleMenu(widget.config, menuControl),
                     )
                   : EzScrollBlocker(EzScrollView(
                       widget.config,
@@ -211,7 +212,8 @@ class _TimerWidgetState extends State<TimerWidget> {
                                 _toInt(secCon.text),
                               ]);
                             },
-                            onLongPress: () async => await canToggleMenu(widget.config, controller),
+                            onLongPress: () async =>
+                                await canToggleMenu(widget.config, menuControl),
                           ),
                         ],
 
@@ -283,7 +285,8 @@ class _TimerWidgetState extends State<TimerWidget> {
                                 _toInt(secCon.text),
                               ]);
                             },
-                            onLongPress: () async => await canToggleMenu(widget.config, controller),
+                            onLongPress: () async =>
+                                await canToggleMenu(widget.config, menuControl),
                           ),
                         ],
                       ],

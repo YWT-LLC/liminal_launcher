@@ -184,7 +184,8 @@ class _AppTileState extends State<AppTile> {
       forceType: EzTransitionType.none,
       child: switch (state) {
         TileState.standard => MenuAnchor(
-            builder: (_, MenuController controller, __) => (widget.location == AppLocation.folder)
+            controller: menuControl,
+            builder: (_, __, ___) => (widget.location == AppLocation.folder)
                 ? AppButton(
                     widget.config,
                     name: widget.app.label,
@@ -194,12 +195,12 @@ class _AppTileState extends State<AppTile> {
                     buttonType: listBT(widget.config),
                     labelType: listLabels(widget.config),
                     onPressed: () => widget.onSelected(widget.app),
-                    onLongPress: () async => await canToggleMenu(widget.config, controller),
+                    onLongPress: () async => await canToggleMenu(widget.config, menuControl),
                   )
                 : WideTile(
                     widget.config,
                     onTap: () => widget.onSelected(widget.app),
-                    onLongPress: () async => await canToggleMenu(widget.config, controller),
+                    onLongPress: () async => await canToggleMenu(widget.config, menuControl),
                     alignment: widget.pos == null
                         ? LAConfig.merge(h: widget.hAlign!, v: widget.vAlign!)
                         : widget.pos!.subAlign,
@@ -212,7 +213,7 @@ class _AppTileState extends State<AppTile> {
                       buttonType: widget._buttonType ?? listBT(widget.config),
                       labelType: widget._labelType ?? listLabels(widget.config),
                       onPressed: () => widget.onSelected(widget.app),
-                      onLongPress: () async => await canToggleMenu(widget.config, controller),
+                      onLongPress: () async => await canToggleMenu(widget.config, menuControl),
                     ),
                   ),
             menuChildren: _menuChildren(

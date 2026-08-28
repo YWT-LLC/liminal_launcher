@@ -99,7 +99,8 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
       forceType: EzTransitionType.none,
       child: switch (state) {
         TileState.standard => MenuAnchor(
-            builder: (_, MenuController controller, __) => WideTile(
+            controller: menuControl,
+            builder: (_, __, ___) => WideTile(
               widget.config,
               alignment: widget.pos.subAlign,
               onLongPress: () async => await canToggleMenu(widget.config, menuControl),

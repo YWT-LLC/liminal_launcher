@@ -161,10 +161,11 @@ class _AppFolderState extends State<FolderTile> {
       forceType: EzTransitionType.none,
       child: state == TileState.standard
           ? MenuAnchor(
-              builder: (_, MenuController controller, __) => WideTile(
+              controller: menuControl,
+              builder: (_, __, ___) => WideTile(
                 widget.config,
                 onTap: showApps,
-                onLongPress: () async => await canToggleMenu(widget.config, controller),
+                onLongPress: () async => await canToggleMenu(widget.config, menuControl),
                 alignment: widget.pos.subAlign,
                 child: FolderButton(
                   widget.config,
@@ -174,7 +175,7 @@ class _AppFolderState extends State<FolderTile> {
                   buttonType: widget._buttonType ?? folderBT(widget.config),
                   labelType: widget._labelType ?? folderLabels(widget.config),
                   onPressed: showApps,
-                  onLongPress: () async => await canToggleMenu(widget.config, controller),
+                  onLongPress: () async => await canToggleMenu(widget.config, menuControl),
                 ),
               ),
               menuChildren: _menuChildren(

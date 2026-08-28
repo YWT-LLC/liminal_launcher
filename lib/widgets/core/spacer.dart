@@ -117,13 +117,14 @@ class _LimSpacerState extends State<LimSpacer> {
             forceType: EzTransitionType.none,
             child: (state == TileState.standard)
                 ? MenuAnchor(
-                    builder: (_, MenuController controller, __) => Semantics(
+                    controller: menuControl,
+                    builder: (_, __, ___) => Semantics(
                       hint: l10n(widget.config).hsSpacer,
                       child: (marked.value == null)
                           ? GestureDetector(
                               behavior: HitTestBehavior.opaque,
                               onLongPress: () async =>
-                                  await canToggleMenu(widget.config, controller),
+                                  await canToggleMenu(widget.config, menuControl),
                               child: SizedBox(height: widget._height, width: widget._width),
                             )
                           : GestureDetector(

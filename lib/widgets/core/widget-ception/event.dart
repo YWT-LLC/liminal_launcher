@@ -249,7 +249,8 @@ class _EventWidgetState extends State<EventWidget> {
       forceType: EzTransitionType.none,
       child: switch (state) {
         TileState.standard => MenuAnchor(
-            builder: (_, MenuController controller, __) => WideTile(
+            controller: menuControl,
+            builder: (_, __, ___) => WideTile(
               widget.config,
               alignment: widget.pos.subAlign,
               onLongPress: () async => await canToggleMenu(widget.config, menuControl),
@@ -280,7 +281,7 @@ class _EventWidgetState extends State<EventWidget> {
                               )
                             : await launchApp(widget._shareDest!);
                       },
-                      onLongPress: () async => await canToggleMenu(widget.config, controller),
+                      onLongPress: () async => await canToggleMenu(widget.config, menuControl),
                     )
                   : EzScrollBlocker(EzScrollView(
                       widget.config,
@@ -324,7 +325,7 @@ class _EventWidgetState extends State<EventWidget> {
 
                             if (!success && context.mounted) await selfDestruct();
                           },
-                          onLongPress: () async => await canToggleMenu(widget.config, controller),
+                          onLongPress: () async => await canToggleMenu(widget.config, menuControl),
                           child: icon,
                         ),
                       ],

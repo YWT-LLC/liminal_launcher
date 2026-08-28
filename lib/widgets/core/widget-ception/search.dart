@@ -229,7 +229,8 @@ class _SearchWidgetState extends State<SearchWidget> {
       forceType: EzTransitionType.none,
       child: switch (state) {
         TileState.standard => MenuAnchor(
-            builder: (_, MenuController controller, __) => WideTile(
+            controller: menuControl,
+            builder: (_, __, ___) => WideTile(
               widget.config,
               alignment: widget.pos.subAlign,
               onLongPress: () async => await canToggleMenu(widget.config, menuControl),
@@ -239,7 +240,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                       icon: Icon(widget._engine.icon),
                       tooltip: l10n(widget.config).gSearch,
                       onPressed: () => launchUrl(Uri.https(widget._engine.base, '/')),
-                      onLongPress: () async => await canToggleMenu(widget.config, controller),
+                      onLongPress: () async => await canToggleMenu(widget.config, menuControl),
                     )
                   : EzScrollBlocker(EzScrollView(
                       widget.config,
@@ -267,7 +268,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                           icon: Icon(widget._engine.icon),
                           tooltip: l10n(widget.config).gSearch,
                           onPressed: () => search(queryCon.text),
-                          onLongPress: () async => await canToggleMenu(widget.config, controller),
+                          onLongPress: () async => await canToggleMenu(widget.config, menuControl),
                         ),
                       ],
                     )),
