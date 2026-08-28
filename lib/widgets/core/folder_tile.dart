@@ -13,6 +13,8 @@ import 'package:open_ui/open_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+// TODO: tooltips are breaking the reorder list on all but app tiles
+
 //* Core Widget *//
 
 class FolderTile extends StatefulWidget {
