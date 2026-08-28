@@ -67,7 +67,8 @@ class AppInfoProvider extends ChangeNotifier {
                   await ezSnackBar(
                     configWatcher(ezRootContext),
                     context: ezRootContext,
-                    message: 'Removing ${app.label}',
+                    message: 'Removing ${app.label}', // TODO: l10n
+                    showCloseIcon: false,
                   ).closed;
                 }
                 await _clearHomeOf(null, app.id, true);
