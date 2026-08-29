@@ -13,8 +13,6 @@ import 'package:go_router/go_router.dart';
 
 //* Core 'Widget' *//
 
-// TODO: can thou ripple?
-
 class LaneHeader extends StatelessWidget {
   final EzCP config;
   final AppInfoProvider appInfo;
