@@ -37,10 +37,7 @@ class LaneHeader extends StatelessWidget {
 
   Future<void> _delete(BuildContext context) async {
     final bool deleted = await appInfo.removeLane(config, context, pos.lane);
-
-    if (deleted == true) {
-      (pos.lane != 0 ? navPageDown?.call() : (numLanes == 1 ? doNothing() : navPageUp?.call()));
-    }
+    if (deleted == true) pos.lane == 0 ? doNothing() : navPageDown?.call();
   }
 
   Future<void> _dupe() => appInfo.dupeLane(
