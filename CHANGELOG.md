@@ -2,9 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.0.0] - 2025-XX-XX
+## [1.0.0] - 2026-09-29
 ### Added
-- liminal_launcher V1
+- Liminal Launcher V1
 
 ## [0.0.0] - 2025-06-01
 ### Added
