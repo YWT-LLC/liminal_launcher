@@ -477,7 +477,18 @@ String defaultSearchEntry(WWGGSize size) => _searchEntry(
       tp: nullTPS,
       size: size,
       engine: ecosia,
-      choices: Engine.defaultOrder.map((Engine e) => e.value),
+      choices: <String>[
+        archive.value,
+        ducks.value,
+        ebay.value,
+        ecosia.value,
+        google.value,
+        netflix.value,
+        spotify.value,
+        wikipedia.value,
+        wolframAlpha.value,
+        youTube.value,
+      ],
     );
 
 String _searchEntry({
@@ -801,7 +812,7 @@ Future<void> _openEdits(
                     ))
                 .toList(),
           ),
-          hidden.isEmpty ? config.separator : config.spacer,
+          EzKeyboardSpacer(config.spacing * (hidden.isEmpty ? 2 : 1)),
         ],
       ),
     ),
@@ -875,14 +886,21 @@ class Engine implements Comparable<Engine> {
   });
 
   static const List<Engine> defaultOrder = <Engine>[
+    amazon,
     archive,
     baidu,
+    bilibili,
     bing,
     ducks,
+    ebay,
     ecosia,
+    fiverr,
     google,
+    hulu,
     naver,
+    netflix,
     qwant,
+    spotify,
     wikipedia,
     wolframAlpha,
     yahoo,
@@ -891,14 +909,21 @@ class Engine implements Comparable<Engine> {
   ];
 
   static const List<Engine> defaultSet = <Engine>[
+    amazon,
     archive,
     baidu,
+    bilibili,
     bing,
     ducks,
+    ebay,
     ecosia,
+    fiverr,
     google,
+    hulu,
     naver,
+    netflix,
     qwant,
+    spotify,
     wikipedia,
     wolframAlpha,
     yahoo,
@@ -907,14 +932,21 @@ class Engine implements Comparable<Engine> {
   ];
 
   static const Map<String?, Engine> library = <String?, Engine>{
+    _amazon: amazon,
     _archive: archive,
     _baidu: baidu,
+    _bilibili: bilibili,
     _bing: bing,
     _ducks: ducks,
+    _ebay: ebay,
     _ecosia: ecosia,
+    _fiverr: fiverr,
     _google: google,
+    _hulu: hulu,
     _naver: naver,
+    _netflix: netflix,
     _qwant: qwant,
+    _spotify: spotify,
     _wikipedia: wikipedia,
     _wolframAlpha: wolframAlpha,
     _yahoo: yahoo,
@@ -936,6 +968,16 @@ class Engine implements Comparable<Engine> {
   int get hashCode => id.hashCode;
 }
 
+const String _amazon = 'amazon';
+const Engine amazon = Engine(
+  name: 'Amazon',
+  icon: LineIcons.amazon,
+  id: _amazon,
+  base: 'amazon.com',
+  path: '/s',
+  query: 'k',
+);
+
 const String _archive = 'archive';
 const Engine archive = Engine(
   name: 'Archive.org',
@@ -954,6 +996,16 @@ const Engine baidu = Engine(
   base: 'baidu.com',
   path: '/s',
   query: 'wd',
+);
+
+const String _bilibili = 'bilibili';
+const Engine bilibili = Engine(
+  name: 'Bilibili',
+  icon: Icons.ondemand_video,
+  id: _bilibili,
+  base: 'search.bilibili.com',
+  path: '/all',
+  query: 'keyword',
 );
 
 const String _bing = 'bing';
@@ -976,6 +1028,16 @@ const Engine ducks = Engine(
   query: 'q',
 );
 
+const String _ebay = 'ebay';
+const Engine ebay = Engine(
+  name: 'eBay',
+  icon: LineIcons.ebay,
+  id: _ebay,
+  base: 'ebay.com',
+  path: '/sch/i.html',
+  query: '_nkw',
+);
+
 const String _ecosia = 'ecosia';
 const Engine ecosia = Engine(
   name: 'Ecosia',
@@ -986,12 +1048,32 @@ const Engine ecosia = Engine(
   query: 'q',
 );
 
+const String _fiverr = 'fiverr';
+const Engine fiverr = Engine(
+  name: 'Fiverr',
+  icon: Icons.work,
+  id: _fiverr,
+  base: 'fiverr.com',
+  path: '/search/gigs',
+  query: 'query',
+);
+
 const String _google = 'google';
 const Engine google = Engine(
   name: 'Google',
   icon: LineIcons.googleLogo,
   id: _google,
   base: 'google.com',
+  path: '/search',
+  query: 'q',
+);
+
+const String _hulu = 'hulu';
+const Engine hulu = Engine(
+  name: 'Hulu',
+  icon: Icons.live_tv,
+  id: _hulu,
+  base: 'hulu.com',
   path: '/search',
   query: 'q',
 );
@@ -1006,6 +1088,16 @@ const Engine naver = Engine(
   query: 'query',
 );
 
+const String _netflix = 'netflix';
+const Engine netflix = Engine(
+  name: 'Netflix',
+  icon: Icons.movie,
+  id: _netflix,
+  base: 'netflix.com',
+  path: '/search',
+  query: 'q',
+);
+
 const String _qwant = 'qwant';
 const Engine qwant = Engine(
   name: 'Qwant',
@@ -1013,6 +1105,16 @@ const Engine qwant = Engine(
   id: _qwant,
   base: 'qwant.com',
   path: '/',
+  query: 'q',
+);
+
+const String _spotify = 'spotify';
+const Engine spotify = Engine(
+  name: 'Spotify',
+  icon: LineIcons.spotify,
+  id: _spotify,
+  base: 'open.spotify.com',
+  path: '/search',
   query: 'q',
 );
 
