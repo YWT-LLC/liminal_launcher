@@ -112,7 +112,11 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
                       },
                       child: EzIconButton(
                         widget.config,
-                        icon: Icon(widget.config.isDark ? Icons.dark_mode : Icons.light_mode),
+                        icon: Icon(widget.config.themeMode == ThemeMode.system
+                            ? (widget.config.isDark
+                                ? Icons.dark_mode_outlined
+                                : Icons.light_mode_outlined)
+                            : (widget.config.isDark ? Icons.dark_mode : Icons.light_mode)),
                         tooltip: l10n(widget.config).thmToggle,
                         onPressed: () async {
                           await EzCM.setBool(isDarkThemeKey, !widget.config.isDark);
@@ -241,7 +245,9 @@ class AddThemeMode extends StatelessWidget {
       ? EzIconButton(
           config,
           onPressed: onTap,
-          icon: Icon(config.isDark ? Icons.dark_mode : Icons.light_mode),
+          icon: Icon(config.themeMode == ThemeMode.system
+              ? (config.isDark ? Icons.dark_mode_outlined : Icons.light_mode_outlined)
+              : (config.isDark ? Icons.dark_mode : Icons.light_mode)),
           tooltip: l10n(config).gAdd,
         )
       : GestureDetector(
