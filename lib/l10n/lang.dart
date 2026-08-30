@@ -611,6 +611,18 @@ abstract class Lang {
   /// **'Shown'**
   String get gShown;
 
+  /// No description provided for @gGrid.
+  ///
+  /// In en, this message translates to:
+  /// **'Grid'**
+  String get gGrid;
+
+  /// No description provided for @gList.
+  ///
+  /// In en, this message translates to:
+  /// **'List'**
+  String get gList;
+
   /// No description provided for @gOutlined.
   ///
   /// In en, this message translates to:
@@ -988,6 +1000,312 @@ abstract class Lang {
   /// In en, this message translates to:
   /// **'Authenticate to see hidden apps'**
   String get hsHiddenAuth;
+
+  /// No description provided for @inAlarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm'**
+  String get inAlarm;
+
+  /// No description provided for @inBike.
+  ///
+  /// In en, this message translates to:
+  /// **'Bike'**
+  String get inBike;
+
+  /// No description provided for @inBoat.
+  ///
+  /// In en, this message translates to:
+  /// **'Boat'**
+  String get inBoat;
+
+  /// No description provided for @inBook.
+  ///
+  /// In en, this message translates to:
+  /// **'Book'**
+  String get inBook;
+
+  /// No description provided for @inCafe.
+  ///
+  /// In en, this message translates to:
+  /// **'Cafe'**
+  String get inCafe;
+
+  /// No description provided for @inCalculator.
+  ///
+  /// In en, this message translates to:
+  /// **'Calculator'**
+  String get inCalculator;
+
+  /// No description provided for @inCalendar.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar'**
+  String get inCalendar;
+
+  /// No description provided for @inCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera'**
+  String get inCamera;
+
+  /// No description provided for @inCar.
+  ///
+  /// In en, this message translates to:
+  /// **'Car'**
+  String get inCar;
+
+  /// No description provided for @inChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat'**
+  String get inChat;
+
+  /// No description provided for @inCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'Check'**
+  String get inCheck;
+
+  /// No description provided for @inCloud.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud'**
+  String get inCloud;
+
+  /// No description provided for @inCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Code'**
+  String get inCode;
+
+  /// No description provided for @inDraw.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw'**
+  String get inDraw;
+
+  /// No description provided for @inExplore.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore'**
+  String get inExplore;
+
+  /// No description provided for @inFavorite.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorite'**
+  String get inFavorite;
+
+  /// No description provided for @inFitness.
+  ///
+  /// In en, this message translates to:
+  /// **'Fitness'**
+  String get inFitness;
+
+  /// No description provided for @inFlight.
+  ///
+  /// In en, this message translates to:
+  /// **'Flight'**
+  String get inFlight;
+
+  /// No description provided for @inFolder.
+  ///
+  /// In en, this message translates to:
+  /// **'Folder'**
+  String get inFolder;
+
+  /// No description provided for @inFuel.
+  ///
+  /// In en, this message translates to:
+  /// **'Fuel'**
+  String get inFuel;
+
+  /// No description provided for @inGame.
+  ///
+  /// In en, this message translates to:
+  /// **'Game'**
+  String get inGame;
+
+  /// No description provided for @inGlobal.
+  ///
+  /// In en, this message translates to:
+  /// **'Global'**
+  String get inGlobal;
+
+  /// No description provided for @inGrass.
+  ///
+  /// In en, this message translates to:
+  /// **'Grass'**
+  String get inGrass;
+
+  /// No description provided for @inGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Group'**
+  String get inGroup;
+
+  /// No description provided for @inGymnastics.
+  ///
+  /// In en, this message translates to:
+  /// **'Gymnastics'**
+  String get inGymnastics;
+
+  /// No description provided for @inHeadset.
+  ///
+  /// In en, this message translates to:
+  /// **'Headset'**
+  String get inHeadset;
+
+  /// No description provided for @inHealth.
+  ///
+  /// In en, this message translates to:
+  /// **'Health'**
+  String get inHealth;
+
+  /// No description provided for @inHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get inHome;
+
+  /// No description provided for @inLock.
+  ///
+  /// In en, this message translates to:
+  /// **'Lock'**
+  String get inLock;
+
+  /// No description provided for @inMail.
+  ///
+  /// In en, this message translates to:
+  /// **'Mail'**
+  String get inMail;
+
+  /// No description provided for @inMovie.
+  ///
+  /// In en, this message translates to:
+  /// **'Movie'**
+  String get inMovie;
+
+  /// No description provided for @inMusic.
+  ///
+  /// In en, this message translates to:
+  /// **'Music'**
+  String get inMusic;
+
+  /// No description provided for @inNews.
+  ///
+  /// In en, this message translates to:
+  /// **'News'**
+  String get inNews;
+
+  /// No description provided for @inPets.
+  ///
+  /// In en, this message translates to:
+  /// **'Pets'**
+  String get inPets;
+
+  /// No description provided for @inPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo'**
+  String get inPhoto;
+
+  /// No description provided for @inPub.
+  ///
+  /// In en, this message translates to:
+  /// **'Pub'**
+  String get inPub;
+
+  /// No description provided for @inRestaurant.
+  ///
+  /// In en, this message translates to:
+  /// **'Restaurant'**
+  String get inRestaurant;
+
+  /// No description provided for @inRun.
+  ///
+  /// In en, this message translates to:
+  /// **'Run'**
+  String get inRun;
+
+  /// No description provided for @inSchool.
+  ///
+  /// In en, this message translates to:
+  /// **'School'**
+  String get inSchool;
+
+  /// No description provided for @inSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get inSearch;
+
+  /// No description provided for @inSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get inSettings;
+
+  /// No description provided for @inShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get inShare;
+
+  /// No description provided for @inShopping.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping'**
+  String get inShopping;
+
+  /// No description provided for @inStar.
+  ///
+  /// In en, this message translates to:
+  /// **'Star'**
+  String get inStar;
+
+  /// No description provided for @inStorefront.
+  ///
+  /// In en, this message translates to:
+  /// **'Storefront'**
+  String get inStorefront;
+
+  /// No description provided for @inTransit.
+  ///
+  /// In en, this message translates to:
+  /// **'Transit'**
+  String get inTransit;
+
+  /// No description provided for @inTool.
+  ///
+  /// In en, this message translates to:
+  /// **'Tool'**
+  String get inTool;
+
+  /// No description provided for @inTV.
+  ///
+  /// In en, this message translates to:
+  /// **'TV'**
+  String get inTV;
+
+  /// No description provided for @inWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet'**
+  String get inWallet;
+
+  /// No description provided for @inWine.
+  ///
+  /// In en, this message translates to:
+  /// **'Wine'**
+  String get inWine;
+
+  /// No description provided for @inWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Work'**
+  String get inWork;
 
   /// No description provided for @mcIconButton.
   ///

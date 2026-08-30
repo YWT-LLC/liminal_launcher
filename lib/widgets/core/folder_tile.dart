@@ -111,26 +111,24 @@ class _AppFolderState extends State<FolderTile> {
               children: <Widget>[
                 EzWrap(
                   children: widget.appList
-                      .map(
-                        (String id) => widget.appInfo.appMap.containsKey(id)
-                            ? Padding(
-                                padding: EzInsets.wrap(widget.config.spacing),
-                                child: AppTile(
-                                  widget.config,
-                                  appInfo: widget.appInfo,
-                                  state: state,
-                                  app: widget.appInfo.appMap[id]!,
-                                  location: AppLocation.folder,
-                                  onSelected: (AppInfo app) async {
-                                    Navigator.of(mCon).pop();
-                                    await launchApp(app);
-                                  },
-                                  hAlign: widget.pos.hAlign,
-                                  vAlign: widget.pos.vAlign,
-                                ),
-                              )
-                            : const SizedBox.shrink(),
-                      )
+                      .map((String id) => widget.appInfo.appMap.containsKey(id)
+                          ? Padding(
+                              padding: EzInsets.wrap(widget.config.spacing),
+                              child: AppTile(
+                                widget.config,
+                                appInfo: widget.appInfo,
+                                state: state,
+                                app: widget.appInfo.appMap[id]!,
+                                location: AppLocation.folder,
+                                onSelected: (AppInfo app) async {
+                                  Navigator.of(mCon).pop();
+                                  await launchApp(app);
+                                },
+                                hAlign: widget.pos.hAlign,
+                                vAlign: widget.pos.vAlign,
+                              ),
+                            )
+                          : const SizedBox.shrink())
                       .where((Widget entry) => entry.runtimeType != SizedBox)
                       .toList(),
                 ),
@@ -805,7 +803,7 @@ Future<void> editFolder(
                               /// Done
                               FloatingActionButton(
                                 heroTag: 'done_folder_edits_FAB',
-                                onPressed: () => Navigator.of(mCon).pop(),
+                                onPressed: () => Navigator.of(mCon).pop(true),
                                 child: EzIcon(config, Icons.done),
                               ),
                             ],

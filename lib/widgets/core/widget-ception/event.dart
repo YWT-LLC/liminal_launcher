@@ -629,6 +629,7 @@ Future<void> _openEdits(
                 setModal(() {
                   shareDest = choice;
                   useAppIcon = (useAppIcon ?? true);
+                  isCalendar = false;
                 });
               },
               title: EzTextButton(
@@ -642,6 +643,7 @@ Future<void> _openEdits(
           onLongPress: () => setModal(() {
             shareDest = nullApp;
             useAppIcon = null;
+            isCalendar = true;
           }),
         ),
 

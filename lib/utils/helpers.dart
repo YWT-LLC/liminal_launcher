@@ -28,16 +28,22 @@ Future<void> canEdit(EzCP config, Future<void> Function() onSuccess) async {
 Future<void> canToggleMenu(EzCP config, MenuController c) =>
     canEdit(config, () async => toggleMenu(c));
 
-Future<IconData?> chooseIcon(EzCP config, BuildContext context) => ezModal(
-      config,
-      context: context,
-      builder: (_) {
-        bool outlined = false;
+Future<IconData?> chooseIcon(EzCP config, BuildContext context) {
+  bool outlined = false;
+  bool grid = true;
+  final TextEditingController searchControl = TextEditingController();
 
-        return StatefulBuilder(
-          builder: (BuildContext mCon, StateSetter setModal) => ezModalScroll(
-            config,
-            physics: const ClampingScrollPhysics(),
+  return ezModal(
+    config,
+    context: context,
+    constraints: BoxConstraints.tight(Size.infinite),
+    builder: (_) => StatefulBuilder(
+      builder: (BuildContext mCon, StateSetter setModal) => Padding(
+        padding: EdgeInsets.all(config.marginVal),
+        child: EzSwipeDetector(
+          rtl: () => setModal(() => outlined = true),
+          ltr: () => setModal(() => outlined = false),
+          child: EzCol(
             children: <Widget>[
               // Switcher
               SegmentedButton<bool>(
@@ -56,32 +62,97 @@ Future<IconData?> chooseIcon(EzCP config, BuildContext context) => ezModal(
                 onSelectionChanged: (Set<bool> selected) =>
                     setModal(() => outlined = selected.first),
               ),
+              config.margin,
+              EzFlipFlop(
+                config,
+                init: grid,
+                onLabel: l10n(config).gGrid,
+                offLabel: l10n(config).gList,
+                onChanged: (bool value) => setModal(() => grid = value),
+              ),
               config.spacer,
 
+              // Search/filter
+              EzScrollBlocker(EzTextField(
+                controller: searchControl,
+                constraints: ezTextFieldConstraints(mCon),
+                hintText: l10n(config).gSearch,
+                onChanged: (_) => setModal(() {}),
+                validator: (_) => null,
+              )),
+
               // Icons
-              EzSwipeDetector(
-                rtl: () => setModal(() => outlined = true),
-                ltr: () => setModal(() => outlined = false),
-                child: EzWrap(
-                  children: (outlined ? outlinedIconChoices : solidIconChoices)
-                      .map((IconData icon) => Padding(
-                            padding: EzInsets.wrap(config.spacing),
-                            child: EzIconButton(
-                              config,
-                              icon: Icon(icon),
-                              tooltip: l10n(config).gPreview,
-                              onPressed: () => Navigator.of(mCon).pop(icon),
-                            ),
-                          ))
-                      .toList(),
-                ),
-              ),
+              Expanded(
+                  child: EzScrollView(
+                config,
+                child: grid
+                    ? EzWrap(
+                        children: (outlined
+                                ? outlinedIconChoices(config)
+                                : solidIconChoices(config))
+                            .entries
+                            .where((MapEntry<String, IconData> entry) => searchControl.text.isEmpty
+                                ? true
+                                : entry.key
+                                    .toLowerCase()
+                                    .contains(searchControl.text.toLowerCase()))
+                            .map((MapEntry<String, IconData> entry) => Padding(
+                                  padding: EzInsets.wrap(config.spacing),
+                                  child: EzIconButton(
+                                    config,
+                                    icon: Icon(entry.value),
+                                    tooltip: entry.key,
+                                    onPressed: () => Navigator.of(mCon).pop(entry.value),
+                                  ),
+                                ))
+                            .toList(),
+                      )
+                    : EzCol(
+                        children: (outlined
+                                ? outlinedIconChoices(config)
+                                : solidIconChoices(config))
+                            .entries
+                            .where((MapEntry<String, IconData> entry) => searchControl.text.isEmpty
+                                ? true
+                                : entry.key
+                                    .toLowerCase()
+                                    .contains(searchControl.text.toLowerCase()))
+                            .map((MapEntry<String, IconData> entry) => InkWell(
+                                  onTap: () => Navigator.of(mCon).pop(entry.value),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                          color: config.colors.primaryContainer,
+                                          width: config.borderWidth,
+                                        ),
+                                      ),
+                                    ),
+                                    padding: EdgeInsets.symmetric(vertical: config.spacing / 2),
+                                    width: double.infinity,
+                                    child: EzTextIconButton(
+                                      config,
+                                      style: TextButton.styleFrom(
+                                        padding: EdgeInsets.zero,
+                                        backgroundColor: config.colors.surfaceContainer,
+                                      ),
+                                      label: entry.key,
+                                      icon: EzIcon(config, entry.value),
+                                      onPressed: () => Navigator.of(mCon).pop(entry.value),
+                                    ),
+                                  ),
+                                ))
+                            .toList(),
+                      ),
+              )),
               config.spacer,
             ],
           ),
-        );
-      },
-    );
+        ),
+      ),
+    ),
+  );
+}
 
 Future<bool> _externalAuth(String reason) async {
   final bool authed = await LocalAuthentication().authenticate(

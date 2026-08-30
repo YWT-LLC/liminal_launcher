@@ -29,6 +29,8 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
         multiDexEnabled = true
+        
+        manifestPlaceholders["appName"] = "Liminal Launcher"
     }
 
     signingConfigs {
@@ -42,8 +44,12 @@ android {
 
     buildTypes {
         getByName("release") {
-            signingConfig = signingConfigs.getByName("debug")
             signingConfig = signingConfigs.getByName("release")
+        }
+        
+        getByName("debug") {
+            applicationIdSuffix = ".debug"
+            manifestPlaceholders["appName"] = "Liminal Debugger"
         }
     }
 }

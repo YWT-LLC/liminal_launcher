@@ -272,6 +272,12 @@ class LangEn extends Lang {
   String get gShown => 'Shown';
 
   @override
+  String get gGrid => 'Grid';
+
+  @override
+  String get gList => 'List';
+
+  @override
   String get gOutlined => 'Outlined';
 
   @override
@@ -477,6 +483,159 @@ class LangEn extends Lang {
 
   @override
   String get hsHiddenAuth => 'Authenticate to see hidden apps';
+
+  @override
+  String get inAlarm => 'Alarm';
+
+  @override
+  String get inBike => 'Bike';
+
+  @override
+  String get inBoat => 'Boat';
+
+  @override
+  String get inBook => 'Book';
+
+  @override
+  String get inCafe => 'Cafe';
+
+  @override
+  String get inCalculator => 'Calculator';
+
+  @override
+  String get inCalendar => 'Calendar';
+
+  @override
+  String get inCamera => 'Camera';
+
+  @override
+  String get inCar => 'Car';
+
+  @override
+  String get inChat => 'Chat';
+
+  @override
+  String get inCheck => 'Check';
+
+  @override
+  String get inCloud => 'Cloud';
+
+  @override
+  String get inCode => 'Code';
+
+  @override
+  String get inDraw => 'Draw';
+
+  @override
+  String get inExplore => 'Explore';
+
+  @override
+  String get inFavorite => 'Favorite';
+
+  @override
+  String get inFitness => 'Fitness';
+
+  @override
+  String get inFlight => 'Flight';
+
+  @override
+  String get inFolder => 'Folder';
+
+  @override
+  String get inFuel => 'Fuel';
+
+  @override
+  String get inGame => 'Game';
+
+  @override
+  String get inGlobal => 'Global';
+
+  @override
+  String get inGrass => 'Grass';
+
+  @override
+  String get inGroup => 'Group';
+
+  @override
+  String get inGymnastics => 'Gymnastics';
+
+  @override
+  String get inHeadset => 'Headset';
+
+  @override
+  String get inHealth => 'Health';
+
+  @override
+  String get inHome => 'Home';
+
+  @override
+  String get inLock => 'Lock';
+
+  @override
+  String get inMail => 'Mail';
+
+  @override
+  String get inMovie => 'Movie';
+
+  @override
+  String get inMusic => 'Music';
+
+  @override
+  String get inNews => 'News';
+
+  @override
+  String get inPets => 'Pets';
+
+  @override
+  String get inPhoto => 'Photo';
+
+  @override
+  String get inPub => 'Pub';
+
+  @override
+  String get inRestaurant => 'Restaurant';
+
+  @override
+  String get inRun => 'Run';
+
+  @override
+  String get inSchool => 'School';
+
+  @override
+  String get inSearch => 'Search';
+
+  @override
+  String get inSettings => 'Settings';
+
+  @override
+  String get inShare => 'Share';
+
+  @override
+  String get inShopping => 'Shopping';
+
+  @override
+  String get inStar => 'Star';
+
+  @override
+  String get inStorefront => 'Storefront';
+
+  @override
+  String get inTransit => 'Transit';
+
+  @override
+  String get inTool => 'Tool';
+
+  @override
+  String get inTV => 'TV';
+
+  @override
+  String get inWallet => 'Wallet';
+
+  @override
+  String get inWine => 'Wine';
+
+  @override
+  String get inWork => 'Work';
 
   @override
   String get mcIconButton => 'Icon button size';
@@ -948,6 +1107,12 @@ class LangEnUs extends LangEn {
   String get gShown => 'Shown';
 
   @override
+  String get gGrid => 'Grid';
+
+  @override
+  String get gList => 'List';
+
+  @override
   String get gOutlined => 'Outlined';
 
   @override
@@ -1153,6 +1318,159 @@ class LangEnUs extends LangEn {
 
   @override
   String get hsHiddenAuth => 'Authenticate to see hidden apps';
+
+  @override
+  String get inAlarm => 'Alarm';
+
+  @override
+  String get inBike => 'Bike';
+
+  @override
+  String get inBoat => 'Boat';
+
+  @override
+  String get inBook => 'Book';
+
+  @override
+  String get inCafe => 'Cafe';
+
+  @override
+  String get inCalculator => 'Calculator';
+
+  @override
+  String get inCalendar => 'Calendar';
+
+  @override
+  String get inCamera => 'Camera';
+
+  @override
+  String get inCar => 'Car';
+
+  @override
+  String get inChat => 'Chat';
+
+  @override
+  String get inCheck => 'Check';
+
+  @override
+  String get inCloud => 'Cloud';
+
+  @override
+  String get inCode => 'Code';
+
+  @override
+  String get inDraw => 'Draw';
+
+  @override
+  String get inExplore => 'Explore';
+
+  @override
+  String get inFavorite => 'Favorite';
+
+  @override
+  String get inFitness => 'Fitness';
+
+  @override
+  String get inFlight => 'Flight';
+
+  @override
+  String get inFolder => 'Folder';
+
+  @override
+  String get inFuel => 'Fuel';
+
+  @override
+  String get inGame => 'Game';
+
+  @override
+  String get inGlobal => 'Global';
+
+  @override
+  String get inGrass => 'Grass';
+
+  @override
+  String get inGroup => 'Group';
+
+  @override
+  String get inGymnastics => 'Gymnastics';
+
+  @override
+  String get inHeadset => 'Headset';
+
+  @override
+  String get inHealth => 'Health';
+
+  @override
+  String get inHome => 'Home';
+
+  @override
+  String get inLock => 'Lock';
+
+  @override
+  String get inMail => 'Mail';
+
+  @override
+  String get inMovie => 'Movie';
+
+  @override
+  String get inMusic => 'Music';
+
+  @override
+  String get inNews => 'News';
+
+  @override
+  String get inPets => 'Pets';
+
+  @override
+  String get inPhoto => 'Photo';
+
+  @override
+  String get inPub => 'Pub';
+
+  @override
+  String get inRestaurant => 'Restaurant';
+
+  @override
+  String get inRun => 'Run';
+
+  @override
+  String get inSchool => 'School';
+
+  @override
+  String get inSearch => 'Search';
+
+  @override
+  String get inSettings => 'Settings';
+
+  @override
+  String get inShare => 'Share';
+
+  @override
+  String get inShopping => 'Shopping';
+
+  @override
+  String get inStar => 'Star';
+
+  @override
+  String get inStorefront => 'Storefront';
+
+  @override
+  String get inTransit => 'Transit';
+
+  @override
+  String get inTool => 'Tool';
+
+  @override
+  String get inTV => 'TV';
+
+  @override
+  String get inWallet => 'Wallet';
+
+  @override
+  String get inWine => 'Wine';
+
+  @override
+  String get inWork => 'Work';
 
   @override
   String get mcIconButton => 'Icon button size';

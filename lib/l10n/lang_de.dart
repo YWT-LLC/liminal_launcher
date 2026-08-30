@@ -273,6 +273,12 @@ class LangDe extends Lang {
   String get gShown => 'Angezeigt';
 
   @override
+  String get gGrid => 'Netz';
+
+  @override
+  String get gList => 'Liste';
+
+  @override
   String get gOutlined => 'Umrandet';
 
   @override
@@ -483,6 +489,159 @@ class LangDe extends Lang {
 
   @override
   String get hsHiddenAuth => 'Authentifizieren, um versteckte Apps zu sehen';
+
+  @override
+  String get inAlarm => 'Alarm';
+
+  @override
+  String get inBike => 'Fahrrad';
+
+  @override
+  String get inBoat => 'Boot';
+
+  @override
+  String get inBook => 'Buch';
+
+  @override
+  String get inCafe => 'Café';
+
+  @override
+  String get inCalculator => 'Taschenrechner';
+
+  @override
+  String get inCalendar => 'Kalender';
+
+  @override
+  String get inCamera => 'Kamera';
+
+  @override
+  String get inCar => 'Auto';
+
+  @override
+  String get inChat => 'Chat';
+
+  @override
+  String get inCheck => 'Check';
+
+  @override
+  String get inCloud => 'Cloud';
+
+  @override
+  String get inCode => 'Code';
+
+  @override
+  String get inDraw => 'Zeichnen';
+
+  @override
+  String get inExplore => 'Entdecken';
+
+  @override
+  String get inFavorite => 'Favorit';
+
+  @override
+  String get inFitness => 'Fitness';
+
+  @override
+  String get inFlight => 'Flug';
+
+  @override
+  String get inFolder => 'Ordner';
+
+  @override
+  String get inFuel => 'Kraftstoff';
+
+  @override
+  String get inGame => 'Spiel';
+
+  @override
+  String get inGlobal => 'Global';
+
+  @override
+  String get inGrass => 'Gras';
+
+  @override
+  String get inGroup => 'Gruppe';
+
+  @override
+  String get inGymnastics => 'Gymnastik';
+
+  @override
+  String get inHeadset => 'Headset';
+
+  @override
+  String get inHealth => 'Gesundheit';
+
+  @override
+  String get inHome => 'Zuhause';
+
+  @override
+  String get inLock => 'Schloss';
+
+  @override
+  String get inMail => 'E-Mail';
+
+  @override
+  String get inMovie => 'Film';
+
+  @override
+  String get inMusic => 'Musik';
+
+  @override
+  String get inNews => 'Nachrichten';
+
+  @override
+  String get inPets => 'Haustiere';
+
+  @override
+  String get inPhoto => 'Foto';
+
+  @override
+  String get inPub => 'Kneipe';
+
+  @override
+  String get inRestaurant => 'Restaurant';
+
+  @override
+  String get inRun => 'Laufen';
+
+  @override
+  String get inSchool => 'Schule';
+
+  @override
+  String get inSearch => 'Suche';
+
+  @override
+  String get inSettings => 'Einstellungen';
+
+  @override
+  String get inShare => 'Teilen';
+
+  @override
+  String get inShopping => 'Einkaufen';
+
+  @override
+  String get inStar => 'Stern';
+
+  @override
+  String get inStorefront => 'Geschäft';
+
+  @override
+  String get inTransit => 'Transport';
+
+  @override
+  String get inTool => 'Werkzeug';
+
+  @override
+  String get inTV => 'TV';
+
+  @override
+  String get inWallet => 'Brieftasche';
+
+  @override
+  String get inWine => 'Wein';
+
+  @override
+  String get inWork => 'Arbeit';
 
   @override
   String get mcIconButton => 'Größe der Symbol-Schaltfläche';
