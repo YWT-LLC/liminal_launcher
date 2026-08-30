@@ -82,7 +82,8 @@ Future<IconData?> chooseIcon(EzCP config, BuildContext context) {
               )),
 
               // Icons
-              EzScrollView(
+              Expanded(
+                  child: EzScrollView(
                 config,
                 child: grid
                     ? EzWrap(
@@ -143,7 +144,7 @@ Future<IconData?> chooseIcon(EzCP config, BuildContext context) {
                                 ))
                             .toList(),
                       ),
-              ),
+              )),
               config.spacer,
             ],
           ),
