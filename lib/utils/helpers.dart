@@ -66,8 +66,8 @@ Future<IconData?> chooseIcon(EzCP config, BuildContext context) {
               EzFlipFlop(
                 config,
                 init: grid,
-                onLabel: 'Grid', // TODO: l10n
-                offLabel: 'List',
+                onLabel: l10n(config).gGrid,
+                offLabel: l10n(config).gList,
                 onChanged: (bool value) => setModal(() => grid = value),
               ),
               config.spacer,
@@ -86,7 +86,9 @@ Future<IconData?> chooseIcon(EzCP config, BuildContext context) {
                 config,
                 child: grid
                     ? EzWrap(
-                        children: (outlined ? outlinedIconChoices : solidIconChoices)
+                        children: (outlined
+                                ? outlinedIconChoices(config)
+                                : solidIconChoices(config))
                             .entries
                             .where((MapEntry<String, IconData> entry) => searchControl.text.isEmpty
                                 ? true
@@ -105,7 +107,9 @@ Future<IconData?> chooseIcon(EzCP config, BuildContext context) {
                             .toList(),
                       )
                     : EzCol(
-                        children: (outlined ? outlinedIconChoices : solidIconChoices)
+                        children: (outlined
+                                ? outlinedIconChoices(config)
+                                : solidIconChoices(config))
                             .entries
                             .where((MapEntry<String, IconData> entry) => searchControl.text.isEmpty
                                 ? true
