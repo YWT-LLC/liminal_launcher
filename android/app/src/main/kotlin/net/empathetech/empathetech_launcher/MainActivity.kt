@@ -1,4 +1,4 @@
-package llc.ywt.liminal
+package llc.ywt.liminal_launcher
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -36,8 +36,8 @@ import java.io.File
 //* Main *//
 
 class MainActivity : FlutterFragmentActivity() {
-  private val METHOD_CHANNEL: String = "llc.ywt.liminal/query"
-  private val EVENT_CHANNEL: String = "llc.ywt.liminal/app_events"
+  private val METHOD_CHANNEL: String = "llc.ywt.liminal_launcher/query"
+  private val EVENT_CHANNEL: String = "llc.ywt.liminal_launcher/app_events"
 
   private var appEventStreamHandler: AppEventStreamHandler? = null
 

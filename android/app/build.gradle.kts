@@ -13,7 +13,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "llc.ywt.liminal"
+    namespace = "llc.ywt.liminal_launcher"
     compileSdk = 37
     ndkVersion = flutter.ndkVersion
 
@@ -23,7 +23,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "llc.ywt.liminal"
+        applicationId = "llc.ywt.liminal_launcher"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

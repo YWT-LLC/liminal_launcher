@@ -14,8 +14,8 @@ import 'package:flutter/material.dart';
 /// Liminal Launcher
 const String appName = 'Liminal Launcher';
 
-/// llc.ywt.liminal
-const String androidPackage = 'llc.ywt.liminal';
+/// llc.ywt.liminal_launcher
+const String androidPackage = 'llc.ywt.liminal_launcher';
 
 /// Liminal Launcher [AppInfo]
 final AppInfo self = AppInfo(
