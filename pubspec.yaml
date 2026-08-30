@@ -1,6 +1,6 @@
-name: empathetech_launcher
-description: "An Empathetech Android launcher."
-version: 1.0.0
+name: liminal_launcher
+description: "An Android launcher."
+version: 1.0.0+1
 publish_to: 'none'
 
 environment:
@@ -13,26 +13,47 @@ dependencies:
     sdk: flutter
 
   # Flutter (Google)
-  go_router: ^14.8.1
-  intl: ^0.20.2
-  shared_preferences: ^2.5.3
-  url_launcher: ^6.3.1
+  go_router: ^18.0.0
+  intl: ^0.20.3
+  local_auth: ^3.0.2
+  shared_preferences: ^2.5.5
+  url_launcher: ^6.3.2
 
   # Community
-  empathetech_flutter_ui:
-    path: ../empathetech_flutter_ui
-  feedback: ^3.1.0
-  flutter_localized_locales: ^2.0.5
-  flutter_platform_widgets: ^9.0.0
+  after_layout: ^1.2.0
+  flutter_secure_storage: ^11.0.0
+  font_awesome_flutter: ^11.0.0
+  line_icons: ^2.0.3
+  provider: ^6.1.5+1
+
+  # YWT
+  ywt_private:
+    path: ../ywt_private
+  open_ui:
+    path: ../open_ui
 
 dev_dependencies:
-  dependency_validator: ^5.0.2
+  dependency_validator: ^5.0.6
+  flutter_launcher_icons: ^0.14.4
   flutter_lints: ^6.0.0
-  flutter_test:
-    sdk: flutter
-  integration_test:
-    sdk: flutter
 
 flutter:
   generate: true
   uses-material-design: true
+
+  assets:
+    - assets/
+    - assets/app-icon.png
+
+flutter_launcher_icons:
+  image_path: assets/app-icon.png
+  adaptive_icon_foreground: assets/app-icon.png
+  adaptive_icon_background: "#000000"
+  android: true
+  ios: false
+  web:
+    generate: false
+  windows:
+    generate: false
+  macos:
+    generate: false

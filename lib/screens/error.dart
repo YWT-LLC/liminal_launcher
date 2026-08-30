@@ -1,69 +1,47 @@
-/* empathetech_launcher
- * Copyright (c) 2025 Empathetech LLC. All rights reserved.
+/* liminal_launcher
+ * Copyright (c) 2026 YWT (Empathetech LLC). All rights reserved.
  * See LICENSE for distribution and usage details.
  */
 
 import '../widgets/export.dart';
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
+import 'package:provider/provider.dart';
+import 'package:open_ui/open_ui.dart';
 
-class ErrorScreen extends StatefulWidget {
-  final GoException? error;
-
-  const ErrorScreen(this.error, {super.key});
-
-  @override
-  State<ErrorScreen> createState() => _ErrorScreenState();
-}
-
-class _ErrorScreenState extends State<ErrorScreen> {
-  // Gather the theme data //
-
-  static const EzSeparator separator = EzSeparator();
-
-  late final EFUILang l10n = ezL10n(context);
-
-  late final TextTheme textTheme = Theme.of(context).textTheme;
-
-  // Set the page title //
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    ezWindowNamer(context, '404 ${l10n.gError}');
-  }
-
-  // Return the build //
+class ErrorScreen extends StatelessWidget {
+  const ErrorScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return EmpathetechLauncherScaffold(
-      body: EzScreen(
-        useImageDecoration: false,
-        child: Center(
+    return Consumer<EzCP>(
+      builder: (_, EzCP config, __) => LiminalScaffold(
+        config,
+        body: Center(
           child: EzScrollView(
-            mainAxisAlignment: MainAxisAlignment.center,
+            config,
             children: <Widget>[
-              Text(
-                l10n.g404Wonder,
-                style: textTheme.headlineLarge,
+              EzText(
+                config,
+                text: config.ezL10n.g404Wonder,
+                style: config.headlineStyle,
                 textAlign: TextAlign.center,
               ),
-              separator,
-              Text(
-                l10n.g404,
-                style: ezSubTitleStyle(textTheme),
+              config.separator,
+              EzText(
+                config,
+                text: config.ezL10n.g404,
+                style: ezSubTitleStyle(config.styles),
                 textAlign: TextAlign.center,
               ),
-              separator,
-              Text(
-                l10n.g404Note,
-                style: textTheme.labelLarge,
+              config.separator,
+              EzText(
+                config,
+                text: config.ezL10n.g404Note,
+                style: config.labelStyle,
                 textAlign: TextAlign.center,
               ),
-              separator,
+              EzFooter(config, spacing: 0),
             ],
           ),
         ),

@@ -1,172 +1,150 @@
-/* empathetech_launcher
- * Copyright (c) 2025 Empathetech LLC. All rights reserved.
+/* liminal_launcher
+ * Copyright (c) 2026 YWT (Empathetech LLC). All rights reserved.
  * See LICENSE for distribution and usage details.
  */
 
 import './screens/export.dart';
 import './utils/export.dart';
 
+import 'package:open_ui/open_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:feedback/feedback.dart';
+import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:empathetech_flutter_ui/empathetech_flutter_ui.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:flutter_localized_locales/flutter_localized_locales.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() async {
   // Setup the app //
 
   WidgetsFlutterBinding.ensureInitialized();
 
-  await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-    DeviceOrientation.landscapeLeft,
-    DeviceOrientation.landscapeRight,
-  ]);
+  await SystemChrome.setPreferredOrientations(<DeviceOrientation>[DeviceOrientation.portraitUp]);
 
-  // Initialize EzConfig //
-
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  EzConfig.init(
-    preferences: prefs,
-    defaults: mobileEmpathConfig,
-    fallbackLang: await EFUILang.delegate.load(english),
-    assetPaths: <String>{},
+  EzCM.init(
+    appName: appName,
+    androidPackage: androidPackage,
+    assetPaths: assetPaths,
+    orientations: <DeviceOrientation>[DeviceOrientation.portraitUp],
+    localeFallback: americanEnglish,
+    l10nFallback: await OUILang.delegate.load(americanEnglish),
+    preferences: await SharedPreferencesWithCache.create(
+      cacheOptions: SharedPreferencesWithCacheOptions(allowList: allLimKeys.keys.toSet()),
+    ),
+    securePreferences: const FlutterSecureStorage(),
+    defaults: liminalDefault,
+    neverReset: neverResetKeys,
   );
 
   // Run the app //
-  // With a feedback wrapper
 
-  late final TextStyle lightFeedbackText = ezBodyStyle(Colors.black);
-  late final TextStyle darkFeedbackText = ezBodyStyle(Colors.white);
+  final (Locale storedLocale, OUILang storedOUILang) = await ezStoredL10n();
 
-  runApp(BetterFeedback(
-    theme: FeedbackThemeData(
-      background: Colors.grey,
-      feedbackSheetColor: Colors.white,
-      // activeFeedbackModeColor: lightPrimaryColor,
-      bottomSheetDescriptionStyle: lightFeedbackText,
-      bottomSheetTextInputStyle: lightFeedbackText,
-      sheetIsDraggable: true,
-      dragHandleColor: Colors.black,
+  runApp(
+    LiminalLauncher(
+      await getApps(),
+      storedLocale,
+      storedOUILang,
+      await Lang.delegate.load(storedLocale),
     ),
-    darkTheme: FeedbackThemeData(
-      background: Colors.grey,
-      feedbackSheetColor: Colors.black,
-      // activeFeedbackModeColor: darkPrimaryColor,
-      bottomSheetDescriptionStyle: darkFeedbackText,
-      bottomSheetTextInputStyle: darkFeedbackText,
-      sheetIsDraggable: true,
-      dragHandleColor: Colors.white,
-    ),
-    themeMode: EzConfig.getThemeMode(),
-    localizationsDelegates: <LocalizationsDelegate<dynamic>>[EzFeedbackLD()],
-    localeOverride: EzConfig.getLocale(),
-    child: const EmpathetechLauncher(),
-  ));
+  );
 }
 
-/// Initialize a path based router for web-enabled apps
-/// Or any other app that requires deep linking
-/// https://docs.flutter.dev/ui/navigation/deep-linking
-final GoRouter router = GoRouter(
-  initialLocation: homePath,
-  errorBuilder: (_, GoRouterState state) => ErrorScreen(state.error),
-  routes: <RouteBase>[
-    GoRoute(
-      path: homePath,
-      name: homePath,
-      builder: (_, __) => const HomeScreen(),
-      routes: <RouteBase>[
-        GoRoute(
-          path: settingsHomePath,
-          name: settingsHomePath,
-          builder: (_, __) => const SettingsHomeScreen(),
+class LiminalLauncher extends StatelessWidget {
+  final List<AppInfo> installedApps;
+  final Locale storedLocale;
+  final OUILang storedOUILang;
+  final Lang storedLang;
+
+  const LiminalLauncher(
+    this.installedApps,
+    this.storedLocale,
+    this.storedOUILang,
+    this.storedLang, {
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) => ChangeNotifierProvider<AppInfoProvider>(
+        create: (_) => AppInfoProvider(installedApps),
+        child: _TheMagic(installedApps, storedLocale, storedOUILang, storedLang),
+      );
+}
+
+class _TheMagic extends StatelessWidget {
+  final List<AppInfo> installedApps;
+  final Locale storedLocale;
+  final OUILang storedOUILang;
+  final Lang storedLang;
+
+  const _TheMagic(this.installedApps, this.storedLocale, this.storedOUILang, this.storedLang);
+
+  @override
+  Widget build(BuildContext context) => EzConfigurableApp(
+        localizationsDelegates: ezLocalizationsDelegates(Lang.localizationsDelegates),
+        supportedLocales: Lang.supportedLocales,
+        locale: storedLocale,
+        el10n: storedOUILang,
+        appCache: LiminalCache(storedLocale, storedLang),
+        routerConfig: GoRouter(
+          navigatorKey: ezRootNav,
+          initialLocation: homePath,
+          errorBuilder: (_, __) => const ErrorScreen(),
           routes: <RouteBase>[
+            // Home
             GoRoute(
-              path: textSettingsPath,
-              name: textSettingsPath,
-              builder: (_, __) => const TextSettingsScreen(),
+              path: homePath,
+              name: homePath,
+              pageBuilder: (BuildContext pbc, GoRouterState pbs) =>
+                  ezPageBuilder(configWatcher(pbc), pbc, pbs, const HomeScreen()),
               routes: <RouteBase>[
+                // App list
                 GoRoute(
-                  path: EzTSType.quick.path,
-                  name: EzTSType.quick.name,
-                  builder: (_, __) =>
-                      const TextSettingsScreen(target: EzTSType.quick),
+                  path: appListPath,
+                  name: appListPath,
+                  pageBuilder: (BuildContext pbc, GoRouterState pbs) => ezPageBuilder(
+                    configWatcher(pbc),
+                    pbc,
+                    pbs,
+                    AppListScreen(pbs.extra as ListConfig),
+                    transitionsBuilder: (BuildContext context, Animation<double> a,
+                            Animation<double> aa, Widget w) =>
+                        ezTransitionsBuilder(
+                      configWatcher(pbc),
+                      context,
+                      a,
+                      aa,
+                      w,
+                      forceType: EzTransitionType.slideY,
+                      forceFade: true,
+                    ),
+                  ),
                 ),
+
+                // Settings home
                 GoRoute(
-                  path: EzTSType.advanced.path,
-                  name: EzTSType.advanced.name,
-                  builder: (_, __) =>
-                      const TextSettingsScreen(target: EzTSType.advanced),
+                  path: settingsPath,
+                  name: settingsPath,
+                  pageBuilder: (BuildContext pbc, GoRouterState pbs) {
+                    final (int, bool)? data = pbs.extra as (int, bool)?;
+                    final int? target = data?.$1;
+                    final bool? secondary = data?.$2;
+
+                    return ezPageBuilder(
+                      configWatcher(pbc),
+                      pbc,
+                      pbs,
+                      SettingsScreen(
+                        key: ValueKey<String>('$target:$secondary'),
+                        target: target,
+                        secondary: secondary,
+                      ),
+                    );
+                  },
                 ),
               ],
-            ),
-            GoRoute(
-              path: layoutSettingsPath,
-              name: layoutSettingsPath,
-              builder: (_, __) => const LayoutSettingsScreen(),
-            ),
-            GoRoute(
-              path: colorSettingsPath,
-              name: colorSettingsPath,
-              builder: (_, __) => const ColorSettingsScreen(),
-              routes: <RouteBase>[
-                GoRoute(
-                  path: EzCSType.quick.path,
-                  name: EzCSType.quick.name,
-                  builder: (_, __) =>
-                      const ColorSettingsScreen(target: EzCSType.quick),
-                ),
-                GoRoute(
-                  path: EzCSType.advanced.path,
-                  name: EzCSType.advanced.name,
-                  builder: (_, __) =>
-                      const ColorSettingsScreen(target: EzCSType.advanced),
-                ),
-              ],
-            ),
-            GoRoute(
-              path: imageSettingsPath,
-              name: imageSettingsPath,
-              builder: (_, __) => const ImageSettingsScreen(),
             ),
           ],
         ),
-      ],
-    ),
-  ],
-);
-
-class EmpathetechLauncher extends StatelessWidget {
-  const EmpathetechLauncher({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return EzAppProvider(
-      app: PlatformApp.router(
-        debugShowCheckedModeBanner: false,
-
-        // Language handlers
-        localizationsDelegates: <LocalizationsDelegate<dynamic>>{
-          const LocaleNamesLocalizationsDelegate(),
-          ...EFUILang.localizationsDelegates,
-          ...Lang.localizationsDelegates,
-        },
-
-        // Supported languages
-        supportedLocales: Lang.supportedLocales,
-
-        // Current language
-        locale: EzConfig.getLocale(),
-
-        title: appTitle,
-        routerConfig: router,
-      ),
-    );
-  }
+      );
 }

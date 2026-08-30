@@ -2,14 +2,14 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "run-empathetech-launcher",
+      "name": "run-liminal-launcher",
       "request": "launch",
       "type": "dart",
       "flutterMode": "debug",
       "program": "lib/main.dart",
     },
     {
-      "name": "install-empathetech-launcher",
+      "name": "install-liminal-launcher",
       "request": "launch",
       "type": "dart",
       "flutterMode": "release",

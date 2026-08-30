@@ -1,0 +1,91 @@
+/* liminal_launcher
+ * Copyright (c) 2026 YWT (Empathetech LLC). All rights reserved.
+ * See LICENSE for distribution and usage details.
+ */
+
+import '../../utils/export.dart';
+import '../export.dart';
+
+import 'package:open_ui/open_ui.dart';
+import 'package:flutter/material.dart';
+
+class EditContainer extends StatefulWidget {
+  final EzCP config;
+  final AlignmentGeometry subAlign;
+  final MenuController menuControl;
+  final List<Widget> menuChildren;
+  final Widget child;
+
+  const EditContainer(
+    this.config, {
+    super.key,
+    required this.subAlign,
+    required this.menuControl,
+    required this.menuChildren,
+    required this.child,
+  });
+
+  @override
+  State<EditContainer> createState() => _EditContainerState();
+}
+
+class _EditContainerState extends State<EditContainer> with SingleTickerProviderStateMixin {
+  // Init //
+
+  late final AnimationController _animControl;
+  late final Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _animControl = AnimationController(vsync: this, duration: breatheTime);
+
+    _animation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _animControl, curve: Curves.linear));
+
+    _animControl.repeat(reverse: true);
+  }
+
+  // Return the build //
+
+  @override
+  Widget build(_) => WideTile(
+        widget.config,
+        alignment: widget.subAlign,
+        child: EzRow(
+          widget.config,
+          children: <Widget>[
+            EzIcon(widget.config, Icons.drag_handle, color: widget.config.colors.outline),
+            widget.config.rowMargin,
+            MenuAnchor(
+              controller: widget.menuControl,
+              builder: (_, __, ___) => AnimatedBuilder(
+                animation: _animation,
+                builder: (_, __) => Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: widget.config.colors.secondary.withValues(alpha: _animation.value),
+                      width: widget.config.borderWidth,
+                    ),
+                    borderRadius: widget.config.buttonShape.radius,
+                  ),
+                  child: widget.child,
+                ),
+              ),
+              menuChildren: widget.menuChildren,
+            ),
+            widget.config.rowMargin,
+            EzIcon(widget.config, Icons.drag_handle, color: widget.config.colors.outline),
+          ],
+        ),
+      );
+
+  @override
+  void dispose() {
+    _animControl.dispose();
+    super.dispose();
+  }
+}

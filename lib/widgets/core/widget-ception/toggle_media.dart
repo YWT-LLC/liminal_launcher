@@ -1,0 +1,558 @@
+/* liminal_launcher
+ * Copyright (c) 2026 YWT (Empathetech LLC). All rights reserved.
+ * See LICENSE for distribution and usage details.
+ */
+
+import '../../../utils/export.dart';
+import '../../export.dart';
+
+import 'dart:async';
+import 'package:open_ui/open_ui.dart';
+import 'package:flutter/material.dart';
+
+//* Core Widget *//
+
+class ToggleMediaWidget extends StatefulWidget {
+  final EzCP config;
+  final AppInfoProvider appInfo;
+  final TileState state;
+  final LimPos pos;
+  final ValueNotifier<double>? rippleProgress;
+  final void Function() editReset;
+
+  final List<String> data;
+  late final String _tp;
+  late final WWGGSize _size;
+  late final bool _bigSkips;
+  late final bool _lilSkips;
+
+  ToggleMediaWidget(
+    this.config,
+    this.appInfo,
+    this.state,
+    this.pos,
+    this.rippleProgress,
+    this.editReset,
+    this.data, {
+    super.key,
+  }) {
+    _tp = data[0]; // Not used here; tracked so local updates don't clobber it
+    _size = WSConfig.safeLookup(data[1]);
+    _bigSkips = bool.tryParse(data[2]) ?? true;
+    _lilSkips = bool.tryParse(data[3]) ?? false;
+  }
+
+  @override
+  State<ToggleMediaWidget> createState() => _ToggleMediaWidgetState();
+}
+
+class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
+  // Define the build data //
+
+  late TileState state = widget.state;
+  Timer? rippleThrottle;
+
+  final MenuController menuControl = MenuController();
+
+  // Define custom functions //
+
+  void rippling() {
+    if (rippleThrottle != null ||
+        widget.rippleProgress == null ||
+        widget.rippleProgress!.value <= 0) {
+      return;
+    }
+
+    final Offset wya = ezWya(context);
+    final double dy = (wya.dy - lastRipple.dy).abs();
+
+    if (dy <= (widget.rippleProgress!.value * heightOf(context))) {
+      setState(
+        () => state = switch (state) {
+          TileState.standard => TileState.groupEdit,
+          _ => TileState.standard,
+        },
+      );
+
+      final Duration animDur = ezDuration(widget.config.animDur);
+      rippleThrottle = Timer(
+        (animDur + const Duration(milliseconds: 50)) - (animDur * widget.rippleProgress!.value),
+        () => rippleThrottle = null,
+      );
+    }
+  }
+
+  // Init //
+
+  @override
+  void initState() {
+    super.initState();
+    widget.rippleProgress?.addListener(rippling);
+  }
+
+  // Return the build //
+
+  @override
+  Widget build(BuildContext context) {
+    final int numLanes = widget.appInfo.numLanes(widget.config);
+
+    return EzAnimSwitch(
+      widget.config,
+      mod: 0.667,
+      forceFade: true,
+      forceType: EzTransitionType.none,
+      child: switch (state) {
+        TileState.standard => MenuAnchor(
+            controller: menuControl,
+            builder: (_, __, ___) => WideTile(
+              widget.config,
+              alignment: widget.pos.subAlign,
+              onLongPress: () async => await canToggleMenu(widget.config, menuControl),
+              child: EzIconButton(
+                widget.config,
+                tooltip: l10n(widget.config).togTitle,
+                icon: (widget._size == WWGGSize.button)
+                    ? const Icon(Icons.headphones)
+                    : EzRow(
+                        widget.config,
+                        reverseHands: false,
+                        children: <Widget>[
+                          widget.config.rowMargin,
+
+                          // Backwards
+                          if (widget._bigSkips) ...<Widget>[
+                            GestureDetector(
+                              onTap: skipPrev,
+                              child: Icon(
+                                Icons.skip_previous,
+                                semanticLabel: l10n(widget.config).togPrevious,
+                              ),
+                            ),
+                            widget.config.rowSpacer,
+                          ],
+
+                          if (widget._lilSkips) ...<Widget>[
+                            GestureDetector(
+                              onTap: rewind,
+                              child: Icon(
+                                Icons.fast_rewind,
+                                semanticLabel: l10n(widget.config).togRewind,
+                              ),
+                            ),
+                            widget.config.rowSpacer,
+                          ],
+
+                          // Play/pause
+                          GestureDetector(
+                            onTap: toggleMedia,
+                            child: Icon(
+                              Icons.headphones,
+                              semanticLabel: l10n(widget.config).togPlayPause,
+                            ),
+                          ),
+
+                          // Forwards
+                          if (widget._lilSkips) ...<Widget>[
+                            widget.config.rowSpacer,
+                            GestureDetector(
+                              onTap: fastForward,
+                              child: Icon(
+                                Icons.fast_forward,
+                                semanticLabel: l10n(widget.config).togFF,
+                              ),
+                            ),
+                          ],
+
+                          if (widget._bigSkips) ...<Widget>[
+                            widget.config.rowSpacer,
+                            GestureDetector(
+                              onTap: skipNext,
+                              child: Icon(
+                                Icons.skip_next,
+                                semanticLabel: l10n(widget.config).togNext,
+                              ),
+                            ),
+                          ],
+                          widget.config.rowMargin,
+                        ],
+                      ),
+                onPressed: (widget._size == WWGGSize.button) ? toggleMedia : doNothing,
+                onLongPress: () async => await canToggleMenu(widget.config, menuControl),
+              ),
+            ),
+            menuChildren: _menuChildren(
+              widget.config,
+              appInfo: widget.appInfo,
+              context: context,
+              state: state,
+              editReset: widget.editReset,
+              numLanes: numLanes,
+              pos: widget.pos,
+              initConfig: _MediaConfig(
+                tp: widget._tp,
+                size: widget._size,
+                bigSkips: widget._bigSkips,
+                lilSkips: widget._lilSkips,
+              ),
+            ),
+          ),
+        _ => EditContainer(
+            widget.config,
+            subAlign: widget.pos.subAlign,
+            menuControl: menuControl,
+            menuChildren: _menuChildren(
+              widget.config,
+              appInfo: widget.appInfo,
+              context: context,
+              state: state,
+              editReset: widget.editReset,
+              numLanes: numLanes,
+              pos: widget.pos,
+              initConfig: _MediaConfig(
+                tp: widget._tp,
+                size: widget._size,
+                bigSkips: widget._bigSkips,
+                lilSkips: widget._lilSkips,
+              ),
+            ),
+            child: EzIconButton(
+              widget.config,
+              icon: const Icon(Icons.headphones),
+              tooltip: l10n(widget.config).togTitle,
+              onPressed: () => toggleMenu(menuControl),
+            ),
+          ),
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    widget.rippleProgress?.removeListener(rippling);
+    super.dispose();
+  }
+}
+
+List<Widget> _menuChildren(
+  EzCP config, {
+  required AppInfoProvider appInfo,
+  required BuildContext context,
+  required TileState state,
+  required void Function() editReset,
+  required int numLanes,
+  required LimPos pos,
+  required _MediaConfig initConfig,
+}) =>
+    <Widget>[
+      // Edit
+      _EditTM(
+        config,
+        appInfo,
+        pContext: context,
+        initConfig: initConfig,
+        lane: pos.lane,
+        index: pos.index,
+      ),
+
+      // Dupe
+      EzMenuButton(
+        config,
+        label: l10n(config).gDupe,
+        icon: EzIcon(config, Icons.copy),
+        onPressed: () => appInfo.dupeItem(
+          config,
+          editNew: () async {
+            if (!ezRootIsMounted) return;
+            await _openEdits(
+              config,
+              appInfo: appInfo,
+              pContext: ezRootContext,
+              initConfig: initConfig,
+              lane: pos.lane,
+              index: pos.index,
+            );
+          },
+          lane: pos.lane,
+          index: pos.index,
+        ),
+      ),
+
+      // Reposition
+      reposition(config, appInfo, pos, stateCheck: editReset),
+
+      // Move
+      if (state == TileState.groupEdit && numLanes > 1) ...<Widget>[
+        moveDownLane(config, appInfo, pos, numLanes: numLanes),
+        moveUpLane(config, appInfo, pos, numLanes: numLanes),
+      ],
+
+      // Remove
+      removeItem(config, appInfo, pos),
+    ];
+
+//* Add Widget *//
+
+class AddToggleMedia extends StatelessWidget {
+  final EzCP config;
+  final AppInfoProvider appInfo;
+  final BuildContext pContext;
+  final int lane;
+  final WWGGSize size;
+
+  const AddToggleMedia(
+    this.config, {
+    super.key,
+    required this.appInfo,
+    required this.pContext,
+    required this.lane,
+    required this.size,
+  });
+
+  void onTap() => appInfo.addWidget(
+        config,
+        type: WWGG.toggleMedia,
+        size: size,
+        editNew: () => _openEdits(
+          config,
+          appInfo: appInfo,
+          pContext: pContext,
+          initConfig: _MediaConfig(
+            tp: nullTPS,
+            size: size,
+            bigSkips: true,
+            lilSkips: false,
+          ),
+          lane: lane,
+          index: appInfo.homeLane(config, lane).length - 1,
+        ),
+        lane: lane,
+      );
+
+  @override
+  Widget build(BuildContext context) => EzIconButton(
+        config,
+        onPressed: onTap,
+        icon: (size == WWGGSize.button)
+            ? const Icon(Icons.headphones)
+            : MergeSemantics(
+                child: EzRow(
+                  config,
+                  reverseHands: false,
+                  children: <Widget>[
+                    config.rowMargin,
+                    const Icon(Icons.skip_previous),
+                    config.rowSpacer,
+                    const Icon(Icons.headphones),
+                    config.rowSpacer,
+                    const Icon(Icons.skip_next),
+                    config.rowMargin,
+                  ],
+                ),
+              ),
+        tooltip: l10n(config).gAdd,
+      );
+}
+
+String defaultMediaEntry(WWGGSize size) => _mediaEntry(
+      tp: nullTPS,
+      size: size,
+      bigSkips: true,
+      lilSkips: false,
+    );
+
+String _mediaEntry({
+  required String tp,
+  required WWGGSize size,
+  required bool bigSkips,
+  required bool lilSkips,
+}) =>
+    <String>[
+      tp,
+      size.value,
+      bigSkips.toString(),
+      lilSkips.toString(),
+    ].join(configSplit);
+
+//* Edit Widget *//
+
+class _MediaConfig {
+  final String tp;
+  final WWGGSize size;
+  final bool bigSkips;
+  final bool lilSkips;
+
+  _MediaConfig({
+    required this.tp,
+    required this.size,
+    required this.bigSkips,
+    required this.lilSkips,
+  });
+}
+
+Future<void> _openEdits(
+  EzCP config, {
+  required AppInfoProvider appInfo,
+  required BuildContext pContext,
+  required _MediaConfig initConfig,
+  required int lane,
+  required int index,
+}) async {
+  WWGGSize size = initConfig.size;
+  bool bigSkips = initConfig.bigSkips;
+  bool lilSkips = initConfig.lilSkips;
+
+  await ezModal(
+    config,
+    context: pContext,
+    builder: (_) => StatefulBuilder(
+      builder: (_, StateSetter setModal) => ezModalScroll(config, children: <Widget>[
+        // Size
+        EzFlipFlop(
+          config,
+          key: UniqueKey(),
+          onLabel: l10n(config).gTile,
+          offLabel: l10n(config).gButton,
+          init: size == WWGGSize.tile,
+          onChanged: (bool tile) {
+            if (!tile) {
+              bigSkips = false;
+              lilSkips = false;
+            } else {
+              if (!bigSkips && !lilSkips) bigSkips = true;
+            }
+
+            setModal(() => size = tile ? WWGGSize.tile : WWGGSize.button);
+          },
+        ),
+        config.margin,
+
+        // Preview
+        EzIconButton(
+          config,
+          tooltip: l10n(config).gPreview,
+          icon: (size == WWGGSize.button)
+              ? const Icon(Icons.headphones)
+              : EzRow(
+                  config,
+                  reverseHands: false,
+                  children: <Widget>[
+                    config.rowMargin,
+
+                    // Backwards
+                    if (bigSkips) ...<Widget>[const Icon(Icons.skip_previous), config.rowSpacer],
+
+                    if (lilSkips) ...<Widget>[const Icon(Icons.fast_rewind), config.rowSpacer],
+
+                    // Play/pause
+                    const Icon(Icons.headphones),
+
+                    // Forwards
+                    if (lilSkips) ...<Widget>[config.rowSpacer, const Icon(Icons.fast_forward)],
+
+                    if (bigSkips) ...<Widget>[config.rowSpacer, const Icon(Icons.skip_next)],
+                    config.rowMargin,
+                  ],
+                ),
+          onPressed: doNothing,
+        ),
+        EzDivider(height: config.spacing * 2),
+
+        // Button toggles
+        EzSwitchPair(
+          config,
+          key: ValueKey<String>('big-$bigSkips'),
+          value: bigSkips,
+          text: l10n(config).togSkipTog,
+          onChanged: (bool? value) {
+            if (value == null) return;
+
+            if (value) {
+              bigSkips = true;
+              if (!lilSkips && (size == WWGGSize.button)) size = WWGGSize.tile;
+              setModal(() {});
+            } else {
+              bigSkips = false;
+              if (!lilSkips && (size == WWGGSize.tile)) size = WWGGSize.button;
+              setModal(() {});
+            }
+          },
+        ),
+        config.spacer,
+        EzSwitchPair(
+          config,
+          key: ValueKey<String>('lil-$lilSkips'),
+          value: lilSkips,
+          text: l10n(config).togFFTog,
+          onChanged: (bool? value) {
+            if (value == null) return;
+
+            if (value) {
+              lilSkips = true;
+              if (!bigSkips && (size == WWGGSize.button)) size = WWGGSize.tile;
+              setModal(() {});
+            } else {
+              lilSkips = false;
+              if (!bigSkips && (size == WWGGSize.tile)) size = WWGGSize.button;
+              setModal(() {});
+            }
+          },
+        ),
+        config.separator,
+
+        // Note
+        Text(
+          l10n(config).togSomePlayers,
+          textAlign: TextAlign.center,
+          style: config.labelStyle,
+        ),
+        config.separator,
+      ]),
+    ),
+  );
+
+  await appInfo.updateWidget(
+    config,
+    WWGG.toggleMedia,
+    _mediaEntry(
+      tp: initConfig.tp,
+      size: size,
+      bigSkips: bigSkips,
+      lilSkips: lilSkips,
+    ),
+    lane: lane,
+    index: index,
+  );
+}
+
+class _EditTM extends StatelessWidget {
+  final EzCP config;
+  final AppInfoProvider appInfo;
+  final BuildContext pContext;
+  final _MediaConfig initConfig;
+  final int lane;
+  final int index;
+
+  const _EditTM(
+    this.config,
+    this.appInfo, {
+    required this.pContext,
+    required this.initConfig,
+    required this.lane,
+    required this.index,
+  });
+
+  @override
+  Widget build(_) => EzMenuButton(
+        config,
+        label: l10n(config).gEdit,
+        icon: EzIcon(config, Icons.edit),
+        onPressed: () => _openEdits(
+          config,
+          appInfo: appInfo,
+          pContext: pContext,
+          initConfig: initConfig,
+          lane: lane,
+          index: index,
+        ),
+      );
+}

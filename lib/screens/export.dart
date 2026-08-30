@@ -1,32 +1,19 @@
-/* empathetech_launcher
- * Copyright (c) 2025 Empathetech LLC. All rights reserved.
+/* liminal_launcher
+ * Copyright (c) 2026 YWT (Empathetech LLC). All rights reserved.
  * See LICENSE for distribution and usage details.
  */
 
 // Exports //
 
+export 'app_list.dart';
 export 'error.dart';
 export 'home.dart';
-
-export 'settings/settings_home.dart';
-export 'settings/text_settings.dart';
-export 'settings/layout_settings.dart';
-export 'settings/color_settings.dart';
-export 'settings/image_settings.dart';
+export 'settings.dart';
 
 // Route names //
 
-/// 'settings-home'
-const String settingsHomePath = 'settings-home';
+/// app-list
+const String appListPath = 'app-list';
 
-/// 'text-settings'
-const String textSettingsPath = 'text-settings';
-
-/// 'layout-settings'
-const String layoutSettingsPath = 'layout-settings';
-
-/// 'color-settings'
-const String colorSettingsPath = 'color-settings';
-
-/// 'image-settings'
-const String imageSettingsPath = 'image-settings';
+/// settings
+const String settingsPath = 'settings';

@@ -1,7 +1,301 @@
 {
   "@@locale": "fr",
 
+  "aplSort": "Trier : {type}",
+  "aplDate": "Date",
+  "aplName": "Nom",
+  "aplPublisher": "Éditeur",
+  "aplSize": "Taille",
+
+  "aplAsc": "Ordre : croissant",
+  "aplDsc": "Ordre : décroissant",
 
 
-  "hsCounterLabel": "Vous avez appuyé sur le bouton autant de fois que cela :"
+
+  "clkTitle": "Horloge",
+
+  "clkBackground": "Arrière-plan",
+  "clkBackgroundColor": "Couleur d'arrière-plan",
+  "clkBackgroundShape": "Forme d'arrière-plan",
+
+  "clkDate": "Date",
+  "clkDateColor": "Couleur de la date",
+  "clkDateStyle": "Style de la date",
+  "clkDateType": "Format de la date",
+
+  "clkCompact": "Compact",
+  "clkLong": "Long",
+  "clkMedium": "Moyen",
+  "clkShort": "Court",
+
+  "clkTime": "Heure",
+  "clkTimeBool": "Afficher l'heure",
+  "clkTimeColor": "Couleur de l'heure",
+  "clkTimeStyle": "Style de l'heure",
+
+
+
+  "dbsTileType": "Tuile {type}",
+  "dbsChangeApp": "Appui long pour changer d'application.",
+
+  "dbsApp": "Application Liminal",
+  "dbsFolder": "Dossier Liminal",
+
+  "dbsLabelType": "Type d'étiquette",
+
+  "dbsInitials": "Initiales",
+  "dbsFull": "Complet",
+  "dbsWingding": "Wingding",
+  
+  "dbsElevatedButton": "Bouton en relief",
+  "dbsShowIcon": "Afficher l'icône",
+
+  "dbsElevatedStyle": "Style en relief",
+
+
+
+  "dpsPageSettings": "Paramètres de la page",
+
+  "dpsWallpaper": "Fond d'écran",
+  "dpsUseOS": "Utiliser l'OS",
+
+  "dpsAlign": "Aligner",
+  "dpsListAlign": "Alignement de la liste",
+  "dpsAlignHint": "L'icône de Liminal Launcher est utilisée pour l'aperçu de l'alignement",
+  
+  "dpsHideStatus": "Masquer la barre d'état",
+  "dpsPages": "Pages de l'écran d'accueil",
+
+
+
+  "evtAppIcon": "Utiliser l'icône de l'application",
+  "evtCalendar": "Calendrier",
+  "evtClear": "Appui long pour effacer",
+  "evtCreate": "Créer",
+  "evtNewEvent": "Nouvel événement",
+  "evtNewTask": "Nouvelle tâche",
+  "evtNoCalendar": "Impossible de trouver une application de calendrier par défaut.\nQue dois-je faire ?\n\n'Tâche' est simplement un partage en arrière-plan. Vous choisirez une application par défaut avec laquelle partager.\nNous recommandons d'utiliser une application de tâches, mais ce n'est pas obligatoire.\nLes résultats peuvent varier.",
+  "evtShare": "'Tâche' est simplement un partage en arrière-plan.\nChoisissez une application de destination ci-dessous.\n\nNous recommandons d'utiliser une application de tâches, mais ce n'est pas obligatoire. Les résultats peuvent varier.",
+  "evtShareDest": "Sélection de la destination de partage",
+  "evtTask": "Tâche",
+  "evtUseTasks": "Passer aux tâches",
+
+
+
+  "fldAddTo": "Ajouter à {name}",
+  "fldAppearance": "Apparence",
+  "fldApps": "Applications",
+
+
+
+  "gAdd": "Ajouter",
+  "gAdded": "Ajouté",
+  "gClear": "Effacer",
+  "gDefault": "Par défaut",
+  "gDupe": "Dupliquer",
+  "gEdit": "Modifier",
+  "gEdits": "Modifications",
+  "gEditDefaults": "Modifier les paramètres par défaut",
+  "gKey": "Clé",
+  "gPreview": "Aperçu",
+  "gResize": "Redimensionner",
+  "gReset": "Réinitialiser",
+
+  "gButton": "Bouton",
+  "gTile": "Tuile",
+  "gWideTiles": "Tuiles larges",
+
+  "gSearch": "Rechercher",
+  "gSearchBar": "Barre de recherche",
+
+  "gEnd": "Fin",
+  "gCenter": "Centre",
+  "gStart": "Début",
+
+  "gBottom": "Bas",
+  "gLeft": "Gauche",
+  "gRight": "Droite",
+  "gTop": "Haut",
+
+  "gHorizontal": "Horizontal",
+  "gVertical": "Vertical",
+  
+  "gHidden": "Masqué",
+  "gShared": "Partagé",
+  "gShown": "Affiché",
+
+  "gOutlined": "Contour",
+  "gSolid": "Plein",
+
+  "gFailed": "Échec",
+  "gInvalid": "Invalide",
+  "gNoEmpty": "Ne peut pas être vide",
+  "gNothing": "Rien",
+
+  "gRemoving": "Supprimer {app}",
+  "gSelfDestruct": "Autodestruction",
+
+  "gMachineTranslated": "Tout est traduit par une machine. Si vous voyez une erreur, merci de proposer une correction !\n",
+  "gTranslations": "Lien vers les traductions.",
+  "gFix": "Corriger...",
+  "gLauncherEntries": "Entrées du lanceur",
+  "gSettingsEntries": "Entrées des paramètres",
+
+
+
+  "gsAppList": "Liste des applications",
+
+  "gsLinkedList": "Listes d'accueil liées",
+  "gsThemedHome": "La liste d'accueil peut aussi être basée sur le thème !",
+  "gsNoBothHome": "Note : les pages d'accueil n'ont pas de système de mise à jour pour les deux (",
+  "gsIndependent": ").\nLes listes seront totalement indépendantes.",
+  "gsRelinked": "Si/quand elles seront reliées, il vous sera demandé quelle version conserver.",
+  "gsKeepWhich": "Quelle disposition conserver ?",
+
+  "gsAutoSearch": "Recherche automatique dans la liste des applications",
+
+  "gsHomeRipple": "Animation d'ondulation de l'accueil",
+  "gsListRipple": "Animation d'ondulation de la liste",
+
+  "gsQuickLaunch": "Lancement rapide",
+  "gsQLDescription": "Balayez vers la gauche/droite sur l'écran d'accueil (sauf lors de la modification) pour ouvrir l'application sélectionnée.\nAppui long pour effacer votre sélection.",
+  "gsSwipe": "Balayage vers {direction}",
+  "gsSwipeDesc": "Choisissez une application à accès rapide qui s'ouvrira lorsque vous balayerez vers {direction} sur l'écran d'accueil.",
+  "gsSwipeHint": "Choisissez l'application qui s'ouvre lors d'un balayage vers {direction}",
+  "gsSwipeLabel": "Sélection du balayage vers {direction}",
+
+  "gsSecurity": "Sécurité",
+  "gsAuthToEdit": "S'authentifier pour modifier les listes/paramètres",
+  "gsAuthForHidden": "S'authentifier pour voir les applications masquées",
+  "gsAuthTimeout": "Délai d'authentification (mins)",
+  "gsPositiveOnly": "Entiers positifs uniquement",
+
+
+
+  "hsHome": "Accueil",
+  "hsHomeHint": "Accueil. Appui long pour modifier.",
+
+  "hsWelcome": "Bienvenue sur Liminal Launcher",
+  "hsDescription": "Il est orienté vers le minimalisme,\nmais offre une personnalisation illimitée.",
+  "hsUserSettings": "En règle générale : l'apparence de Liminal peut être complètement séparée en fonction du mode de thème !\n\nDans les paramètres correspondants, vous verrez une icône basculable qui indique si vous modifiez le thème sombre ",
+  "hsLight": ", clair ",
+  "hsBoth": ", ou les deux ",
+  "hsThemes": " thèmes.",
+  "hsGetStarted": "Faites un appui long sur l'écran d'accueil pour commencer.\nMerci, et profitez bien !",
+
+  "hsOneMore": "Encore une chose...",
+  "hsFree": "Cette version ne provient pas du Play Store, elle devrait donc être gratuite.\nRassurez-vous, la version gratuite de Liminal sera toujours identique à celle de Google Play.\n\nSi vous souhaitez soutenir le développement de Liminal, ou la création d'autres logiciels sympas, pensez à ",
+  "hsContribute": "contribuer",
+  "hsContributeHint": "Ouvrir un lien vers les options de contribution",
+  "hsPopUp": ".\n\nCeci est la seule fenêtre contextuelle hors tutoriel, et sa seule apparition durant cette installation.",
+  "hsOkay": "D'accord",
+
+  "hsApp": "Application",
+  "hsFolder": "Dossier",
+  "hsLane": "Ligne",
+  "hsSpacer": "Espacement",
+  "hsWidget": "Widget",
+
+  "hsScreenLanes": " lignes à l'écran.",
+  "hsWithCurr": "Avec votre actuelle...\n\ntaille d'icône (",
+  "hsPadding": "),\nmarge (",
+  "hsSpacing": "),\net espacement (",
+  "hsCanFit": "...vous pouvez faire tenir jusqu'à ",
+  "hsWithMin": " Avec les valeurs minimales, vous pouvez faire tenir jusqu'à ",
+  "hsLanes": " lignes.",
+
+  "hsEditAuth": "S'authentifier pour modifier le lanceur",
+  "hsHiddenAuth": "S'authentifier pour voir les applications masquées",
+
+
+
+  "mcIconButton": "Taille du bouton de l'icône",
+
+  "mcBanish": "Bannir",
+  "mcDelete": "Supprimer",
+  "mcDone": "Terminé",
+  "mcHide": "Masquer",
+  "mcInfo": "Infos",
+  "mcReposition": "Repositionner",
+  "mcMove": "Déplacer",
+  "mcMoveDown": "Déplacer vers le bas",
+  "mcMoveLeft": "Déplacer vers la gauche",
+  "mcMoveRight": "Déplacer vers la droite",
+  "mcMoveUp": "Déplacer vers le haut",
+  "mcRemove": "Retirer",
+  "mcSave": "Enregistrer",
+  "mcShow": "Afficher",
+  "mcUninstall": "Désinstaller",
+
+
+
+  "mltLaneConfig": "Configuration multi-lignes",
+  "mltPagesEnabled": "Avec les pages activées, les lignes se comportent comme les pages d'un lanceur traditionnel.\n",
+  "mltPagesDisabled": "Avec les pages désactivées, toutes les lignes partagent un défilement horizontal unique.\n",
+  "mltWideEnabled": "Avec les tuiles larges activées...\n",
+  "mltWideWidth": "chaque ligne (contenant un élément) aura la largeur d'un écran.\n",
+  "mltAnywhere": "les applications et les dossiers peuvent/seront activés n'importe où dans leur espace horizontal.\n",
+  "mltWideDisabled": "Avec les tuiles larges désactivées...\n",
+  "mltAutoWidth": "les lignes seront dimensionnées en fonction de leur élément le plus large et de vos paramètres d'espacement.\n",
+  "mltOnlyButton": "les applications et dossiers peuvent/seront activés uniquement par leur(s) bouton(s).\n",
+
+
+
+  "pHiddenReminder": "Balayez vers le haut lors de la modification pour ouvrir la liste des applications masquées.",
+
+  "pReminder": "Rappel",
+
+  "pBanishApp": "Bannir {app} ?",
+  "pRemoveLane": "Retirer {lane} ?",
+
+  "pWantTo": "Voulez-vous...",
+  "pHideDarkToo": "Masquer également pour le mode sombre ?",
+  "pHideLightToo": "Masquer également pour le mode clair ?",
+  "pShowDarkToo": "Afficher également pour le mode sombre ?",
+  "pShowLightToo": "Afficher également pour le mode clair ?",
+  
+  "pWhatBanish": "Lorsque vous bannissez une application, elle reste installée mais n'apparaît plus du tout dans Liminal.\nLes applications bannies ne peuvent être ouvertes que depuis les paramètres du système, ou via un lien d'application.\n\nLe bannissement est utile pour les applications utilitaires qui font aussi perdre du temps. Par exemple, vous voudrez peut-être bannir votre/vos navigateur(s) web.\nAinsi, vous pourrez utiliser des menus en ligne lorsque vous sortez, et réduire le 'doom scrolling' lorsque vous restez chez vous.\n\n{undo}\n\nRappel : le bannissement n'est que pour l'expérience utilisateur, pas pour la sécurité.\nPar exemple : si une application a l'autorisation d'accéder à la localisation en permanence, le fait de la bannir ne changera pas cela.",
+  "pUnBanish": "Le moyen le plus simple de restaurer/annuler le bannissement de {app} est de la désinstaller depuis les paramètres du système, puis de la réinstaller.",
+
+
+
+  "srcCustom": "Personnalisé",
+  "srcName": "Nom ",
+  "srcBase": "Site de base ",
+  "srcPath": "Chemin ",
+  "srcParameter": "Paramètre ",
+
+  "srcNonEmpty": "Un nom non vide est requis.",
+  "srcPlayResponsibly": "Liminal effectue une validation minimale de ces entrées personnalisées.\nÀ utiliser à vos propres risques.",
+  "srcSameName": "Une entrée personnalisée avec ce nom existe déjà.\nVeuillez modifier le nom et réessayer.",
+
+
+
+  "thmSelector": "sélecteur",
+  "thmToggle": "Basculer le thème",
+
+
+  
+  "timTitle": "Minuteur",
+
+  "timHours": "Heures",
+  "timMins": "Minutes",
+  "timSecs": "Secondes",
+
+  "timBadTime": "Temps invalide",
+  "timQuick": "Temps rapides",
+
+
+
+  "togTitle": "Contrôles multimédias",
+
+  "togFF": "Avance rapide",
+  "togNext": "Suivant",
+  "togPlayPause": "Lecture/Pause",
+  "togPrevious": "Précédent",
+  "togRewind": "Retour rapide",
+  
+  "togFFTog": "Avance/Retour rapide",
+  "togSkipTog": "Suivant/Précédent",
+  "togSomePlayers": "Note :\nCes boutons ne fonctionnent que si le lecteur actif les prend en charge. Certains lecteurs de musique n'ont pas l'Avance/Retour rapide, par exemple."
 }
