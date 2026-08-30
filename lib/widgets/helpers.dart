@@ -5,6 +5,7 @@
 
 import '../../../utils/export.dart';
 import './export.dart';
+
 import 'package:ywt_private/ywt_private.dart' as ywt;
 
 import 'package:open_ui/open_ui.dart';
@@ -22,17 +23,15 @@ Widget drawWidget(
   required void Function() editReset,
   required LimPos pos,
   required List<String> data,
-}) =>
-    switch (typeString) {
-      esClock => ClockWidget(config, appInfo, state, pos, rippleProgress, editReset, data),
-      esEvent => EventWidget(config, appInfo, state, pos, rippleProgress, editReset, data),
-      esSearch => SearchWidget(config, appInfo, state, pos, rippleProgress, editReset, data),
-      esTimer => TimerWidget(config, appInfo, state, pos, rippleProgress, editReset, data),
-      esToggleMedia =>
-        ToggleMediaWidget(config, appInfo, state, pos, rippleProgress, editReset, data),
-      esThemeMode => ThemeModeWidget(config, appInfo, state, pos, rippleProgress, editReset, data),
-      _ => const SizedBox.shrink(),
-    };
+}) => switch (typeString) {
+  esClock => ClockWidget(config, appInfo, state, pos, rippleProgress, editReset, data),
+  esEvent => EventWidget(config, appInfo, state, pos, rippleProgress, editReset, data),
+  esSearch => SearchWidget(config, appInfo, state, pos, rippleProgress, editReset, data),
+  esTimer => TimerWidget(config, appInfo, state, pos, rippleProgress, editReset, data),
+  esToggleMedia => ToggleMediaWidget(config, appInfo, state, pos, rippleProgress, editReset, data),
+  esThemeMode => ThemeModeWidget(config, appInfo, state, pos, rippleProgress, editReset, data),
+  _ => const SizedBox.shrink(),
+};
 
 /// When [options] is true, [context] is required
 Widget liminalFooter(
@@ -43,72 +42,60 @@ Widget liminalFooter(
   BuildContext? context,
   bool human = false,
   double? spacing,
-}) =>
-    EzFooter(
-      config,
-      message: EzRichText(
+}) => EzFooter(
+  config,
+  message: EzRichText(
+    config,
+    children: <InlineSpan>[
+      EzPlainText(text: l10n(config).gMachineTranslated, style: config.labelStyle),
+      EzInlineLink(
         config,
-        children: <InlineSpan>[
-          EzPlainText(
-            text: l10n(config).gMachineTranslated,
-            style: config.labelStyle,
-          ),
-          EzInlineLink(
-            config,
-            text: l10n(config).gTranslations,
-            url: options ? null : Uri.parse('${ywt.ywtGitHub}/liminal_launcher/tree/main/lib/l10n'),
-            onTap: options
-                ? () => showDialog(
-                      context: context!,
-                      builder: (_) => EzAlertDialog(
-                        config,
-                        title: Text(l10n(config).gFix, textAlign: TextAlign.center),
-                        actions: <Widget>[
-                          EzAction(
-                            config,
-                            text: l10n(config).gLauncherEntries,
-                            onPressed: () => launchUrl(
-                                Uri.parse('${ywt.ywtGitHub}/liminal_launcher/tree/main/lib/l10n')),
-                            semantics: config.ezL10n.gOpenLink,
-                          ),
-                          EzAction(
-                            config,
-                            text: l10n(config).gSettingsEntries,
-                            onPressed: () => launchUrl(
-                                Uri.parse('${ywt.ywtGitHub}/open_ui/tree/main/lib/src/l10n')),
-                            semantics: config.ezL10n.gOpenLink,
-                          ),
-                          EzAction(
-                            config,
-                            text: config.ezL10n.gCancel,
-                            onPressed: () => Navigator.of(context).pop(),
-                            semantics: config.ezL10n.gOpenLink,
-                          ),
-                        ],
+        text: l10n(config).gTranslations,
+        url: options ? null : Uri.parse('${ywt.ywtGitHub}/liminal_launcher/tree/main/lib/l10n'),
+        onTap: options
+            ? () => showDialog(
+                context: context!,
+                builder: (_) => EzAlertDialog(
+                  config,
+                  title: Text(l10n(config).gFix, textAlign: TextAlign.center),
+                  actions: <Widget>[
+                    EzAction(
+                      config,
+                      text: l10n(config).gLauncherEntries,
+                      onPressed: () => launchUrl(
+                        Uri.parse('${ywt.ywtGitHub}/liminal_launcher/tree/main/lib/l10n'),
                       ),
-                    )
-                : null,
-            hint: config.ezL10n.gOpenLink,
-            style: config.labelStyle,
-            textAlign: textAlign,
-          ),
-        ],
-        textAlign: textAlign,
-        textBackground: textBackground,
+                      semantics: config.ezL10n.gOpenLink,
+                    ),
+                    EzAction(
+                      config,
+                      text: l10n(config).gSettingsEntries,
+                      onPressed: () =>
+                          launchUrl(Uri.parse('${ywt.ywtGitHub}/open_ui/tree/main/lib/src/l10n')),
+                      semantics: config.ezL10n.gOpenLink,
+                    ),
+                    EzAction(
+                      config,
+                      text: config.ezL10n.gCancel,
+                      onPressed: () => Navigator.of(context).pop(),
+                      semantics: config.ezL10n.gOpenLink,
+                    ),
+                  ],
+                ),
+              )
+            : null,
+        hint: config.ezL10n.gOpenLink,
         style: config.labelStyle,
+        textAlign: textAlign,
       ),
-      human: human,
-      spacing: spacing,
-    );
-
-EzUpdaterFAB updater(EzCP config) => EzUpdaterFAB(
-      config,
-      appVersion: '1.0.0',
-      versionSource:
-          'https://raw.githubusercontent.com/YWT-LLC/liminal_launcher/refs/heads/main/APP_VERSION',
-      gPlay: 'https://play.google.com/store/apps/details?id=llc.ywt.liminal_launcher',
-      github: 'https://github.com/YWT-LLC/liminal_launcher/releases',
-    );
+    ],
+    textAlign: textAlign,
+    textBackground: textBackground,
+    style: config.labelStyle,
+  ),
+  human: human,
+  spacing: spacing,
+);
 
 //* Custom Classes *//
 
@@ -121,34 +108,33 @@ class SettingsFAB extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MenuAnchor(
-        builder: (_, MenuController c, __) => GestureDetector(
-          onLongPress: () => toggleMenu(c),
-          child: FloatingActionButton(
-            heroTag: 'settings_FAB',
-            onPressed: onPressed,
-            child: EzIcon(config, Icons.settings),
-          ),
-        ),
-        menuChildren: <Widget>[
-          EzMenuButton(
-            config,
-            label: config.ezL10n.gSystem,
-            icon: EzIcon(config, Icons.settings),
-            onPressed: () => openSystemSettings(),
-          ),
-          EzMenuButton(
-            config,
-            label: config.ezL10n.ssSaveConfig,
-            icon: EzIcon(config, Icons.download),
-            onPressed: () => EzCM.saveConfig(config, context: context),
-          ),
-          EzMenuButton(
-            config,
-            label: config.ezL10n.ssLoadConfig,
-            icon: EzIcon(config, Icons.upload),
-            onPressed: () =>
-                ezConfigLoader(config, context: context, extra: appInfo.reloadFromStorage),
-          ),
-        ],
-      );
+    builder: (_, MenuController c, __) => GestureDetector(
+      onLongPress: () => toggleMenu(c),
+      child: FloatingActionButton(
+        heroTag: 'settings_FAB',
+        onPressed: onPressed,
+        child: EzIcon(config, Icons.settings),
+      ),
+    ),
+    menuChildren: <Widget>[
+      EzMenuButton(
+        config,
+        label: config.ezL10n.gSystem,
+        icon: EzIcon(config, Icons.settings),
+        onPressed: () => openSystemSettings(),
+      ),
+      EzMenuButton(
+        config,
+        label: config.ezL10n.ssSaveConfig,
+        icon: EzIcon(config, Icons.download),
+        onPressed: () => EzCM.saveConfig(config, context: context),
+      ),
+      EzMenuButton(
+        config,
+        label: config.ezL10n.ssLoadConfig,
+        icon: EzIcon(config, Icons.upload),
+        onPressed: () => ezConfigLoader(config, context: context, extra: appInfo.reloadFromStorage),
+      ),
+    ],
+  );
 }
