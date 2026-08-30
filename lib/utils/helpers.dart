@@ -72,14 +72,14 @@ Future<IconData?> chooseIcon(EzCP config, BuildContext context) {
               ),
               config.spacer,
 
-              if (!grid)
-                EzScrollBlocker(EzTextField(
-                  controller: searchControl,
-                  constraints: ezTextFieldConstraints(mCon),
-                  hintText: l10n(config).gSearch,
-                  onChanged: (_) => setModal(() {}),
-                  validator: (_) => null,
-                )),
+              // Search/filter
+              EzScrollBlocker(EzTextField(
+                controller: searchControl,
+                constraints: ezTextFieldConstraints(mCon),
+                hintText: l10n(config).gSearch,
+                onChanged: (_) => setModal(() {}),
+                validator: (_) => null,
+              )),
 
               // Icons
               EzScrollView(
@@ -87,14 +87,19 @@ Future<IconData?> chooseIcon(EzCP config, BuildContext context) {
                 child: grid
                     ? EzWrap(
                         children: (outlined ? outlinedIconChoices : solidIconChoices)
-                            .values
-                            .map((IconData icon) => Padding(
+                            .entries
+                            .where((MapEntry<String, IconData> entry) => searchControl.text.isEmpty
+                                ? true
+                                : entry.key
+                                    .toLowerCase()
+                                    .contains(searchControl.text.toLowerCase()))
+                            .map((MapEntry<String, IconData> entry) => Padding(
                                   padding: EzInsets.wrap(config.spacing),
                                   child: EzIconButton(
                                     config,
-                                    icon: Icon(icon),
-                                    tooltip: l10n(config).gPreview,
-                                    onPressed: () => Navigator.of(mCon).pop(icon),
+                                    icon: Icon(entry.value),
+                                    tooltip: entry.key,
+                                    onPressed: () => Navigator.of(mCon).pop(entry.value),
                                   ),
                                 ))
                             .toList(),
