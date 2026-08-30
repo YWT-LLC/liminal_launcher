@@ -33,8 +33,6 @@ class AppSecSettings extends StatelessWidget {
           );
           final double fieldWidth = max(ttSize.width + config.padding, kMinInteractiveDimension);
 
-          double bottomSpace = config.spacing * 2;
-
           if (context.mounted) {
             await ezModal(
               config,
@@ -98,20 +96,13 @@ class AppSecSettings extends StatelessWidget {
                           errorConstraints: BoxConstraints(maxWidth: fieldWidth * 2),
                           hintText: '0',
                           keyboardType: TextInputType.number,
-                          onTap: () async {
-                            // Wait a bit for the keyboard to open
-                            await Future<void>.delayed(keyTime);
-                            setModal(
-                              () => bottomSpace =
-                                  ((config.spacing * 2) + MediaQuery.of(context).viewInsets.bottom),
-                            );
-                          },
-                          onTapOutside: (_) => setModal(() => bottomSpace = (config.spacing * 2)),
+                          onTap: () => setModal(() {}),
+                          onTapOutside: (_) => setModal(() {}),
                           onFieldSubmitted: (String stringVal) async {
                             final int? intVal = int.tryParse(stringVal);
                             if (intVal == null || intVal < 0) return;
 
-                            setModal(() => bottomSpace = (config.spacing * 2));
+                            setModal(() {});
                             await EzCM.secSet(authTimeoutKey, intVal.toString());
                           },
                           validator: (String? value) {
@@ -124,7 +115,7 @@ class AppSecSettings extends StatelessWidget {
                         ),
                       ],
                     ),
-                    EzSpacer(bottomSpace),
+                    EzKeyboardSpacer(config.spacing * 2),
                   ],
                 ),
               ),
