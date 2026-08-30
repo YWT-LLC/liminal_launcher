@@ -648,7 +648,6 @@ Future<void> _openEdits(
   final EdgeInsets wrapPadding = EzInsets.wrap(config.spacing);
 
   WWGGSize size = initConfig.size;
-  double bottomSpace = config.spacing * 2;
 
   final List<String> quick = List<String>.from(initConfig.quick);
 
@@ -664,150 +663,139 @@ Future<void> _openEdits(
     config,
     context: pContext,
     builder: (_) => StatefulBuilder(
-      builder: (_, StateSetter setModal) {
-        Future<void> grow() async {
-          // Wait a bit for the keyboard to open
-          await Future<void>.delayed(keyTime);
-          setModal(
-              () => bottomSpace = (config.spacing * 2) + MediaQuery.of(pContext).viewInsets.bottom);
-        }
+      builder: (_, StateSetter setModal) => ezModalScroll(config, children: <Widget>[
+        // Size //
 
-        void shrink() => setModal(() => bottomSpace = config.spacing * 2);
+        EzFlipFlop(
+          config,
+          onLabel: l10n(config).gTile,
+          offLabel: l10n(config).gButton,
+          init: initConfig.size == WWGGSize.tile,
+          onChanged: (bool tile) => setModal(() => size = tile ? WWGGSize.tile : WWGGSize.button),
+        ),
+        config.spacer,
 
-        return ezModalScroll(config, children: <Widget>[
-          // Size //
+        // Quick times //
 
-          EzFlipFlop(
-            config,
-            onLabel: l10n(config).gTile,
-            offLabel: l10n(config).gButton,
-            init: initConfig.size == WWGGSize.tile,
-            onChanged: (bool tile) => setModal(() => size = tile ? WWGGSize.tile : WWGGSize.button),
-          ),
-          config.spacer,
-
-          // Quick times //
-
-          // Add
-          EzScrollView(
-            config,
-            scrollDirection: Axis.horizontal,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              if (config.isLefty) ...<Widget>[
-                EzIconButton(
-                  config,
-                  icon: EzIcon(config, Icons.add),
-                  tooltip: l10n(config).gAdd,
-                  onPressed: () {
-                    quick.add(<String>[
-                      _validateTime(ourCon.text),
-                      _validateTime(minCon.text),
-                      _validateTime(secCon.text),
-                    ].join(colon));
-                    quick.sort();
-                    setModal(() {});
-                  },
-                ),
-                config.rowMargin,
-              ],
-
-              // Hours
-              _timeField(
-                constraints: initConfig.constraints,
-                tc: ourCon,
-                curr: ourNode,
-                label: l10n(config).timHours,
-                onTap: () => grow(),
-                onTapOutside: shrink,
-                onSubmit: () {
-                  minNode.requestFocus();
-                  minCon.selection = TextSelection(baseOffset: 0, extentOffset: minCon.text.length);
+        // Add
+        EzScrollView(
+          config,
+          scrollDirection: Axis.horizontal,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            if (config.isLefty) ...<Widget>[
+              EzIconButton(
+                config,
+                icon: EzIcon(config, Icons.add),
+                tooltip: l10n(config).gAdd,
+                onPressed: () {
+                  quick.add(<String>[
+                    _validateTime(ourCon.text),
+                    _validateTime(minCon.text),
+                    _validateTime(secCon.text),
+                  ].join(colon));
+                  quick.sort();
+                  setModal(() {});
                 },
               ),
               config.rowMargin,
-
-              // Minutes
-              _timeField(
-                constraints: initConfig.constraints,
-                tc: minCon,
-                curr: minNode,
-                label: l10n(config).timMins,
-                onTap: () => grow(),
-                onTapOutside: shrink,
-                onSubmit: () {
-                  secNode.requestFocus();
-                  secCon.selection = TextSelection(baseOffset: 0, extentOffset: secCon.text.length);
-                },
-              ),
-              config.rowMargin,
-
-              // Seconds
-              _timeField(
-                constraints: initConfig.constraints,
-                tc: secCon,
-                curr: secNode,
-                label: l10n(config).timSecs,
-                onTap: () => grow(),
-                onTapOutside: shrink,
-                onSubmit: () {
-                  secNode.unfocus();
-                  shrink();
-                },
-                last: true,
-              ),
-
-              if (!config.isLefty) ...<Widget>[
-                config.rowMargin,
-                EzIconButton(
-                  config,
-                  icon: EzIcon(config, Icons.add),
-                  tooltip: l10n(config).gAdd,
-                  onPressed: () {
-                    quick.add(<String>[
-                      _validateTime(ourCon.text),
-                      _validateTime(minCon.text),
-                      _validateTime(secCon.text),
-                    ].join(colon));
-                    quick.sort();
-                    setModal(() {});
-                  },
-                ),
-              ],
             ],
-          ),
-          if (quick.isNotEmpty)
-            EzTitledDivider(
-              config,
-              title: Text(
-                l10n(config).timQuick,
-                textAlign: TextAlign.center,
-                style: config.labelStyle,
-              ),
-              height: config.spacing * 2,
+
+            // Hours
+            _timeField(
+              constraints: initConfig.constraints,
+              tc: ourCon,
+              curr: ourNode,
+              label: l10n(config).timHours,
+              onTap: () => setModal(() {}),
+              onTapOutside: () => setModal(() {}),
+              onSubmit: () {
+                minNode.requestFocus();
+                minCon.selection = TextSelection(baseOffset: 0, extentOffset: minCon.text.length);
+              },
+            ),
+            config.rowMargin,
+
+            // Minutes
+            _timeField(
+              constraints: initConfig.constraints,
+              tc: minCon,
+              curr: minNode,
+              label: l10n(config).timMins,
+              onTap: () => setModal(() {}),
+              onTapOutside: () => setModal(() {}),
+              onSubmit: () {
+                secNode.requestFocus();
+                secCon.selection = TextSelection(baseOffset: 0, extentOffset: secCon.text.length);
+              },
+            ),
+            config.rowMargin,
+
+            // Seconds
+            _timeField(
+              constraints: initConfig.constraints,
+              tc: secCon,
+              curr: secNode,
+              label: l10n(config).timSecs,
+              onTap: () => setModal(() {}),
+              onTapOutside: () => setModal(() {}),
+              onSubmit: () {
+                secNode.unfocus();
+                () => setModal(() {});
+              },
+              last: true,
             ),
 
-          // List
-          EzWrap(
-            children: quick
-                .map((String time) => Padding(
-                      padding: wrapPadding,
-                      child: EzElevatedButton(
-                        config,
-                        key: ValueKey<String>(time),
-                        text: time,
-                        onPressed: () {
-                          quick.remove(time);
-                          quick.sort();
-                          setModal(() {});
-                        },
-                      ),
-                    ))
-                .toList(),
+            if (!config.isLefty) ...<Widget>[
+              config.rowMargin,
+              EzIconButton(
+                config,
+                icon: EzIcon(config, Icons.add),
+                tooltip: l10n(config).gAdd,
+                onPressed: () {
+                  quick.add(<String>[
+                    _validateTime(ourCon.text),
+                    _validateTime(minCon.text),
+                    _validateTime(secCon.text),
+                  ].join(colon));
+                  quick.sort();
+                  setModal(() {});
+                },
+              ),
+            ],
+          ],
+        ),
+        if (quick.isNotEmpty)
+          EzTitledDivider(
+            config,
+            title: Text(
+              l10n(config).timQuick,
+              textAlign: TextAlign.center,
+              style: config.labelStyle,
+            ),
+            height: config.spacing * 2,
           ),
-          EzSpacer(bottomSpace),
-        ]);
-      },
+
+        // List
+        EzWrap(
+          children: quick
+              .map((String time) => Padding(
+                    padding: wrapPadding,
+                    child: EzElevatedButton(
+                      config,
+                      key: ValueKey<String>(time),
+                      text: time,
+                      onPressed: () {
+                        quick.remove(time);
+                        quick.sort();
+                        setModal(() {});
+                      },
+                    ),
+                  ))
+              .toList(),
+        ),
+        EzKeyboardSpacer(config.spacing * 2),
+      ]),
     ),
   );
 
