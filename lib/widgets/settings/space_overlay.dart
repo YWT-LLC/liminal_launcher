@@ -416,11 +416,11 @@ class _EditSpacingOverlayState extends State<_EditSpacingOverlay> {
                                 widget.config.ezL10n.dsSpacing: widget.config.spacing,
                                 widget.config.ezL10n.tsIconSize: widget.config.iconSize,
                                 l10n(widget.config).mcIconButton: appIS,
-                                '1/4': (axis == Axis.horizontal ? fullHeight : fullWidth) * 0.250,
-                                '1/3': (axis == Axis.horizontal ? fullHeight : fullWidth) * 0.333,
-                                '1/2': (axis == Axis.horizontal ? fullHeight : fullWidth) * 0.500,
-                                '2/3': (axis == Axis.horizontal ? fullHeight : fullWidth) * 0.667,
-                                '3/4': (axis == Axis.horizontal ? fullHeight : fullWidth) * 0.750,
+                                '1/4': (axis == Axis.vertical ? fullHeight : fullWidth) * 0.250,
+                                '1/3': (axis == Axis.vertical ? fullHeight : fullWidth) * 0.333,
+                                '1/2': (axis == Axis.vertical ? fullHeight : fullWidth) * 0.500,
+                                '2/3': (axis == Axis.vertical ? fullHeight : fullWidth) * 0.667,
+                                '3/4': (axis == Axis.vertical ? fullHeight : fullWidth) * 0.750,
                               }
                                   .entries
                                   .map((MapEntry<String, double> entry) => EzMenuButton(
