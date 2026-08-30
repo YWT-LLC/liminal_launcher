@@ -38,7 +38,7 @@ class LiminalScaffold extends StatelessWidget {
           fabs: <Widget>[
             EzUpdaterFAB(
               config,
-              appVersion: '1.0.0',
+              appVersion: '1.0.1',
               versionSource:
                   'https://raw.githubusercontent.com/YWT-LLC/liminal_launcher/refs/heads/main/APP_VERSION',
               gPlay: 'https://play.google.com/store/apps/details?id=llc.ywt.liminal_launcher',
