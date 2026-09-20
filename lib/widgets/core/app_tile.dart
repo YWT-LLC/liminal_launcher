@@ -752,14 +752,10 @@ Future<void> editApp(
   Color backgroundColor = initConfig.backgroundColor ?? config.colors.surface;
   Color outlineColor = initConfig.outlineColor ?? config.colors.primaryContainer;
 
-  final bool? update = await ezModal(
+  final bool? update = await ezFullScreenModal<bool>(
     config,
     context: pContext,
-    enableDrag: false,
-    isDismissible: false,
-    showDragHandle: false,
-    constraints: BoxConstraints.tight(Size.infinite),
-    builder: (_) => StatefulBuilder(
+    child: StatefulBuilder(
       builder: (BuildContext mCon, StateSetter setModal) =>
           EzCol(mainAxisSize: MainAxisSize.max, children: <Widget>[
         EzHeader(config),

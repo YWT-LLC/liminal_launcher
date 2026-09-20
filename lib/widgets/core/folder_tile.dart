@@ -541,13 +541,10 @@ Future<void> editFolder(
   Color backgroundColor = initConfig.backgroundColor ?? config.colors.surface;
   Color outlineColor = initConfig.outlineColor ?? config.colors.primaryContainer;
 
-  final bool? update = await ezModal(
+  final bool? update = await ezFullScreenModal(
     config,
     context: pContext,
-    enableDrag: false,
-    isDismissible: false,
-    showDragHandle: false,
-    builder: (_) => StatefulBuilder(
+    child: StatefulBuilder(
       builder: (BuildContext mCon, StateSetter setModal) {
         // Define custom functions //
 
