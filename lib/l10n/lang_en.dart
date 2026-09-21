@@ -9,12 +9,13 @@ class LangEn extends Lang {
   LangEn([String locale = 'en']) : super(locale);
 
   @override
-  String aplSort(Object type) {
-    return 'Sort: $type';
-  }
+  String get aplAsc => 'Order: ascending';
 
   @override
   String get aplDate => 'Date';
+
+  @override
+  String get aplDsc => 'Order: descending';
 
   @override
   String get aplName => 'Name';
@@ -26,13 +27,9 @@ class LangEn extends Lang {
   String get aplSize => 'Size';
 
   @override
-  String get aplAsc => 'Order: ascending';
-
-  @override
-  String get aplDsc => 'Order: descending';
-
-  @override
-  String get clkTitle => 'Clock';
+  String aplSort(Object type) {
+    return 'Sort: $type';
+  }
 
   @override
   String get clkBackground => 'Background';
@@ -42,6 +39,9 @@ class LangEn extends Lang {
 
   @override
   String get clkBackgroundShape => 'Background shape';
+
+  @override
+  String get clkCompact => 'Compact';
 
   @override
   String get clkDate => 'Date';
@@ -54,9 +54,6 @@ class LangEn extends Lang {
 
   @override
   String get clkDateType => 'Date type';
-
-  @override
-  String get clkCompact => 'Compact';
 
   @override
   String get clkLong => 'Long';
@@ -80,54 +77,45 @@ class LangEn extends Lang {
   String get clkTimeStyle => 'Time style';
 
   @override
-  String dbsTileType(Object type) {
-    return '$type tile';
-  }
-
-  @override
-  String get dbsChangeApp => 'Long press to change the app.';
+  String get clkTitle => 'Clock';
 
   @override
   String get dbsApp => 'Liminal App';
 
   @override
-  String get dbsFolder => 'Liminal Folder';
-
-  @override
-  String get dbsLabelType => 'Label type';
-
-  @override
-  String get dbsInitials => 'Initials';
-
-  @override
-  String get dbsFull => 'Full';
-
-  @override
-  String get dbsWingding => 'Wingding';
+  String get dbsChangeApp => 'Long press to change the app.';
 
   @override
   String get dbsElevatedButton => 'Elevated button';
 
   @override
-  String get dbsShowIcon => 'Show icon';
-
-  @override
   String get dbsElevatedStyle => 'Elevated style';
 
   @override
-  String get dpsPageSettings => 'Page settings';
+  String get dbsFolder => 'Liminal Folder';
 
   @override
-  String get dpsWallpaper => 'Wallpaper';
+  String get dbsFull => 'Full';
 
   @override
-  String get dpsUseOS => 'Use OS';
+  String get dbsInitials => 'Initials';
+
+  @override
+  String get dbsLabelType => 'Label type';
+
+  @override
+  String get dbsShowIcon => 'Show icon';
+
+  @override
+  String dbsTileType(Object type) {
+    return '$type tile';
+  }
+
+  @override
+  String get dbsWingding => 'Wingding';
 
   @override
   String get dpsAlign => 'Align';
-
-  @override
-  String get dpsListAlign => 'List alignment';
 
   @override
   String get dpsAlignHint => 'Liminal Launcher icon used for alignment preview';
@@ -136,7 +124,19 @@ class LangEn extends Lang {
   String get dpsHideStatus => 'Hide status bar';
 
   @override
+  String get dpsListAlign => 'List alignment';
+
+  @override
+  String get dpsPageSettings => 'Page settings';
+
+  @override
   String get dpsPages => 'Home screen pages';
+
+  @override
+  String get dpsUseOS => 'Use OS';
+
+  @override
+  String get dpsWallpaper => 'Wallpaper';
 
   @override
   String get evtAppIcon => 'Use app icon';
@@ -191,6 +191,15 @@ class LangEn extends Lang {
   String get gAdded => 'Added';
 
   @override
+  String get gBottom => 'Bottom';
+
+  @override
+  String get gButton => 'Button';
+
+  @override
+  String get gCenter => 'Center';
+
+  @override
   String get gClear => 'Clear';
 
   @override
@@ -203,10 +212,31 @@ class LangEn extends Lang {
   String get gEdit => 'Edit';
 
   @override
+  String get gEditDefaults => 'Edit defaults';
+
+  @override
   String get gEdits => 'Edits';
 
   @override
-  String get gEditDefaults => 'Edit defaults';
+  String get gEnd => 'End';
+
+  @override
+  String get gFailed => 'Failed';
+
+  @override
+  String get gFix => 'Fix...';
+
+  @override
+  String get gGrid => 'Grid';
+
+  @override
+  String get gHidden => 'Hidden';
+
+  @override
+  String get gHorizontal => 'Horizontal';
+
+  @override
+  String get gInvalid => 'Invalid';
 
   @override
   String get gKey => 'Key';
@@ -215,82 +245,17 @@ class LangEn extends Lang {
   String get gLabelStyle => 'Label style';
 
   @override
-  String get gPreview => 'Preview';
-
-  @override
-  String get gResize => 'Resize';
-
-  @override
-  String get gReset => 'Reset';
-
-  @override
-  String get gButton => 'Button';
-
-  @override
-  String get gTile => 'Tile';
-
-  @override
-  String get gWideTiles => 'Wide tiles';
-
-  @override
-  String get gSearch => 'Search';
-
-  @override
-  String get gSearchBar => 'Search bar';
-
-  @override
-  String get gEnd => 'End';
-
-  @override
-  String get gCenter => 'Center';
-
-  @override
-  String get gStart => 'Start';
-
-  @override
-  String get gBottom => 'Bottom';
+  String get gLauncherEntries => 'Launcher entries';
 
   @override
   String get gLeft => 'Left';
 
   @override
-  String get gRight => 'Right';
-
-  @override
-  String get gTop => 'Top';
-
-  @override
-  String get gHorizontal => 'Horizontal';
-
-  @override
-  String get gVertical => 'Vertical';
-
-  @override
-  String get gHidden => 'Hidden';
-
-  @override
-  String get gShared => 'Shared';
-
-  @override
-  String get gShown => 'Shown';
-
-  @override
-  String get gGrid => 'Grid';
-
-  @override
   String get gList => 'List';
 
   @override
-  String get gOutlined => 'Outlined';
-
-  @override
-  String get gSolid => 'Solid';
-
-  @override
-  String get gFailed => 'Failed';
-
-  @override
-  String get gInvalid => 'Invalid';
+  String get gMachineTranslated =>
+      'Everything is machine translated. If you see something wrong, please submit a fix!\n';
 
   @override
   String get gNoEmpty => 'Cannot be empty';
@@ -299,50 +264,75 @@ class LangEn extends Lang {
   String get gNothing => 'Nothing';
 
   @override
+  String get gOutlined => 'Outlined';
+
+  @override
+  String get gPreview => 'Preview';
+
+  @override
   String gRemoving(Object app) {
     return 'Removing $app';
   }
 
   @override
+  String get gReset => 'Reset';
+
+  @override
+  String get gResize => 'Resize';
+
+  @override
+  String get gRight => 'Right';
+
+  @override
+  String get gSearch => 'Search';
+
+  @override
+  String get gSearchBar => 'Search bar';
+
+  @override
   String get gSelfDestruct => 'Self-destruct';
-
-  @override
-  String get gMachineTranslated =>
-      'Everything is machine translated. If you see something wrong, please submit a fix!\n';
-
-  @override
-  String get gTranslations => 'Translations link.';
-
-  @override
-  String get gFix => 'Fix...';
-
-  @override
-  String get gLauncherEntries => 'Launcher entries';
 
   @override
   String get gSettingsEntries => 'Settings entries';
 
   @override
+  String get gShared => 'Shared';
+
+  @override
+  String get gShown => 'Shown';
+
+  @override
+  String get gSolid => 'Solid';
+
+  @override
+  String get gStart => 'Start';
+
+  @override
+  String get gTile => 'Tile';
+
+  @override
+  String get gTop => 'Top';
+
+  @override
+  String get gTranslations => 'Translations link.';
+
+  @override
+  String get gVertical => 'Vertical';
+
+  @override
+  String get gWideTiles => 'Wide tiles';
+
+  @override
   String get gsAppList => 'App list';
 
   @override
-  String get gsLinkedList => 'Linked home lists';
+  String get gsAuthForHidden => 'Auth to see hidden apps';
 
   @override
-  String get gsThemedHome => 'The home list can be theme based too!';
+  String get gsAuthTimeout => 'Auth timeout (mins)';
 
   @override
-  String get gsNoBothHome => 'Note: the home ages have no update both system (';
-
-  @override
-  String get gsIndependent => ').\nThe lists will be fully independent.';
-
-  @override
-  String get gsRelinked =>
-      'If/when re-linked, you will be asked which version to keep.';
-
-  @override
-  String get gsKeepWhich => 'Keep which layout?';
+  String get gsAuthToEdit => 'Auth to edit lists/settings';
 
   @override
   String get gsAutoSearch => 'Auto-search the apps list';
@@ -351,14 +341,36 @@ class LangEn extends Lang {
   String get gsHomeRipple => 'Home ripple animation';
 
   @override
+  String get gsIndependent => ').\nThe lists will be fully independent.';
+
+  @override
+  String get gsKeepWhich => 'Keep which layout?';
+
+  @override
+  String get gsLinkedList => 'Linked home lists';
+
+  @override
   String get gsListRipple => 'List ripple animation';
+
+  @override
+  String get gsNoBothHome => 'Note: the home ages have no update both system (';
+
+  @override
+  String get gsPositiveOnly => 'Positive integers only';
+
+  @override
+  String get gsQLDescription =>
+      'Swipe left/right on the home screen (except when editing) to open the selected app.\nLong press to clear your selection.';
 
   @override
   String get gsQuickLaunch => 'Quick launch';
 
   @override
-  String get gsQLDescription =>
-      'Swipe left/right on the home screen (except when editing) to open the selected app.\nLong press to clear your selection.';
+  String get gsRelinked =>
+      'If/when re-linked, you will be asked which version to keep.';
+
+  @override
+  String get gsSecurity => 'Security';
 
   @override
   String gsSwipe(Object direction) {
@@ -381,56 +393,16 @@ class LangEn extends Lang {
   }
 
   @override
-  String get gsSecurity => 'Security';
+  String get gsThemedHome => 'The home list can be theme based too!';
 
   @override
-  String get gsAuthToEdit => 'Auth to edit lists/settings';
-
-  @override
-  String get gsAuthForHidden => 'Auth to see hidden apps';
-
-  @override
-  String get gsAuthTimeout => 'Auth timeout (mins)';
-
-  @override
-  String get gsPositiveOnly => 'Positive integers only';
-
-  @override
-  String get hsHome => 'Home';
-
-  @override
-  String get hsHomeHint => 'Home. Long press to edit.';
-
-  @override
-  String get hsWelcome => 'Welcome to Liminal Launcher';
-
-  @override
-  String get hsDescription =>
-      'It\'s geared toward minimalism,\nbut has limitless customization.';
-
-  @override
-  String get hsUserSettings =>
-      'As a general rule: Liminal\'s appearance can be completely separate based on theme mode!\n\nWhile in the relevant settings, you will see a toggle-able icon that indicates whether you\'re editing the dark ';
-
-  @override
-  String get hsLight => ', light ';
+  String get hsApp => 'App';
 
   @override
   String get hsBoth => ', or both ';
 
   @override
-  String get hsThemes => ' themes.';
-
-  @override
-  String get hsGetStarted =>
-      'Long press the home screen to get started.\nThank you, and enjoy!';
-
-  @override
-  String get hsOneMore => 'One more thing...';
-
-  @override
-  String get hsFree =>
-      'This version is not from the Play Store, so it should have been free.\nRest assured, the free version of Liminal will always be identical to the Google Play version.\n\nIf you want to support Liminal\'s development, or the development of more cool software, please consider ';
+  String get hsCanFit => '...values, you can fit up to ';
 
   @override
   String get hsContribute => 'contributing';
@@ -439,53 +411,81 @@ class LangEn extends Lang {
   String get hsContributeHint => 'Open a link to contribution options';
 
   @override
-  String get hsPopUp =>
-      '.\n\nThis is the only non-tutorial pop-up, and its only appearance this install.';
-
-  @override
-  String get hsOkay => 'Okay';
-
-  @override
-  String get hsApp => 'App';
-
-  @override
-  String get hsFolder => 'Folder';
-
-  @override
-  String get hsLane => 'Lane';
-
-  @override
-  String get hsSpacer => 'Spacer';
-
-  @override
-  String get hsWidget => 'Widget';
-
-  @override
-  String get hsScreenLanes => ' lanes on screen.';
-
-  @override
-  String get hsWithCurr => 'With your current...\n\nicon size (';
-
-  @override
-  String get hsPadding => '),\npadding (';
-
-  @override
-  String get hsSpacing => '),\n& spacing (';
-
-  @override
-  String get hsCanFit => '...values, you can fit up to ';
-
-  @override
-  String get hsWithMin => ' With the minimum values, you can fit up to ';
-
-  @override
-  String get hsLanes => ' lanes.';
+  String get hsDescription =>
+      'It\'s geared toward minimalism,\nbut has limitless customization.';
 
   @override
   String get hsEditAuth => 'Authenticate to edit the launcher';
 
   @override
+  String get hsFolder => 'Folder';
+
+  @override
+  String get hsFree =>
+      'This version is not from the Play Store, so it should have been free.\nRest assured, the free version of Liminal will always be identical to the Google Play version.\n\nIf you want to support Liminal\'s development, or the development of more cool software, please consider ';
+
+  @override
+  String get hsGetStarted =>
+      'Long press the home screen to get started.\nThank you, and enjoy!';
+
+  @override
   String get hsHiddenAuth => 'Authenticate to see hidden apps';
+
+  @override
+  String get hsHome => 'Home';
+
+  @override
+  String get hsHomeHint => 'Home. Long press to edit.';
+
+  @override
+  String get hsLane => 'Lane';
+
+  @override
+  String get hsLanes => ' lanes.';
+
+  @override
+  String get hsLight => ', light ';
+
+  @override
+  String get hsOkay => 'Okay';
+
+  @override
+  String get hsOneMore => 'One more thing...';
+
+  @override
+  String get hsPadding => '),\npadding (';
+
+  @override
+  String get hsPopUp =>
+      '.\n\nThis is the only non-tutorial pop-up, and its only appearance this install.';
+
+  @override
+  String get hsScreenLanes => ' lanes on screen.';
+
+  @override
+  String get hsSpacer => 'Spacer';
+
+  @override
+  String get hsSpacing => '),\n& spacing (';
+
+  @override
+  String get hsThemes => ' themes.';
+
+  @override
+  String get hsUserSettings =>
+      'As a general rule: Liminal\'s appearance can be completely separate based on theme mode!\n\nWhile in the relevant settings, you will see a toggle-able icon that indicates whether you\'re editing the dark ';
+
+  @override
+  String get hsWelcome => 'Welcome to Liminal Launcher';
+
+  @override
+  String get hsWidget => 'Widget';
+
+  @override
+  String get hsWithCurr => 'With your current...\n\nicon size (';
+
+  @override
+  String get hsWithMin => ' With the minimum values, you can fit up to ';
 
   @override
   String get inAlarm => 'Alarm';
@@ -623,13 +623,13 @@ class LangEn extends Lang {
   String get inStorefront => 'Storefront';
 
   @override
-  String get inTransit => 'Transit';
+  String get inTV => 'TV';
 
   @override
   String get inTool => 'Tool';
 
   @override
-  String get inTV => 'TV';
+  String get inTransit => 'Transit';
 
   @override
   String get inWallet => 'Wallet';
@@ -639,9 +639,6 @@ class LangEn extends Lang {
 
   @override
   String get inWork => 'Work';
-
-  @override
-  String get mcIconButton => 'Icon button size';
 
   @override
   String get mcBanish => 'Banish';
@@ -656,10 +653,10 @@ class LangEn extends Lang {
   String get mcHide => 'Hide';
 
   @override
-  String get mcInfo => 'Info';
+  String get mcIconButton => 'Icon button size';
 
   @override
-  String get mcReposition => 'Reposition';
+  String get mcInfo => 'Info';
 
   @override
   String get mcMove => 'Move';
@@ -680,6 +677,9 @@ class LangEn extends Lang {
   String get mcRemove => 'Remove';
 
   @override
+  String get mcReposition => 'Reposition';
+
+  @override
   String get mcSave => 'Save';
 
   @override
@@ -689,15 +689,30 @@ class LangEn extends Lang {
   String get mcUninstall => 'Uninstall';
 
   @override
+  String get mltAnywhere =>
+      'apps and folders can/will be activated anywhere in their horizontal space.\n';
+
+  @override
+  String get mltAutoWidth =>
+      'lanes will be sized by their widest item & your spacing setting(s).\n';
+
+  @override
   String get mltLaneConfig => 'Multi-lane configuration';
+
+  @override
+  String get mltOnlyButton =>
+      'apps and folders can/will be activated only by their button(s).\n';
+
+  @override
+  String get mltPagesDisabled =>
+      'With pages disabled, all lanes share one horizontal scroll.\n';
 
   @override
   String get mltPagesEnabled =>
       'With pages enabled, lanes behave like pages on a traditional launcher.\n';
 
   @override
-  String get mltPagesDisabled =>
-      'With pages disabled, all lanes share one horizontal scroll.\n';
+  String get mltWideDisabled => 'With wide tiles disabled...\n';
 
   @override
   String get mltWideEnabled => 'With wide tiles enabled...\n';
@@ -707,39 +722,13 @@ class LangEn extends Lang {
       'each lane (with an item) will be the width of one screen.\n';
 
   @override
-  String get mltAnywhere =>
-      'apps and folders can/will be activated anywhere in their horizontal space.\n';
-
-  @override
-  String get mltWideDisabled => 'With wide tiles disabled...\n';
-
-  @override
-  String get mltAutoWidth =>
-      'lanes will be sized by their widest item & your spacing setting(s).\n';
-
-  @override
-  String get mltOnlyButton =>
-      'apps and folders can/will be activated only by their button(s).\n';
-
-  @override
-  String get pHiddenReminder =>
-      'Swipe up while editing to open the hidden apps list.';
-
-  @override
-  String get pReminder => 'Reminder';
-
-  @override
   String pBanishApp(Object app) {
     return 'Banish $app?';
   }
 
   @override
-  String pRemoveLane(Object lane) {
-    return 'Remove $lane?';
-  }
-
-  @override
-  String get pWantTo => 'Want to...';
+  String get pHiddenReminder =>
+      'Swipe up while editing to open the hidden apps list.';
 
   @override
   String get pHideDarkToo => 'Hide for dark mode too?';
@@ -748,10 +737,26 @@ class LangEn extends Lang {
   String get pHideLightToo => 'Hide for light mode too?';
 
   @override
+  String get pReminder => 'Reminder';
+
+  @override
+  String pRemoveLane(Object lane) {
+    return 'Remove $lane?';
+  }
+
+  @override
   String get pShowDarkToo => 'Show for dark mode too?';
 
   @override
   String get pShowLightToo => 'Show for light mode too?';
+
+  @override
+  String pUnBanish(Object app) {
+    return 'The simplest wat to restore/un-banish $app is to uninstall it from the system settings, then reinstall.';
+  }
+
+  @override
+  String get pWantTo => 'Want to...';
 
   @override
   String pWhatBanish(Object undo) {
@@ -759,9 +764,7 @@ class LangEn extends Lang {
   }
 
   @override
-  String pUnBanish(Object app) {
-    return 'The simplest wat to restore/un-banish $app is to uninstall it from the system settings, then reinstall.';
-  }
+  String get srcBase => 'Base site ';
 
   @override
   String get srcCustom => 'Custom';
@@ -770,16 +773,13 @@ class LangEn extends Lang {
   String get srcName => 'Name ';
 
   @override
-  String get srcBase => 'Base site ';
-
-  @override
-  String get srcPath => 'Path ';
+  String get srcNonEmpty => 'Need a non-empty name.';
 
   @override
   String get srcParameter => 'Parameter ';
 
   @override
-  String get srcNonEmpty => 'Need a non-empty name.';
+  String get srcPath => 'Path ';
 
   @override
   String get srcPlayResponsibly =>
@@ -796,7 +796,7 @@ class LangEn extends Lang {
   String get thmToggle => 'Toggle theme';
 
   @override
-  String get timTitle => 'Timer';
+  String get timBadTime => 'Invalid time';
 
   @override
   String get timHours => 'Hours';
@@ -805,19 +805,19 @@ class LangEn extends Lang {
   String get timMins => 'Minutes';
 
   @override
-  String get timSecs => 'Seconds';
-
-  @override
-  String get timBadTime => 'Invalid time';
-
-  @override
   String get timQuick => 'Quick times';
 
   @override
-  String get togTitle => 'Media controls';
+  String get timSecs => 'Seconds';
+
+  @override
+  String get timTitle => 'Timer';
 
   @override
   String get togFF => 'Fast forward';
+
+  @override
+  String get togFFTog => 'FF/Rewind';
 
   @override
   String get togNext => 'Next';
@@ -832,14 +832,14 @@ class LangEn extends Lang {
   String get togRewind => 'Rewind';
 
   @override
-  String get togFFTog => 'FF/Rewind';
-
-  @override
   String get togSkipTog => 'Skip/Prev';
 
   @override
   String get togSomePlayers =>
       'Note:\nThese buttons only work if the active player supports them. Some music players don\'t have FF/Rewind, for example';
+
+  @override
+  String get togTitle => 'Media controls';
 }
 
 /// The translations for English, as used in the United States (`en_US`).
@@ -847,12 +847,13 @@ class LangEnUs extends LangEn {
   LangEnUs() : super('en_US');
 
   @override
-  String aplSort(Object type) {
-    return 'Sort: $type';
-  }
+  String get aplAsc => 'Order: ascending';
 
   @override
   String get aplDate => 'Date';
+
+  @override
+  String get aplDsc => 'Order: descending';
 
   @override
   String get aplName => 'Name';
@@ -864,13 +865,9 @@ class LangEnUs extends LangEn {
   String get aplSize => 'Size';
 
   @override
-  String get aplAsc => 'Order: ascending';
-
-  @override
-  String get aplDsc => 'Order: descending';
-
-  @override
-  String get clkTitle => 'Clock';
+  String aplSort(Object type) {
+    return 'Sort: $type';
+  }
 
   @override
   String get clkBackground => 'Background';
@@ -880,6 +877,9 @@ class LangEnUs extends LangEn {
 
   @override
   String get clkBackgroundShape => 'Background shape';
+
+  @override
+  String get clkCompact => 'Compact';
 
   @override
   String get clkDate => 'Date';
@@ -892,9 +892,6 @@ class LangEnUs extends LangEn {
 
   @override
   String get clkDateType => 'Date type';
-
-  @override
-  String get clkCompact => 'Compact';
 
   @override
   String get clkLong => 'Long';
@@ -918,54 +915,45 @@ class LangEnUs extends LangEn {
   String get clkTimeStyle => 'Time style';
 
   @override
-  String dbsTileType(Object type) {
-    return '$type tile';
-  }
-
-  @override
-  String get dbsChangeApp => 'Long press to change the app.';
+  String get clkTitle => 'Clock';
 
   @override
   String get dbsApp => 'Liminal App';
 
   @override
-  String get dbsFolder => 'Liminal Folder';
-
-  @override
-  String get dbsLabelType => 'Label type';
-
-  @override
-  String get dbsInitials => 'Initials';
-
-  @override
-  String get dbsFull => 'Full';
-
-  @override
-  String get dbsWingding => 'Wingding';
+  String get dbsChangeApp => 'Long press to change the app.';
 
   @override
   String get dbsElevatedButton => 'Elevated button';
 
   @override
-  String get dbsShowIcon => 'Show icon';
-
-  @override
   String get dbsElevatedStyle => 'Elevated style';
 
   @override
-  String get dpsPageSettings => 'Page settings';
+  String get dbsFolder => 'Liminal Folder';
 
   @override
-  String get dpsWallpaper => 'Wallpaper';
+  String get dbsFull => 'Full';
 
   @override
-  String get dpsUseOS => 'Use OS';
+  String get dbsInitials => 'Initials';
+
+  @override
+  String get dbsLabelType => 'Label type';
+
+  @override
+  String get dbsShowIcon => 'Show icon';
+
+  @override
+  String dbsTileType(Object type) {
+    return '$type tile';
+  }
+
+  @override
+  String get dbsWingding => 'Wingding';
 
   @override
   String get dpsAlign => 'Align';
-
-  @override
-  String get dpsListAlign => 'List alignment';
 
   @override
   String get dpsAlignHint => 'Liminal Launcher icon used for alignment preview';
@@ -974,7 +962,19 @@ class LangEnUs extends LangEn {
   String get dpsHideStatus => 'Hide status bar';
 
   @override
+  String get dpsListAlign => 'List alignment';
+
+  @override
+  String get dpsPageSettings => 'Page settings';
+
+  @override
   String get dpsPages => 'Home screen pages';
+
+  @override
+  String get dpsUseOS => 'Use OS';
+
+  @override
+  String get dpsWallpaper => 'Wallpaper';
 
   @override
   String get evtAppIcon => 'Use app icon';
@@ -1029,6 +1029,15 @@ class LangEnUs extends LangEn {
   String get gAdded => 'Added';
 
   @override
+  String get gBottom => 'Bottom';
+
+  @override
+  String get gButton => 'Button';
+
+  @override
+  String get gCenter => 'Center';
+
+  @override
   String get gClear => 'Clear';
 
   @override
@@ -1041,10 +1050,31 @@ class LangEnUs extends LangEn {
   String get gEdit => 'Edit';
 
   @override
+  String get gEditDefaults => 'Edit defaults';
+
+  @override
   String get gEdits => 'Edits';
 
   @override
-  String get gEditDefaults => 'Edit defaults';
+  String get gEnd => 'End';
+
+  @override
+  String get gFailed => 'Failed';
+
+  @override
+  String get gFix => 'Fix...';
+
+  @override
+  String get gGrid => 'Grid';
+
+  @override
+  String get gHidden => 'Hidden';
+
+  @override
+  String get gHorizontal => 'Horizontal';
+
+  @override
+  String get gInvalid => 'Invalid';
 
   @override
   String get gKey => 'Key';
@@ -1053,82 +1083,17 @@ class LangEnUs extends LangEn {
   String get gLabelStyle => 'Label style';
 
   @override
-  String get gPreview => 'Preview';
-
-  @override
-  String get gResize => 'Resize';
-
-  @override
-  String get gReset => 'Reset';
-
-  @override
-  String get gButton => 'Button';
-
-  @override
-  String get gTile => 'Tile';
-
-  @override
-  String get gWideTiles => 'Wide tiles';
-
-  @override
-  String get gSearch => 'Search';
-
-  @override
-  String get gSearchBar => 'Search bar';
-
-  @override
-  String get gEnd => 'End';
-
-  @override
-  String get gCenter => 'Center';
-
-  @override
-  String get gStart => 'Start';
-
-  @override
-  String get gBottom => 'Bottom';
+  String get gLauncherEntries => 'Launcher entries';
 
   @override
   String get gLeft => 'Left';
 
   @override
-  String get gRight => 'Right';
-
-  @override
-  String get gTop => 'Top';
-
-  @override
-  String get gHorizontal => 'Horizontal';
-
-  @override
-  String get gVertical => 'Vertical';
-
-  @override
-  String get gHidden => 'Hidden';
-
-  @override
-  String get gShared => 'Shared';
-
-  @override
-  String get gShown => 'Shown';
-
-  @override
-  String get gGrid => 'Grid';
-
-  @override
   String get gList => 'List';
 
   @override
-  String get gOutlined => 'Outlined';
-
-  @override
-  String get gSolid => 'Solid';
-
-  @override
-  String get gFailed => 'Failed';
-
-  @override
-  String get gInvalid => 'Invalid';
+  String get gMachineTranslated =>
+      'Everything is machine translated. If you see something wrong, please submit a fix!\n';
 
   @override
   String get gNoEmpty => 'Cannot be empty';
@@ -1137,50 +1102,75 @@ class LangEnUs extends LangEn {
   String get gNothing => 'Nothing';
 
   @override
+  String get gOutlined => 'Outlined';
+
+  @override
+  String get gPreview => 'Preview';
+
+  @override
   String gRemoving(Object app) {
     return 'Removing $app';
   }
 
   @override
+  String get gReset => 'Reset';
+
+  @override
+  String get gResize => 'Resize';
+
+  @override
+  String get gRight => 'Right';
+
+  @override
+  String get gSearch => 'Search';
+
+  @override
+  String get gSearchBar => 'Search bar';
+
+  @override
   String get gSelfDestruct => 'Self-destruct';
-
-  @override
-  String get gMachineTranslated =>
-      'Everything is machine translated. If you see something wrong, please submit a fix!\n';
-
-  @override
-  String get gTranslations => 'Translations link.';
-
-  @override
-  String get gFix => 'Fix...';
-
-  @override
-  String get gLauncherEntries => 'Launcher entries';
 
   @override
   String get gSettingsEntries => 'Settings entries';
 
   @override
+  String get gShared => 'Shared';
+
+  @override
+  String get gShown => 'Shown';
+
+  @override
+  String get gSolid => 'Solid';
+
+  @override
+  String get gStart => 'Start';
+
+  @override
+  String get gTile => 'Tile';
+
+  @override
+  String get gTop => 'Top';
+
+  @override
+  String get gTranslations => 'Translations link.';
+
+  @override
+  String get gVertical => 'Vertical';
+
+  @override
+  String get gWideTiles => 'Wide tiles';
+
+  @override
   String get gsAppList => 'App list';
 
   @override
-  String get gsLinkedList => 'Linked home lists';
+  String get gsAuthForHidden => 'Auth to see hidden apps';
 
   @override
-  String get gsThemedHome => 'The home list can be theme based too!';
+  String get gsAuthTimeout => 'Auth timeout (mins)';
 
   @override
-  String get gsNoBothHome => 'Note: the home ages have no update both system (';
-
-  @override
-  String get gsIndependent => ').\nThe lists will be fully independent.';
-
-  @override
-  String get gsRelinked =>
-      'If/when re-linked, you will be asked which version to keep.';
-
-  @override
-  String get gsKeepWhich => 'Keep which layout?';
+  String get gsAuthToEdit => 'Auth to edit lists/settings';
 
   @override
   String get gsAutoSearch => 'Auto-search the apps list';
@@ -1189,14 +1179,36 @@ class LangEnUs extends LangEn {
   String get gsHomeRipple => 'Home ripple animation';
 
   @override
+  String get gsIndependent => ').\nThe lists will be fully independent.';
+
+  @override
+  String get gsKeepWhich => 'Keep which layout?';
+
+  @override
+  String get gsLinkedList => 'Linked home lists';
+
+  @override
   String get gsListRipple => 'List ripple animation';
+
+  @override
+  String get gsNoBothHome => 'Note: the home ages have no update both system (';
+
+  @override
+  String get gsPositiveOnly => 'Positive integers only';
+
+  @override
+  String get gsQLDescription =>
+      'Swipe left/right on the home screen (except when editing) to open the selected app.\nLong press to clear your selection.';
 
   @override
   String get gsQuickLaunch => 'Quick launch';
 
   @override
-  String get gsQLDescription =>
-      'Swipe left/right on the home screen (except when editing) to open the selected app.\nLong press to clear your selection.';
+  String get gsRelinked =>
+      'If/when re-linked, you will be asked which version to keep.';
+
+  @override
+  String get gsSecurity => 'Security';
 
   @override
   String gsSwipe(Object direction) {
@@ -1219,56 +1231,16 @@ class LangEnUs extends LangEn {
   }
 
   @override
-  String get gsSecurity => 'Security';
+  String get gsThemedHome => 'The home list can be theme based too!';
 
   @override
-  String get gsAuthToEdit => 'Auth to edit lists/settings';
-
-  @override
-  String get gsAuthForHidden => 'Auth to see hidden apps';
-
-  @override
-  String get gsAuthTimeout => 'Auth timeout (mins)';
-
-  @override
-  String get gsPositiveOnly => 'Positive integers only';
-
-  @override
-  String get hsHome => 'Home';
-
-  @override
-  String get hsHomeHint => 'Home. Long press to edit.';
-
-  @override
-  String get hsWelcome => 'Welcome to Liminal Launcher';
-
-  @override
-  String get hsDescription =>
-      'It\'s geared toward minimalism,\nbut has limitless customization.';
-
-  @override
-  String get hsUserSettings =>
-      'As a general rule: Liminal\'s appearance can be completely separate based on theme mode!\n\nWhile in the relevant settings, you will see a toggle-able icon that indicates whether you\'re editing the dark ';
-
-  @override
-  String get hsLight => ', light ';
+  String get hsApp => 'App';
 
   @override
   String get hsBoth => ', or both ';
 
   @override
-  String get hsThemes => ' themes.';
-
-  @override
-  String get hsGetStarted =>
-      'Long press the home screen to get started.\nThank you, and enjoy!';
-
-  @override
-  String get hsOneMore => 'One more thing...';
-
-  @override
-  String get hsFree =>
-      'This version is not from the Play Store, so it should have been free.\nRest assured, the free version of Liminal will always be identical to the Google Play version.\n\nIf you want to support Liminal\'s development, or the development of more cool software, please consider ';
+  String get hsCanFit => '...values, you can fit up to ';
 
   @override
   String get hsContribute => 'contributing';
@@ -1277,53 +1249,81 @@ class LangEnUs extends LangEn {
   String get hsContributeHint => 'Open a link to contribution options';
 
   @override
-  String get hsPopUp =>
-      '.\n\nThis is the only non-tutorial pop-up, and its only appearance this install.';
-
-  @override
-  String get hsOkay => 'Okay';
-
-  @override
-  String get hsApp => 'App';
-
-  @override
-  String get hsFolder => 'Folder';
-
-  @override
-  String get hsLane => 'Lane';
-
-  @override
-  String get hsSpacer => 'Spacer';
-
-  @override
-  String get hsWidget => 'Widget';
-
-  @override
-  String get hsScreenLanes => ' lanes on screen.';
-
-  @override
-  String get hsWithCurr => 'With your current...\n\nicon size (';
-
-  @override
-  String get hsPadding => '),\npadding (';
-
-  @override
-  String get hsSpacing => '),\n& spacing (';
-
-  @override
-  String get hsCanFit => '...values, you can fit up to ';
-
-  @override
-  String get hsWithMin => ' With the minimum values, you can fit up to ';
-
-  @override
-  String get hsLanes => ' lanes.';
+  String get hsDescription =>
+      'It\'s geared toward minimalism,\nbut has limitless customization.';
 
   @override
   String get hsEditAuth => 'Authenticate to edit the launcher';
 
   @override
+  String get hsFolder => 'Folder';
+
+  @override
+  String get hsFree =>
+      'This version is not from the Play Store, so it should have been free.\nRest assured, the free version of Liminal will always be identical to the Google Play version.\n\nIf you want to support Liminal\'s development, or the development of more cool software, please consider ';
+
+  @override
+  String get hsGetStarted =>
+      'Long press the home screen to get started.\nThank you, and enjoy!';
+
+  @override
   String get hsHiddenAuth => 'Authenticate to see hidden apps';
+
+  @override
+  String get hsHome => 'Home';
+
+  @override
+  String get hsHomeHint => 'Home. Long press to edit.';
+
+  @override
+  String get hsLane => 'Lane';
+
+  @override
+  String get hsLanes => ' lanes.';
+
+  @override
+  String get hsLight => ', light ';
+
+  @override
+  String get hsOkay => 'Okay';
+
+  @override
+  String get hsOneMore => 'One more thing...';
+
+  @override
+  String get hsPadding => '),\npadding (';
+
+  @override
+  String get hsPopUp =>
+      '.\n\nThis is the only non-tutorial pop-up, and its only appearance this install.';
+
+  @override
+  String get hsScreenLanes => ' lanes on screen.';
+
+  @override
+  String get hsSpacer => 'Spacer';
+
+  @override
+  String get hsSpacing => '),\n& spacing (';
+
+  @override
+  String get hsThemes => ' themes.';
+
+  @override
+  String get hsUserSettings =>
+      'As a general rule: Liminal\'s appearance can be completely separate based on theme mode!\n\nWhile in the relevant settings, you will see a toggle-able icon that indicates whether you\'re editing the dark ';
+
+  @override
+  String get hsWelcome => 'Welcome to Liminal Launcher';
+
+  @override
+  String get hsWidget => 'Widget';
+
+  @override
+  String get hsWithCurr => 'With your current...\n\nicon size (';
+
+  @override
+  String get hsWithMin => ' With the minimum values, you can fit up to ';
 
   @override
   String get inAlarm => 'Alarm';
@@ -1461,13 +1461,13 @@ class LangEnUs extends LangEn {
   String get inStorefront => 'Storefront';
 
   @override
-  String get inTransit => 'Transit';
+  String get inTV => 'TV';
 
   @override
   String get inTool => 'Tool';
 
   @override
-  String get inTV => 'TV';
+  String get inTransit => 'Transit';
 
   @override
   String get inWallet => 'Wallet';
@@ -1477,9 +1477,6 @@ class LangEnUs extends LangEn {
 
   @override
   String get inWork => 'Work';
-
-  @override
-  String get mcIconButton => 'Icon button size';
 
   @override
   String get mcBanish => 'Banish';
@@ -1494,10 +1491,10 @@ class LangEnUs extends LangEn {
   String get mcHide => 'Hide';
 
   @override
-  String get mcInfo => 'Info';
+  String get mcIconButton => 'Icon button size';
 
   @override
-  String get mcReposition => 'Reposition';
+  String get mcInfo => 'Info';
 
   @override
   String get mcMove => 'Move';
@@ -1518,6 +1515,9 @@ class LangEnUs extends LangEn {
   String get mcRemove => 'Remove';
 
   @override
+  String get mcReposition => 'Reposition';
+
+  @override
   String get mcSave => 'Save';
 
   @override
@@ -1527,15 +1527,30 @@ class LangEnUs extends LangEn {
   String get mcUninstall => 'Uninstall';
 
   @override
+  String get mltAnywhere =>
+      'apps and folders can/will be activated anywhere in their horizontal space.\n';
+
+  @override
+  String get mltAutoWidth =>
+      'lanes will be sized by their widest item & your spacing setting(s).\n';
+
+  @override
   String get mltLaneConfig => 'Multi-lane configuration';
+
+  @override
+  String get mltOnlyButton =>
+      'apps and folders can/will be activated only by their button(s).\n';
+
+  @override
+  String get mltPagesDisabled =>
+      'With pages disabled, all lanes share one horizontal scroll.\n';
 
   @override
   String get mltPagesEnabled =>
       'With pages enabled, lanes behave like pages on a traditional launcher.\n';
 
   @override
-  String get mltPagesDisabled =>
-      'With pages disabled, all lanes share one horizontal scroll.\n';
+  String get mltWideDisabled => 'With wide tiles disabled...\n';
 
   @override
   String get mltWideEnabled => 'With wide tiles enabled...\n';
@@ -1545,39 +1560,13 @@ class LangEnUs extends LangEn {
       'each lane (with an item) will be the width of one screen.\n';
 
   @override
-  String get mltAnywhere =>
-      'apps and folders can/will be activated anywhere in their horizontal space.\n';
-
-  @override
-  String get mltWideDisabled => 'With wide tiles disabled...\n';
-
-  @override
-  String get mltAutoWidth =>
-      'lanes will be sized by their widest item & your spacing setting(s).\n';
-
-  @override
-  String get mltOnlyButton =>
-      'apps and folders can/will be activated only by their button(s).\n';
-
-  @override
-  String get pHiddenReminder =>
-      'Swipe up while editing to open the hidden apps list.';
-
-  @override
-  String get pReminder => 'Reminder';
-
-  @override
   String pBanishApp(Object app) {
     return 'Banish $app?';
   }
 
   @override
-  String pRemoveLane(Object lane) {
-    return 'Remove $lane?';
-  }
-
-  @override
-  String get pWantTo => 'Want to...';
+  String get pHiddenReminder =>
+      'Swipe up while editing to open the hidden apps list.';
 
   @override
   String get pHideDarkToo => 'Hide for dark mode too?';
@@ -1586,10 +1575,26 @@ class LangEnUs extends LangEn {
   String get pHideLightToo => 'Hide for light mode too?';
 
   @override
+  String get pReminder => 'Reminder';
+
+  @override
+  String pRemoveLane(Object lane) {
+    return 'Remove $lane?';
+  }
+
+  @override
   String get pShowDarkToo => 'Show for dark mode too?';
 
   @override
   String get pShowLightToo => 'Show for light mode too?';
+
+  @override
+  String pUnBanish(Object app) {
+    return 'The simplest wat to restore/un-banish $app is to uninstall it from the system settings, then reinstall.';
+  }
+
+  @override
+  String get pWantTo => 'Want to...';
 
   @override
   String pWhatBanish(Object undo) {
@@ -1597,9 +1602,7 @@ class LangEnUs extends LangEn {
   }
 
   @override
-  String pUnBanish(Object app) {
-    return 'The simplest wat to restore/un-banish $app is to uninstall it from the system settings, then reinstall.';
-  }
+  String get srcBase => 'Base site ';
 
   @override
   String get srcCustom => 'Custom';
@@ -1608,16 +1611,13 @@ class LangEnUs extends LangEn {
   String get srcName => 'Name ';
 
   @override
-  String get srcBase => 'Base site ';
-
-  @override
-  String get srcPath => 'Path ';
+  String get srcNonEmpty => 'Need a non-empty name.';
 
   @override
   String get srcParameter => 'Parameter ';
 
   @override
-  String get srcNonEmpty => 'Need a non-empty name.';
+  String get srcPath => 'Path ';
 
   @override
   String get srcPlayResponsibly =>
@@ -1634,7 +1634,7 @@ class LangEnUs extends LangEn {
   String get thmToggle => 'Toggle theme';
 
   @override
-  String get timTitle => 'Timer';
+  String get timBadTime => 'Invalid time';
 
   @override
   String get timHours => 'Hours';
@@ -1643,19 +1643,19 @@ class LangEnUs extends LangEn {
   String get timMins => 'Minutes';
 
   @override
-  String get timSecs => 'Seconds';
-
-  @override
-  String get timBadTime => 'Invalid time';
-
-  @override
   String get timQuick => 'Quick times';
 
   @override
-  String get togTitle => 'Media controls';
+  String get timSecs => 'Seconds';
+
+  @override
+  String get timTitle => 'Timer';
 
   @override
   String get togFF => 'Fast forward';
+
+  @override
+  String get togFFTog => 'FF/Rewind';
 
   @override
   String get togNext => 'Next';
@@ -1670,12 +1670,12 @@ class LangEnUs extends LangEn {
   String get togRewind => 'Rewind';
 
   @override
-  String get togFFTog => 'FF/Rewind';
-
-  @override
   String get togSkipTog => 'Skip/Prev';
 
   @override
   String get togSomePlayers =>
       'Note:\nThese buttons only work if the active player supports them. Some music players don\'t have FF/Rewind, for example';
+
+  @override
+  String get togTitle => 'Media controls';
 }

@@ -1,73 +1,47 @@
 {
   "@@locale": "es",
-
-  "aplSort": "Ordenar: {type}",
+  "aplAsc": "Orden: ascendente",
   "aplDate": "Fecha",
+  "aplDsc": "Orden: descendente",
   "aplName": "Nombre",
   "aplPublisher": "Editor",
   "aplSize": "Tamaño",
-
-  "aplAsc": "Orden: ascendente",
-  "aplDsc": "Orden: descendente",
-
-
-
-  "clkTitle": "Reloj",
-
+  "aplSort": "Ordenar: {type}",
   "clkBackground": "Fondo",
   "clkBackgroundColor": "Color de fondo",
   "clkBackgroundShape": "Forma del fondo",
-
+  "clkCompact": "Compacto",
   "clkDate": "Fecha",
   "clkDateColor": "Color de la fecha",
   "clkDateStyle": "Estilo de la fecha",
   "clkDateType": "Tipo de fecha",
-
-  "clkCompact": "Compacto",
   "clkLong": "Largo",
   "clkMedium": "Medio",
   "clkShort": "Corto",
-
   "clkTime": "Hora",
   "clkTimeBool": "Mostrar hora",
   "clkTimeColor": "Color de la hora",
   "clkTimeStyle": "Estilo de la hora",
-
-
-
-  "dbsTileType": "Mosaico {type}",
-  "dbsChangeApp": "Mantén presionado para cambiar la aplicación.",
-
+  "clkTitle": "Reloj",
   "dbsApp": "Aplicación Liminal",
-  "dbsFolder": "Carpeta Liminal",
-
-  "dbsLabelType": "Tipo de etiqueta",
-
-  "dbsInitials": "Iniciales",
-  "dbsFull": "Completo",
-  "dbsWingding": "Wingding",
-  
+  "dbsChangeApp": "Mantén presionado para cambiar la aplicación.",
   "dbsElevatedButton": "Botón elevado",
-  "dbsShowIcon": "Mostrar ícono",
-
   "dbsElevatedStyle": "Estilo elevado",
-
-
-
-  "dpsPageSettings": "Configuración de página",
-
-  "dpsWallpaper": "Fondo de pantalla",
-  "dpsUseOS": "Usar del SO",
-
+  "dbsFolder": "Carpeta Liminal",
+  "dbsFull": "Completo",
+  "dbsInitials": "Iniciales",
+  "dbsLabelType": "Tipo de etiqueta",
+  "dbsShowIcon": "Mostrar ícono",
+  "dbsTileType": "Mosaico {type}",
+  "dbsWingding": "Wingding",
   "dpsAlign": "Alinear",
-  "dpsListAlign": "Alineación de la lista",
   "dpsAlignHint": "Ícono de Liminal Launcher usado para la vista previa de alineación",
-  
   "dpsHideStatus": "Ocultar barra de estado",
+  "dpsListAlign": "Alineación de la lista",
+  "dpsPageSettings": "Configuración de página",
   "dpsPages": "Páginas de la pantalla de inicio",
-
-
-
+  "dpsUseOS": "Usar del SO",
+  "dpsWallpaper": "Fondo de pantalla",
   "evtAppIcon": "Usar ícono de la aplicación",
   "evtCalendar": "Calendario",
   "evtClear": "Mantén presionado para borrar",
@@ -79,139 +53,104 @@
   "evtShareDest": "Seleccionando el destino para compartir",
   "evtTask": "Tarea",
   "evtUseTasks": "Cambiar a tareas",
-
-
-
   "fldAddTo": "Agregar a {name}",
   "fldAppearance": "Apariencia",
   "fldApps": "Aplicaciones",
-
-
-
   "gAdd": "Agregar",
   "gAdded": "Agregado",
+  "gBottom": "Abajo",
+  "gButton": "Botón",
+  "gCenter": "Centro",
   "gClear": "Borrar",
   "gDefault": "Predeterminado",
   "gDupe": "Duplicar",
   "gEdit": "Editar",
-  "gEdits": "Ediciones",
   "gEditDefaults": "Editar predeterminados",
+  "gEdits": "Ediciones",
+  "gEnd": "Fin",
+  "gFailed": "Falló",
+  "gFix": "Corregir...",
+  "gGrid": "Red",
+  "gHidden": "Oculto",
+  "gHorizontal": "Horizontal",
+  "gInvalid": "Inválido",
   "gKey": "Clave",
   "gLabelStyle": "Estilo de etiqueta",
-  "gPreview": "Vista previa",
-  "gResize": "Redimensionar",
-  "gReset": "Restablecer",
-
-  "gButton": "Botón",
-  "gTile": "Mosaico",
-  "gWideTiles": "Mosaicos anchos",
-
-  "gSearch": "Buscar",
-  "gSearchBar": "Barra de búsqueda",
-
-  "gEnd": "Fin",
-  "gCenter": "Centro",
-  "gStart": "Inicio",
-
-  "gBottom": "Abajo",
+  "gLauncherEntries": "Entradas del lanzador",
   "gLeft": "Izquierda",
-  "gRight": "Derecha",
-  "gTop": "Arriba",
-
-  "gHorizontal": "Horizontal",
-  "gVertical": "Vertical",
-  
-  "gHidden": "Oculto",
-  "gShared": "Compartido",
-  "gShown": "Mostrado",
-
-  "gGrid": "Red",
   "gList": "Lista",
-  "gOutlined": "Contorneado",
-  "gSolid": "Sólido",
-
-  "gFailed": "Falló",
-  "gInvalid": "Inválido",
+  "gMachineTranslated": "Todo está traducido por máquina. Si ves algún error, ¡por favor envía una corrección!\n",
   "gNoEmpty": "No puede estar vacío",
   "gNothing": "Nada",
-
+  "gOutlined": "Contorneado",
+  "gPreview": "Vista previa",
   "gRemoving": "Eliminar {app}",
+  "gReset": "Restablecer",
+  "gResize": "Redimensionar",
+  "gRight": "Derecha",
+  "gSearch": "Buscar",
+  "gSearchBar": "Barra de búsqueda",
   "gSelfDestruct": "Autodestrucción",
-
-  "gMachineTranslated": "Todo está traducido por máquina. Si ves algún error, ¡por favor envía una corrección!\n",
-  "gTranslations": "Enlace de traducciones.",
-  "gFix": "Corregir...",
-  "gLauncherEntries": "Entradas del lanzador",
   "gSettingsEntries": "Entradas de configuración",
-
-
-
+  "gShared": "Compartido",
+  "gShown": "Mostrado",
+  "gSolid": "Sólido",
+  "gStart": "Inicio",
+  "gTile": "Mosaico",
+  "gTop": "Arriba",
+  "gTranslations": "Enlace de traducciones.",
+  "gVertical": "Vertical",
+  "gWideTiles": "Mosaicos anchos",
   "gsAppList": "Lista de aplicaciones",
-
-  "gsLinkedList": "Listas de inicio vinculadas",
-  "gsThemedHome": "¡La lista de inicio también puede estar basada en temas!",
-  "gsNoBothHome": "Nota: las páginas de inicio no tienen un sistema de actualizar ambos (",
-  "gsIndependent": ").\nLas listas serán totalmente independientes.",
-  "gsRelinked": "Si se vuelve a vincular, se te preguntará qué versión conservar.",
-  "gsKeepWhich": "¿Qué diseño quieres conservar?",
-
+  "gsAuthForHidden": "Autenticación para ver aplicaciones ocultas",
+  "gsAuthTimeout": "Tiempo límite de autenticación (min)",
+  "gsAuthToEdit": "Autenticación para editar listas/configuraciones",
   "gsAutoSearch": "Búsqueda automática en la lista de aplicaciones",
-
   "gsHomeRipple": "Animación de ondulación en inicio",
+  "gsIndependent": ").\nLas listas serán totalmente independientes.",
+  "gsKeepWhich": "¿Qué diseño quieres conservar?",
+  "gsLinkedList": "Listas de inicio vinculadas",
   "gsListRipple": "Animación de ondulación en lista",
-
-  "gsQuickLaunch": "Inicio rápido",
+  "gsNoBothHome": "Nota: las páginas de inicio no tienen un sistema de actualizar ambos (",
+  "gsPositiveOnly": "Solo números enteros positivos",
   "gsQLDescription": "Desliza a la izquierda/derecha en la pantalla de inicio (excepto al editar) para abrir la aplicación seleccionada.\nMantén presionado para borrar tu selección.",
+  "gsQuickLaunch": "Inicio rápido",
+  "gsRelinked": "Si se vuelve a vincular, se te preguntará qué versión conservar.",
+  "gsSecurity": "Seguridad",
   "gsSwipe": "Deslizamiento hacia {direction}",
   "gsSwipeDesc": "Elige una aplicación de acceso rápido que se abrirá cuando deslices hacia {direction} en la pantalla de inicio.",
   "gsSwipeHint": "Elige la aplicación que se abre al deslizar hacia {direction}",
   "gsSwipeLabel": "Seleccionando el deslizamiento hacia {direction}",
-
-  "gsSecurity": "Seguridad",
-  "gsAuthToEdit": "Autenticación para editar listas/configuraciones",
-  "gsAuthForHidden": "Autenticación para ver aplicaciones ocultas",
-  "gsAuthTimeout": "Tiempo límite de autenticación (min)",
-  "gsPositiveOnly": "Solo números enteros positivos",
-
-
-
-  "hsHome": "Inicio",
-  "hsHomeHint": "Inicio. Mantén presionado para editar.",
-
-  "hsWelcome": "Bienvenido a Liminal Launcher",
-  "hsDescription": "Está orientado al minimalismo,\npero tiene una personalización ilimitada.",
-  "hsUserSettings": "Como regla general: ¡la apariencia de Liminal puede ser completamente independiente según el modo del tema!\n\nAl estar en los ajustes relevantes, verás un ícono alternable que indica si estás editando el oscuro ",
-  "hsLight": ", claro ",
+  "gsThemedHome": "¡La lista de inicio también puede estar basada en temas!",
+  "hsApp": "Aplicación",
   "hsBoth": ", o ambos ",
-  "hsThemes": " temas.",
-  "hsGetStarted": "Mantén presionada la pantalla de inicio para comenzar.\n¡Gracias y disfruta!",
-
-  "hsOneMore": "Una cosa más...",
-  "hsFree": "Esta versión no es de la Play Store, por lo que debería haber sido gratis.\nTen la seguridad de que la versión gratuita de Liminal siempre será idéntica a la versión de Google Play.\n\nSi deseas apoyar el desarrollo de Liminal, o el desarrollo de más software genial, por favor considera ",
+  "hsCanFit": "...pueden caber hasta ",
   "hsContribute": "contribuir",
   "hsContributeHint": "Abrir un enlace a las opciones de contribución",
-  "hsPopUp": ".\n\nEsta es la única ventana emergente que no es un tutorial, y su única aparición en esta instalación.",
-  "hsOkay": "Aceptar",
-
-  "hsApp": "Aplicación",
-  "hsFolder": "Carpeta",
-  "hsLane": "Carril",
-  "hsSpacer": "Espaciador",
-  "hsWidget": "Widget",
-
-  "hsScreenLanes": " carriles en pantalla.",
-  "hsWithCurr": "Con tu actual...\n\ntamaño de ícono (",
-  "hsPadding": "),\nrelleno (",
-  "hsSpacing": "),\ny espaciado (",
-  "hsCanFit": "...pueden caber hasta ",
-  "hsWithMin": " Con los valores mínimos, pueden caber hasta ",
-  "hsLanes": " carriles.",
-
+  "hsDescription": "Está orientado al minimalismo,\npero tiene una personalización ilimitada.",
   "hsEditAuth": "Autentícate para editar el lanzador",
+  "hsFolder": "Carpeta",
+  "hsFree": "Esta versión no es de la Play Store, por lo que debería haber sido gratis.\nTen la seguridad de que la versión gratuita de Liminal siempre será idéntica a la versión de Google Play.\n\nSi deseas apoyar el desarrollo de Liminal, o el desarrollo de más software genial, por favor considera ",
+  "hsGetStarted": "Mantén presionada la pantalla de inicio para comenzar.\n¡Gracias y disfruta!",
   "hsHiddenAuth": "Autentícate para ver aplicaciones ocultas",
-
-
-
+  "hsHome": "Inicio",
+  "hsHomeHint": "Inicio. Mantén presionado para editar.",
+  "hsLane": "Carril",
+  "hsLanes": " carriles.",
+  "hsLight": ", claro ",
+  "hsOkay": "Aceptar",
+  "hsOneMore": "Una cosa más...",
+  "hsPadding": "),\nrelleno (",
+  "hsPopUp": ".\n\nEsta es la única ventana emergente que no es un tutorial, y su única aparición en esta instalación.",
+  "hsScreenLanes": " carriles en pantalla.",
+  "hsSpacer": "Espaciador",
+  "hsSpacing": "),\ny espaciado (",
+  "hsThemes": " temas.",
+  "hsUserSettings": "Como regla general: ¡la apariencia de Liminal puede ser completamente independiente según el modo del tema!\n\nAl estar en los ajustes relevantes, verás un ícono alternable que indica si estás editando el oscuro ",
+  "hsWelcome": "Bienvenido a Liminal Launcher",
+  "hsWidget": "Widget",
+  "hsWithCurr": "Con tu actual...\n\ntamaño de ícono (",
+  "hsWithMin": " Con los valores mínimos, pueden caber hasta ",
   "inAlarm": "Alarma",
   "inBike": "Bicicleta",
   "inBoat": "Barco",
@@ -257,102 +196,71 @@
   "inShopping": "Compras",
   "inStar": "Estrella",
   "inStorefront": "Tienda",
-  "inTransit": "Transporte",
-  "inTool": "Herramienta",
   "inTV": "TV",
+  "inTool": "Herramienta",
+  "inTransit": "Transporte",
   "inWallet": "Billetera",
   "inWine": "Vino",
   "inWork": "Trabajo",
-  
-
-  
-  "mcIconButton": "Tamaño del botón de ícono",
-
   "mcBanish": "Desterrar",
   "mcDelete": "Eliminar",
   "mcDone": "Listo",
   "mcHide": "Ocultar",
+  "mcIconButton": "Tamaño del botón de ícono",
   "mcInfo": "Información",
-  "mcReposition": "Reposicionar",
   "mcMove": "Mover",
   "mcMoveDown": "Mover hacia abajo",
   "mcMoveLeft": "Mover hacia la izquierda",
   "mcMoveRight": "Mover hacia la derecha",
   "mcMoveUp": "Mover hacia arriba",
   "mcRemove": "Quitar",
+  "mcReposition": "Reposicionar",
   "mcSave": "Guardar",
   "mcShow": "Mostrar",
   "mcUninstall": "Desinstalar",
-
-
-
+  "mltAnywhere": "las aplicaciones y carpetas se podrán activar en cualquier parte de su espacio horizontal.\n",
+  "mltAutoWidth": "los carriles se dimensionarán según su elemento más ancho y tus configuraciones de espaciado.\n",
   "mltLaneConfig": "Configuración de múltiples carriles",
-  "mltPagesEnabled": "Con las páginas habilitadas, los carriles se comportan como páginas en un lanzador tradicional.\n",
+  "mltOnlyButton": "las aplicaciones y carpetas se podrán activar únicamente a través de sus botones.\n",
   "mltPagesDisabled": "Con las páginas deshabilitadas, todos los carriles comparten un desplazamiento horizontal.\n",
+  "mltPagesEnabled": "Con las páginas habilitadas, los carriles se comportan como páginas en un lanzador tradicional.\n",
+  "mltWideDisabled": "Con los mosaicos anchos deshabilitados...\n",
   "mltWideEnabled": "Con los mosaicos anchos habilitados...\n",
   "mltWideWidth": "cada carril (con un elemento) tendrá el ancho de una pantalla.\n",
-  "mltAnywhere": "las aplicaciones y carpetas se podrán activar en cualquier parte de su espacio horizontal.\n",
-  "mltWideDisabled": "Con los mosaicos anchos deshabilitados...\n",
-  "mltAutoWidth": "los carriles se dimensionarán según su elemento más ancho y tus configuraciones de espaciado.\n",
-  "mltOnlyButton": "las aplicaciones y carpetas se podrán activar únicamente a través de sus botones.\n",
-
-
-
-  "pHiddenReminder": "Desliza hacia arriba mientras editas para abrir la lista de aplicaciones ocultas.",
-
-  "pReminder": "Recordatorio",
-
   "pBanishApp": "¿Desterrar {app}?",
-  "pRemoveLane": "¿Quitar {lane}?",
-
-  "pWantTo": "Quieres...",
+  "pHiddenReminder": "Desliza hacia arriba mientras editas para abrir la lista de aplicaciones ocultas.",
   "pHideDarkToo": "¿Ocultar también para el modo oscuro?",
   "pHideLightToo": "¿Ocultar también para el modo claro?",
+  "pReminder": "Recordatorio",
+  "pRemoveLane": "¿Quitar {lane}?",
   "pShowDarkToo": "¿Mostrar también para el modo oscuro?",
   "pShowLightToo": "¿Mostrar también para el modo claro?",
-  
-  "pWhatBanish": "Cuando destierras una aplicación, seguirá instalada pero no aparecerá en Liminal en lo absoluto.\nLas aplicaciones desterradas solo se pueden abrir desde la configuración del sistema o mediante un enlace de la aplicación.\n\nDesterrar es útil para las aplicaciones de utilidad que también te hacen perder el tiempo. Por ejemplo, es posible que quieras desterrar tus navegadores web.\nDe esa manera, puedes usar los menús en línea cuando sales y reducir el desplazamiento compulsivo cuando te quedas en casa.\n\n{undo}\n\nRecordatorio: desterrar es solo para la experiencia del usuario (UX), no para la seguridad.\nPor ejemplo: si una aplicación tiene permisos de ubicación siempre activos, desterrarla no afectará eso.",
   "pUnBanish": "La forma más sencilla de restaurar/quitar el destierro de {app} es desinstalarla desde la configuración del sistema y luego volver a instalarla.",
-
-
-
+  "pWantTo": "Quieres...",
+  "pWhatBanish": "Cuando destierras una aplicación, seguirá instalada pero no aparecerá en Liminal en lo absoluto.\nLas aplicaciones desterradas solo se pueden abrir desde la configuración del sistema o mediante un enlace de la aplicación.\n\nDesterrar es útil para las aplicaciones de utilidad que también te hacen perder el tiempo. Por ejemplo, es posible que quieras desterrar tus navegadores web.\nDe esa manera, puedes usar los menús en línea cuando sales y reducir el desplazamiento compulsivo cuando te quedas en casa.\n\n{undo}\n\nRecordatorio: desterrar es solo para la experiencia del usuario (UX), no para la seguridad.\nPor ejemplo: si una aplicación tiene permisos de ubicación siempre activos, desterrarla no afectará eso.",
+  "srcBase": "Sitio base ",
   "srcCustom": "Personalizado",
   "srcName": "Nombre ",
-  "srcBase": "Sitio base ",
-  "srcPath": "Ruta ",
-  "srcParameter": "Parámetro ",
-
   "srcNonEmpty": "Se necesita un nombre que no esté vacío.",
+  "srcParameter": "Parámetro ",
+  "srcPath": "Ruta ",
   "srcPlayResponsibly": "Liminal realiza una validación mínima de estas entradas personalizadas.\nÚsalo bajo tu propio riesgo.",
   "srcSameName": "Ya existe una entrada personalizada con ese nombre.\nPor favor, cambia el nombre e inténtalo de nuevo.",
-
-
-
   "thmSelector": "selector",
   "thmToggle": "Alternar tema",
-
-
-  
-  "timTitle": "Temporizador",
-
+  "timBadTime": "Hora inválida",
   "timHours": "Horas",
   "timMins": "Minutos",
-  "timSecs": "Segundos",
-
-  "timBadTime": "Hora inválida",
   "timQuick": "Tiempos rápidos",
-
-
-
-  "togTitle": "Controles multimedia",
-
+  "timSecs": "Segundos",
+  "timTitle": "Temporizador",
   "togFF": "Avance rápido",
+  "togFFTog": "Avance/Rebobinar",
   "togNext": "Siguiente",
   "togPlayPause": "Reproducir/pausar",
   "togPrevious": "Anterior",
   "togRewind": "Rebobinar",
-  
-  "togFFTog": "Avance/Rebobinar",
   "togSkipTog": "Omitir/Anterior",
-  "togSomePlayers": "Nota:\nEstos botones solo funcionan si el reproductor activo es compatible con ellos. Algunos reproductores de música no tienen la función de avance/rebobinar, por ejemplo"  
+  "togSomePlayers": "Nota:\nEstos botones solo funcionan si el reproductor activo es compatible con ellos. Algunos reproductores de música no tienen la función de avance/rebobinar, por ejemplo",
+  "togTitle": "Controles multimedia"
 }
