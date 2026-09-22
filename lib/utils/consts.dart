@@ -39,7 +39,7 @@ const Set<String> assetPaths = <String>{appIconPath};
 
 /// Credits for...
 /// [appIconPath]
-const Map<String, String> credits = <String, String>{
+const Map<String, dynamic> credits = <String, dynamic>{
   appIconPath: 'https://www.pexels.com/@klub-boks-1437055/',
 };
 
