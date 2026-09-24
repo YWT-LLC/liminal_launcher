@@ -388,8 +388,8 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> reloadFromStorage() async {
-    await ezNoTouch(() async {
+  Future<void> reloadFromStorage(EzCP config) async {
+    await ezNoTouch(config, () async {
       _darkHidden = Set<String>.from(EzCM.get(darkHiddenIDsKey));
       _lightHidden = Set<String>.from(EzCM.get(lightHiddenIDsKey));
 
@@ -964,7 +964,7 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   Future<void> _clearHomeOf(EzCP? config, String id, bool both) async {
-    await ezNoTouch(() async {
+    await ezNoTouch(config, () async {
       if (config == null || both || config.isDark) {
         final List<List<String>> copy = List<List<String>>.from(_darkHomeMatrix);
 

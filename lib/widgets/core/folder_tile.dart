@@ -1136,6 +1136,7 @@ Future<void> editFolder(
   switch (update) {
     case true:
       await ezNoTouch(
+        config,
         () => appInfo.updateFolder(
           config,
           lane: lane,
@@ -1160,6 +1161,7 @@ Future<void> editFolder(
 
     case false:
       await ezNoTouch(
+        config,
         () => appInfo.updateFolder(
           config,
           lane: lane,
