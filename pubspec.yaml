@@ -2,6 +2,7 @@ name: liminal_launcher
 description: "An Android launcher."
 version: 1.0.2+3
 publish_to: 'none'
+repository: https://github.com/YWT-LLC/liminal_launcher
 
 environment:
   sdk: ^3.6.0
