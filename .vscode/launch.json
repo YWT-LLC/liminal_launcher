@@ -8,12 +8,5 @@
       "flutterMode": "debug",
       "program": "lib/main.dart",
     },
-    {
-      "name": "install-liminal-launcher",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "release",
-      "program": "lib/main.dart",
-    },
   ]
 }
