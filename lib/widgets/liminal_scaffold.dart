@@ -5,6 +5,7 @@
 
 import 'package:open_ui/open_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:ywt_private/ywt_private.dart' as ywt;
 
 class LiminalScaffold extends StatelessWidget {
   final EzCP config;
@@ -43,7 +44,7 @@ class LiminalScaffold extends StatelessWidget {
                 versionSource:
                     'https://raw.githubusercontent.com/YWT-LLC/liminal_launcher/refs/heads/main/APP_VERSION',
                 gPlay: 'https://play.google.com/store/apps/details?id=llc.ywt.liminal_launcher',
-                github: 'https://github.com/YWT-LLC/liminal_launcher/releases',
+                github: ywt.liminalReleases,
               ),
             if (fabs != null) ...fabs!,
             ...config.backFABs(isHome),
