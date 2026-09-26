@@ -357,7 +357,6 @@ class SettingsScreen extends StatelessWidget {
             ),
           ],
           target: target,
-          footer: liminalFooter(config, textBackground: true, options: true, context: context),
         ),
         fabs: <Widget>[
           // Rebuild (conditional)

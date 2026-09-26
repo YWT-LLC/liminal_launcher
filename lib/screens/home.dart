@@ -1111,7 +1111,7 @@ Future<void> _welcome(EzCP config, BuildContext context) => ezModal(
             textAlign: TextAlign.center,
             style: config.bodyStyle,
           ),
-          liminalFooter(config, textBackground: false),
+          EzFooter(config, a11howPath: ywt.liminalContributeA11),
         ],
       ),
     );
