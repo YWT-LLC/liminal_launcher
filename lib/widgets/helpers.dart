@@ -43,7 +43,7 @@ Widget liminalFooter(
   BuildContext? context,
   bool human = false,
   double? spacing,
-}) =>
+}) => // TODO: does this show up on home? (shouldn't) - also - integrate a11how
     EzFooter(
       config,
       message: EzRichText(
@@ -95,6 +95,8 @@ Widget liminalFooter(
         textBackground: textBackground,
         style: config.labelStyle,
       ),
+      a11howPath: null,
+      textAlign: textAlign,
       human: human,
       spacing: spacing,
     );
