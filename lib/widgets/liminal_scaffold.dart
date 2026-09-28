@@ -43,7 +43,7 @@ class LiminalScaffold extends StatelessWidget {
                 appVersion: '1.0.2',
                 versionSource:
                     'https://raw.githubusercontent.com/YWT-LLC/liminal_launcher/refs/heads/main/APP_VERSION',
-                gPlay: 'https://play.google.com/store/apps/details?id=llc.ywt.liminal_launcher',
+                gPlay: ywt.liminalGPlay,
                 github: ywt.liminalReleases,
               ),
             if (fabs != null) ...fabs!,
