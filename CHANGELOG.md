@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2026-09-28
+### Added
+- Wrap option for app list screen(s)
+
+### Updated
+- EFUI
+  - a11how integration
+  - Much better ezNoTouch
+  - Proper fullscreen modals
+
 ## [1.0.2] - 2026-09-10
 ### Fixed
 - Unwanted app list navigation when opening app tray
