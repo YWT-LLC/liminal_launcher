@@ -27,9 +27,10 @@ class _AppListScreenState extends State<AppListScreen> {
   final ScrollController scrollControl = ScrollController();
   final TextEditingController searchControl = TextEditingController();
 
-  bool searching = EzCM.get(autoSearchKey);
   ListSort listSort = LSConfig.safeLookup(EzCM.get(listSortKey));
   bool ascList = EzCM.get(ascListKey);
+  bool wrap = EzCM.get(wrapListKey);
+  bool searching = EzCM.get(autoSearchKey);
 
   bool atTop = true;
   bool atBottom = false;
@@ -44,7 +45,7 @@ class _AppListScreenState extends State<AppListScreen> {
     if (!context.mounted) return;
 
     final Duration animDur = listRipple ? ezDuration(config.animDur) : Duration.zero;
-    if (animDur <= oneMS) {
+    if (wrap || (animDur <= oneMS)) {
       setState(() => verbose = !verbose);
       return;
     }
@@ -161,53 +162,87 @@ class _AppListScreenState extends State<AppListScreen> {
                     ),
                     config.rowSpacer,
 
+                    if (!wideTiles(config)) ...<Widget>[
+                      // Wrap
+                      verbose
+                          ? EzIconButton(
+                              config,
+                              enabled: false,
+                              icon: EzIcon(config, Icons.list_outlined),
+                              tooltip: l10n(config).gList,
+                              onPressed: doNothing,
+                            )
+                          : (wrap
+                              ? EzIconButton(
+                                  config,
+                                  icon: EzIcon(config, Icons.grid_3x3),
+                                  tooltip: l10n(config).gWrap,
+                                  onPressed: () async {
+                                    await EzCM.setBool(wrapListKey, false);
+                                    setState(() => wrap = false);
+                                  },
+                                )
+                              : EzIconButton(
+                                  config,
+                                  icon: EzIcon(config, Icons.list_outlined),
+                                  tooltip: l10n(config).gList,
+                                  onPressed: () async {
+                                    await EzCM.setBool(wrapListKey, true);
+                                    setState(() => wrap = true);
+                                  },
+                                )),
+                      config.rowSpacer,
+                    ],
+
                     // Search
-                    AnimatedContainer(
-                      duration: ezDuration(config.animDur),
-                      width: searching ? 200 : null,
-                      curve: Curves.easeInOut,
-                      child: EzRow(
-                        config,
-                        children: <Widget>[
-                          EzIconButton(
-                            config,
-                            icon: const Icon(Icons.search),
-                            tooltip: l10n(config).gSearch,
-                            onPressed: () {
-                              if (searching) {
-                                closeKeyboard(context);
-                                searchControl.clear();
-                                setState(() => searching = false);
-                              } else {
-                                setState(() => searching = true);
-                              }
-                            },
-                          ),
-                          if (searching) ...<Widget>[
-                            config.rowMargin,
-                            Expanded(
-                              child: TextField(
-                                controller: searchControl,
-                                autofocus: searching,
-                                decoration: InputDecoration(
-                                  hintText: l10n(config).gSearch,
-                                  border: InputBorder.none,
-                                  isDense: true,
-                                ),
-                                onChanged: (_) => setState(() {}),
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
+                    EzIconButton(
+                      config,
+                      icon: const Icon(Icons.search),
+                      tooltip: l10n(config).gSearch,
+                      onPressed: () {
+                        if (searching) {
+                          closeKeyboard(context);
+                          searchControl.clear();
+                          setState(() => searching = false);
+                        } else {
+                          setState(() => searching = true);
+                        }
+                      },
                     ),
                   ],
                 ),
-                if (widget.listConfig.title != null) widget.listConfig.title!,
-                EzSpacer((config.spacing * 2) - ((config.spacing * 0.5) + config.marginVal)),
+
+                // Page title (conditional)
+                if (widget.listConfig.title != null) ...<Widget>[
+                  config.margin,
+                  widget.listConfig.title!,
+                ],
+
+                // Search field (conditional)
+                EzAnimVis(
+                  config,
+                  mod: 0.667,
+                  reverse: true,
+                  forceFade: true,
+                  forceType: EzTransitionType.slideY,
+                  visible: searching,
+                  kid: Padding(
+                    padding: EdgeInsets.only(top: config.spacing),
+                    child: EzTextField(
+                      constraints: ezTextFieldConstraints(context, prop: 0.5),
+                      controller: searchControl,
+                      hintText: l10n(config).gSearch,
+                      onChanged: (_) => setState(() {}),
+                      validator: (_) => null,
+                      autofocus: searching,
+                    ),
+                  ),
+                ),
 
                 // App list
+                config.spacer,
                 NotificationListener<ScrollNotification>(
+                  // Notifications
                   onNotification: (ScrollNotification notification) {
                     switch (notification.runtimeType) {
                       case const (OverscrollNotification):
@@ -253,42 +288,87 @@ class _AppListScreenState extends State<AppListScreen> {
 
                     return false;
                   },
+                  // App list content
                   child: Expanded(
-                    child: EzScrollView(
-                      config,
-                      controller: scrollControl,
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: vAlign.mainAxis,
-                      crossAxisAlignment: hAlign.crossAxis,
-                      physics: const ClampingScrollPhysics(),
-                      children: appInfo.apps
-                          .where((AppInfo app) =>
-                              (appInfo.hybridIDs(config, widget.listConfig).contains(app.id) ==
-                                  widget.listConfig.include) &&
-                              (searching
-                                  ? app.label
-                                      .toLowerCase()
-                                      .contains(searchControl.text.toLowerCase())
-                                  : true))
-                          .map((AppInfo app) => Container(
-                                key: ValueKey<String>(app.id),
-                                padding: EdgeInsets.symmetric(vertical: config.spacing / 2),
-                                width: wideTiles(config) ? null : double.infinity,
-                                child: AppTile(
-                                  config,
-                                  appInfo: appInfo,
-                                  state: verbose ? TileState.verbose : TileState.standard,
-                                  rippleProgress: rippleProgress,
-                                  app: app,
-                                  location: AppLocation.list,
-                                  onSelected: widget.listConfig.onSelected,
-                                  hAlign: hAlign,
-                                  vAlign: vAlign,
-                                  verbStart: listSort,
-                                ),
-                              ))
-                          .toList(),
-                    ),
+                    child: (wrap && !verbose)
+                        ? EzScrollView(
+                            config,
+                            controller: scrollControl,
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: vAlign.mainAxis,
+                            crossAxisAlignment: hAlign.crossAxis,
+                            physics: const ClampingScrollPhysics(),
+                            child: EzWrap(
+                              alignment: vAlign.wrapAxis,
+                              runAlignment: hAlign.wrapAxis,
+                              crossAxisAlignment: vAlign.wrapCrossAxis,
+                              children: appInfo.apps
+                                  .where((AppInfo app) =>
+                                      (appInfo
+                                              .hybridIDs(config, widget.listConfig)
+                                              .contains(app.id) ==
+                                          widget.listConfig.include) &&
+                                      (searching
+                                          ? app.label
+                                              .toLowerCase()
+                                              .contains(searchControl.text.toLowerCase())
+                                          : true))
+                                  .map((AppInfo app) => Container(
+                                        key: ValueKey<String>(app.id),
+                                        padding: EzInsets.wrap(config.spacing),
+                                        child: AppTile(
+                                          config,
+                                          appInfo: appInfo,
+                                          state: TileState.standard,
+                                          rippleProgress: rippleProgress,
+                                          app: app,
+                                          location: AppLocation.list,
+                                          onSelected: widget.listConfig.onSelected,
+                                          hAlign: hAlign,
+                                          vAlign: vAlign,
+                                          verbStart: listSort,
+                                        ),
+                                      ))
+                                  .toList(),
+                            ),
+                          )
+                        : EzScrollView(
+                            config,
+                            controller: scrollControl,
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: vAlign.mainAxis,
+                            crossAxisAlignment: hAlign.crossAxis,
+                            physics: const ClampingScrollPhysics(),
+                            children: appInfo.apps
+                                .where((AppInfo app) =>
+                                    (appInfo
+                                            .hybridIDs(config, widget.listConfig)
+                                            .contains(app.id) ==
+                                        widget.listConfig.include) &&
+                                    (searching
+                                        ? app.label
+                                            .toLowerCase()
+                                            .contains(searchControl.text.toLowerCase())
+                                        : true))
+                                .map((AppInfo app) => Container(
+                                      key: ValueKey<String>(app.id),
+                                      padding: EdgeInsets.symmetric(vertical: config.spacing / 2),
+                                      width: wideTiles(config) ? null : double.infinity,
+                                      child: AppTile(
+                                        config,
+                                        appInfo: appInfo,
+                                        state: verbose ? TileState.verbose : TileState.standard,
+                                        rippleProgress: rippleProgress,
+                                        app: app,
+                                        location: AppLocation.list,
+                                        onSelected: widget.listConfig.onSelected,
+                                        hAlign: hAlign,
+                                        vAlign: vAlign,
+                                        verbStart: listSort,
+                                      ),
+                                    ))
+                                .toList(),
+                          ),
                   ),
                 ),
               ],
