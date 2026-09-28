@@ -215,6 +215,18 @@ extension LAConfig on ListAlignment {
         ListAlignment.end => CrossAxisAlignment.end,
       };
 
+  WrapAlignment get wrapAxis => switch (this) {
+        ListAlignment.center => WrapAlignment.center,
+        ListAlignment.start => WrapAlignment.start,
+        ListAlignment.end => WrapAlignment.end,
+      };
+
+  WrapCrossAlignment get wrapCrossAxis => switch (this) {
+        ListAlignment.center => WrapCrossAlignment.center,
+        ListAlignment.start => WrapCrossAlignment.start,
+        ListAlignment.end => WrapCrossAlignment.end,
+      };
+
   TextAlign get textAlign => switch (this) {
         ListAlignment.center => TextAlign.center,
         ListAlignment.start => TextAlign.start,
