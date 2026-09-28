@@ -39,7 +39,7 @@ const Set<String> assetPaths = <String>{appIconPath};
 
 /// Credits for...
 /// [appIconPath]
-const Map<String, String> credits = <String, String>{
+const Map<String, dynamic> credits = <String, dynamic>{
   appIconPath: 'https://www.pexels.com/@klub-boks-1437055/',
 };
 
@@ -57,8 +57,9 @@ const String lightBanishIDsKey = 'lightBanishIDs';
 
 const String shownIntroKey = 'shownIntro';
 
-const String ascListKey = 'ascList';
 const String listSortKey = 'listSort';
+const String ascListKey = 'ascList';
+const String wrapListKey = 'wrapList';
 
 /// Intro, ID lists, and sorting keys
 const Map<String, Type> limBTSKeys = <String, Type>{
@@ -74,9 +75,10 @@ const Map<String, Type> limBTSKeys = <String, Type>{
   // Intro
   shownIntroKey: bool,
 
-  // List(s) sort
-  ascListKey: bool,
+  // App list screen
   listSortKey: String,
+  ascListKey: bool,
+  wrapListKey: bool,
 };
 
 // List //
@@ -218,9 +220,10 @@ final Map<String, Object> liminalDefault = <String, Object>{
   // Intro
   shownIntroKey: false,
 
-  // List(s) sort
-  ascListKey: true,
+  // App list screen
   listSortKey: ListSort.name.value,
+  ascListKey: true,
+  wrapListKey: false,
 
   // List //
   // Home

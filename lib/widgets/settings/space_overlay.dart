@@ -117,7 +117,7 @@ class _EditSpacingOverlayState extends State<_EditSpacingOverlay> {
       return;
     }
 
-    await ezNoTouch(() async {
+    await ezNoTouch(widget.config, () async {
       await widget.appInfo.updateSpacing(
         widget.config,
         lane: currLane,
@@ -834,7 +834,7 @@ Future<void> editSpacing(
   final _ExitData? data = await completer.future;
   overlayEntry.remove();
 
-  await ezNoTouch(() async {
+  await ezNoTouch(config, () async {
     marked.value = null;
     if (data == null) return;
 

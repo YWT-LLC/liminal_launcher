@@ -1111,7 +1111,7 @@ Future<void> _welcome(EzCP config, BuildContext context) => ezModal(
             textAlign: TextAlign.center,
             style: config.bodyStyle,
           ),
-          liminalFooter(config, textBackground: false),
+          EzFooter(config, a11howPath: ywt.liminalContributeA11),
         ],
       ),
     );
@@ -1163,7 +1163,7 @@ Future<void> _free99(EzCP config, BuildContext context) async {
                   text: m2,
                   style: config.bodyStyle,
                   textAlign: TextAlign.center,
-                  url: Uri.parse(ywt.ywtContributePage),
+                  url: Uri.parse(ywt.websiteContributeMula),
                   hint: l10n(config).hsContributeHint,
                 ),
                 EzPlainText(text: m3),

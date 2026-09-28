@@ -170,6 +170,7 @@ class _EventWidgetState extends State<EventWidget> {
               onPressed: () async {
                 Navigator.of(context).pop();
                 await ezNoTouch(
+                  widget.config,
                   () => widget.appInfo.removeItem(
                     widget.config,
                     lane: widget.pos.lane,
