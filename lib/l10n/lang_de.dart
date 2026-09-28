@@ -324,6 +324,9 @@ class LangDe extends Lang {
   String get gWideTiles => 'Breite Kacheln';
 
   @override
+  String get gWrap => 'Umbruch';
+
+  @override
   String get gsAppList => 'App-Liste';
 
   @override

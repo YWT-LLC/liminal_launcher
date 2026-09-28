@@ -707,6 +707,12 @@ abstract class Lang {
   /// **'Wide tiles'**
   String get gWideTiles;
 
+  /// No description provided for @gWrap.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrap'**
+  String get gWrap;
+
   /// No description provided for @gsAppList.
   ///
   /// In en, this message translates to:

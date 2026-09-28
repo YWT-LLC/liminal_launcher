@@ -324,6 +324,9 @@ class LangFr extends Lang {
   String get gWideTiles => 'Tuiles larges';
 
   @override
+  String get gWrap => 'Retour';
+
+  @override
   String get gsAppList => 'Liste des applications';
 
   @override

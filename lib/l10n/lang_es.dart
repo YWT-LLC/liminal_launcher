@@ -324,6 +324,9 @@ class LangEs extends Lang {
   String get gWideTiles => 'Mosaicos anchos';
 
   @override
+  String get gWrap => 'Ajustar';
+
+  @override
   String get gsAppList => 'Lista de aplicaciones';
 
   @override

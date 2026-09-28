@@ -323,6 +323,9 @@ class LangEn extends Lang {
   String get gWideTiles => 'Wide tiles';
 
   @override
+  String get gWrap => 'Wrap';
+
+  @override
   String get gsAppList => 'App list';
 
   @override
@@ -1159,6 +1162,9 @@ class LangEnUs extends LangEn {
 
   @override
   String get gWideTiles => 'Wide tiles';
+
+  @override
+  String get gWrap => 'Wrap';
 
   @override
   String get gsAppList => 'App list';

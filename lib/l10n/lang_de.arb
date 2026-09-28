@@ -101,6 +101,7 @@
   "gTranslations": "Übersetzungs-Link.",
   "gVertical": "Vertikal",
   "gWideTiles": "Breite Kacheln",
+  "gWrap": "Umbruch",
   "gsAppList": "App-Liste",
   "gsAuthForHidden": "Authentifizieren, um versteckte Apps zu sehen",
   "gsAuthTimeout": "Authentifizierungs-Timeout (Minuten)",
