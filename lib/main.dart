@@ -29,7 +29,9 @@ void main() async {
     localeFallback: americanEnglish,
     l10nFallback: await OUILang.delegate.load(americanEnglish),
     preferences: await SharedPreferencesWithCache.create(
-      cacheOptions: SharedPreferencesWithCacheOptions(allowList: allLimKeys.keys.toSet()),
+      cacheOptions: SharedPreferencesWithCacheOptions(
+        allowList: allLimKeys.keys.toSet(),
+      ),
     ),
     securePreferences: const FlutterSecureStorage(),
     defaults: liminalDefault,
@@ -40,14 +42,12 @@ void main() async {
 
   final (Locale storedLocale, OUILang storedOUILang) = await ezStoredL10n();
 
-  runApp(
-    LiminalLauncher(
-      await getApps(),
-      storedLocale,
-      storedOUILang,
-      await Lang.delegate.load(storedLocale),
-    ),
-  );
+  runApp(LiminalLauncher(
+    await getApps(),
+    storedLocale,
+    storedOUILang,
+    await Lang.delegate.load(storedLocale),
+  ));
 }
 
 class LiminalLauncher extends StatelessWidget {
