@@ -47,7 +47,7 @@ class LiminalScaffold extends StatelessWidget {
                 github: ywt.liminalReleases,
               ),
             if (fabs != null) ...fabs!,
-            ...config.backFABs(isHome),
+            ...config.backFABs(isHome: isHome),
           ],
         ),
       );
