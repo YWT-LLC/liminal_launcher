@@ -14,41 +14,65 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-void main() async {
-  // Setup the app //
+// Define the router //
 
-  WidgetsFlutterBinding.ensureInitialized();
-
-  await SystemChrome.setPreferredOrientations(<DeviceOrientation>[DeviceOrientation.portraitUp]);
-
-  EzCM.init(
-    appName: appName,
-    androidPackage: androidPackage,
-    assetPaths: assetPaths,
-    orientations: <DeviceOrientation>[DeviceOrientation.portraitUp],
-    localeFallback: americanEnglish,
-    l10nFallback: await OUILang.delegate.load(americanEnglish),
-    preferences: await SharedPreferencesWithCache.create(
-      cacheOptions: SharedPreferencesWithCacheOptions(
-        allowList: allLimKeys.keys.toSet(),
+final List<RouteBase> routes = <RouteBase>[
+  // Home
+  GoRoute(
+    path: homePath,
+    name: homePath,
+    pageBuilder: (BuildContext pbc, GoRouterState pbs) =>
+        ezPageBuilder(configWatcher(pbc), pbc, pbs, const HomeScreen()),
+    routes: <RouteBase>[
+      // App list
+      GoRoute(
+        path: appListPath,
+        name: appListPath,
+        pageBuilder: (BuildContext pbc, GoRouterState pbs) => ezPageBuilder(
+          configWatcher(pbc),
+          pbc,
+          pbs,
+          AppListScreen(pbs.extra as ListConfig),
+          transitionsBuilder:
+              (BuildContext context, Animation<double> a, Animation<double> aa, Widget w) =>
+                  ezTransitionsBuilder(
+            configWatcher(pbc),
+            context,
+            a,
+            aa,
+            w,
+            forceType: EzTransitionType.slideY,
+            forceFade: true,
+          ),
+        ),
       ),
-    ),
-    securePreferences: const FlutterSecureStorage(),
-    defaults: liminalDefault,
-    neverReset: neverResetKeys,
-  );
 
-  // Run the app //
+      // Settings home
+      GoRoute(
+        path: settingsPath,
+        name: settingsPath,
+        pageBuilder: (BuildContext pbc, GoRouterState pbs) {
+          final (int, bool)? data = pbs.extra as (int, bool)?;
+          final int? target = data?.$1;
+          final bool? secondary = data?.$2;
 
-  final (Locale storedLocale, OUILang storedOUILang) = await ezStoredL10n();
+          return ezPageBuilder(
+            configWatcher(pbc),
+            pbc,
+            pbs,
+            SettingsScreen(
+              key: ValueKey<String>('$target:$secondary'),
+              target: target,
+              secondary: secondary,
+            ),
+          );
+        },
+      ),
+    ],
+  ),
+];
 
-  runApp(LiminalLauncher(
-    await getApps(),
-    storedLocale,
-    storedOUILang,
-    await Lang.delegate.load(storedLocale),
-  ));
-}
+// Define the app //
 
 class LiminalLauncher extends StatelessWidget {
   final List<AppInfo> installedApps;
@@ -90,61 +114,42 @@ class _TheMagic extends StatelessWidget {
           navigatorKey: ezRootNav,
           initialLocation: homePath,
           errorBuilder: (_, __) => const ErrorScreen(),
-          routes: <RouteBase>[
-            // Home
-            GoRoute(
-              path: homePath,
-              name: homePath,
-              pageBuilder: (BuildContext pbc, GoRouterState pbs) =>
-                  ezPageBuilder(configWatcher(pbc), pbc, pbs, const HomeScreen()),
-              routes: <RouteBase>[
-                // App list
-                GoRoute(
-                  path: appListPath,
-                  name: appListPath,
-                  pageBuilder: (BuildContext pbc, GoRouterState pbs) => ezPageBuilder(
-                    configWatcher(pbc),
-                    pbc,
-                    pbs,
-                    AppListScreen(pbs.extra as ListConfig),
-                    transitionsBuilder: (BuildContext context, Animation<double> a,
-                            Animation<double> aa, Widget w) =>
-                        ezTransitionsBuilder(
-                      configWatcher(pbc),
-                      context,
-                      a,
-                      aa,
-                      w,
-                      forceType: EzTransitionType.slideY,
-                      forceFade: true,
-                    ),
-                  ),
-                ),
-
-                // Settings home
-                GoRoute(
-                  path: settingsPath,
-                  name: settingsPath,
-                  pageBuilder: (BuildContext pbc, GoRouterState pbs) {
-                    final (int, bool)? data = pbs.extra as (int, bool)?;
-                    final int? target = data?.$1;
-                    final bool? secondary = data?.$2;
-
-                    return ezPageBuilder(
-                      configWatcher(pbc),
-                      pbc,
-                      pbs,
-                      SettingsScreen(
-                        key: ValueKey<String>('$target:$secondary'),
-                        target: target,
-                        secondary: secondary,
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ],
+          routes: routes,
         ),
       );
+}
+
+void main() async {
+  // Configure the environment //
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations(<DeviceOrientation>[DeviceOrientation.portraitUp]);
+
+  EzCM.init(
+    appName: appName,
+    androidPackage: androidPackage,
+    assetPaths: assetPaths,
+    orientations: <DeviceOrientation>[DeviceOrientation.portraitUp],
+    localeFallback: americanEnglish,
+    l10nFallback: await OUILang.delegate.load(americanEnglish),
+    preferences: await SharedPreferencesWithCache.create(
+      cacheOptions: SharedPreferencesWithCacheOptions(
+        allowList: allLimKeys.keys.toSet(),
+      ),
+    ),
+    securePreferences: const FlutterSecureStorage(),
+    defaults: liminalDefault,
+    neverReset: neverResetKeys,
+  );
+
+  // Run the app //
+
+  final (Locale storedLocale, OUILang storedOUILang) = await ezStoredL10n();
+
+  runApp(LiminalLauncher(
+    await getApps(),
+    storedLocale,
+    storedOUILang,
+    await Lang.delegate.load(storedLocale),
+  ));
 }

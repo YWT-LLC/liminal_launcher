@@ -12,8 +12,8 @@ export 'settings.dart';
 
 // Route names //
 
-/// app-list
+const String homePath = '/';
+
 const String appListPath = 'app-list';
 
-/// settings
 const String settingsPath = 'settings';
