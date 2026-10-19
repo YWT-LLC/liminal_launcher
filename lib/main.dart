@@ -20,14 +20,14 @@ final List<RouteBase> routes = <RouteBase>[
   // Home
   GoRoute(
     path: homePath,
-    name: homePath,
+    name: homeName,
     pageBuilder: (BuildContext pbc, GoRouterState pbs) =>
         ezPageBuilder(configWatcher(pbc), pbc, pbs, const HomeScreen()),
     routes: <RouteBase>[
       // App list
       GoRoute(
-        path: appListPath,
-        name: appListPath,
+        path: appListScreenPath,
+        name: appListScreenName,
         pageBuilder: (BuildContext pbc, GoRouterState pbs) => ezPageBuilder(
           configWatcher(pbc),
           pbc,
@@ -49,8 +49,8 @@ final List<RouteBase> routes = <RouteBase>[
 
       // Settings home
       GoRoute(
-        path: settingsPath,
-        name: settingsPath,
+        path: settingsScreenPath,
+        name: settingsScreenName,
         pageBuilder: (BuildContext pbc, GoRouterState pbs) {
           final (int, bool)? data = pbs.extra as (int, bool)?;
           final int? target = data?.$1;

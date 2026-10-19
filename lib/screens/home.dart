@@ -105,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                 child: EzElevatedIconButton(
                   config,
                   onPressed: () => context.goNamed(
-                    appListPath,
+                    appListScreenName,
                     extra: ListConfig(
                       listContent: <ListContent>{ListContent.hidden, ListContent.banished},
                       include: false,
@@ -453,7 +453,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
   Future<void> swipeUp(EzCP config, AppInfoProvider appInfo) async => (editing)
       ? await _navToHidden(config, appInfo)
       : context.goNamed(
-          appListPath,
+          appListScreenName,
           extra: ListConfig(
             listContent: <ListContent>{ListContent.hidden, ListContent.banished},
             include: false,
@@ -479,7 +479,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
     if (mounted) {
       context.goNamed(
-        appListPath,
+        appListScreenName,
         extra: ListConfig(
           listContent: <ListContent>{ListContent.hidden},
           include: true,
@@ -1046,7 +1046,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
             fabs: editing
                 ? <Widget>[
                     config.spacer,
-                    SettingsFAB(config, appInfo, () => context.goNamed(settingsPath)),
+                    SettingsFAB(config, appInfo, () => context.goNamed(settingsScreenName)),
                   ]
                 : null,
             isHome: true,

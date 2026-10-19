@@ -915,7 +915,7 @@ Future<void> editFolder(
                   icon: EzIcon(config, Icons.launch),
                   onPressed: () {
                     Navigator.of(mCon).pop();
-                    pContext.goNamed(settingsPath, extra: (2, false));
+                    pContext.goNamed(settingsScreenName, extra: (2, false));
                   },
                 ),
               ]),
@@ -957,7 +957,7 @@ Future<void> editFolder(
                           style:
                               TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
                           onPressed: () => mCon.goNamed(
-                            appListPath,
+                            appListScreenName,
                             extra: ListConfig(
                               localContent: appsNotif,
                               listContent: <ListContent>{ListContent.hidden, ListContent.banished},
@@ -1057,7 +1057,7 @@ Future<void> editFolder(
                               FloatingActionButton(
                                 heroTag: 'add_to_folder_FAB',
                                 onPressed: () => mCon.goNamed(
-                                  appListPath,
+                                  appListScreenName,
                                   extra: ListConfig(
                                     localContent: appsNotif,
                                     listContent: <ListContent>{

@@ -77,7 +77,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
           backgroundColor: widget.config.colors.surface,
           outlineColor: widget.config.colors.primaryContainer,
           onPressed: () => context.pushNamed(
-            appListPath,
+            appListScreenName,
             extra: ListConfig(
               listContent: <ListContent>{ListContent.banished},
               include: false,

@@ -638,7 +638,7 @@ Future<void> _openEdits(
           backgroundColor: config.colors.surface,
           outlineColor: config.colors.primaryContainer,
           onPressed: () => pContext.pushNamed(
-            appListPath,
+            appListScreenName,
             extra: ListConfig(
               listContent: <ListContent>{ListContent.banished},
               include: false,

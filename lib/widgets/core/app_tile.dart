@@ -780,7 +780,7 @@ Future<void> editApp(
           outlineColor: outlineColor,
           onPressed: doNothing,
           onLongPress: () => pContext.pushNamed(
-            appListPath,
+            appListScreenName,
             extra: ListConfig(
               listContent: <ListContent>{ListContent.banished, ListContent.hidden},
               include: false,
@@ -1168,7 +1168,7 @@ Future<void> editApp(
             icon: EzIcon(config, Icons.launch),
             onPressed: () {
               Navigator.of(mCon).pop();
-              pContext.goNamed(settingsPath, extra: (2, false));
+              pContext.goNamed(settingsScreenName, extra: (2, false));
             },
           ),
         ]),

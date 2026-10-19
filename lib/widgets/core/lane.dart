@@ -540,7 +540,7 @@ Future<void> _editLane(
               icon: EzIcon(config, Icons.launch),
               onPressed: () {
                 Navigator.of(mCon).pop();
-                context.goNamed(settingsPath, extra: (2, true));
+                context.goNamed(settingsScreenName, extra: (2, true));
               },
             ),
             config.separator,
