@@ -17,58 +17,49 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 // Define the router //
 
 final List<RouteBase> routes = <RouteBase>[
-  // Home
+  // App list
   GoRoute(
-    path: homePath,
-    name: homeName,
-    pageBuilder: (BuildContext pbc, GoRouterState pbs) =>
-        ezPageBuilder(configWatcher(pbc), pbc, pbs, const HomeScreen()),
-    routes: <RouteBase>[
-      // App list
-      GoRoute(
-        path: appListScreenPath,
-        name: appListScreenName,
-        pageBuilder: (BuildContext pbc, GoRouterState pbs) => ezPageBuilder(
-          configWatcher(pbc),
-          pbc,
-          pbs,
-          AppListScreen(pbs.extra as ListConfig),
-          transitionsBuilder:
-              (BuildContext context, Animation<double> a, Animation<double> aa, Widget w) =>
-                  ezTransitionsBuilder(
-            configWatcher(pbc),
-            context,
-            a,
-            aa,
-            w,
-            forceType: EzTransitionType.slideY,
-            forceFade: true,
-          ),
+    path: appListScreenPath,
+    name: appListScreenName,
+    pageBuilder: (BuildContext pbc, GoRouterState pbs) => ezPageBuilder(
+      configWatcher(pbc),
+      pbc,
+      pbs,
+      AppListScreen(pbs.extra as ListConfig),
+      transitionsBuilder:
+          (BuildContext context, Animation<double> a, Animation<double> aa, Widget w) =>
+              ezTransitionsBuilder(
+        configWatcher(pbc),
+        context,
+        a,
+        aa,
+        w,
+        forceType: EzTransitionType.slideY,
+        forceFade: true,
+      ),
+    ),
+  ),
+
+  // Settings home
+  GoRoute(
+    path: settingsScreenPath,
+    name: settingsScreenName,
+    pageBuilder: (BuildContext pbc, GoRouterState pbs) {
+      final (int, bool)? data = pbs.extra as (int, bool)?;
+      final int? target = data?.$1;
+      final bool? secondary = data?.$2;
+
+      return ezPageBuilder(
+        configWatcher(pbc),
+        pbc,
+        pbs,
+        SettingsScreen(
+          key: ValueKey<String>('$target:$secondary'),
+          target: target,
+          secondary: secondary,
         ),
-      ),
-
-      // Settings home
-      GoRoute(
-        path: settingsScreenPath,
-        name: settingsScreenName,
-        pageBuilder: (BuildContext pbc, GoRouterState pbs) {
-          final (int, bool)? data = pbs.extra as (int, bool)?;
-          final int? target = data?.$1;
-          final bool? secondary = data?.$2;
-
-          return ezPageBuilder(
-            configWatcher(pbc),
-            pbc,
-            pbs,
-            SettingsScreen(
-              key: ValueKey<String>('$target:$secondary'),
-              target: target,
-              secondary: secondary,
-            ),
-          );
-        },
-      ),
-    ],
+      );
+    },
   ),
 ];
 
@@ -114,7 +105,16 @@ class _TheMagic extends StatelessWidget {
           navigatorKey: ezRootNav,
           initialLocation: homePath,
           errorBuilder: (_, __) => const ErrorScreen(),
-          routes: routes,
+          routes: <RouteBase>[
+            // Home
+            GoRoute(
+              path: homePath,
+              name: homeName,
+              pageBuilder: (BuildContext pbc, GoRouterState pbs) =>
+                  ezPageBuilder(configWatcher(pbc), pbc, pbs, const HomeScreen()),
+              routes: routes,
+            ),
+          ],
         ),
       );
 }
