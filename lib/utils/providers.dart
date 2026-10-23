@@ -1077,6 +1077,7 @@ class AppInfoProvider extends ChangeNotifier {
       }
     });
 
+    ezCloseAll(); // Close folder modals and such
     notifyListeners();
   }
 
