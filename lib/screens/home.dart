@@ -307,7 +307,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
               ezWrap(config, child: AddLane(config, appInfo: appInfo)),
             ],
           ),
-          EzSpacer(config.spacing / 2),
+          config.halfSpacer,
 
           // Screen space note
           EzRow(config, children: <Widget>[
