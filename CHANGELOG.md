@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.1] - 2026-10-23
+### [Added]
+- More app list customization (in secure settings on global hub)
+  
+### [Updated]
+- Open UI
+
+### [Fixed]
+- GPlay issue
+- Wrap alignment
+
 ## [1.1.0] - 2026-09-28
 ### Added
 - Wrap option for app list screen(s)

@@ -83,8 +83,8 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
 
           // Controls
           EzWrap(children: <Widget>[
-            Padding(
-              padding: EzInsets.wrap(widget.config.spacing),
+            ezWrap(
+              widget.config,
               child: SegmentedButton<ListAlignment>(
                 segments: alignmentSegments,
                 selected: <ListAlignment>{h},
@@ -104,8 +104,8 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
                 },
               ),
             ),
-            Padding(
-              padding: EzInsets.wrap(widget.config.spacing),
+            ezWrap(
+              widget.config,
               child: SegmentedButton<ListAlignment>(
                 segments: alignmentSegments,
                 direction: Axis.vertical,

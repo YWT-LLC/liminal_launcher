@@ -12,8 +12,11 @@ export 'settings.dart';
 
 // Route names //
 
-/// app-list
-const String appListPath = 'app-list';
+const String homePath = '/';
+const String homeName = 'liminal-home';
 
-/// settings
-const String settingsPath = 'settings';
+const String appListScreenPath = 'app-list';
+const String appListScreenName = 'liminal-app-list';
+
+const String settingsScreenPath = 'settings';
+const String settingsScreenName = 'liminal-settings';

@@ -100,12 +100,12 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           EzWrap(
             children: <Widget>[
               // Apps
-              Padding(
-                padding: EzInsets.wrap(config.spacing),
+              ezWrap(
+                config,
                 child: EzElevatedIconButton(
                   config,
                   onPressed: () => context.goNamed(
-                    appListPath,
+                    appListScreenName,
                     extra: ListConfig(
                       listContent: <ListContent>{ListContent.hidden, ListContent.banished},
                       include: false,
@@ -150,8 +150,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
               ),
 
               // Folder
-              Padding(
-                padding: EzInsets.wrap(config.spacing),
+              ezWrap(
+                config,
                 child: EzElevatedIconButton(
                   config,
                   onPressed: () => appInfo.addFolder(
@@ -185,8 +185,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
               ),
 
               // Widgets
-              Padding(
-                padding: EzInsets.wrap(config.spacing),
+              ezWrap(
+                config,
                 child: EzElevatedIconButton(
                   config,
                   onPressed: () => ezModal(
@@ -278,8 +278,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
               ),
 
               // Spacer
-              Padding(
-                padding: EzInsets.wrap(config.spacing),
+              ezWrap(
+                config,
                 child: EzElevatedIconButton(
                   config,
                   onPressed: () async {
@@ -304,13 +304,10 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
               ),
 
               // Lane
-              Padding(
-                padding: EzInsets.wrap(config.spacing),
-                child: AddLane(config, appInfo: appInfo),
-              ),
+              ezWrap(config, child: AddLane(config, appInfo: appInfo)),
             ],
           ),
-          EzSpacer(config.spacing / 2),
+          config.halfSpacer,
 
           // Screen space note
           EzRow(config, children: <Widget>[
@@ -453,7 +450,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
   Future<void> swipeUp(EzCP config, AppInfoProvider appInfo) async => (editing)
       ? await _navToHidden(config, appInfo)
       : context.goNamed(
-          appListPath,
+          appListScreenName,
           extra: ListConfig(
             listContent: <ListContent>{ListContent.hidden, ListContent.banished},
             include: false,
@@ -479,13 +476,14 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
     if (mounted) {
       context.goNamed(
-        appListPath,
+        appListScreenName,
         extra: ListConfig(
           listContent: <ListContent>{ListContent.hidden},
           include: true,
           onSelected: (AppInfo app) async {
             if (ezRootIsMounted) Navigator.of(ezRootContext).pop();
             await launchApp(app);
+            if (resetAfterOpened(config)) setState(() => editing = false);
           },
           title: EzTextIconButton(
             config,
@@ -1046,7 +1044,10 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
             fabs: editing
                 ? <Widget>[
                     config.spacer,
-                    SettingsFAB(config, appInfo, () => context.goNamed(settingsPath)),
+                    SettingsFAB(config, appInfo, () {
+                      context.goNamed(settingsScreenName);
+                      if (resetAfterEdit(config)) setState(() => editing = false);
+                    }),
                   ]
                 : null,
             isHome: true,
@@ -1111,7 +1112,7 @@ Future<void> _welcome(EzCP config, BuildContext context) => ezModal(
             textAlign: TextAlign.center,
             style: config.bodyStyle,
           ),
-          EzFooter(config, a11howPath: ywt.liminalContributeA11),
+          config.separator,
         ],
       ),
     );

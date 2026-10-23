@@ -494,8 +494,8 @@ Future<void> _openEdits(
                   EzButtonShape.roundRect,
                   EzButtonShape.jewel,
                 ]
-                    .map((EzButtonShape bs) => Padding(
-                          padding: EzInsets.wrap(config.spacing),
+                    .map((EzButtonShape bs) => ezWrap(
+                          config,
                           child: EzCol(
                             children: <Widget>[
                               EzElevatedButton(

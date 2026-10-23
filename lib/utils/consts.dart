@@ -108,12 +108,20 @@ const Map<String, Type> limListKeys = <String, Type>{
 
   // App list
   autoSearchKey: bool,
+
+  // Secure in name only
+  resetAfterEditKey: bool,
+  resetAfterOpenedKey: bool,
 };
+
+const String resetAfterEditKey = 'resetAfterEdit';
+const String resetAfterOpenedKey = 'resetAfterOpened';
 
 // Secure //
 
 const String authToEditKey = 'authToEdit';
 const String authForHiddenKey = 'authForHidden';
+
 const String authTimeoutKey = 'authTimeout';
 const String lastAuthKey = 'lastAuth';
 
@@ -239,6 +247,8 @@ final Map<String, Object> liminalDefault = <String, Object>{
 
   // All
   autoSearchKey: false,
+  resetAfterEditKey: true,
+  resetAfterOpenedKey: true,
 
   // Design //
   // Button

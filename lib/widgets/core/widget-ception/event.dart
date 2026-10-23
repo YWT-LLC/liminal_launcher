@@ -136,7 +136,23 @@ class _EventWidgetState extends State<EventWidget> {
         builder: (_) => EzAlertDialog(
           widget.config,
           title: Text(l10n(widget.config).gFailed, textAlign: TextAlign.center),
-          content: Text(l10n(widget.config).evtNoCalendar, textAlign: TextAlign.center),
+          contents: <Widget>[
+            Text(
+              l10n(widget.config).evtNoCalendarBody,
+              textAlign: TextAlign.center,
+              style: widget.config.bodyStyle,
+            ),
+            Text(
+              l10n(widget.config).evtNoCalendarTitle,
+              textAlign: TextAlign.center,
+              style: widget.config.titleStyle,
+            ),
+            Text(
+              l10n(widget.config).evtNoCalendarLabel,
+              textAlign: TextAlign.center,
+              style: widget.config.labelStyle,
+            ),
+          ],
           actions: <Widget>[
             EzAction(
               widget.config,
@@ -638,7 +654,7 @@ Future<void> _openEdits(
           backgroundColor: config.colors.surface,
           outlineColor: config.colors.primaryContainer,
           onPressed: () => pContext.pushNamed(
-            appListPath,
+            appListScreenName,
             extra: ListConfig(
               listContent: <ListContent>{ListContent.banished},
               include: false,

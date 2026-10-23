@@ -130,8 +130,8 @@ class _AppFolderState extends State<FolderTile> {
                 EzWrap(
                   children: widget.appList
                       .map((String id) => widget.appInfo.appMap.containsKey(id)
-                          ? Padding(
-                              padding: EzInsets.wrap(widget.config.spacing),
+                          ? ezWrap(
+                              widget.config,
                               child: AppTile(
                                 widget.config,
                                 appInfo: widget.appInfo,
@@ -518,7 +518,6 @@ Future<void> editFolder(
     backgroundColor: config.colors.surfaceContainer,
     padding: EdgeInsets.zero,
   );
-  final EdgeInsets wrapPadding = EzInsets.wrap(config.spacing);
   final double iconRadius = config.iconSize / 2;
 
   bool showUI = false;
@@ -720,8 +719,8 @@ Future<void> editFolder(
                   // Color wrap
                   EzWrap(children: <Widget>[
                     // Text
-                    Padding(
-                      padding: wrapPadding,
+                    ezWrap(
+                      config,
                       child: EzElevatedIconButton(
                         config,
                         onPressed: () async {
@@ -763,8 +762,8 @@ Future<void> editFolder(
                     ),
 
                     // Icon
-                    Padding(
-                      padding: wrapPadding,
+                    ezWrap(
+                      config,
                       child: EzElevatedIconButton(
                         config,
                         onPressed: () async {
@@ -806,8 +805,8 @@ Future<void> editFolder(
                     ),
 
                     // Background
-                    Padding(
-                      padding: wrapPadding,
+                    ezWrap(
+                      config,
                       child: EzElevatedIconButton(
                         config,
                         onPressed: () async {
@@ -849,8 +848,8 @@ Future<void> editFolder(
                     ),
 
                     // Outline
-                    Padding(
-                      padding: wrapPadding,
+                    ezWrap(
+                      config,
                       child: EzElevatedIconButton(
                         config,
                         onPressed: () async {
@@ -915,7 +914,7 @@ Future<void> editFolder(
                   icon: EzIcon(config, Icons.launch),
                   onPressed: () {
                     Navigator.of(mCon).pop();
-                    pContext.goNamed(settingsPath, extra: (2, false));
+                    pContext.goNamed(settingsScreenName, extra: (2, false));
                   },
                 ),
               ]),
@@ -957,7 +956,7 @@ Future<void> editFolder(
                           style:
                               TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
                           onPressed: () => mCon.goNamed(
-                            appListPath,
+                            appListScreenName,
                             extra: ListConfig(
                               localContent: appsNotif,
                               listContent: <ListContent>{ListContent.hidden, ListContent.banished},
@@ -1057,7 +1056,7 @@ Future<void> editFolder(
                               FloatingActionButton(
                                 heroTag: 'add_to_folder_FAB',
                                 onPressed: () => mCon.goNamed(
-                                  appListPath,
+                                  appListScreenName,
                                   extra: ListConfig(
                                     localContent: appsNotif,
                                     listContent: <ListContent>{
