@@ -157,8 +157,14 @@ class LangEn extends Lang {
   String get evtNewTask => 'New task';
 
   @override
-  String get evtNoCalendar =>
-      'Can\'t find a default calendar app.\nWhat shall I do?\n\n\'Task\' is just share underneath. You\'ll choose a default app to share with.\nWe recommend using a task app, but don\'t require.\nResults may vary.';
+  String get evtNoCalendarBody => 'Can\'t find a default calendar app.';
+
+  @override
+  String get evtNoCalendarTitle => 'What shall be done?\n';
+
+  @override
+  String get evtNoCalendarLabel =>
+      'Note: \'Task\' is just share underneath. You\'ll choose a default app to share with.\nWe recommend using a task app, but don\'t require.\nResults may vary.';
 
   @override
   String get evtShare =>
@@ -998,8 +1004,14 @@ class LangEnUs extends LangEn {
   String get evtNewTask => 'New task';
 
   @override
-  String get evtNoCalendar =>
-      'Can\'t find a default calendar app.\nWhat shall I do?\n\n\'Task\' is just share underneath. You\'ll choose a default app to share with.\nWe recommend using a task app, but don\'t require.\nResults may vary.';
+  String get evtNoCalendarBody => 'Can\'t find a default calendar app.';
+
+  @override
+  String get evtNoCalendarTitle => 'What shall be done?\n';
+
+  @override
+  String get evtNoCalendarLabel =>
+      'Note: \'Task\' is just share underneath. You\'ll choose a default app to share with.\nWe recommend using a task app, but don\'t require.\nResults may vary.';
 
   @override
   String get evtShare =>
