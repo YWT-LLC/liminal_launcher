@@ -299,8 +299,8 @@ class _AppListScreenState extends State<AppListScreen> {
                             crossAxisAlignment: hAlign.crossAxis,
                             physics: const ClampingScrollPhysics(),
                             child: EzWrap(
-                              alignment: vAlign.wrapAxis,
-                              runAlignment: hAlign.wrapAxis,
+                              alignment: hAlign.wrapAxis,
+                              runAlignment: vAlign.wrapAxis,
                               crossAxisAlignment: vAlign.wrapCrossAxis,
                               children: appInfo.apps
                                   .where((AppInfo app) =>
