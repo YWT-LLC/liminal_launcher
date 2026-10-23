@@ -106,6 +106,7 @@ class AppSecSettings extends StatelessWidget {
                         setModal(() => openReset = value);
                       },
                     ),
+                    config.separator,
 
                     // Re-auth timer
                     EzRow(
