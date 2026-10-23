@@ -1112,7 +1112,7 @@ Future<void> _welcome(EzCP config, BuildContext context) => ezModal(
             textAlign: TextAlign.center,
             style: config.bodyStyle,
           ),
-          EzFooter(config, a11howPath: ywt.liminalContributeA11),
+          config.separator,
         ],
       ),
     );
