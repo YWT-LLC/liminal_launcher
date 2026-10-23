@@ -483,6 +483,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           onSelected: (AppInfo app) async {
             if (ezRootIsMounted) Navigator.of(ezRootContext).pop();
             await launchApp(app);
+            if (resetAfterOpened(config)) setState(() => editing = false);
           },
           title: EzTextIconButton(
             config,
@@ -1043,7 +1044,10 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
             fabs: editing
                 ? <Widget>[
                     config.spacer,
-                    SettingsFAB(config, appInfo, () => context.goNamed(settingsScreenName)),
+                    SettingsFAB(config, appInfo, () {
+                      context.goNamed(settingsScreenName);
+                      if (resetAfterEdit(config)) setState(() => editing = false);
+                    }),
                   ]
                 : null,
             isHome: true,

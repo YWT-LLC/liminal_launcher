@@ -21,8 +21,11 @@ class AppSecSettings extends StatelessWidget {
         label: l10n(config).gsSecurity,
         icon: EzIcon(config, Icons.security),
         onPressed: () async {
-          bool forEdit = authToEdit(config);
-          bool forHide = authForHidden(config);
+          bool editAuth = authToEdit(config);
+          bool editReset = resetAfterEdit(config);
+
+          bool hideAuth = authForHidden(config);
+          bool openReset = resetAfterOpened(config);
 
           _timeoutText.text = authTimeout(config).inMinutes.toString();
           final Size ttSize = ezTextSize(
@@ -44,32 +47,65 @@ class AppSecSettings extends StatelessWidget {
                     // Auth to edit
                     EzSwitchPair(
                       config,
-                      key: ValueKey<String>('fes-$forEdit'),
-                      value: forEdit,
+                      key: ValueKey<String>('fes-$editAuth'),
+                      value: editAuth,
                       text: l10n(config).gsAuthToEdit,
                       onChanged: (bool? value) async {
                         if (value == null) return;
 
                         await EzCM.secSet(authToEditKey, value.toString());
-                        setModal(() => forEdit = value);
+                        setModal(() => editAuth = value);
                       },
                     ),
                     config.spacer,
 
+                    // Reset after edit
+                    EzSwitchPair(
+                      config,
+                      key: ValueKey<String>('fes-$editReset'),
+                      value: editReset,
+                      text: 'Reset home after edits',
+                      tipper:
+                          'Reset the home screen/turn off editing mode after you leave for the settings page.',
+                      onChanged: (bool? value) async {
+                        if (value == null) return;
+
+                        await EzCM.setBool(resetAfterEditKey, value);
+                        setModal(() => editReset = value);
+                      },
+                    ),
+                    config.separator,
+
                     // Auth for hidden
                     EzSwitchPair(
                       config,
-                      key: ValueKey<String>('fas-$forHide'),
-                      value: forHide,
+                      key: ValueKey<String>('fas-$hideAuth'),
+                      value: hideAuth,
                       text: l10n(config).gsAuthForHidden,
                       onChanged: (bool? value) async {
                         if (value == null) return;
 
                         await EzCM.secSet(authForHiddenKey, value.toString());
-                        setModal(() => forHide = value);
+                        setModal(() => hideAuth = value);
                       },
                     ),
                     config.spacer,
+
+                    // Reset after opened
+                    EzSwitchPair(
+                      config,
+                      key: ValueKey<String>('fas-$openReset'),
+                      value: openReset,
+                      text: 'Reset after open',
+                      tipper:
+                          'Reset the home screen/turn off editing mode after you open a hidden app.',
+                      onChanged: (bool? value) async {
+                        if (value == null) return;
+
+                        await EzCM.setBool(resetAfterOpenedKey, value);
+                        setModal(() => openReset = value);
+                      },
+                    ),
 
                     // Re-auth timer
                     EzRow(
@@ -122,8 +158,10 @@ class AppSecSettings extends StatelessWidget {
             );
 
             if (_timeoutText.text != authTimeout(config).inMinutes.toString() ||
-                forEdit != authToEdit(config) ||
-                forHide != authForHidden(config)) {
+                editAuth != authToEdit(config) ||
+                editReset != resetAfterEdit(config) ||
+                hideAuth != authForHidden(config) ||
+                openReset != resetAfterOpened(config)) {
               await config.rebuildUI();
             }
           }

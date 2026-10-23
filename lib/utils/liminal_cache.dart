@@ -102,7 +102,9 @@ class LiminalCache extends EzAppCache {
 
     _security = SecureCache(
       authToEdit: bool.tryParse(await EzCM.secGet(authToEditKey)) ?? defATE,
+      resetAfterEdit: EzCM.get(resetAfterEditKey),
       authForHidden: bool.tryParse(await EzCM.secGet(authForHiddenKey)) ?? defAFH,
+      resetAfterOpened: EzCM.get(resetAfterOpenedKey),
       authTimeout: Duration(minutes: int.tryParse(await EzCM.secGet(authTimeoutKey)) ?? defAT),
     );
   }
@@ -143,19 +145,29 @@ class DesignCache {
 
 class SecureCache {
   final bool _authToEdit;
+  final bool _resetAfterEdit;
   final bool _authForHidden;
+  final bool _resetAfterOpened;
   final Duration _authTimeout;
 
   SecureCache({
     required bool authToEdit,
+    required bool resetAfterEdit,
     required bool authForHidden,
+    required bool resetAfterOpened,
     required Duration authTimeout,
   })  : _authToEdit = authToEdit,
+        _resetAfterEdit = resetAfterEdit,
         _authForHidden = authForHidden,
+        _resetAfterOpened = resetAfterOpened,
         _authTimeout = authTimeout;
 
   bool get authToEdit => _authToEdit;
+  bool get resetAfterEdit => _resetAfterEdit;
+
   bool get authForHidden => _authForHidden;
+  bool get resetAfterOpened => _resetAfterOpened;
+
   Duration get authTimeout => _authTimeout;
 }
 
@@ -191,5 +203,9 @@ ListAlignment horizontalAlign(EzCP config) => _cache(config)._design.horizontalA
 ListAlignment verticalAlign(EzCP config) => _cache(config)._design.verticalAlign;
 
 bool authToEdit(EzCP config) => _cache(config)._security.authToEdit;
+bool resetAfterEdit(EzCP config) => _cache(config)._security.resetAfterEdit;
+
 bool authForHidden(EzCP config) => _cache(config)._security.authForHidden;
+bool resetAfterOpened(EzCP config) => _cache(config)._security.resetAfterOpened;
+
 Duration authTimeout(EzCP config) => _cache(config)._security.authTimeout;
