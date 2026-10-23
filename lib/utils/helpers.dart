@@ -96,8 +96,8 @@ Future<IconData?> chooseIcon(EzCP config, BuildContext context) {
                                 : entry.key
                                     .toLowerCase()
                                     .contains(searchControl.text.toLowerCase()))
-                            .map((MapEntry<String, IconData> entry) => Padding(
-                                  padding: EzInsets.wrap(config.spacing),
+                            .map((MapEntry<String, IconData> entry) => ezWrap(
+                                  config,
                                   child: EzIconButton(
                                     config,
                                     icon: Icon(entry.value),

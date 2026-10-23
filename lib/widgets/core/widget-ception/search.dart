@@ -519,8 +519,6 @@ Future<void> _openEdits(
   required int lane,
   required int index,
 }) async {
-  final EdgeInsets wrapPadding = EzInsets.wrap(config.spacing);
-
   WWGGSize size = initConfig.size;
   Engine curr = initConfig.engine;
 
@@ -552,8 +550,8 @@ Future<void> _openEdits(
           EzWrap(
             children: <Widget>[
               ...shown.map(
-                (Engine e) => Padding(
-                  padding: wrapPadding,
+                (Engine e) => ezWrap(
+                  config,
                   child: EzElevatedIconButton(
                     config,
                     key: ValueKey<Engine>(e),
@@ -576,8 +574,8 @@ Future<void> _openEdits(
                   ),
                 ),
               ),
-              Padding(
-                padding: wrapPadding,
+              ezWrap(
+                config,
                 child: EzElevatedIconButton(
                   key: const ValueKey<String>('addNew'),
                   config,
@@ -779,8 +777,8 @@ Future<void> _openEdits(
 
           EzWrap(
             children: hidden
-                .map((Engine e) => Padding(
-                      padding: wrapPadding,
+                .map((Engine e) => ezWrap(
+                      config,
                       child: EzElevatedIconButton(
                         config,
                         key: ValueKey<Engine>(e),

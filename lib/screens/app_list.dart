@@ -313,9 +313,9 @@ class _AppListScreenState extends State<AppListScreen> {
                                               .toLowerCase()
                                               .contains(searchControl.text.toLowerCase())
                                           : true))
-                                  .map((AppInfo app) => Container(
+                                  .map((AppInfo app) => ezWrap(
+                                        config,
                                         key: ValueKey<String>(app.id),
-                                        padding: EzInsets.wrap(config.spacing),
                                         child: AppTile(
                                           config,
                                           appInfo: appInfo,

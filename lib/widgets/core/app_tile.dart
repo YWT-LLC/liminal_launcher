@@ -730,7 +730,6 @@ Future<void> editApp(
     backgroundColor: config.colors.surfaceContainer,
     padding: EdgeInsets.zero,
   );
-  final EdgeInsets wrapPadding = EzInsets.wrap(config.spacing);
   final double iconRadius = config.iconSize / 2;
 
   AppInfo app = initConfig.app;
@@ -974,8 +973,8 @@ Future<void> editApp(
             // Color wrap
             EzWrap(children: <Widget>[
               // Text
-              Padding(
-                padding: wrapPadding,
+              ezWrap(
+                config,
                 child: EzElevatedIconButton(
                   config,
                   onPressed: () async {
@@ -1017,8 +1016,8 @@ Future<void> editApp(
               ),
 
               // Icon
-              Padding(
-                padding: wrapPadding,
+              ezWrap(
+                config,
                 child: EzElevatedIconButton(
                   config,
                   onPressed: () async {
@@ -1060,8 +1059,8 @@ Future<void> editApp(
               ),
 
               // Background
-              Padding(
-                padding: wrapPadding,
+              ezWrap(
+                config,
                 child: EzElevatedIconButton(
                   config,
                   onPressed: () async {
@@ -1103,8 +1102,8 @@ Future<void> editApp(
               ),
 
               // Outline
-              Padding(
-                padding: wrapPadding,
+              ezWrap(
+                config,
                 child: EzElevatedIconButton(
                   config,
                   onPressed: () async {

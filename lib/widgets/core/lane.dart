@@ -503,8 +503,8 @@ Future<void> _editLane(
             // Controls
             EzWrap(
               children: <Widget>[
-                Padding(
-                  padding: EzInsets.wrap(config.spacing),
+                ezWrap(
+                  config,
                   child: SegmentedButton<ListAlignment>(
                     segments: alignmentSegments,
                     selected: <ListAlignment>{hA},
@@ -515,8 +515,8 @@ Future<void> _editLane(
                     },
                   ),
                 ),
-                Padding(
-                  padding: EzInsets.wrap(config.spacing),
+                ezWrap(
+                  config,
                   child: SegmentedButton<ListAlignment>(
                     segments: alignmentSegments,
                     direction: Axis.vertical,

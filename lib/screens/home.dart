@@ -100,8 +100,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           EzWrap(
             children: <Widget>[
               // Apps
-              Padding(
-                padding: EzInsets.wrap(config.spacing),
+              ezWrap(
+                config,
                 child: EzElevatedIconButton(
                   config,
                   onPressed: () => context.goNamed(
@@ -150,8 +150,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
               ),
 
               // Folder
-              Padding(
-                padding: EzInsets.wrap(config.spacing),
+              ezWrap(
+                config,
                 child: EzElevatedIconButton(
                   config,
                   onPressed: () => appInfo.addFolder(
@@ -185,8 +185,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
               ),
 
               // Widgets
-              Padding(
-                padding: EzInsets.wrap(config.spacing),
+              ezWrap(
+                config,
                 child: EzElevatedIconButton(
                   config,
                   onPressed: () => ezModal(
@@ -278,8 +278,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
               ),
 
               // Spacer
-              Padding(
-                padding: EzInsets.wrap(config.spacing),
+              ezWrap(
+                config,
                 child: EzElevatedIconButton(
                   config,
                   onPressed: () async {
@@ -304,10 +304,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
               ),
 
               // Lane
-              Padding(
-                padding: EzInsets.wrap(config.spacing),
-                child: AddLane(config, appInfo: appInfo),
-              ),
+              ezWrap(config, child: AddLane(config, appInfo: appInfo)),
             ],
           ),
           EzSpacer(config.spacing / 2),

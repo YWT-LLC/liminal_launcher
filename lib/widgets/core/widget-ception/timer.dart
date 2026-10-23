@@ -645,8 +645,6 @@ Future<void> _openEdits(
   required int lane,
   required int index,
 }) async {
-  final EdgeInsets wrapPadding = EzInsets.wrap(config.spacing);
-
   WWGGSize size = initConfig.size;
 
   final List<String> quick = List<String>.from(initConfig.quick);
@@ -779,8 +777,8 @@ Future<void> _openEdits(
         // List
         EzWrap(
           children: quick
-              .map((String time) => Padding(
-                    padding: wrapPadding,
+              .map((String time) => ezWrap(
+                    config,
                     child: EzElevatedButton(
                       config,
                       key: ValueKey<String>(time),
