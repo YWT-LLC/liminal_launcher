@@ -788,7 +788,7 @@ abstract class Lang {
   /// No description provided for @gsNoBothHome.
   ///
   /// In en, this message translates to:
-  /// **'Note: the home ages have no update both system ('**
+  /// **'Note: the home pages have no \"update both\" system ('**
   String get gsNoBothHome;
 
   /// No description provided for @gsPositiveOnly.
@@ -830,7 +830,7 @@ abstract class Lang {
   /// No description provided for @gsSwipeDesc.
   ///
   /// In en, this message translates to:
-  /// **'Choose a quick access app that will open when you swipe {direction} on the home screen. swipe'**
+  /// **'Choose a quick access app that will open when you swipe {direction} on the home screen.'**
   String gsSwipeDesc(Object direction);
 
   /// No description provided for @gsSwipeHint.
@@ -1532,7 +1532,7 @@ abstract class Lang {
   /// No description provided for @pUnBanish.
   ///
   /// In en, this message translates to:
-  /// **'The simplest wat to restore/un-banish {app} is to uninstall it from the system settings, then reinstall.'**
+  /// **'The simplest way to restore/un-banish {app} is to uninstall it from the system settings, then reinstall.'**
   String pUnBanish(Object app);
 
   /// No description provided for @pWantTo.
@@ -1688,7 +1688,7 @@ abstract class Lang {
   /// No description provided for @togSomePlayers.
   ///
   /// In en, this message translates to:
-  /// **'Note:\nThese buttons only work if the active player supports them. Some music players don\'t have FF/Rewind, for example'**
+  /// **'Note:\nThese buttons only work if the active player supports them. Some music players don\'t have FF/Rewind, for example.'**
   String get togSomePlayers;
 
   /// No description provided for @togTitle.

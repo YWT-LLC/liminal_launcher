@@ -362,7 +362,8 @@ class LangEn extends Lang {
   String get gsListRipple => 'List ripple animation';
 
   @override
-  String get gsNoBothHome => 'Note: the home ages have no update both system (';
+  String get gsNoBothHome =>
+      'Note: the home pages have no \"update both\" system (';
 
   @override
   String get gsPositiveOnly => 'Positive integers only';
@@ -388,7 +389,7 @@ class LangEn extends Lang {
 
   @override
   String gsSwipeDesc(Object direction) {
-    return 'Choose a quick access app that will open when you swipe $direction on the home screen. swipe';
+    return 'Choose a quick access app that will open when you swipe $direction on the home screen.';
   }
 
   @override
@@ -761,7 +762,7 @@ class LangEn extends Lang {
 
   @override
   String pUnBanish(Object app) {
-    return 'The simplest wat to restore/un-banish $app is to uninstall it from the system settings, then reinstall.';
+    return 'The simplest way to restore/un-banish $app is to uninstall it from the system settings, then reinstall.';
   }
 
   @override
@@ -845,7 +846,7 @@ class LangEn extends Lang {
 
   @override
   String get togSomePlayers =>
-      'Note:\nThese buttons only work if the active player supports them. Some music players don\'t have FF/Rewind, for example';
+      'Note:\nThese buttons only work if the active player supports them. Some music players don\'t have FF/Rewind, for example.';
 
   @override
   String get togTitle => 'Media controls';
@@ -1209,7 +1210,8 @@ class LangEnUs extends LangEn {
   String get gsListRipple => 'List ripple animation';
 
   @override
-  String get gsNoBothHome => 'Note: the home ages have no update both system (';
+  String get gsNoBothHome =>
+      'Note: the home pages have no \"update both\" system (';
 
   @override
   String get gsPositiveOnly => 'Positive integers only';
@@ -1235,7 +1237,7 @@ class LangEnUs extends LangEn {
 
   @override
   String gsSwipeDesc(Object direction) {
-    return 'Choose a quick access app that will open when you swipe $direction on the home screen. swipe';
+    return 'Choose a quick access app that will open when you swipe $direction on the home screen.';
   }
 
   @override
@@ -1608,7 +1610,7 @@ class LangEnUs extends LangEn {
 
   @override
   String pUnBanish(Object app) {
-    return 'The simplest wat to restore/un-banish $app is to uninstall it from the system settings, then reinstall.';
+    return 'The simplest way to restore/un-banish $app is to uninstall it from the system settings, then reinstall.';
   }
 
   @override
@@ -1692,7 +1694,7 @@ class LangEnUs extends LangEn {
 
   @override
   String get togSomePlayers =>
-      'Note:\nThese buttons only work if the active player supports them. Some music players don\'t have FF/Rewind, for example';
+      'Note:\nThese buttons only work if the active player supports them. Some music players don\'t have FF/Rewind, for example.';
 
   @override
   String get togTitle => 'Media controls';

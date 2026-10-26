@@ -80,7 +80,7 @@ class LangDe extends Lang {
   String get clkTitle => 'Uhr';
 
   @override
-  String get dbsApp => 'Liminal App';
+  String get dbsApp => 'Liminal-App';
 
   @override
   String get dbsChangeApp => 'Lange drücken, um die App zu ändern.';
@@ -92,7 +92,7 @@ class LangDe extends Lang {
   String get dbsElevatedStyle => 'Hervorgehobener Stil';
 
   @override
-  String get dbsFolder => 'Liminal Ordner';
+  String get dbsFolder => 'Liminal-Ordner';
 
   @override
   String get dbsFull => 'Vollständig';
@@ -170,7 +170,7 @@ class LangDe extends Lang {
 
   @override
   String get evtShare =>
-      '\'Aufgabe\' ist hier nur eine Teilen-Funktion.\nWähle unten eine Ziel-App aus.\n\nWir empfehlen eine Aufgaben-App, aber sie ist nicht zwingend erforderlich. Ergebnisse können variieren.';
+      '„Aufgabe“ ist hier nur eine Teilen-Funktion.\nWähle unten eine Ziel-App aus.\n\nWir empfehlen eine Aufgaben-App, aber sie ist nicht zwingend erforderlich. Ergebnisse können variieren.';
 
   @override
   String get evtShareDest => 'Teilen-Ziel wird ausgewählt';
@@ -235,7 +235,7 @@ class LangDe extends Lang {
   String get gFix => 'Korrigieren...';
 
   @override
-  String get gGrid => 'Netz';
+  String get gGrid => 'Raster';
 
   @override
   String get gHidden => 'Versteckt';
@@ -279,7 +279,7 @@ class LangDe extends Lang {
 
   @override
   String gRemoving(Object app) {
-    return '$app entfernen';
+    return '$app wird entfernt';
   }
 
   @override
@@ -367,7 +367,7 @@ class LangDe extends Lang {
 
   @override
   String get gsNoBothHome =>
-      'Hinweis: Die Startseiten aktualisieren nicht beide Systeme gleichzeitig (';
+      'Hinweis: Die Startseiten haben kein „beide aktualisieren“-System (';
 
   @override
   String get gsPositiveOnly => 'Nur positive ganze Zahlen';
@@ -388,7 +388,7 @@ class LangDe extends Lang {
 
   @override
   String gsSwipe(Object direction) {
-    return 'Nach $direction wischen';
+    return '$direction wischen';
   }
 
   @override
@@ -414,7 +414,7 @@ class LangDe extends Lang {
   String get hsApp => 'App';
 
   @override
-  String get hsBoth => ', oder beide ';
+  String get hsBoth => ' oder beide ';
 
   @override
   String get hsCanFit => '...Werten passen bis zu ';
@@ -498,7 +498,7 @@ class LangDe extends Lang {
   String get hsWidget => 'Widget';
 
   @override
-  String get hsWithCurr => 'Mit deiner aktuellen...\n\nSymbolgröße (';
+  String get hsWithCurr => 'Mit deinen aktuellen...\n\nSymbolgröße (';
 
   @override
   String get hsWithMin => ' Mit den Minimalwerten passen bis zu ';
@@ -534,7 +534,7 @@ class LangDe extends Lang {
   String get inChat => 'Chat';
 
   @override
-  String get inCheck => 'Check';
+  String get inCheck => 'Häkchen';
 
   @override
   String get inCloud => 'Cloud';
@@ -821,7 +821,7 @@ class LangDe extends Lang {
   String get timMins => 'Minuten';
 
   @override
-  String get timQuick => 'Schnelle Zeiten';
+  String get timQuick => 'Schnellauswahl';
 
   @override
   String get timSecs => 'Sekunden';
