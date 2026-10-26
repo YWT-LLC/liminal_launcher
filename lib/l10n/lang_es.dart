@@ -158,14 +158,15 @@ class LangEs extends Lang {
   String get evtNewTask => 'Nueva tarea';
 
   @override
-  String get evtNoCalendarBody => 'Can\'t find a default calendar app.';
-
-  @override
-  String get evtNoCalendarTitle => 'What shall be done?\n';
+  String get evtNoCalendarBody =>
+      'No se encuentra ninguna aplicación de calendario predeterminada.';
 
   @override
   String get evtNoCalendarLabel =>
-      'Note: \'Task\' is just share underneath. You\'ll choose a default app to share with.\nWe recommend using a task app, but don\'t require.\nResults may vary.';
+      'Nota: \'Tarea\' solo usa la función de compartir internamente. Elegirás una aplicación predeterminada con la que compartir.\nRecomendamos usar una aplicación de tareas, pero no es obligatorio.\nLos resultados pueden variar.';
+
+  @override
+  String get evtNoCalendarTitle => '¿Qué hay que hacer?\n';
 
   @override
   String get evtShare =>

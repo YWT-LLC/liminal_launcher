@@ -395,17 +395,17 @@ abstract class Lang {
   /// **'Can\'t find a default calendar app.'**
   String get evtNoCalendarBody;
 
-  /// No description provided for @evtNoCalendarTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'What shall be done?\n'**
-  String get evtNoCalendarTitle;
-
   /// No description provided for @evtNoCalendarLabel.
   ///
   /// In en, this message translates to:
   /// **'Note: \'Task\' is just share underneath. You\'ll choose a default app to share with.\nWe recommend using a task app, but don\'t require.\nResults may vary.'**
   String get evtNoCalendarLabel;
+
+  /// No description provided for @evtNoCalendarTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What shall be done?\n'**
+  String get evtNoCalendarTitle;
 
   /// No description provided for @evtShare.
   ///
