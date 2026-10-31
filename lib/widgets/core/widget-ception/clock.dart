@@ -531,10 +531,10 @@ Future<void> _openEdits(
                   await ezColorPicker(
                     config,
                     context: pContext,
-                    startColor: curr,
+                    picking: curr,
                     onColorChange: (Color choice) => curr = choice,
                     onConfirm: () => setModal(() => background = curr),
-                    onDeny: doNothing,
+                    onCancel: doNothing,
                   );
                 },
                 onLongPress: () => setModal(() => background = null),
@@ -598,10 +598,10 @@ Future<void> _openEdits(
                   await ezColorPicker(
                     config,
                     context: pContext,
-                    startColor: curr,
+                    picking: curr,
                     onColorChange: (Color choice) => curr = choice,
                     onConfirm: () => setModal(() => timeColor = curr),
-                    onDeny: doNothing,
+                    onCancel: doNothing,
                   );
                 },
                 onLongPress: () => setModal(() => timeColor = null),
@@ -696,10 +696,10 @@ Future<void> _openEdits(
                   await ezColorPicker(
                     config,
                     context: pContext,
-                    startColor: curr,
+                    picking: curr,
                     onColorChange: (Color choice) => curr = choice,
                     onConfirm: () => setModal(() => dateColor = curr),
-                    onDeny: doNothing,
+                    onCancel: doNothing,
                   );
                 },
                 onLongPress: () => setModal(() => dateColor = null),

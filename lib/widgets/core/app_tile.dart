@@ -983,10 +983,10 @@ Future<void> editApp(
                     await ezColorPicker(
                       config,
                       context: pContext,
-                      startColor: curr,
+                      picking: curr,
                       onColorChange: (Color choice) => curr = choice,
                       onConfirm: () => setModal(() => textColor = curr),
-                      onDeny: doNothing,
+                      onCancel: doNothing,
                     );
                   },
                   onLongPress: () => setModal(() => textColor = config.colors.onSurface),
@@ -1026,10 +1026,9 @@ Future<void> editApp(
                     await ezColorPicker(
                       config,
                       context: pContext,
-                      startColor: curr,
+                      picking: curr,
                       onColorChange: (Color choice) => curr = choice,
                       onConfirm: () => setModal(() => iconColor = curr),
-                      onDeny: doNothing,
                     );
                   },
                   onLongPress: () => setModal(() => iconColor = config.colors.primary),
@@ -1069,10 +1068,10 @@ Future<void> editApp(
                     await ezColorPicker(
                       config,
                       context: pContext,
-                      startColor: curr,
+                      picking: curr,
                       onColorChange: (Color choice) => curr = choice,
                       onConfirm: () => setModal(() => backgroundColor = curr),
-                      onDeny: doNothing,
+                      onCancel: doNothing,
                     );
                   },
                   onLongPress: () => setModal(() => backgroundColor = config.colors.surface),
@@ -1112,10 +1111,10 @@ Future<void> editApp(
                     await ezColorPicker(
                       config,
                       context: pContext,
-                      startColor: curr,
+                      picking: curr,
                       onColorChange: (Color choice) => curr = choice,
                       onConfirm: () => setModal(() => outlineColor = curr),
-                      onDeny: doNothing,
+                      onCancel: doNothing,
                     );
                   },
                   onLongPress: () => setModal(() => outlineColor = config.colors.primaryContainer),

@@ -60,6 +60,7 @@ class AppSecSettings extends StatelessWidget {
                     config.spacer,
 
                     // Reset after edit
+                    // TODO: l10n
                     EzSwitchPair(
                       config,
                       key: ValueKey<String>('fes-$editReset'),

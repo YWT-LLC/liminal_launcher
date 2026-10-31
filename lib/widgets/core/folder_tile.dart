@@ -729,7 +729,7 @@ Future<void> editFolder(
                           await ezColorPicker(
                             config,
                             context: pContext,
-                            startColor: curr,
+                            picking: curr,
                             onColorChange: (Color choice) => curr = choice,
                             onConfirm: () => setModal(() => textColor = curr),
                             onDeny: doNothing,
@@ -772,7 +772,7 @@ Future<void> editFolder(
                           await ezColorPicker(
                             config,
                             context: pContext,
-                            startColor: curr,
+                            picking: curr,
                             onColorChange: (Color choice) => curr = choice,
                             onConfirm: () => setModal(() => iconColor = curr),
                             onDeny: doNothing,
@@ -815,7 +815,7 @@ Future<void> editFolder(
                           await ezColorPicker(
                             config,
                             context: pContext,
-                            startColor: curr,
+                            picking: curr,
                             onColorChange: (Color choice) => curr = choice,
                             onConfirm: () => setModal(() => backgroundColor = curr),
                             onDeny: doNothing,
@@ -858,10 +858,10 @@ Future<void> editFolder(
                           await ezColorPicker(
                             config,
                             context: pContext,
-                            startColor: curr,
+                            picking: curr,
                             onColorChange: (Color choice) => curr = choice,
                             onConfirm: () => setModal(() => outlineColor = curr),
-                            onDeny: doNothing,
+                            onCancel: doNothing,
                           );
                         },
                         onLongPress: () =>
