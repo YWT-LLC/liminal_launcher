@@ -31,7 +31,7 @@ class ErrorScreen extends StatelessWidget {
               EzText(
                 config,
                 text: config.ezL10n.g404,
-                style: ezSubTitleStyle(config.styles),
+                style: config.subTitleStyle,
                 textAlign: TextAlign.center,
               ),
               config.separator,
