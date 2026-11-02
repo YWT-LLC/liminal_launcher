@@ -196,7 +196,6 @@ const Map<String, Type> allLimKeys = <String, Type>{
   ...limDesignKeys,
 };
 
-/// [EzCM.init] passthrough
 final Set<String> neverResetKeys = <String>{...limBTSKeys.keys, ...limListKeys.keys};
 
 /// [ywtMobileConfig] with Liminal additions
