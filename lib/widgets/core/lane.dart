@@ -365,10 +365,10 @@ Future<void> _editLane(
                     textAlign: TextAlign.center,
                     style: config.labelStyle?.copyWith(
                       color: i == pos
-                          ? config.colors.onSecondary
+                          ? config.onSecondary
                           : i == lane
-                              ? config.colors.onTertiary
-                              : config.colors.onSurface,
+                              ? config.onTertiary
+                              : config.onSurface,
                     ),
                   ),
                 ),
@@ -444,7 +444,7 @@ Future<void> _editLane(
 
             // Align
             Container(
-              color: config.colors.onSurface,
+              color: config.onSurface,
               height: heightOf(context) * sizeMod,
               width: widthOf(context) * sizeMod,
               child: Stack(
@@ -476,7 +476,7 @@ Future<void> _editLane(
                         child: Text(
                           pos.toString(),
                           textAlign: TextAlign.center,
-                          style: config.labelStyle?.copyWith(color: config.colors.onSecondary),
+                          style: config.labelStyle?.copyWith(color: config.onSecondary),
                         ),
                       ),
                     ),

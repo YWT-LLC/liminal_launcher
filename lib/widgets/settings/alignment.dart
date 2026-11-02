@@ -47,7 +47,7 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
         children: <Widget>[
           // Preview
           Container(
-            color: widget.config.colors.onSurface,
+            color: widget.config.onSurface,
             height: heightOf(context) * _sizeMod,
             width: widthOf(context) * _sizeMod,
             child: Stack(

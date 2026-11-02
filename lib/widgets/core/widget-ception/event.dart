@@ -649,7 +649,7 @@ Future<void> _openEdits(
           buttonType: listBT(config),
           labelType: listLabels(config),
           labelStyle: TxtStile.body,
-          textColor: config.colors.onSurface,
+          textColor: config.onSurface,
           iconColor: config.colors.primary,
           backgroundColor: config.colors.surface,
           outlineColor: config.colors.primaryContainer,

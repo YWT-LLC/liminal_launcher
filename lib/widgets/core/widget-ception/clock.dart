@@ -502,12 +502,12 @@ Future<void> _openEdits(
                                 config,
                                 text: bs.name(config.ezL10n),
                                 textStyle: bs == shape
-                                    ? config.bodyStyle?.copyWith(color: config.colors.onPrimary)
+                                    ? config.bodyStyle?.copyWith(color: config.onPrimary)
                                     : config.bodyStyle,
                                 style: bs == shape
                                     ? ElevatedButton.styleFrom(
                                         shape: bs.shape,
-                                        foregroundColor: config.colors.onPrimary,
+                                        foregroundColor: config.onPrimary,
                                         backgroundColor: config.colors.primary,
                                       )
                                     : ElevatedButton.styleFrom(shape: bs.shape),
@@ -549,7 +549,7 @@ Future<void> _openEdits(
                   child: (background == null || background == Colors.transparent)
                       ? CircleAvatar(
                           backgroundColor: config.colors.surface,
-                          foregroundColor: config.colors.onSurface,
+                          foregroundColor: config.onSurface,
                           radius: iconRadius + config.padding,
                           child: EzIcon(
                             config,
@@ -593,7 +593,7 @@ Future<void> _openEdits(
                 config,
                 enabled: showTime,
                 onPressed: () async {
-                  Color curr = timeColor ?? config.colors.onSurface;
+                  Color curr = timeColor ?? config.onSurface;
 
                   await ezColorPicker(
                     config,
@@ -616,7 +616,7 @@ Future<void> _openEdits(
                   child: (timeColor == null || timeColor == Colors.transparent)
                       ? CircleAvatar(
                           backgroundColor: config.colors.surface,
-                          foregroundColor: config.colors.onSurface,
+                          foregroundColor: config.onSurface,
                           radius: iconRadius + config.padding,
                           child: EzIcon(
                             config,
@@ -691,7 +691,7 @@ Future<void> _openEdits(
                 config,
                 enabled: dateType != DateType.none,
                 onPressed: () async {
-                  Color curr = dateColor ?? config.colors.onSurface;
+                  Color curr = dateColor ?? config.onSurface;
 
                   await ezColorPicker(
                     config,
@@ -714,7 +714,7 @@ Future<void> _openEdits(
                   child: (dateColor == null || dateColor == Colors.transparent)
                       ? CircleAvatar(
                           backgroundColor: config.colors.surface,
-                          foregroundColor: config.colors.onSurface,
+                          foregroundColor: config.onSurface,
                           radius: iconRadius + config.padding,
                           child: EzIcon(
                             config,

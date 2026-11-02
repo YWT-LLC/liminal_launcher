@@ -191,7 +191,7 @@ class _AppFolderState extends State<FolderTile> {
                   buttonType: widget._buttonType ?? folderBT(widget.config),
                   labelType: widget._labelType ?? folderLabels(widget.config),
                   labelStyle: widget._labelStyle ?? TxtStile.body,
-                  textColor: widget._textColor ?? widget.config.colors.onSurface,
+                  textColor: widget._textColor ?? widget.config.onSurface,
                   iconColor: widget._iconColor ?? widget.config.colors.primary,
                   backgroundColor: widget._backgroundColor ?? widget.config.colors.surface,
                   outlineColor: widget._outlineColor ?? widget.config.colors.primaryContainer,
@@ -535,7 +535,7 @@ Future<void> editFolder(
   bool showIcon = iconBTs.contains(initConfig.buttonType ?? folderBT(config));
   bool elevated = elevatedBTs.contains(initConfig.buttonType ?? folderBT(config));
 
-  Color textColor = initConfig.textColor ?? config.colors.onSurface;
+  Color textColor = initConfig.textColor ?? config.onSurface;
   Color iconColor = initConfig.iconColor ?? config.colors.primary;
   Color backgroundColor = initConfig.backgroundColor ?? config.colors.surface;
   Color outlineColor = initConfig.outlineColor ?? config.colors.primaryContainer;
@@ -732,10 +732,9 @@ Future<void> editFolder(
                             picking: curr,
                             onColorChange: (Color choice) => curr = choice,
                             onConfirm: () => setModal(() => textColor = curr),
-                            onDeny: doNothing,
                           );
                         },
-                        onLongPress: () => setModal(() => textColor = config.colors.onSurface),
+                        onLongPress: () => setModal(() => textColor = config.onSurface),
                         icon: Container(
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
@@ -747,7 +746,7 @@ Future<void> editFolder(
                           child: textColor == Colors.transparent
                               ? CircleAvatar(
                                   backgroundColor: config.colors.surface,
-                                  foregroundColor: config.colors.onSurface,
+                                  foregroundColor: config.onSurface,
                                   radius: iconRadius + config.padding,
                                   child: EzIcon(config, Icons.visibility_off),
                                 )
@@ -790,7 +789,7 @@ Future<void> editFolder(
                           child: iconColor == Colors.transparent
                               ? CircleAvatar(
                                   backgroundColor: config.colors.surface,
-                                  foregroundColor: config.colors.onSurface,
+                                  foregroundColor: config.onSurface,
                                   radius: iconRadius + config.padding,
                                   child: EzIcon(config, Icons.visibility_off),
                                 )
@@ -818,7 +817,6 @@ Future<void> editFolder(
                             picking: curr,
                             onColorChange: (Color choice) => curr = choice,
                             onConfirm: () => setModal(() => backgroundColor = curr),
-                            onDeny: doNothing,
                           );
                         },
                         onLongPress: () => setModal(() => backgroundColor = config.colors.surface),
@@ -833,7 +831,7 @@ Future<void> editFolder(
                           child: backgroundColor == Colors.transparent
                               ? CircleAvatar(
                                   backgroundColor: config.colors.surface,
-                                  foregroundColor: config.colors.onSurface,
+                                  foregroundColor: config.onSurface,
                                   radius: iconRadius + config.padding,
                                   child: EzIcon(config, Icons.visibility_off),
                                 )
@@ -877,7 +875,7 @@ Future<void> editFolder(
                           child: outlineColor == Colors.transparent
                               ? CircleAvatar(
                                   backgroundColor: config.colors.surface,
-                                  foregroundColor: config.colors.onSurface,
+                                  foregroundColor: config.onSurface,
                                   radius: iconRadius + config.padding,
                                   child: EzIcon(config, Icons.visibility_off),
                                 )

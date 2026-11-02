@@ -218,7 +218,7 @@ class _AppTileState extends State<AppTile> {
                     buttonType: listBT(widget.config),
                     labelType: listLabels(widget.config),
                     labelStyle: widget._labelStyle ?? TxtStile.body,
-                    textColor: widget._textColor ?? widget.config.colors.onSurface,
+                    textColor: widget._textColor ?? widget.config.onSurface,
                     iconColor: widget._iconColor ?? widget.config.colors.primary,
                     backgroundColor: widget._backgroundColor ?? widget.config.colors.surface,
                     outlineColor: widget._outlineColor ?? widget.config.colors.primaryContainer,
@@ -241,7 +241,7 @@ class _AppTileState extends State<AppTile> {
                       buttonType: widget._buttonType ?? listBT(widget.config),
                       labelType: widget._labelType ?? listLabels(widget.config),
                       labelStyle: widget._labelStyle ?? TxtStile.body,
-                      textColor: widget._textColor ?? widget.config.colors.onSurface,
+                      textColor: widget._textColor ?? widget.config.onSurface,
                       iconColor: widget._iconColor ?? widget.config.colors.primary,
                       backgroundColor: widget._backgroundColor ?? widget.config.colors.surface,
                       outlineColor: widget._outlineColor ?? widget.config.colors.primaryContainer,
@@ -298,7 +298,7 @@ class _AppTileState extends State<AppTile> {
                         buttonType: listBT(widget.config),
                         labelType: listLabels(widget.config),
                         labelStyle: widget._labelStyle ?? TxtStile.body,
-                        textColor: widget._textColor ?? widget.config.colors.onSurface,
+                        textColor: widget._textColor ?? widget.config.onSurface,
                         iconColor: widget._iconColor ?? widget.config.colors.primary,
                         backgroundColor: widget._backgroundColor ?? widget.config.colors.surface,
                         outlineColor: widget._outlineColor ?? widget.config.colors.primaryContainer,
@@ -746,7 +746,7 @@ Future<void> editApp(
   bool showIcon = iconBTs.contains(initConfig.buttonType ?? listBT(config));
   bool elevated = elevatedBTs.contains(initConfig.buttonType ?? listBT(config));
 
-  Color textColor = initConfig.textColor ?? config.colors.onSurface;
+  Color textColor = initConfig.textColor ?? config.onSurface;
   Color iconColor = initConfig.iconColor ?? config.colors.primary;
   Color backgroundColor = initConfig.backgroundColor ?? config.colors.surface;
   Color outlineColor = initConfig.outlineColor ?? config.colors.primaryContainer;
@@ -989,7 +989,7 @@ Future<void> editApp(
                       onCancel: doNothing,
                     );
                   },
-                  onLongPress: () => setModal(() => textColor = config.colors.onSurface),
+                  onLongPress: () => setModal(() => textColor = config.onSurface),
                   icon: Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
@@ -1001,7 +1001,7 @@ Future<void> editApp(
                     child: textColor == Colors.transparent
                         ? CircleAvatar(
                             backgroundColor: config.colors.surface,
-                            foregroundColor: config.colors.onSurface,
+                            foregroundColor: config.onSurface,
                             radius: iconRadius + config.padding,
                             child: EzIcon(config, Icons.visibility_off),
                           )
@@ -1043,7 +1043,7 @@ Future<void> editApp(
                     child: iconColor == Colors.transparent
                         ? CircleAvatar(
                             backgroundColor: config.colors.surface,
-                            foregroundColor: config.colors.onSurface,
+                            foregroundColor: config.onSurface,
                             radius: iconRadius + config.padding,
                             child: EzIcon(config, Icons.visibility_off),
                           )
@@ -1086,7 +1086,7 @@ Future<void> editApp(
                     child: backgroundColor == Colors.transparent
                         ? CircleAvatar(
                             backgroundColor: config.colors.surface,
-                            foregroundColor: config.colors.onSurface,
+                            foregroundColor: config.onSurface,
                             radius: iconRadius + config.padding,
                             child: EzIcon(config, Icons.visibility_off),
                           )
@@ -1129,7 +1129,7 @@ Future<void> editApp(
                     child: outlineColor == Colors.transparent
                         ? CircleAvatar(
                             backgroundColor: config.colors.surface,
-                            foregroundColor: config.colors.onSurface,
+                            foregroundColor: config.onSurface,
                             radius: iconRadius + config.padding,
                             child: EzIcon(config, Icons.visibility_off),
                           )
