@@ -1145,7 +1145,7 @@ Future<void> editApp(
             ]),
           ]),
         ),
-        EzDivider(height: config.spacing * 2),
+        EzDivider(config, height: config.spacing * 2),
 
         EzRow(config, mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
           // Reset

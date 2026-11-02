@@ -772,7 +772,7 @@ Future<void> _openEdits(
                 ],
               ),
             ),
-            config.divider,
+            EzDivider(config),
 
             // Settings
             Expanded(

@@ -576,7 +576,7 @@ Future<void> editFolder(
                 onPressed: doNothing,
                 onLongPress: doNothing,
               ),
-              EzDivider(height: config.spacing * 2),
+              EzDivider(config, height: config.spacing * 2),
 
               // Settings
               Expanded(
@@ -891,7 +891,7 @@ Future<void> editFolder(
                   ]),
                 ],
               )),
-              EzDivider(height: config.spacing * 2),
+              EzDivider(config, height: config.spacing * 2),
 
               EzRow(config, mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
                 // Reset

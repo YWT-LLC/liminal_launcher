@@ -455,7 +455,7 @@ Future<void> _openEdits(
                 ),
           onPressed: doNothing,
         ),
-        EzDivider(height: config.spacing * 2),
+        EzDivider(config, height: config.spacing * 2),
 
         // Button toggles
         EzSwitchPair(
