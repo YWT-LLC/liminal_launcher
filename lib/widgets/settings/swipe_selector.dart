@@ -8,8 +8,8 @@ import '../../../utils/export.dart';
 import '../../../widgets/export.dart';
 
 import 'package:open_ui/open_ui.dart';
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
 class SwipeSelector extends StatefulWidget {
   final EzCP config;
@@ -47,7 +47,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
           widget.config,
           text: l10n(widget.config).gsSwipe(dir),
           textColor: widget.config.onSurface,
-          backgroundColor: widget.config.colors.surfaceContainer,
+          backgroundColor: widget.config.surfaceContainerFill.asColor,
           onTap: () => showDialog(
             context: context,
             builder: (_) => EzAlertDialog(
@@ -73,7 +73,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
           labelType: listLabels(widget.config),
           labelStyle: TxtStile.body,
           textColor: widget.config.onSurface,
-          iconColor: widget.config.colors.primary,
+          iconFill: widget.config.colors.primary,
           backgroundColor: widget.config.colors.surface,
           outlineColor: widget.config.colors.primaryContainer,
           onPressed: () => context.pushNamed(
