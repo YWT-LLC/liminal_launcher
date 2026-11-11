@@ -34,9 +34,14 @@ class LiminalScaffold extends StatelessWidget {
               top: safeTop(context),
               bottom: config.marginVal,
             ),
+            decoration: config.boxDeco(fill: const EzSwitchColor(color: Colors.transparent)),
             child: body,
           ),
-          backgroundColor: Colors.transparent,
+          footer: EzFooter(
+            config,
+            quiet: isHome,
+            a11howPath: ywt.liminalContributeA11,
+          ),
           fabs: <Widget>[
             if (!isHome)
               EzUpdaterFAB(

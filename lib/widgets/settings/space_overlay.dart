@@ -762,7 +762,7 @@ class _EditSpacingOverlayState extends State<_EditSpacingOverlay> {
                                 max: maxWidth * (tile ? 0.5 : 1),
                                 onChanged: setValue,
                               ),
-                        backgroundColor: widget.config.surfaceFill.asColor,
+                        replaceFill: widget.config.surfaceFill,
                       ),
                     ),
                     widget.config.rowMargin,
