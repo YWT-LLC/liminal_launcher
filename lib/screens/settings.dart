@@ -7,9 +7,9 @@ import '../utils/export.dart';
 import '../widgets/export.dart';
 
 import 'package:open_ui/open_ui.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:material_ui/material_ui.dart';
 
 class SettingsScreen extends StatelessWidget {
   final int? target;

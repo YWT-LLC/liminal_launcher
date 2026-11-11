@@ -6,7 +6,7 @@
 import '../../utils/export.dart';
 
 import 'package:open_ui/open_ui.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AlignmentSelectors extends StatefulWidget {
   final EzCP config;
@@ -55,7 +55,8 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
                 // Background
                 Container(
                   decoration: BoxDecoration(
-                    color: widget.config.colors.surface,
+                    color: widget.config.surfaceFill.color,
+                    gradient: widget.config.surfaceFill.gradient,
                     image: (widget.config.backgroundImagePath == noImageValue)
                         ? null
                         : widget.config.backgroundImage,

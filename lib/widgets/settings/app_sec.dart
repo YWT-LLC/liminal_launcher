@@ -7,7 +7,7 @@ import '../../utils/export.dart';
 
 import 'dart:math';
 import 'package:open_ui/open_ui.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AppSecSettings extends StatelessWidget {
   final EzCP config;
