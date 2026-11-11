@@ -6,8 +6,6 @@
 import './screens/export.dart';
 import './utils/export.dart';
 
-// TODO: update defaults to be more "normal"... minimalists are used to settings!
-
 import 'package:open_ui/open_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
