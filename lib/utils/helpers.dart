@@ -6,8 +6,8 @@
 import './export.dart';
 
 import 'package:open_ui/open_ui.dart';
-import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:material_ui/material_ui.dart';
 
 Future<void> canEdit(EzCP config, Future<void> Function() onSuccess) async {
   if (!authToEdit(config)) {

@@ -9,8 +9,8 @@ import '../../export.dart';
 
 import 'dart:async';
 import 'package:open_ui/open_ui.dart';
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
 //* Core Widget *//
 

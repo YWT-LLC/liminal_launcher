@@ -6,7 +6,7 @@
 import 'package:open_ui/open_ui.dart';
 import 'package:ywt_private/ywt_private.dart' as ywt;
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class LiminalScaffold extends StatelessWidget {
   final EzCP config;

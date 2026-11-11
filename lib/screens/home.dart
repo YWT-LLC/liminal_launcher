@@ -10,11 +10,11 @@ import 'package:ywt_private/ywt_private.dart' as ywt;
 
 import 'dart:async';
 import 'package:open_ui/open_ui.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -63,12 +63,12 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     );
     rippleController.addListener(() => rippleProgress.value = rippleController.value);
 
-    final OverlayEntry ripple = ywt.ezRipple(
+    final OverlayEntry ripple = ezRipple(
       controller: rippleController,
       width: widthOf(context),
       height: heightOf(context),
       position: details.globalPosition,
-      color: config.colors.primary,
+      fill: config.primaryFill,
       oMin: focusOpacity,
     );
     Overlay.of(context).insert(ripple);
@@ -139,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                         config,
                         onPressed: doNothing,
                         label: l10n(config).hsHome,
-                        icon: EzIcon(config, Icons.add, color: config.onSurface),
+                        icon: EzIcon(config, Icons.add, fill: config.onSurfaceFiller),
                         textStyle: config.labelStyle,
                       ),
                     ),
@@ -767,7 +767,6 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: vAlign.mainAxis,
               crossAxisAlignment: hAlign.crossAxis,
-              physics: const ClampingScrollPhysics(),
               children: _buildTiles(config, appInfo, lane, hAlign: hAlign, vAlign: vAlign),
             );
 
@@ -1031,7 +1030,6 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                               config,
                               mainAxisSize: MainAxisSize.max,
                               scrollDirection: Axis.horizontal,
-                              physics: const ClampingScrollPhysics(),
                               mainAxisAlignment: horizontalAlign(config).mainAxis,
                               crossAxisAlignment: verticalAlign(config).crossAxis,
                               children: buildGrid(config, appInfo, numLanes),

@@ -8,7 +8,7 @@ import '../../utils/export.dart';
 import 'dart:math';
 import 'dart:async';
 import 'package:open_ui/open_ui.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 //* Core Overlay *//
 
@@ -762,7 +762,7 @@ class _EditSpacingOverlayState extends State<_EditSpacingOverlay> {
                                 max: maxWidth * (tile ? 0.5 : 1),
                                 onChanged: setValue,
                               ),
-                        backgroundColor: widget.config.colors.surface,
+                        backgroundColor: widget.config.surfaceFill.asColor,
                       ),
                     ),
                     widget.config.rowMargin,

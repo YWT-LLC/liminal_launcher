@@ -7,8 +7,8 @@ import '../../utils/export.dart';
 import '../export.dart';
 
 import 'package:open_ui/open_ui.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AppTileSetting extends StatelessWidget {
   final EzCP config;

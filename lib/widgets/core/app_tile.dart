@@ -10,10 +10,10 @@ import '../export.dart';
 import 'dart:math';
 import 'dart:async';
 import 'package:open_ui/open_ui.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:material_ui/material_ui.dart';
 
 //* Core Widget *//
 
@@ -517,9 +517,9 @@ class AppButton extends StatelessWidget {
   final LabelType labelType;
   final TxtStile labelStyle;
   final Color textColor;
-  final Color iconColor;
-  final Color backgroundColor;
-  final Color outlineColor;
+  final EzSwitchColor backgroundFill;
+  final EzSwitchColor iconFill;
+  final EzSwitchColor outlineFill;
   final void Function()? onPressed;
   final void Function()? onLongPress;
 
@@ -534,9 +534,9 @@ class AppButton extends StatelessWidget {
     required this.labelType,
     required this.labelStyle,
     required this.textColor,
-    required this.iconColor,
-    required this.backgroundColor,
-    required this.outlineColor,
+    required this.backgroundFill,
+    required this.iconFill,
+    required this.outlineFill,
     this.onPressed,
     this.onLongPress,
   });
