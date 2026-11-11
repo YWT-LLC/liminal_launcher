@@ -349,6 +349,13 @@ class LangEs extends Lang {
   String get gsAutoSearch => 'Búsqueda automática en la lista de aplicaciones';
 
   @override
+  String get gsEditReset => 'Restablecer inicio tras editar';
+
+  @override
+  String get gsEditResetTip =>
+      'Restablece la pantalla de inicio/desactiva el modo de edición al salir hacia la página de configuración.';
+
+  @override
   String get gsHomeRipple => 'Animación de ondulación en inicio';
 
   @override
@@ -366,6 +373,13 @@ class LangEs extends Lang {
   @override
   String get gsNoBothHome =>
       'Nota: las páginas de inicio no tienen un sistema de \"actualizar ambos\" (';
+
+  @override
+  String get gsOpenReset => 'Restablecer tras abrir';
+
+  @override
+  String get gsOpenResetTip =>
+      'Restablece la pantalla de inicio/desactiva el modo de edición después de abrir una aplicación oculta.';
 
   @override
   String get gsPositiveOnly => 'Solo números enteros positivos';

@@ -755,6 +755,18 @@ abstract class Lang {
   /// **'Auto-search the apps list'**
   String get gsAutoSearch;
 
+  /// No description provided for @gsEditReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset home after edits'**
+  String get gsEditReset;
+
+  /// No description provided for @gsEditResetTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset the home screen/turn off editing mode after you leave for the settings page.'**
+  String get gsEditResetTip;
+
   /// No description provided for @gsHomeRipple.
   ///
   /// In en, this message translates to:
@@ -790,6 +802,18 @@ abstract class Lang {
   /// In en, this message translates to:
   /// **'Note: the home pages have no \"update both\" system ('**
   String get gsNoBothHome;
+
+  /// No description provided for @gsOpenReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset after open'**
+  String get gsOpenReset;
+
+  /// No description provided for @gsOpenResetTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset the home screen/turn off editing mode after you open a hidden app.'**
+  String get gsOpenResetTip;
 
   /// No description provided for @gsPositiveOnly.
   ///

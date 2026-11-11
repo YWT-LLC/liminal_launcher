@@ -350,6 +350,13 @@ class LangDe extends Lang {
   String get gsAutoSearch => 'Automatische Suche in der App-Liste';
 
   @override
+  String get gsEditReset => 'Startbildschirm nach Bearbeitung zurücksetzen';
+
+  @override
+  String get gsEditResetTip =>
+      'Setzt den Startbildschirm zurück/beendet den Bearbeitungsmodus, wenn du zur Einstellungsseite wechselst.';
+
+  @override
   String get gsHomeRipple => 'Startbildschirm-Wellen-Animation';
 
   @override
@@ -368,6 +375,13 @@ class LangDe extends Lang {
   @override
   String get gsNoBothHome =>
       'Hinweis: Die Startseiten haben kein „beide aktualisieren“-System (';
+
+  @override
+  String get gsOpenReset => 'Nach dem Öffnen zurücksetzen';
+
+  @override
+  String get gsOpenResetTip =>
+      'Setzt den Startbildschirm zurück/beendet den Bearbeitungsmodus, nachdem du eine versteckte App geöffnet hast.';
 
   @override
   String get gsPositiveOnly => 'Nur positive ganze Zahlen';

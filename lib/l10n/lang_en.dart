@@ -347,6 +347,13 @@ class LangEn extends Lang {
   String get gsAutoSearch => 'Auto-search the apps list';
 
   @override
+  String get gsEditReset => 'Reset home after edits';
+
+  @override
+  String get gsEditResetTip =>
+      'Reset the home screen/turn off editing mode after you leave for the settings page.';
+
+  @override
   String get gsHomeRipple => 'Home ripple animation';
 
   @override
@@ -364,6 +371,13 @@ class LangEn extends Lang {
   @override
   String get gsNoBothHome =>
       'Note: the home pages have no \"update both\" system (';
+
+  @override
+  String get gsOpenReset => 'Reset after open';
+
+  @override
+  String get gsOpenResetTip =>
+      'Reset the home screen/turn off editing mode after you open a hidden app.';
 
   @override
   String get gsPositiveOnly => 'Positive integers only';
@@ -1195,6 +1209,13 @@ class LangEnUs extends LangEn {
   String get gsAutoSearch => 'Auto-search the apps list';
 
   @override
+  String get gsEditReset => 'Reset home after edits';
+
+  @override
+  String get gsEditResetTip =>
+      'Reset the home screen/turn off editing mode after you leave for the settings page.';
+
+  @override
   String get gsHomeRipple => 'Home ripple animation';
 
   @override
@@ -1212,6 +1233,13 @@ class LangEnUs extends LangEn {
   @override
   String get gsNoBothHome =>
       'Note: the home pages have no \"update both\" system (';
+
+  @override
+  String get gsOpenReset => 'Reset after open';
+
+  @override
+  String get gsOpenResetTip =>
+      'Reset the home screen/turn off editing mode after you open a hidden app.';
 
   @override
   String get gsPositiveOnly => 'Positive integers only';

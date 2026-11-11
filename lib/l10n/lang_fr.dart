@@ -352,6 +352,13 @@ class LangFr extends Lang {
       'Recherche automatique dans la liste des applications';
 
   @override
+  String get gsEditReset => 'Réinitialiser l\'accueil après modification';
+
+  @override
+  String get gsEditResetTip =>
+      'Réinitialise l\'écran d\'accueil/désactive le mode modification lorsque vous partez vers la page des paramètres.';
+
+  @override
   String get gsHomeRipple => 'Animation d\'ondulation de l\'accueil';
 
   @override
@@ -369,6 +376,13 @@ class LangFr extends Lang {
   @override
   String get gsNoBothHome =>
       'Remarque : les pages d\'accueil n\'ont pas de système « mettre à jour les deux » (';
+
+  @override
+  String get gsOpenReset => 'Réinitialiser après ouverture';
+
+  @override
+  String get gsOpenResetTip =>
+      'Réinitialise l\'écran d\'accueil/désactive le mode modification après l\'ouverture d\'une application masquée.';
 
   @override
   String get gsPositiveOnly => 'Entiers positifs uniquement';
