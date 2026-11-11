@@ -60,14 +60,12 @@ class AppSecSettings extends StatelessWidget {
                     config.spacer,
 
                     // Reset after edit
-                    // TODO: l10n
                     EzSwitchPair(
                       config,
                       key: ValueKey<String>('fes-$editReset'),
                       value: editReset,
-                      text: 'Reset home after edits',
-                      tipper:
-                          'Reset the home screen/turn off editing mode after you leave for the settings page.',
+                      text: l10n(config).gsEditReset,
+                      tipper: l10n(config).gsEditResetTip,
                       onChanged: (bool? value) async {
                         if (value == null) return;
 
@@ -97,9 +95,8 @@ class AppSecSettings extends StatelessWidget {
                       config,
                       key: ValueKey<String>('fas-$openReset'),
                       value: openReset,
-                      text: 'Reset after open',
-                      tipper:
-                          'Reset the home screen/turn off editing mode after you open a hidden app.',
+                      text: l10n(config).gsOpenReset,
+                      tipper: l10n(config).gsEditResetTip,
                       onChanged: (bool? value) async {
                         if (value == null) return;
 
