@@ -23,7 +23,7 @@ class ClockWidget extends StatefulWidget {
   final List<String> data;
   late final String _tp;
   late final EzButtonShape _shape;
-  late final Color? _background;
+  late final EzSwitchColor? _fill;
   late final bool _showTime;
   late final TxtStile _timeStyle;
   late final Color? _timeColor;
@@ -44,8 +44,7 @@ class ClockWidget extends StatefulWidget {
     _tp = data[0]; // Not used here; tracked so local updates don't clobber it
     _shape = EBSConfig.safeLookup(data[1]);
 
-    late final int? bCV = int.tryParse(data[2]);
-    _background = bCV == null ? null : Color(bCV);
+    _fill = ezCOG(data[2]);
 
     _showTime = bool.tryParse(data[3]) ?? true;
     _timeStyle = TSConfig.lookup(data[4]) ?? TxtStile.headline;
@@ -140,7 +139,7 @@ class _ClockWidgetState extends State<ClockWidget> {
               child: EzTextBackground(
                 widget.config,
                 shape: widget._shape,
-                backgroundColor: widget._background,
+                replaceFill: widget._fill,
                 text: EzCol(
                   mainAxisAlignment: widget.pos.vAlign.mainAxis,
                   crossAxisAlignment: widget.pos.hAlign.crossAxis,
@@ -178,7 +177,7 @@ class _ClockWidgetState extends State<ClockWidget> {
                 hAlign: widget.pos.hAlign,
                 vAlign: widget.pos.vAlign,
                 shape: widget._shape,
-                background: widget._background,
+                fill: widget._fill,
                 timeStyle: widget._timeStyle,
                 timeColor: widget._timeColor,
                 showTime: widget._showTime,
@@ -205,7 +204,7 @@ class _ClockWidgetState extends State<ClockWidget> {
                 hAlign: widget.pos.hAlign,
                 vAlign: widget.pos.vAlign,
                 shape: widget._shape,
-                background: widget._background,
+                fill: widget._fill,
                 timeStyle: widget._timeStyle,
                 timeColor: widget._timeColor,
                 showTime: widget._showTime,
@@ -323,7 +322,7 @@ class AddClock extends StatelessWidget {
             hAlign: hAlign,
             vAlign: vAlign,
             shape: EzButtonShape.roundRect,
-            background: null,
+            fill: null,
             timeStyle: TxtStile.headline,
             timeColor: null,
             showTime: true,
@@ -369,7 +368,7 @@ class AddClock extends StatelessWidget {
 String defaultClockEntry() => _clockEntry(
       tp: nullTPS,
       shape: EzButtonShape.roundRect,
-      backColor: null,
+      fill: null,
       showTime: true,
       timeStyle: TxtStile.headline,
       timeColor: null,
@@ -381,7 +380,7 @@ String defaultClockEntry() => _clockEntry(
 String _clockEntry({
   required String tp,
   required EzButtonShape shape,
-  required Color? backColor,
+  required EzSwitchColor? fill,
   required bool showTime,
   required TxtStile timeStyle,
   required Color? timeColor,
@@ -392,7 +391,7 @@ String _clockEntry({
     <String>[
       tp,
       shape.value,
-      backColor == null ? esSystem : backColor.toARGB32().toString(),
+      fill == null ? esSystem : fill.toString(),
       showTime.toString(),
       timeStyle.value,
       timeColor == null ? esSystem : timeColor.toARGB32().toString(),
@@ -409,7 +408,7 @@ class _ClockConfig {
   final ListAlignment vAlign;
 
   final EzButtonShape shape;
-  final Color? background;
+  final EzSwitchColor? fill;
 
   final TxtStile timeStyle;
   final Color? timeColor;
@@ -424,7 +423,7 @@ class _ClockConfig {
     required this.hAlign,
     required this.vAlign,
     required this.shape,
-    required this.background,
+    required this.fill,
     required this.timeStyle,
     required this.timeColor,
     required this.showTime,
@@ -460,7 +459,7 @@ Future<void> _openEdits(
   int delta = 0;
 
   EzButtonShape shape = initConfig.shape;
-  Color? background = initConfig.background;
+  EzSwitchColor? fill = initConfig.fill;
 
   TxtStile timeStyle = initConfig.timeStyle;
   Color? timeColor = initConfig.timeColor;
@@ -506,9 +505,11 @@ Future<void> _openEdits(
                                     : config.bodyStyle,
                                 style: bs == shape
                                     ? ElevatedButton.styleFrom(
-                                        shape: bs.shape,
+                                        backgroundBuilder:
+                                            config.buttonLayer(fill: config.primaryFill),
+                                        backgroundColor: config.primaryFill.asColor,
                                         foregroundColor: config.onPrimary,
-                                        backgroundColor: config.colors.primary,
+                                        shape: bs.shape,
                                       )
                                     : ElevatedButton.styleFrom(shape: bs.shape),
                                 onPressed: () => setModal(() => shape = bs),
@@ -524,40 +525,34 @@ Future<void> _openEdits(
               EzElevatedIconButton(
                 config,
                 onPressed: () async {
-                  Color curr = background ??
-                      config.colors.surfaceContainer
-                          .withValues(alpha: config.textBackgroundOpacity);
-
-                  await ezColorPicker(
+                  final String? picked = await ezColorPicker(
                     config,
                     context: pContext,
-                    picking: curr,
-                    onColorChange: (Color choice) => curr = choice,
-                    onConfirm: () => setModal(() => background = curr),
-                    onCancel: doNothing,
+                    picking: (fill ?? config.surfaceContainerFill).toString(),
                   );
+
+                  if (picked != null) setModal(() => fill = ezCOG(fill));
                 },
-                onLongPress: () => setModal(() => background = null),
+                onLongPress: () => setModal(() => fill = null),
                 icon: Container(
-                  decoration: BoxDecoration(
+                  decoration: config.boxDeco(
+                    border: config.boxBorder(),
                     shape: BoxShape.circle,
-                    border: Border.all(
-                      color: config.colors.primaryContainer,
-                      width: config.borderWidth,
-                    ),
                   ),
-                  child: (background == null || background == Colors.transparent)
-                      ? CircleAvatar(
-                          backgroundColor: config.colors.surface,
+                  child: (fill == null || fill!.asColor == Colors.transparent)
+                      ? EzAvatar(
+                          config,
+                          fill: config.surfaceFill,
                           foregroundColor: config.onSurface,
                           radius: iconRadius + config.padding,
                           child: EzIcon(
                             config,
-                            (background == null) ? Icons.settings : Icons.visibility_off,
+                            (fill == null) ? Icons.settings : Icons.visibility_off,
                           ),
                         )
-                      : CircleAvatar(
-                          backgroundColor: background,
+                      : EzAvatar(
+                          config,
+                          fill: fill!,
                           radius: iconRadius + config.padding,
                         ),
                 ),
@@ -577,8 +572,11 @@ Future<void> _openEdits(
                 initialSelection: timeStyle,
                 widthEntry: TxtStile.display.value,
                 dropdownMenuEntries: TxtStile.values
-                    .map((TxtStile ts) =>
-                        DropdownMenuEntry<TxtStile>(value: ts, label: ts.name(config)))
+                    .map((TxtStile ts) => EzDropMenuEntry<TxtStile>(
+                          config,
+                          value: ts,
+                          label: ts.name(config),
+                        ))
                     .toList(),
                 menuStyle: timeStyle.style(config),
                 onSelected: (TxtStile? choice) {
@@ -593,29 +591,28 @@ Future<void> _openEdits(
                 config,
                 enabled: showTime,
                 onPressed: () async {
-                  Color curr = timeColor ?? config.onSurface;
-
-                  await ezColorPicker(
+                  final String? picked = await ezColorPicker(
                     config,
                     context: pContext,
-                    picking: curr,
-                    onColorChange: (Color choice) => curr = choice,
-                    onConfirm: () => setModal(() => timeColor = curr),
-                    onCancel: doNothing,
+                    picking: (timeColor ?? config.onSurface).toString(),
+                    allowGradient: false,
                   );
+
+                  if (picked != null) {
+                    final int? cv = int.tryParse(picked);
+                    if (cv != null) setModal(() => timeColor = Color(cv));
+                  }
                 },
                 onLongPress: () => setModal(() => timeColor = null),
                 icon: Container(
-                  decoration: BoxDecoration(
+                  decoration: config.boxDeco(
+                    border: config.boxBorder(),
                     shape: BoxShape.circle,
-                    border: Border.all(
-                      color: config.colors.primaryContainer,
-                      width: config.borderWidth,
-                    ),
                   ),
                   child: (timeColor == null || timeColor == Colors.transparent)
-                      ? CircleAvatar(
-                          backgroundColor: config.colors.surface,
+                      ? EzAvatar(
+                          config,
+                          fill: config.surfaceFill,
                           foregroundColor: config.onSurface,
                           radius: iconRadius + config.padding,
                           child: EzIcon(
@@ -623,8 +620,9 @@ Future<void> _openEdits(
                             (timeColor == null) ? Icons.settings : Icons.visibility_off,
                           ),
                         )
-                      : CircleAvatar(
-                          backgroundColor: timeColor,
+                      : EzAvatar(
+                          config,
+                          fill: EzSwitchColor(color: timeColor),
                           radius: iconRadius + config.padding,
                         ),
                 ),
@@ -655,8 +653,11 @@ Future<void> _openEdits(
                 initialSelection: dateType,
                 widthEntry: DateType.compact.value,
                 dropdownMenuEntries: DateType.values
-                    .map((DateType dt) =>
-                        DropdownMenuEntry<DateType>(value: dt, label: dt.name(config)))
+                    .map((DateType dt) => EzDropMenuEntry<DateType>(
+                          config,
+                          value: dt,
+                          label: dt.name(config),
+                        ))
                     .toList(),
                 onSelected: (DateType? choice) {
                   if (choice == null) return;
@@ -675,8 +676,11 @@ Future<void> _openEdits(
                 initialSelection: dateStyle,
                 widthEntry: TxtStile.display.value,
                 dropdownMenuEntries: TxtStile.values
-                    .map((TxtStile ts) =>
-                        DropdownMenuEntry<TxtStile>(value: ts, label: ts.name(config)))
+                    .map((TxtStile ts) => EzDropMenuEntry<TxtStile>(
+                          config,
+                          value: ts,
+                          label: ts.name(config),
+                        ))
                     .toList(),
                 menuStyle: dateStyle.style(config),
                 onSelected: (TxtStile? choice) {
@@ -691,29 +695,28 @@ Future<void> _openEdits(
                 config,
                 enabled: dateType != DateType.none,
                 onPressed: () async {
-                  Color curr = dateColor ?? config.onSurface;
-
-                  await ezColorPicker(
+                  final String? picked = await ezColorPicker(
                     config,
                     context: pContext,
-                    picking: curr,
-                    onColorChange: (Color choice) => curr = choice,
-                    onConfirm: () => setModal(() => dateColor = curr),
-                    onCancel: doNothing,
+                    picking: (dateColor ?? config.onSurface).toString(),
+                    allowGradient: false,
                   );
+
+                  if (picked != null) {
+                    final int? cv = int.tryParse(picked);
+                    if (cv != null) setModal(() => timeColor = Color(cv));
+                  }
                 },
                 onLongPress: () => setModal(() => dateColor = null),
                 icon: Container(
-                  decoration: BoxDecoration(
+                  decoration: config.boxDeco(
+                    border: config.boxBorder(),
                     shape: BoxShape.circle,
-                    border: Border.all(
-                      color: config.colors.primaryContainer,
-                      width: config.borderWidth,
-                    ),
                   ),
                   child: (dateColor == null || dateColor == Colors.transparent)
-                      ? CircleAvatar(
-                          backgroundColor: config.colors.surface,
+                      ? EzAvatar(
+                          config,
+                          fill: config.surfaceFill,
                           foregroundColor: config.onSurface,
                           radius: iconRadius + config.padding,
                           child: EzIcon(
@@ -721,8 +724,9 @@ Future<void> _openEdits(
                             (dateColor == null) ? Icons.settings : Icons.visibility_off,
                           ),
                         )
-                      : CircleAvatar(
-                          backgroundColor: dateColor,
+                      : EzAvatar(
+                          config,
+                          fill: EzSwitchColor(color: dateColor),
                           radius: iconRadius + config.padding,
                         ),
                 ),
@@ -752,7 +756,7 @@ Future<void> _openEdits(
             EzTextBackground(
               config,
               shape: shape,
-              backgroundColor: background,
+              replaceFill: fill,
               text: EzCol(
                 mainAxisAlignment: initConfig.vAlign.mainAxis,
                 crossAxisAlignment: initConfig.hAlign.crossAxis,
@@ -809,7 +813,7 @@ Future<void> _openEdits(
     _clockEntry(
       tp: initConfig.tp,
       shape: shape,
-      backColor: background,
+      fill: fill,
       showTime: showTime,
       timeStyle: timeStyle,
       timeColor: timeColor,
