@@ -750,7 +750,7 @@ Future<void> editFolder(
                           final String? picked = await ezColorPicker(
                             config,
                             context: pContext,
-                            picking: textColor.toString(),
+                            picking: textColor.toARGB32().toString(),
                             allowGradient: false,
                           );
 
@@ -836,7 +836,7 @@ Future<void> editFolder(
                           );
 
                           if (picked != null) {
-                            setModal(() => backgroundFill = ezCOG(picked) ?? iconFill);
+                            setModal(() => backgroundFill = ezCOG(picked) ?? backgroundFill);
                           }
                         },
                         onLongPress: () => setModal(() => backgroundFill = config.surfaceFill),
@@ -877,7 +877,7 @@ Future<void> editFolder(
                           );
 
                           if (picked != null) {
-                            setModal(() => outlineFill = ezCOG(picked) ?? iconFill);
+                            setModal(() => outlineFill = ezCOG(picked) ?? outlineFill);
                           }
                         },
                         onLongPress: () =>
