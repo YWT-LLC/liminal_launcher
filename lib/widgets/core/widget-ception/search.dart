@@ -696,7 +696,7 @@ Future<void> _openEdits(
                                     label: config.ezL10n.gCancel,
                                     style: TextButton.styleFrom(
                                       padding: EdgeInsets.zero,
-                                      backgroundColor: config.colors.surfaceContainer,
+                                      backgroundColor: config.surfaceContainerFill.asColor,
                                     ),
                                     onPressed: () => Navigator.of(customCon).pop(),
                                   ),
@@ -707,7 +707,7 @@ Future<void> _openEdits(
                                     label: l10n(config).gAdd,
                                     style: TextButton.styleFrom(
                                       padding: EdgeInsets.zero,
-                                      backgroundColor: config.colors.surfaceContainer,
+                                      backgroundColor: config.surfaceContainerFill.asColor,
                                     ),
                                     onPressed: () {
                                       if (nameCon.text.trim().isEmpty) {

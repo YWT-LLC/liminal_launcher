@@ -106,13 +106,10 @@ class _TimerWidgetState extends State<TimerWidget> {
           child: IgnorePointer(
             child: Container(
               padding: EdgeInsets.all(widget.config.marginVal),
-              decoration: BoxDecoration(
-                color: widget.config.colors.surfaceContainer,
-                border: Border.all(
-                  color: widget.config.colors.secondaryContainer,
-                  width: widget.config.borderWidth,
-                ),
-                borderRadius: widget.config.textRadius,
+              decoration: widget.config.boxDeco(
+                fill: widget.config.surfaceContainerFill,
+                border: widget.config.boxBorder(fill: widget.config.secondaryContainerFill),
+                borderRadius: widget.config.buttonShape.textRadius,
               ),
               child: Text(
                 controller.text,

@@ -179,7 +179,7 @@ class AddLane extends StatelessWidget {
     bool useWide = wideTiles(config);
 
     final TextStyle? focussed = config.bodyStyle;
-    final TextStyle? hidden = config.labelStyle?.copyWith(color: config.colors.outline);
+    final TextStyle? hidden = config.labelStyle?.copyWith(color: config.outline);
 
     await ezModal(
       config,
@@ -353,10 +353,10 @@ Future<void> _editLane(
                   height: appIconSize(config),
                   width: appIconSize(config),
                 ),
-                decoration: BoxDecoration(
-                  color: i == pos
-                      ? (i == lane ? config.colors.tertiary : config.colors.secondary)
-                      : config.colors.surface,
+                decoration: config.boxDeco(
+                  fill: i == pos
+                      ? (i == lane ? config.tertiaryFill : config.secondaryFill)
+                      : config.surfaceFill,
                   shape: BoxShape.circle,
                 ),
                 child: Center(
@@ -451,11 +451,12 @@ Future<void> _editLane(
                 children: <Widget>[
                   // Background
                   Container(
-                    decoration: BoxDecoration(
-                      color: config.colors.surface,
+                    decoration: config.boxDeco(
+                      fill: config.surfaceFill,
                       image: (config.backgroundImagePath == noImageValue)
                           ? null
                           : config.backgroundImage,
+                      borderRadius: BorderRadius.zero,
                     ),
                     margin: EdgeInsets.all(config.marginVal * sizeMod),
                   ),
@@ -468,8 +469,8 @@ Future<void> _editLane(
                         height: appIconSize(config),
                         width: appIconSize(config),
                       ),
-                      decoration: BoxDecoration(
-                        color: config.colors.secondary,
+                      decoration: config.boxDeco(
+                        fill: config.secondaryFill,
                         shape: BoxShape.circle,
                       ),
                       child: Center(
@@ -536,7 +537,7 @@ Future<void> _editLane(
             EzTextIconButton(
               config,
               label: l10n(config).dpsPageSettings,
-              style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
+              style: TextButton.styleFrom(backgroundColor: config.surfaceContainerFill.asColor),
               icon: EzIcon(config, Icons.launch),
               onPressed: () {
                 Navigator.of(mCon).pop();

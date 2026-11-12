@@ -152,19 +152,18 @@ class AppInfoProvider extends ChangeNotifier {
                   children: <Widget>[
                     CustomPaint(
                       size: Size(size, size),
-                      painter: EzCountdownPainter(progress, config.colors.secondaryContainer),
+                      painter: EzCountdownPainter(progress, config.secondaryContainerFill),
                     ),
                     (editNew != null)
                         ? EzIconButton(
                             config,
-                            icon: Icon(progress > 0.667 ? Icons.check : Icons.edit),
-                            tooltip: l10n(config).gEdit,
-                            style: IconButton.styleFrom(
-                              backgroundColor:
-                                  flipped ? config.colors.primary : config.colors.surface,
-                              foregroundColor:
-                                  flipped ? config.colors.surface : config.colors.primary,
+                            icon: EzIcon(
+                              config,
+                              progress > 0.667 ? Icons.check : Icons.edit,
+                              fill: flipped ? config.surfaceFill : config.primaryFill,
                             ),
+                            tooltip: l10n(config).gEdit,
+                            backgroundFill: flipped ? config.primaryFill : config.surfaceFill,
                             onPressed: () async {
                               _clearAdded();
                               ezCloseAll();

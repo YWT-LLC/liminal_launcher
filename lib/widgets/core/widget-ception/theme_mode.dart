@@ -257,8 +257,12 @@ class AddThemeMode extends StatelessWidget {
               config,
               label: config.ezL10n.ssThemeMode,
               widthEntry: config.ezL10n.ssThemeMode,
-              dropdownMenuEntries: <DropdownMenuEntry<bool>>[
-                DropdownMenuEntry<bool>(label: l10n(config).thmSelector, value: true),
+              dropdownMenuEntries: <EzDropMenuEntry<bool>>[
+                EzDropMenuEntry<bool>(
+                  config,
+                  label: l10n(config).thmSelector,
+                  value: true,
+                ),
               ],
               enabled: false,
               initialSelection: true,

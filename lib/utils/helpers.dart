@@ -120,21 +120,15 @@ Future<IconData?> chooseIcon(EzCP config, BuildContext context) {
                             .map((MapEntry<String, IconData> entry) => InkWell(
                                   onTap: () => Navigator.of(mCon).pop(entry.value),
                                   child: Container(
-                                    decoration: BoxDecoration(
-                                      border: Border(
-                                        bottom: BorderSide(
-                                          color: config.colors.primaryContainer,
-                                          width: config.borderWidth,
-                                        ),
-                                      ),
-                                    ),
+                                    decoration:
+                                        BoxDecoration(border: Border(bottom: config.borderSide())),
                                     padding: EdgeInsets.symmetric(vertical: config.spacing / 2),
                                     width: double.infinity,
                                     child: EzTextIconButton(
                                       config,
                                       style: TextButton.styleFrom(
                                         padding: EdgeInsets.zero,
-                                        backgroundColor: config.colors.surfaceContainer,
+                                        backgroundColor: config.surfaceContainerFill.asColor,
                                       ),
                                       label: entry.key,
                                       icon: EzIcon(config, entry.value),
