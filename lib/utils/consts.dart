@@ -5,6 +5,7 @@
 
 import './export.dart';
 import '../widgets/export.dart';
+import 'package:ywt_private/ywt_private.dart' as ywt;
 
 import 'package:open_ui/open_ui.dart';
 import 'package:material_ui/material_ui.dart';
@@ -552,7 +553,7 @@ final ValueNotifier<LimPos?> marked = ValueNotifier<LimPos?>(null);
 bool get editingMarked => marked.value != null;
 
 final ValueNotifier<Size> editSpacerSize =
-    ValueNotifier<Size>(const Size.square(defaultMobileSpacing));
+    ValueNotifier<Size>(const Size.square(ywt.defaultMobileSpacing));
 
 final ValueNotifier<EdgeInsets> editTilePadding =
-    ValueNotifier<EdgeInsets>(const EzInsets.wrap(defaultMobileSpacing));
+    ValueNotifier<EdgeInsets>(const EzInsets.wrap(ywt.defaultMobileSpacing));
