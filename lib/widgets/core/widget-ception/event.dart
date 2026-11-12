@@ -228,14 +228,7 @@ class _EventWidgetState extends State<EventWidget> {
       child: ExcludeSemantics(
         child: widget._isCalendar
             ? Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: widget.config.colors.primaryContainer,
-                    width: widget.config.borderWidth,
-                  ),
-                  borderRadius: widget.config.buttonShape.radius,
-                  color: widget.config.colors.surface,
-                ),
+                decoration: widget.config.boxDeco(border: widget.config.boxBorder()),
                 padding: EzInsets.wrap(widget.config.padding),
                 child: EzIcon(widget.config, Icons.edit_calendar),
               )
@@ -246,14 +239,7 @@ class _EventWidgetState extends State<EventWidget> {
                     height: appIconSize(widget.config),
                   )
                 : Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: widget.config.colors.primaryContainer,
-                        width: widget.config.borderWidth,
-                      ),
-                      borderRadius: widget.config.buttonShape.radius,
-                      color: widget.config.colors.surface,
-                    ),
+                    decoration: widget.config.boxDeco(border: widget.config.boxBorder()),
                     padding: EzInsets.wrap(widget.config.padding),
                     child: EzIcon(widget.config, Icons.add_task),
                   ),
@@ -650,9 +636,9 @@ Future<void> _openEdits(
           labelType: listLabels(config),
           labelStyle: TxtStile.body,
           textColor: config.onSurface,
-          iconColor: config.colors.primary,
-          backgroundColor: config.colors.surface,
-          outlineColor: config.colors.primaryContainer,
+          iconFill: config.primaryFill,
+          backgroundFill: config.surfaceFill,
+          outlineFill: config.primaryContainerFill,
           onPressed: () => pContext.pushNamed(
             appListScreenName,
             extra: ListConfig(
