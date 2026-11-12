@@ -452,7 +452,6 @@ Future<void> _editLane(
                   // Background
                   Container(
                     decoration: config.boxDeco(
-                      fill: config.surfaceFill,
                       image: (config.backgroundImagePath == noImageValue)
                           ? null
                           : config.backgroundImage,

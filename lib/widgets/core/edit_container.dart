@@ -70,10 +70,11 @@ class _EditContainerState extends State<EditContainer> with SingleTickerProvider
                 animation: _animation,
                 builder: (_, __) => Container(
                   decoration: widget.config.boxDeco(
-                      border: widget.config.boxBorder(
-                    fill: widget.config.secondaryFill,
-                    opacity: _animation.value,
-                  )),
+                    border: widget.config.boxBorder(
+                      fill: widget.config.secondaryFill,
+                      opacity: _animation.value,
+                    ),
+                  ),
                   child: widget.child,
                 ),
               ),
