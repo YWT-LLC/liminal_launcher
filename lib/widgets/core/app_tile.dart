@@ -6,6 +6,7 @@
 import '../../screens/export.dart';
 import '../../utils/export.dart';
 import '../export.dart';
+import 'package:ywt_private/ywt_private.dart' as ywt;
 
 import 'dart:math';
 import 'dart:async';
@@ -45,9 +46,9 @@ class AppTile extends StatefulWidget {
   late final LabelType? _labelType;
   late final TxtStile? _labelStyle;
   late final Color? _textColor;
-  late final Color? _iconColor;
-  late final Color? _backgroundColor;
-  late final Color? _outlineColor;
+  late final EzSwitchColor? _iconFill;
+  late final EzSwitchColor? _backgroundFill;
+  late final EzSwitchColor? _outlineFill;
 
   AppTile(
     this.config, {
@@ -88,14 +89,9 @@ class AppTile extends StatefulWidget {
       late final int? tCV = int.tryParse(safeData(data!, 7));
       _textColor = tCV == null ? null : Color(tCV);
 
-      late final int? iCV = int.tryParse(safeData(data!, 8));
-      _iconColor = iCV == null ? null : Color(iCV);
-
-      late final int? bCV = int.tryParse(safeData(data!, 9));
-      _backgroundColor = bCV == null ? null : Color(bCV);
-
-      late final int? oCV = int.tryParse(safeData(data!, 10));
-      _outlineColor = oCV == null ? null : Color(oCV);
+      _iconFill = ezCOG(safeData(data!, 8));
+      _backgroundFill = ezCOG(safeData(data!, 9));
+      _outlineFill = ezCOG(safeData(data!, 10));
     } else {
       _name = null;
       _icon = null;
@@ -104,9 +100,9 @@ class AppTile extends StatefulWidget {
       _labelType = null;
       _labelStyle = null;
       _textColor = null;
-      _iconColor = null;
-      _backgroundColor = null;
-      _outlineColor = null;
+      _iconFill = null;
+      _backgroundFill = null;
+      _outlineFill = null;
     }
   }
 
@@ -190,8 +186,11 @@ class _AppTileState extends State<AppTile> {
   Widget verboseSpace() => switch (state) {
         TileState.verbose => SizedBox(
             height: widget.config.iconSize,
-            child: VerticalDivider(
-                width: widget.config.spacing, color: widget.config.colors.secondary),
+            child: EzVerticalDivider(
+              widget.config,
+              width: widget.config.spacing,
+              fill: widget.config.secondaryFill,
+            ),
           ),
         _ => SizedBox(height: widget.config.iconSize, width: widget.config.spacing),
       };
@@ -219,9 +218,9 @@ class _AppTileState extends State<AppTile> {
                     labelType: listLabels(widget.config),
                     labelStyle: widget._labelStyle ?? TxtStile.body,
                     textColor: widget._textColor ?? widget.config.onSurface,
-                    iconColor: widget._iconColor ?? widget.config.colors.primary,
-                    backgroundColor: widget._backgroundColor ?? widget.config.colors.surface,
-                    outlineColor: widget._outlineColor ?? widget.config.colors.primaryContainer,
+                    iconFill: widget._iconFill ?? widget.config.primaryFill,
+                    backgroundFill: widget._backgroundFill ?? widget.config.surfaceFill,
+                    outlineFill: widget._outlineFill ?? widget.config.primaryContainerFill,
                     onPressed: () => widget.onSelected(widget.app),
                     onLongPress: () async => await canToggleMenu(widget.config, menuControl),
                   )
@@ -242,9 +241,9 @@ class _AppTileState extends State<AppTile> {
                       labelType: widget._labelType ?? listLabels(widget.config),
                       labelStyle: widget._labelStyle ?? TxtStile.body,
                       textColor: widget._textColor ?? widget.config.onSurface,
-                      iconColor: widget._iconColor ?? widget.config.colors.primary,
-                      backgroundColor: widget._backgroundColor ?? widget.config.colors.surface,
-                      outlineColor: widget._outlineColor ?? widget.config.colors.primaryContainer,
+                      iconFill: widget._iconFill ?? widget.config.primaryFill,
+                      backgroundFill: widget._backgroundFill ?? widget.config.surfaceFill,
+                      outlineFill: widget._outlineFill ?? widget.config.primaryContainerFill,
                       onPressed: () => widget.onSelected(widget.app),
                       onLongPress: () async => await canToggleMenu(widget.config, menuControl),
                     ),
@@ -270,9 +269,9 @@ class _AppTileState extends State<AppTile> {
                       labelType: widget._labelType,
                       labelStyle: widget._labelStyle,
                       textColor: widget._textColor,
-                      iconColor: widget._iconColor,
-                      backgroundColor: widget._backgroundColor,
-                      outlineColor: widget._outlineColor,
+                      iconFill: widget._iconFill,
+                      backgroundFill: widget._backgroundFill,
+                      outlineFill: widget._outlineFill,
                     )
                   : null,
             ),
@@ -299,9 +298,9 @@ class _AppTileState extends State<AppTile> {
                         labelType: listLabels(widget.config),
                         labelStyle: widget._labelStyle ?? TxtStile.body,
                         textColor: widget._textColor ?? widget.config.onSurface,
-                        iconColor: widget._iconColor ?? widget.config.colors.primary,
-                        backgroundColor: widget._backgroundColor ?? widget.config.colors.surface,
-                        outlineColor: widget._outlineColor ?? widget.config.colors.primaryContainer,
+                        iconFill: widget._iconFill ?? widget.config.primaryFill,
+                        backgroundFill: widget._backgroundFill ?? widget.config.surfaceFill,
+                        outlineFill: widget._outlineFill ?? widget.config.primaryContainerFill,
                         onPressed: () => widget.onSelected(widget.app),
                       ),
                     ListSort.publisher => EzRow(
@@ -359,9 +358,9 @@ class _AppTileState extends State<AppTile> {
                 labelType: widget._labelType,
                 labelStyle: widget._labelStyle,
                 textColor: widget._textColor,
-                iconColor: widget._iconColor,
-                backgroundColor: widget._backgroundColor,
-                outlineColor: widget._outlineColor,
+                iconFill: widget._iconFill,
+                backgroundFill: widget._backgroundFill,
+                outlineFill: widget._outlineFill,
               ),
             ),
             child: widget._icon == null
@@ -545,11 +544,12 @@ class AppButton extends StatelessWidget {
         excluding: excluding,
         child: (icon == null)
             ? (image == null)
-                ? Icon(
+                ? EzIcon(
+                    config,
                     Icons.question_mark,
                     semanticLabel: name,
                     size: iconSize ?? appIconSize(config),
-                    color: iconColor,
+                    fill: iconFill,
                   )
                 : Image.memory(
                     image!,
@@ -557,11 +557,12 @@ class AppButton extends StatelessWidget {
                     width: iconSize ?? appIconSize(config),
                     height: iconSize ?? appIconSize(config),
                   )
-            : Icon(
+            : EzIcon(
+                config,
                 icon!,
                 semanticLabel: name,
                 size: iconSize ?? appIconSize(config),
-                color: iconColor,
+                fill: iconFill,
               ),
       );
 
@@ -581,21 +582,20 @@ class AppButton extends StatelessWidget {
             onPressed: onPressed,
             onLongPress: onLongPress,
             icon: appIcon(),
-            style: IconButton.styleFrom(
-              backgroundColor: backgroundColor,
-              side: config.borderSide(color: outlineColor),
-            ),
+            backgroundFill: backgroundFill,
+            style: IconButton.styleFrom(side: config.borderSide(fill: outlineFill)),
           ),
         ButtonType.text => EzTextButton(
             config,
             text: buildLabel(name, labelType),
             textStyle: labelStyle.style(config)?.copyWith(color: textColor),
             style: TextButton.styleFrom(
+              backgroundBuilder: config.buttonLayer(fill: backgroundFill),
+              backgroundColor: backgroundFill.asColor,
               padding: config.textBackgroundOpacity < oneP
                   ? EdgeInsets.zero
                   : EdgeInsets.all(config.padding),
-              backgroundColor: backgroundColor,
-              side: config.borderSide(color: outlineColor),
+              side: config.borderSide(fill: outlineFill),
             ),
             onPressed: onPressed,
             onLongPress: onLongPress,
@@ -605,9 +605,10 @@ class AppButton extends StatelessWidget {
             text: buildLabel(name, labelType),
             textStyle: labelStyle.style(config)?.copyWith(color: textColor),
             style: TextButton.styleFrom(
+              backgroundBuilder: config.buttonLayer(fill: backgroundFill),
+              backgroundColor: backgroundFill.asColor,
               padding: EdgeInsets.all(config.padding),
-              backgroundColor: backgroundColor,
-              side: config.borderSide(color: outlineColor),
+              side: config.borderSide(fill: outlineFill),
             ),
             onPressed: onPressed,
             onLongPress: onLongPress,
@@ -618,11 +619,12 @@ class AppButton extends StatelessWidget {
             textStyle: labelStyle.style(config)?.copyWith(color: textColor),
             icon: appIcon(),
             style: TextButton.styleFrom(
+              backgroundBuilder: config.buttonLayer(fill: backgroundFill),
+              backgroundColor: backgroundFill.asColor,
               padding: config.textBackgroundOpacity < oneP
                   ? EdgeInsets.zero
                   : EdgeInsets.all(config.padding),
-              backgroundColor: backgroundColor,
-              side: config.borderSide(color: outlineColor),
+              side: config.borderSide(fill: outlineFill),
             ),
             onPressed: onPressed,
             onLongPress: onLongPress,
@@ -633,9 +635,10 @@ class AppButton extends StatelessWidget {
             textStyle: labelStyle.style(config)?.copyWith(color: textColor),
             icon: appIcon(),
             style: TextButton.styleFrom(
+              backgroundBuilder: config.buttonLayer(fill: backgroundFill),
+              backgroundColor: backgroundFill.asColor,
               padding: EdgeInsets.all(config.padding),
-              backgroundColor: backgroundColor,
-              side: config.borderSide(color: outlineColor),
+              side: config.borderSide(fill: outlineFill),
             ),
             onPressed: onPressed,
             onLongPress: onLongPress,
@@ -652,9 +655,9 @@ String defaultAppEntry(String name) => _appEntry(
       labelType: null,
       labelStyle: null,
       textColor: null,
-      iconColor: null,
-      backgroundColor: null,
-      outlineColor: null,
+      iconFill: null,
+      backgroundFill: null,
+      outlineFill: null,
     );
 
 String _appEntry({
@@ -666,9 +669,9 @@ String _appEntry({
   required LabelType? labelType,
   required TxtStile? labelStyle,
   required Color? textColor,
-  required Color? iconColor,
-  required Color? backgroundColor,
-  required Color? outlineColor,
+  required EzSwitchColor? iconFill,
+  required EzSwitchColor? backgroundFill,
+  required EzSwitchColor? outlineFill,
 }) =>
     <String>[
       tp,
@@ -679,9 +682,9 @@ String _appEntry({
       (labelType == null ? esSystem : labelType.value),
       (labelStyle == null ? esSystem : labelStyle.value),
       (textColor == null ? esSystem : textColor.toARGB32().toString()),
-      (iconColor == null ? esSystem : iconColor.toARGB32().toString()),
-      (backgroundColor == null ? esSystem : backgroundColor.toARGB32().toString()),
-      (outlineColor == null ? esSystem : outlineColor.toARGB32().toString()),
+      (iconFill == null ? esSystem : iconFill.toString()),
+      (backgroundFill == null ? esSystem : backgroundFill.toString()),
+      (outlineFill == null ? esSystem : outlineFill.toString()),
     ].join(configSplit);
 
 const int _toMB = 1048576;
@@ -698,9 +701,9 @@ class AppConfig {
   final LabelType? labelType;
   final TxtStile? labelStyle;
   final Color? textColor;
-  final Color? iconColor;
-  final Color? backgroundColor;
-  final Color? outlineColor;
+  final EzSwitchColor? iconFill;
+  final EzSwitchColor? backgroundFill;
+  final EzSwitchColor? outlineFill;
 
   AppConfig({
     required this.tp,
@@ -712,9 +715,9 @@ class AppConfig {
     required this.labelType,
     required this.labelStyle,
     required this.textColor,
-    required this.iconColor,
-    required this.backgroundColor,
-    required this.outlineColor,
+    required this.iconFill,
+    required this.backgroundFill,
+    required this.outlineFill,
   });
 }
 
@@ -727,7 +730,7 @@ Future<void> editApp(
   required int index,
 }) async {
   final ButtonStyle textButtonStyle = TextButton.styleFrom(
-    backgroundColor: config.colors.surfaceContainer,
+    backgroundColor: config.surfaceContainerFill.asColor,
     padding: EdgeInsets.zero,
   );
   final double iconRadius = config.iconSize / 2;
@@ -747,9 +750,9 @@ Future<void> editApp(
   bool elevated = elevatedBTs.contains(initConfig.buttonType ?? listBT(config));
 
   Color textColor = initConfig.textColor ?? config.onSurface;
-  Color iconColor = initConfig.iconColor ?? config.colors.primary;
-  Color backgroundColor = initConfig.backgroundColor ?? config.colors.surface;
-  Color outlineColor = initConfig.outlineColor ?? config.colors.primaryContainer;
+  EzSwitchColor iconFill = initConfig.iconFill ?? config.primaryFill;
+  EzSwitchColor backgroundFill = initConfig.backgroundFill ?? config.surfaceFill;
+  EzSwitchColor outlineFill = initConfig.outlineFill ?? config.primaryContainerFill;
 
   final bool? update = await ezFullScreenModal<bool>(
     config,
@@ -774,9 +777,9 @@ Future<void> editApp(
           labelType: labelType ?? listLabels(config),
           labelStyle: labelStyle,
           textColor: textColor,
-          iconColor: iconColor,
-          backgroundColor: backgroundColor,
-          outlineColor: outlineColor,
+          iconFill: iconFill,
+          backgroundFill: backgroundFill,
+          outlineFill: outlineFill,
           onPressed: doNothing,
           onLongPress: () => pContext.pushNamed(
             appListScreenName,
@@ -842,12 +845,12 @@ Future<void> editApp(
                 // Plus/minus
                 EzIconButton(
                   config,
-                  enabled: showIcon && (iconSize == null || iconSize! > minIconSize),
+                  enabled: showIcon && (iconSize == null || iconSize! > ywt.minIconSize),
                   icon: const Icon(Icons.remove),
                   tooltip: config.ezL10n.gDecrease,
                   onPressed: () {
                     iconSize = (iconSize == null) ? (appIconSize(config) - 1) : (iconSize! - 1);
-                    setModal(() => iconSize = max(iconSize!, minIconSize));
+                    setModal(() => iconSize = max(iconSize!, ywt.minIconSize));
                   },
                 ),
                 config.rowMargin,
@@ -887,12 +890,12 @@ Future<void> editApp(
                 config.rowMargin,
                 EzIconButton(
                   config,
-                  enabled: showIcon && (iconSize == null || iconSize! < maxIconSize),
+                  enabled: showIcon && (iconSize == null || iconSize! < ywt.maxIconSize),
                   icon: const Icon(Icons.add),
                   tooltip: config.ezL10n.gIncrease,
                   onPressed: () {
                     iconSize = (iconSize == null) ? (appIconSize(config) + 1) : (iconSize! + 1);
-                    setModal(() => iconSize = min(iconSize!, maxIconSize));
+                    setModal(() => iconSize = min(iconSize!, ywt.maxIconSize));
                   },
                 ),
               ],
@@ -904,10 +907,17 @@ Future<void> editApp(
               config,
               label: l10n(config).dbsLabelType,
               widthEntry: l10n(config).dbsInitials,
-              dropdownMenuEntries: <DropdownMenuEntry<LabelType?>>[
-                DropdownMenuEntry<LabelType?>(value: null, label: l10n(config).gDefault),
-                ...LabelType.values.map((LabelType lt) =>
-                    DropdownMenuEntry<LabelType?>(value: lt, label: lt.name(config))),
+              dropdownMenuEntries: <EzDropMenuEntry<LabelType?>>[
+                EzDropMenuEntry<LabelType?>(
+                  config,
+                  value: null,
+                  label: l10n(config).gDefault,
+                ),
+                ...LabelType.values.map((LabelType lt) => EzDropMenuEntry<LabelType?>(
+                      config,
+                      value: lt,
+                      label: lt.name(config),
+                    )),
               ],
               enableSearch: false,
               initialSelection: labelType,
@@ -929,8 +939,11 @@ Future<void> editApp(
               initialSelection: labelStyle,
               widthEntry: TxtStile.display.value,
               dropdownMenuEntries: TxtStile.values
-                  .map((TxtStile ts) =>
-                      DropdownMenuEntry<TxtStile>(value: ts, label: ts.name(config)))
+                  .map((TxtStile ts) => EzDropMenuEntry<TxtStile>(
+                        config,
+                        value: ts,
+                        label: ts.name(config),
+                      ))
                   .toList(),
               menuStyle: labelStyle.style(config),
               onSelected: (TxtStile? choice) {
@@ -978,35 +991,35 @@ Future<void> editApp(
                 child: EzElevatedIconButton(
                   config,
                   onPressed: () async {
-                    Color curr = textColor;
-
-                    await ezColorPicker(
+                    final String? picked = await ezColorPicker(
                       config,
                       context: pContext,
-                      picking: curr,
-                      onColorChange: (Color choice) => curr = choice,
-                      onConfirm: () => setModal(() => textColor = curr),
-                      onCancel: doNothing,
+                      picking: textColor.toARGB32().toString(),
+                      allowGradient: false,
                     );
+
+                    if (picked != null) {
+                      final int? cv = int.tryParse(picked);
+                      if (cv != null) setModal(() => textColor = Color(cv));
+                    }
                   },
                   onLongPress: () => setModal(() => textColor = config.onSurface),
                   icon: Container(
-                    decoration: BoxDecoration(
+                    decoration: config.boxDeco(
                       shape: BoxShape.circle,
-                      border: Border.all(
-                        color: config.colors.primaryContainer,
-                        width: config.borderWidth,
-                      ),
+                      border: config.boxBorder(),
                     ),
                     child: textColor == Colors.transparent
-                        ? CircleAvatar(
-                            backgroundColor: config.colors.surface,
+                        ? EzAvatar(
+                            config,
+                            fill: config.surfaceFill,
                             foregroundColor: config.onSurface,
                             radius: iconRadius + config.padding,
                             child: EzIcon(config, Icons.visibility_off),
                           )
-                        : CircleAvatar(
-                            backgroundColor: textColor,
+                        : EzAvatar(
+                            config,
+                            fill: EzSwitchColor(color: textColor),
                             radius: iconRadius + config.padding,
                           ),
                   ),
@@ -1021,34 +1034,31 @@ Future<void> editApp(
                 child: EzElevatedIconButton(
                   config,
                   onPressed: () async {
-                    Color curr = iconColor;
-
-                    await ezColorPicker(
+                    final String? picked = await ezColorPicker(
                       config,
                       context: pContext,
-                      picking: curr,
-                      onColorChange: (Color choice) => curr = choice,
-                      onConfirm: () => setModal(() => iconColor = curr),
+                      picking: iconFill.toString(),
                     );
+
+                    if (picked != null) setModal(() => iconFill = ezCOG(picked) ?? iconFill);
                   },
-                  onLongPress: () => setModal(() => iconColor = config.colors.primary),
+                  onLongPress: () => setModal(() => iconFill = config.primaryFill),
                   icon: Container(
-                    decoration: BoxDecoration(
+                    decoration: config.boxDeco(
+                      border: config.boxBorder(),
                       shape: BoxShape.circle,
-                      border: Border.all(
-                        color: config.colors.primaryContainer,
-                        width: config.borderWidth,
-                      ),
                     ),
-                    child: iconColor == Colors.transparent
-                        ? CircleAvatar(
-                            backgroundColor: config.colors.surface,
+                    child: iconFill.asColor == Colors.transparent
+                        ? EzAvatar(
+                            config,
+                            fill: config.surfaceFill,
                             foregroundColor: config.onSurface,
                             radius: iconRadius + config.padding,
                             child: EzIcon(config, Icons.visibility_off),
                           )
-                        : CircleAvatar(
-                            backgroundColor: iconColor,
+                        : EzAvatar(
+                            config,
+                            fill: iconFill,
                             radius: iconRadius + config.padding,
                           ),
                   ),
@@ -1063,35 +1073,33 @@ Future<void> editApp(
                 child: EzElevatedIconButton(
                   config,
                   onPressed: () async {
-                    Color curr = backgroundColor;
-
-                    await ezColorPicker(
+                    final String? picked = await ezColorPicker(
                       config,
                       context: pContext,
-                      picking: curr,
-                      onColorChange: (Color choice) => curr = choice,
-                      onConfirm: () => setModal(() => backgroundColor = curr),
-                      onCancel: doNothing,
+                      picking: backgroundFill.toString(),
                     );
+
+                    if (picked != null) {
+                      setModal(() => backgroundFill = ezCOG(picked) ?? backgroundFill);
+                    }
                   },
-                  onLongPress: () => setModal(() => backgroundColor = config.colors.surface),
+                  onLongPress: () => setModal(() => backgroundFill = config.surfaceFill),
                   icon: Container(
-                    decoration: BoxDecoration(
+                    decoration: config.boxDeco(
+                      border: config.boxBorder(),
                       shape: BoxShape.circle,
-                      border: Border.all(
-                        color: config.colors.primaryContainer,
-                        width: config.borderWidth,
-                      ),
                     ),
-                    child: backgroundColor == Colors.transparent
-                        ? CircleAvatar(
-                            backgroundColor: config.colors.surface,
+                    child: backgroundFill.asColor == Colors.transparent
+                        ? EzAvatar(
+                            config,
+                            fill: config.surfaceFill,
                             foregroundColor: config.onSurface,
                             radius: iconRadius + config.padding,
                             child: EzIcon(config, Icons.visibility_off),
                           )
-                        : CircleAvatar(
-                            backgroundColor: backgroundColor,
+                        : EzAvatar(
+                            config,
+                            fill: backgroundFill,
                             radius: iconRadius + config.padding,
                           ),
                   ),
@@ -1106,35 +1114,33 @@ Future<void> editApp(
                 child: EzElevatedIconButton(
                   config,
                   onPressed: () async {
-                    Color curr = outlineColor;
-
-                    await ezColorPicker(
+                    final String? picked = await ezColorPicker(
                       config,
                       context: pContext,
-                      picking: curr,
-                      onColorChange: (Color choice) => curr = choice,
-                      onConfirm: () => setModal(() => outlineColor = curr),
-                      onCancel: doNothing,
+                      picking: outlineFill.toString(),
                     );
+
+                    if (picked != null) {
+                      setModal(() => outlineFill = ezCOG(picked) ?? outlineFill);
+                    }
                   },
-                  onLongPress: () => setModal(() => outlineColor = config.colors.primaryContainer),
+                  onLongPress: () => setModal(() => outlineFill = config.primaryContainerFill),
                   icon: Container(
-                    decoration: BoxDecoration(
+                    decoration: config.boxDeco(
+                      border: config.boxBorder(),
                       shape: BoxShape.circle,
-                      border: Border.all(
-                        color: config.colors.primaryContainer,
-                        width: config.borderWidth,
-                      ),
                     ),
-                    child: outlineColor == Colors.transparent
-                        ? CircleAvatar(
-                            backgroundColor: config.colors.surface,
+                    child: outlineFill.asColor == Colors.transparent
+                        ? EzAvatar(
+                            config,
+                            fill: config.surfaceFill,
                             foregroundColor: config.onSurface,
                             radius: iconRadius + config.padding,
                             child: EzIcon(config, Icons.visibility_off),
                           )
-                        : CircleAvatar(
-                            backgroundColor: outlineColor,
+                        : EzAvatar(
+                            config,
+                            fill: outlineFill,
                             radius: iconRadius + config.padding,
                           ),
                   ),
@@ -1176,7 +1182,7 @@ Future<void> editApp(
           EzTextIconButton(
             config,
             label: config.ezL10n.gCancel,
-            style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
+            style: TextButton.styleFrom(backgroundColor: config.surfaceContainerFill.asColor),
             icon: EzIcon(config, Icons.cancel),
             onPressed: () => Navigator.of(mCon).pop(),
           ),
@@ -1184,7 +1190,7 @@ Future<void> editApp(
           EzTextIconButton(
             config,
             label: l10n(config).mcSave,
-            style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
+            style: TextButton.styleFrom(backgroundColor: config.surfaceContainerFill.asColor),
             icon: EzIcon(config, Icons.done),
             onPressed: () => Navigator.of(mCon).pop(true),
           ),
@@ -1212,9 +1218,9 @@ Future<void> editApp(
             labelType: labelType,
             labelStyle: labelStyle,
             textColor: textColor,
-            iconColor: iconColor,
-            backgroundColor: backgroundColor,
-            outlineColor: outlineColor,
+            iconFill: iconFill,
+            backgroundFill: backgroundFill,
+            outlineFill: outlineFill,
           ));
       return;
 
@@ -1233,9 +1239,9 @@ Future<void> editApp(
           labelType: null,
           labelStyle: null,
           textColor: null,
-          iconColor: null,
-          backgroundColor: null,
-          outlineColor: null,
+          iconFill: null,
+          backgroundFill: null,
+          outlineFill: null,
         ),
       );
       return;
