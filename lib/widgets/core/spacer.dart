@@ -98,13 +98,10 @@ class _LimSpacerState extends State<LimSpacer> {
         ? ValueListenableBuilder<Size>(
             valueListenable: editSpacerSize,
             builder: (_, Size size, __) => Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: widget.config.colors.secondary,
-                  width: widget.config.borderWidth,
-                ),
-                borderRadius: EzButtonShape.roundRect.radius,
-                color: widget.config.colors.secondary.withValues(alpha: focusOpacity),
+              decoration: widget.config.boxDeco(
+                border: widget.config.boxBorder(fill: widget.config.secondaryFill),
+                fill: widget.config.secondaryFill,
+                opacity: focusOpacity,
               ),
               height: size.height,
               width: size.width,
@@ -131,14 +128,12 @@ class _LimSpacerState extends State<LimSpacer> {
                               behavior: HitTestBehavior.opaque,
                               onTap: () => setState(() => marked.value = widget.pos),
                               child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: widget.config.colors.tertiaryContainer,
-                                    width: widget.config.borderWidth,
-                                  ),
+                                decoration: widget.config.boxDeco(
+                                  border: widget.config
+                                      .boxBorder(fill: widget.config.tertiaryContainerFill),
                                   borderRadius: EzButtonShape.roundRect.radius,
-                                  color:
-                                      widget.config.colors.tertiary.withValues(alpha: focusOpacity),
+                                  fill: widget.config.tertiaryFill,
+                                  opacity: focusOpacity,
                                 ),
                                 height: widget._height,
                                 width: widget._width,

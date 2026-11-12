@@ -58,27 +58,33 @@ class _EditContainerState extends State<EditContainer> with SingleTickerProvider
         child: EzRow(
           widget.config,
           children: <Widget>[
-            EzIcon(widget.config, Icons.drag_handle, color: widget.config.colors.outline),
+            EzIcon(
+              widget.config,
+              Icons.drag_handle,
+              fill: widget.config.outlineFiller,
+            ),
             widget.config.rowMargin,
             MenuAnchor(
               controller: widget.menuControl,
               builder: (_, __, ___) => AnimatedBuilder(
                 animation: _animation,
                 builder: (_, __) => Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: widget.config.colors.secondary.withValues(alpha: _animation.value),
-                      width: widget.config.borderWidth,
-                    ),
-                    borderRadius: widget.config.buttonShape.radius,
-                  ),
+                  decoration: widget.config.boxDeco(
+                      border: widget.config.boxBorder(
+                    fill: widget.config.secondaryFill,
+                    opacity: _animation.value,
+                  )),
                   child: widget.child,
                 ),
               ),
               menuChildren: widget.menuChildren,
             ),
             widget.config.rowMargin,
-            EzIcon(widget.config, Icons.drag_handle, color: widget.config.colors.outline),
+            EzIcon(
+              widget.config,
+              Icons.drag_handle,
+              fill: widget.config.outlineFiller,
+            ),
           ],
         ),
       );
