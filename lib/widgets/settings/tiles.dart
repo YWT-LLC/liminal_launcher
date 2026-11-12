@@ -53,9 +53,9 @@ class AppTileSetting extends StatelessWidget {
                   labelType: labelType,
                   labelStyle: TxtStile.body,
                   textColor: config.onSurface,
-                  iconColor: config.colors.primary,
-                  backgroundColor: config.colors.surface,
-                  outlineColor: config.colors.primaryContainer,
+                  iconFill: config.primaryFill,
+                  backgroundFill: config.surfaceFill,
+                  outlineFill: config.primaryContainerFill,
                   onPressed: doNothing,
                   onLongPress: doNothing,
                 )
@@ -69,9 +69,9 @@ class AppTileSetting extends StatelessWidget {
                   labelType: labelType,
                   labelStyle: TxtStile.body,
                   textColor: config.onSurface,
-                  iconColor: config.colors.primary,
-                  backgroundColor: config.colors.surface,
-                  outlineColor: config.colors.primaryContainer,
+                  iconFill: config.primaryFill,
+                  backgroundFill: config.surfaceFill,
+                  outlineFill: config.primaryContainerFill,
                   onPressed: doNothing,
                   onLongPress: doNothing,
                 );
@@ -107,8 +107,11 @@ class AppTileSetting extends StatelessWidget {
                     label: l10n(config).dbsLabelType,
                     widthEntry: l10n(config).dbsInitials,
                     dropdownMenuEntries: LabelType.values
-                        .map((LabelType lt) =>
-                            DropdownMenuEntry<LabelType>(value: lt, label: lt.name(config)))
+                        .map((LabelType lt) => EzDropMenuEntry<LabelType>(
+                              config,
+                              value: lt,
+                              label: lt.name(config),
+                            ))
                         .toList(),
                     enableSearch: false,
                     initialSelection: labelType,
