@@ -130,13 +130,16 @@ class AppInfoProvider extends ChangeNotifier {
   OverlayEntry? _addedEntry;
   final ValueNotifier<bool> _flipped = ValueNotifier<bool>(false);
 
-  Future<void> _added(EzCP config, {required Future<void> Function()? editNew}) async {
+  Future<void> _added(
+    EzCP config, {
+    required Future<void> Function()? editNew,
+  }) async {
     if (_addedTimer?.isActive ?? false) _clearAdded(setFlipped: !_flipped.value);
 
     final double size = appIconSize(config) + config.marginVal;
     _addedEntry = OverlayEntry(
       builder: (BuildContext context) => Positioned(
-        top: safeTop(context),
+        top: safeTop(context), // Can't use Ez, no local context
         left: 0,
         right: 0,
         child: Material(
