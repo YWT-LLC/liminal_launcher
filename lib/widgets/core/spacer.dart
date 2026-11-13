@@ -131,7 +131,7 @@ class _LimSpacerState extends State<LimSpacer> {
                                 decoration: widget.config.boxDeco(
                                   border: widget.config
                                       .boxBorder(fill: widget.config.tertiaryContainerFill),
-                                  borderRadius: EzButtonShape.roundRect.radius,
+                                  borderRadius: widget.config.buttonShape.textRadius,
                                   fill: widget.config.tertiaryFill,
                                   opacity: focusOpacity,
                                 ),

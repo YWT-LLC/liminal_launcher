@@ -537,7 +537,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       padding: padding,
                       decoration: config.boxDeco(
                         border: config.boxBorder(fill: config.secondaryContainerFill),
-                        borderRadius: EzButtonShape.roundRect.radius,
+                        borderRadius: config.buttonShape.textRadius,
                         fill: config.secondaryFill,
                         opacity: focusOpacity,
                       ),
@@ -589,7 +589,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       padding: padding,
                       decoration: config.boxDeco(
                         border: config.boxBorder(fill: config.secondaryContainerFill),
-                        borderRadius: EzButtonShape.roundRect.radius,
+                        borderRadius: config.buttonShape.textRadius,
                         fill: config.secondaryFill,
                         opacity: focusOpacity,
                       ),
@@ -639,7 +639,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                         padding: padding,
                         decoration: config.boxDeco(
                           border: config.boxBorder(fill: config.secondaryContainerFill),
-                          borderRadius: EzButtonShape.roundRect.radius,
+                          borderRadius: config.buttonShape.textRadius,
                           fill: config.secondaryFill,
                           opacity: focusOpacity,
                         ),
