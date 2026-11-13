@@ -54,9 +54,8 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
               children: <Widget>[
                 // Background
                 Container(
-                  decoration: BoxDecoration(
-                    color: widget.config.surfaceFill.color,
-                    gradient: widget.config.surfaceFill.gradient,
+                  decoration: widget.config.boxDeco(
+                    borderRadius: BorderRadius.zero,
                     image: (widget.config.backgroundImagePath == noImageValue)
                         ? null
                         : widget.config.backgroundImage,
