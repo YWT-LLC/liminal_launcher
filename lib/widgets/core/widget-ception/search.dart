@@ -228,7 +228,7 @@ class _SearchWidgetState extends State<SearchWidget> {
               child: (widget._size == WWGGSize.button)
                   ? EzIconButton(
                       widget.config,
-                      icon: Icon(widget._engine.icon),
+                      icon: EzIcon(widget.config, widget._engine.icon),
                       tooltip: l10n(widget.config).gSearch,
                       onPressed: () => launchUrl(Uri.https(widget._engine.base, '/')),
                       onLongPress: () async => await canToggleMenu(widget.config, menuControl),
@@ -256,7 +256,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                         widget.config.rowMargin,
                         EzIconButton(
                           widget.config,
-                          icon: Icon(widget._engine.icon),
+                          icon: EzIcon(widget.config, widget._engine.icon),
                           tooltip: l10n(widget.config).gSearch,
                           onPressed: () => search(queryCon.text),
                           onLongPress: () async => await canToggleMenu(widget.config, menuControl),
@@ -303,7 +303,7 @@ class _SearchWidgetState extends State<SearchWidget> {
             ),
             child: EzIconButton(
               widget.config,
-              icon: const Icon(Icons.search),
+              icon: EzIcon(widget.config, Icons.search),
               tooltip: l10n(widget.config).gSearch,
               onPressed: () => toggleMenu(menuControl),
             ),
@@ -424,7 +424,7 @@ class AddSearch extends StatelessWidget {
       ? EzIconButton(
           config,
           onPressed: onTap,
-          icon: const Icon(Icons.search),
+          icon: EzIcon(config, Icons.search),
           tooltip: l10n(config).gAdd,
         )
       : GestureDetector(
@@ -454,7 +454,7 @@ class AddSearch extends StatelessWidget {
                 config.rowMargin,
                 EzIconButton(
                   config,
-                  icon: const Icon(Icons.search),
+                  icon: EzIcon(config, Icons.search),
                   onPressed: onTap,
                   tooltip: l10n(config).gAdd,
                 ),
@@ -630,7 +630,7 @@ Future<void> _openEdits(
                                   config.rowMargin,
                                   EzIconButton(
                                     config,
-                                    icon: Icon(icon),
+                                    icon: EzIcon(config, icon),
                                     tooltip: l10n(config).gPreview,
                                     onPressed: () async {
                                       final IconData? choice = await chooseIcon(config, pContext);

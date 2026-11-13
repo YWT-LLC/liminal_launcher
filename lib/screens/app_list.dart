@@ -127,7 +127,7 @@ class _AppListScreenState extends State<AppListScreen> {
                     MenuAnchor(
                       builder: (_, MenuController controller, __) => EzIconButton(
                         config,
-                        icon: const Icon(Icons.sort),
+                        icon: EzIcon(config, Icons.sort),
                         tooltip: l10n(config).aplSort(listSort.name(config)),
                         onPressed: () => toggleMenu(controller),
                       ),
@@ -150,7 +150,7 @@ class _AppListScreenState extends State<AppListScreen> {
                     // Order
                     EzIconButton(
                       config,
-                      icon: Icon(ascList ? Icons.arrow_upward : Icons.arrow_downward),
+                      icon: EzIcon(config, ascList ? Icons.arrow_upward : Icons.arrow_downward),
                       tooltip: ascList ? l10n(config).aplAsc : l10n(config).aplDsc,
                       onPressed: () async {
                         await EzCM.setBool(ascListKey, !ascList);
@@ -196,7 +196,7 @@ class _AppListScreenState extends State<AppListScreen> {
                     // Search
                     EzIconButton(
                       config,
-                      icon: const Icon(Icons.search),
+                      icon: EzIcon(config, Icons.search),
                       tooltip: l10n(config).gSearch,
                       onPressed: () {
                         if (searching) {

@@ -248,7 +248,7 @@ class _AppFolderState extends State<FolderTile> {
               ),
               child: EzIconButton(
                 widget.config,
-                icon: Icon(widget._icon),
+                icon: EzIcon(widget.config, widget._icon),
                 tooltip: widget.name,
                 onPressed: () => toggleMenu(menuControl),
               ),
@@ -624,7 +624,7 @@ Future<void> editFolder(
                       EzIconButton(
                         config,
                         enabled: showIcon && (iconSize > ywt.minIconSize),
-                        icon: const Icon(Icons.remove),
+                        icon: EzIcon(config, Icons.remove),
                         tooltip: config.ezL10n.gDecrease,
                         onPressed: () {
                           iconSize -= 1;
@@ -635,7 +635,7 @@ Future<void> editFolder(
                       EzIconButton(
                         config,
                         enabled: showIcon,
-                        icon: Icon(icon, size: iconSize),
+                        icon: EzIcon(config, icon, size: iconSize),
                         tooltip: l10n(config).gPreview,
                         onPressed: () async {
                           final IconData? choice = await chooseIcon(config, pContext);
@@ -647,7 +647,7 @@ Future<void> editFolder(
                       EzIconButton(
                         config,
                         enabled: showIcon && (iconSize < ywt.maxIconSize),
-                        icon: const Icon(Icons.add),
+                        icon: EzIcon(config, Icons.add),
                         tooltip: config.ezL10n.gIncrease,
                         onPressed: () {
                           iconSize += 1;
@@ -1039,7 +1039,7 @@ Future<void> editFolder(
                                             config.rowSpacer,
                                             EzIconButton(
                                               config,
-                                              icon: const Icon(Icons.remove),
+                                              icon: EzIcon(config, Icons.remove),
                                               tooltip: config.ezL10n.gRemove,
                                               onPressed: () => appsNotif.value =
                                                   List<String>.from(apps)..remove(id),

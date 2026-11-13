@@ -496,7 +496,7 @@ class AddEvent extends StatelessWidget {
       ? EzIconButton(
           config,
           onPressed: onTap,
-          icon: const Icon(Icons.edit_calendar),
+          icon: EzIcon(config, Icons.edit_calendar),
           tooltip: l10n(config).gAdd,
         )
       : GestureDetector(
@@ -526,7 +526,7 @@ class AddEvent extends StatelessWidget {
                 config.rowMargin,
                 EzIconButton(
                   config,
-                  icon: const Icon(Icons.edit_calendar),
+                  icon: EzIcon(config, Icons.edit_calendar),
                   onPressed: onTap,
                   tooltip: l10n(config).gAdd,
                 ),

@@ -74,7 +74,7 @@ class LaneHeader extends StatelessWidget {
                 EzIconButton(
                   config,
                   onPressed: () => _delete(context),
-                  icon: const Icon(Icons.delete),
+                  icon: EzIcon(config, Icons.delete),
                   tooltip: numLanes > 1 ? config.ezL10n.gRemove : l10n(config).gClear,
                 ),
                 config.rowSpacer,
@@ -83,7 +83,7 @@ class LaneHeader extends StatelessWidget {
                 EzIconButton(
                   config,
                   onPressed: _dupe,
-                  icon: const Icon(Icons.copy),
+                  icon: EzIcon(config, Icons.copy),
                   tooltip: l10n(config).gDupe,
                 ),
                 config.rowSpacer,
@@ -100,7 +100,7 @@ class LaneHeader extends StatelessWidget {
                     hAlign: pos.hAlign,
                     vAlign: pos.vAlign,
                   ),
-                  icon: const Icon(Icons.edit),
+                  icon: EzIcon(config, Icons.edit),
                   tooltip: l10n(config).gEdit,
                 ),
                 config.rowSpacer,
@@ -109,7 +109,7 @@ class LaneHeader extends StatelessWidget {
                 EzIconButton(
                   config,
                   onPressed: () => addModal(config, appInfo, pos.lane, pos.hAlign, pos.vAlign),
-                  icon: const Icon(Icons.add),
+                  icon: EzIcon(config, Icons.add),
                   tooltip: l10n(config).gAdd,
                 ),
               ],
@@ -126,7 +126,7 @@ class LaneHeader extends StatelessWidget {
                 EzIconButton(
                   config,
                   onPressed: () => toggleMenu(controller),
-                  icon: const Icon(Icons.more_vert),
+                  icon: EzIcon(config, Icons.more_vert),
                   tooltip: config.ezL10n.gOptions,
                 ),
               ],
@@ -401,7 +401,7 @@ Future<void> _editLane(
                     child: EzIconButton(
                       config,
                       enabled: pos > 0,
-                      icon: const Icon(Icons.keyboard_arrow_left),
+                      icon: EzIcon(config, Icons.keyboard_arrow_left),
                       tooltip: l10n(config).mcMoveLeft,
                       onPressed: () => setModal(() => pos -= 1),
                     ),
@@ -423,7 +423,7 @@ Future<void> _editLane(
                     child: EzIconButton(
                       config,
                       enabled: pos < (numLanes - 1),
-                      icon: const Icon(Icons.keyboard_arrow_right),
+                      icon: EzIcon(config, Icons.keyboard_arrow_right),
                       tooltip: l10n(config).mcMoveRight,
                       onPressed: () => setModal(() => pos += 1),
                     ),

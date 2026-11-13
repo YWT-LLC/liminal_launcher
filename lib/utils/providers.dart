@@ -172,7 +172,7 @@ class AppInfoProvider extends ChangeNotifier {
                           )
                         : EzIconButton(
                             config,
-                            icon: const Icon(Icons.check),
+                            icon: EzIcon(config, Icons.check),
                             tooltip: l10n(config).gAdded,
                             onPressed: _clearAdded,
                           ),

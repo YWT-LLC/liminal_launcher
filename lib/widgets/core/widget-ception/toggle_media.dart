@@ -112,7 +112,7 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
                 widget.config,
                 tooltip: l10n(widget.config).togTitle,
                 icon: (widget._size == WWGGSize.button)
-                    ? const Icon(Icons.headphones)
+                    ? EzIcon(widget.config, Icons.headphones)
                     : EzRow(
                         widget.config,
                         reverseHands: false,
@@ -123,7 +123,8 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
                           if (widget._bigSkips) ...<Widget>[
                             GestureDetector(
                               onTap: skipPrev,
-                              child: Icon(
+                              child: EzIcon(
+                                widget.config,
                                 Icons.skip_previous,
                                 semanticLabel: l10n(widget.config).togPrevious,
                               ),
@@ -134,7 +135,8 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
                           if (widget._lilSkips) ...<Widget>[
                             GestureDetector(
                               onTap: rewind,
-                              child: Icon(
+                              child: EzIcon(
+                                widget.config,
                                 Icons.fast_rewind,
                                 semanticLabel: l10n(widget.config).togRewind,
                               ),
@@ -145,7 +147,8 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
                           // Play/pause
                           GestureDetector(
                             onTap: toggleMedia,
-                            child: Icon(
+                            child: EzIcon(
+                              widget.config,
                               Icons.headphones,
                               semanticLabel: l10n(widget.config).togPlayPause,
                             ),
@@ -156,7 +159,8 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
                             widget.config.rowSpacer,
                             GestureDetector(
                               onTap: fastForward,
-                              child: Icon(
+                              child: EzIcon(
+                                widget.config,
                                 Icons.fast_forward,
                                 semanticLabel: l10n(widget.config).togFF,
                               ),
@@ -167,7 +171,8 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
                             widget.config.rowSpacer,
                             GestureDetector(
                               onTap: skipNext,
-                              child: Icon(
+                              child: EzIcon(
+                                widget.config,
                                 Icons.skip_next,
                                 semanticLabel: l10n(widget.config).togNext,
                               ),
@@ -217,7 +222,7 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
             ),
             child: EzIconButton(
               widget.config,
-              icon: const Icon(Icons.headphones),
+              icon: EzIcon(widget.config, Icons.headphones),
               tooltip: l10n(widget.config).togTitle,
               onPressed: () => toggleMenu(menuControl),
             ),
@@ -333,18 +338,18 @@ class AddToggleMedia extends StatelessWidget {
         config,
         onPressed: onTap,
         icon: (size == WWGGSize.button)
-            ? const Icon(Icons.headphones)
+            ? EzIcon(config, Icons.headphones)
             : MergeSemantics(
                 child: EzRow(
                   config,
                   reverseHands: false,
                   children: <Widget>[
                     config.rowMargin,
-                    const Icon(Icons.skip_previous),
+                    EzIcon(config, Icons.skip_previous),
                     config.rowSpacer,
-                    const Icon(Icons.headphones),
+                    EzIcon(config, Icons.headphones),
                     config.rowSpacer,
-                    const Icon(Icons.skip_next),
+                    EzIcon(config, Icons.skip_next),
                     config.rowMargin,
                   ],
                 ),
@@ -431,7 +436,7 @@ Future<void> _openEdits(
           config,
           tooltip: l10n(config).gPreview,
           icon: (size == WWGGSize.button)
-              ? const Icon(Icons.headphones)
+              ? EzIcon(config, Icons.headphones)
               : EzRow(
                   config,
                   reverseHands: false,
@@ -439,17 +444,29 @@ Future<void> _openEdits(
                     config.rowMargin,
 
                     // Backwards
-                    if (bigSkips) ...<Widget>[const Icon(Icons.skip_previous), config.rowSpacer],
+                    if (bigSkips) ...<Widget>[
+                      EzIcon(config, Icons.skip_previous),
+                      config.rowSpacer,
+                    ],
 
-                    if (lilSkips) ...<Widget>[const Icon(Icons.fast_rewind), config.rowSpacer],
+                    if (lilSkips) ...<Widget>[
+                      EzIcon(config, Icons.fast_rewind),
+                      config.rowSpacer,
+                    ],
 
                     // Play/pause
-                    const Icon(Icons.headphones),
+                    EzIcon(config, Icons.headphones),
 
                     // Forwards
-                    if (lilSkips) ...<Widget>[config.rowSpacer, const Icon(Icons.fast_forward)],
+                    if (lilSkips) ...<Widget>[
+                      config.rowSpacer,
+                      EzIcon(config, Icons.fast_forward),
+                    ],
 
-                    if (bigSkips) ...<Widget>[config.rowSpacer, const Icon(Icons.skip_next)],
+                    if (bigSkips) ...<Widget>[
+                      config.rowSpacer,
+                      EzIcon(config, Icons.skip_next),
+                    ],
                     config.rowMargin,
                   ],
                 ),

@@ -375,7 +375,7 @@ class _AppTileState extends State<AppTile> {
                   )
                 : EzIconButton(
                     widget.config,
-                    icon: Icon(widget._icon),
+                    icon: EzIcon(widget.config, widget._icon),
                     tooltip: widget._name ?? widget.app.label,
                     onPressed: () => toggleMenu(menuControl),
                   ),
@@ -846,7 +846,7 @@ Future<void> editApp(
                 EzIconButton(
                   config,
                   enabled: showIcon && (iconSize == null || iconSize! > ywt.minIconSize),
-                  icon: const Icon(Icons.remove),
+                  icon: EzIcon(config, Icons.remove),
                   tooltip: config.ezL10n.gDecrease,
                   onPressed: () {
                     iconSize = (iconSize == null) ? (appIconSize(config) - 1) : (iconSize! - 1);
@@ -872,7 +872,11 @@ Future<void> editApp(
                       )
                     : EzIconButton(
                         config,
-                        icon: Icon(icon ?? Icons.settings, size: iconSize ?? appIconSize(config)),
+                        icon: EzIcon(
+                          config,
+                          icon ?? Icons.settings,
+                          size: iconSize ?? appIconSize(config),
+                        ),
                         tooltip: l10n(config).gPreview,
                         onPressed: showIcon
                             ? () async {
@@ -891,7 +895,7 @@ Future<void> editApp(
                 EzIconButton(
                   config,
                   enabled: showIcon && (iconSize == null || iconSize! < ywt.maxIconSize),
-                  icon: const Icon(Icons.add),
+                  icon: EzIcon(config, Icons.add),
                   tooltip: config.ezL10n.gIncrease,
                   onPressed: () {
                     iconSize = (iconSize == null) ? (appIconSize(config) + 1) : (iconSize! + 1);

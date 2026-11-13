@@ -100,7 +100,7 @@ Future<IconData?> chooseIcon(EzCP config, BuildContext context) {
                                   config,
                                   child: EzIconButton(
                                     config,
-                                    icon: Icon(entry.value),
+                                    icon: EzIcon(config, entry.value),
                                     tooltip: entry.key,
                                     onPressed: () => Navigator.of(mCon).pop(entry.value),
                                   ),

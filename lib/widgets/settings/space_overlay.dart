@@ -306,7 +306,8 @@ class _EditSpacingOverlayState extends State<_EditSpacingOverlay> {
                 right: standardFlow(widget.config) ? null : widget.config.spacing,
                 child: GestureDetector(
                   onTap: () => setState(() => showControls = !showControls),
-                  child: Icon(
+                  child: EzIcon(
+                    widget.config,
                     showControls ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_up,
                     size: widget.config.iconSize,
                   ),
@@ -340,7 +341,8 @@ class _EditSpacingOverlayState extends State<_EditSpacingOverlay> {
                             MenuAnchor(
                               builder: (_, MenuController c, __) => EzIconButton(
                                 widget.config,
-                                icon: Icon(
+                                icon: EzIcon(
+                                  widget.config,
                                   tile
                                       ? switch (side) {
                                           AxisDirection.up => Icons.north,
@@ -406,7 +408,7 @@ class _EditSpacingOverlayState extends State<_EditSpacingOverlay> {
                             MenuAnchor(
                               builder: (_, MenuController c, __) => EzIconButton(
                                 widget.config,
-                                icon: const Icon(Icons.key),
+                                icon: EzIcon(widget.config, Icons.key),
                                 tooltip: l10n(widget.config).gKey,
                                 onPressed: () => toggleMenu(c),
                               ),
@@ -440,7 +442,7 @@ class _EditSpacingOverlayState extends State<_EditSpacingOverlay> {
                             MenuAnchor(
                               builder: (_, MenuController controller, __) => EzIconButton(
                                 widget.config,
-                                icon: const Icon(Icons.build),
+                                icon: EzIcon(widget.config, Icons.build),
                                 tooltip: l10n(widget.config).gEdits,
                                 onPressed: () => toggleMenu(controller),
                               ),
@@ -565,7 +567,8 @@ class _EditSpacingOverlayState extends State<_EditSpacingOverlay> {
                                 EzIconButton(
                                   widget.config,
                                   enabled: currLane > 0,
-                                  icon: Icon(
+                                  icon: EzIcon(
+                                    widget.config,
                                     standardFlow(widget.config)
                                         ? Icons.keyboard_arrow_left
                                         : Icons.keyboard_arrow_right,
@@ -602,7 +605,8 @@ class _EditSpacingOverlayState extends State<_EditSpacingOverlay> {
                               // Move (item) up
                               EzIconButton(
                                 widget.config,
-                                icon: Icon(
+                                icon: EzIcon(
+                                  widget.config,
                                   vAlign == ListAlignment.end
                                       ? Icons.keyboard_arrow_up
                                       : Icons.keyboard_arrow_down,
@@ -636,7 +640,8 @@ class _EditSpacingOverlayState extends State<_EditSpacingOverlay> {
                               // Moved (item) down
                               EzIconButton(
                                 widget.config,
-                                icon: Icon(
+                                icon: EzIcon(
+                                  widget.config,
                                   vAlign == ListAlignment.end
                                       ? Icons.keyboard_arrow_down
                                       : Icons.keyboard_arrow_up,
@@ -671,7 +676,8 @@ class _EditSpacingOverlayState extends State<_EditSpacingOverlay> {
                                 EzIconButton(
                                   widget.config,
                                   enabled: currLane < (numLanes - 1),
-                                  icon: Icon(
+                                  icon: EzIcon(
+                                    widget.config,
                                     standardFlow(widget.config)
                                         ? Icons.keyboard_arrow_right
                                         : Icons.keyboard_arrow_left,
@@ -725,7 +731,7 @@ class _EditSpacingOverlayState extends State<_EditSpacingOverlay> {
                     MenuAnchor(
                       builder: (_, MenuController c, __) => EzIconButton(
                         widget.config,
-                        icon: const Icon(Icons.keyboard_arrow_left),
+                        icon: EzIcon(widget.config, Icons.keyboard_arrow_left),
                         tooltip: widget.config.ezL10n.gDecrease,
                         onPressed: () {
                           final double base = tile
@@ -771,7 +777,7 @@ class _EditSpacingOverlayState extends State<_EditSpacingOverlay> {
                     MenuAnchor(
                       builder: (_, MenuController c, __) => EzIconButton(
                         widget.config,
-                        icon: const Icon(Icons.keyboard_arrow_right),
+                        icon: EzIcon(widget.config, Icons.keyboard_arrow_right),
                         tooltip: widget.config.ezL10n.gIncrease,
                         onPressed: () {
                           final double base = tile
