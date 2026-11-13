@@ -1113,7 +1113,8 @@ Future<void> editFolder(
 
         return EzCol(mainAxisSize: MainAxisSize.max, children: <Widget>[
           EzHeader(config),
-          SegmentedButton<bool>(
+          EzSegmentedButton<bool>(
+            config,
             segments: <ButtonSegment<bool>>[
               ButtonSegment<bool>(
                 value: true,

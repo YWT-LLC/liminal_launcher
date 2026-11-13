@@ -505,7 +505,8 @@ Future<void> _editLane(
               children: <Widget>[
                 ezWrap(
                   config,
-                  child: SegmentedButton<ListAlignment>(
+                  child: EzSegmentedButton<ListAlignment>(
+                    config,
                     segments: alignmentSegments,
                     selected: <ListAlignment>{hA},
                     showSelectedIcon: false,
@@ -517,7 +518,8 @@ Future<void> _editLane(
                 ),
                 ezWrap(
                   config,
-                  child: SegmentedButton<ListAlignment>(
+                  child: EzSegmentedButton<ListAlignment>(
+                    config,
                     segments: alignmentSegments,
                     direction: Axis.vertical,
                     selected: <ListAlignment>{vA},

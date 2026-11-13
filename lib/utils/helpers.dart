@@ -46,7 +46,8 @@ Future<IconData?> chooseIcon(EzCP config, BuildContext context) {
           child: EzCol(
             children: <Widget>[
               // Switcher
-              SegmentedButton<bool>(
+              EzSegmentedButton<bool>(
+                config,
                 segments: <ButtonSegment<bool>>[
                   ButtonSegment<bool>(
                     value: false,

@@ -739,7 +739,8 @@ Future<void> _openEdits(
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             // Switcher
-            SegmentedButton<_Edits>(
+            EzSegmentedButton<_Edits>(
+              config,
               segments: _Edits.values
                   .map((_Edits et) => ButtonSegment<_Edits>(
                         value: et,
