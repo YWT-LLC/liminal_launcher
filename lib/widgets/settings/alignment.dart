@@ -86,7 +86,8 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
           EzWrap(children: <Widget>[
             ezWrap(
               widget.config,
-              child: SegmentedButton<ListAlignment>(
+              child: EzSegmentedButton<ListAlignment>(
+                widget.config,
                 segments: alignmentSegments,
                 selected: <ListAlignment>{h},
                 showSelectedIcon: false,
@@ -107,7 +108,8 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
             ),
             ezWrap(
               widget.config,
-              child: SegmentedButton<ListAlignment>(
+              child: EzSegmentedButton<ListAlignment>(
+                widget.config,
                 segments: alignmentSegments,
                 direction: Axis.vertical,
                 selected: <ListAlignment>{v},
