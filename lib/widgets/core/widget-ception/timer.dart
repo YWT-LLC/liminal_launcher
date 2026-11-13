@@ -96,28 +96,21 @@ class _TimerWidgetState extends State<TimerWidget> {
   }
 
   void showOverlay(TextEditingController controller) {
-    overlayEntry = OverlayEntry(
-      builder: (BuildContext context) => Positioned(
-        top: safeTop(context),
-        left: widget.config.marginVal,
-        right: widget.config.marginVal,
-        child: Material(
-          type: MaterialType.transparency,
-          child: IgnorePointer(
-            child: Container(
-              padding: EdgeInsets.all(widget.config.marginVal),
-              decoration: widget.config.boxDeco(
-                fill: widget.config.surfaceContainerFill,
-                border: widget.config.boxBorder(fill: widget.config.secondaryContainerFill),
-                borderRadius: widget.config.buttonShape.textRadius,
-              ),
-              child: Text(
-                controller.text,
-                style: widget.config.bodyStyle,
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
+    overlayEntry = EzOverlayEntry(
+      top: safeTop(context),
+      left: widget.config.marginVal,
+      right: widget.config.marginVal,
+      child: Container(
+        padding: EdgeInsets.all(widget.config.marginVal),
+        decoration: widget.config.boxDeco(
+          fill: widget.config.surfaceContainerFill,
+          border: widget.config.boxBorder(fill: widget.config.secondaryContainerFill),
+          borderRadius: widget.config.buttonShape.textRadius,
+        ),
+        child: Text(
+          controller.text,
+          style: widget.config.bodyStyle,
+          textAlign: TextAlign.center,
         ),
       ),
     );
