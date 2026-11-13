@@ -358,6 +358,7 @@ class SettingsScreen extends StatelessWidget {
           ],
           target: target,
         ),
+        settingsA11: true,
         fabs: <Widget>[
           // Rebuild (conditional)
           if (config.needsRebuild) ...<Widget>[config.spacer, EzRebuildFAB(config)],

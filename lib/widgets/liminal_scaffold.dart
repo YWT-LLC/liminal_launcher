@@ -13,6 +13,7 @@ class LiminalScaffold extends StatelessWidget {
   final Widget body;
   final List<Widget>? fabs;
   final bool isHome;
+  final bool settingsA11;
 
   const LiminalScaffold(
     this.config, {
@@ -20,6 +21,7 @@ class LiminalScaffold extends StatelessWidget {
     required this.body,
     this.fabs,
     this.isHome = false,
+    this.settingsA11 = false,
   });
 
   @override
@@ -40,7 +42,7 @@ class LiminalScaffold extends StatelessWidget {
           footer: EzFooter(
             config,
             quiet: isHome,
-            a11howPath: ywt.liminalContributeA11,
+            a11howPath: settingsA11 ? ywt.openUIContributeA11 : ywt.liminalContributeA11,
           ),
           fabs: <Widget>[
             if (!isHome)
