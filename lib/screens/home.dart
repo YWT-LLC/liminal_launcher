@@ -354,35 +354,28 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     }
     if (nodes.length > 2) nodes.removeLast();
 
-    pagePosEntry = OverlayEntry(
-      builder: (BuildContext oCon) => Positioned(
-        bottom: safeBottom(context),
-        left: 0,
-        right: 0,
-        child: Material(
-          type: MaterialType.transparency,
-          child: IgnorePointer(
-            child: Center(
-              child: EzScrollView(
+    pagePosEntry = EzOverlayEntry(
+      bottom: safeBottom(context),
+      left: 0,
+      right: 0,
+      child: Center(
+        child: EzScrollView(
+          config,
+          startCentered: true,
+          thumbVisibility: false,
+          scrollDirection: Axis.horizontal,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.all(config.marginVal),
+              decoration: config.boxDeco(fill: config.outlineFiller),
+              child: EzRow(
                 config,
-                startCentered: true,
-                thumbVisibility: false,
-                scrollDirection: Axis.horizontal,
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.all(config.marginVal),
-                    decoration: config.boxDeco(fill: config.outlineFiller),
-                    child: EzRow(
-                      config,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: forward ? nodes : nodes.reversed.toList(),
-                    ),
-                  ),
-                ],
+                children: forward ? nodes : nodes.reversed.toList(),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );

@@ -135,23 +135,19 @@ class _SearchWidgetState extends State<SearchWidget> {
       : ((overlayEntry == null) ? showOverlay() : overlayEntry!.markNeedsBuild());
 
   void showOverlay() {
-    overlayEntry = OverlayEntry(
-      builder: (BuildContext context) => Positioned(
-        top: safeTop(context),
-        left: widget.config.marginVal,
-        right: widget.config.marginVal,
-        child: Material(
-          type: MaterialType.transparency,
-          child: EzTextField(
-            controller: queryCon,
-            constraints: BoxConstraints.loose(Size.infinite),
-            hintText: widget._engine.name,
-            keyboardType: TextInputType.webSearch,
-            onChanged: onChanged,
-            onFieldSubmitted: search,
-            validator: null,
-          ),
-        ),
+    overlayEntry = EzOverlayEntry(
+      top: safeTop(context),
+      left: widget.config.marginVal,
+      right: widget.config.marginVal,
+      ignore: false,
+      child: EzTextField(
+        controller: queryCon,
+        constraints: BoxConstraints.loose(Size.infinite),
+        hintText: widget._engine.name,
+        keyboardType: TextInputType.webSearch,
+        onChanged: onChanged,
+        onFieldSubmitted: search,
+        validator: null,
       ),
     );
     ezRootOverlay?.insert(overlayEntry!);

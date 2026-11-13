@@ -94,33 +94,28 @@ class _EventWidgetState extends State<EventWidget> {
       : ((overlayEntry == null) ? showOverlay() : overlayEntry!.markNeedsBuild());
 
   void showOverlay() {
-    overlayEntry = OverlayEntry(
-      builder: (BuildContext context) => Positioned(
-        top: safeTop(context),
-        left: widget.config.marginVal,
-        right: widget.config.marginVal,
-        child: Material(
-          type: MaterialType.transparency,
-          child: EzTextField(
-            controller: eventCon,
-            constraints: BoxConstraints.loose(Size.infinite),
-            hintText: widget._isCalendar
-                ? l10n(widget.config).evtNewEvent
-                : l10n(widget.config).evtNewTask,
-            onChanged: onChanged,
-            onFieldSubmitted: (String entry) async {
-              final bool success = widget._isCalendar
-                  ? await createCalendarEvent(entry)
-                  : await createTask(entry, widget._shareDest);
+    overlayEntry = EzOverlayEntry(
+      top: safeTop(context),
+      left: widget.config.marginVal,
+      right: widget.config.marginVal,
+      ignore: false,
+      child: EzTextField(
+        controller: eventCon,
+        constraints: BoxConstraints.loose(Size.infinite),
+        hintText:
+            widget._isCalendar ? l10n(widget.config).evtNewEvent : l10n(widget.config).evtNewTask,
+        onChanged: onChanged,
+        onFieldSubmitted: (String entry) async {
+          final bool success = widget._isCalendar
+              ? await createCalendarEvent(entry)
+              : await createTask(entry, widget._shareDest);
 
-              eventCon.clear();
-              removeOverlay();
+          eventCon.clear();
+          removeOverlay();
 
-              if (!success && context.mounted) await selfDestruct();
-            },
-            validator: null,
-          ),
-        ),
+          if (!success && context.mounted) await selfDestruct();
+        },
+        validator: null,
       ),
     );
     ezRootOverlay?.insert(overlayEntry!);
