@@ -372,9 +372,7 @@ class FolderButton extends StatelessWidget {
             onLongPress: onLongPress,
             icon: EzIcon(config, icon, size: iconSize, fill: iconFill),
             backgroundFill: backgroundFill,
-            style: IconButton.styleFrom(
-              side: config.borderSide(fill: outlineFill),
-            ),
+            style: IconButton.styleFrom(side: config.borderSide(fill: outlineFill)),
           ),
         ButtonType.text => EzTextButton(
             config,

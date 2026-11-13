@@ -505,8 +505,10 @@ Future<void> _openEdits(
                                     : config.bodyStyle,
                                 style: bs == shape
                                     ? ElevatedButton.styleFrom(
-                                        backgroundBuilder:
-                                            config.buttonLayer(fill: config.primaryFill),
+                                        backgroundBuilder: config.buttonLayer(
+                                          fill: config.primaryFill,
+                                          borderRadius: bs.radius,
+                                        ),
                                         backgroundColor: config.primaryFill.asColor,
                                         foregroundColor: config.onPrimary,
                                         shape: bs.shape,
