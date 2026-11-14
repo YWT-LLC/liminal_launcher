@@ -979,8 +979,10 @@ Future<void> editFolder(
                               title: EzTextButton(
                                 config,
                                 onPressed: doNothing,
-                                text:
-                                    "Add to '${validateName(config, renameCon.text) == null ? renameCon.text : initConfig.name}'",
+                                text: l10n(config).fldAddTo(
+                                    validateName(config, renameCon.text) == null
+                                        ? renameCon.text
+                                        : initConfig.name),
                                 textStyle: config.labelStyle,
                               ),
                             ),
