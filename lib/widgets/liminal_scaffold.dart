@@ -28,22 +28,18 @@ class LiminalScaffold extends StatelessWidget {
   Widget build(BuildContext context) => EzAdaptiveParent(
         small: EzScaffold(
           config,
-          body: EzScreen(
-            config,
-            margin: EdgeInsets.only(
+          body: Container(
+            padding: EdgeInsets.only(
               left: config.marginVal,
               right: config.marginVal,
               top: safeTop(context),
               bottom: config.marginVal,
             ),
-            decoration: config.boxDeco(fill: const EzSwitchColor(color: Colors.transparent)),
-            child: body,
+            height: double.infinity,
+            width: double.infinity,
+            child: Material(type: MaterialType.transparency, child: body),
           ),
-          footer: EzFooter(
-            config,
-            quiet: isHome,
-            a11howPath: settingsA11 ? ywt.openUIContributeA11 : ywt.liminalContributeA11,
-          ),
+          footer: settingsA11 ? EzFooter(config, a11howPath: ywt.openUIContributeA11) : null,
           fabs: <Widget>[
             if (!isHome)
               EzUpdaterFAB(
