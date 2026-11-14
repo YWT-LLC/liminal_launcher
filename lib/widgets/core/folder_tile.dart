@@ -379,7 +379,7 @@ class FolderButton extends StatelessWidget {
             text: buildLabel(name, labelType),
             textStyle: labelStyle.style(config)?.copyWith(color: textColor),
             style: TextButton.styleFrom(
-              backgroundBuilder: config.buttonLayer(
+              backgroundBuilder: config.smartLayer(
                 fill: backgroundFill,
                 border: config.boxBorder(fill: outlineFill),
               ),
@@ -397,7 +397,7 @@ class FolderButton extends StatelessWidget {
             text: buildLabel(name, labelType),
             textStyle: labelStyle.style(config)?.copyWith(color: textColor),
             style: TextButton.styleFrom(
-              backgroundBuilder: config.buttonLayer(
+              backgroundBuilder: config.smartLayer(
                 fill: backgroundFill,
                 border: config.boxBorder(fill: outlineFill),
               ),
@@ -414,7 +414,7 @@ class FolderButton extends StatelessWidget {
             textStyle: labelStyle.style(config)?.copyWith(color: textColor),
             icon: EzIcon(config, icon, size: iconSize, fill: iconFill),
             style: TextButton.styleFrom(
-              backgroundBuilder: config.buttonLayer(
+              backgroundBuilder: config.smartLayer(
                 fill: backgroundFill,
                 border: config.boxBorder(fill: outlineFill),
               ),
@@ -433,7 +433,7 @@ class FolderButton extends StatelessWidget {
             textStyle: labelStyle.style(config)?.copyWith(color: textColor),
             icon: EzIcon(config, icon, size: iconSize, fill: iconFill),
             style: TextButton.styleFrom(
-              backgroundBuilder: config.buttonLayer(
+              backgroundBuilder: config.smartLayer(
                 fill: backgroundFill,
                 border: config.boxBorder(fill: outlineFill),
               ),

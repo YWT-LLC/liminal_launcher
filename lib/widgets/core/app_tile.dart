@@ -590,7 +590,7 @@ class AppButton extends StatelessWidget {
             text: buildLabel(name, labelType),
             textStyle: labelStyle.style(config)?.copyWith(color: textColor),
             style: TextButton.styleFrom(
-              backgroundBuilder: config.buttonLayer(fill: backgroundFill),
+              backgroundBuilder: config.smartLayer(fill: backgroundFill),
               backgroundColor: backgroundFill.asColor,
               padding: config.textBackgroundOpacity < oneP
                   ? EdgeInsets.zero
@@ -605,7 +605,7 @@ class AppButton extends StatelessWidget {
             text: buildLabel(name, labelType),
             textStyle: labelStyle.style(config)?.copyWith(color: textColor),
             style: TextButton.styleFrom(
-              backgroundBuilder: config.buttonLayer(fill: backgroundFill),
+              backgroundBuilder: config.smartLayer(fill: backgroundFill),
               backgroundColor: backgroundFill.asColor,
               padding: EdgeInsets.all(config.padding),
               side: config.borderSide(fill: outlineFill),
@@ -619,7 +619,7 @@ class AppButton extends StatelessWidget {
             textStyle: labelStyle.style(config)?.copyWith(color: textColor),
             icon: appIcon(),
             style: TextButton.styleFrom(
-              backgroundBuilder: config.buttonLayer(fill: backgroundFill),
+              backgroundBuilder: config.smartLayer(fill: backgroundFill),
               backgroundColor: backgroundFill.asColor,
               padding: config.textBackgroundOpacity < oneP
                   ? EdgeInsets.zero
@@ -635,7 +635,7 @@ class AppButton extends StatelessWidget {
             textStyle: labelStyle.style(config)?.copyWith(color: textColor),
             icon: appIcon(),
             style: TextButton.styleFrom(
-              backgroundBuilder: config.buttonLayer(fill: backgroundFill),
+              backgroundBuilder: config.smartLayer(fill: backgroundFill),
               backgroundColor: backgroundFill.asColor,
               padding: EdgeInsets.all(config.padding),
               side: config.borderSide(fill: outlineFill),
