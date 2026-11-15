@@ -508,6 +508,7 @@ Future<void> _openEdits(
                                         backgroundBuilder: config.smartLayer(
                                           fill: config.primaryFill,
                                           borderRadius: bs.radius,
+                                          shape: bs.shape,
                                         ),
                                         backgroundColor: config.primaryFill.asColor,
                                         foregroundColor: config.onPrimary,
@@ -737,75 +738,72 @@ Future<void> _openEdits(
               ),
             ]);
 
-        return EzCol(
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            // Switcher
-            EzSegmentedButton<_Edits>(
-              config,
-              segments: _Edits.values
-                  .map((_Edits et) => ButtonSegment<_Edits>(
-                        value: et,
-                        label: Text(et.name(config), textAlign: TextAlign.center),
-                      ))
-                  .toList(),
-              selected: <_Edits>{curr},
-              showSelectedIcon: false,
-              onSelectionChanged: (Set<_Edits> selected) => nav(selected.first),
-            ),
-            config.spacer,
+        return EzCol(mainAxisSize: MainAxisSize.max, children: <Widget>[
+          // Switcher
+          EzSegmentedButton<_Edits>(
+            config,
+            segments: _Edits.values
+                .map((_Edits et) => ButtonSegment<_Edits>(
+                      value: et,
+                      label: Text(et.name(config), textAlign: TextAlign.center),
+                    ))
+                .toList(),
+            selected: <_Edits>{curr},
+            showSelectedIcon: false,
+            onSelectionChanged: (Set<_Edits> selected) => nav(selected.first),
+          ),
+          config.spacer,
 
-            // Preview
-            EzTextBackground(
-              config,
-              shape: shape,
-              replaceFill: fill,
-              text: EzCol(
-                mainAxisAlignment: initConfig.vAlign.mainAxis,
-                crossAxisAlignment: initConfig.hAlign.crossAxis,
-                children: <Widget>[
-                  if (showTime)
-                    Text(
-                      TimeOfDay.fromDateTime(DateTime.now()).format(mCon),
-                      style: timeStyle.style(config)?.copyWith(color: timeColor),
-                      textAlign: initConfig.hAlign.textAlign,
-                    ),
-                  if (dateType != DateType.none)
-                    Text(
-                      DTConfig.buildDate(mCon, DateTime.now(), dateType),
-                      style: dateStyle.style(config)?.copyWith(color: dateColor),
-                      textAlign: initConfig.hAlign.textAlign,
-                    ),
-                ],
-              ),
+          // Preview
+          EzTextBackground(
+            config,
+            shape: shape,
+            replaceFill: fill,
+            text: EzCol(
+              mainAxisAlignment: initConfig.vAlign.mainAxis,
+              crossAxisAlignment: initConfig.hAlign.crossAxis,
+              children: <Widget>[
+                if (showTime)
+                  Text(
+                    TimeOfDay.fromDateTime(DateTime.now()).format(mCon),
+                    style: timeStyle.style(config)?.copyWith(color: timeColor),
+                    textAlign: initConfig.hAlign.textAlign,
+                  ),
+                if (dateType != DateType.none)
+                  Text(
+                    DTConfig.buildDate(mCon, DateTime.now(), dateType),
+                    style: dateStyle.style(config)?.copyWith(color: dateColor),
+                    textAlign: initConfig.hAlign.textAlign,
+                  ),
+              ],
             ),
-            EzDivider(config),
+          ),
+          EzDivider(config),
 
-            // Settings
-            Expanded(
-              child: EzSwipeDetector(
-                rtl: () => (curr.index < 2) ? nav(_Edits.values[curr.index + 1]) : doNothing(),
-                ltr: () => (curr.index > 0) ? nav(_Edits.values[curr.index - 1]) : doNothing(),
-                child: EzFauxCarousel(
-                  config,
-                  position: curr.index,
-                  delta: delta,
-                  child: InkWell(
-                    child: Container(
-                      alignment: Alignment.topCenter,
-                      constraints: BoxConstraints.tight(Size.infinite),
-                      child: switch (curr) {
-                        _Edits.background => backgroundSettings(),
-                        _Edits.time => timeSettings(),
-                        _Edits.date => dateSettings(),
-                      },
-                    ),
+          // Settings
+          Expanded(
+            child: EzSwipeDetector(
+              rtl: () => (curr.index < 2) ? nav(_Edits.values[curr.index + 1]) : doNothing(),
+              ltr: () => (curr.index > 0) ? nav(_Edits.values[curr.index - 1]) : doNothing(),
+              child: EzFauxCarousel(
+                config,
+                position: curr.index,
+                delta: delta,
+                child: InkWell(
+                  child: Container(
+                    alignment: Alignment.topCenter,
+                    constraints: BoxConstraints.tight(Size.infinite),
+                    child: switch (curr) {
+                      _Edits.background => backgroundSettings(),
+                      _Edits.time => timeSettings(),
+                      _Edits.date => dateSettings(),
+                    },
                   ),
                 ),
               ),
             ),
-          ],
-        );
+          ),
+        ]);
       },
     ),
   );
