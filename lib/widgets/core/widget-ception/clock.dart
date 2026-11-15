@@ -707,7 +707,7 @@ Future<void> _openEdits(
 
                   if (picked != null) {
                     final int? cv = int.tryParse(picked);
-                    if (cv != null) setModal(() => timeColor = Color(cv));
+                    if (cv != null) setModal(() => dateColor = Color(cv));
                   }
                 },
                 onLongPress: () => setModal(() => dateColor = null),
