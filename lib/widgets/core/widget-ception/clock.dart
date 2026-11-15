@@ -534,7 +534,7 @@ Future<void> _openEdits(
                     picking: (fill ?? config.surfaceContainerFill).toString(),
                   );
 
-                  if (picked != null) setModal(() => fill = ezCOG(fill));
+                  if (picked != null) setModal(() => fill = ezCOG(picked));
                 },
                 onLongPress: () => setModal(() => fill = null),
                 icon: Container(
