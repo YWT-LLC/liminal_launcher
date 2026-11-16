@@ -373,9 +373,9 @@ class _AppTileState extends State<AppTile> {
                       height: appIconSize(widget.config),
                     ),
                   )
-                : EzIconButton(
+                : EzIconTouch(
                     widget.config,
-                    icon: EzIcon(widget.config, widget._icon),
+                    icon: widget._icon ?? Icons.question_mark,
                     tooltip: widget._name ?? widget.app.label,
                     onPressed: () => toggleMenu(menuControl),
                   ),

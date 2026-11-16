@@ -297,9 +297,9 @@ class _SearchWidgetState extends State<SearchWidget> {
                 choices: widget._choices,
               ),
             ),
-            child: EzIconButton(
+            child: EzIconTouch(
               widget.config,
-              icon: EzIcon(widget.config, Icons.search),
+              icon: Icons.search,
               tooltip: l10n(widget.config).gSearch,
               onPressed: () => toggleMenu(menuControl),
             ),

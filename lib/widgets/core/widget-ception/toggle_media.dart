@@ -220,9 +220,9 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
                 lilSkips: widget._lilSkips,
               ),
             ),
-            child: EzIconButton(
+            child: EzIconTouch(
               widget.config,
-              icon: EzIcon(widget.config, Icons.headphones),
+              icon: Icons.headphones,
               tooltip: l10n(widget.config).togTitle,
               onPressed: () => toggleMenu(menuControl),
             ),

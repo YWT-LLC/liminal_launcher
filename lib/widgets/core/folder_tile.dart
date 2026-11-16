@@ -246,9 +246,9 @@ class _AppFolderState extends State<FolderTile> {
                   outlineFill: widget._outlineFill,
                 ),
               ),
-              child: EzIconButton(
+              child: EzIconTouch(
                 widget.config,
-                icon: EzIcon(widget.config, widget._icon),
+                icon: widget._icon,
                 tooltip: widget.name,
                 onPressed: () => toggleMenu(menuControl),
               ),

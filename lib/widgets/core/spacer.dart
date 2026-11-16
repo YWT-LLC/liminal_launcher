@@ -161,9 +161,9 @@ class _LimSpacerState extends State<LimSpacer> {
                       numLanes: numLanes,
                       pos: widget.pos,
                     ),
-                    child: EzIconButton(
+                    child: EzIconTouch(
                       widget.config,
-                      icon: EzIcon(widget.config, Icons.space_bar),
+                      icon: Icons.space_bar,
                       tooltip: l10n(widget.config).hsSpacer,
                       onPressed: () => toggleMenu(menuControl),
                     ),

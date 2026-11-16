@@ -160,10 +160,9 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
                 size: widget._size,
               ),
             ),
-            child: EzIconButton(
+            child: EzIconTouch(
               widget.config,
-              icon:
-                  EzIcon(widget.config, widget.config.isDark ? Icons.dark_mode : Icons.light_mode),
+              icon: widget.config.isDark ? Icons.dark_mode : Icons.light_mode,
               tooltip: l10n(widget.config).thmToggle,
               onPressed: () => toggleMenu(menuControl),
             ),

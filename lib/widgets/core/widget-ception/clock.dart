@@ -213,9 +213,9 @@ class _ClockWidgetState extends State<ClockWidget> {
                 dateColor: widget._dateColor,
               ),
             ),
-            child: EzIconButton(
+            child: EzIconTouch(
               widget.config,
-              icon: EzIcon(widget.config, Icons.watch),
+              icon: Icons.watch,
               tooltip: l10n(widget.config).clkTitle,
               onPressed: () => toggleMenu(menuControl),
             ),
