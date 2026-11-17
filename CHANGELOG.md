@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.2] - 2026-11-17
+### [Added]
+- Gradient colors
+- More settings
+
+### [Updated]
+- a11how integration
+
 ## [1.1.1] - 2026-10-23
 ### [Added]
 - More app list customization (in secure settings on global hub)
