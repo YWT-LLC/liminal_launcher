@@ -30,15 +30,21 @@ class LiminalScaffold extends StatelessWidget {
           config,
           backgroundColor: Colors.transparent,
           body: Container(
-            padding: EdgeInsets.only(
-              left: config.marginVal,
-              right: config.marginVal,
-              top: safeTop(context),
-              bottom: config.marginVal,
-            ),
+            decoration:
+                (config.backgroundImagePath == noImageValue) ? null : config.screenDecoration,
             height: double.infinity,
             width: double.infinity,
-            child: Material(type: MaterialType.transparency, child: body),
+            child: Container(
+              padding: EdgeInsets.only(
+                left: config.marginVal,
+                right: config.marginVal,
+                top: safeTop(context),
+                bottom: config.marginVal,
+              ),
+              height: double.infinity,
+              width: double.infinity,
+              child: Material(type: MaterialType.transparency, child: body),
+            ),
           ),
           footer: settingsA11 ? EzFooter(config, a11howPath: ywt.openUIContributeA11) : null,
           fabs: <Widget>[
