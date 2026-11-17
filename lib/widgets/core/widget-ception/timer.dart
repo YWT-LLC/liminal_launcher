@@ -8,7 +8,7 @@ import '../../export.dart';
 
 import 'dart:async';
 import 'package:open_ui/open_ui.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 //* Core Widget *//
 
@@ -96,31 +96,21 @@ class _TimerWidgetState extends State<TimerWidget> {
   }
 
   void showOverlay(TextEditingController controller) {
-    overlayEntry = OverlayEntry(
-      builder: (BuildContext context) => Positioned(
-        top: safeTop(context),
-        left: widget.config.marginVal,
-        right: widget.config.marginVal,
-        child: Material(
-          type: MaterialType.transparency,
-          child: IgnorePointer(
-            child: Container(
-              padding: EdgeInsets.all(widget.config.marginVal),
-              decoration: BoxDecoration(
-                color: widget.config.colors.surfaceContainer,
-                border: Border.all(
-                  color: widget.config.colors.secondaryContainer,
-                  width: widget.config.borderWidth,
-                ),
-                borderRadius: widget.config.textRadius,
-              ),
-              child: Text(
-                controller.text,
-                style: widget.config.bodyStyle,
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
+    overlayEntry = EzOverlayEntry(
+      top: safeTop(context),
+      left: widget.config.marginVal,
+      right: widget.config.marginVal,
+      child: Container(
+        padding: EdgeInsets.all(widget.config.marginVal),
+        decoration: widget.config.boxDeco(
+          fill: widget.config.surfaceContainerFill,
+          border: widget.config.boxBorder(fill: widget.config.secondaryContainerFill),
+          borderRadius: widget.config.buttonShape.textRadius,
+        ),
+        child: Text(
+          controller.text,
+          style: widget.config.bodyStyle,
+          textAlign: TextAlign.center,
         ),
       ),
     );
@@ -176,7 +166,7 @@ class _TimerWidgetState extends State<TimerWidget> {
               child: (widget._size == WWGGSize.button)
                   ? EzIconButton(
                       widget.config,
-                      icon: const Icon(Icons.timer_outlined),
+                      icon: EzIcon(widget.config, Icons.timer_outlined),
                       tooltip: l10n(widget.config).gStart,
                       onPressed: () async {
                         final int ours = _toInt(ourCon.text);
@@ -202,7 +192,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                           widget.config.rowMargin,
                           EzIconButton(
                             widget.config,
-                            icon: const Icon(Icons.timer_outlined),
+                            icon: EzIcon(widget.config, Icons.timer_outlined),
                             tooltip: l10n(widget.config).gStart,
                             onPressed: () async {
                               removeOverlay();
@@ -275,7 +265,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                           widget.config.rowMargin,
                           EzIconButton(
                             widget.config,
-                            icon: const Icon(Icons.timer_outlined),
+                            icon: EzIcon(widget.config, Icons.timer_outlined),
                             tooltip: l10n(widget.config).gStart,
                             onPressed: () async {
                               removeOverlay();
@@ -337,9 +327,9 @@ class _TimerWidgetState extends State<TimerWidget> {
                 quick: widget._times,
               ),
             ),
-            child: EzIconButton(
+            child: EzIconTouch(
               widget.config,
-              icon: const Icon(Icons.timer_outlined),
+              icon: Icons.timer_outlined,
               tooltip: l10n(widget.config).timTitle,
               onPressed: () => toggleMenu(menuControl),
             ),
@@ -557,7 +547,7 @@ class AddTimer extends StatelessWidget {
             config,
             onPressed: onTap,
             tooltip: l10n(config).gAdd,
-            icon: const Icon(Icons.timer),
+            icon: EzIcon(config, Icons.timer),
           )
         : GestureDetector(
             onTap: onTap,
@@ -572,7 +562,7 @@ class AddTimer extends StatelessWidget {
                       config,
                       onPressed: onTap,
                       tooltip: l10n(config).gAdd,
-                      icon: const Icon(Icons.timer),
+                      icon: EzIcon(config, Icons.timer),
                     ),
                   ],
                   fauxTimerField,
@@ -586,7 +576,7 @@ class AddTimer extends StatelessWidget {
                       config,
                       onPressed: onTap,
                       tooltip: l10n(config).gAdd,
-                      icon: const Icon(Icons.timer),
+                      icon: EzIcon(config, Icons.timer),
                     ),
                   ],
                 ],

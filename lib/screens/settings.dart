@@ -7,9 +7,9 @@ import '../utils/export.dart';
 import '../widgets/export.dart';
 
 import 'package:open_ui/open_ui.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:material_ui/material_ui.dart';
 
 class SettingsScreen extends StatelessWidget {
   final int? target;
@@ -65,7 +65,7 @@ class SettingsScreen extends StatelessWidget {
                   config.spacer,
                   AppSecSettings(config),
                 ],
-                quickConfigSpacer: config.divider,
+                quickConfigSpacer: EzDivider(config),
                 extraBig: (bool updateBoth) async {
                   if (updateBoth || config.isDark) {
                     // Button design
@@ -237,9 +237,9 @@ class SettingsScreen extends StatelessWidget {
                   AppTileSetting(config, folder: false),
                   config.spacer,
                   AppTileSetting(config, folder: true),
-                  config.divider,
+                  EzDivider(config),
                 ],
-                styleLabel: l10n(config).dbsElevatedStyle,
+                labelStyle: l10n(config).dbsElevatedStyle,
                 includeBackgroundImage: false,
                 prependPage: <Widget>[
                   // Wallpaper
@@ -338,7 +338,7 @@ class SettingsScreen extends StatelessWidget {
                       await config.rebuildUI();
                     },
                   ),
-                  config.divider,
+                  EzDivider(config),
                 ],
               ),
             ),
@@ -358,6 +358,7 @@ class SettingsScreen extends StatelessWidget {
           ],
           target: target,
         ),
+        settingsA11: true,
         fabs: <Widget>[
           // Rebuild (conditional)
           if (config.needsRebuild) ...<Widget>[config.spacer, EzRebuildFAB(config)],

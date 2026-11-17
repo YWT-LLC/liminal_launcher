@@ -5,12 +5,11 @@
 
 import '../utils/export.dart';
 import '../widgets/export.dart';
-import 'package:ywt_private/ywt_private.dart' as ywt;
 
 import 'dart:async';
 import 'package:open_ui/open_ui.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AppListScreen extends StatefulWidget {
   final ListConfig listConfig;
@@ -57,12 +56,12 @@ class _AppListScreenState extends State<AppListScreen> {
     );
     rippleController.addListener(() => rippleProgress.value = rippleController.value);
 
-    final OverlayEntry ripple = ywt.ezRipple(
+    final OverlayEntry ripple = ezRipple(
       controller: rippleController,
       width: widthOf(context),
       height: heightOf(context),
       position: details.globalPosition,
-      color: config.colors.primary,
+      fill: config.primaryFill,
       oMin: focusOpacity,
     );
     Overlay.of(context).insert(ripple);
@@ -128,7 +127,7 @@ class _AppListScreenState extends State<AppListScreen> {
                     MenuAnchor(
                       builder: (_, MenuController controller, __) => EzIconButton(
                         config,
-                        icon: const Icon(Icons.sort),
+                        icon: EzIcon(config, Icons.sort),
                         tooltip: l10n(config).aplSort(listSort.name(config)),
                         onPressed: () => toggleMenu(controller),
                       ),
@@ -151,7 +150,7 @@ class _AppListScreenState extends State<AppListScreen> {
                     // Order
                     EzIconButton(
                       config,
-                      icon: Icon(ascList ? Icons.arrow_upward : Icons.arrow_downward),
+                      icon: EzIcon(config, ascList ? Icons.arrow_upward : Icons.arrow_downward),
                       tooltip: ascList ? l10n(config).aplAsc : l10n(config).aplDsc,
                       onPressed: () async {
                         await EzCM.setBool(ascListKey, !ascList);
@@ -197,7 +196,7 @@ class _AppListScreenState extends State<AppListScreen> {
                     // Search
                     EzIconButton(
                       config,
-                      icon: const Icon(Icons.search),
+                      icon: EzIcon(config, Icons.search),
                       tooltip: l10n(config).gSearch,
                       onPressed: () {
                         if (searching) {
@@ -297,7 +296,6 @@ class _AppListScreenState extends State<AppListScreen> {
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: vAlign.mainAxis,
                             crossAxisAlignment: hAlign.crossAxis,
-                            physics: const ClampingScrollPhysics(),
                             child: EzWrap(
                               alignment: hAlign.wrapAxis,
                               runAlignment: vAlign.wrapAxis,
@@ -338,7 +336,6 @@ class _AppListScreenState extends State<AppListScreen> {
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: vAlign.mainAxis,
                             crossAxisAlignment: hAlign.crossAxis,
-                            physics: const ClampingScrollPhysics(),
                             children: appInfo.apps
                                 .where((AppInfo app) =>
                                     (appInfo

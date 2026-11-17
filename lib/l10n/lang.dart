@@ -395,17 +395,17 @@ abstract class Lang {
   /// **'Can\'t find a default calendar app.'**
   String get evtNoCalendarBody;
 
-  /// No description provided for @evtNoCalendarTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'What shall be done?\n'**
-  String get evtNoCalendarTitle;
-
   /// No description provided for @evtNoCalendarLabel.
   ///
   /// In en, this message translates to:
   /// **'Note: \'Task\' is just share underneath. You\'ll choose a default app to share with.\nWe recommend using a task app, but don\'t require.\nResults may vary.'**
   String get evtNoCalendarLabel;
+
+  /// No description provided for @evtNoCalendarTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What shall be done?\n'**
+  String get evtNoCalendarTitle;
 
   /// No description provided for @evtShare.
   ///
@@ -755,6 +755,18 @@ abstract class Lang {
   /// **'Auto-search the apps list'**
   String get gsAutoSearch;
 
+  /// No description provided for @gsEditReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset home after edits'**
+  String get gsEditReset;
+
+  /// No description provided for @gsEditResetTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset the home screen/turn off editing mode after you leave for the settings page.'**
+  String get gsEditResetTip;
+
   /// No description provided for @gsHomeRipple.
   ///
   /// In en, this message translates to:
@@ -788,8 +800,20 @@ abstract class Lang {
   /// No description provided for @gsNoBothHome.
   ///
   /// In en, this message translates to:
-  /// **'Note: the home ages have no update both system ('**
+  /// **'Note: the home pages have no \"update both\" system ('**
   String get gsNoBothHome;
+
+  /// No description provided for @gsOpenReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset after open'**
+  String get gsOpenReset;
+
+  /// No description provided for @gsOpenResetTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset the home screen/turn off editing mode after you open a hidden app.'**
+  String get gsOpenResetTip;
 
   /// No description provided for @gsPositiveOnly.
   ///
@@ -830,7 +854,7 @@ abstract class Lang {
   /// No description provided for @gsSwipeDesc.
   ///
   /// In en, this message translates to:
-  /// **'Choose a quick access app that will open when you swipe {direction} on the home screen. swipe'**
+  /// **'Choose a quick access app that will open when you swipe {direction} on the home screen.'**
   String gsSwipeDesc(Object direction);
 
   /// No description provided for @gsSwipeHint.
@@ -1532,7 +1556,7 @@ abstract class Lang {
   /// No description provided for @pUnBanish.
   ///
   /// In en, this message translates to:
-  /// **'The simplest wat to restore/un-banish {app} is to uninstall it from the system settings, then reinstall.'**
+  /// **'The simplest way to restore/un-banish {app} is to uninstall it from the system settings, then reinstall.'**
   String pUnBanish(Object app);
 
   /// No description provided for @pWantTo.
@@ -1688,7 +1712,7 @@ abstract class Lang {
   /// No description provided for @togSomePlayers.
   ///
   /// In en, this message translates to:
-  /// **'Note:\nThese buttons only work if the active player supports them. Some music players don\'t have FF/Rewind, for example'**
+  /// **'Note:\nThese buttons only work if the active player supports them. Some music players don\'t have FF/Rewind, for example.'**
   String get togSomePlayers;
 
   /// No description provided for @togTitle.

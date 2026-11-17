@@ -119,7 +119,7 @@ class LangFr extends Lang {
 
   @override
   String get dpsAlignHint =>
-      'L\'icône de Liminal Launcher est utilisée pour l\'aperçu de l\'alignement';
+      'Icône de Liminal Launcher utilisée pour l\'aperçu de l\'alignement';
 
   @override
   String get dpsHideStatus => 'Masquer la barre d\'état';
@@ -158,18 +158,19 @@ class LangFr extends Lang {
   String get evtNewTask => 'Nouvelle tâche';
 
   @override
-  String get evtNoCalendarBody => 'Can\'t find a default calendar app.';
-
-  @override
-  String get evtNoCalendarTitle => 'What shall be done?\n';
+  String get evtNoCalendarBody =>
+      'Impossible de trouver une application de calendrier par défaut.';
 
   @override
   String get evtNoCalendarLabel =>
-      'Note: \'Task\' is just share underneath. You\'ll choose a default app to share with.\nWe recommend using a task app, but don\'t require.\nResults may vary.';
+      'Remarque : « Tâche » utilise simplement le partage en arrière-plan. Vous choisirez une application par défaut avec laquelle partager.\nNous recommandons d\'utiliser une application de tâches, mais ce n\'est pas obligatoire.\nLes résultats peuvent varier.';
+
+  @override
+  String get evtNoCalendarTitle => 'Que faut-il faire ?\n';
 
   @override
   String get evtShare =>
-      '\'Tâche\' est simplement un partage en arrière-plan.\nChoisissez une application de destination ci-dessous.\n\nNous recommandons d\'utiliser une application de tâches, mais ce n\'est pas obligatoire. Les résultats peuvent varier.';
+      '« Tâche » est simplement un partage en arrière-plan.\nChoisissez une application de destination ci-dessous.\n\nNous recommandons d\'utiliser une application de tâches, mais ce n\'est pas obligatoire. Les résultats peuvent varier.';
 
   @override
   String get evtShareDest => 'Sélection de la destination de partage';
@@ -278,7 +279,7 @@ class LangFr extends Lang {
 
   @override
   String gRemoving(Object app) {
-    return 'Supprimer $app';
+    return 'Suppression de $app';
   }
 
   @override
@@ -330,7 +331,7 @@ class LangFr extends Lang {
   String get gWideTiles => 'Tuiles larges';
 
   @override
-  String get gWrap => 'Retour';
+  String get gWrap => 'Retour à la ligne';
 
   @override
   String get gsAppList => 'Liste des applications';
@@ -340,7 +341,7 @@ class LangFr extends Lang {
       'S\'authentifier pour voir les applications masquées';
 
   @override
-  String get gsAuthTimeout => 'Délai d\'authentification (mins)';
+  String get gsAuthTimeout => 'Délai d\'authentification (min)';
 
   @override
   String get gsAuthToEdit =>
@@ -349,6 +350,13 @@ class LangFr extends Lang {
   @override
   String get gsAutoSearch =>
       'Recherche automatique dans la liste des applications';
+
+  @override
+  String get gsEditReset => 'Réinitialiser l\'accueil après modification';
+
+  @override
+  String get gsEditResetTip =>
+      'Réinitialise l\'écran d\'accueil/désactive le mode modification lorsque vous partez vers la page des paramètres.';
 
   @override
   String get gsHomeRipple => 'Animation d\'ondulation de l\'accueil';
@@ -367,7 +375,14 @@ class LangFr extends Lang {
 
   @override
   String get gsNoBothHome =>
-      'Note : les pages d\'accueil n\'ont pas de système de mise à jour pour les deux (';
+      'Remarque : les pages d\'accueil n\'ont pas de système « mettre à jour les deux » (';
+
+  @override
+  String get gsOpenReset => 'Réinitialiser après ouverture';
+
+  @override
+  String get gsOpenResetTip =>
+      'Réinitialise l\'écran d\'accueil/désactive le mode modification après l\'ouverture d\'une application masquée.';
 
   @override
   String get gsPositiveOnly => 'Entiers positifs uniquement';
@@ -388,22 +403,22 @@ class LangFr extends Lang {
 
   @override
   String gsSwipe(Object direction) {
-    return 'Balayage vers $direction';
+    return 'Balayage : $direction';
   }
 
   @override
   String gsSwipeDesc(Object direction) {
-    return 'Choisissez une application à accès rapide qui s\'ouvrira lorsque vous balayerez vers $direction sur l\'écran d\'accueil.';
+    return 'Choisissez une application à accès rapide qui s\'ouvrira lorsque vous balayerez vers la $direction sur l\'écran d\'accueil.';
   }
 
   @override
   String gsSwipeHint(Object direction) {
-    return 'Choisissez l\'application qui s\'ouvre lors d\'un balayage vers $direction';
+    return 'Choisissez l\'application qui s\'ouvre lors d\'un balayage vers la $direction';
   }
 
   @override
   String gsSwipeLabel(Object direction) {
-    return 'Sélection du balayage vers $direction';
+    return 'Sélection du balayage vers la $direction';
   }
 
   @override
@@ -414,7 +429,7 @@ class LangFr extends Lang {
   String get hsApp => 'Application';
 
   @override
-  String get hsBoth => ', ou les deux ';
+  String get hsBoth => ' ou les deux ';
 
   @override
   String get hsCanFit => '...vous pouvez faire tenir jusqu\'à ';
@@ -455,13 +470,13 @@ class LangFr extends Lang {
   String get hsHomeHint => 'Accueil. Appui long pour modifier.';
 
   @override
-  String get hsLane => 'Ligne';
+  String get hsLane => 'Colonne';
 
   @override
-  String get hsLanes => ' lignes.';
+  String get hsLanes => ' colonnes.';
 
   @override
-  String get hsLight => ', clair ';
+  String get hsLight => ', le thème clair ';
 
   @override
   String get hsOkay => 'D\'accord';
@@ -477,16 +492,16 @@ class LangFr extends Lang {
       '.\n\nCeci est la seule fenêtre contextuelle hors tutoriel, et sa seule apparition durant cette installation.';
 
   @override
-  String get hsScreenLanes => ' lignes à l\'écran.';
+  String get hsScreenLanes => ' colonnes à l\'écran.';
 
   @override
-  String get hsSpacer => 'Espacement';
+  String get hsSpacer => 'Espaceur';
 
   @override
   String get hsSpacing => '),\net espacement (';
 
   @override
-  String get hsThemes => ' thèmes.';
+  String get hsThemes => '.';
 
   @override
   String get hsUserSettings =>
@@ -499,7 +514,8 @@ class LangFr extends Lang {
   String get hsWidget => 'Widget';
 
   @override
-  String get hsWithCurr => 'Avec votre actuelle...\n\ntaille d\'icône (';
+  String get hsWithCurr =>
+      'Avec vos valeurs actuelles de...\n\ntaille d\'icône (';
 
   @override
   String get hsWithMin =>
@@ -536,7 +552,7 @@ class LangFr extends Lang {
   String get inChat => 'Chat';
 
   @override
-  String get inCheck => 'Chèque';
+  String get inCheck => 'Coche';
 
   @override
   String get inCloud => 'Cloud';
@@ -708,26 +724,26 @@ class LangFr extends Lang {
 
   @override
   String get mltAnywhere =>
-      'les applications et les dossiers peuvent/seront activés n\'importe où dans leur espace horizontal.\n';
+      'les applications et les dossiers peuvent être/seront activés n\'importe où dans leur espace horizontal.\n';
 
   @override
   String get mltAutoWidth =>
-      'les lignes seront dimensionnées en fonction de leur élément le plus large et de vos paramètres d\'espacement.\n';
+      'les colonnes seront dimensionnées en fonction de leur élément le plus large et de vos paramètres d\'espacement.\n';
 
   @override
-  String get mltLaneConfig => 'Configuration multi-lignes';
+  String get mltLaneConfig => 'Configuration multi-colonnes';
 
   @override
   String get mltOnlyButton =>
-      'les applications et dossiers peuvent/seront activés uniquement par leur(s) bouton(s).\n';
+      'les applications et dossiers peuvent être/seront activés uniquement par leur(s) bouton(s).\n';
 
   @override
   String get mltPagesDisabled =>
-      'Avec les pages désactivées, toutes les lignes partagent un défilement horizontal unique.\n';
+      'Avec les pages désactivées, toutes les colonnes partagent un défilement horizontal unique.\n';
 
   @override
   String get mltPagesEnabled =>
-      'Avec les pages activées, les lignes se comportent comme les pages d\'un lanceur traditionnel.\n';
+      'Avec les pages activées, les colonnes se comportent comme les pages d\'un lanceur traditionnel.\n';
 
   @override
   String get mltWideDisabled => 'Avec les tuiles larges désactivées...\n';
@@ -737,7 +753,7 @@ class LangFr extends Lang {
 
   @override
   String get mltWideWidth =>
-      'chaque ligne (contenant un élément) aura la largeur d\'un écran.\n';
+      'chaque colonne (contenant un élément) aura la largeur d\'un écran.\n';
 
   @override
   String pBanishApp(Object app) {
@@ -778,7 +794,7 @@ class LangFr extends Lang {
 
   @override
   String pWhatBanish(Object undo) {
-    return 'Lorsque vous bannissez une application, elle reste installée mais n\'apparaît plus du tout dans Liminal.\nLes applications bannies ne peuvent être ouvertes que depuis les paramètres du système, ou via un lien d\'application.\n\nLe bannissement est utile pour les applications utilitaires qui font aussi perdre du temps. Par exemple, vous voudrez peut-être bannir votre/vos navigateur(s) web.\nAinsi, vous pourrez utiliser des menus en ligne lorsque vous sortez, et réduire le \'doom scrolling\' lorsque vous restez chez vous.\n\n$undo\n\nRappel : le bannissement n\'est que pour l\'expérience utilisateur, pas pour la sécurité.\nPar exemple : si une application a l\'autorisation d\'accéder à la localisation en permanence, le fait de la bannir ne changera pas cela.';
+    return 'Lorsque vous bannissez une application, elle reste installée mais n\'apparaît plus du tout dans Liminal.\nLes applications bannies ne peuvent être ouvertes que depuis les paramètres du système, ou via un lien d\'application.\n\nLe bannissement est utile pour les applications utilitaires qui font aussi perdre du temps. Par exemple, vous voudrez peut-être bannir votre/vos navigateur(s) web.\nAinsi, vous pourrez utiliser des menus en ligne lorsque vous sortez, et réduire le « doom scrolling » lorsque vous restez chez vous.\n\n$undo\n\nRappel : le bannissement n\'est que pour l\'expérience utilisateur, pas pour la sécurité.\nPar exemple : si une application a l\'autorisation d\'accéder à la localisation en permanence, le fait de la bannir ne changera pas cela.';
   }
 
   @override
@@ -814,7 +830,7 @@ class LangFr extends Lang {
   String get thmToggle => 'Basculer le thème';
 
   @override
-  String get timBadTime => 'Temps invalide';
+  String get timBadTime => 'Durée invalide';
 
   @override
   String get timHours => 'Heures';
@@ -823,7 +839,7 @@ class LangFr extends Lang {
   String get timMins => 'Minutes';
 
   @override
-  String get timQuick => 'Temps rapides';
+  String get timQuick => 'Durées rapides';
 
   @override
   String get timSecs => 'Secondes';

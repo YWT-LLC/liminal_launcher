@@ -7,7 +7,7 @@ import '../../utils/export.dart';
 
 import 'dart:math';
 import 'package:open_ui/open_ui.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AppSecSettings extends StatelessWidget {
   final EzCP config;
@@ -64,9 +64,8 @@ class AppSecSettings extends StatelessWidget {
                       config,
                       key: ValueKey<String>('fes-$editReset'),
                       value: editReset,
-                      text: 'Reset home after edits',
-                      tipper:
-                          'Reset the home screen/turn off editing mode after you leave for the settings page.',
+                      text: l10n(config).gsEditReset,
+                      tipper: l10n(config).gsEditResetTip,
                       onChanged: (bool? value) async {
                         if (value == null) return;
 
@@ -96,9 +95,8 @@ class AppSecSettings extends StatelessWidget {
                       config,
                       key: ValueKey<String>('fas-$openReset'),
                       value: openReset,
-                      text: 'Reset after open',
-                      tipper:
-                          'Reset the home screen/turn off editing mode after you open a hidden app.',
+                      text: l10n(config).gsOpenReset,
+                      tipper: l10n(config).gsEditResetTip,
                       onChanged: (bool? value) async {
                         if (value == null) return;
 

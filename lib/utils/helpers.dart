@@ -6,8 +6,8 @@
 import './export.dart';
 
 import 'package:open_ui/open_ui.dart';
-import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:material_ui/material_ui.dart';
 
 Future<void> canEdit(EzCP config, Future<void> Function() onSuccess) async {
   if (!authToEdit(config)) {
@@ -46,7 +46,8 @@ Future<IconData?> chooseIcon(EzCP config, BuildContext context) {
           child: EzCol(
             children: <Widget>[
               // Switcher
-              SegmentedButton<bool>(
+              EzSegmentedButton<bool>(
+                config,
                 segments: <ButtonSegment<bool>>[
                   ButtonSegment<bool>(
                     value: false,
@@ -100,7 +101,7 @@ Future<IconData?> chooseIcon(EzCP config, BuildContext context) {
                                   config,
                                   child: EzIconButton(
                                     config,
-                                    icon: Icon(entry.value),
+                                    icon: EzIcon(config, entry.value),
                                     tooltip: entry.key,
                                     onPressed: () => Navigator.of(mCon).pop(entry.value),
                                   ),
@@ -120,21 +121,15 @@ Future<IconData?> chooseIcon(EzCP config, BuildContext context) {
                             .map((MapEntry<String, IconData> entry) => InkWell(
                                   onTap: () => Navigator.of(mCon).pop(entry.value),
                                   child: Container(
-                                    decoration: BoxDecoration(
-                                      border: Border(
-                                        bottom: BorderSide(
-                                          color: config.colors.primaryContainer,
-                                          width: config.borderWidth,
-                                        ),
-                                      ),
-                                    ),
+                                    decoration:
+                                        BoxDecoration(border: Border(bottom: config.borderSide())),
                                     padding: EdgeInsets.symmetric(vertical: config.spacing / 2),
                                     width: double.infinity,
                                     child: EzTextIconButton(
                                       config,
                                       style: TextButton.styleFrom(
                                         padding: EdgeInsets.zero,
-                                        backgroundColor: config.colors.surfaceContainer,
+                                        backgroundColor: config.surfaceContainerFill.asColor,
                                       ),
                                       label: entry.key,
                                       icon: EzIcon(config, entry.value),

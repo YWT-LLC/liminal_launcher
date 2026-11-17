@@ -4,14 +4,16 @@
  */
 
 import 'package:open_ui/open_ui.dart';
-import 'package:flutter/material.dart';
 import 'package:ywt_private/ywt_private.dart' as ywt;
+
+import 'package:material_ui/material_ui.dart';
 
 class LiminalScaffold extends StatelessWidget {
   final EzCP config;
   final Widget body;
   final List<Widget>? fabs;
   final bool isHome;
+  final bool settingsA11;
 
   const LiminalScaffold(
     this.config, {
@@ -19,28 +21,37 @@ class LiminalScaffold extends StatelessWidget {
     required this.body,
     this.fabs,
     this.isHome = false,
+    this.settingsA11 = false,
   });
 
   @override
   Widget build(BuildContext context) => EzAdaptiveParent(
         small: EzScaffold(
           config,
-          body: EzScreen(
-            config,
-            margin: EdgeInsets.only(
-              left: config.marginVal,
-              right: config.marginVal,
-              top: safeTop(context),
-              bottom: config.marginVal,
-            ),
-            child: body,
-          ),
           backgroundColor: Colors.transparent,
+          body: Container(
+            decoration:
+                (config.backgroundImagePath == noImageValue) ? null : config.screenDecoration,
+            height: double.infinity,
+            width: double.infinity,
+            child: Container(
+              padding: EdgeInsets.only(
+                left: config.marginVal,
+                right: config.marginVal,
+                top: safeTop(context),
+                bottom: config.marginVal,
+              ),
+              height: double.infinity,
+              width: double.infinity,
+              child: Material(type: MaterialType.transparency, child: body),
+            ),
+          ),
+          footer: settingsA11 ? EzFooter(config, a11howPath: ywt.openUIContributeA11) : null,
           fabs: <Widget>[
             if (!isHome)
               EzUpdaterFAB(
                 config,
-                appVersion: '1.1.1',
+                appVersion: '1.1.2',
                 versionSource:
                     'https://raw.githubusercontent.com/YWT-LLC/liminal_launcher/refs/heads/main/APP_VERSION',
                 gPlay: ywt.liminalGPlay,

@@ -158,14 +158,15 @@ class LangEs extends Lang {
   String get evtNewTask => 'Nueva tarea';
 
   @override
-  String get evtNoCalendarBody => 'Can\'t find a default calendar app.';
-
-  @override
-  String get evtNoCalendarTitle => 'What shall be done?\n';
+  String get evtNoCalendarBody =>
+      'No se encuentra ninguna aplicación de calendario predeterminada.';
 
   @override
   String get evtNoCalendarLabel =>
-      'Note: \'Task\' is just share underneath. You\'ll choose a default app to share with.\nWe recommend using a task app, but don\'t require.\nResults may vary.';
+      'Nota: \'Tarea\' solo usa la función de compartir internamente. Elegirás una aplicación predeterminada con la que compartir.\nRecomendamos usar una aplicación de tareas, pero no es obligatorio.\nLos resultados pueden variar.';
+
+  @override
+  String get evtNoCalendarTitle => '¿Qué hay que hacer?\n';
 
   @override
   String get evtShare =>
@@ -234,7 +235,7 @@ class LangEs extends Lang {
   String get gFix => 'Corregir...';
 
   @override
-  String get gGrid => 'Red';
+  String get gGrid => 'Cuadrícula';
 
   @override
   String get gHidden => 'Oculto';
@@ -278,7 +279,7 @@ class LangEs extends Lang {
 
   @override
   String gRemoving(Object app) {
-    return 'Eliminar $app';
+    return 'Eliminando $app';
   }
 
   @override
@@ -348,6 +349,13 @@ class LangEs extends Lang {
   String get gsAutoSearch => 'Búsqueda automática en la lista de aplicaciones';
 
   @override
+  String get gsEditReset => 'Restablecer inicio tras editar';
+
+  @override
+  String get gsEditResetTip =>
+      'Restablece la pantalla de inicio/desactiva el modo de edición al salir hacia la página de configuración.';
+
+  @override
   String get gsHomeRipple => 'Animación de ondulación en inicio';
 
   @override
@@ -364,7 +372,14 @@ class LangEs extends Lang {
 
   @override
   String get gsNoBothHome =>
-      'Nota: las páginas de inicio no tienen un sistema de actualizar ambos (';
+      'Nota: las páginas de inicio no tienen un sistema de \"actualizar ambos\" (';
+
+  @override
+  String get gsOpenReset => 'Restablecer tras abrir';
+
+  @override
+  String get gsOpenResetTip =>
+      'Restablece la pantalla de inicio/desactiva el modo de edición después de abrir una aplicación oculta.';
 
   @override
   String get gsPositiveOnly => 'Solo números enteros positivos';
@@ -385,22 +400,22 @@ class LangEs extends Lang {
 
   @override
   String gsSwipe(Object direction) {
-    return 'Deslizamiento hacia $direction';
+    return 'Deslizar: $direction';
   }
 
   @override
   String gsSwipeDesc(Object direction) {
-    return 'Elige una aplicación de acceso rápido que se abrirá cuando deslices hacia $direction en la pantalla de inicio.';
+    return 'Elige una aplicación de acceso rápido que se abrirá cuando deslices hacia la $direction en la pantalla de inicio.';
   }
 
   @override
   String gsSwipeHint(Object direction) {
-    return 'Elige la aplicación que se abre al deslizar hacia $direction';
+    return 'Elige la aplicación que se abre al deslizar hacia la $direction';
   }
 
   @override
   String gsSwipeLabel(Object direction) {
-    return 'Seleccionando el deslizamiento hacia $direction';
+    return 'Seleccionando el deslizamiento hacia la $direction';
   }
 
   @override
@@ -495,7 +510,8 @@ class LangEs extends Lang {
   String get hsWidget => 'Widget';
 
   @override
-  String get hsWithCurr => 'Con tu actual...\n\ntamaño de ícono (';
+  String get hsWithCurr =>
+      'Con tus valores actuales de...\n\ntamaño de ícono (';
 
   @override
   String get hsWithMin => ' Con los valores mínimos, pueden caber hasta ';
@@ -531,7 +547,7 @@ class LangEs extends Lang {
   String get inChat => 'Chat';
 
   @override
-  String get inCheck => 'Verificar';
+  String get inCheck => 'Marca de verificación';
 
   @override
   String get inCloud => 'Nube';
@@ -769,7 +785,7 @@ class LangEs extends Lang {
   }
 
   @override
-  String get pWantTo => 'Quieres...';
+  String get pWantTo => '¿Quieres...?';
 
   @override
   String pWhatBanish(Object undo) {
@@ -809,7 +825,7 @@ class LangEs extends Lang {
   String get thmToggle => 'Alternar tema';
 
   @override
-  String get timBadTime => 'Hora inválida';
+  String get timBadTime => 'Tiempo inválido';
 
   @override
   String get timHours => 'Horas';
@@ -849,7 +865,7 @@ class LangEs extends Lang {
 
   @override
   String get togSomePlayers =>
-      'Nota:\nEstos botones solo funcionan si el reproductor activo es compatible con ellos. Algunos reproductores de música no tienen la función de avance/rebobinar, por ejemplo';
+      'Nota:\nEstos botones solo funcionan si el reproductor activo es compatible con ellos. Algunos reproductores de música no tienen la función de avance/rebobinar, por ejemplo.';
 
   @override
   String get togTitle => 'Controles multimedia';

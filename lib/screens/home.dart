@@ -10,11 +10,11 @@ import 'package:ywt_private/ywt_private.dart' as ywt;
 
 import 'dart:async';
 import 'package:open_ui/open_ui.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -63,12 +63,12 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     );
     rippleController.addListener(() => rippleProgress.value = rippleController.value);
 
-    final OverlayEntry ripple = ywt.ezRipple(
+    final OverlayEntry ripple = ezRipple(
       controller: rippleController,
       width: widthOf(context),
       height: heightOf(context),
       position: details.globalPosition,
-      color: config.colors.primary,
+      fill: config.primaryFill,
       oMin: focusOpacity,
     );
     Overlay.of(context).insert(ripple);
@@ -127,9 +127,9 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                             labelType: null,
                             labelStyle: null,
                             textColor: null,
-                            iconColor: null,
-                            backgroundColor: null,
-                            outlineColor: null,
+                            iconFill: null,
+                            backgroundFill: null,
+                            outlineFill: null,
                           ),
                           lane: lane,
                           index: appInfo.homeLane(config, lane).length - 1,
@@ -139,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                         config,
                         onPressed: doNothing,
                         label: l10n(config).hsHome,
-                        icon: EzIcon(config, Icons.add, color: config.colors.onSurface),
+                        icon: EzIcon(config, Icons.add, fill: config.onSurfaceFiller),
                         textStyle: config.labelStyle,
                       ),
                     ),
@@ -171,9 +171,9 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                         labelType: null,
                         labelStyle: null,
                         textColor: null,
-                        iconColor: null,
-                        backgroundColor: null,
-                        outlineColor: null,
+                        iconFill: null,
+                        backgroundFill: null,
+                        outlineFill: null,
                       ),
                       lane: lane,
                       index: appInfo.homeLane(config, lane).length - 1,
@@ -322,7 +322,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
             EzToolTipper(
               config,
               message:
-                  '${l10n(config).hsWithCurr}${config.iconSize.toStringAsFixed(1)}${l10n(config).hsPadding}${config.padding.toStringAsFixed(0)}${l10n(config).hsSpacing}${config.spacing.toStringAsFixed(1)})\n\n${l10n(config).hsCanFit}${(screenWidth / (config.iconSize + config.padding + config.spacing)).toStringAsFixed(2)}${l10n(config).hsScreenLanes}${(config.iconSize != minIconSize && config.padding != minPadding && config.spacing != minSpacing) ? '${l10n(config).hsWithMin}${(screenWidth / (minIconSize + minPadding + minSpacing)).toStringAsFixed(2)}${l10n(config).hsLanes}' : ''}',
+                  '${l10n(config).hsWithCurr}${config.iconSize.toStringAsFixed(1)}${l10n(config).hsPadding}${config.padding.toStringAsFixed(0)}${l10n(config).hsSpacing}${config.spacing.toStringAsFixed(1)})\n\n${l10n(config).hsCanFit}${(screenWidth / (config.iconSize + config.padding + config.spacing)).toStringAsFixed(2)}${l10n(config).hsScreenLanes}${(config.iconSize != ywt.minIconSize && config.padding != ywt.minPadding && config.spacing != ywt.minSpacing) ? '${l10n(config).hsWithMin}${(screenWidth / (ywt.minIconSize + ywt.minPadding + ywt.minSpacing)).toStringAsFixed(2)}${l10n(config).hsLanes}' : ''}',
             ),
           ]),
           config.separator,
@@ -344,8 +344,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
       nodes.addAll(<Widget>[
         Container(
           constraints: BoxConstraints.tightFor(height: config.iconSize, width: config.iconSize),
-          decoration: BoxDecoration(
-            color: i == lane ? config.colors.primary : config.colors.surface,
+          decoration: config.boxDeco(
+            fill: i == lane ? config.primaryFill : config.surfaceFill,
             shape: BoxShape.circle,
           ),
         ),
@@ -354,38 +354,28 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     }
     if (nodes.length > 2) nodes.removeLast();
 
-    pagePosEntry = OverlayEntry(
-      builder: (BuildContext oCon) => Positioned(
-        bottom: safeBottom(context),
-        left: 0,
-        right: 0,
-        child: Material(
-          type: MaterialType.transparency,
-          child: IgnorePointer(
-            child: Center(
-              child: EzScrollView(
+    pagePosEntry = EzOverlayEntry(
+      bottom: safeBottom(context),
+      left: 0,
+      right: 0,
+      child: Center(
+        child: EzScrollView(
+          config,
+          startCentered: true,
+          thumbVisibility: false,
+          scrollDirection: Axis.horizontal,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.all(config.marginVal),
+              decoration: config.boxDeco(fill: config.outlineFiller),
+              child: EzRow(
                 config,
-                startCentered: true,
-                thumbVisibility: false,
-                scrollDirection: Axis.horizontal,
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.all(config.marginVal),
-                    decoration: BoxDecoration(
-                      borderRadius: config.buttonShape.radius,
-                      color: config.colors.outline,
-                    ),
-                    child: EzRow(
-                      config,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: forward ? nodes : nodes.reversed.toList(),
-                    ),
-                  ),
-                ],
+                children: forward ? nodes : nodes.reversed.toList(),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -489,7 +479,11 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
             config,
             onPressed: doNothing,
             label: l10n(config).gHidden,
-            icon: EzIcon(config, Icons.visibility_off, color: config.colors.onSurface),
+            icon: EzIcon(
+              config,
+              Icons.visibility_off,
+              fill: config.onSurfaceFiller,
+            ),
             textStyle: config.labelStyle,
           ),
         ),
@@ -534,13 +528,11 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                     valueListenable: editTilePadding,
                     builder: (_, EdgeInsets padding, __) => Container(
                       padding: padding,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: config.colors.secondaryContainer,
-                          width: config.borderWidth,
-                        ),
-                        borderRadius: EzButtonShape.roundRect.radius,
-                        color: config.colors.secondary.withValues(alpha: focusOpacity),
+                      decoration: config.boxDeco(
+                        border: config.boxBorder(fill: config.secondaryContainerFill),
+                        borderRadius: config.buttonShape.textRadius,
+                        fill: config.secondaryFill,
+                        opacity: focusOpacity,
                       ),
                       child: AppTile(
                         config,
@@ -588,13 +580,11 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                     valueListenable: editTilePadding,
                     builder: (_, EdgeInsets padding, __) => Container(
                       padding: padding,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: config.colors.secondaryContainer,
-                          width: config.borderWidth,
-                        ),
-                        borderRadius: EzButtonShape.roundRect.radius,
-                        color: config.colors.secondary.withValues(alpha: focusOpacity),
+                      decoration: config.boxDeco(
+                        border: config.boxBorder(fill: config.secondaryContainerFill),
+                        borderRadius: config.buttonShape.textRadius,
+                        fill: config.secondaryFill,
+                        opacity: focusOpacity,
                       ),
                       child: FolderTile(
                         config,
@@ -640,13 +630,11 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       onTap: doNothing,
                       kid: Container(
                         padding: padding,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: config.colors.secondaryContainer,
-                            width: config.borderWidth,
-                          ),
-                          borderRadius: EzButtonShape.roundRect.radius,
-                          color: config.colors.secondary.withValues(alpha: focusOpacity),
+                        decoration: config.boxDeco(
+                          border: config.boxBorder(fill: config.secondaryContainerFill),
+                          borderRadius: config.buttonShape.textRadius,
+                          fill: config.secondaryFill,
+                          opacity: focusOpacity,
                         ),
                         child: drawWidget(
                           config,
@@ -767,7 +755,6 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: vAlign.mainAxis,
               crossAxisAlignment: hAlign.crossAxis,
-              physics: const ClampingScrollPhysics(),
               children: _buildTiles(config, appInfo, lane, hAlign: hAlign, vAlign: vAlign),
             );
 
@@ -1031,7 +1018,6 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                               config,
                               mainAxisSize: MainAxisSize.max,
                               scrollDirection: Axis.horizontal,
-                              physics: const ClampingScrollPhysics(),
                               mainAxisAlignment: horizontalAlign(config).mainAxis,
                               crossAxisAlignment: verticalAlign(config).crossAxis,
                               children: buildGrid(config, appInfo, numLanes),
@@ -1179,7 +1165,7 @@ Future<void> _free99(EzCP config, BuildContext context) async {
             EzTextIconButton(
               config,
               label: l10n(config).hsOkay,
-              style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
+              style: TextButton.styleFrom(backgroundColor: config.surfaceContainerFill.asColor),
               icon:
                   read ? EzIcon(config, Icons.done) : EzCountdownTimer(config, duration: readTime),
               onPressed: () => read ? Navigator.of(mCon).pop() : doNothing(),

@@ -7,7 +7,7 @@ import '../../utils/export.dart';
 import '../export.dart';
 
 import 'package:open_ui/open_ui.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class EditContainer extends StatefulWidget {
   final EzCP config;
@@ -58,19 +58,22 @@ class _EditContainerState extends State<EditContainer> with SingleTickerProvider
         child: EzRow(
           widget.config,
           children: <Widget>[
-            EzIcon(widget.config, Icons.drag_handle, color: widget.config.colors.outline),
+            EzIcon(
+              widget.config,
+              Icons.drag_handle,
+              fill: widget.config.outlineFiller,
+            ),
             widget.config.rowMargin,
             MenuAnchor(
               controller: widget.menuControl,
               builder: (_, __, ___) => AnimatedBuilder(
                 animation: _animation,
                 builder: (_, __) => Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: widget.config.colors.secondary.withValues(alpha: _animation.value),
-                      width: widget.config.borderWidth,
+                  decoration: widget.config.boxDeco(
+                    border: widget.config.boxBorder(
+                      fill: widget.config.secondaryFill,
+                      opacity: _animation.value,
                     ),
-                    borderRadius: widget.config.buttonShape.radius,
                   ),
                   child: widget.child,
                 ),
@@ -78,7 +81,11 @@ class _EditContainerState extends State<EditContainer> with SingleTickerProvider
               menuChildren: widget.menuChildren,
             ),
             widget.config.rowMargin,
-            EzIcon(widget.config, Icons.drag_handle, color: widget.config.colors.outline),
+            EzIcon(
+              widget.config,
+              Icons.drag_handle,
+              fill: widget.config.outlineFiller,
+            ),
           ],
         ),
       );

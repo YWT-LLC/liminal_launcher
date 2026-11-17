@@ -7,8 +7,8 @@ import '../../utils/export.dart';
 import '../export.dart';
 
 import 'package:open_ui/open_ui.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AppTileSetting extends StatelessWidget {
   final EzCP config;
@@ -52,10 +52,10 @@ class AppTileSetting extends StatelessWidget {
                   buttonType: BTConfig.build(labelType, icons: showIcon, elevated: elevated),
                   labelType: labelType,
                   labelStyle: TxtStile.body,
-                  textColor: config.colors.onSurface,
-                  iconColor: config.colors.primary,
-                  backgroundColor: config.colors.surface,
-                  outlineColor: config.colors.primaryContainer,
+                  textColor: config.onSurface,
+                  iconFill: config.primaryFill,
+                  backgroundFill: config.surfaceFill,
+                  outlineFill: config.primaryContainerFill,
                   onPressed: doNothing,
                   onLongPress: doNothing,
                 )
@@ -68,10 +68,10 @@ class AppTileSetting extends StatelessWidget {
                   buttonType: BTConfig.build(labelType, icons: showIcon, elevated: elevated),
                   labelType: labelType,
                   labelStyle: TxtStile.body,
-                  textColor: config.colors.onSurface,
-                  iconColor: config.colors.primary,
-                  backgroundColor: config.colors.surface,
-                  outlineColor: config.colors.primaryContainer,
+                  textColor: config.onSurface,
+                  iconFill: config.primaryFill,
+                  backgroundFill: config.surfaceFill,
+                  outlineFill: config.primaryContainerFill,
                   onPressed: doNothing,
                   onLongPress: doNothing,
                 );
@@ -107,8 +107,11 @@ class AppTileSetting extends StatelessWidget {
                     label: l10n(config).dbsLabelType,
                     widthEntry: l10n(config).dbsInitials,
                     dropdownMenuEntries: LabelType.values
-                        .map((LabelType lt) =>
-                            DropdownMenuEntry<LabelType>(value: lt, label: lt.name(config)))
+                        .map((LabelType lt) => EzDropMenuEntry<LabelType>(
+                              config,
+                              value: lt,
+                              label: lt.name(config),
+                            ))
                         .toList(),
                     enableSearch: false,
                     initialSelection: labelType,

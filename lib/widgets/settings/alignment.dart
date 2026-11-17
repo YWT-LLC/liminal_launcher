@@ -6,7 +6,7 @@
 import '../../utils/export.dart';
 
 import 'package:open_ui/open_ui.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AlignmentSelectors extends StatefulWidget {
   final EzCP config;
@@ -47,15 +47,15 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
         children: <Widget>[
           // Preview
           Container(
-            color: widget.config.colors.onSurface,
+            color: widget.config.onSurface,
             height: heightOf(context) * _sizeMod,
             width: widthOf(context) * _sizeMod,
             child: Stack(
               children: <Widget>[
                 // Background
                 Container(
-                  decoration: BoxDecoration(
-                    color: widget.config.colors.surface,
+                  decoration: widget.config.boxDeco(
+                    borderRadius: BorderRadius.zero,
                     image: (widget.config.backgroundImagePath == noImageValue)
                         ? null
                         : widget.config.backgroundImage,
@@ -85,7 +85,8 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
           EzWrap(children: <Widget>[
             ezWrap(
               widget.config,
-              child: SegmentedButton<ListAlignment>(
+              child: EzSegmentedButton<ListAlignment>(
+                widget.config,
                 segments: alignmentSegments,
                 selected: <ListAlignment>{h},
                 showSelectedIcon: false,
@@ -106,7 +107,8 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
             ),
             ezWrap(
               widget.config,
-              child: SegmentedButton<ListAlignment>(
+              child: EzSegmentedButton<ListAlignment>(
+                widget.config,
                 segments: alignmentSegments,
                 direction: Axis.vertical,
                 selected: <ListAlignment>{v},

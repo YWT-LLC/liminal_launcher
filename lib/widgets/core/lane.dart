@@ -8,8 +8,8 @@ import '../../utils/export.dart';
 
 import 'dart:async';
 import 'package:open_ui/open_ui.dart';
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
 //* Core 'Widget' *//
 
@@ -74,7 +74,7 @@ class LaneHeader extends StatelessWidget {
                 EzIconButton(
                   config,
                   onPressed: () => _delete(context),
-                  icon: const Icon(Icons.delete),
+                  icon: EzIcon(config, Icons.delete),
                   tooltip: numLanes > 1 ? config.ezL10n.gRemove : l10n(config).gClear,
                 ),
                 config.rowSpacer,
@@ -83,7 +83,7 @@ class LaneHeader extends StatelessWidget {
                 EzIconButton(
                   config,
                   onPressed: _dupe,
-                  icon: const Icon(Icons.copy),
+                  icon: EzIcon(config, Icons.copy),
                   tooltip: l10n(config).gDupe,
                 ),
                 config.rowSpacer,
@@ -100,7 +100,7 @@ class LaneHeader extends StatelessWidget {
                     hAlign: pos.hAlign,
                     vAlign: pos.vAlign,
                   ),
-                  icon: const Icon(Icons.edit),
+                  icon: EzIcon(config, Icons.edit),
                   tooltip: l10n(config).gEdit,
                 ),
                 config.rowSpacer,
@@ -109,7 +109,7 @@ class LaneHeader extends StatelessWidget {
                 EzIconButton(
                   config,
                   onPressed: () => addModal(config, appInfo, pos.lane, pos.hAlign, pos.vAlign),
-                  icon: const Icon(Icons.add),
+                  icon: EzIcon(config, Icons.add),
                   tooltip: l10n(config).gAdd,
                 ),
               ],
@@ -126,7 +126,7 @@ class LaneHeader extends StatelessWidget {
                 EzIconButton(
                   config,
                   onPressed: () => toggleMenu(controller),
-                  icon: const Icon(Icons.more_vert),
+                  icon: EzIcon(config, Icons.more_vert),
                   tooltip: config.ezL10n.gOptions,
                 ),
               ],
@@ -179,7 +179,7 @@ class AddLane extends StatelessWidget {
     bool useWide = wideTiles(config);
 
     final TextStyle? focussed = config.bodyStyle;
-    final TextStyle? hidden = config.labelStyle?.copyWith(color: config.colors.outline);
+    final TextStyle? hidden = config.labelStyle?.copyWith(color: config.outline);
 
     await ezModal(
       config,
@@ -353,10 +353,10 @@ Future<void> _editLane(
                   height: appIconSize(config),
                   width: appIconSize(config),
                 ),
-                decoration: BoxDecoration(
-                  color: i == pos
-                      ? (i == lane ? config.colors.tertiary : config.colors.secondary)
-                      : config.colors.surface,
+                decoration: config.boxDeco(
+                  fill: i == pos
+                      ? (i == lane ? config.tertiaryFill : config.secondaryFill)
+                      : config.surfaceFill,
                   shape: BoxShape.circle,
                 ),
                 child: Center(
@@ -365,10 +365,10 @@ Future<void> _editLane(
                     textAlign: TextAlign.center,
                     style: config.labelStyle?.copyWith(
                       color: i == pos
-                          ? config.colors.onSecondary
+                          ? config.onSecondary
                           : i == lane
-                              ? config.colors.onTertiary
-                              : config.colors.onSurface,
+                              ? config.onTertiary
+                              : config.onSurface,
                     ),
                   ),
                 ),
@@ -401,7 +401,7 @@ Future<void> _editLane(
                     child: EzIconButton(
                       config,
                       enabled: pos > 0,
-                      icon: const Icon(Icons.keyboard_arrow_left),
+                      icon: EzIcon(config, Icons.keyboard_arrow_left),
                       tooltip: l10n(config).mcMoveLeft,
                       onPressed: () => setModal(() => pos -= 1),
                     ),
@@ -423,7 +423,7 @@ Future<void> _editLane(
                     child: EzIconButton(
                       config,
                       enabled: pos < (numLanes - 1),
-                      icon: const Icon(Icons.keyboard_arrow_right),
+                      icon: EzIcon(config, Icons.keyboard_arrow_right),
                       tooltip: l10n(config).mcMoveRight,
                       onPressed: () => setModal(() => pos += 1),
                     ),
@@ -444,18 +444,18 @@ Future<void> _editLane(
 
             // Align
             Container(
-              color: config.colors.onSurface,
+              color: config.onSurface,
               height: heightOf(context) * sizeMod,
               width: widthOf(context) * sizeMod,
               child: Stack(
                 children: <Widget>[
                   // Background
                   Container(
-                    decoration: BoxDecoration(
-                      color: config.colors.surface,
+                    decoration: config.boxDeco(
                       image: (config.backgroundImagePath == noImageValue)
                           ? null
                           : config.backgroundImage,
+                      borderRadius: BorderRadius.zero,
                     ),
                     margin: EdgeInsets.all(config.marginVal * sizeMod),
                   ),
@@ -468,15 +468,15 @@ Future<void> _editLane(
                         height: appIconSize(config),
                         width: appIconSize(config),
                       ),
-                      decoration: BoxDecoration(
-                        color: config.colors.secondary,
+                      decoration: config.boxDeco(
+                        fill: config.secondaryFill,
                         shape: BoxShape.circle,
                       ),
                       child: Center(
                         child: Text(
                           pos.toString(),
                           textAlign: TextAlign.center,
-                          style: config.labelStyle?.copyWith(color: config.colors.onSecondary),
+                          style: config.labelStyle?.copyWith(color: config.onSecondary),
                         ),
                       ),
                     ),
@@ -505,7 +505,8 @@ Future<void> _editLane(
               children: <Widget>[
                 ezWrap(
                   config,
-                  child: SegmentedButton<ListAlignment>(
+                  child: EzSegmentedButton<ListAlignment>(
+                    config,
                     segments: alignmentSegments,
                     selected: <ListAlignment>{hA},
                     showSelectedIcon: false,
@@ -517,7 +518,8 @@ Future<void> _editLane(
                 ),
                 ezWrap(
                   config,
-                  child: SegmentedButton<ListAlignment>(
+                  child: EzSegmentedButton<ListAlignment>(
+                    config,
                     segments: alignmentSegments,
                     direction: Axis.vertical,
                     selected: <ListAlignment>{vA},
@@ -536,7 +538,7 @@ Future<void> _editLane(
             EzTextIconButton(
               config,
               label: l10n(config).dpsPageSettings,
-              style: TextButton.styleFrom(backgroundColor: config.colors.surfaceContainer),
+              style: TextButton.styleFrom(backgroundColor: config.surfaceContainerFill.asColor),
               icon: EzIcon(config, Icons.launch),
               onPressed: () {
                 Navigator.of(mCon).pop();

@@ -9,8 +9,8 @@ import '../../export.dart';
 
 import 'dart:async';
 import 'package:open_ui/open_ui.dart';
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
 //* Core Widget *//
 
@@ -94,33 +94,28 @@ class _EventWidgetState extends State<EventWidget> {
       : ((overlayEntry == null) ? showOverlay() : overlayEntry!.markNeedsBuild());
 
   void showOverlay() {
-    overlayEntry = OverlayEntry(
-      builder: (BuildContext context) => Positioned(
-        top: safeTop(context),
-        left: widget.config.marginVal,
-        right: widget.config.marginVal,
-        child: Material(
-          type: MaterialType.transparency,
-          child: EzTextField(
-            controller: eventCon,
-            constraints: BoxConstraints.loose(Size.infinite),
-            hintText: widget._isCalendar
-                ? l10n(widget.config).evtNewEvent
-                : l10n(widget.config).evtNewTask,
-            onChanged: onChanged,
-            onFieldSubmitted: (String entry) async {
-              final bool success = widget._isCalendar
-                  ? await createCalendarEvent(entry)
-                  : await createTask(entry, widget._shareDest);
+    overlayEntry = EzOverlayEntry(
+      top: safeTop(context),
+      left: widget.config.marginVal,
+      right: widget.config.marginVal,
+      ignore: false,
+      child: EzTextField(
+        controller: eventCon,
+        constraints: BoxConstraints.loose(Size.infinite),
+        hintText:
+            widget._isCalendar ? l10n(widget.config).evtNewEvent : l10n(widget.config).evtNewTask,
+        onChanged: onChanged,
+        onFieldSubmitted: (String entry) async {
+          final bool success = widget._isCalendar
+              ? await createCalendarEvent(entry)
+              : await createTask(entry, widget._shareDest);
 
-              eventCon.clear();
-              removeOverlay();
+          eventCon.clear();
+          removeOverlay();
 
-              if (!success && context.mounted) await selfDestruct();
-            },
-            validator: null,
-          ),
-        ),
+          if (!success && context.mounted) await selfDestruct();
+        },
+        validator: null,
       ),
     );
     ezRootOverlay?.insert(overlayEntry!);
@@ -228,14 +223,7 @@ class _EventWidgetState extends State<EventWidget> {
       child: ExcludeSemantics(
         child: widget._isCalendar
             ? Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: widget.config.colors.primaryContainer,
-                    width: widget.config.borderWidth,
-                  ),
-                  borderRadius: widget.config.buttonShape.radius,
-                  color: widget.config.colors.surface,
-                ),
+                decoration: widget.config.boxDeco(border: widget.config.boxBorder()),
                 padding: EzInsets.wrap(widget.config.padding),
                 child: EzIcon(widget.config, Icons.edit_calendar),
               )
@@ -246,14 +234,7 @@ class _EventWidgetState extends State<EventWidget> {
                     height: appIconSize(widget.config),
                   )
                 : Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: widget.config.colors.primaryContainer,
-                        width: widget.config.borderWidth,
-                      ),
-                      borderRadius: widget.config.buttonShape.radius,
-                      color: widget.config.colors.surface,
-                    ),
+                    decoration: widget.config.boxDeco(border: widget.config.boxBorder()),
                     padding: EzInsets.wrap(widget.config.padding),
                     child: EzIcon(widget.config, Icons.add_task),
                   ),
@@ -510,7 +491,7 @@ class AddEvent extends StatelessWidget {
       ? EzIconButton(
           config,
           onPressed: onTap,
-          icon: const Icon(Icons.edit_calendar),
+          icon: EzIcon(config, Icons.edit_calendar),
           tooltip: l10n(config).gAdd,
         )
       : GestureDetector(
@@ -540,7 +521,7 @@ class AddEvent extends StatelessWidget {
                 config.rowMargin,
                 EzIconButton(
                   config,
-                  icon: const Icon(Icons.edit_calendar),
+                  icon: EzIcon(config, Icons.edit_calendar),
                   onPressed: onTap,
                   tooltip: l10n(config).gAdd,
                 ),
@@ -649,10 +630,10 @@ Future<void> _openEdits(
           buttonType: listBT(config),
           labelType: listLabels(config),
           labelStyle: TxtStile.body,
-          textColor: config.colors.onSurface,
-          iconColor: config.colors.primary,
-          backgroundColor: config.colors.surface,
-          outlineColor: config.colors.primaryContainer,
+          textColor: config.onSurface,
+          iconFill: config.primaryFill,
+          backgroundFill: config.surfaceFill,
+          outlineFill: config.primaryContainerFill,
           onPressed: () => pContext.pushNamed(
             appListScreenName,
             extra: ListConfig(

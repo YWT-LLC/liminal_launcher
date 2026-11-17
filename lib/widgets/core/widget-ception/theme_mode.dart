@@ -8,7 +8,7 @@ import '../../export.dart';
 
 import 'dart:async';
 import 'package:open_ui/open_ui.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 //* Core Widget *//
 
@@ -112,11 +112,14 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
                       },
                       child: EzIconButton(
                         widget.config,
-                        icon: Icon(widget.config.themeMode == ThemeMode.system
-                            ? (widget.config.isDark
-                                ? Icons.dark_mode_outlined
-                                : Icons.light_mode_outlined)
-                            : (widget.config.isDark ? Icons.dark_mode : Icons.light_mode)),
+                        icon: EzIcon(
+                          widget.config,
+                          widget.config.themeMode == ThemeMode.system
+                              ? (widget.config.isDark
+                                  ? Icons.dark_mode_outlined
+                                  : Icons.light_mode_outlined)
+                              : (widget.config.isDark ? Icons.dark_mode : Icons.light_mode),
+                        ),
                         tooltip: l10n(widget.config).thmToggle,
                         onPressed: () async {
                           await EzCM.setBool(isDarkThemeKey, !widget.config.isDark);
@@ -157,9 +160,9 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
                 size: widget._size,
               ),
             ),
-            child: EzIconButton(
+            child: EzIconTouch(
               widget.config,
-              icon: Icon(widget.config.isDark ? Icons.dark_mode : Icons.light_mode),
+              icon: widget.config.isDark ? Icons.dark_mode : Icons.light_mode,
               tooltip: l10n(widget.config).thmToggle,
               onPressed: () => toggleMenu(menuControl),
             ),
@@ -245,9 +248,11 @@ class AddThemeMode extends StatelessWidget {
       ? EzIconButton(
           config,
           onPressed: onTap,
-          icon: Icon(config.themeMode == ThemeMode.system
-              ? (config.isDark ? Icons.dark_mode_outlined : Icons.light_mode_outlined)
-              : (config.isDark ? Icons.dark_mode : Icons.light_mode)),
+          icon: EzIcon(
+              config,
+              config.themeMode == ThemeMode.system
+                  ? (config.isDark ? Icons.dark_mode_outlined : Icons.light_mode_outlined)
+                  : (config.isDark ? Icons.dark_mode : Icons.light_mode)),
           tooltip: l10n(config).gAdd,
         )
       : GestureDetector(
@@ -257,8 +262,12 @@ class AddThemeMode extends StatelessWidget {
               config,
               label: config.ezL10n.ssThemeMode,
               widthEntry: config.ezL10n.ssThemeMode,
-              dropdownMenuEntries: <DropdownMenuEntry<bool>>[
-                DropdownMenuEntry<bool>(label: l10n(config).thmSelector, value: true),
+              dropdownMenuEntries: <EzDropMenuEntry<bool>>[
+                EzDropMenuEntry<bool>(
+                  config,
+                  label: l10n(config).thmSelector,
+                  value: true,
+                ),
               ],
               enabled: false,
               initialSelection: true,

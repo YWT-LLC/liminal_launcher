@@ -8,8 +8,8 @@ import '../../export.dart';
 
 import 'dart:async';
 import 'package:open_ui/open_ui.dart';
-import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 //* Core Widget *//
@@ -135,23 +135,19 @@ class _SearchWidgetState extends State<SearchWidget> {
       : ((overlayEntry == null) ? showOverlay() : overlayEntry!.markNeedsBuild());
 
   void showOverlay() {
-    overlayEntry = OverlayEntry(
-      builder: (BuildContext context) => Positioned(
-        top: safeTop(context),
-        left: widget.config.marginVal,
-        right: widget.config.marginVal,
-        child: Material(
-          type: MaterialType.transparency,
-          child: EzTextField(
-            controller: queryCon,
-            constraints: BoxConstraints.loose(Size.infinite),
-            hintText: widget._engine.name,
-            keyboardType: TextInputType.webSearch,
-            onChanged: onChanged,
-            onFieldSubmitted: search,
-            validator: null,
-          ),
-        ),
+    overlayEntry = EzOverlayEntry(
+      top: safeTop(context),
+      left: widget.config.marginVal,
+      right: widget.config.marginVal,
+      ignore: false,
+      child: EzTextField(
+        controller: queryCon,
+        constraints: BoxConstraints.loose(Size.infinite),
+        hintText: widget._engine.name,
+        keyboardType: TextInputType.webSearch,
+        onChanged: onChanged,
+        onFieldSubmitted: search,
+        validator: null,
       ),
     );
     ezRootOverlay?.insert(overlayEntry!);
@@ -228,7 +224,7 @@ class _SearchWidgetState extends State<SearchWidget> {
               child: (widget._size == WWGGSize.button)
                   ? EzIconButton(
                       widget.config,
-                      icon: Icon(widget._engine.icon),
+                      icon: EzIcon(widget.config, widget._engine.icon),
                       tooltip: l10n(widget.config).gSearch,
                       onPressed: () => launchUrl(Uri.https(widget._engine.base, '/')),
                       onLongPress: () async => await canToggleMenu(widget.config, menuControl),
@@ -256,7 +252,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                         widget.config.rowMargin,
                         EzIconButton(
                           widget.config,
-                          icon: Icon(widget._engine.icon),
+                          icon: EzIcon(widget.config, widget._engine.icon),
                           tooltip: l10n(widget.config).gSearch,
                           onPressed: () => search(queryCon.text),
                           onLongPress: () async => await canToggleMenu(widget.config, menuControl),
@@ -301,9 +297,9 @@ class _SearchWidgetState extends State<SearchWidget> {
                 choices: widget._choices,
               ),
             ),
-            child: EzIconButton(
+            child: EzIconTouch(
               widget.config,
-              icon: const Icon(Icons.search),
+              icon: Icons.search,
               tooltip: l10n(widget.config).gSearch,
               onPressed: () => toggleMenu(menuControl),
             ),
@@ -424,7 +420,7 @@ class AddSearch extends StatelessWidget {
       ? EzIconButton(
           config,
           onPressed: onTap,
-          icon: const Icon(Icons.search),
+          icon: EzIcon(config, Icons.search),
           tooltip: l10n(config).gAdd,
         )
       : GestureDetector(
@@ -454,7 +450,7 @@ class AddSearch extends StatelessWidget {
                 config.rowMargin,
                 EzIconButton(
                   config,
-                  icon: const Icon(Icons.search),
+                  icon: EzIcon(config, Icons.search),
                   onPressed: onTap,
                   tooltip: l10n(config).gAdd,
                 ),
@@ -630,7 +626,7 @@ Future<void> _openEdits(
                                   config.rowMargin,
                                   EzIconButton(
                                     config,
-                                    icon: Icon(icon),
+                                    icon: EzIcon(config, icon),
                                     tooltip: l10n(config).gPreview,
                                     onPressed: () async {
                                       final IconData? choice = await chooseIcon(config, pContext);
@@ -696,7 +692,7 @@ Future<void> _openEdits(
                                     label: config.ezL10n.gCancel,
                                     style: TextButton.styleFrom(
                                       padding: EdgeInsets.zero,
-                                      backgroundColor: config.colors.surfaceContainer,
+                                      backgroundColor: config.surfaceContainerFill.asColor,
                                     ),
                                     onPressed: () => Navigator.of(customCon).pop(),
                                   ),
@@ -707,7 +703,7 @@ Future<void> _openEdits(
                                     label: l10n(config).gAdd,
                                     style: TextButton.styleFrom(
                                       padding: EdgeInsets.zero,
-                                      backgroundColor: config.colors.surfaceContainer,
+                                      backgroundColor: config.surfaceContainerFill.asColor,
                                     ),
                                     onPressed: () {
                                       if (nameCon.text.trim().isEmpty) {

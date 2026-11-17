@@ -8,8 +8,8 @@ import '../widgets/export.dart';
 
 import 'dart:async';
 import 'package:open_ui/open_ui.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AppInfoProvider extends ChangeNotifier {
   //* Construct *//
@@ -130,13 +130,16 @@ class AppInfoProvider extends ChangeNotifier {
   OverlayEntry? _addedEntry;
   final ValueNotifier<bool> _flipped = ValueNotifier<bool>(false);
 
-  Future<void> _added(EzCP config, {required Future<void> Function()? editNew}) async {
+  Future<void> _added(
+    EzCP config, {
+    required Future<void> Function()? editNew,
+  }) async {
     if (_addedTimer?.isActive ?? false) _clearAdded(setFlipped: !_flipped.value);
 
     final double size = appIconSize(config) + config.marginVal;
     _addedEntry = OverlayEntry(
       builder: (BuildContext context) => Positioned(
-        top: safeTop(context),
+        top: safeTop(context), // Can't use Ez, no local context
         left: 0,
         right: 0,
         child: Material(
@@ -152,19 +155,18 @@ class AppInfoProvider extends ChangeNotifier {
                   children: <Widget>[
                     CustomPaint(
                       size: Size(size, size),
-                      painter: EzCountdownPainter(progress, config.colors.secondaryContainer),
+                      painter: EzCountdownPainter(progress, config.secondaryContainerFill),
                     ),
                     (editNew != null)
                         ? EzIconButton(
                             config,
-                            icon: Icon(progress > 0.667 ? Icons.check : Icons.edit),
-                            tooltip: l10n(config).gEdit,
-                            style: IconButton.styleFrom(
-                              backgroundColor:
-                                  flipped ? config.colors.primary : config.colors.surface,
-                              foregroundColor:
-                                  flipped ? config.colors.surface : config.colors.primary,
+                            icon: EzIcon(
+                              config,
+                              progress > 0.667 ? Icons.check : Icons.edit,
+                              fill: flipped ? config.surfaceFill : config.primaryFill,
                             ),
+                            tooltip: l10n(config).gEdit,
+                            backgroundFill: flipped ? config.primaryFill : config.surfaceFill,
                             onPressed: () async {
                               _clearAdded();
                               ezCloseAll();
@@ -173,7 +175,7 @@ class AppInfoProvider extends ChangeNotifier {
                           )
                         : EzIconButton(
                             config,
-                            icon: const Icon(Icons.check),
+                            icon: EzIcon(config, Icons.check),
                             tooltip: l10n(config).gAdded,
                             onPressed: _clearAdded,
                           ),
