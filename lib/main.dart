@@ -134,12 +134,12 @@ void main() async {
     l10nFallback: await OUILang.delegate.load(americanEnglish),
     preferences: await SharedPreferencesWithCache.create(
       cacheOptions: SharedPreferencesWithCacheOptions(
-        allowList: allLimKeys.keys.toSet(),
+        allowList: allLiminalPairs.keys.toSet(),
       ),
     ),
     securePreferences: const FlutterSecureStorage(),
     defaults: liminalDefault,
-    neverReset: neverResetKeys,
+    neverReset: neverResetPairs.keys.toSet(),
   );
 
   // Run the app //
