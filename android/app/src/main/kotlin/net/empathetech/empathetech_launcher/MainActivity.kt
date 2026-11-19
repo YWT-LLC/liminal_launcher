@@ -1,5 +1,6 @@
 package llc.ywt.liminal_launcher
 
+import android.app.WallpaperManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -112,6 +113,26 @@ class MainActivity : FlutterFragmentActivity() {
             }
           } catch (e: Exception) {
             result.error("DELETE_ERROR", "Could not uninstall app", e.message)
+          }
+        }
+
+        "setBlankWallpaper" -> {
+          try {
+            val wm = WallpaperManager.getInstance(applicationContext)
+            val prefs = getSharedPreferences("liminal_wallpaper", Context.MODE_PRIVATE)
+            val ourId = prefs.getInt("blackWallpaperId", -1)
+
+            // Skip if the current system wallpaper is still the black one we set
+            if (ourId == -1 || wm.getWallpaperId(WallpaperManager.FLAG_SYSTEM) != ourId) {
+              val black = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+              black.eraseColor(android.graphics.Color.BLACK)
+
+              val newId = wm.setBitmap(black, null, true, WallpaperManager.FLAG_SYSTEM)
+              prefs.edit().putInt("blackWallpaperId", newId).apply()
+            }
+            result.success(true)
+          } catch (e: Exception) {
+            result.error("WALLPAPER_ERROR", "Could not set wallpaper", e.message)
           }
         }
 

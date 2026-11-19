@@ -5,6 +5,7 @@
 
 import './export.dart';
 
+import 'dart:async';
 import 'package:open_ui/open_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
@@ -31,6 +32,9 @@ class LiminalCache extends EzAppCache {
     }
 
     await _buildLocalCache(config);
+
+    // For when nothing is being drawn by Flutter. Don't want jump scares.
+    if (config.backgroundImagePath != noImageValue) unawaited(setBlankWallpaper());
   }
 
   Future<void> _buildLocalCache(EzCP config) async {
