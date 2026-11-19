@@ -176,6 +176,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       ),
                       lane: lane,
                       index: appInfo.homeLane(config, lane).length - 1,
+                      appearance: false,
                     ),
                   ),
                   label: l10n(config).hsFolder,
