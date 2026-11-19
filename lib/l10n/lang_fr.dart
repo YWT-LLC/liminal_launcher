@@ -435,13 +435,6 @@ class LangFr extends Lang {
   String get hsCanFit => '...vous pouvez faire tenir jusqu\'à ';
 
   @override
-  String get hsContribute => 'contribuer';
-
-  @override
-  String get hsContributeHint =>
-      'Ouvrir un lien vers les options de contribution';
-
-  @override
   String get hsDescription =>
       'Il est orienté vers le minimalisme,\nmais offre une personnalisation illimitée.';
 
@@ -450,10 +443,6 @@ class LangFr extends Lang {
 
   @override
   String get hsFolder => 'Dossier';
-
-  @override
-  String get hsFree =>
-      'Cette version ne provient pas du Play Store, elle devrait donc être gratuite.\nRassurez-vous, la version gratuite de Liminal sera toujours identique à celle de Google Play.\n\nSi vous souhaitez soutenir le développement de Liminal, ou la création d\'autres logiciels sympas, pensez à ';
 
   @override
   String get hsGetStarted =>
@@ -482,14 +471,7 @@ class LangFr extends Lang {
   String get hsOkay => 'D\'accord';
 
   @override
-  String get hsOneMore => 'Encore une chose...';
-
-  @override
   String get hsPadding => '),\nmarge (';
-
-  @override
-  String get hsPopUp =>
-      '.\n\nCeci est la seule fenêtre contextuelle hors tutoriel, et sa seule apparition durant cette installation.';
 
   @override
   String get hsScreenLanes => ' colonnes à l\'écran.';

@@ -893,18 +893,6 @@ abstract class Lang {
   /// **'...values, you can fit up to '**
   String get hsCanFit;
 
-  /// No description provided for @hsContribute.
-  ///
-  /// In en, this message translates to:
-  /// **'contributing'**
-  String get hsContribute;
-
-  /// No description provided for @hsContributeHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Open a link to contribution options'**
-  String get hsContributeHint;
-
   /// No description provided for @hsDescription.
   ///
   /// In en, this message translates to:
@@ -922,12 +910,6 @@ abstract class Lang {
   /// In en, this message translates to:
   /// **'Folder'**
   String get hsFolder;
-
-  /// No description provided for @hsFree.
-  ///
-  /// In en, this message translates to:
-  /// **'This version is not from the Play Store, so it should have been free.\nRest assured, the free version of Liminal will always be identical to the Google Play version.\n\nIf you want to support Liminal\'s development, or the development of more cool software, please consider '**
-  String get hsFree;
 
   /// No description provided for @hsGetStarted.
   ///
@@ -977,23 +959,11 @@ abstract class Lang {
   /// **'Okay'**
   String get hsOkay;
 
-  /// No description provided for @hsOneMore.
-  ///
-  /// In en, this message translates to:
-  /// **'One more thing...'**
-  String get hsOneMore;
-
   /// No description provided for @hsPadding.
   ///
   /// In en, this message translates to:
   /// **'),\npadding ('**
   String get hsPadding;
-
-  /// No description provided for @hsPopUp.
-  ///
-  /// In en, this message translates to:
-  /// **'.\n\nThis is the only non-tutorial pop-up, and its only appearance this install.'**
-  String get hsPopUp;
 
   /// No description provided for @hsScreenLanes.
   ///

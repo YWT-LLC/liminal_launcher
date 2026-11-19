@@ -429,12 +429,6 @@ class LangEn extends Lang {
   String get hsCanFit => '...values, you can fit up to ';
 
   @override
-  String get hsContribute => 'contributing';
-
-  @override
-  String get hsContributeHint => 'Open a link to contribution options';
-
-  @override
   String get hsDescription =>
       'It\'s geared toward minimalism,\nbut has limitless customization.';
 
@@ -443,10 +437,6 @@ class LangEn extends Lang {
 
   @override
   String get hsFolder => 'Folder';
-
-  @override
-  String get hsFree =>
-      'This version is not from the Play Store, so it should have been free.\nRest assured, the free version of Liminal will always be identical to the Google Play version.\n\nIf you want to support Liminal\'s development, or the development of more cool software, please consider ';
 
   @override
   String get hsGetStarted =>
@@ -474,14 +464,7 @@ class LangEn extends Lang {
   String get hsOkay => 'Okay';
 
   @override
-  String get hsOneMore => 'One more thing...';
-
-  @override
   String get hsPadding => '),\npadding (';
-
-  @override
-  String get hsPopUp =>
-      '.\n\nThis is the only non-tutorial pop-up, and its only appearance this install.';
 
   @override
   String get hsScreenLanes => ' lanes on screen.';
@@ -1291,12 +1274,6 @@ class LangEnUs extends LangEn {
   String get hsCanFit => '...values, you can fit up to ';
 
   @override
-  String get hsContribute => 'contributing';
-
-  @override
-  String get hsContributeHint => 'Open a link to contribution options';
-
-  @override
   String get hsDescription =>
       'It\'s geared toward minimalism,\nbut has limitless customization.';
 
@@ -1305,10 +1282,6 @@ class LangEnUs extends LangEn {
 
   @override
   String get hsFolder => 'Folder';
-
-  @override
-  String get hsFree =>
-      'This version is not from the Play Store, so it should have been free.\nRest assured, the free version of Liminal will always be identical to the Google Play version.\n\nIf you want to support Liminal\'s development, or the development of more cool software, please consider ';
 
   @override
   String get hsGetStarted =>
@@ -1336,14 +1309,7 @@ class LangEnUs extends LangEn {
   String get hsOkay => 'Okay';
 
   @override
-  String get hsOneMore => 'One more thing...';
-
-  @override
   String get hsPadding => '),\npadding (';
-
-  @override
-  String get hsPopUp =>
-      '.\n\nThis is the only non-tutorial pop-up, and its only appearance this install.';
 
   @override
   String get hsScreenLanes => ' lanes on screen.';
