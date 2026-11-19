@@ -21,7 +21,7 @@ class LiminalCache extends EzAppCache {
         _l10n = l10n;
 
   @override
-  void init(bool isDark) => _buildLocalCache(isDark);
+  void init(EzCP config) => _buildLocalCache(config);
 
   @override
   Future<void> rebuild(EzCP config) async {
@@ -30,12 +30,12 @@ class LiminalCache extends EzAppCache {
       _l10n = await Lang.delegate.load(config.locale);
     }
 
-    await _buildLocalCache(config.isDark);
+    await _buildLocalCache(config);
   }
 
-  Future<void> _buildLocalCache(bool isDark) async {
+  Future<void> _buildLocalCache(EzCP config) async {
     // Design cache
-    if (isDark) {
+    if (config.isDark) {
       final bool listIcons = EzCM.get(darkListIconKey);
       final LabelType listLabels = LTConfig.safeLookup(EzCM.get(darkListLabelKey));
       final bool elevatedLists = EzCM.get(darkElevatedListKey);
@@ -45,6 +45,9 @@ class LiminalCache extends EzAppCache {
       final bool elevatedFolders = EzCM.get(darkElevatedFolderKey);
 
       _design = DesignCache(
+        wallpaper: (config.backgroundImagePath == noImageValue) ? null : config.screenDecoration,
+        pages: EzCM.get(darkPagesKey),
+        wideTiles: EzCM.get(darkWideTilesKey),
         horizontalAlign: LAConfig.lookup(EzCM.get(darkHorizontalAlignKey)) ?? ListAlignment.center,
         verticalAlign: LAConfig.lookup(EzCM.get(darkVerticalAlignKey)) ?? ListAlignment.start,
         listIcons: listIcons,
@@ -55,8 +58,6 @@ class LiminalCache extends EzAppCache {
         folderLabels: folderLabels,
         elevatedFolders: elevatedFolders,
         folderBT: BTConfig.build(folderLabels, icons: folderIcons, elevated: elevatedFolders),
-        wideTiles: EzCM.get(darkWideTilesKey),
-        pages: EzCM.get(darkPagesKey),
       );
     } else {
       final bool listIcons = EzCM.get(lightListIconKey);
@@ -68,6 +69,9 @@ class LiminalCache extends EzAppCache {
       final bool elevatedFolders = EzCM.get(lightElevatedFolderKey);
 
       _design = DesignCache(
+        wallpaper: (config.backgroundImagePath == noImageValue) ? null : config.screenDecoration,
+        pages: EzCM.get(lightPagesKey),
+        wideTiles: EzCM.get(lightWideTilesKey),
         horizontalAlign: LAConfig.lookup(EzCM.get(lightHorizontalAlignKey)) ?? ListAlignment.center,
         verticalAlign: LAConfig.lookup(EzCM.get(lightVerticalAlignKey)) ?? ListAlignment.start,
         listIcons: listIcons,
@@ -78,12 +82,10 @@ class LiminalCache extends EzAppCache {
         folderLabels: folderLabels,
         elevatedFolders: elevatedFolders,
         folderBT: BTConfig.build(folderLabels, icons: folderIcons, elevated: elevatedFolders),
-        wideTiles: EzCM.get(lightWideTilesKey),
-        pages: EzCM.get(lightPagesKey),
       );
     }
 
-    if (EzCM.get(isDark ? darkHideStatusKey : lightHideStatusKey) == true) {
+    if (EzCM.get(config.isDark ? darkHideStatusKey : lightHideStatusKey) == true) {
       await SystemChrome.setEnabledSystemUIMode(
         SystemUiMode.manual,
         overlays: <SystemUiOverlay>[SystemUiOverlay.bottom],
@@ -111,6 +113,10 @@ class LiminalCache extends EzAppCache {
 }
 
 class DesignCache {
+  final BoxDecoration? wallpaper;
+  final bool pages;
+  final bool wideTiles;
+
   final ListAlignment horizontalAlign;
   final ListAlignment verticalAlign;
 
@@ -124,10 +130,10 @@ class DesignCache {
   final bool elevatedFolders;
   final ButtonType folderBT;
 
-  final bool wideTiles;
-  final bool pages;
-
   DesignCache({
+    required this.wallpaper,
+    required this.pages,
+    required this.wideTiles,
     required this.horizontalAlign,
     required this.verticalAlign,
     required this.listIcons,
@@ -138,16 +144,16 @@ class DesignCache {
     required this.folderLabels,
     required this.elevatedFolders,
     required this.folderBT,
-    required this.wideTiles,
-    required this.pages,
   });
 }
 
 class SecureCache {
   final bool _authToEdit;
   final bool _resetAfterEdit;
+
   final bool _authForHidden;
   final bool _resetAfterOpened;
+
   final Duration _authTimeout;
 
   SecureCache({
@@ -171,7 +177,7 @@ class SecureCache {
   Duration get authTimeout => _authTimeout;
 }
 
-// Aliases/helpers //
+// EzCM aliases //
 
 bool get interlinked => EzCM.get(interlinkedKey);
 
@@ -181,9 +187,19 @@ bool get listRipple => EzCM.get(listRippleKey);
 String get leftSwipeID => EzCM.get(leftSwipeIDKey);
 String get rightSwipeID => EzCM.get(rightSwipeIDKey);
 
+// EzCP aliases //
+
 LiminalCache _cache(EzCP config) => config.appCache! as LiminalCache;
 
 Lang l10n(EzCP config) => _cache(config)._l10n;
+double appIconSize(EzCP config) => config.iconSize + config.padding;
+
+BoxDecoration? wallpaper(EzCP config) => _cache(config)._design.wallpaper;
+bool pages(EzCP config) => _cache(config)._design.pages;
+bool wideTiles(EzCP config) => _cache(config)._design.wideTiles;
+
+ListAlignment horizontalAlign(EzCP config) => _cache(config)._design.horizontalAlign;
+ListAlignment verticalAlign(EzCP config) => _cache(config)._design.verticalAlign;
 
 bool listIcons(EzCP config) => _cache(config)._design.listIcons;
 LabelType listLabels(EzCP config) => _cache(config)._design.listLabels;
@@ -194,13 +210,6 @@ bool folderIcons(EzCP config) => _cache(config)._design.folderIcons;
 LabelType folderLabels(EzCP config) => _cache(config)._design.folderLabels;
 bool elevatedFolders(EzCP config) => _cache(config)._design.elevatedFolders;
 ButtonType folderBT(EzCP config) => _cache(config)._design.folderBT;
-
-bool wideTiles(EzCP config) => _cache(config)._design.wideTiles;
-bool pages(EzCP config) => _cache(config)._design.pages;
-double appIconSize(EzCP config) => config.iconSize + config.padding;
-
-ListAlignment horizontalAlign(EzCP config) => _cache(config)._design.horizontalAlign;
-ListAlignment verticalAlign(EzCP config) => _cache(config)._design.verticalAlign;
 
 bool authToEdit(EzCP config) => _cache(config)._security.authToEdit;
 bool resetAfterEdit(EzCP config) => _cache(config)._security.resetAfterEdit;
