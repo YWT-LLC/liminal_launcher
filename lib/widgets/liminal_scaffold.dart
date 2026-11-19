@@ -3,9 +3,10 @@
  * See LICENSE for distribution and usage details.
  */
 
-import 'package:open_ui/open_ui.dart';
+import '../utils/liminal_cache.dart';
 import 'package:ywt_private/ywt_private.dart' as ywt;
 
+import 'package:open_ui/open_ui.dart';
 import 'package:material_ui/material_ui.dart';
 
 class LiminalScaffold extends StatelessWidget {
@@ -30,8 +31,7 @@ class LiminalScaffold extends StatelessWidget {
           config,
           backgroundColor: Colors.transparent,
           body: Container(
-            decoration:
-                (config.backgroundImagePath == noImageValue) ? null : config.screenDecoration,
+            decoration: wallpaper(config),
             height: double.infinity,
             width: double.infinity,
             child: Container(
@@ -51,7 +51,7 @@ class LiminalScaffold extends StatelessWidget {
             if (!isHome)
               EzUpdaterFAB(
                 config,
-                appVersion: '1.1.2',
+                appVersion: '1.1.3',
                 versionSource:
                     'https://raw.githubusercontent.com/YWT-LLC/liminal_launcher/refs/heads/main/APP_VERSION',
                 gPlay: ywt.liminalGPlay,

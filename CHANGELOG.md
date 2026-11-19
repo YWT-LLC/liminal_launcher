@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.3] - 2026-11-19
+### [Fixed]
+- Bugs
+  - Gradients were only working in debug mode... classic
+  - Added blank system wallpaper override for when custom wallpaper is set
+  - Extended Scaffold when footer is present
+
 ## [1.1.2] - 2026-11-17
 ### [Added]
 - Gradient colors

@@ -9,6 +9,7 @@ import 'package:open_ui/open_ui.dart';
 import 'package:flutter/services.dart';
 
 const MethodChannel platform = MethodChannel('$androidPackage/query');
+bool _blankWallpaperSet = false;
 
 // Core //
 
@@ -57,6 +58,19 @@ Future<void> openDelete(AppInfo app) async {
     await platform.invokeMethod('deleteApp', <String, dynamic>{'packageName': app.package});
   } catch (e) {
     ezLog('Failed to delete ${app.package}: $e');
+  }
+}
+
+/// Set the system wallpaper to solid black (once per session)
+Future<void> setBlankWallpaper() async {
+  if (_blankWallpaperSet) return;
+  _blankWallpaperSet = true;
+
+  try {
+    await platform.invokeMethod('setBlankWallpaper');
+  } catch (e) {
+    _blankWallpaperSet = false;
+    ezLog('Failed to set system wallpaper: $e');
   }
 }
 

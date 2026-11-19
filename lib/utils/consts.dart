@@ -189,15 +189,21 @@ const Map<String, Type> limDesignKeys = <String, Type>{
 
 // Shared //
 
-/// [allEZConfigKeys], [limBTSKeys], [limListKeys], [limDesignKeys],
-const Map<String, Type> allLimKeys = <String, Type>{
-  ...allEZConfigKeys,
+const Map<String, Type> uniquePairs = <String, Type>{
   ...limBTSKeys,
   ...limListKeys,
   ...limDesignKeys,
 };
 
-final Set<String> neverResetKeys = <String>{...limBTSKeys.keys, ...limListKeys.keys};
+final Map<String, Type> neverResetPairs = <String, Type>{
+  ...limBTSKeys,
+  ...limListKeys,
+};
+
+final Map<String, Type> allLiminalPairs = <String, Type>{
+  ...allEzConfigPairs,
+  ...uniquePairs,
+};
 
 /// [ywtMobileConfig] with Liminal additions
 final Map<String, Object> liminalDefault = <String, Object>{

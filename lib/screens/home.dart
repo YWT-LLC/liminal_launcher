@@ -12,7 +12,6 @@ import 'dart:async';
 import 'package:open_ui/open_ui.dart';
 import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:after_layout/after_layout.dart';
@@ -177,6 +176,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                       ),
                       lane: lane,
                       index: appInfo.homeLane(config, lane).length - 1,
+                      appearance: false,
                     ),
                   ),
                   label: l10n(config).hsFolder,
@@ -844,9 +844,6 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     if (!EzCM.get(shownIntroKey)) {
       if (context.mounted) await _welcome(config, context);
 
-      final bool isGPlay = await isGPlayInstall();
-      if (!kDebugMode && context.mounted && !isGPlay) await _free99(config, context);
-
       await EzCM.setBool(shownIntroKey, true);
     }
   }
@@ -1102,78 +1099,3 @@ Future<void> _welcome(EzCP config, BuildContext context) => ezModal(
         ],
       ),
     );
-
-Future<void> _free99(EzCP config, BuildContext context) async {
-  final String m1 = l10n(config).hsFree;
-  final String m2 = l10n(config).hsContribute;
-  final String m3 = l10n(config).hsPopUp;
-
-  bool read = false;
-
-  await ezModal(
-    config,
-    context: context,
-    enableDrag: false,
-    isDismissible: false,
-    showDragHandle: false,
-    builder: (_) => StatefulBuilder(
-      builder: (BuildContext mCon, StateSetter setModal) {
-        final Duration readTime = Duration(
-          milliseconds:
-              ((ezReadingTime(config, <String>[m1, m2, m3].join()).inMilliseconds) / 3).ceil(),
-        );
-
-        Future<void>.delayed(readTime, () {
-          if (mCon.mounted) setModal(() => read = true);
-        });
-
-        return ezModalScroll(
-          config,
-          children: <Widget>[
-            EzHeader(config),
-
-            // Title
-            Text(
-              l10n(config).hsOneMore,
-              textAlign: TextAlign.center,
-              style: config.titleStyle,
-            ),
-            config.centerLine,
-
-            // Message
-            EzRichText(
-              config,
-              children: <InlineSpan>[
-                EzPlainText(text: m1),
-                EzInlineLink(
-                  config,
-                  text: m2,
-                  style: config.bodyStyle,
-                  textAlign: TextAlign.center,
-                  url: Uri.parse(ywt.websiteContributeMula),
-                  hint: l10n(config).hsContributeHint,
-                ),
-                EzPlainText(text: m3),
-              ],
-              style: config.bodyStyle,
-              textBackground: false,
-              textAlign: TextAlign.center,
-            ),
-            config.separator,
-
-            // Leave after (half) read
-            EzTextIconButton(
-              config,
-              label: l10n(config).hsOkay,
-              style: TextButton.styleFrom(backgroundColor: config.surfaceContainerFill.asColor),
-              icon:
-                  read ? EzIcon(config, Icons.done) : EzCountdownTimer(config, duration: readTime),
-              onPressed: () => read ? Navigator.of(mCon).pop() : doNothing(),
-            ),
-            config.separator,
-          ],
-        );
-      },
-    ),
-  );
-}
