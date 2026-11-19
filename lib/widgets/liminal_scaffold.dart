@@ -29,7 +29,7 @@ class LiminalScaffold extends StatelessWidget {
   Widget build(BuildContext context) => EzAdaptiveParent(
         small: EzScaffold(
           config,
-          backgroundColor: scaffoldColor(config),
+          backgroundColor: Colors.transparent,
           body: Container(
             decoration: wallpaper(config),
             height: double.infinity,
