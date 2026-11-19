@@ -46,6 +46,11 @@ class LiminalCache extends EzAppCache {
 
       _design = DesignCache(
         wallpaper: (config.backgroundImagePath == noImageValue) ? null : config.screenDecoration,
+        scaffoldColor: (config.backgroundImagePath == noImageValue)
+            ? Colors.transparent
+            : (config.screenDecoration.color ??
+                config.screenDecoration.gradient?.colors.first ??
+                config.surfaceContainerFill.asColor),
         pages: EzCM.get(darkPagesKey),
         wideTiles: EzCM.get(darkWideTilesKey),
         horizontalAlign: LAConfig.lookup(EzCM.get(darkHorizontalAlignKey)) ?? ListAlignment.center,
@@ -70,6 +75,11 @@ class LiminalCache extends EzAppCache {
 
       _design = DesignCache(
         wallpaper: (config.backgroundImagePath == noImageValue) ? null : config.screenDecoration,
+        scaffoldColor: (config.backgroundImagePath == noImageValue)
+            ? Colors.transparent
+            : (config.screenDecoration.color ??
+                config.screenDecoration.gradient?.colors.first ??
+                config.surfaceContainerFill.asColor),
         pages: EzCM.get(lightPagesKey),
         wideTiles: EzCM.get(lightWideTilesKey),
         horizontalAlign: LAConfig.lookup(EzCM.get(lightHorizontalAlignKey)) ?? ListAlignment.center,
@@ -114,6 +124,7 @@ class LiminalCache extends EzAppCache {
 
 class DesignCache {
   final BoxDecoration? wallpaper;
+  final Color scaffoldColor;
   final bool pages;
   final bool wideTiles;
 
@@ -132,6 +143,7 @@ class DesignCache {
 
   DesignCache({
     required this.wallpaper,
+    required this.scaffoldColor,
     required this.pages,
     required this.wideTiles,
     required this.horizontalAlign,
@@ -195,6 +207,7 @@ Lang l10n(EzCP config) => _cache(config)._l10n;
 double appIconSize(EzCP config) => config.iconSize + config.padding;
 
 BoxDecoration? wallpaper(EzCP config) => _cache(config)._design.wallpaper;
+Color scaffoldColor(EzCP config) => _cache(config)._design.scaffoldColor;
 bool pages(EzCP config) => _cache(config)._design.pages;
 bool wideTiles(EzCP config) => _cache(config)._design.wideTiles;
 
