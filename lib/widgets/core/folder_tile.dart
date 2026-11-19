@@ -274,7 +274,7 @@ List<Widget> _menuChildren(
   required FolderConfig initConfig,
 }) =>
     <Widget>[
-      // Edit
+      // Add apps
       _EditFolder(
         config,
         appInfo,
@@ -282,6 +282,18 @@ List<Widget> _menuChildren(
         initConfig: initConfig,
         lane: pos.lane,
         index: pos.index,
+        appearance: false,
+      ),
+
+      // Edit appearance
+      _EditFolder(
+        config,
+        appInfo,
+        pContext: context,
+        initConfig: initConfig,
+        lane: pos.lane,
+        index: pos.index,
+        appearance: true,
       ),
 
       // Dupe
@@ -300,6 +312,7 @@ List<Widget> _menuChildren(
               initConfig: initConfig,
               lane: pos.lane,
               index: pos.index,
+              appearance: false,
             );
           },
           lane: pos.lane,
@@ -524,6 +537,7 @@ Future<void> editFolder(
   required FolderConfig initConfig,
   required int lane,
   required int index,
+  required bool appearance,
 }) async {
   final ButtonStyle textButtonStyle = TextButton.styleFrom(
     backgroundColor: config.surfaceContainerFill.asColor,
@@ -531,7 +545,7 @@ Future<void> editFolder(
   );
   final double iconRadius = config.iconSize / 2;
 
-  bool showUI = false;
+  bool showUI = appearance;
   int delta = 0;
 
   final ValueNotifier<List<String>> appsNotif = ValueNotifier<List<String>>(initConfig.appList);
@@ -802,7 +816,7 @@ Future<void> editFolder(
                             border: config.boxBorder(),
                             shape: BoxShape.circle,
                           ),
-                          child: iconFill.asColor == Colors.transparent
+                          child: (iconFill.asColor == Colors.transparent)
                               ? EzAvatar(
                                   config,
                                   fill: config.surfaceFill,
@@ -1211,6 +1225,7 @@ class _EditFolder extends StatelessWidget {
   final FolderConfig initConfig;
   final int lane;
   final int index;
+  final bool appearance;
 
   const _EditFolder(
     this.config,
@@ -1219,20 +1234,37 @@ class _EditFolder extends StatelessWidget {
     required this.initConfig,
     required this.lane,
     required this.index,
+    required this.appearance,
   });
 
   @override
-  Widget build(_) => EzMenuButton(
-        config,
-        onPressed: () => editFolder(
+  Widget build(_) => appearance
+      ? EzMenuButton(
           config,
-          appInfo: appInfo,
-          pContext: pContext,
-          initConfig: initConfig,
-          lane: lane,
-          index: index,
-        ),
-        label: l10n(config).gEdit,
-        icon: EzIcon(config, Icons.edit),
-      );
+          onPressed: () => editFolder(
+            config,
+            appInfo: appInfo,
+            pContext: pContext,
+            initConfig: initConfig,
+            lane: lane,
+            index: index,
+            appearance: true,
+          ),
+          label: l10n(config).gEdit,
+          icon: EzIcon(config, Icons.edit),
+        )
+      : EzMenuButton(
+          config,
+          onPressed: () => editFolder(
+            config,
+            appInfo: appInfo,
+            pContext: pContext,
+            initConfig: initConfig,
+            lane: lane,
+            index: index,
+            appearance: false,
+          ),
+          label: l10n(config).gAdd,
+          icon: EzIcon(config, Icons.add),
+        );
 }
