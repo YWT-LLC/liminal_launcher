@@ -51,7 +51,7 @@ class LiminalScaffold extends StatelessWidget {
             if (!isHome)
               EzUpdaterFAB(
                 config,
-                appVersion: '1.1.2',
+                appVersion: '1.1.3',
                 versionSource:
                     'https://raw.githubusercontent.com/YWT-LLC/liminal_launcher/refs/heads/main/APP_VERSION',
                 gPlay: ywt.liminalGPlay,
