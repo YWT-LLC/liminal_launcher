@@ -13,7 +13,7 @@ import 'package:material_ui/material_ui.dart';
 //* Core Widget *//
 
 class ThemeModeWidget extends StatefulWidget {
-  final EzCP config;
+  final EzProvider config;
   final AppInfoProvider appInfo;
   final TileState state;
   final LimPos pos;
@@ -107,7 +107,7 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
               child: (widget._size == WWGGSize.button)
                   ? GestureDetector(
                       onDoubleTap: () async {
-                        await EzCM.remove(isDarkThemeKey);
+                        await EzManager.remove(isDarkThemeKey);
                         await widget.config.rebuildThemeMode();
                       },
                       child: EzIconButton(
@@ -122,7 +122,7 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
                         ),
                         tooltip: l10n(widget.config).thmToggle,
                         onPressed: () async {
-                          await EzCM.setBool(isDarkThemeKey, !widget.config.isDark);
+                          await EzManager.setBool(isDarkThemeKey, !widget.config.isDark);
                           await widget.config.rebuildThemeMode();
                         },
                       ),
@@ -179,7 +179,7 @@ class _ThemeModeWidgetState extends State<ThemeModeWidget> {
 }
 
 List<Widget> _menuChildren(
-  EzCP config, {
+  EzProvider config, {
   required AppInfoProvider appInfo,
   required BuildContext context,
   required TileState state,
@@ -222,7 +222,7 @@ List<Widget> _menuChildren(
 //* Add Widget *//
 
 class AddThemeMode extends StatelessWidget {
-  final EzCP config;
+  final EzProvider config;
   final AppInfoProvider appInfo;
   final int lane;
   final WWGGSize size;
@@ -303,7 +303,7 @@ class _TMConfig {
 }
 
 Future<void> _quickResize(
-  EzCP config, {
+  EzProvider config, {
   required AppInfoProvider appInfo,
   required _TMConfig initConfig,
   required int lane,
@@ -321,7 +321,7 @@ Future<void> _quickResize(
     );
 
 class _EditTM extends StatelessWidget {
-  final EzCP config;
+  final EzProvider config;
   final AppInfoProvider appInfo;
   final _TMConfig initConfig;
   final int lane;

@@ -19,7 +19,7 @@ import 'package:material_ui/material_ui.dart';
 //* Core Widget *//
 
 class AppTile extends StatefulWidget {
-  final EzCP config;
+  final EzProvider config;
   final AppInfoProvider appInfo;
   final AppInfo app;
   final Future<void> Function(AppInfo app) onSelected;
@@ -392,7 +392,7 @@ class _AppTileState extends State<AppTile> {
 }
 
 List<Widget> _menuChildren(
-  EzCP config, {
+  EzProvider config, {
   required AppInfoProvider appInfo,
   required BuildContext context,
   required AppInfo app,
@@ -457,7 +457,7 @@ List<Widget> _menuChildren(
     };
 
 List<Widget> _baseMC(
-  EzCP config,
+  EzProvider config,
   AppInfoProvider appInfo, {
   required BuildContext context,
   required AppInfo app,
@@ -507,7 +507,7 @@ List<Widget> _baseMC(
 //* Add Widget *//
 
 class AppButton extends StatelessWidget {
-  final EzCP config;
+  final EzProvider config;
   final String name;
   final Uint8List? image;
   final IconData? icon;
@@ -722,7 +722,7 @@ class AppConfig {
 }
 
 Future<void> editApp(
-  EzCP config, {
+  EzProvider config, {
   required AppInfoProvider appInfo,
   required BuildContext pContext,
   required AppConfig initConfig,
@@ -1256,7 +1256,7 @@ Future<void> editApp(
 }
 
 class _EditApp extends StatelessWidget {
-  final EzCP config;
+  final EzProvider config;
   final AppInfoProvider appInfo;
   final BuildContext pContext;
   final AppConfig initConfig;

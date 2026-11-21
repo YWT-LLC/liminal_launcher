@@ -19,8 +19,8 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<EzCP>(
-      builder: (_, EzCP config, __) => LiminalScaffold(
+    return Consumer<EzProvider>(
+      builder: (_, EzProvider config, __) => LiminalScaffold(
         config,
         body: EzSettingsHub(
           config,
@@ -32,8 +32,8 @@ class SettingsScreen extends StatelessWidget {
               title: config.ezL10n.gGlobal,
               icon: EzIcon(
                 config,
-                EzCM.onMobile
-                    ? EzCM.platform == TargetPlatform.iOS
+                EzManager.onMobile
+                    ? EzManager.platform == TargetPlatform.iOS
                         ? Icons.phone_iphone
                         : Icons.phone_android
                     : Icons.computer,
@@ -69,139 +69,139 @@ class SettingsScreen extends StatelessWidget {
                 extraBig: (bool updateBoth) async {
                   if (updateBoth || config.isDark) {
                     // Button design
-                    await EzCM.setString(darkListLabelKey, LabelType.full.value);
-                    await EzCM.setBool(darkListIconKey, true);
-                    await EzCM.setBool(darkElevatedListKey, true);
-                    await EzCM.setString(darkFolderLabelKey, LabelType.full.value);
-                    await EzCM.setBool(darkFolderIconKey, true);
-                    await EzCM.setBool(darkElevatedFolderKey, true);
+                    await EzManager.setString(darkListLabelKey, LabelType.full.value);
+                    await EzManager.setBool(darkListIconKey, true);
+                    await EzManager.setBool(darkElevatedListKey, true);
+                    await EzManager.setString(darkFolderLabelKey, LabelType.full.value);
+                    await EzManager.setBool(darkFolderIconKey, true);
+                    await EzManager.setBool(darkElevatedFolderKey, true);
 
-                    await EzCM.setBool(darkWideTilesKey, true);
-                    await EzCM.setBool(darkPagesKey, true);
+                    await EzManager.setBool(darkWideTilesKey, true);
+                    await EzManager.setBool(darkPagesKey, true);
 
                     // Page design
-                    await EzCM.setBool(darkHideStatusKey, false);
-                    await EzCM.setString(
+                    await EzManager.setBool(darkHideStatusKey, false);
+                    await EzManager.setString(
                       darkHorizontalAlignKey,
                       config.isLefty ? ListAlignment.end.value : ListAlignment.start.value,
                     );
-                    await EzCM.setString(darkVerticalAlignKey, ListAlignment.start.value);
+                    await EzManager.setString(darkVerticalAlignKey, ListAlignment.start.value);
                   }
 
                   if (updateBoth || !config.isDark) {
                     // Button design
-                    await EzCM.setString(lightListLabelKey, LabelType.full.value);
-                    await EzCM.setBool(lightListIconKey, true);
-                    await EzCM.setBool(lightElevatedListKey, true);
-                    await EzCM.setString(lightFolderLabelKey, LabelType.full.value);
-                    await EzCM.setBool(lightFolderIconKey, true);
-                    await EzCM.setBool(lightElevatedFolderKey, true);
+                    await EzManager.setString(lightListLabelKey, LabelType.full.value);
+                    await EzManager.setBool(lightListIconKey, true);
+                    await EzManager.setBool(lightElevatedListKey, true);
+                    await EzManager.setString(lightFolderLabelKey, LabelType.full.value);
+                    await EzManager.setBool(lightFolderIconKey, true);
+                    await EzManager.setBool(lightElevatedFolderKey, true);
 
-                    await EzCM.setBool(lightWideTilesKey, true);
-                    await EzCM.setBool(lightPagesKey, true);
+                    await EzManager.setBool(lightWideTilesKey, true);
+                    await EzManager.setBool(lightPagesKey, true);
 
                     // Page design
-                    await EzCM.setBool(lightHideStatusKey, false);
-                    await EzCM.setString(
+                    await EzManager.setBool(lightHideStatusKey, false);
+                    await EzManager.setString(
                       lightHorizontalAlignKey,
                       config.isLefty ? ListAlignment.end.value : ListAlignment.start.value,
                     );
-                    await EzCM.setString(lightVerticalAlignKey, ListAlignment.start.value);
+                    await EzManager.setString(lightVerticalAlignKey, ListAlignment.start.value);
                   }
                 },
                 extraVis: (bool updateBoth) async {
                   if (updateBoth || config.isDark) {
                     // Button design
-                    await EzCM.setString(darkListLabelKey, LabelType.full.value);
-                    await EzCM.setBool(darkListIconKey, true);
-                    await EzCM.setBool(darkElevatedListKey, true);
-                    await EzCM.setString(darkFolderLabelKey, LabelType.full.value);
-                    await EzCM.setBool(darkFolderIconKey, true);
-                    await EzCM.setBool(darkElevatedFolderKey, true);
+                    await EzManager.setString(darkListLabelKey, LabelType.full.value);
+                    await EzManager.setBool(darkListIconKey, true);
+                    await EzManager.setBool(darkElevatedListKey, true);
+                    await EzManager.setString(darkFolderLabelKey, LabelType.full.value);
+                    await EzManager.setBool(darkFolderIconKey, true);
+                    await EzManager.setBool(darkElevatedFolderKey, true);
 
-                    await EzCM.setBool(darkWideTilesKey, true);
-                    await EzCM.setBool(darkPagesKey, true);
+                    await EzManager.setBool(darkWideTilesKey, true);
+                    await EzManager.setBool(darkPagesKey, true);
 
                     // Page design
-                    await EzCM.setBool(darkHideStatusKey, true);
-                    await EzCM.setString(darkHorizontalAlignKey, ListAlignment.center.value);
-                    await EzCM.setString(darkVerticalAlignKey, ListAlignment.start.value);
+                    await EzManager.setBool(darkHideStatusKey, true);
+                    await EzManager.setString(darkHorizontalAlignKey, ListAlignment.center.value);
+                    await EzManager.setString(darkVerticalAlignKey, ListAlignment.start.value);
                   }
 
                   if (updateBoth || !config.isDark) {
                     // Button design
-                    await EzCM.setString(lightListLabelKey, LabelType.full.value);
-                    await EzCM.setBool(lightListIconKey, true);
-                    await EzCM.setBool(lightElevatedListKey, true);
-                    await EzCM.setString(lightFolderLabelKey, LabelType.full.value);
-                    await EzCM.setBool(lightFolderIconKey, true);
-                    await EzCM.setBool(lightElevatedFolderKey, true);
+                    await EzManager.setString(lightListLabelKey, LabelType.full.value);
+                    await EzManager.setBool(lightListIconKey, true);
+                    await EzManager.setBool(lightElevatedListKey, true);
+                    await EzManager.setString(lightFolderLabelKey, LabelType.full.value);
+                    await EzManager.setBool(lightFolderIconKey, true);
+                    await EzManager.setBool(lightElevatedFolderKey, true);
 
-                    await EzCM.setBool(lightWideTilesKey, true);
-                    await EzCM.setBool(lightPagesKey, true);
+                    await EzManager.setBool(lightWideTilesKey, true);
+                    await EzManager.setBool(lightPagesKey, true);
 
                     // Page design
-                    await EzCM.setBool(lightHideStatusKey, true);
-                    await EzCM.setString(lightHorizontalAlignKey, ListAlignment.center.value);
-                    await EzCM.setString(lightVerticalAlignKey, ListAlignment.start.value);
+                    await EzManager.setBool(lightHideStatusKey, true);
+                    await EzManager.setString(lightHorizontalAlignKey, ListAlignment.center.value);
+                    await EzManager.setString(lightVerticalAlignKey, ListAlignment.start.value);
                   }
                 },
                 extraChalk: (_) async {
                   // Button design
-                  await EzCM.setString(darkListLabelKey, LabelType.full.value);
-                  await EzCM.setBool(darkListIconKey, false);
-                  await EzCM.setBool(darkElevatedListKey, false);
-                  await EzCM.setString(darkFolderLabelKey, LabelType.full.value);
-                  await EzCM.setBool(darkFolderIconKey, false);
-                  await EzCM.setBool(darkElevatedFolderKey, false);
+                  await EzManager.setString(darkListLabelKey, LabelType.full.value);
+                  await EzManager.setBool(darkListIconKey, false);
+                  await EzManager.setBool(darkElevatedListKey, false);
+                  await EzManager.setString(darkFolderLabelKey, LabelType.full.value);
+                  await EzManager.setBool(darkFolderIconKey, false);
+                  await EzManager.setBool(darkElevatedFolderKey, false);
 
-                  await EzCM.setBool(darkWideTilesKey, true);
-                  await EzCM.setBool(darkPagesKey, true);
+                  await EzManager.setBool(darkWideTilesKey, true);
+                  await EzManager.setBool(darkPagesKey, true);
 
                   // Page design
-                  await EzCM.setBool(darkHideStatusKey, true);
-                  await EzCM.setString(darkHorizontalAlignKey, ListAlignment.center.value);
-                  await EzCM.setString(darkVerticalAlignKey, ListAlignment.start.value);
+                  await EzManager.setBool(darkHideStatusKey, true);
+                  await EzManager.setString(darkHorizontalAlignKey, ListAlignment.center.value);
+                  await EzManager.setString(darkVerticalAlignKey, ListAlignment.start.value);
                 },
                 extraNebula: (_) async {
                   // Button design
-                  await EzCM.setString(darkListLabelKey, LabelType.none.value);
-                  await EzCM.setBool(darkListIconKey, true);
-                  await EzCM.setBool(darkElevatedListKey, false);
-                  await EzCM.setString(darkFolderLabelKey, LabelType.none.value);
-                  await EzCM.setBool(darkFolderIconKey, true);
-                  await EzCM.setBool(darkElevatedFolderKey, false);
+                  await EzManager.setString(darkListLabelKey, LabelType.none.value);
+                  await EzManager.setBool(darkListIconKey, true);
+                  await EzManager.setBool(darkElevatedListKey, false);
+                  await EzManager.setString(darkFolderLabelKey, LabelType.none.value);
+                  await EzManager.setBool(darkFolderIconKey, true);
+                  await EzManager.setBool(darkElevatedFolderKey, false);
 
-                  await EzCM.setBool(darkWideTilesKey, false);
-                  await EzCM.setBool(darkPagesKey, false);
+                  await EzManager.setBool(darkWideTilesKey, false);
+                  await EzManager.setBool(darkPagesKey, false);
 
                   // Page design
-                  await EzCM.setBool(darkHideStatusKey, true);
-                  await EzCM.setString(
+                  await EzManager.setBool(darkHideStatusKey, true);
+                  await EzManager.setString(
                     darkHorizontalAlignKey,
                     config.isLefty ? ListAlignment.end.value : ListAlignment.start.value,
                   );
-                  await EzCM.setString(darkVerticalAlignKey, ListAlignment.start.value);
+                  await EzManager.setString(darkVerticalAlignKey, ListAlignment.start.value);
                 },
                 extraWall: (_) async {
                   // Button design
-                  await EzCM.setString(lightListLabelKey, LabelType.full.value);
-                  await EzCM.setBool(lightListIconKey, true);
-                  await EzCM.setBool(lightElevatedListKey, false);
-                  await EzCM.setString(lightFolderLabelKey, LabelType.full.value);
-                  await EzCM.setBool(lightFolderIconKey, true);
-                  await EzCM.setBool(lightElevatedFolderKey, false);
+                  await EzManager.setString(lightListLabelKey, LabelType.full.value);
+                  await EzManager.setBool(lightListIconKey, true);
+                  await EzManager.setBool(lightElevatedListKey, false);
+                  await EzManager.setString(lightFolderLabelKey, LabelType.full.value);
+                  await EzManager.setBool(lightFolderIconKey, true);
+                  await EzManager.setBool(lightElevatedFolderKey, false);
 
-                  await EzCM.setBool(lightWideTilesKey, true);
-                  await EzCM.setBool(lightPagesKey, true);
+                  await EzManager.setBool(lightWideTilesKey, true);
+                  await EzManager.setBool(lightPagesKey, true);
 
                   // Page design
-                  await EzCM.setBool(lightHideStatusKey, false);
-                  await EzCM.setString(
+                  await EzManager.setBool(lightHideStatusKey, false);
+                  await EzManager.setString(
                     lightHorizontalAlignKey,
                     config.isLefty ? ListAlignment.end.value : ListAlignment.start.value,
                   );
-                  await EzCM.setString(lightVerticalAlignKey, ListAlignment.start.value);
+                  await EzManager.setString(lightVerticalAlignKey, ListAlignment.start.value);
                 },
               ),
             ),
@@ -213,7 +213,7 @@ class SettingsScreen extends StatelessWidget {
               title: config.ezL10n.gColor,
               icon: EzIcon(config, Icons.palette, semanticLabel: config.ezL10n.gColor),
               subSettings: <EzSubSetting>[EzSubSetting.qckColor, EzSubSetting.advColor],
-              fromStorage: () => (secondary ?? EzCM.get(advancedColorsKey) == true)
+              fromStorage: () => (secondary ?? EzManager.get(advancedColorsKey) == true)
                   ? EzSubSetting.advColor
                   : EzSubSetting.qckColor,
               build: (EzSubSetting subSec) => EzColorSettings(config, target: subSec),
@@ -226,7 +226,7 @@ class SettingsScreen extends StatelessWidget {
               title: config.ezL10n.gDesign,
               icon: EzIcon(config, Icons.design_services, semanticLabel: config.ezL10n.gDesign),
               subSettings: <EzSubSetting>[EzSubSetting.butDesign, EzSubSetting.pagDesign],
-              fromStorage: () => (secondary ?? EzCM.get(pageTabKey) == true)
+              fromStorage: () => (secondary ?? EzManager.get(pageTabKey) == true)
                   ? EzSubSetting.pagDesign
                   : EzSubSetting.butDesign,
               build: (EzSubSetting subSec) => EzDesignSettings(
@@ -277,13 +277,13 @@ class SettingsScreen extends StatelessWidget {
 
                       if (horizontalAlign(config) !=
                               LAConfig.lookup(
-                                EzCM.get(
+                                EzManager.get(
                                   config.isDark ? darkHorizontalAlignKey : lightHorizontalAlignKey,
                                 ),
                               ) ||
                           verticalAlign(config) !=
                               LAConfig.lookup(
-                                EzCM.get(
+                                EzManager.get(
                                   config.isDark ? darkVerticalAlignKey : lightVerticalAlignKey,
                                 ),
                               )) {
@@ -302,8 +302,8 @@ class SettingsScreen extends StatelessWidget {
                     valueKey: config.isDark ? darkHideStatusKey : lightHideStatusKey,
                     afterChanged: (bool? choice) async {
                       if (choice == null) return;
-                      if (EzCM.updateBoth) {
-                        await EzCM.setBool(
+                      if (EzManager.updateBoth) {
+                        await EzManager.setBool(
                           config.isDark ? lightHideStatusKey : darkHideStatusKey,
                           choice,
                         );
@@ -332,8 +332,9 @@ class SettingsScreen extends StatelessWidget {
                     afterChanged: (bool? choice) async {
                       if (choice == null) return;
 
-                      if (EzCM.updateBoth) {
-                        await EzCM.setBool(config.isDark ? lightPagesKey : darkPagesKey, choice);
+                      if (EzManager.updateBoth) {
+                        await EzManager.setBool(
+                            config.isDark ? lightPagesKey : darkPagesKey, choice);
                       }
                       await config.rebuildUI();
                     },
@@ -350,7 +351,7 @@ class SettingsScreen extends StatelessWidget {
               title: config.ezL10n.gText,
               icon: EzIcon(config, Icons.text_format, semanticLabel: config.ezL10n.gText),
               subSettings: <EzSubSetting>[EzSubSetting.qckText, EzSubSetting.advText],
-              fromStorage: () => (secondary ?? EzCM.get(advancedTextKey) == true)
+              fromStorage: () => (secondary ?? EzManager.get(advancedTextKey) == true)
                   ? EzSubSetting.advText
                   : EzSubSetting.qckText,
               build: (EzSubSetting subSec) => EzTextSettings(config, target: subSec),

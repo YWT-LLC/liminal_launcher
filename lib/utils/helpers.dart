@@ -9,7 +9,7 @@ import 'package:open_ui/open_ui.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:material_ui/material_ui.dart';
 
-Future<void> canEdit(EzCP config, Future<void> Function() onSuccess) async {
+Future<void> canEdit(EzProvider config, Future<void> Function() onSuccess) async {
   if (!authToEdit(config)) {
     await onSuccess.call();
     return;
@@ -25,10 +25,10 @@ Future<void> canEdit(EzCP config, Future<void> Function() onSuccess) async {
   if (authed) await onSuccess.call();
 }
 
-Future<void> canToggleMenu(EzCP config, MenuController c) =>
+Future<void> canToggleMenu(EzProvider config, MenuController c) =>
     canEdit(config, () async => toggleMenu(c));
 
-Future<IconData?> chooseIcon(EzCP config, BuildContext context) {
+Future<IconData?> chooseIcon(EzProvider config, BuildContext context) {
   bool outlined = false;
   bool grid = true;
   final TextEditingController searchControl = TextEditingController();
@@ -155,12 +155,12 @@ Future<bool> _externalAuth(String reason) async {
     persistAcrossBackgrounding: true,
   );
 
-  if (authed) await EzCM.secSet(lastAuthKey, DateTime.now().toString());
+  if (authed) await EzManager.secSet(lastAuthKey, DateTime.now().toString());
   return authed;
 }
 
-Future<bool> liminalAuth(EzCP config, String reason) async {
-  final String lastAuth = await EzCM.secGet(lastAuthKey);
+Future<bool> liminalAuth(EzProvider config, String reason) async {
+  final String lastAuth = await EzManager.secGet(lastAuthKey);
 
   // Check quick exit(s)
   if (lastAuth.isEmpty || authTimeout(config) <= oneMS) return _externalAuth(reason);
@@ -183,10 +183,11 @@ String safeData(List<String> data, int pos) {
   }
 }
 
-/// [EzCP.isLTR] && [horizontalAlign] != [ListAlignment.end]
-bool standardFlow(EzCP config) => config.isLTR && horizontalAlign(config) != ListAlignment.end;
+/// [EzProvider.isLTR] && [horizontalAlign] != [ListAlignment.end]
+bool standardFlow(EzProvider config) =>
+    config.isLTR && horizontalAlign(config) != ListAlignment.end;
 
-EdgeInsets tilePadding(EzCP config, String datum, bool editing) {
+EdgeInsets tilePadding(EzProvider config, String datum, bool editing) {
   // Check for quick values
   if (editing || datum == nullTPS) return EzInsets.wrap(config.spacing);
   if (datum == zeroTPS) return EdgeInsets.zero;
@@ -207,7 +208,7 @@ String tpMap(List<double?> tp) =>
     tp.map((double? entry) => entry == null ? esSystem : entry.toString()).join(colon);
 
 const String _pattern = r'^(?!.*:[01]{8}:)[^/\\\x00]{1,50}$';
-String? validateName(EzCP config, String? name) {
+String? validateName(EzProvider config, String? name) {
   if (name == null || name.trim().isEmpty) return l10n(config).gNoEmpty;
 
   final RegExp regex = RegExp(_pattern);

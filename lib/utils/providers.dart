@@ -20,11 +20,11 @@ class AppInfoProvider extends ChangeNotifier {
   static const EventChannel _appEventChannel = EventChannel('$androidPackage/app_events');
   StreamSubscription<dynamic>? _appEventSubscription;
 
-  Set<String> _darkHidden = Set<String>.from(EzCM.get(darkHiddenIDsKey));
-  Set<String> _lightHidden = Set<String>.from(EzCM.get(lightHiddenIDsKey));
+  Set<String> _darkHidden = Set<String>.from(EzManager.get(darkHiddenIDsKey));
+  Set<String> _lightHidden = Set<String>.from(EzManager.get(lightHiddenIDsKey));
 
-  Set<String> _darkBanished = Set<String>.from(EzCM.get(darkBanishIDsKey));
-  Set<String> _lightBanished = Set<String>.from(EzCM.get(lightBanishIDsKey));
+  Set<String> _darkBanished = Set<String>.from(EzManager.get(darkBanishIDsKey));
+  Set<String> _lightBanished = Set<String>.from(EzManager.get(lightBanishIDsKey));
 
   late List<List<String>> _darkHomeMatrix;
   late List<List<String>> _lightHomeMatrix;
@@ -33,11 +33,11 @@ class AppInfoProvider extends ChangeNotifier {
       : _apps = apps,
         _appMap = <String, AppInfo>{for (AppInfo app in apps) app.id: app} {
     // Build the matrices
-    _darkHomeMatrix = _buildHomeMatrix(EzCM.get(darkHomeDataKey));
-    _lightHomeMatrix = _buildHomeMatrix(EzCM.get(lightHomeDataKey));
+    _darkHomeMatrix = _buildHomeMatrix(EzManager.get(darkHomeDataKey));
+    _lightHomeMatrix = _buildHomeMatrix(EzManager.get(lightHomeDataKey));
 
     // Sort based on the user's preferences
-    sort(LSConfig.safeLookup(EzCM.get(listSortKey)), EzCM.get(ascListKey));
+    sort(LSConfig.safeLookup(EzManager.get(listSortKey)), EzManager.get(ascListKey));
 
     // Listen to events (installs, external deletes, etc.)
     _listenToAppEvents();
@@ -90,7 +90,7 @@ class AppInfoProvider extends ChangeNotifier {
     _apps.add(installed);
     _appMap[installed.id] = installed;
 
-    sort(LSConfig.safeLookup(EzCM.get(listSortKey)), EzCM.get(ascListKey));
+    sort(LSConfig.safeLookup(EzManager.get(listSortKey)), EzManager.get(ascListKey));
     notifyListeners();
   }
 
@@ -99,18 +99,19 @@ class AppInfoProvider extends ChangeNotifier {
   List<AppInfo> get apps => _apps;
   Map<String, AppInfo> get appMap => _appMap;
 
-  int numLanes(EzCP config) => config.isDark ? _darkHomeMatrix.length : _lightHomeMatrix.length;
+  int numLanes(EzProvider config) =>
+      config.isDark ? _darkHomeMatrix.length : _lightHomeMatrix.length;
 
-  List<String> homeLane(EzCP config, int lane) =>
+  List<String> homeLane(EzProvider config, int lane) =>
       config.isDark ? _darkHomeMatrix[lane] : _lightHomeMatrix[lane];
 
-  String homeItem(EzCP config, {required int lane, required int index}) =>
+  String homeItem(EzProvider config, {required int lane, required int index}) =>
       config.isDark ? _darkHomeMatrix[lane][index] : _lightHomeMatrix[lane][index];
 
-  Set<String> hidden(EzCP config) => config.isDark ? _darkHidden : _lightHidden;
-  Set<String> banished(EzCP config) => config.isDark ? _darkBanished : _lightBanished;
+  Set<String> hidden(EzProvider config) => config.isDark ? _darkHidden : _lightHidden;
+  Set<String> banished(EzProvider config) => config.isDark ? _darkBanished : _lightBanished;
 
-  Set<String> hybridIDs(EzCP config, ListConfig listConfig) => config.isDark
+  Set<String> hybridIDs(EzProvider config, ListConfig listConfig) => config.isDark
       ? <String>{
           if (listConfig.localContent != null) ...listConfig.localContent!.value,
           if (listConfig.listContent.contains(ListContent.hidden)) ..._darkHidden,
@@ -131,7 +132,7 @@ class AppInfoProvider extends ChangeNotifier {
   final ValueNotifier<bool> _flipped = ValueNotifier<bool>(false);
 
   Future<void> _added(
-    EzCP config, {
+    EzProvider config, {
     required Future<void> Function()? editNew,
   }) async {
     if (_addedTimer?.isActive ?? false) _clearAdded(setFlipped: !_flipped.value);
@@ -206,7 +207,7 @@ class AppInfoProvider extends ChangeNotifier {
   // Core //
 
   Future<void> addApp(
-    EzCP config, {
+    EzProvider config, {
     required int lane,
     required String id,
     required Future<void> Function() editNew,
@@ -226,7 +227,7 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   Future<void> addWidget(
-    EzCP config, {
+    EzProvider config, {
     required WWGG type,
     required WWGGSize size,
     required Future<void> Function()? editNew,
@@ -260,7 +261,7 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   Future<void> addFolder(
-    EzCP config, {
+    EzProvider config, {
     required int lane,
     required Future<void> Function() editNew,
   }) async {
@@ -281,7 +282,7 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   Future<int> addSpacer(
-    EzCP config, {
+    EzProvider config, {
     double? height,
     double? width,
     required int lane,
@@ -317,7 +318,7 @@ class AppInfoProvider extends ChangeNotifier {
     return pos;
   }
 
-  Future<void> addLane(EzCP config) async {
+  Future<void> addLane(EzProvider config) async {
     if (interlinked || config.isDark) {
       _darkHomeMatrix.add(<String>[defaultLaneEntry()]);
       unawaited(_saveDarkMatrix(List<List<String>>.from(_darkHomeMatrix)));
@@ -333,7 +334,7 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   Future<void> dupeItem(
-    EzCP config, {
+    EzProvider config, {
     required int lane,
     required int index,
     required Future<void> Function()? editNew,
@@ -353,7 +354,7 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   Future<void> dupeLane(
-    EzCP config, {
+    EzProvider config, {
     required int lane,
     required Future<void> Function() editNew,
   }) async {
@@ -390,23 +391,23 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> reloadFromStorage(EzCP config) async {
+  Future<void> reloadFromStorage(EzProvider config) async {
     await ezNoTouch(config, () async {
-      _darkHidden = Set<String>.from(EzCM.get(darkHiddenIDsKey));
-      _lightHidden = Set<String>.from(EzCM.get(lightHiddenIDsKey));
+      _darkHidden = Set<String>.from(EzManager.get(darkHiddenIDsKey));
+      _lightHidden = Set<String>.from(EzManager.get(lightHiddenIDsKey));
 
-      _darkBanished = Set<String>.from(EzCM.get(darkBanishIDsKey));
-      _lightBanished = Set<String>.from(EzCM.get(lightBanishIDsKey));
+      _darkBanished = Set<String>.from(EzManager.get(darkBanishIDsKey));
+      _lightBanished = Set<String>.from(EzManager.get(lightBanishIDsKey));
 
-      _darkHomeMatrix = _buildHomeMatrix(EzCM.get(darkHomeDataKey));
-      _lightHomeMatrix = _buildHomeMatrix(EzCM.get(lightHomeDataKey));
+      _darkHomeMatrix = _buildHomeMatrix(EzManager.get(darkHomeDataKey));
+      _lightHomeMatrix = _buildHomeMatrix(EzManager.get(lightHomeDataKey));
     });
 
     notifyListeners();
   }
 
   Future<void> updateSpacing(
-    EzCP config, {
+    EzProvider config, {
     required int lane,
     required int index,
     required String entry,
@@ -507,7 +508,7 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   Future<void> updateApp(
-    EzCP config, {
+    EzProvider config, {
     required int lane,
     required int index,
     required String id,
@@ -527,7 +528,7 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   Future<void> updateFolder(
-    EzCP config, {
+    EzProvider config, {
     required int lane,
     required int index,
     required String name,
@@ -556,7 +557,7 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   Future<void> updateWidget(
-    EzCP config,
+    EzProvider config,
     WWGG type,
     String extra, {
     required int lane,
@@ -576,7 +577,7 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   Future<void> reorderLane(
-    EzCP config, {
+    EzProvider config, {
     required int lane,
     required int oldIndex,
     required int newIndex,
@@ -598,7 +599,7 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> moveItemUpLane(EzCP config, {required int lane, required int index}) async {
+  Future<void> moveItemUpLane(EzProvider config, {required int lane, required int index}) async {
     if (interlinked || config.isDark) {
       final String item = _darkHomeMatrix[lane].removeAt(index);
       _darkHomeMatrix[lane + 1].add(item);
@@ -616,7 +617,7 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> moveItemDownLane(EzCP config, {required int lane, required int index}) async {
+  Future<void> moveItemDownLane(EzProvider config, {required int lane, required int index}) async {
     if (interlinked || config.isDark) {
       final String item = _darkHomeMatrix[lane].removeAt(index);
       _darkHomeMatrix[lane - 1].add(item);
@@ -634,7 +635,7 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _reorderLanes(EzCP config, int oldPos, int newPos) async {
+  Future<void> _reorderLanes(EzProvider config, int oldPos, int newPos) async {
     if (interlinked || config.isDark) {
       final List<String> lane = _darkHomeMatrix.removeAt(oldPos);
       _darkHomeMatrix.insert(newPos, lane);
@@ -653,7 +654,7 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   Future<void> updateLane(
-    EzCP config, {
+    EzProvider config, {
     required String entry,
     required int startPos,
     required int currPos,
@@ -672,7 +673,7 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> hideApp(EzCP config, BuildContext context, String id) async {
+  Future<void> hideApp(EzProvider config, BuildContext context, String id) async {
     bool? both;
 
     if (interlinked || config.isDark) {
@@ -708,7 +709,8 @@ class AppInfoProvider extends ChangeNotifier {
                       text: config.ezL10n.gYes,
                       onPressed: () {
                         _lightHidden.add(id);
-                        unawaited(EzCM.setStringList(lightHiddenIDsKey, _lightHidden.toList()));
+                        unawaited(
+                            EzManager.setStringList(lightHiddenIDsKey, _lightHidden.toList()));
                         Navigator.of(dCon).pop(true);
                       },
                     ),
@@ -720,7 +722,7 @@ class AppInfoProvider extends ChangeNotifier {
       }
 
       _darkHidden.add(id);
-      unawaited(EzCM.setStringList(darkHiddenIDsKey, _darkHidden.toList()));
+      unawaited(EzManager.setStringList(darkHiddenIDsKey, _darkHidden.toList()));
     }
 
     if (interlinked || !config.isDark) {
@@ -755,7 +757,7 @@ class AppInfoProvider extends ChangeNotifier {
                 text: config.ezL10n.gYes,
                 onPressed: () {
                   _darkHidden.add(id);
-                  unawaited(EzCM.setStringList(darkHiddenIDsKey, _darkHidden.toList()));
+                  unawaited(EzManager.setStringList(darkHiddenIDsKey, _darkHidden.toList()));
                   Navigator.of(dCon).pop(true);
                 },
               ),
@@ -766,13 +768,13 @@ class AppInfoProvider extends ChangeNotifier {
       }
 
       _lightHidden.add(id);
-      unawaited(EzCM.setStringList(lightHiddenIDsKey, _lightHidden.toList()));
+      unawaited(EzManager.setStringList(lightHiddenIDsKey, _lightHidden.toList()));
     }
 
     await _clearHomeOf(config, id, both ?? interlinked);
   }
 
-  Future<bool> showApp(EzCP config, String id, {bool batch = false}) async {
+  Future<bool> showApp(EzProvider config, String id, {bool batch = false}) async {
     if (interlinked || config.isDark) {
       if (!_darkHidden.contains(id)) return false;
       final bool worthAsk = !batch && !interlinked && _lightHidden.contains(id);
@@ -790,7 +792,7 @@ class AppInfoProvider extends ChangeNotifier {
                 text: config.ezL10n.gYes,
                 onPressed: () {
                   _lightHidden.remove(id);
-                  unawaited(EzCM.setStringList(lightHiddenIDsKey, _lightHidden.toList()));
+                  unawaited(EzManager.setStringList(lightHiddenIDsKey, _lightHidden.toList()));
                 },
               ),
               EzAction(config, text: config.ezL10n.gNo, onPressed: () => Navigator.of(dCon).pop()),
@@ -801,7 +803,7 @@ class AppInfoProvider extends ChangeNotifier {
       }
 
       _darkHidden.remove(id);
-      unawaited(EzCM.setStringList(darkHiddenIDsKey, _darkHidden.toList()));
+      unawaited(EzManager.setStringList(darkHiddenIDsKey, _darkHidden.toList()));
     }
 
     if (interlinked || !config.isDark) {
@@ -821,7 +823,7 @@ class AppInfoProvider extends ChangeNotifier {
                 text: config.ezL10n.gYes,
                 onPressed: () {
                   _darkHidden.remove(id);
-                  unawaited(EzCM.setStringList(darkHiddenIDsKey, _darkHidden.toList()));
+                  unawaited(EzManager.setStringList(darkHiddenIDsKey, _darkHidden.toList()));
                 },
               ),
               EzAction(config, text: config.ezL10n.gNo, onPressed: () => Navigator.of(dCon).pop()),
@@ -832,14 +834,14 @@ class AppInfoProvider extends ChangeNotifier {
       }
 
       _lightHidden.remove(id);
-      unawaited(EzCM.setStringList(lightHiddenIDsKey, _lightHidden.toList()));
+      unawaited(EzManager.setStringList(lightHiddenIDsKey, _lightHidden.toList()));
     }
 
     if (!batch) notifyListeners();
     return true;
   }
 
-  Future<bool> banishApp(EzCP config, BuildContext context, AppInfo app) async {
+  Future<bool> banishApp(EzProvider config, BuildContext context, AppInfo app) async {
     const String curr = 'curr'; // not for user, don't translate
     const String both = 'both';
 
@@ -887,18 +889,18 @@ class AppInfoProvider extends ChangeNotifier {
       case curr:
         if (config.isDark) {
           _darkBanished.add(app.id);
-          unawaited(EzCM.setStringList(darkBanishIDsKey, _darkBanished.toList()));
+          unawaited(EzManager.setStringList(darkBanishIDsKey, _darkBanished.toList()));
         } else {
           _lightBanished.add(app.id);
-          unawaited(EzCM.setStringList(lightBanishIDsKey, _lightBanished.toList()));
+          unawaited(EzManager.setStringList(lightBanishIDsKey, _lightBanished.toList()));
         }
         break;
 
       case both:
         _darkBanished.add(app.id);
         _lightBanished.add(app.id);
-        unawaited(EzCM.setStringList(darkBanishIDsKey, _darkBanished.toList()));
-        unawaited(EzCM.setStringList(lightBanishIDsKey, _lightBanished.toList()));
+        unawaited(EzManager.setStringList(darkBanishIDsKey, _darkBanished.toList()));
+        unawaited(EzManager.setStringList(lightBanishIDsKey, _lightBanished.toList()));
         break;
 
       default:
@@ -923,8 +925,8 @@ class AppInfoProvider extends ChangeNotifier {
       _lightBanished = banishedCopy;
 
       unawaited(_saveLightMatrix(homeCopy));
-      unawaited(EzCM.setStringList(lightHiddenIDsKey, hiddenCopy.toList()));
-      unawaited(EzCM.setStringList(lightBanishIDsKey, banishedCopy.toList()));
+      unawaited(EzManager.setStringList(lightHiddenIDsKey, hiddenCopy.toList()));
+      unawaited(EzManager.setStringList(lightBanishIDsKey, banishedCopy.toList()));
     } else {
       final List<List<String>> homeCopy =
           _lightHomeMatrix.map((List<String> lane) => List<String>.from(lane)).toList();
@@ -937,8 +939,8 @@ class AppInfoProvider extends ChangeNotifier {
       _darkBanished = banishedCopy;
 
       unawaited(_saveDarkMatrix(homeCopy));
-      unawaited(EzCM.setStringList(darkHiddenIDsKey, hiddenCopy.toList()));
-      unawaited(EzCM.setStringList(darkBanishIDsKey, banishedCopy.toList()));
+      unawaited(EzManager.setStringList(darkHiddenIDsKey, hiddenCopy.toList()));
+      unawaited(EzManager.setStringList(darkBanishIDsKey, banishedCopy.toList()));
     }
 
     notifyListeners();
@@ -947,7 +949,7 @@ class AppInfoProvider extends ChangeNotifier {
   // Delete //
 
   Future<void> removeItem(
-    EzCP config, {
+    EzProvider config, {
     required int lane,
     required int index,
     bool batch = false,
@@ -965,7 +967,7 @@ class AppInfoProvider extends ChangeNotifier {
     if (!batch) notifyListeners();
   }
 
-  Future<void> _clearHomeOf(EzCP? config, String id, bool both) async {
+  Future<void> _clearHomeOf(EzProvider? config, String id, bool both) async {
     await ezNoTouch(config, () async {
       if (config == null || both || config.isDark) {
         final List<List<String>> copy = List<List<String>>.from(_darkHomeMatrix);
@@ -973,11 +975,11 @@ class AppInfoProvider extends ChangeNotifier {
         if (config == null) {
           if (_darkHidden.contains(id)) {
             _darkHidden.remove(id);
-            unawaited(EzCM.setStringList(darkHiddenIDsKey, _darkHidden.toList()));
+            unawaited(EzManager.setStringList(darkHiddenIDsKey, _darkHidden.toList()));
           }
           if (_darkBanished.contains(id)) {
             _darkBanished.remove(id);
-            unawaited(EzCM.setStringList(darkBanishIDsKey, _darkBanished.toList()));
+            unawaited(EzManager.setStringList(darkBanishIDsKey, _darkBanished.toList()));
           }
         }
 
@@ -1026,11 +1028,11 @@ class AppInfoProvider extends ChangeNotifier {
         if (config == null) {
           if (_lightHidden.contains(id)) {
             _lightHidden.remove(id);
-            unawaited(EzCM.setStringList(lightHiddenIDsKey, _lightHidden.toList()));
+            unawaited(EzManager.setStringList(lightHiddenIDsKey, _lightHidden.toList()));
           }
           if (_lightBanished.contains(id)) {
             _lightBanished.remove(id);
-            unawaited(EzCM.setStringList(lightBanishIDsKey, _lightBanished.toList()));
+            unawaited(EzManager.setStringList(lightBanishIDsKey, _lightBanished.toList()));
           }
         }
 
@@ -1084,7 +1086,7 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   Future<bool> removeLane(
-    EzCP config,
+    EzProvider config,
     BuildContext context,
     int lane, {
     bool confirm = true,
@@ -1137,12 +1139,12 @@ class AppInfoProvider extends ChangeNotifier {
 List<List<String>> _buildHomeMatrix(List<String> data) =>
     data.map((String outtie) => outtie.split(listSplit)).toList();
 
-Future<bool> _saveDarkMatrix(List<List<String>> matrix) => EzCM.setStringList(
+Future<bool> _saveDarkMatrix(List<List<String>> matrix) => EzManager.setStringList(
       darkHomeDataKey,
       matrix.map((List<String> innie) => innie.join(listSplit)).toList(),
     );
 
-Future<bool> _saveLightMatrix(List<List<String>> matrix) => EzCM.setStringList(
+Future<bool> _saveLightMatrix(List<List<String>> matrix) => EzManager.setStringList(
       lightHomeDataKey,
       matrix.map((List<String> innie) => innie.join(listSplit)).toList(),
     );

@@ -17,7 +17,7 @@ import 'package:material_ui/material_ui.dart';
 //* Core Widget *//
 
 class FolderTile extends StatefulWidget {
-  final EzCP config;
+  final EzProvider config;
   final AppInfoProvider appInfo;
   final TileState state;
   final ValueNotifier<double>? rippleProgress;
@@ -264,7 +264,7 @@ class _AppFolderState extends State<FolderTile> {
 }
 
 List<Widget> _menuChildren(
-  EzCP config, {
+  EzProvider config, {
   required AppInfoProvider appInfo,
   required BuildContext context,
   required TileState state,
@@ -336,7 +336,7 @@ List<Widget> _menuChildren(
 //* Add Widget *//
 
 class FolderButton extends StatelessWidget {
-  final EzCP config;
+  final EzProvider config;
 
   final EzSwitchColor backgroundFill;
   final ButtonType buttonType;
@@ -531,7 +531,7 @@ class FolderConfig {
 }
 
 Future<void> editFolder(
-  EzCP config, {
+  EzProvider config, {
   required AppInfoProvider appInfo,
   required BuildContext pContext,
   required FolderConfig initConfig,
@@ -1219,7 +1219,7 @@ Future<void> editFolder(
 }
 
 class _EditFolder extends StatelessWidget {
-  final EzCP config;
+  final EzProvider config;
   final AppInfoProvider appInfo;
   final BuildContext pContext;
   final FolderConfig initConfig;

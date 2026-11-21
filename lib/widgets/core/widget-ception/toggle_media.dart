@@ -13,7 +13,7 @@ import 'package:material_ui/material_ui.dart';
 //* Core Widget *//
 
 class ToggleMediaWidget extends StatefulWidget {
-  final EzCP config;
+  final EzProvider config;
   final AppInfoProvider appInfo;
   final TileState state;
   final LimPos pos;
@@ -239,7 +239,7 @@ class _ToggleMediaWidgetState extends State<ToggleMediaWidget> {
 }
 
 List<Widget> _menuChildren(
-  EzCP config, {
+  EzProvider config, {
   required AppInfoProvider appInfo,
   required BuildContext context,
   required TileState state,
@@ -298,7 +298,7 @@ List<Widget> _menuChildren(
 //* Add Widget *//
 
 class AddToggleMedia extends StatelessWidget {
-  final EzCP config;
+  final EzProvider config;
   final AppInfoProvider appInfo;
   final BuildContext pContext;
   final int lane;
@@ -395,7 +395,7 @@ class _MediaConfig {
 }
 
 Future<void> _openEdits(
-  EzCP config, {
+  EzProvider config, {
   required AppInfoProvider appInfo,
   required BuildContext pContext,
   required _MediaConfig initConfig,
@@ -542,7 +542,7 @@ Future<void> _openEdits(
 }
 
 class _EditTM extends StatelessWidget {
-  final EzCP config;
+  final EzProvider config;
   final AppInfoProvider appInfo;
   final BuildContext pContext;
   final _MediaConfig initConfig;

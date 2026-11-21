@@ -9,7 +9,7 @@ import 'package:open_ui/open_ui.dart';
 import 'package:material_ui/material_ui.dart';
 
 class AlignmentSelectors extends StatefulWidget {
-  final EzCP config;
+  final EzProvider config;
 
   const AlignmentSelectors(this.config, {super.key});
 
@@ -94,11 +94,11 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
                   if (choice?.first == null) return;
                   final ListAlignment selected = choice!.first;
 
-                  if (EzCM.updateBoth || widget.config.isDark) {
-                    await EzCM.setString(darkHorizontalAlignKey, selected.value);
+                  if (EzManager.updateBoth || widget.config.isDark) {
+                    await EzManager.setString(darkHorizontalAlignKey, selected.value);
                   }
-                  if (EzCM.updateBoth || !widget.config.isDark) {
-                    await EzCM.setString(lightHorizontalAlignKey, selected.value);
+                  if (EzManager.updateBoth || !widget.config.isDark) {
+                    await EzManager.setString(lightHorizontalAlignKey, selected.value);
                   }
 
                   setState(() => h = selected);
@@ -117,11 +117,11 @@ class _AlignmentSelectorsState extends State<AlignmentSelectors> {
                   if (choice?.first == null) return;
                   final ListAlignment selected = choice!.first;
 
-                  if (EzCM.updateBoth || widget.config.isDark) {
-                    await EzCM.setString(darkVerticalAlignKey, selected.value);
+                  if (EzManager.updateBoth || widget.config.isDark) {
+                    await EzManager.setString(darkVerticalAlignKey, selected.value);
                   }
-                  if (EzCM.updateBoth || !widget.config.isDark) {
-                    await EzCM.setString(lightVerticalAlignKey, selected.value);
+                  if (EzManager.updateBoth || !widget.config.isDark) {
+                    await EzManager.setString(lightVerticalAlignKey, selected.value);
                   }
 
                   setState(() => v = selected);

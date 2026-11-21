@@ -13,7 +13,7 @@ import 'package:material_ui/material_ui.dart';
 //* Core Widget *//
 
 class ClockWidget extends StatefulWidget {
-  final EzCP config;
+  final EzProvider config;
   final AppInfoProvider appInfo;
   final TileState state;
   final LimPos pos;
@@ -233,7 +233,7 @@ class _ClockWidgetState extends State<ClockWidget> {
 }
 
 List<Widget> _menuChildren(
-  EzCP config, {
+  EzProvider config, {
   required AppInfoProvider appInfo,
   required BuildContext context,
   required TileState state,
@@ -292,7 +292,7 @@ List<Widget> _menuChildren(
 //* Add Widget *//
 
 class AddClock extends StatelessWidget {
-  final EzCP config;
+  final EzProvider config;
   final AppInfoProvider appInfo;
   final BuildContext pContext;
   final int lane;
@@ -438,7 +438,7 @@ enum _Edits { background, time, date }
 
 /// background, time, date
 extension _Title on _Edits {
-  String name(EzCP config) => switch (this) {
+  String name(EzProvider config) => switch (this) {
         _Edits.background => l10n(config).clkBackground,
         _Edits.time => l10n(config).clkTime,
         _Edits.date => l10n(config).clkDate,
@@ -446,7 +446,7 @@ extension _Title on _Edits {
 }
 
 Future<void> _openEdits(
-  EzCP config, {
+  EzProvider config, {
   required AppInfoProvider appInfo,
   required BuildContext pContext,
   required _ClockConfig initConfig,
@@ -828,7 +828,7 @@ Future<void> _openEdits(
 }
 
 class _EditClock extends StatelessWidget {
-  final EzCP config;
+  final EzProvider config;
   final AppInfoProvider appInfo;
   final BuildContext pContext;
   final _ClockConfig initConfig;

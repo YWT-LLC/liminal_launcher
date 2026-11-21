@@ -12,7 +12,7 @@ import 'package:material_ui/material_ui.dart';
 //* (Widget) Functions *//
 
 Widget drawWidget(
-  EzCP config, {
+  EzProvider config, {
   required AppInfoProvider appInfo,
   required String typeString,
   required TileState state,
@@ -35,7 +35,7 @@ Widget drawWidget(
 //* Custom Classes *//
 
 class SettingsFAB extends StatelessWidget {
-  final EzCP config;
+  final EzProvider config;
   final AppInfoProvider appInfo;
   final void Function() onPressed;
 
@@ -62,7 +62,7 @@ class SettingsFAB extends StatelessWidget {
             config,
             label: config.ezL10n.ssSaveConfig,
             icon: EzIcon(config, Icons.download),
-            onPressed: () => EzCM.saveConfig(config, context: context),
+            onPressed: () => EzManager.saveConfig(config, context: context),
           ),
           EzMenuButton(
             config,

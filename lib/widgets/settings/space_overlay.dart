@@ -14,7 +14,7 @@ import 'package:material_ui/material_ui.dart';
 
 class _EditSpacingEntry extends OverlayEntry {
   _EditSpacingEntry(
-    EzCP config, {
+    EzProvider config, {
     required AppInfoProvider appInfo,
     required Completer<_ExitData?> completer,
   }) : super(builder: (_) {
@@ -24,7 +24,7 @@ class _EditSpacingEntry extends OverlayEntry {
 }
 
 class _EditSpacingOverlay extends StatefulWidget {
-  final EzCP config;
+  final EzProvider config;
   final AppInfoProvider appInfo;
   final Completer<_ExitData?> completer;
 
@@ -828,7 +828,7 @@ class _ExitData {
 //* Func *//
 
 Future<void> editSpacing(
-  EzCP config, {
+  EzProvider config, {
   required AppInfoProvider appInfo,
   required BuildContext context,
 }) async {

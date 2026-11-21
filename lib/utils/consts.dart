@@ -443,7 +443,7 @@ const Duration breatheTime = Duration(seconds: 2);
 
 // Const-ish //
 
-Map<String, IconData> solidIconChoices(EzCP config) => <String, IconData>{
+Map<String, IconData> solidIconChoices(EzProvider config) => <String, IconData>{
       l10n(config).inAlarm: Icons.alarm,
       l10n(config).inBike: Icons.directions_bike,
       l10n(config).inBoat: Icons.directions_boat,
@@ -497,7 +497,7 @@ Map<String, IconData> solidIconChoices(EzCP config) => <String, IconData>{
       l10n(config).inWork: Icons.work,
     };
 
-Map<String, IconData> outlinedIconChoices(EzCP config) => <String, IconData>{
+Map<String, IconData> outlinedIconChoices(EzProvider config) => <String, IconData>{
       l10n(config).inAlarm: Icons.alarm_outlined,
       l10n(config).inBike: Icons.directions_bike_outlined,
       l10n(config).inBoat: Icons.directions_boat_outlined,

@@ -13,7 +13,7 @@ import 'package:material_ui/material_ui.dart';
 //* Core Widget *//
 
 class TimerWidget extends StatefulWidget {
-  final EzCP config;
+  final EzProvider config;
   final AppInfoProvider appInfo;
   final TileState state;
   final LimPos pos;
@@ -351,7 +351,7 @@ class _TimerWidgetState extends State<TimerWidget> {
 }
 
 List<Widget> _menuChildren(
-  EzCP config, {
+  EzProvider config, {
   required AppInfoProvider appInfo,
   required BuildContext context,
   required TileState state,
@@ -476,7 +476,7 @@ int _toInt(String time) {
 //* Add Widget *//
 
 class AddTimer extends StatelessWidget {
-  final EzCP config;
+  final EzProvider config;
   final AppInfoProvider appInfo;
   final BuildContext pContext;
   final int lane;
@@ -628,7 +628,7 @@ class _TimerConfig {
 }
 
 Future<void> _openEdits(
-  EzCP config, {
+  EzProvider config, {
   required AppInfoProvider appInfo,
   required BuildContext pContext,
   required _TimerConfig initConfig,
@@ -806,7 +806,7 @@ Future<void> _openEdits(
 }
 
 class _EditTimer extends StatelessWidget {
-  final EzCP config;
+  final EzProvider config;
   final AppInfoProvider appInfo;
   final BuildContext pContext;
   final _TimerConfig initConfig;

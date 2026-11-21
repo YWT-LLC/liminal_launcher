@@ -14,8 +14,8 @@ class ErrorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<EzCP>(
-      builder: (_, EzCP config, __) => LiminalScaffold(
+    return Consumer<EzProvider>(
+      builder: (_, EzProvider config, __) => LiminalScaffold(
         config,
         body: Center(
           child: EzScrollView(

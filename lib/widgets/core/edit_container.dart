@@ -10,7 +10,7 @@ import 'package:open_ui/open_ui.dart';
 import 'package:material_ui/material_ui.dart';
 
 class EditContainer extends StatefulWidget {
-  final EzCP config;
+  final EzProvider config;
   final AlignmentGeometry subAlign;
   final MenuController menuControl;
   final List<Widget> menuChildren;

@@ -10,7 +10,7 @@ import 'package:open_ui/open_ui.dart';
 import 'package:material_ui/material_ui.dart';
 
 class AppSecSettings extends StatelessWidget {
-  final EzCP config;
+  final EzProvider config;
   final TextEditingController _timeoutText;
 
   AppSecSettings(this.config, {super.key}) : _timeoutText = TextEditingController();
@@ -53,7 +53,7 @@ class AppSecSettings extends StatelessWidget {
                       onChanged: (bool? value) async {
                         if (value == null) return;
 
-                        await EzCM.secSet(authToEditKey, value.toString());
+                        await EzManager.secSet(authToEditKey, value.toString());
                         setModal(() => editAuth = value);
                       },
                     ),
@@ -69,7 +69,7 @@ class AppSecSettings extends StatelessWidget {
                       onChanged: (bool? value) async {
                         if (value == null) return;
 
-                        await EzCM.setBool(resetAfterEditKey, value);
+                        await EzManager.setBool(resetAfterEditKey, value);
                         setModal(() => editReset = value);
                       },
                     ),
@@ -84,7 +84,7 @@ class AppSecSettings extends StatelessWidget {
                       onChanged: (bool? value) async {
                         if (value == null) return;
 
-                        await EzCM.secSet(authForHiddenKey, value.toString());
+                        await EzManager.secSet(authForHiddenKey, value.toString());
                         setModal(() => hideAuth = value);
                       },
                     ),
@@ -100,7 +100,7 @@ class AppSecSettings extends StatelessWidget {
                       onChanged: (bool? value) async {
                         if (value == null) return;
 
-                        await EzCM.setBool(resetAfterOpenedKey, value);
+                        await EzManager.setBool(resetAfterOpenedKey, value);
                         setModal(() => openReset = value);
                       },
                     ),
@@ -138,7 +138,7 @@ class AppSecSettings extends StatelessWidget {
                             if (intVal == null || intVal < 0) return;
 
                             setModal(() {});
-                            await EzCM.secSet(authTimeoutKey, intVal.toString());
+                            await EzManager.secSet(authTimeoutKey, intVal.toString());
                           },
                           validator: (String? value) {
                             if (value == null) return null;

@@ -33,7 +33,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   int delta = 0;
 
   // Theme(s)
-  bool separate = !EzCM.updateBoth;
+  bool separate = !EzManager.updateBoth;
 
   // Wallpaper(s)
   String darkPath = _path(darkBackgroundImageKey);
@@ -55,7 +55,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   // Define custom functions //
 
-  String _path(String key) => EzCM.get(key) ?? noImageValue;
+  String _path(String key) => EzManager.get(key) ?? noImageValue;
 
   static bool _isImage(String path) =>
       path != noImageValue && int.tryParse(path) == null && path.split(colorSplit).length < 4;
@@ -72,12 +72,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   Future<void> setSeparate(bool choice) async {
-    await EzCM.setBool(updateBothKey, !choice);
+    await EzManager.setBool(updateBothKey, !choice);
     setState(() => separate = choice);
   }
 
   /// Mirrors (when shared) and colors (when requested) newly chosen wallpapers
-  /// [EzImageSetting] calls [EzCP.rebuildUI] after a change, so we listen for that
+  /// [EzImageSetting] calls [EzProvider.rebuildUI] after a change, so we listen for that
   Future<void> onConfigChange() async {
     if (syncing) return;
 
@@ -95,12 +95,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       if (!separate) {
         // One setup for both: copy the edited wallpaper to the other theme
         final String source = darkChanged ? newDark : newLight;
-        final String? fit = EzCM.get(darkChanged ? darkBackgroundFitKey : lightBackgroundFitKey);
+        final String? fit =
+            EzManager.get(darkChanged ? darkBackgroundFitKey : lightBackgroundFitKey);
 
-        await EzCM.setString(
+        await EzManager.setString(
             darkChanged ? lightBackgroundImageKey : darkBackgroundImageKey, source);
         if (fit != null) {
-          await EzCM.setString(darkChanged ? lightBackgroundFitKey : darkBackgroundFitKey, fit);
+          await EzManager.setString(
+              darkChanged ? lightBackgroundFitKey : darkBackgroundFitKey, fit);
         }
         wrote = true;
 
@@ -137,13 +139,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     final String opacityKey = isDark ? darkTextBackgroundOpacityKey : lightTextBackgroundOpacityKey;
 
     // Better to have to turn it down than up
-    final double? opacity = EzCM.get(opacityKey);
-    if (opacity == null || opacity <= 0.05) await EzCM.setDouble(opacityKey, 0.50);
+    final double? opacity = EzManager.get(opacityKey);
+    if (opacity == null || opacity <= 0.05) await EzManager.setDouble(opacityKey, 0.50);
 
     final String result = await loadImageColorScheme(path, brightness);
 
     if (result == success) {
-      await EzCM.setString(isDark ? darkColorSchemeImageKey : lightColorSchemeImageKey, path);
+      await EzManager.setString(isDark ? darkColorSchemeImageKey : lightColorSchemeImageKey, path);
     } else {
       final String errorMsg =
           '$result${ezUrlCheck(path) ? '\n\n${_config.ezL10n.dsImgPermission}' : ''}';
@@ -183,13 +185,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   Future<void> setLaneBool(
-    EzCP config, {
+    EzProvider config, {
     required String darkKey,
     required String lightKey,
     required bool value,
   }) async {
-    if (interlinked || EzCM.updateBoth) {
-      await EzCM.setBool(config.isDark ? lightKey : darkKey, value);
+    if (interlinked || EzManager.updateBoth) {
+      await EzManager.setBool(config.isDark ? lightKey : darkKey, value);
     }
   }
 
@@ -215,11 +217,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     shuffleTimer = null;
   }
 
-  Future<void> finish(EzCP config) async {
+  Future<void> finish(EzProvider config) async {
     stopShuffle();
 
-    if (EzCM.get(config.isDark ? darkPagesKey : lightPagesKey) != pages(config) ||
-        EzCM.get(config.isDark ? darkWideTilesKey : lightWideTilesKey) != wideTiles(config)) {
+    if (EzManager.get(config.isDark ? darkPagesKey : lightPagesKey) != pages(config) ||
+        EzManager.get(config.isDark ? darkWideTilesKey : lightWideTilesKey) != wideTiles(config)) {
       await config.rebuildUI();
     }
 
@@ -228,21 +230,21 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   // Build custom Widgets //
 
-  Widget header(EzCP config) => EzText(
+  Widget header(EzProvider config) => EzText(
         config,
         text: '${page + 1}/$_numPages',
         textAlign: TextAlign.center,
         style: config.labelStyle,
       );
 
-  Widget title(EzCP config, String text) => EzText(
+  Widget title(EzProvider config, String text) => EzText(
         config,
         text: text,
         textAlign: TextAlign.center,
         style: config.titleStyle,
       );
 
-  Widget body(EzCP config, String text, {TextStyle? style}) => EzText(
+  Widget body(EzProvider config, String text, {TextStyle? style}) => EzText(
         config,
         text: text,
         textAlign: TextAlign.center,
@@ -250,7 +252,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       );
 
   // 1. Welcome
-  List<Widget> welcomePage(EzCP config) => <Widget>[
+  List<Widget> welcomePage(EzProvider config) => <Widget>[
         // Welcome
         title(config, l10n(config).hsWelcome),
         config.centerLine,
@@ -302,7 +304,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       ];
 
   // 2. Theme(s)
-  List<Widget> themePage(EzCP config) => <Widget>[
+  List<Widget> themePage(EzProvider config) => <Widget>[
         header(config),
         title(config, 'Light & dark mode'),
         config.centerLine,
@@ -348,7 +350,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   // 3. Wallpaper(s)
   Widget wallpaperSetting(
-    EzCP config, {
+    EzProvider config, {
     required bool? dark,
     required String label,
   }) {
@@ -378,7 +380,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     ]);
   }
 
-  List<Widget> wallpaperPage(EzCP config) {
+  List<Widget> wallpaperPage(EzProvider config) {
     final bool anySet = darkPath != noImageValue || lightPath != noImageValue;
 
     return <Widget>[
@@ -419,7 +421,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   // 4. Lanes
-  List<Widget> lanePage(EzCP config) {
+  List<Widget> lanePage(EzProvider config) {
     final TextStyle? focussed = config.bodyStyle;
     final TextStyle? hidden = config.labelStyle?.copyWith(color: config.outline);
 
@@ -508,7 +510,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   // 5. Swipe apps
-  List<Widget> swipePage(EzCP config, AppInfoProvider appInfo) => <Widget>[
+  List<Widget> swipePage(EzProvider config, AppInfoProvider appInfo) => <Widget>[
         header(config),
         title(config, 'Quick launch'),
         config.centerLine,
@@ -525,7 +527,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       ];
 
   // 6. Launch
-  List<Widget> launchPage(EzCP config) {
+  List<Widget> launchPage(EzProvider config) {
     final _LaunchStyle? ls = launchStyle;
 
     return <Widget>[
@@ -575,7 +577,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     ];
   }
 
-  Widget navRow(EzCP config) => EzRow(
+  Widget navRow(EzProvider config) => EzRow(
         config,
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -616,8 +618,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget build(BuildContext context) => PopScope(
         canPop: false,
         onPopInvokedWithResult: (bool didPop, _) => (didPop) ? goTo(page - 1) : doNothing,
-        child: Consumer2<EzCP, AppInfoProvider>(
-          builder: (_, EzCP config, AppInfoProvider appInfo, __) {
+        child: Consumer2<EzProvider, AppInfoProvider>(
+          builder: (_, EzProvider config, AppInfoProvider appInfo, __) {
             final List<Widget> children = switch (page) {
               0 => welcomePage(config),
               1 => themePage(config),
@@ -697,7 +699,7 @@ class _LaunchStyle {
       1.0,
     );
 
-    // Same 1:4 gradient odds as EzCM.randomize
+    // Same 1:4 gradient odds as EzManager.randomize
     final HSVColor hsv = HSVColor.fromColor(primary);
     final EzSwitchColor border = (random.nextInt(4) == 0)
         ? EzSwitchColor(
@@ -723,7 +725,7 @@ class _LaunchStyle {
     );
   }
 
-  ButtonStyle buttonStyle(EzCP config) {
+  ButtonStyle buttonStyle(EzProvider config) {
     final ColorScheme scheme = ColorScheme.fromSeed(
       seedColor: primary,
       brightness: config.isDark ? Brightness.dark : Brightness.light,
@@ -742,7 +744,7 @@ class _LaunchStyle {
     );
   }
 
-  TextStyle? textStyle(EzCP config) => googleStyles[fontFamily]?.copyWith(
+  TextStyle? textStyle(EzProvider config) => googleStyles[fontFamily]?.copyWith(
         fontSize: ywt.defaultBodySize * fontScale,
         color: config.isDark ? Colors.white : Colors.black,
         decoration: underline ? TextDecoration.underline : null,

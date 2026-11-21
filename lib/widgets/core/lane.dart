@@ -14,12 +14,13 @@ import 'package:material_ui/material_ui.dart';
 //* Core 'Widget' *//
 
 class LaneHeader extends StatelessWidget {
-  final EzCP config;
+  final EzProvider config;
   final AppInfoProvider appInfo;
   final BuildContext pContext;
   final int numLanes;
   final LimPos pos;
-  final Future<void> Function(EzCP, AppInfoProvider, int, ListAlignment, ListAlignment) addModal;
+  final Future<void> Function(EzProvider, AppInfoProvider, int, ListAlignment, ListAlignment)
+      addModal;
   final void Function()? navPageDown;
   final void Function()? navPageUp;
 
@@ -165,7 +166,7 @@ class LaneHeader extends StatelessWidget {
 //* Add 'Widget' *//
 
 class AddLane extends StatelessWidget {
-  final EzCP config;
+  final EzProvider config;
   final AppInfoProvider appInfo;
 
   const AddLane(
@@ -186,7 +187,7 @@ class AddLane extends StatelessWidget {
 //* Edit 'Widget' *//
 
 Future<void> _editLane(
-  EzCP config, {
+  EzProvider config, {
   required AppInfoProvider appInfo,
   required BuildContext context,
   required int lane,

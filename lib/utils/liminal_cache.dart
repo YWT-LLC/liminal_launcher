@@ -22,10 +22,10 @@ class LiminalCache extends EzAppCache {
         _l10n = l10n;
 
   @override
-  void init(EzCP config) => _buildLocalCache(config);
+  void init(EzProvider config) => _buildLocalCache(config);
 
   @override
-  Future<void> rebuild(EzCP config) async {
+  Future<void> rebuild(EzProvider config) async {
     if (_locale != config.locale) {
       _locale = config.locale;
       _l10n = await Lang.delegate.load(config.locale);
@@ -37,23 +37,24 @@ class LiminalCache extends EzAppCache {
     if (config.backgroundImagePath != noImageValue) unawaited(setBlankWallpaper());
   }
 
-  Future<void> _buildLocalCache(EzCP config) async {
+  Future<void> _buildLocalCache(EzProvider config) async {
     // Design cache
     if (config.isDark) {
-      final bool listIcons = EzCM.get(darkListIconKey);
-      final LabelType listLabels = LTConfig.safeLookup(EzCM.get(darkListLabelKey));
-      final bool elevatedLists = EzCM.get(darkElevatedListKey);
+      final bool listIcons = EzManager.get(darkListIconKey);
+      final LabelType listLabels = LTConfig.safeLookup(EzManager.get(darkListLabelKey));
+      final bool elevatedLists = EzManager.get(darkElevatedListKey);
 
-      final bool folderIcons = EzCM.get(darkFolderIconKey);
-      final LabelType folderLabels = LTConfig.safeLookup(EzCM.get(darkFolderLabelKey));
-      final bool elevatedFolders = EzCM.get(darkElevatedFolderKey);
+      final bool folderIcons = EzManager.get(darkFolderIconKey);
+      final LabelType folderLabels = LTConfig.safeLookup(EzManager.get(darkFolderLabelKey));
+      final bool elevatedFolders = EzManager.get(darkElevatedFolderKey);
 
       _design = DesignCache(
         wallpaper: (config.backgroundImagePath == noImageValue) ? null : config.screenDecoration,
-        pages: EzCM.get(darkPagesKey),
-        wideTiles: EzCM.get(darkWideTilesKey),
-        horizontalAlign: LAConfig.lookup(EzCM.get(darkHorizontalAlignKey)) ?? ListAlignment.center,
-        verticalAlign: LAConfig.lookup(EzCM.get(darkVerticalAlignKey)) ?? ListAlignment.start,
+        pages: EzManager.get(darkPagesKey),
+        wideTiles: EzManager.get(darkWideTilesKey),
+        horizontalAlign:
+            LAConfig.lookup(EzManager.get(darkHorizontalAlignKey)) ?? ListAlignment.center,
+        verticalAlign: LAConfig.lookup(EzManager.get(darkVerticalAlignKey)) ?? ListAlignment.start,
         listIcons: listIcons,
         listLabels: listLabels,
         elevatedLists: elevatedLists,
@@ -64,20 +65,21 @@ class LiminalCache extends EzAppCache {
         folderBT: BTConfig.build(folderLabels, icons: folderIcons, elevated: elevatedFolders),
       );
     } else {
-      final bool listIcons = EzCM.get(lightListIconKey);
-      final LabelType listLabels = LTConfig.safeLookup(EzCM.get(lightListLabelKey));
-      final bool elevatedLists = EzCM.get(lightElevatedListKey);
+      final bool listIcons = EzManager.get(lightListIconKey);
+      final LabelType listLabels = LTConfig.safeLookup(EzManager.get(lightListLabelKey));
+      final bool elevatedLists = EzManager.get(lightElevatedListKey);
 
-      final bool folderIcons = EzCM.get(lightFolderIconKey);
-      final LabelType folderLabels = LTConfig.safeLookup(EzCM.get(lightFolderLabelKey));
-      final bool elevatedFolders = EzCM.get(lightElevatedFolderKey);
+      final bool folderIcons = EzManager.get(lightFolderIconKey);
+      final LabelType folderLabels = LTConfig.safeLookup(EzManager.get(lightFolderLabelKey));
+      final bool elevatedFolders = EzManager.get(lightElevatedFolderKey);
 
       _design = DesignCache(
         wallpaper: (config.backgroundImagePath == noImageValue) ? null : config.screenDecoration,
-        pages: EzCM.get(lightPagesKey),
-        wideTiles: EzCM.get(lightWideTilesKey),
-        horizontalAlign: LAConfig.lookup(EzCM.get(lightHorizontalAlignKey)) ?? ListAlignment.center,
-        verticalAlign: LAConfig.lookup(EzCM.get(lightVerticalAlignKey)) ?? ListAlignment.start,
+        pages: EzManager.get(lightPagesKey),
+        wideTiles: EzManager.get(lightWideTilesKey),
+        horizontalAlign:
+            LAConfig.lookup(EzManager.get(lightHorizontalAlignKey)) ?? ListAlignment.center,
+        verticalAlign: LAConfig.lookup(EzManager.get(lightVerticalAlignKey)) ?? ListAlignment.start,
         listIcons: listIcons,
         listLabels: listLabels,
         elevatedLists: elevatedLists,
@@ -89,7 +91,7 @@ class LiminalCache extends EzAppCache {
       );
     }
 
-    if (EzCM.get(config.isDark ? darkHideStatusKey : lightHideStatusKey) == true) {
+    if (EzManager.get(config.isDark ? darkHideStatusKey : lightHideStatusKey) == true) {
       await SystemChrome.setEnabledSystemUIMode(
         SystemUiMode.manual,
         overlays: <SystemUiOverlay>[SystemUiOverlay.bottom],
@@ -107,11 +109,11 @@ class LiminalCache extends EzAppCache {
     final int defAT = limSecDef[authTimeoutKey] as int;
 
     _security = SecureCache(
-      authToEdit: bool.tryParse(await EzCM.secGet(authToEditKey)) ?? defATE,
-      resetAfterEdit: EzCM.get(resetAfterEditKey),
-      authForHidden: bool.tryParse(await EzCM.secGet(authForHiddenKey)) ?? defAFH,
-      resetAfterOpened: EzCM.get(resetAfterOpenedKey),
-      authTimeout: Duration(minutes: int.tryParse(await EzCM.secGet(authTimeoutKey)) ?? defAT),
+      authToEdit: bool.tryParse(await EzManager.secGet(authToEditKey)) ?? defATE,
+      resetAfterEdit: EzManager.get(resetAfterEditKey),
+      authForHidden: bool.tryParse(await EzManager.secGet(authForHiddenKey)) ?? defAFH,
+      resetAfterOpened: EzManager.get(resetAfterOpenedKey),
+      authTimeout: Duration(minutes: int.tryParse(await EzManager.secGet(authTimeoutKey)) ?? defAT),
     );
   }
 }
@@ -181,44 +183,44 @@ class SecureCache {
   Duration get authTimeout => _authTimeout;
 }
 
-// EzCM aliases //
+// EzManager aliases //
 
-bool get interlinked => EzCM.get(interlinkedKey);
+bool get interlinked => EzManager.get(interlinkedKey);
 
-bool get homeRipple => EzCM.get(homeRippleKey);
-bool get listRipple => EzCM.get(listRippleKey);
+bool get homeRipple => EzManager.get(homeRippleKey);
+bool get listRipple => EzManager.get(listRippleKey);
 
-String get leftSwipeID => EzCM.get(leftSwipeIDKey);
-String get rightSwipeID => EzCM.get(rightSwipeIDKey);
+String get leftSwipeID => EzManager.get(leftSwipeIDKey);
+String get rightSwipeID => EzManager.get(rightSwipeIDKey);
 
-// EzCP aliases //
+// EzProvider aliases //
 
-LiminalCache _cache(EzCP config) => config.appCache! as LiminalCache;
+LiminalCache _cache(EzProvider config) => config.appCache! as LiminalCache;
 
-Lang l10n(EzCP config) => _cache(config)._l10n;
-double appIconSize(EzCP config) => config.iconSize + config.padding;
+Lang l10n(EzProvider config) => _cache(config)._l10n;
+double appIconSize(EzProvider config) => config.iconSize + config.padding;
 
-BoxDecoration? wallpaper(EzCP config) => _cache(config)._design.wallpaper;
-bool pages(EzCP config) => _cache(config)._design.pages;
-bool wideTiles(EzCP config) => _cache(config)._design.wideTiles;
+BoxDecoration? wallpaper(EzProvider config) => _cache(config)._design.wallpaper;
+bool pages(EzProvider config) => _cache(config)._design.pages;
+bool wideTiles(EzProvider config) => _cache(config)._design.wideTiles;
 
-ListAlignment horizontalAlign(EzCP config) => _cache(config)._design.horizontalAlign;
-ListAlignment verticalAlign(EzCP config) => _cache(config)._design.verticalAlign;
+ListAlignment horizontalAlign(EzProvider config) => _cache(config)._design.horizontalAlign;
+ListAlignment verticalAlign(EzProvider config) => _cache(config)._design.verticalAlign;
 
-bool listIcons(EzCP config) => _cache(config)._design.listIcons;
-LabelType listLabels(EzCP config) => _cache(config)._design.listLabels;
-bool elevatedLists(EzCP config) => _cache(config)._design.elevatedLists;
-ButtonType listBT(EzCP config) => _cache(config)._design.listBT;
+bool listIcons(EzProvider config) => _cache(config)._design.listIcons;
+LabelType listLabels(EzProvider config) => _cache(config)._design.listLabels;
+bool elevatedLists(EzProvider config) => _cache(config)._design.elevatedLists;
+ButtonType listBT(EzProvider config) => _cache(config)._design.listBT;
 
-bool folderIcons(EzCP config) => _cache(config)._design.folderIcons;
-LabelType folderLabels(EzCP config) => _cache(config)._design.folderLabels;
-bool elevatedFolders(EzCP config) => _cache(config)._design.elevatedFolders;
-ButtonType folderBT(EzCP config) => _cache(config)._design.folderBT;
+bool folderIcons(EzProvider config) => _cache(config)._design.folderIcons;
+LabelType folderLabels(EzProvider config) => _cache(config)._design.folderLabels;
+bool elevatedFolders(EzProvider config) => _cache(config)._design.elevatedFolders;
+ButtonType folderBT(EzProvider config) => _cache(config)._design.folderBT;
 
-bool authToEdit(EzCP config) => _cache(config)._security.authToEdit;
-bool resetAfterEdit(EzCP config) => _cache(config)._security.resetAfterEdit;
+bool authToEdit(EzProvider config) => _cache(config)._security.authToEdit;
+bool resetAfterEdit(EzProvider config) => _cache(config)._security.resetAfterEdit;
 
-bool authForHidden(EzCP config) => _cache(config)._security.authForHidden;
-bool resetAfterOpened(EzCP config) => _cache(config)._security.resetAfterOpened;
+bool authForHidden(EzProvider config) => _cache(config)._security.authForHidden;
+bool resetAfterOpened(EzProvider config) => _cache(config)._security.resetAfterOpened;
 
-Duration authTimeout(EzCP config) => _cache(config)._security.authTimeout;
+Duration authTimeout(EzProvider config) => _cache(config)._security.authTimeout;
