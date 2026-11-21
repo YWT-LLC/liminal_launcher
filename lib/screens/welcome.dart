@@ -35,9 +35,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   bool twoHomes = EzManager.get(interlinkedKey);
 
-  String darkPath = EzManager.get(darkBackgroundImageKey);
-  String lightPath = EzManager.get(lightBackgroundImageKey);
-
   late bool usePage;
   late bool useWide;
 
@@ -212,7 +209,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   List<Widget> wallpaperPage(EzProvider config) => <Widget>[
         header(config),
         title(config, l10n(config).wsWallpapers),
-        if ((darkPath == noImageValue) != (lightPath == noImageValue)) // TODO: fix
+        if ((EzManager.get(darkBackgroundImageKey) == noImageValue) !=
+            (EzManager.get(lightBackgroundImageKey) == noImageValue))
           label(config, l10n(config).wsHeadsUp),
         config.spacer,
         EzCol(children: <Widget>[
