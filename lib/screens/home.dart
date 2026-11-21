@@ -839,8 +839,10 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
   Future<void> afterFirstLayout(BuildContext context) async {
     // Check for welcome message(s)
     if (!EzManager.get(shownIntroKey)) {
-      if (context.mounted) await context.pushNamed(welcomeScreenName);
-      await EzManager.setBool(shownIntroKey, true);
+      late final bool? finished;
+      if (context.mounted) finished = await context.pushNamed<bool?>(welcomeScreenName);
+
+      if (finished == true) await EzManager.setBool(shownIntroKey, true);
     }
   }
 
