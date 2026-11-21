@@ -19,6 +19,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 const int _numPages = 6;
 const int _lastPage = _numPages - 1;
 
+const int _shuffleSeconds = 3;
+
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
 
@@ -31,34 +33,29 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   int page = 0;
   int delta = 0;
+  bool changes = false;
 
-  // Theme(s)
-  bool separate = !EzManager.updateBoth;
+  bool separate = EzManager.get(updateBothKey);
 
-  // Wallpaper(s)
-  String darkPath = _path(darkBackgroundImageKey);
-  String lightPath = _path(lightBackgroundImageKey);
+  String darkPath = EzManager.get(darkBackgroundImageKey);
   bool darkColors = false;
+  String lightPath = EzManager.get(lightBackgroundImageKey);
   bool lightColors = false;
-  bool syncing = false;
 
-  // Lanes
-  late bool usePage = pages(_config);
-  late bool useWide = wideTiles(_config);
+  late bool usePage;
+  late bool useWide;
 
-  // Launch
-  static const int shuffleSeconds = 3;
   final Random random = Random();
-  Timer? shuffleTimer;
-  int countdown = shuffleSeconds;
   _LaunchStyle? launchStyle;
+  Timer? shuffleTimer;
+  int countdown = _shuffleSeconds;
 
   // Define custom functions //
 
-  String _path(String key) => EzManager.get(key) ?? noImageValue;
-
-  static bool _isImage(String path) =>
-      path != noImageValue && int.tryParse(path) == null && path.split(colorSplit).length < 4;
+  void stopShuffle() {
+    shuffleTimer?.cancel();
+    shuffleTimer = null;
+  }
 
   void goTo(int target) {
     if (target < 0 || target > _lastPage || target == page) return;
@@ -68,167 +65,38 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       page = target;
     });
 
-    (page == _lastPage) ? startShuffle() : stopShuffle();
+    (page == _lastPage)
+        ? () {
+            shuffleTimer?.cancel();
+            countdown = _shuffleSeconds;
+
+            shuffleTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+              if (!mounted) return;
+              countdown -= 1;
+
+              if (countdown <= 0) {
+                setState(() {
+                  launchStyle = _LaunchStyle.random(random);
+                  countdown = _shuffleSeconds;
+                });
+              }
+            });
+          }
+        : stopShuffle();
   }
 
-  Future<void> setSeparate(bool choice) async {
-    await EzManager.setBool(updateBothKey, !choice);
-    setState(() => separate = choice);
+  // Init //
+
+  @override
+  void initState() {
+    super.initState();
+
+    final EzProvider config = configWatcher(context);
+    usePage = pages(config);
+    useWide = wideTiles(config);
   }
 
-  /// Mirrors (when shared) and colors (when requested) newly chosen wallpapers
-  /// [EzImageSetting] calls [EzProvider.rebuildUI] after a change, so we listen for that
-  Future<void> onConfigChange() async {
-    if (syncing) return;
-
-    final String newDark = _path(darkBackgroundImageKey);
-    final String newLight = _path(lightBackgroundImageKey);
-
-    final bool darkChanged = newDark != darkPath;
-    final bool lightChanged = newLight != lightPath;
-    if (!darkChanged && !lightChanged) return;
-
-    syncing = true;
-    bool wrote = false;
-
-    try {
-      if (!separate) {
-        // One setup for both: copy the edited wallpaper to the other theme
-        final String source = darkChanged ? newDark : newLight;
-        final String? fit =
-            EzManager.get(darkChanged ? darkBackgroundFitKey : lightBackgroundFitKey);
-
-        await EzManager.setString(
-            darkChanged ? lightBackgroundImageKey : darkBackgroundImageKey, source);
-        if (fit != null) {
-          await EzManager.setString(
-              darkChanged ? lightBackgroundFitKey : darkBackgroundFitKey, fit);
-        }
-        wrote = true;
-
-        darkPath = source;
-        lightPath = source;
-
-        if ((_config.isDark ? darkColors : lightColors) && _isImage(source)) {
-          await imageScheme(source, Brightness.dark);
-          await imageScheme(source, Brightness.light);
-        }
-      } else {
-        darkPath = newDark;
-        lightPath = newLight;
-
-        if (darkChanged && darkColors && _isImage(newDark)) {
-          wrote = await imageScheme(newDark, Brightness.dark) || wrote;
-        }
-        if (lightChanged && lightColors && _isImage(newLight)) {
-          wrote = await imageScheme(newLight, Brightness.light) || wrote;
-        }
-      }
-
-      if (wrote) await _config.rebuildUI();
-    } finally {
-      syncing = false;
-    }
-
-    if (mounted) setState(() {});
-  }
-
-  /// Mirrors [EzImageSetting]'s color scheme logic, but for an explicit [Brightness]
-  Future<bool> imageScheme(String path, Brightness brightness) async {
-    final bool isDark = brightness == Brightness.dark;
-    final String opacityKey = isDark ? darkTextBackgroundOpacityKey : lightTextBackgroundOpacityKey;
-
-    // Better to have to turn it down than up
-    final double? opacity = EzManager.get(opacityKey);
-    if (opacity == null || opacity <= 0.05) await EzManager.setDouble(opacityKey, 0.50);
-
-    final String result = await loadImageColorScheme(path, brightness);
-
-    if (result == success) {
-      await EzManager.setString(isDark ? darkColorSchemeImageKey : lightColorSchemeImageKey, path);
-    } else {
-      final String errorMsg =
-          '$result${ezUrlCheck(path) ? '\n\n${_config.ezL10n.dsImgPermission}' : ''}';
-      mounted
-          ? ezLogAlert(
-              _config,
-              context: context,
-              title: _config.ezL10n.dsImgGetFailed,
-              message: errorMsg,
-            )
-          : ezLog(errorMsg);
-    }
-    return true;
-  }
-
-  /// Update the color toggle, applying it right away if a wallpaper is already set
-  Future<void> setColors(bool choice, {required bool? dark}) async {
-    setState(() {
-      if (dark != false) darkColors = choice;
-      if (dark != true) lightColors = choice;
-    });
-    if (!choice) return;
-
-    syncing = true;
-    bool wrote = false;
-    try {
-      if (dark != false && _isImage(darkPath)) {
-        wrote = await imageScheme(darkPath, Brightness.dark) || wrote;
-      }
-      if (dark != true && _isImage(lightPath)) {
-        wrote = await imageScheme(lightPath, Brightness.light) || wrote;
-      }
-      if (wrote) await _config.rebuildUI();
-    } finally {
-      syncing = false;
-    }
-  }
-
-  Future<void> setLaneBool(
-    EzProvider config, {
-    required String darkKey,
-    required String lightKey,
-    required bool value,
-  }) async {
-    if (interlinked || EzManager.updateBoth) {
-      await EzManager.setBool(config.isDark ? lightKey : darkKey, value);
-    }
-  }
-
-  void startShuffle() {
-    shuffleTimer?.cancel();
-    countdown = shuffleSeconds;
-
-    shuffleTimer = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (!mounted) return;
-
-      setState(() {
-        countdown -= 1;
-        if (countdown <= 0) {
-          launchStyle = _LaunchStyle.random(random);
-          countdown = shuffleSeconds;
-        }
-      });
-    });
-  }
-
-  void stopShuffle() {
-    shuffleTimer?.cancel();
-    shuffleTimer = null;
-  }
-
-  Future<void> finish(EzProvider config) async {
-    stopShuffle();
-
-    if (EzManager.get(config.isDark ? darkPagesKey : lightPagesKey) != pages(config) ||
-        EzManager.get(config.isDark ? darkWideTilesKey : lightWideTilesKey) != wideTiles(config)) {
-      await config.rebuildUI();
-    }
-
-    if (mounted) Navigator.of(context).pop();
-  }
-
-  // Build custom Widgets //
+  // Define the build //
 
   Widget header(EzProvider config) => EzText(
         config,
@@ -327,9 +195,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           ],
           selected: <bool>{separate},
           showSelectedIcon: false,
-          onSelectionChanged: (Set<bool>? choice) {
-            if (choice?.first == null) return;
-            setSeparate(choice!.first);
+          onSelectionChanged: (Set<bool>? choice) async {
+            if (choice?.first == null || choice?.first == separate) return;
+
+            await EzManager.setBool(updateBothKey, choice!.first);
+            setState(() => changes = true);
           },
         ),
         config.spacer,
@@ -374,7 +244,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         text: 'Match colors',
         onChanged: (bool? choice) {
           if (choice == null) return;
-          setColors(choice, dark: dark);
+          // TODO
         },
       ),
     ]);
@@ -442,12 +312,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         text: l10n(config).dpsPages,
         afterChanged: (bool? value) async {
           if (value == null) return;
-          await setLaneBool(
-            config,
-            darkKey: darkPagesKey,
-            lightKey: lightPagesKey,
-            value: value,
-          );
+          // TODO
           setState(() => usePage = value);
         },
       ),
@@ -458,12 +323,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         text: l10n(config).gWideTiles,
         afterChanged: (bool? value) async {
           if (value == null) return;
-          await setLaneBool(
-            config,
-            darkKey: darkWideTilesKey,
-            lightKey: lightWideTilesKey,
-            value: value,
-          );
+          // TODO
           setState(() => useWide = value);
         },
       ),
@@ -546,7 +406,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           EzElevatedIconButton(
             config,
             key: ValueKey<int>(ls?.hashCode ?? 0),
-            onPressed: finish,
+            onPressed: () {
+              stopShuffle();
+              if (mounted) Navigator.of(context).pop();
+            },
             style: ls?.buttonStyle(config),
             textStyle: ls?.textStyle(config),
             icon: EzIcon(
@@ -596,21 +459,19 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           (page < _lastPage)
               ? EzElevatedIconButton(
                   config,
-                  onPressed: () => goTo(page + 1),
+                  onPressed: () async {
+                    if (changes) {
+                      await config.rebuildUI();
+                      setState(() => changes = false);
+                    }
+                    goTo(page + 1);
+                  },
                   label: (page == 0) ? "Let's go" : 'Next',
                   icon: EzIcon(config, Icons.arrow_forward),
                 )
               : const SizedBox.shrink(),
         ],
       );
-
-  // Init //
-
-  @override
-  void initState() {
-    super.initState();
-    _config.addListener(onConfigChange);
-  }
 
   // Return the build //
 
