@@ -10,7 +10,7 @@ import 'package:open_ui/open_ui.dart';
 import 'package:material_ui/material_ui.dart';
 
 EzMenuButton reposition(
-  EzCP config,
+  EzProvider config,
   AppInfoProvider appInfo,
   LimPos pos, {
   required void Function() stateCheck,
@@ -29,7 +29,7 @@ EzMenuButton reposition(
     );
 
 EzMenuButton moveDownLane(
-  EzCP config,
+  EzProvider config,
   AppInfoProvider appInfo,
   LimPos pos, {
   required int numLanes,
@@ -46,7 +46,7 @@ EzMenuButton moveDownLane(
     );
 
 EzMenuButton moveUpLane(
-  EzCP config,
+  EzProvider config,
   AppInfoProvider appInfo,
   LimPos pos, {
   required int numLanes,
@@ -63,7 +63,7 @@ EzMenuButton moveUpLane(
     );
 
 EzMenuButton removeItem(
-  EzCP config,
+  EzProvider config,
   AppInfoProvider appInfo,
   LimPos pos,
 ) =>

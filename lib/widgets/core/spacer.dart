@@ -13,7 +13,7 @@ import 'package:material_ui/material_ui.dart';
 //* Core Widget *//
 
 class LimSpacer extends StatefulWidget {
-  final EzCP config;
+  final EzProvider config;
   final AppInfoProvider appInfo;
   final LimPos pos;
   final TileState state;
@@ -179,7 +179,7 @@ class _LimSpacerState extends State<LimSpacer> {
 }
 
 List<Widget> _menuChildren(
-  EzCP config, {
+  EzProvider config, {
   required AppInfoProvider appInfo,
   required TileState state,
   required void Function() stateCheck,
@@ -221,7 +221,7 @@ List<Widget> _menuChildren(
 //* Edit Widget *//
 
 class _EditSpacer extends StatelessWidget {
-  final EzCP config;
+  final EzProvider config;
   final AppInfoProvider appInfo;
 
   final LimPos pos;

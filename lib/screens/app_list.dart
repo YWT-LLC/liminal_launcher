@@ -26,10 +26,10 @@ class _AppListScreenState extends State<AppListScreen> {
   final ScrollController scrollControl = ScrollController();
   final TextEditingController searchControl = TextEditingController();
 
-  ListSort listSort = LSConfig.safeLookup(EzCM.get(listSortKey));
-  bool ascList = EzCM.get(ascListKey);
-  bool wrap = EzCM.get(wrapListKey);
-  bool searching = EzCM.get(autoSearchKey);
+  ListSort listSort = LSConfig.safeLookup(EzManager.get(listSortKey));
+  bool ascList = EzManager.get(ascListKey);
+  bool wrap = EzManager.get(wrapListKey);
+  bool searching = EzManager.get(autoSearchKey);
 
   bool atTop = true;
   bool atBottom = false;
@@ -40,7 +40,7 @@ class _AppListScreenState extends State<AppListScreen> {
 
   // Define custom functions //
 
-  Future<void> ripple(EzCP config, LongPressStartDetails details) async {
+  Future<void> ripple(EzProvider config, LongPressStartDetails details) async {
     if (!context.mounted) return;
 
     final Duration animDur = listRipple ? ezDuration(config.animDur) : Duration.zero;
@@ -92,8 +92,8 @@ class _AppListScreenState extends State<AppListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<EzCP, AppInfoProvider>(
-      builder: (_, EzCP config, AppInfoProvider appInfo, __) {
+    return Consumer2<EzProvider, AppInfoProvider>(
+      builder: (_, EzProvider config, AppInfoProvider appInfo, __) {
         final ListAlignment hAlign = horizontalAlign(config);
         final ListAlignment vAlign = verticalAlign(config);
 
@@ -137,7 +137,7 @@ class _AppListScreenState extends State<AppListScreen> {
                                 label: type.name(config),
                                 textAlign: hAlign.textAlign,
                                 onPressed: () async {
-                                  await EzCM.setString(listSortKey, type.value);
+                                  await EzManager.setString(listSortKey, type.value);
 
                                   appInfo.sort(type, ascList);
                                   setState(() => listSort = type);
@@ -153,7 +153,7 @@ class _AppListScreenState extends State<AppListScreen> {
                       icon: EzIcon(config, ascList ? Icons.arrow_upward : Icons.arrow_downward),
                       tooltip: ascList ? l10n(config).aplAsc : l10n(config).aplDsc,
                       onPressed: () async {
-                        await EzCM.setBool(ascListKey, !ascList);
+                        await EzManager.setBool(ascListKey, !ascList);
 
                         appInfo.sort(listSort, !ascList);
                         setState(() => ascList = !ascList);
@@ -177,7 +177,7 @@ class _AppListScreenState extends State<AppListScreen> {
                                   icon: EzIcon(config, Icons.grid_3x3),
                                   tooltip: l10n(config).gWrap,
                                   onPressed: () async {
-                                    await EzCM.setBool(wrapListKey, false);
+                                    await EzManager.setBool(wrapListKey, false);
                                     setState(() => wrap = false);
                                   },
                                 )
@@ -186,7 +186,7 @@ class _AppListScreenState extends State<AppListScreen> {
                                   icon: EzIcon(config, Icons.list_outlined),
                                   tooltip: l10n(config).gList,
                                   onPressed: () async {
-                                    await EzCM.setBool(wrapListKey, true);
+                                    await EzManager.setBool(wrapListKey, true);
                                     setState(() => wrap = true);
                                   },
                                 )),

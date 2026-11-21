@@ -15,7 +15,6 @@ import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:after_layout/after_layout.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -46,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
   // Define custom functions //
 
-  Future<void> ripple(EzCP config, PositionedGestureDetails details) async {
+  Future<void> ripple(EzProvider config, PositionedGestureDetails details) async {
     if (!context.mounted) return;
 
     final Duration animDur = homeRipple ? ezDuration(config.animDur) : Duration.zero;
@@ -82,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
   }
 
   Future<void> addModal(
-    EzCP config,
+    EzProvider config,
     AppInfoProvider appInfo,
     int lane,
     ListAlignment hAlign,
@@ -332,7 +331,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
   }
 
   Future<void> showPagePos(
-    EzCP config,
+    EzProvider config,
     bool forward, {
     required int numLanes,
     required int lane,
@@ -394,7 +393,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
   }
 
   /// Checks out of bounds, safe to always call directly
-  Future<bool> navPageDown(EzCP config, AppInfoProvider appInfo, int numLanes) async {
+  Future<bool> navPageDown(EzProvider config, AppInfoProvider appInfo, int numLanes) async {
     if (page <= 0) return false;
 
     delta = standardFlow(config) ? -1 : 1;
@@ -416,7 +415,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
   }
 
   /// Checks out of bounds, safe to always call directly
-  Future<bool> navPageUp(EzCP config, AppInfoProvider appInfo, int numLanes) async {
+  Future<bool> navPageUp(EzProvider config, AppInfoProvider appInfo, int numLanes) async {
     if (page >= (numLanes - 1)) return false;
 
     delta = standardFlow(config) ? 1 : -1;
@@ -437,7 +436,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     return true;
   }
 
-  Future<void> swipeUp(EzCP config, AppInfoProvider appInfo) async => (editing)
+  Future<void> swipeUp(EzProvider config, AppInfoProvider appInfo) async => (editing)
       ? await _navToHidden(config, appInfo)
       : context.goNamed(
           appListScreenName,
@@ -452,7 +451,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
           ),
         );
 
-  Future<void> _navToHidden(EzCP config, AppInfoProvider appInfo) async {
+  Future<void> _navToHidden(EzProvider config, AppInfoProvider appInfo) async {
     if (authForHidden(config)) {
       bool authed = false;
       try {
@@ -494,7 +493,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
   // Build custom Widgets //
 
   List<Widget> _buildTiles(
-    EzCP config,
+    EzProvider config,
     AppInfoProvider appInfo,
     int lane, {
     required ListAlignment hAlign,
@@ -696,7 +695,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
   }
 
   Widget _buildLane(
-    EzCP config,
+    EzProvider config,
     AppInfoProvider appInfo, {
     required int numLanes,
     required int lane,
@@ -759,7 +758,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
             );
 
   Widget buildPage(
-    EzCP config,
+    EzProvider config,
     AppInfoProvider appInfo, {
     required int numLanes,
     required int lane,
@@ -789,7 +788,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     );
   }
 
-  List<Widget> buildGrid(EzCP config, AppInfoProvider appInfo, int numLanes) {
+  List<Widget> buildGrid(EzProvider config, AppInfoProvider appInfo, int numLanes) {
     final List<Widget> lanes = <Widget>[];
 
     for (int lane = 0; lane < numLanes; lane++) {
@@ -838,13 +837,12 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
   @override
   Future<void> afterFirstLayout(BuildContext context) async {
-    late final EzCP config = configWatcher(context);
-
     // Check for welcome message(s)
-    if (!EzCM.get(shownIntroKey)) {
-      if (context.mounted) await _welcome(config, context);
+    if (!EzManager.get(shownIntroKey)) {
+      late final bool? finished;
+      if (context.mounted) finished = await context.pushNamed<bool?>(welcomeScreenName);
 
-      await EzCM.setBool(shownIntroKey, true);
+      if (finished == true) await EzManager.setBool(shownIntroKey, true);
     }
   }
 
@@ -857,8 +855,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
       onPopInvokedWithResult: (_, __) {
         if (editing) setState(() => editing = false);
       },
-      child: Consumer2<EzCP, AppInfoProvider>(
-        builder: (_, EzCP config, AppInfoProvider appInfo, __) {
+      child: Consumer2<EzProvider, AppInfoProvider>(
+        builder: (_, EzProvider config, AppInfoProvider appInfo, __) {
           final int numLanes = appInfo.numLanes(config);
           final double headerSpacing = config.iconSize + config.padding + (config.spacing / 2);
 
@@ -1040,62 +1038,3 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     );
   }
 }
-
-Future<void> _welcome(EzCP config, BuildContext context) => ezModal(
-      config,
-      context: context,
-      builder: (_) => ezModalScroll(
-        config,
-        children: <Widget>[
-          // Welcome
-          Text(
-            l10n(config).hsWelcome,
-            textAlign: TextAlign.center,
-            style: config.titleStyle,
-          ),
-          config.centerLine,
-
-          // Minimal-ish
-          Text(
-            l10n(config).hsDescription,
-            textAlign: TextAlign.center,
-            style: config.bodyStyle,
-          ),
-          config.centerLine,
-
-          // Yin/Yang
-          EzRichText(
-            config,
-            children: <InlineSpan>[
-              EzPlainText(text: l10n(config).hsUserSettings, style: config.bodyStyle),
-              WidgetSpan(
-                alignment: PlaceholderAlignment.middle,
-                child: EzIcon(config, Icons.dark_mode),
-              ),
-              EzPlainText(text: l10n(config).hsLight, style: config.bodyStyle),
-              WidgetSpan(
-                alignment: PlaceholderAlignment.middle,
-                child: EzIcon(config, Icons.light_mode),
-              ),
-              EzPlainText(text: l10n(config).hsBoth, style: config.bodyStyle),
-              WidgetSpan(
-                alignment: PlaceholderAlignment.middle,
-                child: FaIcon(FontAwesomeIcons.yinYang, size: config.iconSize),
-              ),
-              EzPlainText(text: l10n(config).hsThemes, style: config.bodyStyle),
-            ],
-            textAlign: TextAlign.center,
-            style: config.bodyStyle,
-          ),
-          config.centerLine,
-
-          // Have fun!
-          Text(
-            l10n(config).hsGetStarted,
-            textAlign: TextAlign.center,
-            style: config.bodyStyle,
-          ),
-          config.separator,
-        ],
-      ),
-    );

@@ -9,6 +9,7 @@ export 'app_list.dart';
 export 'error.dart';
 export 'home.dart';
 export 'settings.dart';
+export 'welcome.dart';
 
 // Route names //
 
@@ -20,3 +21,6 @@ const String appListScreenName = 'liminal-app-list';
 
 const String settingsScreenPath = 'settings';
 const String settingsScreenName = 'liminal-settings';
+
+const String welcomeScreenPath = 'welcome';
+const String welcomeScreenName = 'liminal-welcome';

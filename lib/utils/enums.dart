@@ -98,7 +98,7 @@ extension DTConfig on DateType {
         DateType.long => esLong,
       };
 
-  String name(EzCP config) => switch (this) {
+  String name(EzProvider config) => switch (this) {
         DateType.none => config.ezL10n.dsNone,
         DateType.compact => l10n(config).clkCompact,
         DateType.short => l10n(config).clkShort,
@@ -149,7 +149,7 @@ extension LTConfig on LabelType {
         LabelType.wingding => esWingding,
       };
 
-  String name(EzCP config) => switch (this) {
+  String name(EzProvider config) => switch (this) {
         LabelType.none => config.ezL10n.dsNone,
         LabelType.initials => l10n(config).dbsInitials,
         LabelType.full => l10n(config).dbsFull,
@@ -197,7 +197,7 @@ extension LAConfig on ListAlignment {
         ListAlignment.end => esEnd,
       };
 
-  String name(EzCP config) => switch (this) {
+  String name(EzProvider config) => switch (this) {
         ListAlignment.center => l10n(config).gCenter,
         ListAlignment.start => l10n(config).gStart,
         ListAlignment.end => l10n(config).gEnd,
@@ -240,7 +240,7 @@ extension LAConfig on ListAlignment {
         _ => null,
       };
 
-  static ListAlignment buildLookup(String laneEntry, Axis axis, EzCP config) {
+  static ListAlignment buildLookup(String laneEntry, Axis axis, EzProvider config) {
     final List<String> parts = laneEntry.split(configSplit);
 
     return axis == Axis.horizontal
@@ -288,7 +288,7 @@ extension LSConfig on ListSort {
         ListSort.size => esSize,
       };
 
-  String name(EzCP config) => switch (this) {
+  String name(EzProvider config) => switch (this) {
         ListSort.name => l10n(config).aplName,
         ListSort.publisher => l10n(config).aplPublisher,
         ListSort.date => l10n(config).aplDate,
@@ -358,7 +358,7 @@ extension TSConfig on TxtStile {
         TxtStile.label => _label,
       };
 
-  String name(EzCP config) => switch (this) {
+  String name(EzProvider config) => switch (this) {
         TxtStile.display => config.ezL10n.tsDisplay,
         TxtStile.headline => config.ezL10n.tsHeadline,
         TxtStile.title => config.ezL10n.tsTitle,
@@ -366,7 +366,7 @@ extension TSConfig on TxtStile {
         TxtStile.label => config.ezL10n.tsLabel,
       };
 
-  TextStyle? style(EzCP config) => switch (this) {
+  TextStyle? style(EzProvider config) => switch (this) {
         TxtStile.display => config.displayStyle,
         TxtStile.headline => config.headlineStyle,
         TxtStile.title => config.titleStyle,

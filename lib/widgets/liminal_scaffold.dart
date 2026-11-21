@@ -10,7 +10,7 @@ import 'package:open_ui/open_ui.dart';
 import 'package:material_ui/material_ui.dart';
 
 class LiminalScaffold extends StatelessWidget {
-  final EzCP config;
+  final EzProvider config;
   final Widget body;
   final List<Widget>? fabs;
   final bool isHome;
@@ -51,7 +51,7 @@ class LiminalScaffold extends StatelessWidget {
             if (!isHome)
               EzUpdaterFAB(
                 config,
-                appVersion: '1.1.3',
+                appVersion: '1.2.0',
                 versionSource:
                     'https://raw.githubusercontent.com/YWT-LLC/liminal_launcher/refs/heads/main/APP_VERSION',
                 gPlay: ywt.liminalGPlay,

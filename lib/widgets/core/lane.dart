@@ -14,12 +14,13 @@ import 'package:material_ui/material_ui.dart';
 //* Core 'Widget' *//
 
 class LaneHeader extends StatelessWidget {
-  final EzCP config;
+  final EzProvider config;
   final AppInfoProvider appInfo;
   final BuildContext pContext;
   final int numLanes;
   final LimPos pos;
-  final Future<void> Function(EzCP, AppInfoProvider, int, ListAlignment, ListAlignment) addModal;
+  final Future<void> Function(EzProvider, AppInfoProvider, int, ListAlignment, ListAlignment)
+      addModal;
   final void Function()? navPageDown;
   final void Function()? navPageUp;
 
@@ -165,7 +166,7 @@ class LaneHeader extends StatelessWidget {
 //* Add 'Widget' *//
 
 class AddLane extends StatelessWidget {
-  final EzCP config;
+  final EzProvider config;
   final AppInfoProvider appInfo;
 
   const AddLane(
@@ -174,130 +175,10 @@ class AddLane extends StatelessWidget {
     required this.appInfo,
   });
 
-  Future<void> configMultiLane(BuildContext context, {bool rebuild = false}) async {
-    bool usePage = pages(config);
-    bool useWide = wideTiles(config);
-
-    final TextStyle? focussed = config.bodyStyle;
-    final TextStyle? hidden = config.labelStyle?.copyWith(color: config.outline);
-
-    await ezModal(
-      config,
-      context: context,
-      builder: (_) => StatefulBuilder(
-        builder: (BuildContext mCon, StateSetter setModal) => ezModalScroll(
-          config,
-          children: <Widget>[
-            // Title
-            Text(
-              l10n(config).mltLaneConfig,
-              textAlign: TextAlign.center,
-              style: config.titleStyle,
-            ),
-            config.spacer,
-
-            // Switches
-            EzSwitchPair(
-              config,
-              valueKey: config.isDark ? darkPagesKey : lightPagesKey,
-              text: l10n(config).dpsPages,
-              afterChanged: (bool? value) async {
-                if (value == null) return;
-
-                if (interlinked) {
-                  await EzCM.setBool(
-                    config.isDark ? lightPagesKey : darkPagesKey,
-                    value,
-                  );
-                }
-                setModal(() => usePage = value);
-              },
-            ),
-            config.spacer,
-            EzSwitchPair(
-              config,
-              valueKey: config.isDark ? darkWideTilesKey : lightWideTilesKey,
-              text: l10n(config).gWideTiles,
-              afterChanged: (bool? value) async {
-                if (value == null) return;
-
-                if (interlinked) {
-                  await EzCM.setBool(
-                    config.isDark ? lightWideTilesKey : darkWideTilesKey,
-                    value,
-                  );
-                }
-                setModal(() => useWide = value);
-              },
-            ),
-            config.spacer,
-
-            // Description
-            EzRichText(
-              config,
-              children: <InlineSpan>[
-                EzPlainText(
-                  text: l10n(config).mltPagesEnabled,
-                  style: usePage ? focussed : hidden,
-                ),
-                EzPlainText(
-                  text: l10n(config).mltPagesDisabled,
-                  style: usePage ? hidden : focussed,
-                ),
-                config.richLine,
-                EzPlainText(
-                  text: l10n(config).mltWideEnabled,
-                  style: useWide ? focussed : hidden,
-                ),
-                EzPlainText(
-                  text: l10n(config).mltWideWidth,
-                  style: usePage ? hidden : (useWide ? focussed : hidden),
-                ),
-                EzPlainText(
-                  text: l10n(config).mltAnywhere,
-                  style: useWide ? focussed : hidden,
-                ),
-                config.richLine,
-                EzPlainText(
-                  text: l10n(config).mltWideDisabled,
-                  style: useWide ? hidden : focussed,
-                ),
-                EzPlainText(
-                  text: l10n(config).mltAutoWidth,
-                  style: usePage ? hidden : (useWide ? hidden : focussed),
-                ),
-                EzPlainText(
-                  text: l10n(config).mltOnlyButton,
-                  style: useWide ? hidden : focussed,
-                ),
-              ],
-            ),
-            config.separator,
-          ],
-        ),
-      ),
-    );
-
-    if (rebuild && (usePage != pages(config) || useWide != wideTiles(config))) {
-      await config.rebuildUI();
-    }
-  }
-
   @override
   Widget build(BuildContext context) => EzElevatedIconButton(
         config,
-        onPressed: () async {
-          if (appInfo.numLanes(config) == 1) await configMultiLane(context);
-          await appInfo.addLane(config);
-
-          if (EzCM.get(config.isDark ? darkPagesKey : lightPagesKey) != pages(config) ||
-              EzCM.get(config.isDark ? darkWideTilesKey : lightWideTilesKey) != wideTiles(config)) {
-            await config.rebuildUI();
-          }
-        },
-        onLongPress: () async => (appInfo.numLanes(config) == 1)
-            ? doNothing()
-            : await configMultiLane(context, rebuild: true),
+        onPressed: () => appInfo.addLane(config),
         label: l10n(config).hsLane,
         icon: EzIcon(config, Icons.view_column_outlined),
       );
@@ -306,7 +187,7 @@ class AddLane extends StatelessWidget {
 //* Edit 'Widget' *//
 
 Future<void> _editLane(
-  EzCP config, {
+  EzProvider config, {
   required AppInfoProvider appInfo,
   required BuildContext context,
   required int lane,

@@ -12,7 +12,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AppListSettings extends StatelessWidget {
-  final EzCP config;
+  final EzProvider config;
 
   const AppListSettings(this.config, {super.key});
 

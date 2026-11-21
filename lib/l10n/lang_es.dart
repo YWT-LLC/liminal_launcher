@@ -131,7 +131,7 @@ class LangEs extends Lang {
   String get dpsPageSettings => 'Configuración de página';
 
   @override
-  String get dpsPages => 'Páginas de la pantalla de inicio';
+  String get dpsPages => 'Carriles = páginas';
 
   @override
   String get dpsUseOS => 'Usar del SO';
@@ -708,9 +708,6 @@ class LangEs extends Lang {
       'los carriles se dimensionarán según su elemento más ancho y tus configuraciones de espaciado.\n';
 
   @override
-  String get mltLaneConfig => 'Configuración de múltiples carriles';
-
-  @override
   String get mltOnlyButton =>
       'las aplicaciones y carpetas se podrán activar únicamente a través de sus botones.\n';
 
@@ -851,4 +848,80 @@ class LangEs extends Lang {
 
   @override
   String get togTitle => 'Controles multimedia';
+
+  @override
+  String get wsBothThemes =>
+      'Por ahora, esto actualizará ambos temas.\nPuedes cambiar cualquiera de ellos en cualquier momento.';
+
+  @override
+  String get wsChangeAnyTime =>
+      'Puedes cambiar esto en cualquier momento.\nAl pasar de 2 > 1, tendrás que elegir cuál conservar.';
+
+  @override
+  String get wsDarkWallpaper => 'Fondo\noscuro';
+
+  @override
+  String get wsGetStarted => 'Empecemos con algunos ajustes generales.';
+
+  @override
+  String get wsHeadsUp =>
+      '¡Atención!\nUsar un fondo de pantalla personalizado (de Liminal) cambia el fondo de pantalla del sistema (Android) a negro sólido.\nA menos que quieras que uno quede en blanco, lo mejor es configurar ambos.';
+
+  @override
+  String get wsHomes => 'Inicios claro y oscuro';
+
+  @override
+  String get wsHomesDesc =>
+      'La apariencia de Liminal puede/será siempre única según el modo de tema.\n\n¿Quieres tener también páginas de inicio únicas según el modo de tema?';
+
+  @override
+  String get wsLaneConfig => 'Configuración de carriles';
+
+  @override
+  String get wsLanesDesc =>
+      'Tu pantalla de inicio está formada por carriles...\nColumnas llenas de apps, carpetas y widgets.\n\n¿Cómo quieres que se comporten?';
+
+  @override
+  String get wsLaunch => 'Despegar';
+
+  @override
+  String get wsLaunchDesc =>
+      'Y, sinceramente: es solo la punta del iceberg.\n\nColores, fuentes, estilos de botones, espaciado, widgets y más están a tu disposición para personalizar.\n\nComo siempre, mantén pulsada la pantalla de inicio para empezar a personalizar.';
+
+  @override
+  String get wsLightWallpaper => 'Fondo\nclaro';
+
+  @override
+  String get wsMatchColors => 'Combinar colores';
+
+  @override
+  String get wsNext => 'Siguiente';
+
+  @override
+  String get wsOneForBoth => 'Uno para ambos';
+
+  @override
+  String get wsSeparate => 'Separados';
+
+  @override
+  String wsShuffleHint(Object seconds) {
+    return 'El botón de despegue cambia de estilo cada $seconds segundos';
+  }
+
+  @override
+  String get wsSwipeClear => 'Mantén pulsada una app para quitarla.';
+
+  @override
+  String get wsSwipeDesc =>
+      'Elige apps que se abran al deslizar más allá del borde izquierdo o derecho de la pantalla de inicio.';
+
+  @override
+  String get wsTheBasics => '¡Eso es lo básico!';
+
+  @override
+  String get wsWallpaperDesc =>
+      '¿Quieres conservar tu fondo de pantalla actual?\nSimplemente omite este paso.';
+
+  @override
+  String get wsWallpapers => 'Fondos de pantalla';
 }

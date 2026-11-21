@@ -15,7 +15,7 @@ import 'package:url_launcher/url_launcher.dart';
 //* Core Widget *//
 
 class SearchWidget extends StatefulWidget {
-  final EzCP config;
+  final EzProvider config;
   final AppInfoProvider appInfo;
   final TileState state;
   final LimPos pos;
@@ -317,7 +317,7 @@ class _SearchWidgetState extends State<SearchWidget> {
 }
 
 List<Widget> _menuChildren(
-  EzCP config, {
+  EzProvider config, {
   required AppInfoProvider appInfo,
   required BuildContext context,
   required TileState state,
@@ -380,7 +380,7 @@ List<Widget> _menuChildren(
 //* Add Widget *//
 
 class AddSearch extends StatelessWidget {
-  final EzCP config;
+  final EzProvider config;
   final AppInfoProvider appInfo;
   final BuildContext pContext;
   final int lane;
@@ -508,7 +508,7 @@ class _SearchConfig {
 }
 
 Future<void> _openEdits(
-  EzCP config, {
+  EzProvider config, {
   required AppInfoProvider appInfo,
   required BuildContext pContext,
   required _SearchConfig initConfig,
@@ -818,7 +818,7 @@ Future<void> _openEdits(
 }
 
 class _EditSearch extends StatelessWidget {
-  final EzCP config;
+  final EzProvider config;
   final AppInfoProvider appInfo;
   final BuildContext pContext;
   final _SearchConfig initConfig;

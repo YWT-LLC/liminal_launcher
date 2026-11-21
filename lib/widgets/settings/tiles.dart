@@ -11,7 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 
 class AppTileSetting extends StatelessWidget {
-  final EzCP config;
+  final EzProvider config;
   final bool folder;
 
   final String darkLabelKey;
@@ -118,19 +118,19 @@ class AppTileSetting extends StatelessWidget {
                     onSelected: (LabelType? choice) async {
                       if (choice == null) return;
 
-                      if (EzCM.updateBoth || config.isDark) {
-                        await EzCM.setString(darkLabelKey, choice.value);
+                      if (EzManager.updateBoth || config.isDark) {
+                        await EzManager.setString(darkLabelKey, choice.value);
                         if (choice == LabelType.none) {
                           showIcon = true;
-                          await EzCM.setBool(darkIconKey, true);
+                          await EzManager.setBool(darkIconKey, true);
                         }
                       }
 
-                      if (EzCM.updateBoth || !config.isDark) {
-                        await EzCM.setString(lightLabelKey, choice.value);
+                      if (EzManager.updateBoth || !config.isDark) {
+                        await EzManager.setString(lightLabelKey, choice.value);
                         if (choice == LabelType.none) {
                           showIcon = true;
-                          await EzCM.setBool(lightIconKey, true);
+                          await EzManager.setBool(lightIconKey, true);
                         }
                       }
 
@@ -150,16 +150,16 @@ class AppTileSetting extends StatelessWidget {
                       if (value == false && labelType == LabelType.none) {
                         labelType = LabelType.full;
 
-                        if (EzCM.updateBoth || config.isDark) {
-                          await EzCM.setString(darkLabelKey, LabelType.full.value);
+                        if (EzManager.updateBoth || config.isDark) {
+                          await EzManager.setString(darkLabelKey, LabelType.full.value);
                         }
-                        if (EzCM.updateBoth || !config.isDark) {
-                          await EzCM.setString(lightLabelKey, LabelType.full.value);
+                        if (EzManager.updateBoth || !config.isDark) {
+                          await EzManager.setString(lightLabelKey, LabelType.full.value);
                         }
                       }
 
-                      if (EzCM.updateBoth) {
-                        await EzCM.setBool(config.isDark ? lightIconKey : darkIconKey, value);
+                      if (EzManager.updateBoth) {
+                        await EzManager.setBool(config.isDark ? lightIconKey : darkIconKey, value);
                       }
                       setModal(() => showIcon = value);
                     },
@@ -174,8 +174,8 @@ class AppTileSetting extends StatelessWidget {
                     afterChanged: (bool? choice) async {
                       if (choice == null) return;
 
-                      if (EzCM.updateBoth) {
-                        await EzCM.setBool(
+                      if (EzManager.updateBoth) {
+                        await EzManager.setBool(
                             config.isDark ? lightElevatedKey : darkElevatedKey, choice);
                       }
                       setModal(() => elevated = choice);
@@ -199,8 +199,8 @@ class AppTileSetting extends StatelessWidget {
                     afterChanged: (bool? choice) async {
                       if (choice == null) return;
 
-                      if (EzCM.updateBoth) {
-                        await EzCM.setBool(
+                      if (EzManager.updateBoth) {
+                        await EzManager.setBool(
                           config.isDark ? lightWideTilesKey : darkWideTilesKey,
                           choice,
                         );

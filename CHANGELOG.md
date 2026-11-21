@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2026-11-21
+## [Updated]
+- Welcome modal overhaul
+  - Now a welcome screen with 6 sub-pages
+
 ## [1.1.3] - 2026-11-19
 ### [Fixed]
 - Bugs

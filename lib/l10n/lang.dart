@@ -338,7 +338,7 @@ abstract class Lang {
   /// No description provided for @dpsPages.
   ///
   /// In en, this message translates to:
-  /// **'Home screen pages'**
+  /// **'Lanes = pages'**
   String get dpsPages;
 
   /// No description provided for @dpsUseOS.
@@ -1433,12 +1433,6 @@ abstract class Lang {
   /// **'lanes will be sized by their widest item & your spacing setting(s).\n'**
   String get mltAutoWidth;
 
-  /// No description provided for @mltLaneConfig.
-  ///
-  /// In en, this message translates to:
-  /// **'Multi-lane configuration'**
-  String get mltLaneConfig;
-
   /// No description provided for @mltOnlyButton.
   ///
   /// In en, this message translates to:
@@ -1690,6 +1684,138 @@ abstract class Lang {
   /// In en, this message translates to:
   /// **'Media controls'**
   String get togTitle;
+
+  /// No description provided for @wsBothThemes.
+  ///
+  /// In en, this message translates to:
+  /// **'This will update both themes for now.\nYou can update either at any point.'**
+  String get wsBothThemes;
+
+  /// No description provided for @wsChangeAnyTime.
+  ///
+  /// In en, this message translates to:
+  /// **'You can change this any time.\nWhen going from 2 > 1, you will have to choose which to keep.'**
+  String get wsChangeAnyTime;
+
+  /// No description provided for @wsDarkWallpaper.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark\nwallpaper'**
+  String get wsDarkWallpaper;
+
+  /// No description provided for @wsGetStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s get started with some general settings.'**
+  String get wsGetStarted;
+
+  /// No description provided for @wsHeadsUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Heads up!\nUsing a custom (Liminal) wallpaper sets your system (Android) wallpaper to solid black.\nUnless you want one to be blank, it\'s probably best to set both.'**
+  String get wsHeadsUp;
+
+  /// No description provided for @wsHomes.
+  ///
+  /// In en, this message translates to:
+  /// **'Light and dark homes'**
+  String get wsHomes;
+
+  /// No description provided for @wsHomesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Liminal\'s appearance can/will always be unique based on theme mode.\n\nDo you want to also have unique home pages based on theme mode?'**
+  String get wsHomesDesc;
+
+  /// No description provided for @wsLaneConfig.
+  ///
+  /// In en, this message translates to:
+  /// **'Lane config'**
+  String get wsLaneConfig;
+
+  /// No description provided for @wsLanesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your home screen is made of lanes...\nColumns filled with apps, folders, and widgets.\n\nHow do you want them to behave?'**
+  String get wsLanesDesc;
+
+  /// No description provided for @wsLaunch.
+  ///
+  /// In en, this message translates to:
+  /// **'Launch'**
+  String get wsLaunch;
+
+  /// No description provided for @wsLaunchDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'And, honestly: the tip of the iceberg.\n\nColors, fonts, button styles, spacing, widgets, and more are yours to personalize.\n\nAs usual, long press the home screen to start customizing.'**
+  String get wsLaunchDesc;
+
+  /// No description provided for @wsLightWallpaper.
+  ///
+  /// In en, this message translates to:
+  /// **'Light\nwallpaper'**
+  String get wsLightWallpaper;
+
+  /// No description provided for @wsMatchColors.
+  ///
+  /// In en, this message translates to:
+  /// **'Match colors'**
+  String get wsMatchColors;
+
+  /// No description provided for @wsNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get wsNext;
+
+  /// No description provided for @wsOneForBoth.
+  ///
+  /// In en, this message translates to:
+  /// **'One for both'**
+  String get wsOneForBoth;
+
+  /// No description provided for @wsSeparate.
+  ///
+  /// In en, this message translates to:
+  /// **'Separate'**
+  String get wsSeparate;
+
+  /// No description provided for @wsShuffleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'The launch button changes style every {seconds} seconds'**
+  String wsShuffleHint(Object seconds);
+
+  /// No description provided for @wsSwipeClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Long press an app to clear it.'**
+  String get wsSwipeClear;
+
+  /// No description provided for @wsSwipeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick apps that open when you overscroll left or right on the home screen.'**
+  String get wsSwipeDesc;
+
+  /// No description provided for @wsTheBasics.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s the basics!'**
+  String get wsTheBasics;
+
+  /// No description provided for @wsWallpaperDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Want to keep your current wallpaper?\nJust skip this step.'**
+  String get wsWallpaperDesc;
+
+  /// No description provided for @wsWallpapers.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallpapers'**
+  String get wsWallpapers;
 }
 
 class _LangDelegate extends LocalizationsDelegate<Lang> {

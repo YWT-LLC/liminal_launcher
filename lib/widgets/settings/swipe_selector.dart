@@ -12,7 +12,7 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 class SwipeSelector extends StatefulWidget {
-  final EzCP config;
+  final EzProvider config;
   final AppInfoProvider appInfo;
   final bool left;
   final String _key;
@@ -32,7 +32,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
     late final String dir = widget.left ? widget.config.ezL10n.gLeft : widget.config.ezL10n.gRight;
     final String lowDir = dir.toLowerCase();
 
-    String? appID = EzCM.get(widget._key);
+    String? appID = EzManager.get(widget._key);
     AppInfo app =
         (appID == null || appID.isEmpty) ? nullApp : widget.appInfo.appMap[appID] ?? nullApp;
 
@@ -87,7 +87,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
                   return;
                 }
 
-                await EzCM.setString(widget._key, newApp.id);
+                await EzManager.setString(widget._key, newApp.id);
                 setState(() => app = newApp);
 
                 if (context.mounted) Navigator.of(context).pop();
@@ -104,7 +104,7 @@ class _SwipeSelectorState extends State<SwipeSelector> {
             appID = null;
             app = nullApp;
 
-            await EzCM.remove(widget._key);
+            await EzManager.remove(widget._key);
             setState(() {});
           },
         ),
