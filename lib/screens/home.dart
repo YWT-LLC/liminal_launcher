@@ -15,7 +15,6 @@ import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:after_layout/after_layout.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -838,12 +837,9 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
   @override
   Future<void> afterFirstLayout(BuildContext context) async {
-    late final EzCP config = configWatcher(context);
-
     // Check for welcome message(s)
     if (!EzCM.get(shownIntroKey)) {
-      if (context.mounted) await _welcome(config, context);
-
+      if (context.mounted) await context.pushNamed(welcomeScreenName);
       await EzCM.setBool(shownIntroKey, true);
     }
   }
@@ -1040,62 +1036,3 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
     );
   }
 }
-
-Future<void> _welcome(EzCP config, BuildContext context) => ezModal(
-      config,
-      context: context,
-      builder: (_) => ezModalScroll(
-        config,
-        children: <Widget>[
-          // Welcome
-          Text(
-            l10n(config).hsWelcome,
-            textAlign: TextAlign.center,
-            style: config.titleStyle,
-          ),
-          config.centerLine,
-
-          // Minimal-ish
-          Text(
-            l10n(config).hsDescription,
-            textAlign: TextAlign.center,
-            style: config.bodyStyle,
-          ),
-          config.centerLine,
-
-          // Yin/Yang
-          EzRichText(
-            config,
-            children: <InlineSpan>[
-              EzPlainText(text: l10n(config).hsUserSettings, style: config.bodyStyle),
-              WidgetSpan(
-                alignment: PlaceholderAlignment.middle,
-                child: EzIcon(config, Icons.dark_mode),
-              ),
-              EzPlainText(text: l10n(config).hsLight, style: config.bodyStyle),
-              WidgetSpan(
-                alignment: PlaceholderAlignment.middle,
-                child: EzIcon(config, Icons.light_mode),
-              ),
-              EzPlainText(text: l10n(config).hsBoth, style: config.bodyStyle),
-              WidgetSpan(
-                alignment: PlaceholderAlignment.middle,
-                child: FaIcon(FontAwesomeIcons.yinYang, size: config.iconSize),
-              ),
-              EzPlainText(text: l10n(config).hsThemes, style: config.bodyStyle),
-            ],
-            textAlign: TextAlign.center,
-            style: config.bodyStyle,
-          ),
-          config.centerLine,
-
-          // Have fun!
-          Text(
-            l10n(config).hsGetStarted,
-            textAlign: TextAlign.center,
-            style: config.bodyStyle,
-          ),
-          config.separator,
-        ],
-      ),
-    );

@@ -17,6 +17,29 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 // Define the router //
 
 final List<RouteBase> routes = <RouteBase>[
+  // Welcome
+  GoRoute(
+    path: welcomeScreenPath,
+    name: welcomeScreenName,
+    pageBuilder: (BuildContext pbc, GoRouterState pbs) => ezPageBuilder(
+      configWatcher(pbc),
+      pbc,
+      pbs,
+      const WelcomeScreen(),
+      transitionsBuilder:
+          (BuildContext context, Animation<double> a, Animation<double> aa, Widget w) =>
+              ezTransitionsBuilder(
+        configWatcher(pbc),
+        context,
+        a,
+        aa,
+        w,
+        forceType: EzTransitionType.slideY,
+        forceFade: true,
+      ),
+    ),
+  ),
+
   // App list
   GoRoute(
     path: appListScreenPath,
