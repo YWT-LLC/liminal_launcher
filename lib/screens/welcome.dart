@@ -14,8 +14,6 @@ import 'package:provider/provider.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-// TODO: l10n
-
 const int _numPages = 6;
 const int _lastPage = _numPages - 1;
 
@@ -39,7 +37,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   String darkPath = EzManager.get(darkBackgroundImageKey);
   String lightPath = EzManager.get(lightBackgroundImageKey);
-  bool setColors = true;
 
   late bool usePage;
   late bool useWide;
@@ -47,7 +44,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   final Random random = Random();
   _LaunchStyle? launchStyle;
   Timer? shuffleTimer;
-  int countdown = _shuffleSeconds;
+  int shuffles = 0;
 
   // Define custom functions //
 
@@ -64,24 +61,23 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       page = target;
     });
 
-    (page == _lastPage)
-        ? () {
-            shuffleTimer?.cancel();
-            countdown = _shuffleSeconds;
+    if (page != _lastPage) return stopShuffle();
 
-            shuffleTimer = Timer.periodic(const Duration(seconds: 1), (_) {
-              if (!mounted) return;
-              countdown -= 1;
+    shuffleTimer?.cancel();
+    shuffleTimer = Timer.periodic(const Duration(seconds: _shuffleSeconds), (_) {
+      if (!mounted) return;
 
-              if (countdown <= 0) {
-                setState(() {
-                  launchStyle = _LaunchStyle.random(random);
-                  countdown = _shuffleSeconds;
-                });
-              }
-            });
-          }
-        : stopShuffle();
+      setState(() {
+        launchStyle = _LaunchStyle.random(random);
+        shuffles += 1;
+      });
+    });
+  }
+
+  /// Sets [darkKey] and [lightKey] to [value]
+  Future<void> setBoth(String darkKey, String lightKey, bool value) async {
+    await EzManager.setBool(darkKey, value);
+    await EzManager.setBool(lightKey, value);
   }
 
   // Init //
@@ -136,7 +132,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               EzTextIconButton(
                 config,
                 onPressed: () => goTo(page - 1),
-                label: 'Back',
+                label: config.ezL10n.gBack,
                 icon: EzIcon(config, Icons.arrow_back),
               ),
 
@@ -153,7 +149,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   }
                   goTo(page + 1);
                 },
-                label: 'Next',
+                label: l10n(config).wsNext,
                 icon: EzIcon(config, Icons.arrow_forward),
               ),
           ],
@@ -209,74 +205,49 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         config.centerLine,
 
         // Let it be gotten
-        body(config, "Let's get started with some general settings."),
+        body(config, l10n(config).wsGetStarted),
       ];
 
   // [1]: Wallpaper(s)
-  Widget _wallpaperSetting(
-    EzProvider config, {
-    required bool setDark,
-    required String label,
-  }) =>
-      EzCol(children: <Widget>[
-        EzImageSetting(
-          config,
-          pathKey: setDark ? darkBackgroundImageKey : lightBackgroundImageKey,
-          fitKey: setDark ? darkBackgroundFitKey : lightBackgroundFitKey,
-          label: label,
-          allowSolidColor: true,
-          clearLabel: l10n(config).dpsUseOS,
-          setColors: setColors,
-        ),
-        config.spacer,
-        EzSwitchPair(
-          config,
-          key: ValueKey<String>('colors-$setDark-$setColors'),
-          value: setColors,
-          text: 'Match colors',
-          onChanged: (bool? choice) {
-            if (choice == null || choice == setColors) return;
-            setState(() => setColors = choice);
-          },
-        ),
-      ]);
-  // TODO: fix: currently always overrides the current theme
-
   List<Widget> wallpaperPage(EzProvider config) => <Widget>[
         header(config),
-        title(config, 'Wallpapers'),
-        if ((darkPath == noImageValue) != (lightPath == noImageValue))
-          label(config,
-              "Heads up!\nUsing a custom (Liminal) wallpaper sets your system (Android) wallpaper to solid black.\nUnless you want one to be blank, it's probably best to set both."),
+        title(config, l10n(config).wsWallpapers),
+        if ((darkPath == noImageValue) != (lightPath == noImageValue)) // TODO: fix
+          label(config, l10n(config).wsHeadsUp),
         config.spacer,
-        EzRowCol(
-          row: EzRow(
+        EzCol(children: <Widget>[
+          EzImageSetting(
             config,
-            reverseHands: false,
-            children: <Widget>[
-              _wallpaperSetting(config, setDark: true, label: 'Dark\nwallpaper'),
-              config.rowSeparator,
-              _wallpaperSetting(config, setDark: false, label: 'Light\nwallpaper'),
-            ],
+            key: const ValueKey<String>('image-dark'),
+            pathKey: darkBackgroundImageKey,
+            fitKey: darkBackgroundFitKey,
+            label: l10n(config).wsDarkWallpaper,
+            allowSolidColor: true,
+            clearLabel: l10n(config).dpsUseOS,
+            brightness: Brightness.dark,
           ),
-          col: EzCol(children: <Widget>[
-            _wallpaperSetting(config, setDark: true, label: 'Dark\nwallpaper'),
-            config.separator,
-            _wallpaperSetting(config, setDark: false, label: 'Light\nwallpaper'),
-          ]),
-        ),
-        config.separator,
-        body(config,
-            '"Match colors" will update the color scheme when an image is set.\n\nWant to keep your current wallpaper?\nJust skip this step.'),
+          config.spacer,
+          EzImageSetting(
+            config,
+            key: const ValueKey<String>('image-light'),
+            pathKey: lightBackgroundImageKey,
+            fitKey: lightBackgroundFitKey,
+            label: l10n(config).wsLightWallpaper,
+            allowSolidColor: true,
+            clearLabel: l10n(config).dpsUseOS,
+            brightness: Brightness.light,
+          ),
+        ]),
+        config.spacer,
+        body(config, l10n(config).wsWallpaperDesc),
       ];
 
   // [2]: Theme(s)
   List<Widget> themePage(EzProvider config) => <Widget>[
         header(config),
-        title(config, 'Light and dark homes'),
+        title(config, l10n(config).wsHomes),
         config.centerLine,
-        body(config,
-            "Liminal's appearance can/will always be unique based on theme mode.\n\nDo you want to also have unique home pages based on theme mode?"),
+        body(config, l10n(config).wsHomesDesc),
         config.spacer,
         EzSegmentedButton<bool>(
           config,
@@ -284,12 +255,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ButtonSegment<bool>(
               value: false,
               icon: FaIcon(FontAwesomeIcons.yinYang, size: config.iconSize),
-              label: const Text('One for both', textAlign: TextAlign.center),
+              label: Text(l10n(config).wsOneForBoth, textAlign: TextAlign.center),
             ),
             ButtonSegment<bool>(
               value: true,
               icon: EzIcon(config, Icons.contrast),
-              label: const Text('Separate', textAlign: TextAlign.center),
+              label: Text(l10n(config).wsSeparate, textAlign: TextAlign.center),
             ),
           ],
           selected: <bool>{twoHomes},
@@ -305,8 +276,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           },
         ),
         config.spacer,
-        label(config,
-            'You can change this any time.\nWhen going from 2 > 1, you will have to choose which to keep.'),
+        label(config, l10n(config).wsChangeAnyTime),
       ];
 
   // [3]: Lanes
@@ -316,23 +286,19 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
     return <Widget>[
       header(config),
-      title(config, 'Lane config'),
-      // TODO: remove mltLaneConfig
+      title(config, l10n(config).wsLaneConfig),
       config.centerLine,
-      body(config,
-          'Your home screen is made of lanes...\nColumns filled with apps, folders, and widgets.\n\nHow do you want them to behave?'),
-
-      // TODO: actually set both
+      body(config, l10n(config).wsLanesDesc),
       config.spacer,
 
       // Switches
       EzSwitchPair(
         config,
         valueKey: config.isDark ? darkPagesKey : lightPagesKey,
-        text: l10n(config).dpsPages, // TODO: update dpsPages to "Lanes = pages"
+        text: l10n(config).dpsPages,
         afterChanged: (bool? value) async {
           if (value == null) return;
-          // TODO
+          await setBoth(darkPagesKey, lightPagesKey, value);
           setState(() {
             usePage = value;
             changes = true;
@@ -346,7 +312,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         text: l10n(config).gWideTiles,
         afterChanged: (bool? value) async {
           if (value == null) return;
-          // TODO
+          await setBoth(darkWideTilesKey, lightWideTilesKey, value);
           setState(() {
             useWide = value;
             changes = true;
@@ -395,7 +361,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
       if (twoHomes) ...<Widget>[
         config.centerLine,
-        label(config, 'This will update both themes for now.\nYou can update either at any point.'),
+        label(config, l10n(config).wsBothThemes),
       ],
     ];
   }
@@ -403,15 +369,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   // [4]: Swipe apps
   List<Widget> swipePage(EzProvider config, AppInfoProvider appInfo) => <Widget>[
         header(config),
-        title(config, 'Quick launch'),
+        title(config, l10n(config).gsQuickLaunch),
         config.centerLine,
-        body(config, 'Pick apps that open when you overscroll left or right on the home screen.'),
+        body(config, l10n(config).wsSwipeDesc),
         config.spacer,
         SwipeSelector(config, appInfo, left: true),
         config.spacer,
         SwipeSelector(config, appInfo, left: false),
         config.spacer,
-        label(config, 'Long press an app to clear it.'),
+        label(config, l10n(config).wsSwipeClear),
       ];
 
   // [5]: Launch
@@ -420,19 +386,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
     return <Widget>[
       header(config),
-      title(config, "That's the basics!"),
+      title(config, l10n(config).wsTheBasics),
       config.centerLine,
-      body(config,
-          'And, honestly: the tip of the iceberg.\n\nColors, fonts, button styles, spacing, widgets, and more are yours to personalize.\n\nAs usual, long press the home screen to start customizing.'),
+      body(config, l10n(config).wsLaunchDesc),
       config.separator,
       EzRow(
         config,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          // TODO: fix: shuffle doesn't work
           EzElevatedIconButton(
             config,
-            key: ValueKey<int>(ls?.hashCode ?? 0),
+            key: ValueKey<int>(shuffles),
             onPressed: () {
               stopShuffle();
               if (mounted) Navigator.of(context).pop(true);
@@ -444,22 +408,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               Icons.rocket_launch,
               fill: (ls == null) ? null : EzSwitchColor(color: ls.primary),
             ),
-            label: 'Launch',
+            label: l10n(config).wsLaunch,
           ),
           config.rowMargin,
-          // TODO: just use ez countdown timer
           Semantics(
-            label: 'Shuffling the button style in $countdown',
+            label: l10n(config).wsShuffleHint(_shuffleSeconds),
             child: ExcludeSemantics(
-              child: Container(
-                width: config.iconSize + config.padding,
-                height: config.iconSize + config.padding,
-                alignment: Alignment.center,
-                decoration: config.boxDeco(
-                  border: config.boxBorder(fill: config.primaryFill),
-                  shape: BoxShape.circle,
-                ),
-                child: Text('$countdown', style: config.labelStyle),
+              child: EzCountdownTimer(
+                config,
+                key: ValueKey<int>(shuffles),
+                duration: const Duration(seconds: _shuffleSeconds),
               ),
             ),
           ),
@@ -473,7 +431,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) => PopScope(
         canPop: false,
-        onPopInvokedWithResult: (bool didPop, _) => (didPop) ? goTo(page - 1) : doNothing,
+        onPopInvokedWithResult: (bool didPop, _) {
+          if (!didPop) goTo(page - 1);
+        },
         child: Consumer2<EzProvider, AppInfoProvider>(
           builder: (_, EzProvider config, AppInfoProvider appInfo, __) {
             final List<Widget> children = switch (page) {
