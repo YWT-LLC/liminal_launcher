@@ -7,8 +7,8 @@ import '../utils/export.dart';
 import '../widgets/export.dart';
 import 'package:ywt_private/ywt_private.dart' as ywt;
 
-import 'dart:async';
 import 'dart:math';
+import 'dart:async';
 import 'package:open_ui/open_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:material_ui/material_ui.dart';
@@ -19,7 +19,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 const int _numPages = 6;
 const int _lastPage = _numPages - 1;
 
-const int _shuffleSeconds = 3;
+const int _shuffleSeconds = 2;
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -35,12 +35,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   int delta = 0;
   bool changes = false;
 
-  bool separate = EzManager.get(updateBothKey);
+  bool twoHomes = EzManager.get(interlinkedKey);
 
   String darkPath = EzManager.get(darkBackgroundImageKey);
-  bool darkColors = false;
   String lightPath = EzManager.get(lightBackgroundImageKey);
-  bool lightColors = false;
+  bool setColors = true;
 
   late bool usePage;
   late bool useWide;
@@ -112,14 +111,56 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         style: config.titleStyle,
       );
 
-  Widget body(EzProvider config, String text, {TextStyle? style}) => EzText(
+  Widget body(EzProvider config, String text) => EzText(
         config,
         text: text,
         textAlign: TextAlign.center,
-        style: style ?? config.bodyStyle,
+        style: config.bodyStyle,
       );
 
-  // 1. Welcome
+  Widget label(EzProvider config, String text) => EzText(
+        config,
+        text: text,
+        textAlign: TextAlign.center,
+        style: config.labelStyle,
+      );
+
+  Widget navRow(EzProvider config) => Center(
+        child: EzRow(
+          config,
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            // Back
+            if (page > 0)
+              EzTextIconButton(
+                config,
+                onPressed: () => goTo(page - 1),
+                label: 'Back',
+                icon: EzIcon(config, Icons.arrow_back),
+              ),
+
+            if (page != 0 && page != _lastPage) config.rowSeparator,
+
+            // Next
+            if (page < _lastPage)
+              EzElevatedIconButton(
+                config,
+                onPressed: () async {
+                  if (changes) {
+                    await config.rebuildUI();
+                    setState(() => changes = false);
+                  }
+                  goTo(page + 1);
+                },
+                label: 'Next',
+                icon: EzIcon(config, Icons.arrow_forward),
+              ),
+          ],
+        ),
+      );
+
+  // [0]: Welcome
   List<Widget> welcomePage(EzProvider config) => <Widget>[
         // Welcome
         title(config, l10n(config).hsWelcome),
@@ -167,17 +208,75 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         ),
         config.centerLine,
 
-        // Let's go!
-        body(config, "Let's get you set up.\nIt'll only take a minute!"),
+        // Let it be gotten
+        body(config, "Let's get started with some general settings."),
       ];
 
-  // 2. Theme(s)
+  // [1]: Wallpaper(s)
+  Widget _wallpaperSetting(
+    EzProvider config, {
+    required bool setDark,
+    required String label,
+  }) =>
+      EzCol(children: <Widget>[
+        EzImageSetting(
+          config,
+          pathKey: setDark ? darkBackgroundImageKey : lightBackgroundImageKey,
+          fitKey: setDark ? darkBackgroundFitKey : lightBackgroundFitKey,
+          label: label,
+          allowSolidColor: true,
+          clearLabel: l10n(config).dpsUseOS,
+          setColors: setColors,
+        ),
+        config.spacer,
+        EzSwitchPair(
+          config,
+          key: ValueKey<String>('colors-$setDark-$setColors'),
+          value: setColors,
+          text: 'Match colors',
+          onChanged: (bool? choice) {
+            if (choice == null || choice == setColors) return;
+            setState(() => setColors = choice);
+          },
+        ),
+      ]);
+  // TODO: fix: currently always overrides the current theme
+
+  List<Widget> wallpaperPage(EzProvider config) => <Widget>[
+        header(config),
+        title(config, 'Wallpapers'),
+        if ((darkPath == noImageValue) != (lightPath == noImageValue))
+          label(config,
+              "Heads up!\nUsing a custom (Liminal) wallpaper sets your system (Android) wallpaper to solid black.\nUnless you want one to be blank, it's probably best to set both."),
+        config.spacer,
+        EzRowCol(
+          row: EzRow(
+            config,
+            reverseHands: false,
+            children: <Widget>[
+              _wallpaperSetting(config, setDark: true, label: 'Dark\nwallpaper'),
+              config.rowSeparator,
+              _wallpaperSetting(config, setDark: false, label: 'Light\nwallpaper'),
+            ],
+          ),
+          col: EzCol(children: <Widget>[
+            _wallpaperSetting(config, setDark: true, label: 'Dark\nwallpaper'),
+            config.separator,
+            _wallpaperSetting(config, setDark: false, label: 'Light\nwallpaper'),
+          ]),
+        ),
+        config.separator,
+        body(config,
+            '"Match colors" will update the color scheme when an image is set.\n\nWant to keep your current wallpaper?\nJust skip this step.'),
+      ];
+
+  // [2]: Theme(s)
   List<Widget> themePage(EzProvider config) => <Widget>[
         header(config),
-        title(config, 'Light & dark mode'),
+        title(config, 'Light and dark homes'),
         config.centerLine,
         body(config,
-            'Would you like Liminal to look different in light and dark mode?\n\nOr keep things simple, with one look for both?'),
+            "Liminal's appearance can/will always be unique based on theme mode.\n\nDo you want to also have unique home pages based on theme mode?"),
         config.spacer,
         EzSegmentedButton<bool>(
           config,
@@ -193,127 +292,51 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               label: const Text('Separate', textAlign: TextAlign.center),
             ),
           ],
-          selected: <bool>{separate},
+          selected: <bool>{twoHomes},
           showSelectedIcon: false,
           onSelectionChanged: (Set<bool>? choice) async {
-            if (choice?.first == null || choice?.first == separate) return;
+            if (choice?.first == null || choice?.first == twoHomes) return;
 
-            await EzManager.setBool(updateBothKey, choice!.first);
-            setState(() => changes = true);
+            await EzManager.setBool(interlinkedKey, choice!.first);
+            setState(() {
+              twoHomes = choice.first;
+              changes = true;
+            });
           },
         ),
         config.spacer,
-        body(
-          config,
-          separate
-              ? 'Light and dark mode will each have their own setup.\nChanges only apply to the mode you are editing.'
-              : 'Changes will apply to both light and dark mode.',
-          style: config.labelStyle,
-        ),
-        config.spacer,
-        body(
-          config,
-          'You can change this any time in settings.',
-          style: config.labelStyle,
-        ),
+        label(config,
+            'You can change this any time.\nWhen going from 2 > 1, you will have to choose which to keep.'),
       ];
 
-  // 3. Wallpaper(s)
-  Widget wallpaperSetting(
-    EzProvider config, {
-    required bool? dark,
-    required String label,
-  }) {
-    final bool useDark = dark ?? config.isDark;
-    final bool colors = (dark ?? config.isDark) ? darkColors : lightColors;
-
-    return EzCol(children: <Widget>[
-      EzImageSetting(
-        config,
-        pathKey: useDark ? darkBackgroundImageKey : lightBackgroundImageKey,
-        fitKey: useDark ? darkBackgroundFitKey : lightBackgroundFitKey,
-        label: label,
-        allowSolidColor: true,
-        clearLabel: l10n(config).dpsUseOS,
-      ),
-      config.spacer,
-      EzSwitchPair(
-        config,
-        key: ValueKey<String>('colors-$dark-$colors'),
-        value: colors,
-        text: 'Match colors',
-        onChanged: (bool? choice) {
-          if (choice == null) return;
-          // TODO
-        },
-      ),
-    ]);
-  }
-
-  List<Widget> wallpaperPage(EzProvider config) {
-    final bool anySet = darkPath != noImageValue || lightPath != noImageValue;
-
-    return <Widget>[
-      header(config),
-      if (separate && anySet) ...<Widget>[
-        body(
-          config,
-          'Heads up! Custom wallpapers set your system wallpaper to black.\nIf you only set one, the other mode will be black, so it\'s probably best to set both.',
-          style: config.labelStyle?.copyWith(color: config.tertiaryFill.asColor),
-        ),
-        config.spacer,
-      ],
-      title(
-        config,
-        separate ? 'Wallpapers' : l10n(config).dpsWallpaper,
-      ),
-      config.centerLine,
-      body(
-        config,
-        'Pick an image (or color) for your home screen. "Match colors" will update the color scheme to fit.\n\nWant to keep your current wallpaper? Just skip this step.',
-      ),
-      config.spacer,
-      separate
-          ? EzWrap(
-              children: <Widget>[
-                ezWrap(
-                  config,
-                  child: wallpaperSetting(config, dark: true, label: 'Dark\nwallpaper'),
-                ),
-                ezWrap(
-                  config,
-                  child: wallpaperSetting(config, dark: false, label: 'Light\nwallpaper'),
-                ),
-              ],
-            )
-          : wallpaperSetting(config, dark: null, label: l10n(config).dpsWallpaper),
-    ];
-  }
-
-  // 4. Lanes
+  // [3]: Lanes
   List<Widget> lanePage(EzProvider config) {
     final TextStyle? focussed = config.bodyStyle;
     final TextStyle? hidden = config.labelStyle?.copyWith(color: config.outline);
 
     return <Widget>[
       header(config),
-      title(config, l10n(config).mltLaneConfig),
+      title(config, 'Lane config'),
+      // TODO: remove mltLaneConfig
       config.centerLine,
-      body(
-        config,
-        'Your home screen is made of lanes: columns of apps, folders, and widgets.\nYou can add more any time, here\'s how they\'ll behave.',
-      ),
+      body(config,
+          'Your home screen is made of lanes...\nColumns filled with apps, folders, and widgets.\n\nHow do you want them to behave?'),
+
+      // TODO: actually set both
       config.spacer,
 
       // Switches
       EzSwitchPair(
         config,
         valueKey: config.isDark ? darkPagesKey : lightPagesKey,
-        text: l10n(config).dpsPages,
+        text: l10n(config).dpsPages, // TODO: update dpsPages to "Lanes = pages"
         afterChanged: (bool? value) async {
           if (value == null) return;
           // TODO
-          setState(() => usePage = value);
+          setState(() {
+            usePage = value;
+            changes = true;
+          });
         },
       ),
       config.spacer,
@@ -324,7 +347,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         afterChanged: (bool? value) async {
           if (value == null) return;
           // TODO
-          setState(() => useWide = value);
+          setState(() {
+            useWide = value;
+            changes = true;
+          });
         },
       ),
       config.spacer,
@@ -366,49 +392,50 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           style: useWide ? hidden : focussed,
         ),
       ]),
+
+      if (twoHomes) ...<Widget>[
+        config.centerLine,
+        label(config, 'This will update both themes for now.\nYou can update either at any point.'),
+      ],
     ];
   }
 
-  // 5. Swipe apps
+  // [4]: Swipe apps
   List<Widget> swipePage(EzProvider config, AppInfoProvider appInfo) => <Widget>[
         header(config),
         title(config, 'Quick launch'),
         config.centerLine,
-        body(
-          config,
-          'Pick an app to open when you swipe left or right on your home screen.\n\nIf you have more than one page, just keep swiping once you reach the edge.',
-        ),
+        body(config, 'Pick apps that open when you overscroll left or right on the home screen.'),
         config.spacer,
         SwipeSelector(config, appInfo, left: true),
         config.spacer,
         SwipeSelector(config, appInfo, left: false),
         config.spacer,
-        body(config, 'Long press an app to clear it.', style: config.labelStyle),
+        label(config, 'Long press an app to clear it.'),
       ];
 
-  // 6. Launch
+  // [5]: Launch
   List<Widget> launchPage(EzProvider config) {
     final _LaunchStyle? ls = launchStyle;
 
     return <Widget>[
       header(config),
-      title(config, "You're all set!"),
+      title(config, "That's the basics!"),
       config.centerLine,
-      body(
-        config,
-        "That's just the tip of the iceberg. Colors, fonts, folders, widgets, and way more are all yours to tweak.\n\nWhenever inspiration strikes, long press the home screen to get started.",
-      ),
+      body(config,
+          'And, honestly: the tip of the iceberg.\n\nColors, fonts, button styles, spacing, widgets, and more are yours to personalize.\n\nAs usual, long press the home screen to start customizing.'),
       config.separator,
       EzRow(
         config,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          // TODO: fix: shuffle doesn't work
           EzElevatedIconButton(
             config,
             key: ValueKey<int>(ls?.hashCode ?? 0),
             onPressed: () {
               stopShuffle();
-              if (mounted) Navigator.of(context).pop();
+              if (mounted) Navigator.of(context).pop(true);
             },
             style: ls?.buttonStyle(config),
             textStyle: ls?.textStyle(config),
@@ -420,6 +447,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             label: 'Launch',
           ),
           config.rowMargin,
+          // TODO: just use ez countdown timer
           Semantics(
             label: 'Shuffling the button style in $countdown',
             child: ExcludeSemantics(
@@ -440,39 +468,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     ];
   }
 
-  Widget navRow(EzProvider config) => EzRow(
-        config,
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          // Back
-          (page > 0)
-              ? EzTextIconButton(
-                  config,
-                  onPressed: () => goTo(page - 1),
-                  label: 'Back',
-                  icon: EzIcon(config, Icons.arrow_back),
-                )
-              : const SizedBox.shrink(),
-
-          // Next
-          (page < _lastPage)
-              ? EzElevatedIconButton(
-                  config,
-                  onPressed: () async {
-                    if (changes) {
-                      await config.rebuildUI();
-                      setState(() => changes = false);
-                    }
-                    goTo(page + 1);
-                  },
-                  label: (page == 0) ? "Let's go" : 'Next',
-                  icon: EzIcon(config, Icons.arrow_forward),
-                )
-              : const SizedBox.shrink(),
-        ],
-      );
-
   // Return the build //
 
   @override
@@ -483,8 +478,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           builder: (_, EzProvider config, AppInfoProvider appInfo, __) {
             final List<Widget> children = switch (page) {
               0 => welcomePage(config),
-              1 => themePage(config),
-              2 => wallpaperPage(config),
+              1 => wallpaperPage(config),
+              2 => themePage(config),
               3 => lanePage(config),
               4 => swipePage(config, appInfo),
               _ => launchPage(config),
