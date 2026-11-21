@@ -920,7 +920,7 @@ class LangEs extends Lang {
 
   @override
   String get wsWallpaperDesc =>
-      '\"Combinar colores\" actualizará el esquema de colores cuando se establezca una imagen.\n\n¿Quieres conservar tu fondo de pantalla actual?\nSimplemente omite este paso.';
+      '¿Quieres conservar tu fondo de pantalla actual?\nSimplemente omite este paso.';
 
   @override
   String get wsWallpapers => 'Fondos de pantalla';

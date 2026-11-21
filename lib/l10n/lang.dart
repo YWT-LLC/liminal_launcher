@@ -1808,7 +1808,7 @@ abstract class Lang {
   /// No description provided for @wsWallpaperDesc.
   ///
   /// In en, this message translates to:
-  /// **'\"Match colors\" will update the color scheme when an image is set.\n\nWant to keep your current wallpaper?\nJust skip this step.'**
+  /// **'Want to keep your current wallpaper?\nJust skip this step.'**
   String get wsWallpaperDesc;
 
   /// No description provided for @wsWallpapers.

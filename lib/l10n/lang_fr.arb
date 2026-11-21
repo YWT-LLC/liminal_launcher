@@ -284,6 +284,6 @@
   "wsSwipeClear": "Appuyez longuement sur une application pour la retirer.",
   "wsSwipeDesc": "Choisissez des applications qui s'ouvrent lorsque vous balayez au-delà du bord gauche ou droit de l'écran d'accueil.",
   "wsTheBasics": "Voilà l'essentiel !",
-  "wsWallpaperDesc": "« Assortir les couleurs » mettra à jour le jeu de couleurs lorsqu'une image est définie.\n\nVous voulez garder votre fond d'écran actuel ?\nPassez simplement cette étape.",
+  "wsWallpaperDesc": "Vous voulez garder votre fond d'écran actuel ?\nPassez simplement cette étape.",
   "wsWallpapers": "Fonds d'écran"
 }

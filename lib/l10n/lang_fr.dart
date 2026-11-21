@@ -926,7 +926,7 @@ class LangFr extends Lang {
 
   @override
   String get wsWallpaperDesc =>
-      '« Assortir les couleurs » mettra à jour le jeu de couleurs lorsqu\'une image est définie.\n\nVous voulez garder votre fond d\'écran actuel ?\nPassez simplement cette étape.';
+      'Vous voulez garder votre fond d\'écran actuel ?\nPassez simplement cette étape.';
 
   @override
   String get wsWallpapers => 'Fonds d\'écran';

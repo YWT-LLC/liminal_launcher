@@ -922,7 +922,7 @@ class LangDe extends Lang {
 
   @override
   String get wsWallpaperDesc =>
-      '\"Farben anpassen\" aktualisiert das Farbschema, wenn ein Bild festgelegt wird.\n\nDu möchtest dein aktuelles Hintergrundbild behalten?\nÜberspringe einfach diesen Schritt.';
+      'Du möchtest dein aktuelles Hintergrundbild behalten?\nÜberspringe einfach diesen Schritt.';
 
   @override
   String get wsWallpapers => 'Hintergrundbilder';

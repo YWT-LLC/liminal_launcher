@@ -284,6 +284,6 @@
   "wsSwipeClear": "Mantén pulsada una app para quitarla.",
   "wsSwipeDesc": "Elige apps que se abran al deslizar más allá del borde izquierdo o derecho de la pantalla de inicio.",
   "wsTheBasics": "¡Eso es lo básico!",
-  "wsWallpaperDesc": "\"Combinar colores\" actualizará el esquema de colores cuando se establezca una imagen.\n\n¿Quieres conservar tu fondo de pantalla actual?\nSimplemente omite este paso.",
+  "wsWallpaperDesc": "¿Quieres conservar tu fondo de pantalla actual?\nSimplemente omite este paso.",
   "wsWallpapers": "Fondos de pantalla"
 }

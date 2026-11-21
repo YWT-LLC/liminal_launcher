@@ -916,7 +916,7 @@ class LangEn extends Lang {
 
   @override
   String get wsWallpaperDesc =>
-      '\"Match colors\" will update the color scheme when an image is set.\n\nWant to keep your current wallpaper?\nJust skip this step.';
+      'Want to keep your current wallpaper?\nJust skip this step.';
 
   @override
   String get wsWallpapers => 'Wallpapers';
@@ -1834,7 +1834,7 @@ class LangEnUs extends LangEn {
 
   @override
   String get wsWallpaperDesc =>
-      '\"Match colors\" will update the color scheme when an image is set.\n\nWant to keep your current wallpaper?\nJust skip this step.';
+      'Want to keep your current wallpaper?\nJust skip this step.';
 
   @override
   String get wsWallpapers => 'Wallpapers';
