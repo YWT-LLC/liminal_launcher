@@ -131,7 +131,7 @@ class LangDe extends Lang {
   String get dpsPageSettings => 'Seiteneinstellungen';
 
   @override
-  String get dpsPages => 'Startbildschirm-Seiten';
+  String get dpsPages => 'Spuren = Seiten';
 
   @override
   String get dpsUseOS => 'Vom System übernehmen';
@@ -709,9 +709,6 @@ class LangDe extends Lang {
       'werden die Spuren anhand ihres breitesten Elements & deiner Abstandseinstellungen dimensioniert.\n';
 
   @override
-  String get mltLaneConfig => 'Multi-Spur-Konfiguration';
-
-  @override
   String get mltOnlyButton =>
       'können Apps und Ordner nur über ihre(n) Button(s) aktiviert werden.\n';
 
@@ -852,4 +849,81 @@ class LangDe extends Lang {
 
   @override
   String get togTitle => 'Mediensteuerung';
+
+  @override
+  String get wsBothThemes =>
+      'Dies aktualisiert vorerst beide Themes.\nDu kannst jedes jederzeit einzeln anpassen.';
+
+  @override
+  String get wsChangeAnyTime =>
+      'Du kannst das jederzeit ändern.\nBeim Wechsel von 2 > 1 musst du wählen, welches du behältst.';
+
+  @override
+  String get wsDarkWallpaper => 'Dunkles\nHintergrundbild';
+
+  @override
+  String get wsGetStarted =>
+      'Lass uns mit ein paar allgemeinen Einstellungen beginnen.';
+
+  @override
+  String get wsHeadsUp =>
+      'Achtung!\nEin eigenes (Liminal-)Hintergrundbild setzt dein System-(Android-)Hintergrundbild auf einfarbiges Schwarz.\nWenn eines nicht leer bleiben soll, stellst du am besten beide ein.';
+
+  @override
+  String get wsHomes => 'Helle und dunkle Startbildschirme';
+
+  @override
+  String get wsHomesDesc =>
+      'Liminals Aussehen kann/wird immer je nach Theme-Modus einzigartig sein.\n\nMöchtest du auch je nach Theme-Modus eigene Startbildschirme haben?';
+
+  @override
+  String get wsLaneConfig => 'Spur-Konfiguration';
+
+  @override
+  String get wsLanesDesc =>
+      'Dein Startbildschirm besteht aus Spuren...\nSpalten voller Apps, Ordner und Widgets.\n\nWie sollen sie sich verhalten?';
+
+  @override
+  String get wsLaunch => 'Starten';
+
+  @override
+  String get wsLaunchDesc =>
+      'Und ehrlich gesagt: nur die Spitze des Eisbergs.\n\nFarben, Schriftarten, Button-Stile, Abstände, Widgets und mehr kannst du ganz nach deinem Geschmack anpassen.\n\nWie gewohnt: Drücke lange auf den Startbildschirm, um mit dem Anpassen zu beginnen.';
+
+  @override
+  String get wsLightWallpaper => 'Helles\nHintergrundbild';
+
+  @override
+  String get wsMatchColors => 'Farben anpassen';
+
+  @override
+  String get wsNext => 'Weiter';
+
+  @override
+  String get wsOneForBoth => 'Eins für beide';
+
+  @override
+  String get wsSeparate => 'Getrennt';
+
+  @override
+  String wsShuffleHint(Object seconds) {
+    return 'Der Start-Button ändert alle $seconds Sekunden seinen Stil';
+  }
+
+  @override
+  String get wsSwipeClear => 'Drücke lange auf eine App, um sie zu entfernen.';
+
+  @override
+  String get wsSwipeDesc =>
+      'Wähle Apps, die sich öffnen, wenn du auf dem Startbildschirm über den linken oder rechten Rand hinaus wischst.';
+
+  @override
+  String get wsTheBasics => 'Das sind die Grundlagen!';
+
+  @override
+  String get wsWallpaperDesc =>
+      '\"Farben anpassen\" aktualisiert das Farbschema, wenn ein Bild festgelegt wird.\n\nDu möchtest dein aktuelles Hintergrundbild behalten?\nÜberspringe einfach diesen Schritt.';
+
+  @override
+  String get wsWallpapers => 'Hintergrundbilder';
 }

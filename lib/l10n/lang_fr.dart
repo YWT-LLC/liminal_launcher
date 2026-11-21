@@ -131,7 +131,7 @@ class LangFr extends Lang {
   String get dpsPageSettings => 'Paramètres de la page';
 
   @override
-  String get dpsPages => 'Pages de l\'écran d\'accueil';
+  String get dpsPages => 'Colonnes = pages';
 
   @override
   String get dpsUseOS => 'Utiliser l\'OS';
@@ -713,9 +713,6 @@ class LangFr extends Lang {
       'les colonnes seront dimensionnées en fonction de leur élément le plus large et de vos paramètres d\'espacement.\n';
 
   @override
-  String get mltLaneConfig => 'Configuration multi-colonnes';
-
-  @override
   String get mltOnlyButton =>
       'les applications et dossiers peuvent être/seront activés uniquement par leur(s) bouton(s).\n';
 
@@ -856,4 +853,81 @@ class LangFr extends Lang {
 
   @override
   String get togTitle => 'Contrôles multimédias';
+
+  @override
+  String get wsBothThemes =>
+      'Cela mettra à jour les deux thèmes pour l\'instant.\nVous pourrez modifier l\'un ou l\'autre à tout moment.';
+
+  @override
+  String get wsChangeAnyTime =>
+      'Vous pouvez modifier cela à tout moment.\nEn passant de 2 > 1, vous devrez choisir lequel garder.';
+
+  @override
+  String get wsDarkWallpaper => 'Fond d\'écran\nsombre';
+
+  @override
+  String get wsGetStarted => 'Commençons par quelques réglages généraux.';
+
+  @override
+  String get wsHeadsUp =>
+      'Attention !\nUtiliser un fond d\'écran personnalisé (Liminal) remplace le fond d\'écran du système (Android) par du noir uni.\nÀ moins que vous ne vouliez que l\'un soit vide, mieux vaut définir les deux.';
+
+  @override
+  String get wsHomes => 'Accueils clair et sombre';
+
+  @override
+  String get wsHomesDesc =>
+      'L\'apparence de Liminal peut/sera toujours unique selon le mode du thème.\n\nVoulez-vous aussi des pages d\'accueil uniques selon le mode du thème ?';
+
+  @override
+  String get wsLaneConfig => 'Configuration des colonnes';
+
+  @override
+  String get wsLanesDesc =>
+      'Votre écran d\'accueil est composé de colonnes...\nRemplies d\'applications, de dossiers et de widgets.\n\nComment voulez-vous qu\'elles se comportent ?';
+
+  @override
+  String get wsLaunch => 'Décoller';
+
+  @override
+  String get wsLaunchDesc =>
+      'Et, honnêtement : ce n\'est que la partie émergée de l\'iceberg.\n\nCouleurs, polices, styles de boutons, espacements, widgets et plus encore sont à personnaliser selon vos envies.\n\nComme d\'habitude, appuyez longuement sur l\'écran d\'accueil pour commencer à personnaliser.';
+
+  @override
+  String get wsLightWallpaper => 'Fond d\'écran\nclair';
+
+  @override
+  String get wsMatchColors => 'Assortir les couleurs';
+
+  @override
+  String get wsNext => 'Suivant';
+
+  @override
+  String get wsOneForBoth => 'Un pour les deux';
+
+  @override
+  String get wsSeparate => 'Séparés';
+
+  @override
+  String wsShuffleHint(Object seconds) {
+    return 'Le bouton de décollage change de style toutes les $seconds secondes';
+  }
+
+  @override
+  String get wsSwipeClear =>
+      'Appuyez longuement sur une application pour la retirer.';
+
+  @override
+  String get wsSwipeDesc =>
+      'Choisissez des applications qui s\'ouvrent lorsque vous balayez au-delà du bord gauche ou droit de l\'écran d\'accueil.';
+
+  @override
+  String get wsTheBasics => 'Voilà l\'essentiel !';
+
+  @override
+  String get wsWallpaperDesc =>
+      '« Assortir les couleurs » mettra à jour le jeu de couleurs lorsqu\'une image est définie.\n\nVous voulez garder votre fond d\'écran actuel ?\nPassez simplement cette étape.';
+
+  @override
+  String get wsWallpapers => 'Fonds d\'écran';
 }

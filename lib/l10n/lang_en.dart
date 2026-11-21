@@ -130,7 +130,7 @@ class LangEn extends Lang {
   String get dpsPageSettings => 'Page settings';
 
   @override
-  String get dpsPages => 'Home screen pages';
+  String get dpsPages => 'Lanes = pages';
 
   @override
   String get dpsUseOS => 'Use OS';
@@ -704,9 +704,6 @@ class LangEn extends Lang {
       'lanes will be sized by their widest item & your spacing setting(s).\n';
 
   @override
-  String get mltLaneConfig => 'Multi-lane configuration';
-
-  @override
   String get mltOnlyButton =>
       'apps and folders can/will be activated only by their button(s).\n';
 
@@ -847,6 +844,82 @@ class LangEn extends Lang {
 
   @override
   String get togTitle => 'Media controls';
+
+  @override
+  String get wsBothThemes =>
+      'This will update both themes for now.\nYou can update either at any point.';
+
+  @override
+  String get wsChangeAnyTime =>
+      'You can change this any time.\nWhen going from 2 > 1, you will have to choose which to keep.';
+
+  @override
+  String get wsDarkWallpaper => 'Dark\nwallpaper';
+
+  @override
+  String get wsGetStarted => 'Let\'s get started with some general settings.';
+
+  @override
+  String get wsHeadsUp =>
+      'Heads up!\nUsing a custom (Liminal) wallpaper sets your system (Android) wallpaper to solid black.\nUnless you want one to be blank, it\'s probably best to set both.';
+
+  @override
+  String get wsHomes => 'Light and dark homes';
+
+  @override
+  String get wsHomesDesc =>
+      'Liminal\'s appearance can/will always be unique based on theme mode.\n\nDo you want to also have unique home pages based on theme mode?';
+
+  @override
+  String get wsLaneConfig => 'Lane config';
+
+  @override
+  String get wsLanesDesc =>
+      'Your home screen is made of lanes...\nColumns filled with apps, folders, and widgets.\n\nHow do you want them to behave?';
+
+  @override
+  String get wsLaunch => 'Launch';
+
+  @override
+  String get wsLaunchDesc =>
+      'And, honestly: the tip of the iceberg.\n\nColors, fonts, button styles, spacing, widgets, and more are yours to personalize.\n\nAs usual, long press the home screen to start customizing.';
+
+  @override
+  String get wsLightWallpaper => 'Light\nwallpaper';
+
+  @override
+  String get wsMatchColors => 'Match colors';
+
+  @override
+  String get wsNext => 'Next';
+
+  @override
+  String get wsOneForBoth => 'One for both';
+
+  @override
+  String get wsSeparate => 'Separate';
+
+  @override
+  String wsShuffleHint(Object seconds) {
+    return 'The launch button changes style every $seconds seconds';
+  }
+
+  @override
+  String get wsSwipeClear => 'Long press an app to clear it.';
+
+  @override
+  String get wsSwipeDesc =>
+      'Pick apps that open when you overscroll left or right on the home screen.';
+
+  @override
+  String get wsTheBasics => 'That\'s the basics!';
+
+  @override
+  String get wsWallpaperDesc =>
+      '\"Match colors\" will update the color scheme when an image is set.\n\nWant to keep your current wallpaper?\nJust skip this step.';
+
+  @override
+  String get wsWallpapers => 'Wallpapers';
 }
 
 /// The translations for English, as used in the United States (`en_US`).
@@ -975,7 +1048,7 @@ class LangEnUs extends LangEn {
   String get dpsPageSettings => 'Page settings';
 
   @override
-  String get dpsPages => 'Home screen pages';
+  String get dpsPages => 'Lanes = pages';
 
   @override
   String get dpsUseOS => 'Use OS';
@@ -1549,9 +1622,6 @@ class LangEnUs extends LangEn {
       'lanes will be sized by their widest item & your spacing setting(s).\n';
 
   @override
-  String get mltLaneConfig => 'Multi-lane configuration';
-
-  @override
   String get mltOnlyButton =>
       'apps and folders can/will be activated only by their button(s).\n';
 
@@ -1692,4 +1762,80 @@ class LangEnUs extends LangEn {
 
   @override
   String get togTitle => 'Media controls';
+
+  @override
+  String get wsBothThemes =>
+      'This will update both themes for now.\nYou can update either at any point.';
+
+  @override
+  String get wsChangeAnyTime =>
+      'You can change this any time.\nWhen going from 2 > 1, you will have to choose which to keep.';
+
+  @override
+  String get wsDarkWallpaper => 'Dark\nwallpaper';
+
+  @override
+  String get wsGetStarted => 'Let\'s get started with some general settings.';
+
+  @override
+  String get wsHeadsUp =>
+      'Heads up!\nUsing a custom (Liminal) wallpaper sets your system (Android) wallpaper to solid black.\nUnless you want one to be blank, it\'s probably best to set both.';
+
+  @override
+  String get wsHomes => 'Light and dark homes';
+
+  @override
+  String get wsHomesDesc =>
+      'Liminal\'s appearance can/will always be unique based on theme mode.\n\nDo you want to also have unique home pages based on theme mode?';
+
+  @override
+  String get wsLaneConfig => 'Lane config';
+
+  @override
+  String get wsLanesDesc =>
+      'Your home screen is made of lanes...\nColumns filled with apps, folders, and widgets.\n\nHow do you want them to behave?';
+
+  @override
+  String get wsLaunch => 'Launch';
+
+  @override
+  String get wsLaunchDesc =>
+      'And, honestly: the tip of the iceberg.\n\nColors, fonts, button styles, spacing, widgets, and more are yours to personalize.\n\nAs usual, long press the home screen to start customizing.';
+
+  @override
+  String get wsLightWallpaper => 'Light\nwallpaper';
+
+  @override
+  String get wsMatchColors => 'Match colors';
+
+  @override
+  String get wsNext => 'Next';
+
+  @override
+  String get wsOneForBoth => 'One for both';
+
+  @override
+  String get wsSeparate => 'Separate';
+
+  @override
+  String wsShuffleHint(Object seconds) {
+    return 'The launch button changes style every $seconds seconds';
+  }
+
+  @override
+  String get wsSwipeClear => 'Long press an app to clear it.';
+
+  @override
+  String get wsSwipeDesc =>
+      'Pick apps that open when you overscroll left or right on the home screen.';
+
+  @override
+  String get wsTheBasics => 'That\'s the basics!';
+
+  @override
+  String get wsWallpaperDesc =>
+      '\"Match colors\" will update the color scheme when an image is set.\n\nWant to keep your current wallpaper?\nJust skip this step.';
+
+  @override
+  String get wsWallpapers => 'Wallpapers';
 }
