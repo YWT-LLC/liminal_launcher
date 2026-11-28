@@ -63,7 +63,7 @@ final List<RouteBase> routes = <RouteBase>[
     ),
   ),
 
-  // Settings home
+  // Settings
   GoRoute(
     path: settingsScreenPath,
     name: settingsScreenName,
@@ -105,17 +105,16 @@ class LiminalLauncher extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider<AppInfoProvider>(
         create: (_) => AppInfoProvider(installedApps),
-        child: _TheMagic(installedApps, storedLocale, storedOUILang, storedLang),
+        child: _TheMagic(storedLocale, storedOUILang, storedLang),
       );
 }
 
 class _TheMagic extends StatelessWidget {
-  final List<AppInfo> installedApps;
   final Locale storedLocale;
   final OUILang storedOUILang;
   final Lang storedLang;
 
-  const _TheMagic(this.installedApps, this.storedLocale, this.storedOUILang, this.storedLang);
+  const _TheMagic(this.storedLocale, this.storedOUILang, this.storedLang);
 
   @override
   Widget build(BuildContext context) => EzConfigurableApp(
@@ -133,8 +132,12 @@ class _TheMagic extends StatelessWidget {
             GoRoute(
               path: homePath,
               name: homeName,
-              pageBuilder: (BuildContext pbc, GoRouterState pbs) =>
-                  ezPageBuilder(configWatcher(pbc), pbc, pbs, const HomeScreen()),
+              pageBuilder: (BuildContext pbc, GoRouterState pbs) => ezPageBuilder(
+                configWatcher(pbc),
+                pbc,
+                pbs,
+                const HomeScreen(),
+              ),
               routes: routes,
             ),
           ],
