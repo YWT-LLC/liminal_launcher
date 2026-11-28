@@ -10,8 +10,6 @@ import 'dart:async';
 import 'package:open_ui/open_ui.dart';
 import 'package:material_ui/material_ui.dart';
 
-// TODO: add edit home MC
-
 //* Core Widget *//
 
 class LimSpacer extends StatefulWidget {
@@ -22,6 +20,7 @@ class LimSpacer extends StatefulWidget {
   final ValueNotifier<double>? rippleProgress;
 
   final void Function() stateCheck;
+  final void Function() editToggle;
 
   late final double _height;
   late final double _width;
@@ -34,6 +33,7 @@ class LimSpacer extends StatefulWidget {
     required this.state,
     required this.rippleProgress,
     required this.stateCheck,
+    required this.editToggle,
   }) {
     final List<String> data =
         appInfo.homeItem(config, lane: pos.lane, index: pos.index).split(spacerSplit);
@@ -147,6 +147,7 @@ class _LimSpacerState extends State<LimSpacer> {
                       appInfo: widget.appInfo,
                       state: state,
                       stateCheck: widget.stateCheck,
+                      editToggle: widget.editToggle,
                       numLanes: numLanes,
                       pos: widget.pos,
                     ),
@@ -160,6 +161,7 @@ class _LimSpacerState extends State<LimSpacer> {
                       appInfo: widget.appInfo,
                       state: state,
                       stateCheck: widget.stateCheck,
+                      editToggle: widget.editToggle,
                       numLanes: numLanes,
                       pos: widget.pos,
                     ),
@@ -185,11 +187,12 @@ List<Widget> _menuChildren(
   required AppInfoProvider appInfo,
   required TileState state,
   required void Function() stateCheck,
+  required void Function() editToggle,
   required int numLanes,
   required LimPos pos,
 }) =>
     <Widget>[
-      // Edit
+      // Edit spacer
       _EditSpacer(config, appInfo, pos: pos, stateCheck: stateCheck),
 
       // Dupe
@@ -218,6 +221,14 @@ List<Widget> _menuChildren(
 
       // Remove
       removeItem(config, appInfo, pos),
+
+      // Edit home
+      EzMenuButton(
+        config,
+        label: l10n(config).mcEditHome,
+        icon: EzIcon(config, Icons.home),
+        onPressed: editToggle,
+      ),
     ];
 
 //* Edit Widget *//
@@ -234,6 +245,8 @@ class _EditSpacer extends StatelessWidget {
   @override
   Widget build(_) => EzMenuButton(
         config,
+        label: l10n(config).mcEditSpacer,
+        icon: EzIcon(config, Icons.edit),
         onPressed: () async {
           if (!ezRootIsMounted) return;
           marked.value = pos;
@@ -241,7 +254,5 @@ class _EditSpacer extends StatelessWidget {
           stateCheck.call();
           await editSpacing(config, appInfo: appInfo, context: ezRootContext);
         },
-        label: l10n(config).gEdit,
-        icon: EzIcon(config, Icons.edit),
       );
 }
