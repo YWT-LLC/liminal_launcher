@@ -207,6 +207,8 @@
   "mcBanish": "Banish",
   "mcDelete": "Delete",
   "mcDone": "Done",
+  "mcEditHome": "Edit home",
+  "mcEditSpacer": "Edit spacer",
   "mcHide": "Hide",
   "mcIconButton": "Icon button size",
   "mcInfo": "Info",

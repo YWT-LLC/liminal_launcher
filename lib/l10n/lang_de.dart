@@ -662,6 +662,12 @@ class LangDe extends Lang {
   String get mcDone => 'Fertig';
 
   @override
+  String get mcEditHome => 'Startbildschirm bearbeiten';
+
+  @override
+  String get mcEditSpacer => 'Abstandshalter bearbeiten';
+
+  @override
   String get mcHide => 'Ausblenden';
 
   @override

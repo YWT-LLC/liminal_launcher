@@ -661,6 +661,12 @@ class LangEs extends Lang {
   String get mcDone => 'Listo';
 
   @override
+  String get mcEditHome => 'Editar inicio';
+
+  @override
+  String get mcEditSpacer => 'Editar espaciador';
+
+  @override
   String get mcHide => 'Ocultar';
 
   @override

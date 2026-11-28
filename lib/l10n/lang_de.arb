@@ -207,6 +207,8 @@
   "mcBanish": "Verbannen",
   "mcDelete": "Löschen",
   "mcDone": "Fertig",
+  "mcEditHome": "Startbildschirm bearbeiten",
+  "mcEditSpacer": "Abstandshalter bearbeiten",
   "mcHide": "Ausblenden",
   "mcIconButton": "Größe der Symbol-Schaltfläche",
   "mcInfo": "Info",

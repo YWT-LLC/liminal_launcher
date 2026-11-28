@@ -1343,6 +1343,18 @@ abstract class Lang {
   /// **'Done'**
   String get mcDone;
 
+  /// No description provided for @mcEditHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit home'**
+  String get mcEditHome;
+
+  /// No description provided for @mcEditSpacer.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit spacer'**
+  String get mcEditSpacer;
+
   /// No description provided for @mcHide.
   ///
   /// In en, this message translates to:

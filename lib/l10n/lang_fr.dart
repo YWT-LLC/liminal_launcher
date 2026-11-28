@@ -666,6 +666,12 @@ class LangFr extends Lang {
   String get mcDone => 'Terminé';
 
   @override
+  String get mcEditHome => 'Modifier l\'accueil';
+
+  @override
+  String get mcEditSpacer => 'Modifier l\'espaceur';
+
+  @override
   String get mcHide => 'Masquer';
 
   @override

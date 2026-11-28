@@ -657,6 +657,12 @@ class LangEn extends Lang {
   String get mcDone => 'Done';
 
   @override
+  String get mcEditHome => 'Edit home';
+
+  @override
+  String get mcEditSpacer => 'Edit spacer';
+
+  @override
   String get mcHide => 'Hide';
 
   @override
@@ -1573,6 +1579,12 @@ class LangEnUs extends LangEn {
 
   @override
   String get mcDone => 'Done';
+
+  @override
+  String get mcEditHome => 'Edit home';
+
+  @override
+  String get mcEditSpacer => 'Edit spacer';
 
   @override
   String get mcHide => 'Hide';

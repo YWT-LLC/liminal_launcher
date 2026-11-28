@@ -207,6 +207,8 @@
   "mcBanish": "Bannir",
   "mcDelete": "Supprimer",
   "mcDone": "Terminé",
+  "mcEditHome": "Modifier l'accueil",
+  "mcEditSpacer": "Modifier l'espaceur",
   "mcHide": "Masquer",
   "mcIconButton": "Taille du bouton de l'icône",
   "mcInfo": "Infos",
