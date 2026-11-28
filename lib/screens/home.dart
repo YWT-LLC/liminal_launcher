@@ -681,6 +681,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
                 state: editing ? TileState.groupEdit : TileState.standard,
                 rippleProgress: rippleProgress,
                 stateCheck: () => setState(() => editing = false),
+                editToggle: () => setState(() => editing = !editing),
               ),
             ),
           );
